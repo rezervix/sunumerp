@@ -34,7 +34,7 @@
     "electron:build:mac:universal": "npx prisma generate && npm run build && electron-builder --mac --universal && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
     "electron:build:linux": "npx prisma generate && npm run build && electron-builder --linux",
     "prebuild": "prisma generate",
-    "postinstall": "electron-rebuild"
+    "postinstall": "node -e \"if (!process.env.VERCEL) { try { require('child_process').execSync('electron-rebuild', {stdio: 'inherit'}); } catch(e){} }\""
   },
   "build": {
     "appId": "com.yonetim.paneli",

@@ -1,0 +1,22 @@
+# Python AI & Local Microservices (Run locally / external server)
+fingpt/
+kuscu/
+read_docx.py
+
+# Electron & Desktop builds
+electron/
+crmpanelcckn/
+dist/
+build/
+*.exe
+*.dmg
+*.AppImage
+
+# Standalone Background Services
+services/
+
+# Local scripts & tools
+*.bat
+*.ps1
+dev.db
+*.log

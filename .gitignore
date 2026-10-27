@@ -16,3 +16,7 @@ services/wa-connector/dist/
 services/wa-connector/node_modules/
 services/ai-orchestrator/dist/
 services/ai-orchestrator/node_modules/
+
+# Untracked submodules & local temp
+crmpanelcckn/
+

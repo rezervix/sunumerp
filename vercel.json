@@ -1,26 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "app": {
-      "root": ".",
-      "framework": "nextjs"
-    },
-    "fingpt": {
-      "root": "fingpt",
-      "runtime": "python",
-      "entrypoint": "main.py" 
-    },
-    "kuscu": {
-      "root": "kuscu",
-      "framework": "fastapi"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": {
-        "service": "app"
-      }
-    }
-  ]
+  "framework": "nextjs"
 }
