@@ -1,0 +1,196 @@
+# ERP Projesi — Antigravity Kural Dosyası (Workspace)
+
+Bu dosya sadece bu proje için geçerlidir. Aşağıdaki kurallar, her prompt için ayrıca
+yazılmasına gerek kalmadan tüm revizyon/geliştirme taleplerinde otomatik olarak uygulanır.
+
+---
+
+## 1. Tasarım Tutarlılığı (Pixel-Level) ve Kullanıcı Deneyimi
+
+- Yeni bir sayfa/komponent/modal/form tasarlanacaksa **önce mevcut sayfaların
+  tasarımını incele** (renk paleti, tipografi, spacing/padding değerleri, buton
+  stilleri, ikon seti, kart/tablo yapıları, breakpoint davranışları).
+- Yeni tasarım, mevcut sayfalarla **hem tema (renk/font/spacing) hem de yapısal
+  (layout, component hiyerarşisi, grid yapısı) düzeyde birebir tutarlı** olmalı.
+  Rastgele/keyfi yeni bir stil, farklı bir component kütüphanesi ya da farklı bir
+  layout deseni üretme.
+- Yapılan veya yapılacak bütün arayüz tasarımları, mevcut tasarımlar referans
+  alınarak **birbirleriyle uyumlu, kurumsal, resmi, sade ve yüksek kullanıcı
+  deneyimi sunacak şekilde** hazırlanmalıdır. Uygulamanın genel diline uymayan
+  oyuncu, aşırı renkli, gösterişli veya tüketici uygulaması tarzında tasarımlar
+  oluşturma.
+- Kullanıcı akışları anlaşılır olmalı; önemli işlemler görünür, sık kullanılan
+  işlemler kolay erişilebilir, form alanları ve aksiyonlar açık biçimde
+  adlandırılmış olmalıdır. Kullanıcıyı gereksiz adımlara, tekrarlı veri girişine
+  veya belirsiz ekranlara zorlayan akışlar oluşturma.
+- Ortak kullanılan elemanlar (buton, input, tablo, modal, sidebar, breadcrumb vb.)
+  için zaten var olan component'leri **yeniden kullan**; aynı işi gören ikinci bir
+  component/stil oluşturma.
+- Yeni veya değişen arayüzlerde hover, focus, disabled, loading, success, warning,
+  error ve empty state gibi bütün etkileşim durumları mevcut tasarım sistemiyle
+  uyumlu şekilde ele alınmalıdır.
+- Erişilebilirlik göz ardı edilmemelidir: klavye ile kullanım, görünür focus durumu,
+  yeterli renk kontrastı, doğru label/aria kullanımı ve anlaşılır hata mesajları
+  sağlanmalıdır.
+- Eğer birden fazla sayfa arasında tutarsızlık fark edersen (örn. bir sayfa farklı
+  bir buton stili kullanıyor), bunu belirt ve hangi standardın referans alınacağını
+  sor; kendi kararınla rastgele birini seçme.
+
+## 2. Backend — Eksiksiz ve Mimariye Sadık
+
+- Hiçbir özellik sadece arayüz (UI) olarak bırakılmaz. Her yeni/değişen ekran için
+  **backend tarafı da (API endpoint, servis/iş mantığı, veritabanı şeması/migration,
+  validasyon, yetkilendirme) eksiksiz kurulmalı**.
+- Mevcut backend mimarisini ve teknolojisini **koru** (framework, klasör yapısı,
+  katmanlama, isimlendirme konvansiyonları, ORM/DB erişim deseni ne ise onu izle).
+  Mimariyi "daha modern" veya "daha iyi" olduğu gerekçesiyle **değiştirme veya
+  refactor etme**; sadece eksik olan kısmı tamamla.
+- Eğer mevcut mimari yeni özelliği desteklemiyorsa veya ciddi bir yapısal
+  değişiklik gerektiriyorsa, **önce durumu açıkla ve onay iste**; sessizce mimariyi
+  değiştirme.
+- Frontend-backend arasındaki veri akışı uçtan uca çalışır durumda olmalı: mock data,
+  sahte/placeholder response, "TODO: backend'e bağlanacak" gibi yarım bırakılmış
+  entegrasyonlar kabul edilemez.
+
+## 3. Tamlık Standardı (MVP / Yarım İş Yasak)
+
+- Hiçbir görev "MVP", "ilk versiyon", "basit hali", "sonra geliştiririz" mantığıyla
+  yarım bırakılmaz. Her talep, **production-ready, tam kapasite ve kusursuz çalışan**
+  bir sonuç hedefiyle tamamlanır.
+- Aşağıdakiler her zaman dahil edilmeli (aksi belirtilmedikçe):
+  - Form validasyonları (hem frontend hem backend tarafında)
+  - Hata yönetimi (try/catch, kullanıcıya anlamlı hata mesajları, loading/error state'leri)
+  - Boş durum (empty state), yükleniyor (loading state) ve hata durumu (error state) arayüzleri
+  - Yetkilendirme/rol kontrolleri (varsa mevcut yetki sistemine göre)
+  - Responsive davranış (mevcut sayfalar responsive ise yeni sayfa da olmalı)
+- "Şimdilik böyle kalsın", "ileride tamamlarız" gibi bir sınırlama varsa bunu
+  **açıkça belirt**, sessizce eksik bırakma.
+
+## 4. Kod Kalitesi ve Tutarlılık
+
+- Mevcut projede kullanılan dil/framework/kütüphane sürümlerini koru; yeni bir
+  bağımlılık eklemeden önce zaten var olan bir çözüm olup olmadığını kontrol et.
+- İsimlendirme (dosya, değişken, endpoint, tablo/kolon) mevcut projedeki
+  konvansiyonlarla birebir uyumlu olmalı.
+- Tekrar eden kodu (duplicate logic) yeni bir yerde tekrar yazma; ortak bir
+  fonksiyon/servis/hook'a çıkar.
+
+## 5. Uygulama Öncesi Netleştirme
+
+- Talep belirsizse (örn. hangi sayfanın referans alınacağı, hangi veri modelinin
+  kullanılacağı net değilse) varsayım yapıp ilerlemeden önce **kısa bir soru sor**.
+- Riskli/geri dönüşü zor işlemler (veritabanı migration'ı, mevcut veri şemasını
+  değiştirme, dosya/tablo silme) öncesinde onay iste.
+
+## 6. Test ve Doğrulama
+
+- Bir değişiklik tamamlandığında, ilgili akışı (mümkünse browser üzerinden) test et
+  ve sonucu özetle: ne test edildi, hangi senaryolar kontrol edildi, bilinen bir
+  sınırlama var mı.
+- "Çalışıyor olmalı" gibi doğrulanmamış bir ifadeyle işi bitmiş sayma; gerçekten
+  çalıştığını teyit et.
+
+## 7. Performans, Hız ve Marka Standartları (Çiçekana ERP)
+
+- **Marka ve İsimlendirme**: Platformun resmi adı "Çiçekana Kurumsal Kaynak Planlama Sistemi" (kısaca Çiçekana ERP)'dir. Tüm dökümantasyon, UI metinleri, başlıklar, bildirimler ve log etiketlerinde bu marka standardı kullanılmalıdır.
+- **Sanallaştırma (Virtualization)**: WhatsApp sohbet geçmişi, CRM müşteri listeleri, stok istekleri ve Audit Log gibi yüzlerce/binlerce satırlık listelerde 60 FPS UI akıcılığı sağlamak için Virtual Scrolling / Windowing uygulanmalıdır.
+- **Dinamik Yükleme & Code Splitting**: Ağır modüller ve grafik bileşenleri yalnızca ihtiyaç anında dinamik olarak yüklenmelidir (React.lazy / Dynamic Import).
+- **Medya Optimizasyonu**: Sisteme yüklenen veya görüntülenen tüm görseller sunucuya gitmeden/ekrana basılmadan önce otomatik olarak modern formatlara (WebP / AVIF) dönüştürülmeli; video ve ses dosyalarında Chunked Range Request kullanılmalıdır.
+- **Bellek ve State Temizliği**: Gereksiz re-render'lar memoization ile önlenmeli (INP < 50ms); kapanan modüllerdeki WebSocket, event listener ve timer'lar anında temizlenmelidir.
+- **Electron GPU İvmelendirme**: Donanım ivmesi aktif edilmeli; yerel SQLite/sorgu işlemleri Web Worker veya arka plan süreçlerine devredilmelidir.
+- **Akıllı Önbellekleme & Veritabanı Hızı**: Sık erişilen veriler bellek içi önbelleğe (In-Memory/Redis) alınmalı; tüm ilişkisel tablolarda indeksleme ve N+1 sorgu engelleme uygulanmalıdır (DB yanıtı < 20ms).
+- **Asenkron İş Kuyrukları**: Ağır ve uzun süren arka plan süreçleri (PDF dönüştürme, FFmpeg video işleme, Night Scan, toplu bildirim) Asenkron İş Kuyruğuna alınmalı ve kullanıcıya SSE / WebSocket ile bildirilmelidir.
+
+## 8. Özellik Kapsamı, Hedef Kullanıcı ve Yetkilendirme
+
+- Her yeni özellik, ekran, menü, buton, rapor, API veya sistem işlemi geliştirilmeden
+  önce **bu özelliğin kimleri ilgilendirdiği ve kimler tarafından kullanılabileceği**
+  açıkça belirlenmelidir.
+- Hedef kullanıcı kapsamı; uygulama sahibi/geliştirici, süper yönetici, firma
+  yöneticisi, departman, rol, yetki grubu, belirli kullanıcı veya tüm kullanıcılar
+  şeklinde netleştirilmelidir. Kapsam belirtilmemişse özelliği otomatik olarak tüm
+  kullanıcılara açma; önce kısa bir netleştirme sorusu sor.
+- Yalnızca uygulamanın geliştiricisini veya sahibini ilgilendiren ekran ve araçlar
+  **sadece tanımlı geliştirici/sahip hesabında görünmeli ve çalışmalıdır**. Bu tür
+  özellikler diğer kullanıcıların menüsünde, rotalarında, arama sonuçlarında,
+  kısayollarında, bildirimlerinde veya API yanıtlarında yer almamalıdır.
+- Geliştirici/sahip erişimi frontend içinde e-posta adresi, kullanıcı adı veya
+  kullanıcı ID'si karşılaştırılarak hard-code edilmemelidir. Mevcut rol/yetki sistemi,
+  güvenli sunucu yapılandırması veya merkezi feature flag mekanizması kullanılmalıdır.
+- Bir araç yalnızca geliştirme ortamına aitse production build içinde varsayılan
+  olarak kapalı olmalı; sadece yetkili ortam ve hesap koşulları birlikte sağlandığında
+  etkinleşmelidir.
+- Bir özelliği yalnızca frontend'de gizlemek yetkilendirme sayılmaz. Menü ve buton
+  görünürlüğüne ek olarak **route guard, backend authorization, API erişim kontrolü
+  ve veri sorgusu kapsamı** da uygulanmalıdır. Yetkisiz kullanıcı doğrudan URL veya
+  API isteğiyle özelliğe erişememelidir.
+- Yetki kontrollerinde **varsayılan olarak reddet (deny by default) ve en az yetki
+  (least privilege)** prensibi uygulanmalıdır. Açıkça izin verilmeyen rol veya
+  kullanıcı özelliğe erişememelidir.
+- Kullanıcıya veya role özel bir özellikte istemciye gereksiz veri gönderme; kullanıcı
+  arayüzünde gizlenecek olsa bile yetkisiz veriyi frontend'e taşıma.
+- Çok firmalı/tenant yapısında her sorgu ve işlem aktif firma/tenant kapsamında
+  çalışmalı; bir firmanın verisi hiçbir koşulda başka bir firma tarafından
+  görüntülenememeli, değiştirilememeli veya tahmin edilebilir ID'lerle erişilememelidir.
+- Yetkilendirme değişiklikleri test edilirken en az şu senaryolar doğrulanmalıdır:
+  yetkili kullanıcı, yetkisiz kullanıcı, doğrudan URL erişimi, doğrudan API erişimi,
+  farklı rol ve farklı firma/tenant erişimi.
+
+## 9. Değişiklik Kapsamı ve Regresyon Koruması
+
+- Yalnızca talep edilen özelliği ve bu özelliğin çalışması için zorunlu olan alanları
+  değiştir. İlgisiz dosyalarda, modüllerde veya çalışan akışlarda gereksiz düzenleme,
+  toplu formatlama, yeniden adlandırma ya da refactor yapma.
+- Mevcut çalışan özellikleri bozabilecek bir değişiklik gerekiyorsa önce etki alanını,
+  riski ve alternatifleri açıkla; onay almadan geniş kapsamlı değişiklik yapma.
+- Bir dosyayı tamamen yeniden yazmak yerine mümkün olduğunca hedefli ve küçük
+  değişiklikler uygula. Mevcut kodu, ayarları, metinleri veya iş kurallarını talep
+  dışında silme.
+- Değişiklik sonunda hangi dosyaların değiştiğini, her dosyada ne yapıldığını ve
+  mevcut davranışların nasıl korunduğunu özetle.
+- Yeni özellik nedeniyle mevcut akışlarda regresyon oluşmadığını ilgili smoke test
+  ve regresyon senaryolarıyla doğrula.
+
+## 10. Veri Güvenliği, Migration ve Geri Alma
+
+- Veritabanı migration'ları mümkün olduğunca **geri alınabilir, veri kaybına yol
+  açmayacak ve mevcut kayıtlarla uyumlu** tasarlanmalıdır.
+- Kolon/tablo silme, veri tipini daraltma, toplu veri güncelleme veya geri dönüşü zor
+  veri işlemleri öncesinde açık onay alınmalıdır.
+- Kritik veri değişiklikleri transaction içinde yapılmalı; işlem yarıda kalırsa veri
+  tutarsızlığı oluşmamalıdır.
+- Seed, migration, senkronizasyon ve toplu işlem kodları tekrar çalıştırıldığında
+  mükerrer kayıt veya bozulma üretmeyecek şekilde mümkün olduğunca idempotent olmalıdır.
+- Riskli değişikliklerde uygulanabilir bir rollback/geri alma planı bulunmalı ve
+  teslim özetinde belirtilmelidir.
+
+## 11. Güvenlik ve Gizlilik
+
+- API anahtarı, parola, token, bağlantı bilgisi veya diğer gizli değerleri kaynak
+  koda, frontend bundle'a, loglara ya da hata mesajlarına yazma; mevcut secret/env
+  yönetim yöntemini kullan.
+- Kullanıcı girdileri backend tarafında da doğrulanmalı ve güvenli şekilde işlenmelidir.
+  SQL injection, XSS, CSRF, yetki yükseltme, path traversal ve güvensiz dosya yükleme
+  risklerine karşı mevcut teknolojiye uygun korumalar uygulanmalıdır.
+- Dosya yüklemelerinde uzantı, MIME type, boyut, içerik ve erişim yetkisi kontrol
+  edilmeli; yüklenen dosyalar doğrudan çalıştırılabilir veya herkese açık hale
+  getirilmemelidir.
+- Loglarda kişisel veri, parola, token, özel mesaj içeriği veya gereksiz hassas veri
+  tutulmamalıdır. Hata ayıklama için eklenen geçici loglar teslim öncesinde
+  temizlenmelidir.
+- Yetki, kullanıcı, rol, kritik veri ve sistem ayarı değişiklikleri mevcut Audit Log
+  mimarisiyle uyumlu biçimde izlenebilir olmalıdır.
+
+## 12. Teslimat ve Değişiklik Raporu
+
+- Görev tamamlandığında yalnızca "tamamlandı" deme. Kısa ve somut bir teslim raporu
+  ver: yapılan değişiklikler, etkilenen dosyalar/modüller, eklenen endpoint/migration,
+  uygulanan yetkiler, gerçekleştirilen testler ve varsa bilinen sınırlamalar.
+- Test edilemeyen bir alan varsa bunu açıkça belirt; test edilmemiş bir sonucu
+  doğrulanmış gibi sunma.
+- Kullanıcının ayrıca yapması gereken manuel işlem, ortam değişkeni, migration,
+  build, servis yeniden başlatma veya deployment adımı varsa eksiksiz listele.
+
+---
+
+**Özet önceliklendirme:** Önce özelliğin hedef kullanıcısını ve erişim kapsamını belirle → mevcut sistemin tasarım ve backend mimarisine sadık kal → kurumsal ve yüksek kullanıcı deneyimli arayüz üret → Çiçekana ERP marka standardını koru → yalnızca gerekli kapsamda değişiklik yap ve mevcut sistemi bozma → hiçbir şeyi yarım/MVP bırakma → güvenlik, veri bütünlüğü ve tenant izolasyonunu koru → maksimum performans (60 FPS UI, <1s FCP, <50ms INP) sağla → teslim etmeden önce yetki, regresyon ve uçtan uca çalışma testlerini doğrula.

@@ -1,0 +1,101 @@
+# GÖREV: ERP "Chat" Modülüne WhatsApp Sohbet İçe Aktarma Özelliği Ekle
+
+## 1. Bağlam ve İş Amacı
+
+Müşterilerimiz/kullanıcılarımız operasyonlarını şu ana kadar WhatsApp üzerinden yürütüyordu. Şimdi tüm operasyonu ERP sistemimizdeki **Chat modülüne** taşıyoruz. WhatsApp'ın sunduğu tüm özellikler (mesajlaşma, medya paylaşımı, vb.) Chat modülünde zaten mevcut.
+
+Geçiş sürecinde kullanıcı deneyimini kesintisiz kılmak ve mesaj kaybı yaşanmamasını sağlamak için, kullanıcıların WhatsApp'tan dışa aktardıkları (export ettikleri) eski sohbetlerini — **medya içerikleri dahil** — ilgili Chat kaydına içeri aktarabilmesi (import) gerekiyor. Amaç: kullanıcı ERP'deki ilgili sohbet ekranını açtığında, sanki hiç platform değişikliği olmamış gibi, WhatsApp'taki geçmişiyle ERP'deki yeni mesajlarının **kronolojik olarak birleşmiş** tek bir akış görmesi.
+
+Şu anda ERP'de bu içe aktarma işlevi **yok**. Bunu sıfırdan tasarlayıp uygulaman gerekiyor.
+
+## 2. Önce Yapılması Gereken: Keşif (Discovery)
+
+Kod tabanına eriştiğine göre, geliştirmeye başlamadan önce şunları incele ve bana/kendine özetle:
+
+1. Chat modülünün veri modeli: mesaj tablosu şeması (gönderen, alıcı, zaman damgası, mesaj tipi, içerik, medya referansı, sohbet/thread ID vb.)
+2. Medya dosyalarının nasıl saklandığı (S3, yerel disk, CDN, path yapısı, dosya adlandırma konvansiyonu, boyut limitleri)
+3. Mesaj tiplerinin enum/tipleri (metin, resim, video, ses, döküman, konum, kişi kartı, sistem mesajı vb.)
+4. Var olan dosya yükleme (upload) altyapısı — büyük dosya/toplu yükleme için mevcut bir mekanizma var mı?
+5. Yetkilendirme modeli — bir sohbete "geçmiş içe aktarma" yapma yetkisi kimde olmalı (admin, agent, vb.)
+
+Bu keşfin sonucunu bana özetleyerek başla, varsayımlarını netleştir, sonra uygulamaya geç.
+
+## 3. WhatsApp Dışa Aktarım Formatının Teknik Özellikleri
+
+WhatsApp'ın "Sohbeti Dışa Aktar" (Export Chat) özelliği bir **.zip** dosyası üretir. Bu formatı doğru parse etmek kritik — aşağıdaki incelikleri mutlaka dikkate al:
+
+### 3.1 Zip içeriği
+- `_chat.txt` (iOS) veya `WhatsApp Chat with [İsim].txt` (Android) adlı düz metin dosyası
+- Referans verilen medya dosyaları: `IMG-20240115-WA0001.jpg`, `VID-...`, `AUD-...`, `PTT-...` (sesli mesaj), `.opus`, `.webp` (sticker), `.vcf` (kişi kartı) vb.
+- **Önemli:** WhatsApp export'unda genelde **son 10.000 mesaj / son X ay** sınırı olabilir; kullanıcıya bunu arayüzde hatırlat.
+
+### 3.2 Metin dosyasının satır formatı (platforma ve dile göre DEĞİŞİR)
+Örnekler:
+```
+[15.01.2024 14:23:11] Ahmet Yılmaz: Merhaba, siparişim nerede?
+15/01/2024, 14:23 - Ahmet Yılmaz: Merhaba, siparişim nerede?
+1/15/24, 2:23 PM - Ahmet Yılmaz: Merhaba, siparişim nerede?
+```
+- iOS: köşeli parantez `[tarih saat]` formatı, 24 saat veya AM/PM olabilir
+- Android: `tarih, saat - isim: mesaj` formatı
+- Tarih formatı cihazın bölge ayarına göre GG/AA/YY, AA/GG/YY veya YYYY-AA-GG olabilir — **otomatik tespit + kullanıcıya onaylatma** mekanizması kur (regex ile birden fazla format dene, örnek satırlardan hangi formatın tutarlı olduğunu tespit et)
+- Farklı dillerde export edilmişse ayırıcı karakter ve AM/PM ibaresi değişebilir (ör. "öö/ös" Türkçe Android'de)
+- Çok satırlı mesajlar: bir mesaj birden fazla satıra yayılabilir (satır başında tarih damgası yoksa önceki mesajın devamıdır)
+
+### 3.3 Medya referansları
+- Satır içinde `<attached: IMG-20240115-WA0001.jpg>` (iOS) veya sadece dosya adı `IMG-20240115-WA0001.jpg (file attached)` (Android) şeklinde geçer
+- Bazı diller için ibare farklıdır ("dosya eklendi", "attached", vb.) — dile göre regex listesi tut, sabit kodlama yapma
+- Medya dosyası zip içinde yoksa (WhatsApp bazen "‎medya dahil edilmedi" placeholder'ı bırakır) bunu **eksik medya** olarak işaretle, import'u durdurma
+
+### 3.4 Sistem mesajları
+"Mesajlar ve aramalar uçtan uca şifrelidir", "X grubu oluşturdu", "Y numarasını değiştirdi" gibi sistem mesajlarını **normal mesaj olarak değil, meta/sistem event'i** olarak ayrıştır ve Chat modülünde ayrı bir stil ile (opsiyonel) göster ya da varsayılan olarak filtrele.
+
+### 3.5 Karakter kodlama ve gizli karakterler
+WhatsApp export'larında **LRM (Left-to-Right Mark, U+200E)** gibi görünmez Unicode karakterler bulunur — parse ederken bunları temizle (strip), yoksa regex eşleşmeleri sessizce başarısız olur.
+
+## 4. Fonksiyonel Gereksinimler
+
+1. **Yükleme arayüzü:** Chat modülünde ilgili sohbet ekranına "Geçmişi İçe Aktar" (Import History) butonu/aksiyonu ekle. Kullanıcı `.zip` dosyasını seçip yükler.
+2. **Ön izleme ve onay adımı:** Parse işleminden sonra kullanıcıya "X mesaj, Y medya dosyası tespit edildi, tarih aralığı: ... " gibi bir özet göster, kullanıcı onaylamadan kalıcı import yapma.
+3. **Gönderen eşleştirme:** WhatsApp'taki isimler ile ERP'deki kullanıcı/müşteri kayıtları arasında eşleştirme yapılmalı (telefon numarası varsa öncelik, yoksa isimle fuzzy match + manuel eşleştirme ekranı sun). Eşleşmeyen gönderenler için "Bilinmeyen Kişi (WhatsApp)" gibi bir placeholder kullanıcı oluştur.
+4. **Kronolojik birleştirme:** İçe aktarılan mesajlar, sohbetin gerçek zaman damgalarıyla (import anının zamanı DEĞİL) veritabanına yazılmalı, böylece mevcut/yeni mesajlarla doğru sırada karışsınlar.
+5. **Medya işleme:**
+   - Her medya dosyasını sistemin mevcut medya depolama altyapısına (S3/CDN/disk) doğru mesaj tipiyle yükle
+   - Dosya adı çakışmalarını önlemek için yeniden adlandır/namespace uygula
+   - Görsel/video/ses için mevcut thumbnail/preview mekanizmasını çalıştır
+   - Eksik veya bozuk medya dosyalarını "medya kullanılamıyor" placeholder'ı ile işaretle, tüm import'u başarısız saydırma
+6. **Görsel ayrım:** İçe aktarılan mesajları arayüzde **"WhatsApp'tan içe aktarıldı"** rozeti/etiketi ile işaretle (kullanıcı hangi mesajın orijinal WhatsApp geçmişinden geldiğini ayırt edebilsin, denetim/uyumluluk için de gerekli).
+7. **Tekrar (duplicate) koruması:** Aynı export dosyası yanlışlıkla iki kez yüklenirse mesajları tekilleştir (içerik + zaman damgası + gönderen hash'i ile).
+8. **Büyük dosya desteği:** Uzun süredir kullanılan sohbetlerde export dosyası birkaç GB'a ulaşabilir (özellikle video/ses içeriyorsa). Yükleme işlemini **arka planda (async/queue/job)** çalıştır, kullanıcıya ilerleme durumu (progress bar / % tamamlandı) göster, tarayıcıyı bloklama.
+9. **Hata raporlama:** Parse edilemeyen satırları/mesajları atlama, bunları bir "içe aktarılamayan öğeler" raporunda kullanıcıya sun (kaç mesaj, hangi satırlar, neden).
+10. **Loglama/denetim izi:** Kim, ne zaman, hangi sohbete, kaç mesaj import etti — audit log tut.
+
+## 5. Teknik Uygulama Önerileri
+
+- Parser'ı **saf, test edilebilir bir modül** olarak yaz (input: zip buffer, output: yapılandırılmış mesaj listesi + medya eşleme haritası), UI/DB katmanından bağımsız tut.
+- Zip'i işlerken **stream/chunk bazlı** oku (tüm dosyayı belleğe yükleme, özellikle büyük medya dosyaları için).
+- Format tespiti için **birden fazla regex pattern'i sırayla dene**, ilk 50-100 satırdan hangisinin tutarlı eşleştiği baz alınarak format belirlensin.
+- İşlemi **idempotent** tasarla — aynı job iki kez tetiklenirse veri bozulmasın.
+- Mevcut Chat modülünün mesaj gönderme/medya yükleme servis katmanlarını (varsa) **yeniden kullan**, paralel bir yol açma.
+
+## 6. Kabul Kriterleri (Acceptance Criteria)
+
+- [ ] Hem iOS hem Android formatındaki export dosyaları doğru parse ediliyor
+- [ ] En az 3 farklı tarih/saat formatı (GG/AA/YY, AA/GG/YY, [köşeli parantez]) otomatik tespit ediliyor
+- [ ] Görsel, video, ses (opus dahil), döküman ve sticker medya tipleri doğru şekilde ilişkilendirilip yükleniyor
+- [ ] 5.000+ mesaj ve 500+ medya dosyası içeren bir export, arayüzü kilitlemeden başarıyla içe aktarılabiliyor
+- [ ] İçe aktarılan mesajlar sohbette doğru kronolojik sırada, orijinal zaman damgalarıyla görünüyor
+- [ ] Eksik/bozuk medya olan bir export, hatasız şekilde (placeholder ile) tamamlanıyor
+- [ ] Aynı dosya iki kez yüklendiğinde mesajlar tekilleşiyor, çift kayıt oluşmuyor
+- [ ] İçe aktarılan mesajlar arayüzde ayırt edici şekilde etiketleniyor
+
+## 7. Beklenen Teslimat
+
+1. Keşif özeti (madde 2)
+2. Parser modülü + birim testleri (farklı format örnekleriyle)
+3. Backend: içe aktarma job/servis katmanı + API endpoint(ler)
+4. Frontend: yükleme, önizleme/onay, ilerleme durumu, hata raporu ekranları
+5. Migration/şema değişikliği varsa (ör. `imported_from` alanı, `external_id` vb.)
+6. Kısa bir kullanım kılavuzu (kullanıcıya nasıl export alıp yükleyeceğini anlatan)
+
+Lütfen önce keşif adımını tamamla ve bana bulduklarını özetleyerek bir uygulama planı sun; onay verdikten sonra kodlamaya başla.

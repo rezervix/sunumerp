@@ -1,0 +1,408 @@
+{
+  "/dashboard": {
+    "tr": {
+      "title": "Gösterge Paneli",
+      "description": "İşletmenizin genel performansını, gelir/gider analizlerini, aktif projelerinizi ve son etkinlikleri tek bir ekrandan takip edebileceğiniz kontrol merkezidir."
+    },
+    "en": {
+      "title": "Dashboard",
+      "description": "The central control center where you can monitor your business's overall performance, income/expense analyses, active projects, and recent activities in one place."
+    },
+    "ru": {
+      "title": "Панель управления",
+      "description": "Единый центр управления, где вы можете отслеживать общую эффективность бизнеса, анализ доходов и расходов, активные проекты и последние события."
+    }
+  },
+  "/dashboard/takvim": {
+    "tr": {
+      "title": "Takvim",
+      "description": "Tüm toplantılarınızı, randevularınızı, özel etkinliklerinizi ve iş planlarınızı günlük, haftalık veya aylık görünümde planlayıp takip edebileceğiniz takvim modülüdür."
+    },
+    "en": {
+      "title": "Calendar",
+      "description": "The calendar module where you can schedule and track all your meetings, appointments, special events, and work plans in daily, weekly, or monthly views."
+    },
+    "ru": {
+      "title": "Календарь",
+      "description": "Модуль календаря для планирования и отслеживания встреч, записей, специальных мероприятий и рабочих планов в дневном, недельном или месячном формате."
+    }
+  },
+  "/dashboard/orders": {
+    "tr": {
+      "title": "Sipariş Yönetimi",
+      "description": "Müşterilerinizin sipariş taleplerini sisteme kaydedebilir, ödeme ve teslimat durumlarını (hazırlanıyor, kargolandı, tamamlandı) güncelleyebilirsiniz."
+    },
+    "en": {
+      "title": "Order Management",
+      "description": "You can record customer order requests in the system, and update payment and delivery statuses (preparing, shipped, completed)."
+    },
+    "ru": {
+      "title": "Управление заказами",
+      "description": "Регистрация заказов клиентов в системе и обновление статусов оплаты и доставки (подготовка, отправлено, завершено)."
+    }
+  },
+  "/dashboard/b2b": {
+    "tr": {
+      "title": "B2B Mağaza",
+      "description": "Şubeler ve bayiler için oluşturulmuş toptan ürün sipariş sistemidir. Şubeleriniz stok ihtiyaçlarını buradan talep edebilir."
+    },
+    "en": {
+      "title": "B2B Store",
+      "description": "A wholesale product ordering system created for branches and dealers. Your branches can request stock replenishment from here."
+    },
+    "ru": {
+      "title": "B2B Магазин",
+      "description": "Система оптовых заказов товаров для филиалов и дилеров. Ваши филиалы могут запрашивать пополнение запасов отсюда."
+    }
+  },
+  "/dashboard/customers": {
+    "tr": {
+      "title": "Müşteriler (CRM)",
+      "description": "Müşterilerinizin iletişim bilgilerini, notlarını, satın alma olasılıklarını ve geçmiş etkileşimlerini yönetebileceğiniz merkezi veri tabanıdır."
+    },
+    "en": {
+      "title": "Customers (CRM)",
+      "description": "The central database where you can manage your customers' contact information, notes, purchase probabilities, and history of interactions."
+    },
+    "ru": {
+      "title": "Клиенты (CRM)",
+      "description": "Центральная база данных для управления контактной информацией клиентов, заметками, вероятностью покупок и историей взаимодействия."
+    }
+  },
+  "/dashboard/hr": {
+    "tr": {
+      "title": "İnsan Kaynakları (İK)",
+      "description": "Personel profillerini, departman ve pozisyon dağılımlarını, işe alım süreçlerini ve çalışan bilgilerini takip edebileceğiniz alandır."
+    },
+    "en": {
+      "title": "Human Resources (HR)",
+      "description": "The area where you can track staff profiles, department and position distributions, recruitment processes, and employee details."
+    },
+    "ru": {
+      "title": "Кадры (HR)",
+      "description": "Раздел для отслеживания профилей сотрудников, распределения по отделам и должностям, процессов найма и подробной информации о персонале."
+    }
+  },
+  "/dashboard/personel-talepleri": {
+    "tr": {
+      "title": "Personel Talepleri",
+      "description": "Çalışanlar tarafından iletilen izin, donanım veya diğer operasyonel taleplerin listelendiği ve yöneticiler tarafından onaylandığı merkezdir."
+    },
+    "en": {
+      "title": "Staff Requests",
+      "description": "The center where leave, equipment, or other operational requests submitted by employees are listed and approved by managers."
+    },
+    "ru": {
+      "title": "Запросы персонала",
+      "description": "Центр, где отображаются и утверждаются руководителями запросы сотрудников на отпуск, оборудование и другие операционные нужды."
+    }
+  },
+  "/dashboard/projects": {
+    "tr": {
+      "title": "Projeler",
+      "description": "Devam eden veya tamamlanan projeleri, ilerleme yüzdelerini, teslim tarihlerini ve proje detaylarını izleyebileceğiniz takip ekranıdır."
+    },
+    "en": {
+      "title": "Projects",
+      "description": "The tracking screen where you can monitor ongoing or completed projects, progress percentages, deadlines, and project details."
+    },
+    "ru": {
+      "title": "Проекты",
+      "description": "Экран отслеживания текущих и завершенных проектов, процента выполнения, сроков сдачи и деталей проектов."
+    }
+  },
+  "/dashboard/leads": {
+    "tr": {
+      "title": "Potansiyel Müşteriler",
+      "description": "Satış sürecindeki aday müşterileri, bütçe aralıklarını, ilgi duydukları hizmetleri ve takip tarihlerini yönetebileceğiniz satış hunisidir."
+    },
+    "en": {
+      "title": "Leads",
+      "description": "The sales funnel where you can manage prospect clients in the sales cycle, their budget ranges, services of interest, and follow-up dates."
+    },
+    "ru": {
+      "title": "Потенциальные клиенты",
+      "description": "Воронка продаж для управления перспективными клиентами, их бюджетами, интересующими услугами и датами последующих контактов."
+    }
+  },
+  "/dashboard/cargo": {
+    "tr": {
+      "title": "Kargo Takibi",
+      "description": "Şubeler arası veya müşterilere gönderilen kargoların takip numaralarını, kurye firmalarını ve teslimat aşamalarını izleme ekranıdır."
+    },
+    "en": {
+      "title": "Cargo Tracking",
+      "description": "The screen for tracking tracking numbers, courier companies, and delivery stages of shipments sent between branches or to customers."
+    },
+    "ru": {
+      "title": "Отслеживание доставки",
+      "description": "Экран отслеживания трек-номеров, курьерских служб и этапов доставки грузов между филиалами или клиентам."
+    }
+  },
+  "/dashboard/files": {
+    "tr": {
+      "title": "Dosya Transferi & Teslimat",
+      "description": "Kullanıcılar veya şubeler arasında büyük boyutlu dosyaları güvenle gönderebileceğiniz ve teslimat geçmişini inceleyebileceğiniz alandır."
+    },
+    "en": {
+      "title": "File Transfer & Delivery",
+      "description": "The area where you can securely send large files between users or branches and review delivery history."
+    },
+    "ru": {
+      "title": "Передача файлов и доставка",
+      "description": "Раздел для безопасной отправки файлов большого размера между пользователями или филиалами и просмотра истории доставок."
+    }
+  },
+  "/dashboard/ajans-kutuphanesi": {
+    "tr": {
+      "title": "Ajans Kütüphanesi",
+      "description": "Kurumsal şablonların, kılavuzların, sözleşmelerin ve ortak belgelerin düzenli bir şekilde saklandığı ve paylaşıldığı dijital arşivdir."
+    },
+    "en": {
+      "title": "Agency Library",
+      "description": "The digital archive where corporate templates, guidelines, contracts, and shared documents are organized, stored, and shared."
+    },
+    "ru": {
+      "title": "Библиотека агентства",
+      "description": "Цифровой архив для организованного хранения и обмена корпоративными шаблонами, руководствами, договорами и общими документами."
+    }
+  },
+  "/dashboard/icerik-magazasi": {
+    "tr": {
+      "title": "İçerik Mağazası",
+      "description": "Markalarınız veya ajansınız için üretilmiş ve onaylanmış sosyal medya içeriklerinin, video taslaklarının ve görsellerin depolandığı havuzdur."
+    },
+    "en": {
+      "title": "Content Store",
+      "description": "The pool where social media content, draft videos, and graphics produced and approved for your brands or agency are stored."
+    },
+    "ru": {
+      "title": "Магазин контента",
+      "description": "База готового и утвержденного контента для социальных сетей, черновых видеороликов и графики для ваших брендов или агентства."
+    }
+  },
+  "/dashboard/tasks": {
+    "tr": {
+      "title": "Görevlerim",
+      "description": "Kişisel olarak yapmanız gereken işleri veya ekibinize atadığınız görevleri, öncelik ve durumlarına göre yönetebileceğiniz alandır."
+    },
+    "en": {
+      "title": "My Tasks",
+      "description": "The area where you can manage tasks you need to complete personally or tasks you have assigned to your team, filtered by priority and status."
+    },
+    "ru": {
+      "title": "Мои задачи",
+      "description": "Раздел для управления личными задачами и поручениями команде с фильтрацией по приоритету и статусу."
+    }
+  },
+  "/dashboard/personel-denetim": {
+    "tr": {
+      "title": "Ekip Denetim & Yük Durumu",
+      "description": "Çalışanlarınızın aktif olarak hangi görevler üzerinde çalıştığını ve iş yükü dağılımlarını gerçek zamanlı inceleyebileceğiniz ekrandır."
+    },
+    "en": {
+      "title": "Team Audit & Workload",
+      "description": "The screen where you can review in real-time which tasks your employees are actively working on and their workload distribution."
+    },
+    "ru": {
+      "title": "Контроль команды и загрузка",
+      "description": "Экран для проверки в реальном времени, над какими задачами работают сотрудники, и распределения рабочей нагрузки."
+    }
+  },
+  "/dashboard/personel-denetim/gun-sonu": {
+    "tr": {
+      "title": "Gün Sonu Raporları",
+      "description": "Ekip üyelerinin gün sonunda teslim ettiği çalışmaların, tamamlanan işlerin ve günlük faaliyet raporlarının incelendiği yönetim ekranıdır."
+    },
+    "en": {
+      "title": "End of Day Reports",
+      "description": "The management screen where end-of-day submissions, completed tasks, and daily activity reports from team members are reviewed."
+    },
+    "ru": {
+      "title": "Отчеты за день",
+      "description": "Экран управления для проверки выполненных работ и ежедневных отчетов, предоставленных членами команды в конце дня."
+    }
+  },
+  "/dashboard/personel-denetim/musteri-talepleri": {
+    "tr": {
+      "title": "Müşteri Talepleri",
+      "description": "Müşterilerden gelen revize, destek veya bilgi taleplerinin tek bir havuzda toplanıp ilgili personele atandığı kontrol panelidir."
+    },
+    "en": {
+      "title": "Customer Requests",
+      "description": "The control panel where revision, support, or info requests from customers are collected in a single pool and assigned to relevant staff."
+    },
+    "ru": {
+      "title": "Запросы клиентов",
+      "description": "Панель управления, где запросы клиентов на доработку, поддержку или информацию собираются в единую базу и назначаются сотрудникам."
+    }
+  },
+  "/dashboard/todos": {
+    "tr": {
+      "title": "Yapılacaklar",
+      "description": "Günlük kişisel işlerinizi, basit yapılacaklar listesi şeklinde ekleyip tamamladıkça işaretleyebileceğiniz hızlı ajandadır."
+    },
+    "en": {
+      "title": "To-Do List",
+      "description": "A quick agenda where you can add your daily personal tasks in a simple checklist format and mark them as completed."
+    },
+    "ru": {
+      "title": "Список дел",
+      "description": "Быстрый органайзер для добавления личных ежедневных задач в формате списка и отметки их выполнения."
+    }
+  },
+  "/dashboard/notes": {
+    "tr": {
+      "title": "Notlarım",
+      "description": "İş akışınızla ilgili fikirleri, geçici hatırlatmaları ve önemli bilgileri hızlıca kaydedip arayabileceğiniz kişisel not defterinizdir."
+    },
+    "en": {
+      "title": "My Notes",
+      "description": "Your personal notepad where you can quickly write down ideas, temporary reminders, and key info related to your workflow."
+    },
+    "ru": {
+      "title": "Мои заметки",
+      "description": "Личные заметки для быстрой записи и поиска идей, временных напоминаний и важной информации о рабочих процессах."
+    }
+  },
+  "/dashboard/hesaplama-araci": {
+    "tr": {
+      "title": "Hesaplama Aracı",
+      "description": "Hizmet maliyetleri, personel giderleri ve hedef kâr marjlarınıza göre müşterileriniz için teklif fiyatı hesaplayabileceğiniz akıllı fiyatlandırma motorudur."
+    },
+    "en": {
+      "title": "Calculation Tool",
+      "description": "The smart pricing engine where you can calculate quote prices for customers based on service costs, staff expenses, and target profit margins."
+    },
+    "ru": {
+      "title": "Инструмент расчета",
+      "description": "Умный модуль ценообразования для расчета коммерческих предложений на основе стоимости услуг, расходов на персонал и целевой маржи."
+    }
+  },
+  "/dashboard/finance": {
+    "tr": {
+      "title": "Kurumsal Finans",
+      "description": "Şubenizin gelir, gider, fatura ve genel mali durumunu takip edip, grafikler eşliğinde finansal analizler oluşturabileceğiniz modüldür."
+    },
+    "en": {
+      "title": "Corporate Finance",
+      "description": "The module where you can track your branch's income, expenses, invoices, and overall financial status, and generate charts and financial reports."
+    },
+    "ru": {
+      "title": "Корпоративные финансы",
+      "description": "Модуль для отслеживания доходов, расходов, счетов и финансового состояния филиала с наглядными графиками и аналитикой."
+    }
+  },
+  "/dashboard/sosyal-medya": {
+    "tr": {
+      "title": "Sosyal Medya Yönetimi",
+      "description": "Ajansınızın yönettiği markalara ait sosyal medya hesaplarının bağlantılarını kurabileceğiniz ve paylaşımları organize edebileceğiniz alandır."
+    },
+    "en": {
+      "title": "Social Media Management",
+      "description": "The area where you can connect social media accounts of brands managed by your agency and organize posts."
+    },
+    "ru": {
+      "title": "Управление соцсетями",
+      "description": "Раздел для подключения аккаунтов социальных сетей управляемых брендов и организации публикаций."
+    }
+  },
+  "/dashboard/icerik-takvimi": {
+    "tr": {
+      "title": "İçerik Takvimi",
+      "description": "Markalar için planlanan sosyal medya gönderilerinin, tasarım ve çekim süreçlerinin tarih bazlı organize edildiği planlama ekranıdır."
+    },
+    "en": {
+      "title": "Content Calendar",
+      "description": "The planning screen where social media posts, design, and shoot workflows scheduled for brands are organized on a date basis."
+    },
+    "ru": {
+      "title": "Контент-календарь",
+      "description": "Экран планирования публикаций в соцсетях, процессов дизайна и съемок для брендов с привязкой к датам."
+    }
+  },
+  "/dashboard/branches": {
+    "tr": {
+      "title": "Şube Yönetimi",
+      "description": "Sistemde yer alan tüm şubeleri, bunların adres, telefon ve yönetici atamalarını yapabileceğiniz genel merkez kontrol ekranıdır."
+    },
+    "en": {
+      "title": "Branch Management",
+      "description": "The headquarters control screen where you can create and manage all branches, their addresses, phone numbers, and manager assignments."
+    },
+    "ru": {
+      "title": "Управление филиалами",
+      "description": "Главный экран управления для создания и настройки всех филиалов, их адресов, телефонов и назначения управляющих."
+    }
+  },
+  "/dashboard/users": {
+    "tr": {
+      "title": "Kullanıcılar & Yetkiler",
+      "description": "Sisteme yeni personel ekleyebilir, aktiflik durumlarını yönetebilir ve atadığınız şubelerdeki rollerine göre erişim yetkilerini kısıtlayabilirsiniz."
+    },
+    "en": {
+      "title": "Users & Permissions",
+      "description": "You can add new staff to the system, manage their active/inactive status, and restrict access permissions based on their assigned roles."
+    },
+    "ru": {
+      "title": "Пользователи и права",
+      "description": "Добавление сотрудников в систему, управление их активностью и разграничение прав доступа в зависимости от ролей в филиалах."
+    }
+  },
+  "/dashboard/support-tickets": {
+    "tr": {
+      "title": "Teknik Destek Talepleri",
+      "description": "Panel kullanıcılarının veya müşterilerinizin karşılaştığı teknik sorunlar için açtığı biletleri inceleyip çözüm sunabileceğiniz destek merkezidir."
+    },
+    "en": {
+      "title": "Technical Support Tickets",
+      "description": "The support center where you can review and resolve tickets submitted by panel users or customers regarding technical issues."
+    },
+    "ru": {
+      "title": "Заявки в техподдержку",
+      "description": "Центр поддержки для рассмотрения и решения технических проблем и заявок, созданных пользователями или клиентами."
+    }
+  },
+  "/dashboard/chat": {
+    "tr": {
+      "title": "Mesajlaşma (Sohbet)",
+      "description": "Ekip arkadaşlarınızla anlık olarak yazışabileceğiniz, gruplar kurabileceğiniz ve dosya aktarımı yapabileceğiniz WhatsApp benzeri dahili chat panelidir."
+    },
+    "en": {
+      "title": "Messaging (Chat)",
+      "description": "The internal WhatsApp-like chat panel where you can text team members, create group chats, and transfer files instantly."
+    },
+    "ru": {
+      "title": "Чат и сообщения",
+      "description": "Внутренний чат для мгновенного обмена сообщениями с коллегами, создания групп и передачи файлов."
+    }
+  },
+  "/dashboard/announcements": {
+    "tr": {
+      "title": "Duyurular",
+      "description": "Tüm şubelere veya belirli ekiplere iletmek istediğiniz şirket içi duyuru ve bilgilendirme metinlerini hazırlayıp yayınlayabileceğiniz alandır."
+    },
+    "en": {
+      "title": "Announcements",
+      "description": "The area where you can draft and publish internal announcements and informative updates for all branches or specific teams."
+    },
+    "ru": {
+      "title": "Объявления",
+      "description": "Раздел для подготовки и публикации внутренних новостей и объявлений для всех филиалов или отдельных команд."
+    }
+  },
+  "/dashboard/sss": {
+    "tr": {
+      "title": "SSS / Yardım Kılavuzu",
+      "description": "Sistem kullanımı, modüllerin işleyişi ve sıkça sorulan sorulara dair hazırlanan görsel ve yazılı kılavuzların yer aldığı dokümantasyon merkezidir."
+    },
+    "en": {
+      "title": "FAQ / Help Guide",
+      "description": "The documentation center containing visual and written guides on system usage, module workflows, and frequently asked questions."
+    },
+    "ru": {
+      "title": "ЧаВо / Руководство",
+      "description": "Центр документации с наглядными руководствами по использованию системы, работе модулей и ответами на частые вопросы."
+    }
+  }
+}

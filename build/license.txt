@@ -1,0 +1,36 @@
+===============================================================================
+                       ÇİÇEKANA ERP - SON KULLANICI LİSANS SÖZLEŞMESİ (EULA)
+===============================================================================
+
+LÜTFEN BU YAZILIMI KURMADAN VEYA KULLANMADAN ÖNCE BU LİSANS SÖZLEŞMESİNİ 
+DİKKATLE OKUYUNUZ. BU PROGRAMI KURARAK VEYA KULLANARAK, BU SÖZLEŞMENİN TÜM 
+ŞARTLARINI KABUL ETMİŞ SAYILIRSINIZ.
+
+1. LİSANS HAKKI
+Bu yazılım ("Çiçekana ERP"), Lisans Sahibi tarafından yalnızca yetkili kullanıcı 
+veya kuruluşun kullanımı amacıyla lisanslanmıştır. Yazılımın mülkiyeti satılmamakta, 
+yalnızca kullanım hakkı devredilmektedir.
+
+2. KULLANIM KISITLAMALARI
+Kullanıcı, aşağıdaki eylemleri gerçekleştiremez:
+a) Yazılımı tersine mühendislik (reverse engineering) işlemine tabi tutmak, 
+   decompile etmek veya kaynak kodunu çıkarmaya çalışmak.
+b) Yazılımı üçüncü şahıslara kiralamak, satmak veya dağıtmak.
+c) Güvenlik ve lisans doğrulama mekanizmalarını devre dışı bırakmak veya aşmaya çalışmak.
+
+3. GÜVENLİK VE VERİ KORUMA
+Çiçekana ERP, sistem bütünlüğünü korumak amacıyla lisans doğrulamaları ve sistem 
+denetimleri gerçekleştirebilir. Verilerinizin güvenliği ve gizliliği önceliklidir.
+
+4. GARANTİ REDDİ VE SORUMLULUK SINIRLAMASI
+Yazılım "OLDUĞU GİBİ" sunulmaktadır. Lisans Veren, yazılımın kesintisiz veya 
+hatasız çalışacağına dair garanti vermez. Doğrudan veya dolaylı oluşabilecek 
+veri kayıplarından kanunların izin verdiği azami ölçüde sorumluluk kabul edilmez.
+
+5. FESİH
+Bu sözleşme şartlarının ihlali durumunda lisans hakkı kendiliğinden sona erer. 
+Fesih durumunda yazılım ve tüm kopyaları bilgisayarınızdan kaldırılmalıdır.
+
+===============================================================================
+Devam etmek için lütfen sözleşme şartlarını kabul ettiğinizi onaylayınız.
+===============================================================================

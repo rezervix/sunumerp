@@ -1,0 +1,229 @@
+{
+  "name": "yonetim-paneli",
+  "version": "1.0.0",
+  "description": "İşletme Yönetim Sistemi - CRM, Proje Yönetimi ve Finans Takibi",
+  "author": "Yönetim Paneli Ekibi",
+  "private": true,
+  "main": "electron/main.js",
+  "bin": "./electron/main.js",
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "targets": [
+      "node18-win-x64",
+      "node18-macos-x64",
+      "node18-macos-arm64"
+    ],
+    "outputPath": "dist"
+  },
+  "scripts": {
+    "build": "next build --webpack",
+    "postbuild": "node scripts/copy-static.js && node scripts/obfuscate.js",
+    "dev": "next dev --webpack -p 3020",
+    "lint": "eslint .",
+    "start": "next start",
+    "clean": "rimraf dist .next",
+    "clean:dist": "node clean-dist.js",
+    "seed:demo": "node scripts/seed-demo-database.js",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .\"",
+    "electron:build": "rimraf dist && npx prisma generate && npm run build && electron-builder",
+    "electron:build:win": "npx prisma generate && npm run build && electron-builder --win && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
+    "electron:build:win:portable": "npx prisma generate && npm run build && electron-builder --win portable",
+    "electron:build:win:installer": "npx prisma generate && npm run build && electron-builder --win nsis",
+    "electron:build:mac": "npx prisma generate && npm run build && electron-builder --mac && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
+    "electron:build:mac:universal": "npx prisma generate && npm run build && electron-builder --mac --universal && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
+    "electron:build:linux": "npx prisma generate && npm run build && electron-builder --linux",
+    "prebuild": "prisma generate",
+    "postinstall": "electron-rebuild"
+  },
+  "build": {
+    "appId": "com.yonetim.paneli",
+    "productName": "Yönetim Paneli",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "YOUR_GITHUB_OWNER",
+        "repo": "YOUR_GITHUB_REPO"
+      }
+    ],
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      ".next/standalone/**/*",
+      ".next/static/**/*",
+      "public/**/*",
+      "prisma/**/*",
+      "node_modules/**/*",
+      "node_modules/.prisma/**/*",
+      "package.json",
+      ".env"
+    ],
+    "extraResources": [
+      {
+        "from": "prisma/dev.db",
+        "to": "prisma/dev.db"
+      },
+      {
+        "from": "prisma/schema.prisma",
+        "to": "prisma/schema.prisma"
+      },
+      {
+        "from": "node_modules/.prisma",
+        "to": "node_modules/.prisma"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/images/logo.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Çiçekana ERP - Yönetim Paneli",
+      "license": "build/license.txt",
+      "runAfterFinish": true,
+      "displayLanguageSelector": false,
+      "uninstallDisplayName": "Çiçekana ERP - Yönetim Paneli"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "public/images/logo.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist"
+    },
+    "afterSign": "scripts/notarize.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@hookform/resolvers": "^3.10.0",
+    "@prisma/client": "^5.22.0",
+    "@radix-ui/react-accordion": "1.2.2",
+    "@radix-ui/react-alert-dialog": "1.1.4",
+    "@radix-ui/react-aspect-ratio": "1.1.1",
+    "@radix-ui/react-avatar": "1.1.2",
+    "@radix-ui/react-checkbox": "1.1.3",
+    "@radix-ui/react-collapsible": "1.1.2",
+    "@radix-ui/react-context-menu": "2.2.4",
+    "@radix-ui/react-dialog": "1.1.4",
+    "@radix-ui/react-dropdown-menu": "2.1.4",
+    "@radix-ui/react-hover-card": "1.1.4",
+    "@radix-ui/react-label": "2.1.1",
+    "@radix-ui/react-menubar": "1.1.4",
+    "@radix-ui/react-navigation-menu": "1.2.3",
+    "@radix-ui/react-popover": "1.1.4",
+    "@radix-ui/react-progress": "1.1.1",
+    "@radix-ui/react-radio-group": "1.2.2",
+    "@radix-ui/react-scroll-area": "1.2.2",
+    "@radix-ui/react-select": "2.1.4",
+    "@radix-ui/react-separator": "1.1.1",
+    "@radix-ui/react-slider": "1.2.2",
+    "@radix-ui/react-slot": "1.1.1",
+    "@radix-ui/react-switch": "1.1.2",
+    "@radix-ui/react-tabs": "1.1.2",
+    "@radix-ui/react-toast": "1.2.4",
+    "@radix-ui/react-toggle": "1.1.1",
+    "@radix-ui/react-toggle-group": "1.1.1",
+    "@radix-ui/react-tooltip": "1.1.6",
+    "@tiptap/pm": "^3.21.0",
+    "@tiptap/react": "^3.21.0",
+    "@tiptap/starter-kit": "^3.21.0",
+    "@vercel/analytics": "latest",
+    "archiver": "^7.0.1",
+    "autoprefixer": "^10.4.20",
+    "bcryptjs": "^3.0.3",
+    "bytenode": "^1.5.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "1.0.4",
+    "date-fns": "4.1.0",
+    "electron-updater": "^6.1.7",
+    "embla-carousel-react": "8.5.1",
+    "file-type": "^19.6.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "html2canvas-pro": "^2.2.4",
+    "html2pdf.js": "^0.14.0",
+    "input-otp": "1.4.1",
+    "jose": "^6.1.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.454.0",
+    "next": "16.0.3",
+    "next-themes": "^0.4.6",
+    "react": "19.2.0",
+    "react-day-picker": "9.8.0",
+    "react-dom": "19.2.0",
+    "react-hook-form": "^7.60.0",
+    "react-resizable-panels": "^2.1.7",
+    "recharts": "2.15.4",
+    "sharp": "^0.33.5",
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^13.0.0",
+    "vaul": "^1.1.2",
+    "web-push": "^3.6.7",
+    "xlsx": "^0.18.5",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1",
+    "@electron/notarize": "^3.1.1",
+    "@electron/rebuild": "^4.2.0",
+    "@tailwindcss/postcss": "^4.1.9",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
+    "@types/web-push": "^3.6.4",
+    "baseline-browser-mapping": "^2.10.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^31.0.1",
+    "electron-builder": "^26.0.12",
+    "fs-extra": "^11.3.2",
+    "pg": "^8.20.0",
+    "pkg": "^5.8.1",
+    "postcss": "^8.5",
+    "prisma": "^5.22.0",
+    "rimraf": "^6.1.2",
+    "tailwindcss": "^4.1.9",
+    "tw-animate-css": "1.3.3",
+    "typescript": "^5",
+    "wait-on": "^9.0.3"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-07-08T13:03:19.102Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\a9514072-439a-4afd-954b-e308633c5474.mp3",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\a9514072-439a-4afd-954b-e308633c5474.mp3\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---
+{
+  "timestamp": "2026-07-08T13:05:10.996Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\e1e17f19-9761-4d03-9549-f8f7cc5d1fbe.mp3",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\e1e17f19-9761-4d03-9549-f8f7cc5d1fbe.mp3\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---
+{
+  "timestamp": "2026-07-08T13:21:11.155Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\b09d2562-c518-4ba8-98fc-a1cf9975d9a5.mp4",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\b09d2562-c518-4ba8-98fc-a1cf9975d9a5.mp4\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---
+{
+  "timestamp": "2026-07-08T13:21:26.471Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\fdd47162-b3c8-41ea-bbe1-962a633f8cd9.mp4",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\fdd47162-b3c8-41ea-bbe1-962a633f8cd9.mp4\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---
+{
+  "timestamp": "2026-07-08T13:21:27.049Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\d227abb2-7bbf-4fed-8b3e-0042e8c8b3cf.mp4",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\d227abb2-7bbf-4fed-8b3e-0042e8c8b3cf.mp4\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---
+{
+  "timestamp": "2026-07-08T13:27:06.080Z",
+  "filePath": "C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\6a018449-ab63-4921-8c5d-d81dabce6698.mp4",
+  "errors": [
+    "[K3] ffprobe hatası: Command failed: ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height -of json \"C:\\Users\\i3 7100\\Desktop\\crmcicekana\\crmcicekana\\storage\\ajans-kutuphanesi\\2026\\07\\6a018449-ab63-4921-8c5d-d81dabce6698.mp4\"\n'ffprobe' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+  ],
+  "warnings": []
+}
+---

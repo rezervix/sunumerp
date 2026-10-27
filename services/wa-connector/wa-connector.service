@@ -1,0 +1,25 @@
+[Unit]
+Description=WhatsApp AI Agent — wa-connector (Baileys)
+After=network.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=erp
+WorkingDirectory=/opt/erparfamedia/services/wa-connector
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wa-connector
+
+# Ortam değişkenleri
+EnvironmentFile=/opt/erparfamedia/services/wa-connector/.env
+
+# Güvenlik kısıtlamaları
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

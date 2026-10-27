@@ -1,0 +1,18 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/lib/generated/prisma
+
+# Electron build output
+dist
+*.exe
+*.dmg
+*.AppImage
+
+# WhatsApp AI Agent Servisleri
+services/wa-connector/sessions/        # Baileys oturum verileri — asla commit etme
+services/wa-connector/dist/
+services/wa-connector/node_modules/
+services/ai-orchestrator/dist/
+services/ai-orchestrator/node_modules/

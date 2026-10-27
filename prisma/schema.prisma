@@ -1,0 +1,1750 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String?
+  password  String
+  fullName  String
+  phone     String?
+  avatarUrl  String?
+  department String?
+  position   String?
+  isActive   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  branches             UserBranchRole[]
+  sentMessages         Message[]            @relation("SentMessages")
+  announcements        Announcement[]
+  auditLogs            AuditLog[]
+  todos                Todo[]
+  notes                Note[]
+  calculationHistories CalculationHistory[]
+  notifications        Notification[]
+  pushSubscriptions    PushSubscription[]
+  aiRevisionAnalyses   AiRevisionAnalysis[]
+  createdLeads         Lead[]               @relation("CreatedLeads")
+  taskStatusHistories  TaskStatusHistory[]
+  libraryFoldersCreated  LibraryFolder[]        @relation("LibraryFolderCreator")
+  libraryFilesUploaded   LibraryFile[]          @relation("LibraryFileUploader")
+  libraryPermissionsGranted LibraryFilePermission[] @relation("LibraryPermissionGranter")
+  libraryConversionJobs  LibraryConversionJob[] @relation("LibraryJobRequester")
+  libraryActivityLogs    LibraryActivityLog[]   @relation("LibraryActivityUser")
+  contentStoreUploaded   ContentStore[]         @relation("ContentStoreUploadedBy")
+  contentStoreApproved   ContentStore[]         @relation("ContentStoreApprovedBy")
+  contentVersionsUploaded ContentVersion[]      @relation("ContentVersionUploadedBy")
+  contentAnalyticsEvents ContentAnalyticsEvent[] @relation("ContentAnalyticsEventUser")
+  createdRevisions       RevisionRequest[]      @relation("CreatedRevisions")
+  completedRevisions     RevisionRequest[]      @relation("CompletedRevisions")
+
+  // Görev Yönetimi İlişkileri
+  assignedTasks InternalTask[] @relation("TasksAssigned")
+  receivedTasks InternalTask[] @relation("TasksReceived")
+  activeTask         ActiveTask?
+  taskStatusLogs     InternalTaskStatusLog[]
+
+  // ── WhatsApp Chat System Relations ──────────────────
+  chatParticipations   ChatParticipant[]     @relation("ChatParticipations")
+  messageReactions     MessageReaction[]     @relation("MessageReactions")
+  messageReadReceipts  MessageReadReceipt[]  @relation("MessageReadReceipts")
+  messageMentions      MessageMention[]      @relation("Mentions")
+  pinnedMessages       PinnedMessage[]       @relation("PinnedByUser")
+  starredMessages      MessageStar[]         @relation("StarredMessages")
+  chatMuteSettings     ChatMuteSettings[]    @relation("ChatMuteSettings")
+  presence             UserPresence?         @relation("UserPresence")
+  blockedUsers         UserBlock[]           @relation("BlockedByUser")
+  blockedByUsers       UserBlock[]           @relation("BlockedUsers")
+  broadcastLists       BroadcastList[]       @relation("BroadcastLists")
+  broadcastMemberships BroadcastListMember[] @relation("BroadcastMemberships")
+  chatWallpapers       ChatWallpaper[]       @relation("ChatWallpapers")
+  messageForwards      MessageForward[]      @relation("ForwardedByUser")
+
+  lastLoginAt          DateTime?
+  mustChangePassword   Boolean               @default(false)
+  createdBy            String?
+  sessions             UserSession[]
+  passwordResetLogs    PasswordResetLog[]
+  eodReports           EodReport[]
+  reportedTickets      SupportTicket[]      @relation("ReportedTickets")
+  assignedTickets      SupportTicket[]      @relation("AssignedTickets")
+  trashItems           TrashItem[]
+}
+
+model Branch {
+  id               String   @id @default(uuid())
+  name             String
+  code             String   @unique
+  address          String?
+  phone            String?
+  email            String?
+  managerId        String?
+  managerFullName  String?
+  logoUrl          String?
+  themeColor       String   @default("#3B82F6")
+  timezone         String   @default("Europe/Istanbul")
+  operationalHours String? // Stored as JSON string
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  users              UserBranchRole[]
+  customers          Customer[]
+  projects           Project[]
+  leads              Lead[]
+  finances           Finance[]
+  orders             Order[]
+  files              File[]
+  reminders          Reminder[]
+  sentDeliveries     FileDelivery[]   @relation("SentDeliveries")
+  receivedDeliveries FileDelivery[]   @relation("ReceivedDeliveries")
+  branchPrices       BranchPrice[]
+  stockRequests      StockRequest[]
+  cargoTrackings     CargoTracking[]
+  candidates         Candidate[]
+  appointments       Appointment[]
+  nightScanResults   NightScanResult[]
+  contentCalendars    ContentCalendar[]
+  libraryFolders     LibraryFolder[]
+  libraryFiles       LibraryFile[]
+  // Deprecated: messages field removed - now via ChatConversation.branchId
+
+  // İçerik Takvimi Yönetim Sistemi
+  contentItems       ContentItem[]
+  productionShoots   ProductionShoot[]
+  internalTasks      InternalTask[]
+  trashItems         TrashItem[]
+}
+
+model Role {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  permissions String // Stored as JSON string
+
+  userBranches UserBranchRole[]
+}
+
+model UserBranchRole {
+  id         String   @id @default(uuid())
+  userId     String
+  branchId   String
+  roleId     String
+  assignedAt DateTime @default(now())
+  assignedBy String?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, branchId])
+}
+
+model Customer {
+  id           String    @id @default(uuid())
+  branchId     String
+  name         String?   // Changed to be optional
+  company      String?
+  email        String?
+  phone        String?
+  address      String?
+  status       String    @default("active") // active, pending, inactive
+  scoreTemp    String?   @default("Ilik") // Cold, Warm, Hot, VP
+  purchaseProb Int?      // Purchase probability percentage
+  segment      String?   // Wholesale, Retail, Corporate etc.
+  recallDate   DateTime? // Recall date
+  anniversary  DateTime? // Birthday etc.
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  branch       Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  orders       Order[]
+  notes        CustomerNote[]
+  chats        CustomerChat[]
+  documents    CustomerDocument[]
+  tasks        CustomerTask[]
+  contacts     CustomerContact[]
+  aiMemories   AiConversationMemory[]
+  aiAgentLogs  AiAgentLog[]
+}
+
+model Project {
+  id            String    @id @default(uuid())
+  branchId      String
+  name          String
+  description   String?
+  status        String    @default("active") // active, completed, on_hold
+  progress      Int       @default(0)
+  startDate     DateTime?
+  endDate       DateTime?
+  customerNotes String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+}
+
+model Lead {
+  id               String   @id @default(uuid())
+  branchId         String
+  name             String
+  company          String?
+  email            String?
+  phone            String?
+  status           String   @default("new") // new, contacted, qualified, lost, hot, warm, cold
+  source           String?
+  notes            String?
+  digitalAssets    String? // JSON: stored credentials, digital info
+  serviceSelection String? // Selected services (JSON array)
+  amount           Float? // Potential revenue amount
+  painPoint        String? // Pain point or customer needs
+  instagramUrl     String? // Instagram page link
+  websiteUrl       String? // Website link
+  googleMapsUrl    String? // Google Maps business link
+
+  // Firma Bilgileri
+  employeeCount     String?   // "1-9", "10-49", "50-249", "250+"
+  industry          String?   // "İnşaat", "Tekstil", vb.
+  companyAge        String?   // "1 yıldan az", "1-3 yıl", vb.
+  legalStructure    String?   // "Şahıs Şirketi", "Limited Şirket", vb.
+  currentERP        String?   // Serbest metin
+  competitorInUse   String?   // Serbest metin
+
+  // Satış Süreci Alanları
+  scoreTemp          String?   // "Soğuk", "Ilık", "Sıcak"
+  budgetRange        String?   // Fiyat aralığı dropdown
+  timeline           String?   // "Hemen", "Kısa vade", vb.
+  decisionStructure  String?   // "Patron/Kurucu", vb.
+  lastContactedAt    DateTime? // Son iletişim tarihi
+  nextFollowUpDate   DateTime? // Takip tarihi
+  referralSource     String?   // "Instagram", "Web Sitesi", vb.
+  createdById        String?   // Kaydı oluşturan kullanıcı
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdBy User?  @relation("CreatedLeads", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([branchId, status])
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  branchId      String
+  customerId    String?
+  orderNumber   String?
+  title         String
+  description   String?
+  orderType     String
+  quantity      Int?
+  priority      String   @default("normal")
+  status        String   @default("pending") // pending, approved, in-progress, delivered, rejected
+  paymentStatus String   @default("unpaid") // paid, unpaid, partial
+  totalAmount   Float?
+  customerName  String?
+  companyName   String?
+  customerPhone String?
+  files         String?  // JSON array of file URLs
+  orderDate     DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  branch   Branch    @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([branchId, status])
+}
+
+model File {
+  id                 String   @id @default(uuid())
+  branchId           String
+  name               String
+  url                String
+  type               String
+  size               Int
+  uploadedBy         String?
+  contentCalendarId  String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  branch          Branch           @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  contentCalendar ContentCalendar? @relation(fields: [contentCalendarId], references: [id], onDelete: SetNull)
+}
+
+model Reminder {
+  id          String    @id @default(uuid())
+  branchId    String
+  title       String
+  description String?
+  category    String?   @default("Genel")
+  startDate   DateTime?
+  dueDate     DateTime
+  priority    String    @default("normal")
+  status      String    @default("pending") // pending, completed
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+}
+
+model FileDelivery {
+  id             String    @id @default(uuid())
+  fromBranchId   String
+  toBranchId     String?
+  fromUserId     String?
+  toUserId       String?
+  trackingNumber String
+  title          String
+  description    String?
+  fileUrls       String // Stored as JSON string
+  status         String    @default("sent") // sent, received, acknowledged, completed
+  priority       String    @default("normal")
+  sentAt         DateTime  @default(now())
+  receivedAt     DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  fromBranch Branch  @relation("SentDeliveries", fields: [fromBranchId], references: [id])
+  toBranch   Branch? @relation("ReceivedDeliveries", fields: [toBranchId], references: [id])
+}
+
+// B2B Store
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  unit        String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  prices        BranchPrice[]
+  stockRequests StockRequest[]
+}
+
+model BranchPrice {
+  id        String @id @default(uuid())
+  productId String
+  branchId  String
+  price     Float
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, branchId])
+}
+
+model StockRequest {
+  id         String   @id @default(uuid())
+  branchId   String
+  productId     String?
+  customProduct String?
+  quantity      Int
+  status        String   @default("pending") // pending, approved, rejected, delivered
+  approvedBy    String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  branch  Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+}
+
+// Cargo Tracking
+model CargoTracking {
+  id             String   @id @default(uuid())
+  branchId       String
+  carrierName    String
+  trackingNumber String
+  status         String   @default("in_transit") // in_transit, delivered, returned, lost
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+}
+
+// =====================================================
+// WHATSAPP-LIKE CHAT SYSTEM — TAM ENTEGRASYON ŞEMASI
+// =====================================================
+
+// Konuşma tipi: doğrudan mesaj (dm) veya grup
+// "branch_channel" şube geneli kanalı temsil eder
+model ChatConversation {
+  id              String   @id @default(uuid())
+  type            String   @default("dm")         // dm | group | branch_channel | broadcast
+  name            String?                          // Grup/kanal adı (DM'de null)
+  description     String?                          // Grup açıklaması
+  avatarUrl       String?                          // Grup profil fotoğrafı
+  branchId        String?                          // Şubeye bağlı kanallar için
+  createdById     String                           // Grubu/konuşmayı oluşturan
+  isArchived      Boolean  @default(false)
+  isBroadcast     Boolean  @default(false)         // Broadcast listesi mi
+  lastMessageId   String?  @unique                 // Hızlı önizleme için son mesaj
+  lastActivityAt  DateTime @default(now())         // Sıralama için son aktivite
+  maxParticipants Int      @default(1024)          // Grup üye limiti (default: WhatsApp limiti)
+  onlyAdminCanMessage Boolean @default(false)      // Sadece adminler mesaj gönderebilir mi
+  onlyAdminCanEditInfo Boolean @default(false)     // Sadece adminler grup bilgilerini düzenleyebilir mi
+  disappearingMessages Boolean @default(false)     // Kaybolan mesajlar aktif mi
+  disappearingDuration Int?                        // Kaybolan mesaj süresi (saniye)
+  inviteLink      String?  @unique                 // Gruba davet linki
+  inviteLinkActive Boolean @default(true)
+  customEmoji     String?                          // Konuşmaya özel emoji (JSON array)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  participants    ChatParticipant[]
+  messages        Message[]
+  pinnedMessages  PinnedMessage[]
+  wallpapers      ChatWallpaper[]
+  muteSettings    ChatMuteSettings[]
+
+  @@index([branchId])
+  @@index([lastActivityAt])
+  @@index([type])
+}
+
+// Konuşma katılımcıları — hem DM hem grup için
+model ChatParticipant {
+  id               String    @id @default(uuid())
+  conversationId   String
+  userId           String
+  role             String    @default("member")   // member | admin | super_admin
+  joinedAt         DateTime  @default(now())
+  leftAt           DateTime?                      // Gruptan ayrılma tarihi
+  removedById      String?                        // Kim çıkardı
+  isRemoved        Boolean   @default(false)      // Gruptan çıkarıldı mı
+  lastReadAt       DateTime?                      // Bu kullanıcının bu konuşmada son okuduğu zaman
+  lastReadMessageId String?                       // Son okunan mesaj ID (unread count için)
+  notificationSound String?                       // Özel bildirim sesi
+  nickname          String?                       // Grup içi takma ad
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User             @relation("ChatParticipations", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+// Ana mesaj modeli — tüm WhatsApp özellikleri
+model Message {
+  id               String    @id @default(uuid())
+  conversationId   String                           // Hangi konuşmaya ait
+  fromUserId       String                           // Gönderen
+  content          String    @default("")           // Metin içeriği
+  contentType      String    @default("text")       // text | image | video | audio | voice | document | sticker | location | contact | system | poll | deleted
+  
+  // Dosya/Medya alanları
+  fileUrl          String?                          // Yüklenen dosya URL'i
+  fileType         String?                          // MIME tipi (image/jpeg, video/mp4 vb.)
+  fileName         String?                          // Orijinal dosya adı
+  fileSize         BigInt?                          // Dosya boyutu (byte)
+  fileDuration     Int?                             // Ses/video süresi (saniye)
+  thumbnailUrl     String?                          // Video/belge küçük resmi
+  waveformData     String?                          // Ses dalgaformu verisi (JSON float array)
+  
+  // Konum paylaşımı
+  locationLat      Float?
+  locationLng      Float?
+  locationAddress  String?
+  locationName     String?                          // Yer adı (Google Maps entegrasyonu)
+  
+  // Yanıt (Reply) alanları
+  replyToMessageId String?                          // Yanıt verilen mesaj ID'si
+  replyPreviewText String?                          // Hızlı önizleme metni (denormalized)
+  replyPreviewType String?                          // Yanıt verilen mesajın tipi
+  replyFromUserId  String?                          // Yanıt verilen mesajı gönderenin adı
+  
+  // İletme (Forward) alanları
+  isForwarded      Boolean   @default(false)
+  forwardedFromConversationId String?               // Kaynak konuşma
+  forwardCount     Int       @default(0)            // Kaç kez iletildi (WhatsApp: çok iletildi etiketi)
+  
+  // Mesaj durumu
+  isEdited         Boolean   @default(false)
+  editedAt         DateTime?
+  isDeleted        Boolean   @default(false)        // Herkes için sil
+  deletedAt        DateTime?
+  deletedForAll    Boolean   @default(false)        // "Bu mesaj silindi" olarak gösterilecek mi
+  isSelfDestruct   Boolean   @default(false)        // Kaybolan mesaj mı
+  selfDestructAt   DateTime?                        // Kaybolan mesaj ne zaman silinecek
+  
+  // Yıldız/Sabitleme
+  isStarred        Boolean   @default(false)        // Gönderenin yıldızladı mı (kişisel)
+  isPinned         Boolean   @default(false)        // Sohbet içinde sabitlendi mi
+  
+  // Sistem mesajları
+  isSystemMessage  Boolean   @default(false)        // "X gruba eklendi", "Y admin oldu" gibi
+  systemAction     String?                          // group_created | member_added | member_removed | admin_granted | admin_revoked | link_changed | name_changed | avatar_changed | disappearing_on | disappearing_off
+  
+  // Poll (Anket) — JSON olarak saklanır
+  pollData         String?                          // JSON: { question, options: [{id, text, votes: [userId]}], isAnonymous, allowMultiple, expiresAt }
+  
+  // Yayın zamanlaması (görüntüleme saati)
+  scheduledAt      DateTime?
+  
+  // Eski sistem ile geriye uyumluluk (migration geçiş dönemi)
+  toUserId         String?   @db.Uuid              // DEPRECATED - conversationId kullanılacak
+  branchId         String?                          // DEPRECATED - conversationId üzerinden
+  isRead           Boolean   @default(false)        // DEPRECATED - MessageReadReceipt kullanılacak
+
+  // WhatsApp import alanları
+  importedFrom     String?                          // Kaynak platform: "whatsapp"
+  importedAt       DateTime?                        // Import anı (not: createdAt = orijinal WhatsApp zaman damgası)
+  externalId       String?                          // Duplicate koruması: SHA-256(content+timestamp+sender)
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // İlişkiler
+  fromUser         User              @relation("SentMessages", fields: [fromUserId], references: [id], onDelete: Cascade)
+  conversation     ChatConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  replyToMessage   Message?          @relation("MessageReplies", fields: [replyToMessageId], references: [id], onDelete: SetNull)
+  replies          Message[]         @relation("MessageReplies")
+  reactions        MessageReaction[]
+  readReceipts     MessageReadReceipt[]
+  mentions         MessageMention[]
+  pinnedIn         PinnedMessage[]
+  voiceMessage     VoiceMessage?
+  forwardHistory   MessageForward[]  @relation("ForwardedMessage")
+  starredBy        MessageStar[]
+
+  @@index([conversationId, createdAt])
+  @@index([fromUserId])
+  @@index([isDeleted])
+  @@index([replyToMessageId])
+  @@index([selfDestructAt])
+  @@unique([conversationId, externalId], name: "Message_conversationId_externalId_unique")
+}
+
+// Emoji reaksiyonları — bir mesaja birden fazla kullanıcı farklı emoji atabilir
+model MessageReaction {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  emoji     String                              // Unicode emoji: "👍", "❤️", "😂" vb.
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation("MessageReactions", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])           // Aynı kullanıcı aynı emojiyi bir kez atabilir
+  @@index([messageId])
+  @@index([userId])
+}
+
+// Çoklu okundu bilgisi — her katılımcı için ayrı okundu kaydı (grup mesajları için çift/üç tik)
+model MessageReadReceipt {
+  id         String   @id @default(uuid())
+  messageId  String
+  userId     String
+  readAt     DateTime @default(now())
+  deliveredAt DateTime?                         // Teslim edildi (cihaza ulaştı) anı
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation("MessageReadReceipts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([messageId])
+  @@index([userId])
+}
+
+// @mention kayıtları — bir mesajda birden fazla mention olabilir
+model MessageMention {
+  id          String @id @default(uuid())
+  messageId   String
+  mentionedUserId String
+
+  message       Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  mentionedUser User    @relation("Mentions", fields: [mentionedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, mentionedUserId])
+  @@index([mentionedUserId])
+}
+
+// Sohbet içi sabitlenmiş mesajlar — bir sohbette birden fazla mesaj sabitlenebilir
+model PinnedMessage {
+  id             String   @id @default(uuid())
+  conversationId String
+  messageId      String
+  pinnedById     String
+  pinnedAt       DateTime @default(now())
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message          @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  pinnedBy     User             @relation("PinnedByUser", fields: [pinnedById], references: [id])
+
+  @@unique([conversationId, messageId])
+  @@index([conversationId])
+}
+
+// Sesli mesaj detayları
+model VoiceMessage {
+  id         String  @id @default(uuid())
+  messageId  String  @unique
+  duration   Int                              // Saniye cinsinden süre
+  waveform   String?                          // Float array JSON (ses dalgaformu görselleştirmesi)
+  isListened Boolean @default(false)          // Alıcı dinledi mi (bir kez gösterme)
+  fileSize   BigInt?
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+// Mesaj iletme geçmişi — zinciri takip etmek için
+model MessageForward {
+  id                   String   @id @default(uuid())
+  originalMessageId    String                       // Orijinal mesaj
+  forwardedMessageId   String                       // İletilen yeni mesaj
+  forwardedByUserId    String
+  forwardedAt          DateTime @default(now())
+
+  originalMessage  Message @relation("ForwardedMessage", fields: [originalMessageId], references: [id], onDelete: Cascade)
+  forwardedBy      User    @relation("ForwardedByUser", fields: [forwardedByUserId], references: [id])
+
+  @@index([originalMessageId])
+}
+
+// Yıldızlanan mesajlar — kullanıcı kişisel yıldız listesi
+model MessageStar {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  starredAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation("StarredMessages", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([userId])
+}
+
+// Sessizleştirme ayarları — kullanıcı bazında, konuşma bazında
+model ChatMuteSettings {
+  id             String    @id @default(uuid())
+  conversationId String
+  userId         String
+  mutedUntil     DateTime?                     // null = kalıcı sessiz; tarih = o tarihe kadar sessiz
+  showPreview    Boolean   @default(true)      // Bildirimde içerik gösterilsin mi
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User             @relation("ChatMuteSettings", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+// Kullanıcı anlık durum takibi — online/offline/yazıyor/ses kaydediyor
+model UserPresence {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  isOnline        Boolean  @default(false)
+  lastSeenAt      DateTime @default(now())
+  lastSeenHidden  Boolean  @default(false)       // "Son görülme" gizle
+  typingInConversationId String?                 // Şu an hangi konuşmada yazıyor (null = yazmıyor)
+  recordingInConversationId String?              // Şu an hangi konuşmada ses kaydediyor
+  updatedAt       DateTime @updatedAt
+
+  user User @relation("UserPresence", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([isOnline])
+}
+
+// Kullanıcı engelleme listesi
+model UserBlock {
+  id          String   @id @default(uuid())
+  blockerId   String                              // Kim engelledi
+  blockedId   String                              // Kim engellendi
+  createdAt   DateTime @default(now())
+
+  blocker User @relation("BlockedByUser", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("BlockedUsers", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+}
+
+// Broadcast (Yayın) listeleri — grubun bilmediği toplu mesaj gönderimi
+// Her broadcast listesi için ayrı bir ChatConversation (type=broadcast) otomatik oluşturulur
+model BroadcastList {
+  id          String   @id @default(uuid())
+  name        String
+  createdById String
+  branchId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy   User                  @relation("BroadcastLists", fields: [createdById], references: [id], onDelete: Cascade)
+  members     BroadcastListMember[]
+
+  @@index([createdById])
+}
+
+// Broadcast listesi üyeleri
+model BroadcastListMember {
+  id              String   @id @default(uuid())
+  broadcastListId String
+  userId          String
+  addedAt         DateTime @default(now())
+
+  broadcastList BroadcastList @relation(fields: [broadcastListId], references: [id], onDelete: Cascade)
+  user          User          @relation("BroadcastMemberships", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([broadcastListId, userId])
+  @@index([broadcastListId])
+}
+
+// Sohbet duvar kağıdı ayarları — kullanıcı bazında, konuşma bazında özel arka plan
+model ChatWallpaper {
+  id             String   @id @default(uuid())
+  conversationId String
+  userId         String
+  wallpaperType  String   @default("default")  // default | color | image
+  colorValue     String?                        // HEX renk kodu
+  imageUrl       String?                        // Özel arka plan resmi
+  opacity        Float    @default(1.0)          // Şeffaflık (0-1)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User             @relation("ChatWallpapers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+}
+
+// Eski Message modeli ile geriye uyumluluk için branch ilişkisi
+// (Migration geçiş döneminde kullanılacak, daha sonra kaldırılacak)
+
+// Announcements
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  targetType  String   @default("all") // branch, staff, all
+  targetIds   String? // JSON array of branch/user Ids
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy User @relation(fields: [createdById], references: [id])
+}
+
+// Audit Log
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String?
+  details    String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([action])
+}
+
+// To-Do Module
+model Todo {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  priority    String    @default("medium") // low, medium, high
+  status      String    @default("pending") // pending, completed
+  dueDate     DateTime?
+  attachments String?  @default("[]") // JSON array of uploaded file URLs
+  startDate   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Notes Module
+model Note {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  content   String
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Smart Pricing Engine (Hesaplama Araci)
+model CalculationHistory {
+  id                String   @id @default(uuid())
+  userId            String
+  productCost       Float
+  totalCost         Float
+  appliedProfitRate Float
+  profitAmount      Float
+  totalPrice        Float? // Backward compatibility
+  finalPrice        Float
+  roundingStrategy  String
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  title      String
+  message    String
+  type       String   @default("info") // info, success, warning, error, task, reminder
+  moduleType String?  // To track which module this notification belongs to (e.g. chat, leads, etc.)
+  content    String?  // Content details in markdown or JSON format
+  isRead     Boolean  @default(false)
+  link       String?  // Optional link to redirect on click
+  taskId     String?  // Optional relation to tasks for deduplication
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model Finance {
+  id          String   @id @default(uuid())
+  branchId    String
+  type        String // "INCOME", "EXPENSE", "DEBT", "EXPECTED_PAYMENT"
+  amount      Float
+  category    String
+  description String?
+  receiptUrl  String?
+  status      String   @default("pending") // pending, approved, rejected
+  approvedBy  String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId, type])
+}
+
+// -----------------------------------------
+// CUSTOMER ENHANCED MODULES
+// -----------------------------------------
+model CustomerNote {
+  id         String   @id @default(uuid())
+  customerId String
+  content    String
+  noteType   String   @default("Arama") // Call, Meeting, Email, Visit
+  reminderId String?  // Optional link to a reminder
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model CustomerChat {
+  id         String   @id @default(uuid())
+  customerId String
+  type       String   @default("WhatsApp") // WhatsApp, SMS, Email etc
+  content    String?
+  fileUrl    String?  // Transcript file url
+  timestamp  DateTime @default(now())
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model CustomerDocument {
+  id                String   @id @default(uuid())
+  customerId        String
+  name              String
+  url               String
+  type              String   @default("Sozlesme") // Contract, Offer, Invoice etc.
+  contentCalendarId String?
+  createdAt         DateTime @default(now())
+
+  customer        Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  contentCalendar ContentCalendar? @relation(fields: [contentCalendarId], references: [id], onDelete: SetNull)
+}
+
+model CustomerTask {
+  id          String   @id @default(uuid())
+  customerId  String
+  title       String
+  description String?
+  assignedTo  String?  // user id (optional)
+  dueDate     DateTime?
+  attachments String?  @default("[]") // JSON array of uploaded file URLs
+  priority    String   @default("normal") // low, normal, high
+  status      String   @default("Fikir / Brief Aşamasında")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customer            Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  taskStatusHistories TaskStatusHistory[]
+}
+
+model TaskStatusHistory {
+  id              String   @id @default(uuid())
+  userId          String
+  taskId          String
+  contentCalendarId String?
+  oldStatus       String
+  newStatus       String
+  timestamp       DateTime @default(now())
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task           CustomerTask    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  contentCalendar ContentCalendar? @relation(fields: [contentCalendarId], references: [id], onDelete: SetNull)
+}
+
+model ContentCalendar {
+  id            String   @id @default(uuid())
+  branchId      String
+  title         String
+  description   String?
+  scheduledDate DateTime
+  status        String   @default("planned")
+  customerName  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  branch        Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  files         File[]
+  documents     CustomerDocument[]
+  taskHistories TaskStatusHistory[]
+  libraryFiles  LibraryFile[]
+}
+
+// -----------------------------------------
+// İÇERİK TAKVİMİ YÖNETİM SİSTEMİ
+// Ajans içerik üretim sürecini uçtan uca yönetir:
+// İçerik planı → Çekim → Editlime → Onay → Yayın
+// -----------------------------------------
+
+// Ana içerik kaydı
+model ContentItem {
+  id          String   @id @default(uuid())
+  branchId    String   // Hangi firma/şube
+
+  // Temel bilgiler
+  title       String
+  caption     String?  // Sosyal medya açıklaması/metni
+  description String?  // İç notlar, brief
+
+  // Platform ve içerik tipi
+  platforms   String   // JSON array: ["instagram","tiktok","youtube","facebook","linkedin","x","other"]
+  contentType String   // reels | static_post | story | carousel | video | blog | other
+
+  // Zamanlama
+  scheduledDate DateTime  // Paylaşım tarihi
+  scheduledTime String?   // Paylaşım saati (HH:mm formatı, string olarak saklanır)
+
+  // Durum
+  // draft | awaiting_shoot | in_editing | pending_approval | scheduled | published | cancelled | missed
+  status      String   @default("draft")
+  iptalOncesiDurum String?
+
+  // Ekip atama — her rol için ayrı alan
+  shooterId   String?  // Videoçekim uzmanı (User.id)
+  editorId    String?  // Editör (User.id)
+  managerId   String?  // Sosyal medya yöneticisi (User.id)
+  designerId  String?  // Grafik tasarım uzmanı (User.id)
+
+  // Çekim bağlantısı (opsiyonel)
+  shootId     String?  // ProductionShoot.id
+
+  // Müşteri onayı
+  clientApprovalRequired Boolean @default(false)
+  clientApprovalStatus   String? // pending | approved | rejected
+
+  // Yayın takibi
+  publishedUrl String?  // Yayınlanan içeriğin gerçek URL'i
+
+  // Oluşturma bilgisi
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // İlişkiler
+  branch        Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  shoot         ProductionShoot?    @relation(fields: [shootId], references: [id], onDelete: SetNull)
+  media         ContentMedia[]
+  statusHistory ContentStatusHistory[] @relation("ContentItemHistory")
+  chatLinks     ContentChatLink[]   @relation("ContentItemChatLinks")
+  revisions     RevisionRequest[]
+
+  @@index([branchId, scheduledDate])
+  @@index([branchId, status])
+  @@index([shooterId])
+  @@index([editorId])
+  @@index([managerId])
+  @@index([designerId])
+}
+
+// Çekim günü kaydı — bir çekim gününde birden fazla içerik üretilebilir
+model ProductionShoot {
+  id          String   @id @default(uuid())
+  branchId    String
+
+  shootDate   DateTime // Çekim tarihi
+  shootTime   String?  // Çekim saati (HH:mm)
+  location    String?  // Mekan/adres
+
+  // Atanan kişiler (JSON array of user IDs)
+  videographerIds String? // JSON: ["userId1","userId2"]
+
+  // Durum
+  // planned | shot | in_editing | completed | cancelled | postponed
+  status      String   @default("planned")
+
+  // Notlar
+  equipmentNotes String? // Ekipman ve özel notlar
+
+  // Oluşturma
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // İlişkiler
+  branch        Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  contentItems  ContentItem[]
+  statusHistory ContentStatusHistory[] @relation("ShootHistory")
+  chatLinks     ContentChatLink[]   @relation("ShootChatLinks")
+
+  @@index([branchId, shootDate])
+  @@index([branchId, status])
+}
+
+// Medya dosyaları — versiyon geçmişi destekli
+model ContentMedia {
+  id            String   @id @default(uuid())
+  contentItemId String
+
+  fileUrl       String   // Dosya URL'i (/api/uploads/...)
+  fileType      String   // image | video | document
+  mimeType      String?  // image/jpeg, video/mp4 vb.
+  fileName      String?  // Orijinal dosya adı
+  fileSize      BigInt?  // Byte cinsinden boyut
+  thumbnailUrl  String?  // Video/belge küçük resmi
+
+  version       Int      @default(1)           // Versiyon numarası
+  isFinal       Boolean  @default(false)       // Bu versiyon final mi?
+  versionNote   String?  // Versiyon notu (ör. "1. revizyon")
+
+  uploadedById  String
+  uploadedAt    DateTime @default(now())
+
+  // İlişkiler
+  contentItem   ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@index([contentItemId])
+  @@index([contentItemId, version])
+}
+
+// Durum değişikliği geçmişi — ContentItem ve ProductionShoot için ortak (polymorphic)
+model ContentStatusHistory {
+  id          String   @id @default(uuid())
+
+  // Polimorfik — entityType + entityId ile hedef belirlenir
+  entityType  String   // "content_item" | "production_shoot"
+  entityId    String   // İlgili kaydın ID'si
+
+  oldStatus   String
+  newStatus   String
+  changedById String   // Kim değiştirdi (User.id)
+  changedAt   DateTime @default(now())
+  note        String?  // Opsiyonel açıklama (ör. "İptal sebebi: hava durumu")
+
+  // Polimorfik ilişkiler — her iki modele de bağlanabilir
+  contentItem   ContentItem?     @relation("ContentItemHistory",   fields: [entityId], references: [id], onDelete: Cascade, map: "csh_content_item_fk")
+  productionShoot ProductionShoot? @relation("ShootHistory",       fields: [entityId], references: [id], onDelete: Cascade, map: "csh_shoot_fk")
+
+  @@index([entityType, entityId])
+  @@index([changedById])
+  @@index([changedAt])
+}
+
+// Chat entegrasyon kaydı — tek tuşla gönderilen görev mesajlarının referansı
+model ContentChatLink {
+  id            String   @id @default(uuid())
+
+  // Hedef — ContentItem veya ProductionShoot'a bağlı
+  contentItemId String?
+  shootId       String?
+
+  sentToUserId    String   // Kime gönderildi
+  chatMessageId   String?  // Mevcut chat sistemindeki mesaj ID'si
+  chatConversationId String? // Hangi konuşmada gönderildi
+
+  sentById      String
+  sentAt        DateTime @default(now())
+
+  // İlişkiler
+  contentItem   ContentItem?     @relation("ContentItemChatLinks", fields: [contentItemId], references: [id], onDelete: Cascade)
+  shoot         ProductionShoot? @relation("ShootChatLinks",       fields: [shootId],       references: [id], onDelete: Cascade)
+
+  @@index([contentItemId])
+  @@index([shootId])
+  @@index([sentToUserId])
+}
+
+model CustomerContact {
+  id         String   @id @default(uuid())
+  customerId String
+  name       String
+  role       String?  // Decision maker, Technical contact etc.
+  phone      String?
+  email      String?
+  createdAt  DateTime @default(now())
+
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------
+// HR (Human Resources) MODULES
+// -----------------------------------------
+model Candidate {
+  id              String   @id @default(uuid())
+  branchId        String
+  firstName       String?
+  lastName        String?
+  email           String?
+  phone           String?
+  position        String?
+  status          String   @default("Aday") // Candidate, Active, Ex-Employee, Blacklist
+  applicationDate DateTime?
+  startDate       DateTime?
+  leaveDate       DateTime?
+  salaryRange     String?
+  expectationNote String?
+  rating          Int      @default(0) // 1-5
+  kanbanStatus    String   @default("Basvurdu") // Applied, Interview, Offer, Hired, Rejected
+  department      String?  // Sales, Technical, Accounting etc.
+  priority        String   @default("Normal") // Urgent, Normal, Pending
+  skills          String?  // JSON list
+  location        String?
+  experienceYears Int?
+  education       String?
+  
+  photoUrl        String?
+  
+  documents       CandidateDocument[]
+  chats           CandidateChat[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  branch          Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+}
+
+model CandidateDocument {
+  id          String   @id @default(uuid())
+  candidateId String
+  name        String
+  url         String
+  type        String   @default("CV") // CV, Portfolio, ID etc.
+  version     Int      @default(1)
+  notes       String?
+  aiData      String?  // AI parsed data
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+model CandidateChat {
+  id              String   @id @default(uuid())
+  candidateId     String
+  type            String   @default("Telefon") // Phone, Email, WhatsApp
+  content         String?
+  fileUrl         String?
+  timestamp       DateTime @default(now())
+  nextContactDate DateTime?
+  
+  candidate       Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------
+// TAKVIM - RANDEVU MODELI
+// -----------------------------------------
+model Appointment {
+  id           String    @id @default(uuid())
+  branchId     String
+  title        String
+  description  String?
+  userId       String?   // Optional: user specific calendar
+  customerId   String?   // Optional: customer related appointment
+  customerName String?   // Customer name (denormalized for fast display)
+  startDate    DateTime
+  endDate      DateTime?
+  allDay       Boolean   @default(false)
+  color        String    @default("#3B82F6") // Calendar appearance color
+  location     String?
+  status       String    @default("scheduled") // scheduled, completed, cancelled
+  approvalStep String?
+  slaDeadline  DateTime?
+  assignedTo   String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  branch  Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId, startDate])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AiRevisionAnalysis {
+  id            String   @id @default(uuid())
+  branchId      String
+  uploadedById  String
+  customerName  String?
+  sourceText    String
+  summary       String
+  preferences   Json
+  redFlags      Json
+  createdAt     DateTime @default(now())
+
+  uploadedBy User @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+}
+
+model NightScanResult {
+  id                String   @id @default(uuid())
+  branchId          String
+  companyName       String
+  industry          String?
+  websiteUrl        String?
+  instagramUrl      String?
+  googleMapsUrl     String?
+  painPoints        String?  // JSON array
+  matchedServices   String?  // JSON array
+  fieldNote         String?
+  scoreTemp         String?
+  status            String   @default("pending") // pending, approved, dismissed
+  scanDate          DateTime @default(now())
+  createdAt         DateTime @default(now())
+
+  branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId, status])
+}
+
+model NightScanLog {
+  id          String   @id @default(uuid())
+  branchId    String?
+  status      String   @default("running") // running, completed, failed
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  totalFound  Int      @default(0)
+  errorLog    String?
+}
+
+// -----------------------------------------
+// AJANS KÜTÜPHANESİ MODÜLÜ
+// -----------------------------------------
+
+model LibraryFolder {
+  id             String   @id @default(uuid())
+  branchId       String
+  name           String
+  parentFolderId String?
+  createdById    String
+  isStarred      Boolean  @default(false)
+  isTrashed      Boolean  @default(false)
+  trashedAt      DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  branch        Branch              @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  createdBy     User                @relation("LibraryFolderCreator", fields: [createdById], references: [id])
+  parentFolder  LibraryFolder?      @relation("FolderChildren", fields: [parentFolderId], references: [id])
+  childFolders  LibraryFolder[]     @relation("FolderChildren")
+  files         LibraryFile[]
+  permissions   LibraryFilePermission[]
+  activityLogs  LibraryActivityLog[]
+
+  @@index([branchId, parentFolderId])
+  @@index([branchId, isTrashed])
+}
+
+model LibraryFile {
+  id                 String    @id @default(uuid())
+  branchId           String
+  folderId           String?
+  originalName       String
+  mimeType           String
+  sizeBytes          BigInt
+  checksumSha256     String
+  storagePath        String
+  uploadedById       String
+  version            Int       @default(1)
+  parentFileId       String?   // Versiyonlama: önceki versiyon
+  derivedFromFileId  String?   // Converter çıktısı: kaynak dosya
+  isStarred          Boolean   @default(false)
+  isTrashed          Boolean   @default(false)
+  trashedAt          DateTime?
+  description        String?
+  tags               String?   // JSON array
+  contentCalendarId  String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  branch            Branch                  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  folder            LibraryFolder?          @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  uploadedBy        User                    @relation("LibraryFileUploader", fields: [uploadedById], references: [id])
+  parentFile        LibraryFile?            @relation("FileVersions", fields: [parentFileId], references: [id])
+  fileVersions      LibraryFile[]           @relation("FileVersions")
+  derivedFrom       LibraryFile?            @relation("DerivedFiles", fields: [derivedFromFileId], references: [id])
+  derivedFiles      LibraryFile[]           @relation("DerivedFiles")
+  permissions       LibraryFilePermission[]
+  conversionJobs    LibraryConversionJob[]  @relation("SourceFile")
+  outputJobs        LibraryConversionJob[]  @relation("OutputFile")
+  activityLogs      LibraryActivityLog[]
+  contentCalendar   ContentCalendar?        @relation(fields: [contentCalendarId], references: [id], onDelete: SetNull)
+
+  @@index([branchId, folderId])
+  @@index([branchId, isTrashed])
+  @@index([branchId, mimeType])
+  @@index([checksumSha256])
+}
+
+model LibraryFilePermission {
+  id              String   @id @default(uuid())
+  fileId          String?
+  folderId        String?
+  userId          String?
+  roleId          String?
+  permissionLevel String   @default("view") // view, comment, edit
+  grantedById     String
+  createdAt       DateTime @default(now())
+
+  file      LibraryFile?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  folder    LibraryFolder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  grantedBy User           @relation("LibraryPermissionGranter", fields: [grantedById], references: [id])
+
+  @@index([fileId])
+  @@index([folderId])
+  @@index([userId])
+}
+
+model LibraryConversionJob {
+  id             String    @id @default(uuid())
+  sourceFileId   String
+  targetFormat   String
+  status         String    @default("queued") // queued, processing, completed, failed
+  progress       Int       @default(0)
+  outputFileId   String?
+  errorMessage   String?
+  requestedById  String
+  options        String?   // JSON: quality, resolution vb. kullanıcı seçimleri
+  createdAt      DateTime  @default(now())
+  startedAt      DateTime?
+  completedAt    DateTime?
+
+  sourceFile    LibraryFile  @relation("SourceFile", fields: [sourceFileId], references: [id], onDelete: Cascade)
+  outputFile    LibraryFile? @relation("OutputFile", fields: [outputFileId], references: [id])
+  requestedBy   User         @relation("LibraryJobRequester", fields: [requestedById], references: [id])
+
+  @@index([status])
+  @@index([sourceFileId])
+  @@index([requestedById])
+}
+
+model LibraryActivityLog {
+  id         String   @id @default(uuid())
+  branchId   String
+  fileId     String?
+  folderId   String?
+  userId     String
+  action     String   // upload, download, delete, restore, convert, share, move, rename, copy
+  details    String?  // JSON: ek bilgi
+  createdAt  DateTime @default(now())
+
+  file      LibraryFile?   @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  folder    LibraryFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  user      User           @relation("LibraryActivityUser", fields: [userId], references: [id])
+
+  @@index([branchId, createdAt])
+  @@index([fileId])
+  @@index([userId])
+}
+
+model LibraryUploadChunk {
+  id         String   @id @default(uuid())
+  uploadId   String
+  chunkIndex Int
+  totalChunks Int
+  fileName   String
+  mimeType   String
+  chunkPath  String
+  createdAt  DateTime @default(now())
+
+  @@unique([uploadId, chunkIndex])
+  @@index([uploadId])
+}
+
+// -----------------------------------------
+// İÇERİK MAĞAZASI (CONTENT STORE) MODÜLÜ
+// -----------------------------------------
+
+model Niche {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  createdAt     DateTime       @default(now())
+  contentStores ContentStore[]
+}
+
+model ContentStore {
+  id                  String                  @id @default(uuid())
+  url                 String
+  originalName        String
+  mimeType            String
+  sizeBytes           BigInt
+  type                String                  // "IMAGE", "VIDEO", "OTHER"
+  nicheId             String
+  niche               Niche                   @relation(fields: [nicheId], references: [id])
+  uploadedById        String
+  uploadedBy          User                    @relation("ContentStoreUploadedBy", fields: [uploadedById], references: [id])
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  
+  // Yeni eklenen alanlar
+  status              String                  @default("approved") // draft, pending_approval, approved, rejected
+  fileHash            String                  @default("")
+  currentVersionNumber Int                    @default(1)
+  approvedById        String?
+  approvedBy          User?                   @relation("ContentStoreApprovedBy", fields: [approvedById], references: [id])
+  approvedAt          DateTime?
+  rejectionReason     String?
+  viewCount           Int                     @default(0)
+  downloadCount       Int                     @default(0)
+  duplicateOfContentId String?
+  duplicateOf         ContentStore?           @relation("ContentDuplicates", fields: [duplicateOfContentId], references: [id], onDelete: SetNull)
+  duplicates          ContentStore[]          @relation("ContentDuplicates")
+  versions            ContentVersion[]
+  analyticsEvents     ContentAnalyticsEvent[]
+
+  @@index([nicheId])
+  @@index([type])
+  @@index([status])
+  @@index([fileHash])
+}
+
+model ContentVersion {
+  id             String       @id @default(uuid())
+  contentStoreId String
+  contentStore   ContentStore @relation(fields: [contentStoreId], references: [id], onDelete: Cascade)
+  versionNumber  Int
+  url            String
+  fileHash       String
+  fileSize       BigInt
+  uploadedById   String
+  uploadedBy     User         @relation("ContentVersionUploadedBy", fields: [uploadedById], references: [id])
+  changeNote     String?
+  createdAt      DateTime     @default(now())
+
+  @@index([contentStoreId])
+}
+
+model ContentAnalyticsEvent {
+  id             String       @id @default(uuid())
+  contentStoreId String
+  contentStore   ContentStore @relation(fields: [contentStoreId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation("ContentAnalyticsEventUser", fields: [userId], references: [id], onDelete: SetNull)
+  eventType      String       // "view", "download"
+  createdAt      DateTime     @default(now())
+
+  @@index([contentStoreId, createdAt])
+}
+
+model RevisionRequest {
+  id             String    @id @default(uuid())
+  contentItemId  String
+  revisionNumber Int
+  message        String
+  createdById    String
+  createdAt      DateTime  @default(now())
+  completedById  String?
+  completedAt    DateTime?
+  status         String    @default("bekliyor") // bekliyor | tamamlandi
+
+  contentItem    ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  createdBy      User        @relation("CreatedRevisions", fields: [createdById], references: [id])
+  completedBy    User?       @relation("CompletedRevisions", fields: [completedById], references: [id])
+
+  @@index([contentItemId])
+}
+
+
+// -----------------------------------------
+// G�REV Y�NET�M (TASK) MOD�L�
+// -----------------------------------------
+
+model InternalTask {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      String   @default("TODO") // TODO, IN_PROGRESS, REVIEW, DONE
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  dueDate     DateTime?
+  attachments String?  @default("[]") // JSON array of uploaded file URLs
+  
+  assignerId  String
+  assigneeId  String
+  
+  assigner    User     @relation("TasksAssigned", fields: [assignerId], references: [id])
+  assignee    User     @relation("TasksReceived", fields: [assigneeId], references: [id])
+  
+  statusLogs  InternalTaskStatusLog[]
+  activeTasks ActiveTask[]
+  branchId    String?
+  branch      Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InternalTaskStatusLog {
+  id         String       @id @default(uuid())
+  taskId     String
+  userId     String
+  status     String       // "START" | "PAUSE" | "RESUME" | "COMPLETE"
+  startedAt  DateTime     @default(now())
+  endedAt    DateTime?
+  note       String?
+
+  task       InternalTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, taskId])
+  @@index([startedAt])
+}
+
+model ActiveTask {
+  id         String       @id @default(uuid())
+  userId     String       @unique
+  taskId     String
+  startedAt  DateTime     @default(now())
+
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task       InternalTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model UserSession {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  ipAddress String?
+  userAgent String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetLog {
+  id        String   @id @default(uuid())
+  userId    String
+  resetBy   String
+  resetAt   DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Module {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  label     String
+  sortOrder Int      @default(0)
+}
+
+model EodReport {
+  id             String              @id @default(uuid())
+  userId         String
+  reportDate     DateTime            // Date of EOD (normalized to 00:00:00)
+  status         String              @default("draft") // draft | submitted
+  autoContent    String              // JSON string of Branch groupings: Array of { branchId, branchName, items: string[] }
+  manualContent  String              @default("")      // Non-ERP comments
+  submittedAt    DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auditLogs      EodReportAuditLog[]
+
+  @@unique([userId, reportDate])
+}
+
+model EodReportAuditLog {
+  id        String    @id @default(uuid())
+  reportId  String
+  userId    String
+  action    String    // create_draft | update_draft | submit
+  details   String?   // JSON representation of diff or log details
+  createdAt DateTime  @default(now())
+
+  report    EodReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model SupportTicket {
+  id             String                    @id @default(uuid())
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  reporterUserId String
+  reporter       User                      @relation("ReportedTickets", fields: [reporterUserId], references: [id], onDelete: Cascade)
+  title          String
+  description    String
+  status         String                    @default("open") // open, in_progress, needs_info, resolved, wont_fix, closed
+  priority       String                    @default("medium") // low, medium, high, critical
+  category       String                    @default("other") // ui_bug, backend_error, missing_feature, performance, data_issue, other
+  pageUrl        String
+  moduleName     String
+  screenshotUrl  String?
+  browserInfo    Json                      // JSON: user agent, screen resolution, viewport
+  consoleLogs    Json                      // JSON array: console errors and warnings
+  networkLogs    Json                      // JSON array: failed API requests (sensitive data masked)
+  appVersion     String?
+  assignedTo     String?
+  assignedUser   User?                     @relation("AssignedTickets", fields: [assignedTo], references: [id], onDelete: SetNull)
+  resolutionNote String?
+  internalComments Json                    // JSON array of comment objects: [{ id, userId, fullName, comment, createdAt }]
+  isDeleted      Boolean                   @default(false)
+  attachments    SupportTicketAttachment[]
+
+  @@index([status, priority])
+  @@index([reporterUserId, isDeleted])
+  @@map("support_tickets")
+}
+
+model SupportTicketAttachment {
+  id        String        @id @default(uuid())
+  ticketId  String
+  ticket    SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  fileName  String
+  fileUrl   String
+  fileSize  Int
+  mimeType  String
+  createdAt DateTime      @default(now())
+
+  @@map("support_ticket_attachments")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// WHATSAPP AI AGENT TABLOLARI
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model AiKnowledgeChunk {
+  id        String   @id @default(cuid())
+  source    String   // "business_doc" | "whatsapp_history" | "product_catalog"
+  sourceRef String?  // Dosya adı veya customerId referansı
+  content   String   // Ham metin chunk (500-1000 karakter)
+  embeddingJson String? // JSON float array [0.1, 0.2, ...] geçici olarak
+  contentHash   String  // SHA-256 hash — idempotent ingestion için
+  metadata      Json?   // Ek bağlam: { customerName, date, branchId }
+  createdAt DateTime @default(now())
+
+  @@index([source])
+  @@index([sourceRef])
+  @@index([contentHash])
+}
+
+model AiConversationMemory {
+  id         String   @id @default(cuid())
+  customerId String
+  role       String   // "user" | "assistant" | "system"
+  content    String
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId, createdAt])
+}
+
+model AiAgentLog {
+  id                String   @id @default(cuid())
+  customerId        String?
+  incomingMessage   String
+  retrievedContext  Json     // RAG'de bulunanlar, hangi chunk'lar kullanıldı
+  toolCalls         Json?    // Çağrılan ERP tool'ları ve parametreleri
+  generatedResponse String
+  wasAutoSent       Boolean  @default(false)  // Gerçekten gönderildi mi (shadow mode = false)
+  escalatedToHuman  Boolean  @default(false)
+  escalationReason  String?
+  latencyMs         Int
+  llmProvider       String   // "anthropic" | "openai" | "ollama" | "gemini"
+  shadowMode        Boolean  @default(true)   // Shadow mode'da mı üretildi
+  createdAt         DateTime @default(now())
+
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([customerId, createdAt])
+  @@index([wasAutoSent])
+  @@index([escalatedToHuman])
+  @@index([createdAt])
+}
+
+// FAQ Module
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String   @default("Genel")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Enterprise Geri Dönüşüm Kutusu (Polymorphic Trash Engine) Modeli
+model TrashItem {
+  id                String    @id @default(uuid())
+  entityType        String    // "Customer", "Project", "Order", "LibraryFile", "InternalTask", "Finance" vb.
+  entityId          String    // Orijinal kaydın ID'si
+  title             String    // Kullanıcının göreceği başlık / isim
+  payload           String    // Orijinal verinin tam JSON snapshot'ı (bağımlılıklar dahil)
+  filePaths         String?   // Varsa fiziksel dosya yollarının JSON dizisi (["/uploads/a.pdf"])
+  deletedByUserId   String
+  deletedByFullName String
+  branchId          String?
+  deletedAt         DateTime  @default(now())
+  expiresAt         DateTime  // Otomatik kalıcı silinme tarihi (30 gün varsayılan)
+  status            String    @default("IN_TRASH") // "IN_TRASH", "RESTORED", "PURGED"
+
+  user   User    @relation(fields: [deletedByUserId], references: [id], onDelete: Cascade)
+  branch Branch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([entityType])
+  @@index([deletedByUserId])
+  @@index([branchId])
+  @@index([expiresAt])
+  @@index([status])
+}
+

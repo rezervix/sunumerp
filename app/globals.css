@@ -1,0 +1,239 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+/* ── Light Mode Tokens ───────────────────────────── */
+:root {
+  --background: #F7F3EE;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+  --primary: #D37112;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F9E2B6;
+  --secondary-foreground: #111827;
+  --muted: #F0E8DD;
+  --muted-foreground: #6B6358;
+  --accent: #D32F28;
+  --accent-foreground: #FFFFFF;
+  --destructive: #E2483E;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(17, 24, 39, 0.08);
+  --input: rgba(17, 24, 39, 0.08);
+  --ring: #D37112;
+  --radius: 0.625rem;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111827;
+  --sidebar-border: rgba(17, 24, 39, 0.07);
+  --sidebar-muted: #6B6B6B;
+  --sidebar-accent: #FEF2E7;
+  --sidebar-accent-foreground: #D37112;
+  --sidebar-primary: #D37112;
+
+  /* Header */
+  --header: #FFFFFF;
+  --header-border: rgba(17, 24, 39, 0.07);
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  /* Deprecated alias kept for compat */
+  --shadow-soft: var(--shadow-sm);
+}
+
+/* ── Dark Mode Tokens (Luxury Deep Navy-Black) ───── */
+.dark {
+  --background: #0D1324;
+  --foreground: #F8EFDF;
+  --card: #152033;
+  --card-foreground: #F8EFDF;
+  --popover: #1E2A3F;
+  --popover-foreground: #F8EFDF;
+  --primary: #E8B44F;
+  --primary-foreground: #0F172A;
+  --secondary: #243649;
+  --secondary-foreground: #D7CAB1;
+  --muted: #1D2838;
+  --muted-foreground: #9AA1B3;
+  --accent: #D65A4A;
+  --accent-foreground: #FFFFFF;
+  --destructive: #F57A6E;
+  --destructive-foreground: #FFFFFF;
+  --border: rgba(248, 239, 226, 0.1);
+  --input: rgba(248, 239, 226, 0.08);
+  --ring: #E8B44F;
+
+  /* Sidebar */
+  --sidebar: #111C2D;
+  --sidebar-foreground: #F8EFDF;
+  --sidebar-border: rgba(248, 239, 226, 0.08);
+  --sidebar-muted: #A0A9BB;
+  --sidebar-accent: #283B58;
+  --sidebar-accent-foreground: #E8B44F;
+  --sidebar-primary: #E8B44F;
+
+  /* Header */
+  --header: #111C2D;
+  --header-border: rgba(248, 239, 226, 0.08);
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  --shadow-soft: var(--shadow-sm);
+}
+
+/* ── Tailwind Theme ───────────────────────────────── */
+@theme inline {
+  --font-sans: "Inter", "sans-serif";
+  --font-display: "Inter", "sans-serif";
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Sidebar tokens */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  /* Header tokens */
+  --color-header: var(--header);
+  --color-header-border: var(--header-border);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --shadow-soft: var(--shadow-sm);
+}
+
+/* ── Base ─────────────────────────────────────────── */
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring), transparent 50%);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ── Typography Utilities ────────────────────────── */
+@utility text-display {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+@utility text-heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+@utility text-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility text-caption {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+/* ── Layout Utilities ────────────────────────────── */
+@utility sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  transition: background-color 150ms, color 150ms;
+  color: var(--sidebar-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@utility sidebar-item-active {
+  background-color: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
+}
+
+/* ── Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+  opacity: 0.4;
+}
+
+/* ── Sparkline utilities ─────────────────────────── */
+.sparkline {
+  fill: none;
+  stroke: #22c55e;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.sparkline-down { stroke: #ef4444; }
+.sparkline-neutral { stroke: #64748b; }

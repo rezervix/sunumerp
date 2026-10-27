@@ -1,0 +1,23 @@
+[Unit]
+Description=AI Orkestrasyon Servisi — RAG, Tool-Calling, LLM
+After=network.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=erp
+WorkingDirectory=/opt/erparfamedia/services/ai-orchestrator
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ai-orchestrator
+
+EnvironmentFile=/opt/erparfamedia/services/ai-orchestrator/.env
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
