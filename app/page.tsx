@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/lib/auth/context"
 import { SunumLogo } from "@/components/sunum-logo"
@@ -24,7 +24,7 @@ import {
   AlertCircle
 } from "lucide-react"
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { session, loginAsDemo, login, loading: authLoading } = useAuth()
@@ -359,5 +359,22 @@ export default function LoginPage() {
       </div>
 
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <div className="flex flex-col items-center gap-4">
+            <SunumLogo className="size-12 shadow-lg" />
+            <div className="size-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        </div>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   )
 }
