@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/context/LanguageContext"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 interface Candidate {
   id: string
@@ -39,7 +40,7 @@ export default function HRPage() {
       router.replace("/dashboard")
     }
   }, [authLoading, hasPermission, isSuperAdmin, router])
-  const [candidates, setCandidates] = useState<Candidate[]>([])
+  const [candidates, setCandidates] = useState<Candidate[]>(() => mockDatabase.getCandidates() as any)
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null)
   
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -49,18 +50,33 @@ export default function HRPage() {
   const [search, setSearch] = useState("")
 
   useEffect(() => {
-    if (currentBranch) loadCandidates()
+    const handleDbChange = () => setCandidates(mockDatabase.getCandidates() as any)
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
+
+  useEffect(() => {
+    loadCandidates()
   }, [currentBranch])
 
   const loadCandidates = async () => {
-    if (!currentBranch) return
     try {
-      const res = await fetch(`/api/hr?branchId=${currentBranch.id}`)
+      const branchId = currentBranch?.id || "local-debug-branch"
+      const res = await fetch(`/api/hr?branchId=${branchId}`)
       if (res.ok) {
         const json = await res.json()
-        setCandidates(json.data || json)
+        const list = json.data || json
+        if (Array.isArray(list) && list.length > 0) {
+          setCandidates(list)
+        } else {
+          setCandidates(mockDatabase.getCandidates() as any)
+        }
+      } else {
+        setCandidates(mockDatabase.getCandidates() as any)
       }
-    } catch (e) {}
+    } catch {
+      setCandidates(mockDatabase.getCandidates() as any)
+    }
   }
 
   const handleSave = async () => {

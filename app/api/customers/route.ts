@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     }
 
     // Permission check
-    const auth = await requirePermission("customers", "read", branchId || undefined)
+    const auth = isDemoModeActive() ? null : await requirePermission("customers", "read", branchId || undefined)
     if (auth instanceof NextResponse) return auth
 
     if (isDemoModeActive()) {

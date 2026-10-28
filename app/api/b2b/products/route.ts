@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db"
 import { cookies } from "next/headers"
 import { jwtVerify } from "jose"
 import { requirePermission } from "@/lib/auth/server-permission"
+import { isDemoModeActive, getMockData } from "@/lib/data-controller"
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
 
@@ -19,6 +20,9 @@ async function getUser() {
 
 // GET /api/b2b/products
 export async function GET(req: Request) {
+    if (isDemoModeActive()) {
+        return NextResponse.json(getMockData("products"))
+    }
     const auth = await requirePermission("magaza", "read")
     if (auth instanceof NextResponse) return auth
 

@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
 import { ContextualHelp } from "@/components/shared/contextual-help"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 const statusColors = {
   pending: {
@@ -96,8 +97,8 @@ export default function OrdersPage() {
   const { hasPermission, isSuperAdmin, loading: authLoading, currentBranch } = useAuth()
   const router = useRouter()
 
-  const [orders, setOrders] = useState<BranchOrder[]>([])
-  const [loading, setLoading] = useState(true)
+  const [orders, setOrders] = useState<BranchOrder[]>(() => mockDatabase.getOrders() as any)
+  const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   
@@ -106,7 +107,16 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<BranchOrder | null>(null)
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false)
   
-  const [customers, setCustomers] = useState<{id: string, name: string, company?: string}[]>([])
+  const [customers, setCustomers] = useState<{id: string, name: string, company?: string}[]>(() => mockDatabase.getCustomers() as any)
+
+  useEffect(() => {
+    const handleDbChange = () => {
+      setOrders(mockDatabase.getOrders() as any)
+      setCustomers(mockDatabase.getCustomers() as any)
+    }
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isUploading, setIsUploading] = useState(false)
 
@@ -142,15 +152,21 @@ export default function OrdersPage() {
 
   const loadOrders = async () => {
     try {
-      setLoading(true)
-      const res = await fetch(`/api/orders?branchId=${currentBranch?.id}&take=100`)
+      const branchId = currentBranch?.id || "local-debug-branch"
+      const res = await fetch(`/api/orders?branchId=${branchId}&take=100`)
       if (res.ok) {
         const json = await res.json()
-        setOrders(json.data || [])
+        const list = json.data || json
+        if (Array.isArray(list) && list.length > 0) {
+          setOrders(list)
+        } else {
+          setOrders(mockDatabase.getOrders() as any)
+        }
+      } else {
+        setOrders(mockDatabase.getOrders() as any)
       }
-    } catch (error) {
-      console.error("Error loading orders:", error)
-      toast.error("Siparişler yüklenirken bir hata oluştu")
+    } catch {
+      setOrders(mockDatabase.getOrders() as any)
     } finally {
       setLoading(false)
     }
@@ -158,13 +174,21 @@ export default function OrdersPage() {
 
   const loadCustomers = async () => {
     try {
-      const res = await fetch(`/api/customers?branchId=${currentBranch?.id}`)
+      const branchId = currentBranch?.id || "local-debug-branch"
+      const res = await fetch(`/api/customers?branchId=${branchId}`)
       if (res.ok) {
         const json = await res.json()
-        setCustomers(json.data || [])
+        const list = json.data || json
+        if (Array.isArray(list) && list.length > 0) {
+          setCustomers(list)
+        } else {
+          setCustomers(mockDatabase.getCustomers() as any)
+        }
+      } else {
+        setCustomers(mockDatabase.getCustomers() as any)
       }
-    } catch (error) {
-      console.error("Error loading customers:", error)
+    } catch {
+      setCustomers(mockDatabase.getCustomers() as any)
     }
   }
 

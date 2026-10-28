@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { isDemoModeActive, getMockData } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 // Kategori Tanımları
 const CATEGORIES = [
@@ -133,13 +134,22 @@ const INITIAL_REQUESTS: RequestItem[] = [
 
 export default function PersonelTalepleriPage() {
   const { t, tText } = useLanguage()
-  const [requests, setRequests] = useState<RequestItem[]>([])
+  const [requests, setRequests] = useState<RequestItem[]>(() => mockDatabase.getHRRequests() as any)
+
+  useEffect(() => {
+    const handleDbChange = () => setRequests(mockDatabase.getHRRequests() as any)
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
 
   useEffect(() => {
     if (isDemoModeActive()) {
-      setRequests(getMockData("personel_talepleri"))
-    } else {
-      setRequests([])
+      const data = getMockData("personel_talepleri")
+      if (Array.isArray(data) && data.length > 0) {
+        setRequests(data)
+      } else {
+        setRequests(mockDatabase.getHRRequests() as any)
+      }
     }
   }, [])
 

@@ -39,6 +39,10 @@ export interface CalendarEvent {
  * Şubeye ait tüm takvim eventlerini (randevu, ödeme planı, hatırlatıcı) birleştirir.
  */
 export async function GET(req: Request) {
+  if (isDemoModeActive()) {
+    return NextResponse.json(getMockData("calendar_events"))
+  }
+
   const session = await getSession()
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -48,10 +52,6 @@ export async function GET(req: Request) {
   const toStr = searchParams.get("to")
 
   if (!branchId) return NextResponse.json({ error: "branchId gerekli" }, { status: 400 })
-
-  if (isDemoModeActive()) {
-    return NextResponse.json(getMockData("calendar_events", branchId))
-  }
 
   const from = fromStr ? new Date(fromStr) : new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   const to = toStr ? new Date(toStr) : new Date(new Date().getFullYear(), new Date().getMonth() + 2, 0)

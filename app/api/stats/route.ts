@@ -4,6 +4,10 @@ import { getAuthPayload } from "@/lib/auth/server-permission"
 import { isDemoModeActive, getMockData } from "@/lib/data-controller"
 
 export async function GET(req: Request) {
+    if (isDemoModeActive()) {
+        return NextResponse.json(getMockData("stats"))
+    }
+
     const auth = await getAuthPayload()
     if (!auth) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -14,10 +18,6 @@ export async function GET(req: Request) {
 
     if (!branchId) {
         return NextResponse.json({ error: "Branch ID required" }, { status: 400 })
-    }
-
-    if (isDemoModeActive()) {
-        return NextResponse.json(getMockData("stats", branchId))
     }
 
     try {

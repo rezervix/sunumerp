@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { createAuditLog } from "@/lib/audit";
 import { requirePermission, isSuperAdminUser } from "@/lib/auth/server-permission";
+import { isDemoModeActive } from "@/lib/data-controller";
+import { mockDatabase } from "@/lib/data/mockDatabase";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -9,6 +11,9 @@ export async function GET(req: Request) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
+    if (isDemoModeActive()) {
+        return NextResponse.json(mockDatabase.getFinances());
+    }
     const auth = await requirePermission("finance", "view", branchId || undefined);
     if (auth instanceof NextResponse) return auth;
 

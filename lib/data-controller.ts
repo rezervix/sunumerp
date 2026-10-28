@@ -1,4 +1,5 @@
 import * as mockData from "./mock-data"
+import { mockDatabase } from "./data/mockDatabase"
 
 /**
  * Checks if the Demo/Mock Mode is active.
@@ -26,9 +27,9 @@ export function isDemoModeActive(): boolean {
 export function getMockData(type: string, branchId?: string | null): any {
   switch (type) {
     case "customers":
-      return mockData.mockCustomers
+      return mockDatabase.getCustomers()
     case "orders":
-      return mockData.mockOrders
+      return mockDatabase.getOrders()
     case "projects":
       return mockData.mockProjects
     case "chat_users":
@@ -36,11 +37,11 @@ export function getMockData(type: string, branchId?: string | null): any {
     case "messages":
       return mockData.mockMessages
     case "calendar_events":
-      return mockData.mockCalendarEvents
+      return mockDatabase.getCalendarEvents()
     case "personel_talepleri":
-      return mockData.mockHRRequests
+      return mockDatabase.getHRRequests()
     case "stats":
-      return mockData.getMockStats()
+      return mockDatabase.getStats()
     case "leads":
       return mockData.mockLeads
     case "finance":
@@ -48,7 +49,10 @@ export function getMockData(type: string, branchId?: string | null): any {
     case "cargo":
       return mockData.mockCargo
     case "products":
-      return mockData.mockProducts
+      return mockDatabase.getProducts()
+    case "candidates":
+    case "hr":
+      return mockDatabase.getCandidates()
     default:
       return null
   }

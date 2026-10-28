@@ -1,11 +1,26 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { requirePermission } from "@/lib/auth/server-permission"
+import { isDemoModeActive, getMockData } from "@/lib/data-controller"
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const branchId = searchParams.get("branchId")
     const id = searchParams.get("id")
+
+    if (isDemoModeActive()) {
+        const candidates = (getMockData("hr") || []) as any[]
+        if (id) {
+            const cand = candidates.find(c => c.id === id)
+            return NextResponse.json(cand || { error: "Not found" })
+        }
+        return NextResponse.json({
+            data: candidates,
+            total: candidates.length,
+            page: 1,
+            pageSize: 100
+        })
+    }
 
     if (!id && !branchId) {
         return NextResponse.json({ error: "Branch ID required" }, { status: 400 })

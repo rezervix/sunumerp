@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import { NotesTab, TasksTab, ChatsTab, DocumentsTab, ContactsTab } from "./relation-tabs"
 import { ContextualHelp } from "@/components/shared/contextual-help"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 // Interfaces
 interface Customer {
@@ -45,7 +46,7 @@ export default function CustomersPage() {
     }
   }, [authLoading, hasPermission, isSuperAdmin, router])
 
-  const [customers, setCustomers] = useState<Customer[]>([])
+  const [customers, setCustomers] = useState<Customer[]>(() => mockDatabase.getCustomers() as any)
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
   
   const [searchTerm, setSearchTerm] = useState("")
@@ -55,6 +56,12 @@ export default function CustomersPage() {
   const [formData, setFormData] = useState<Partial<Customer>>({})
   const [isBlacklistOpen, setIsBlacklistOpen] = useState(false)
   const [syncingLeads, setSyncingLeads] = useState(false)
+
+  useEffect(() => {
+    const handleDbChange = () => setCustomers(mockDatabase.getCustomers() as any)
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,14 +143,23 @@ export default function CustomersPage() {
   }, [currentBranch])
 
   const loadCustomers = async () => {
-    if (!currentBranch) return
     try {
-      const res = await fetch(`/api/customers?branchId=${currentBranch.id}`)
+      const branchId = currentBranch?.id || "local-debug-branch"
+      const res = await fetch(`/api/customers?branchId=${branchId}`)
       if (res.ok) {
         const json = await res.json()
-        setCustomers(json.data || json)
+        const list = json.data || json
+        if (Array.isArray(list) && list.length > 0) {
+          setCustomers(list)
+        } else {
+          setCustomers(mockDatabase.getCustomers() as any)
+        }
+      } else {
+        setCustomers(mockDatabase.getCustomers() as any)
       }
-    } catch (e) {}
+    } catch {
+      setCustomers(mockDatabase.getCustomers() as any)
+    }
   }
 
   const handleSaveCustomer = async () => {

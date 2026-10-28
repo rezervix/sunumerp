@@ -14,6 +14,7 @@ import { Download, Plus, Users, FolderOpen, TrendingUp, CreditCard, History, X }
 import { useRouter } from "next/navigation"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { useLanguage } from "@/lib/context/LanguageContext"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 const PIE_COLORS = ["#004aad", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"]
 
@@ -66,27 +67,34 @@ export default function DashboardPage() {
   const { t, tText, locale } = useLanguage()
   const router = useRouter()
   const [isReportOpen, setIsReportOpen] = useState(false)
-  const [statsData, setStatsData] = useState({
-    customers: 0,
-    activeProjects: 0,
-    leads: 0,
-    income: 0,
-    expense: 0,
-    spendingByKind: [] as { name: string; value: number }[],
-    recentActivities: [] as any[],
-  })
+  const [statsData, setStatsData] = useState(() => mockDatabase.getStats())
 
   useEffect(() => {
-    if (currentBranch) loadStats()
+    loadStats()
   }, [currentBranch])
 
+  useEffect(() => {
+    const handleDbChange = () => setStatsData(mockDatabase.getStats())
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
+
   const loadStats = async () => {
-    if (!currentBranch) return
     try {
-      const res = await fetch(`/api/stats?branchId=${currentBranch.id}`)
-      if (res.ok) setStatsData(await res.json())
+      const branchParam = currentBranch?.id ? `?branchId=${currentBranch.id}` : ""
+      const res = await fetch(`/api/stats${branchParam}`)
+      if (res.ok) {
+        const data = await res.json()
+        if (data && (data.customers || data.income)) {
+          setStatsData(data)
+        } else {
+          setStatsData(mockDatabase.getStats())
+        }
+      } else {
+        setStatsData(mockDatabase.getStats())
+      }
     } catch {
-      console.error("Failed to load stats")
+      setStatsData(mockDatabase.getStats())
     }
   }
 

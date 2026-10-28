@@ -17,9 +17,21 @@ interface Transaction {
 }
 
 import { FilePicker } from "@/components/shared/file-picker"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 export default function FinancialPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [transactions, setTransactions] = useState<Transaction[]>(() =>
+    mockDatabase.getFinances().map(f => ({
+      id: f.id,
+      branchId: f.branchId,
+      date: f.date,
+      description: f.description,
+      client: f.description.split(" - ")[0] || "Müşteri",
+      type: f.type === "INCOME" ? ("income" as const) : ("expense" as const),
+      amount: f.amount,
+      expenseCategory: f.category
+    }))
+  )
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -41,7 +53,7 @@ export default function FinancialPage() {
 
   const loadTransactions = async () => {
     if (!currentBranch) {
-      setTransactions([])
+      // Keep initial transactions
       return
     }
 

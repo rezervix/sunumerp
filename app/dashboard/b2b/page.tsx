@@ -7,6 +7,7 @@ import { useLanguage } from "@/lib/context/LanguageContext"
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 const reqStatusConfig = {
     pending: { label: "Bekliyor", bg: "bg-yellow-50 dark:bg-yellow-500/10", text: "text-yellow-600 dark:text-yellow-500", icon: "schedule" },
@@ -20,8 +21,8 @@ export default function B2BPage() {
     const { hasPermission, currentBranch, isSuperAdmin, loading: authLoading } = useAuth()
     const router = useRouter()
 
-    const [products, setProducts] = useState<any[]>([])
-    const [requests, setRequests] = useState<any[]>([])
+    const [products, setProducts] = useState<any[]>(() => mockDatabase.getProducts())
+    const [requests, setRequests] = useState<any[]>(() => mockDatabase.getStockRequests())
     const [isProductOpen, setIsProductOpen] = useState(false)
     const [isRequestOpen, setIsRequestOpen] = useState(false)
     const [editProduct, setEditProduct] = useState<any | null>(null)
@@ -30,6 +31,15 @@ export default function B2BPage() {
     const [requestForm, setRequestForm] = useState({ productId: "", customProduct: "", quantity: 1, notes: "" })
 
     const [activeTab, setActiveTab] = useState("requests")
+
+    useEffect(() => {
+        const handleDbChange = () => {
+            setProducts(mockDatabase.getProducts())
+            setRequests(mockDatabase.getStockRequests())
+        }
+        window.addEventListener("sunum-mockdb-change", handleDbChange)
+        return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+    }, [])
 
     useEffect(() => {
         if (!authLoading && !hasPermission("magaza", "read") && !isSuperAdmin) {
@@ -48,16 +58,31 @@ export default function B2BPage() {
     const loadProducts = async () => {
         try {
             const res = await fetch("/api/b2b/products?includeInactive=true")
-            if (res.ok) setProducts(await res.json())
-        } catch { }
+            if (res.ok) {
+                const data = await res.json()
+                setProducts(Array.isArray(data) && data.length > 0 ? data : mockDatabase.getProducts())
+            } else {
+                setProducts(mockDatabase.getProducts())
+            }
+        } catch {
+            setProducts(mockDatabase.getProducts())
+        }
     }
 
     const loadRequests = async () => {
         try {
-            const url = isSuperAdmin ? "/api/b2b/requests" : `/api/b2b/requests?branchId=${currentBranch?.id}`
+            const branchParam = currentBranch?.id ? `?branchId=${currentBranch.id}` : ""
+            const url = isSuperAdmin ? "/api/b2b/requests" : `/api/b2b/requests${branchParam}`
             const res = await fetch(url)
-            if (res.ok) setRequests(await res.json())
-        } catch { }
+            if (res.ok) {
+                const data = await res.json()
+                setRequests(Array.isArray(data) && data.length > 0 ? data : mockDatabase.getStockRequests())
+            } else {
+                setRequests(mockDatabase.getStockRequests())
+            }
+        } catch {
+            setRequests(mockDatabase.getStockRequests())
+        }
     }
 
     const handleSaveProduct = async () => {

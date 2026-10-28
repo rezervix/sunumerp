@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, Plus, X, Calendar, Clock, MapPin, Loader2 } 
 import { Button } from "@/components/ui/button"
 import { getUpcomingSpecialDays, getSpecialDaysForDate, SPECIAL_DAYS, type SpecialDay } from "@/lib/data/special-days"
 import type { CalendarEvent } from "@/app/api/calendar/events/route"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Yardımcı
@@ -267,7 +268,13 @@ export default function TakvimPage() {
 
   const [currentDate, setCurrentDate] = useState(new Date())
   const [viewMode, setViewMode] = useState<ViewMode>("month")
-  const [events, setEvents] = useState<CalendarEvent[]>([])
+  const [events, setEvents] = useState<CalendarEvent[]>(() => mockDatabase.getCalendarEvents())
+
+  useEffect(() => {
+    const handleDbChange = () => setEvents(mockDatabase.getCalendarEvents())
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
   const [loading, setLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [showModal, setShowModal] = useState(false)
@@ -301,13 +308,18 @@ export default function TakvimPage() {
 
   // â”€â”€ Event Yükle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const loadEvents = useCallback(async () => {
-    if (!currentBranch) return
+    const branchId = currentBranch?.id || "local-debug-branch"
     setLoading(true)
     try {
       const from = new Date(year, month, 1).toISOString().split("T")[0]
       const to = new Date(year, month + 1, 0).toISOString().split("T")[0]
-      const res = await fetch(`/api/calendar/events?branchId=${currentBranch.id}&from=${from}&to=${to}`)
-      if (res.ok) setEvents(await res.json())
+      const res = await fetch(`/api/calendar/events?branchId=${branchId}&from=${from}&to=${to}`)
+      if (res.ok) {
+        const data = await res.json()
+        setEvents(Array.isArray(data) && data.length > 0 ? data : mockDatabase.getCalendarEvents())
+      } else {
+        setEvents(mockDatabase.getCalendarEvents())
+      }
     } catch {
       toast.error("Takvim verileri yüklenemedi")
     } finally {

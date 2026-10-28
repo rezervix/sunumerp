@@ -11,7 +11,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Branch ID required" }, { status: 400 })
     }
 
-    const auth = await requirePermission("orders", "view", branchId)
+    const auth = isDemoModeActive() ? null : await requirePermission("orders", "read", branchId)
     if (auth instanceof NextResponse) return auth
 
     if (isDemoModeActive()) {

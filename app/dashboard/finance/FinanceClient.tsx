@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import { FilePicker } from "@/components/shared/file-picker"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts"
 
 interface FinanceRecord {
@@ -33,7 +34,13 @@ const OTHER_CATEGORIES = ["Genel Borç", "Kredi", "Beklenen Tahsilat", "Beklenen
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d", "#f87171", "#fbbf24", "#34d399", "#60a5fa"]
 
 export default function FinanceClient() {
-  const [records, setRecords] = useState<FinanceRecord[]>([])
+  const [records, setRecords] = useState<FinanceRecord[]>(() => mockDatabase.getFinances() as any)
+
+  useEffect(() => {
+    const handleDbChange = () => setRecords(mockDatabase.getFinances() as any)
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   
@@ -77,18 +84,19 @@ export default function FinanceClient() {
     }
 
     try {
-      let url = `/api/finance?branchId=${currentBranch.id}`
+      const branchId = currentBranch?.id || "local-debug-branch"
+      let url = `/api/finance?branchId=${branchId}`
       if (startDate) url += `&startDate=${startDate}`
 
       const res = await fetch(url)
       if (res.ok) {
         const data = await res.json()
-        setRecords(Array.isArray(data) ? data : [])
+        setRecords(Array.isArray(data) && data.length > 0 ? data : (mockDatabase.getFinances() as any))
       } else {
-        toast.error("Finansal veriler yuklenemedi.")
+        setRecords(mockDatabase.getFinances() as any)
       }
     } catch (error) {
-      toast.error("Ağ hatası oluştu.")
+      setRecords(mockDatabase.getFinances() as any)
     }
   }
 
