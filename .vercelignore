@@ -1,21 +1,25 @@
-# Python AI & Local Microservices (Run locally / external server)
-fingpt/
-kuscu/
-read_docx.py
+# Standalone Background Services & Local AI Microservices (Root only)
+/fingpt/
+/kuscu/
+/services/
+/read_docx.py
 
-# Electron & Desktop builds
-electron/
-crmpanelcckn/
-dist/
-build/
+# Electron & Desktop builds (Root only)
+/electron/
+/crmpanelcckn/
+/dist/
+/build/
 *.exe
 *.dmg
 *.AppImage
 
-# Standalone Background Services
-services/
+# Explicitly ensure Next.js app services & API routes are never ignored
+!/lib/services/
+!/lib/services/**
+!/app/api/kuscu/
+!/app/api/kuscu/**
 
-# Local scripts & tools
+# Local scripts & database files
 *.bat
 *.ps1
 dev.db
