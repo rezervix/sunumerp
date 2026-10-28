@@ -153,3 +153,4 @@ for (let y = 0; y < size; y++) {
 const pngBuffer = encode({ width: size, height: size, data })
 fs.writeFileSync(path.join(__dirname, '..', 'public', 'images', 'logo.png'), Buffer.from(pngBuffer))
 console.log('✅ PNG logo written to public/images/logo.png (' + pngBuffer.length + ' bytes)')
+
