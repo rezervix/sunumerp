@@ -1,4 +1,15 @@
-const fs = require('fs-extra')
+if (process.env.VERCEL) {
+    console.log('[copy-static] Skipping static files copy on Vercel deployment.')
+    process.exit(0)
+}
+
+let fs
+try {
+    fs = require('fs-extra')
+} catch (e) {
+    console.warn('[copy-static] fs-extra not found, skipping.')
+    process.exit(0)
+}
 const path = require('path')
 
 async function copyStaticFiles() {

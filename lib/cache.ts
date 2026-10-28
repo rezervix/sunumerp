@@ -15,7 +15,10 @@ class InMemoryCache {
 
   constructor() {
     if (typeof window === "undefined") {
-      setInterval(() => this.cleanupExpired(), this.cleanupIntervalMs)
+      const timer = setInterval(() => this.cleanupExpired(), this.cleanupIntervalMs)
+      if (timer && typeof timer.unref === "function") {
+        timer.unref()
+      }
     }
   }
 

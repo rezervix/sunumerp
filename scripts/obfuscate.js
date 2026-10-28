@@ -1,3 +1,8 @@
+if (process.env.VERCEL) {
+  console.log('[Obfuscator] Skipping code obfuscation on Vercel deployment.');
+  process.exit(0);
+}
+
 const fs = require('fs');
 const path = require('path');
 let JavaScriptObfuscator;

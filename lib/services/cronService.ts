@@ -14,10 +14,14 @@ class ContentCronService {
 
   public start() {
     if (this.intervalId) return // Zaten çalışıyor
+    if (process.env.NEXT_PHASE === 'phase-production-build') return // Build aşamasında arka plan görevlerini çalıştırma
 
     console.log("🚀 İçerik Takvimi Otomatik Hatırlatıcı & Takip Servisi başlatıldı.")
     // Her 60 saniyede bir çalıştır
     this.intervalId = setInterval(() => this.runTasks(), 60 * 1000)
+    if (this.intervalId && typeof this.intervalId.unref === "function") {
+      this.intervalId.unref()
+    }
     // İlk çalışmayı hemen yap
     this.runTasks()
   }
