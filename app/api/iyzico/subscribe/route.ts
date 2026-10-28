@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     const client = new IyzicoClient()
     const ip = req.headers.get("x-forwarded-for") || "127.0.0.1"
     const fullName = (user?.fullName as string) || cardHolderName || "System Customer"
-    const email = (user?.email as string) || "customer@cicekanaerp.local"
+    const email = (user?.email as string) || "customer@sunumerp.local"
 
     const result = await client.createSubscription({
       cardHolderName,

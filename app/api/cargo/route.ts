@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { requirePermission } from "@/lib/auth/server-permission"
+import { isDemoModeActive, getMockData } from "@/lib/data-controller"
 
 export async function GET(req: Request) {
     const auth = await requirePermission("cargo", "view")
@@ -8,6 +9,17 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url)
     const branchId = searchParams.get("branchId")
+
+    if (isDemoModeActive()) {
+        const cargoList = getMockData("cargo", branchId) as any[]
+        return NextResponse.json({
+            data: cargoList,
+            total: cargoList.length,
+            page: 1,
+            pageSize: 20
+        })
+    }
+
     const take = parseInt(searchParams.get("take") || "20")
     const skip = parseInt(searchParams.get("skip") || "0")
 
@@ -42,6 +54,18 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Sube, kargo firmasi ve takip numarasi zorunludur" }, { status: 400 })
         }
 
+        if (isDemoModeActive()) {
+            return NextResponse.json({
+                id: `cargo-demo-${Date.now()}`,
+                branchId,
+                carrierName,
+                trackingNumber,
+                status: status || "in_transit",
+                notes: notes || "Demo kargo kaydı",
+                createdAt: new Date().toISOString()
+            })
+        }
+
         const tracking = await prisma.cargoTracking.create({
             data: { branchId, carrierName, trackingNumber, status: status || "in_transit", notes },
         })
@@ -51,49 +75,3 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
     }
 }
-
-export async function PUT(req: Request) {
-    try {
-        const body = await req.json()
-        const { id, status, notes, carrierName, trackingNumber } = body
-
-        if (!id) return NextResponse.json({ error: "ID zorunludur" }, { status: 400 })
-
-        // Find record to check branch permission
-        const record = await prisma.cargoTracking.findUnique({ where: { id }, select: { branchId: true } })
-        if (!record) return NextResponse.json({ error: "Kayit bulunamadi" }, { status: 404 })
-
-        const auth = await requirePermission("cargo", "update", record.branchId)
-        if (auth instanceof NextResponse) return auth
-
-        const tracking = await prisma.cargoTracking.update({
-            where: { id },
-            data: { status, notes, carrierName, trackingNumber },
-        })
-        return NextResponse.json(tracking)
-    } catch (error) {
-        console.error("Error updating cargo:", error)
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
-    }
-}
-
-export async function DELETE(req: Request) {
-    const { searchParams } = new URL(req.url)
-    const id = searchParams.get("id")
-    if (!id) return NextResponse.json({ error: "ID zorunludur" }, { status: 400 })
-
-    try {
-        const record = await prisma.cargoTracking.findUnique({ where: { id }, select: { branchId: true } })
-        if (!record) return NextResponse.json({ error: "Kayit bulunamadi" }, { status: 404 })
-
-        const auth = await requirePermission("cargo", "delete", record.branchId)
-        if (auth instanceof NextResponse) return auth
-
-        await prisma.cargoTracking.delete({ where: { id } })
-        return NextResponse.json({ success: true })
-    } catch (error) {
-        console.error("Error deleting cargo:", error)
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 })
-    }
-}
-

@@ -722,14 +722,14 @@ export const mockProjects: MockProject[] = [
 
 // 4. KULLANICILAR (Users)
 export const mockUsers: MockUser[] = [
-  { id: "local-debug-user", username: "cicekana.dev", fullName: "Murat Çiçek (Ajans Başkanı)", email: "murat@cicekana.com", isActive: true },
-  { id: "user-art-director", username: "melis.sen", fullName: "Melis Şen (Kreatif Direktör)", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", email: "melis.sen@cicekana.com", isActive: true },
-  { id: "user-copywriter", username: "cem.aslan", fullName: "Cem Aslan (Metin Yazarı)", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150", email: "cem.aslan@cicekana.com", isActive: true },
-  { id: "user-developer", username: "emre.yildirim", fullName: "Emre Yıldırım (Lead Geliştirici)", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150", email: "emre.yildirim@cicekana.com", isActive: true },
-  { id: "user-accountant", username: "kemal.ozturk", fullName: "Kemal Öztürk (Mali Müşavir)", avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150", email: "kemal.ozturk@cicekana.com", isActive: true },
-  { id: "user-hr", username: "zeynep.demir", fullName: "Zeynep Demir (İK Direktörü)", avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150", email: "zeynep.demir@cicekana.com", isActive: true },
-  { id: "user-sales", username: "burak.celik", fullName: "Burak Çelik (Satış Direktörü)", avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150", email: "burak.celik@cicekana.com", isActive: true },
-  { id: "user-it", username: "ahmet.kurt", fullName: "Ahmet Kurt (IT Sorumlusu)", avatarUrl: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150", email: "ahmet.kurt@cicekana.com", isActive: true }
+  { id: "local-debug-user", username: "cicekana.dev", fullName: "Murat Çiçek (Ajans Başkanı)", email: "murat@sunumerp.com", isActive: true },
+  { id: "user-art-director", username: "melis.sen", fullName: "Melis Şen (Kreatif Direktör)", avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150", email: "melis.sen@sunumerp.com", isActive: true },
+  { id: "user-copywriter", username: "cem.aslan", fullName: "Cem Aslan (Metin Yazarı)", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150", email: "cem.aslan@sunumerp.com", isActive: true },
+  { id: "user-developer", username: "emre.yildirim", fullName: "Emre Yıldırım (Lead Geliştirici)", avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150", email: "emre.yildirim@sunumerp.com", isActive: true },
+  { id: "user-accountant", username: "kemal.ozturk", fullName: "Kemal Öztürk (Mali Müşavir)", avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150", email: "kemal.ozturk@sunumerp.com", isActive: true },
+  { id: "user-hr", username: "zeynep.demir", fullName: "Zeynep Demir (İK Direktörü)", avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150", email: "zeynep.demir@sunumerp.com", isActive: true },
+  { id: "user-sales", username: "burak.celik", fullName: "Burak Çelik (Satış Direktörü)", avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150", email: "burak.celik@sunumerp.com", isActive: true },
+  { id: "user-it", username: "ahmet.kurt", fullName: "Ahmet Kurt (IT Sorumlusu)", avatarUrl: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=150", email: "ahmet.kurt@sunumerp.com", isActive: true }
 ]
 
 // 5. CHAT MESAJLARI (Chat / Communication)
@@ -952,24 +952,43 @@ export const getMockStats = () => {
 
 // 9. LEADS & FINANCE & CARGO EXPORTS FOR DATA CONTROLLER
 export const mockLeads = [
-  { id: "lead-01", branchId: mockBranchId, name: "Seda Aksoy", company: "Migros Ticaret A.Ş.", email: "seda.aksoy@migros.com.tr", phone: "0532 999 1122", status: "hot", amount: 180000, industry: "Perakende & E-Ticaret", scoreTemp: "Sıcak", timeline: "Hemen" },
-  { id: "lead-02", branchId: mockBranchId, name: "Onur Çetin", company: "LC Waikiki", email: "onur.cetin@lcwaikiki.com", phone: "0533 888 2233", status: "qualified", amount: 240000, industry: "Moda & Tekstil", scoreTemp: "Sıcak", timeline: "Kısa vade" },
-  { id: "lead-03", branchId: mockBranchId, name: "Derya Şengül", company: "Eczacıbaşı", email: "derya.sengul@eczacibasi.com.tr", phone: "0535 777 3344", status: "warm", amount: 135000, industry: "Yapı Malzemeleri", scoreTemp: "Ilık", timeline: "Q4" },
-  { id: "lead-04", branchId: mockBranchId, name: "Tarkan Güven", company: "Beko Global", email: "tarkan.guven@beko.com", phone: "0530 666 4455", status: "contacted", amount: 210000, industry: "Tüketici Elektroniği", scoreTemp: "Sıcak", timeline: "Hemen" }
+  { id: "lead-01", branchId: mockBranchId, name: "Seda Aksoy", company: "Migros Ticaret A.Ş.", email: "seda.aksoy@migros.com.tr", phone: "0532 999 1122", status: "hot", amount: 180000, industry: "Perakende & E-Ticaret", scoreTemp: "Sıcak", timeline: "Hemen", createdAt: "2026-07-20T10:00:00Z" },
+  { id: "lead-02", branchId: mockBranchId, name: "Onur Çetin", company: "LC Waikiki", email: "onur.cetin@lcwaikiki.com", phone: "0533 888 2233", status: "qualified", amount: 240000, industry: "Moda & Tekstil", scoreTemp: "Sıcak", timeline: "Kısa vade", createdAt: "2026-07-21T11:30:00Z" },
+  { id: "lead-03", branchId: mockBranchId, name: "Derya Şengül", company: "Eczacıbaşı Holding", email: "derya.sengul@eczacibasi.com.tr", phone: "0535 777 3344", status: "warm", amount: 135000, industry: "Yapı Malzemeleri", scoreTemp: "Ilık", timeline: "Q4", createdAt: "2026-07-22T09:15:00Z" },
+  { id: "lead-04", branchId: mockBranchId, name: "Tarkan Güven", company: "Beko Global", email: "tarkan.guven@beko.com", phone: "0530 666 4455", status: "contacted", amount: 210000, industry: "Tüketici Elektroniği", scoreTemp: "Sıcak", timeline: "Hemen", createdAt: "2026-07-23T14:00:00Z" },
+  { id: "lead-05", branchId: "branch-ankara", name: "Murat Özkan", company: "Havelsan Teknoloji", email: "m.ozkan@havelsan.com.tr", phone: "0542 333 4455", status: "hot", amount: 350000, industry: "Savunma & Yazılım", scoreTemp: "Sıcak", timeline: "Q3", createdAt: "2026-07-24T10:20:00Z" },
+  { id: "lead-06", branchId: "branch-izmir", name: "Zeliha Kaya", company: "Petkim Petrokimya", email: "z.kaya@petkim.com.tr", phone: "0536 222 1100", status: "qualified", amount: 195000, industry: "Enerji & Kimya", scoreTemp: "Ilık", timeline: "Hemen", createdAt: "2026-07-25T16:45:00Z" },
+  { id: "lead-07", branchId: "branch-bursa", name: "Kenan Yıldız", company: "Oyak Renault", email: "kenan.yildiz@renault.com.tr", phone: "0538 111 8899", status: "contacted", amount: 280000, industry: "Otomotiv", scoreTemp: "Sıcak", timeline: "Q4", createdAt: "2026-07-26T12:00:00Z" },
+  { id: "lead-08", branchId: mockBranchId, name: "Gülşah Arıcan", company: "Getir Perakende", email: "gulsah@getir.com", phone: "0539 444 7788", status: "hot", amount: 165000, industry: "Hızlı Teslimat", scoreTemp: "Sıcak", timeline: "Hemen", createdAt: "2026-07-27T15:10:00Z" }
 ]
 
 export const mockFinances = [
-  { id: "fin-01", branchId: mockBranchId, type: "INCOME", amount: 75000, category: "Hizmet Geliri", description: "Ziraat Bankası Temmuz danışmanlık hakedişi", status: "approved", date: new Date().toISOString() },
-  { id: "fin-02", branchId: mockBranchId, type: "INCOME", amount: 95000, category: "Prodüksiyon Geliri", description: "Koç Holding Sürdürülebilirlik filmi teslimatı", status: "approved", date: new Date().toISOString() },
-  { id: "fin-03", branchId: mockBranchId, type: "EXPENSE", amount: 18500, category: "Bulut & Sunucu", description: "AWS Cloud ve Cloudflare CDN kurumsal sunucu faturası", status: "approved", date: new Date().toISOString() }
+  { id: "fin-01", branchId: mockBranchId, type: "INCOME", amount: 75000, category: "Hizmet Geliri", description: "Ziraat Bankası kurumsal kimlik ve tasarım hakedişi", status: "approved", date: new Date(Date.now() - 86400000 * 2).toISOString() },
+  { id: "fin-02", branchId: mockBranchId, type: "INCOME", amount: 95000, category: "Prodüksiyon Geliri", description: "Koç Holding Sürdürülebilirlik tanıtım filmi teslimatı", status: "approved", date: new Date(Date.now() - 86400000 * 4).toISOString() },
+  { id: "fin-03", branchId: mockBranchId, type: "INCOME", amount: 120000, category: "Yazılım Geliştirme", description: "Trendyol Satıcı Portalı UI/UX tasarım fazı", status: "approved", date: new Date(Date.now() - 86400000 * 6).toISOString() },
+  { id: "fin-04", branchId: mockBranchId, type: "INCOME", amount: 48000, category: "Sosyal Medya", description: "Defacto Yaz Koleksiyonu aylık retainer bedeli", status: "approved", date: new Date(Date.now() - 86400000 * 8).toISOString() },
+  { id: "fin-05", branchId: mockBranchId, type: "EXPENSE", amount: 18500, category: "Bulut & Sunucu", description: "AWS Cloud ve Cloudflare CDN kurumsal sunucu altyapısı", status: "approved", date: new Date(Date.now() - 86400000 * 3).toISOString() },
+  { id: "fin-06", branchId: mockBranchId, type: "EXPENSE", amount: 22800, category: "Yazılım Lisansları", description: "Adobe Creative Cloud ve Figma Enterprise lisans yenilemesi", status: "approved", date: new Date(Date.now() - 86400000 * 5).toISOString() },
+  { id: "fin-07", branchId: mockBranchId, type: "EXPENSE", amount: 45000, category: "Ofis & Kira", description: "Merkez Ofis Levent Kanyon kira ve yönetim aidatı", status: "approved", date: new Date(Date.now() - 86400000 * 10).toISOString() },
+  { id: "fin-08", branchId: mockBranchId, type: "EXPENSE", amount: 16500, category: "Prodüksiyon Gideri", description: "4K Kamera ve Işık stüdyo ekipman kiralama faturası", status: "approved", date: new Date(Date.now() - 86400000 * 12).toISOString() },
+  { id: "fin-09", branchId: "branch-ankara", type: "INCOME", amount: 82000, category: "Hizmet Geliri", description: "Ankara Büyükşehir Dijital Arşiv Projesi 2. Hakediş", status: "approved", date: new Date(Date.now() - 86400000 * 5).toISOString() },
+  { id: "fin-10", branchId: "branch-izmir", type: "INCOME", amount: 64000, category: "Yazılım Geliri", description: "Vestel Tanıtım Sitesi Next.js frontend teslimatı", status: "approved", date: new Date(Date.now() - 86400000 * 7).toISOString() }
 ]
 
 export const mockCargo = [
-  { id: "cargo-01", branchId: mockBranchId, carrierName: "Yurtiçi Kargo", trackingNumber: "124892019401", status: "delivered", notes: "Ziraat Bankası sözleşme evrakları teslim edildi" },
-  { id: "cargo-02", branchId: mockBranchId, carrierName: "Aras Kargo", trackingNumber: "349182940192", status: "in_transit", notes: "Çiçek Sepeti numune kutuları dağıtımda" }
+  { id: "cargo-01", branchId: mockBranchId, carrierName: "Yurtiçi Kargo", trackingNumber: "124892019401", status: "delivered", notes: "Ziraat Bankası onaylı sözleşme evrakları teslim edildi", createdAt: new Date(Date.now() - 86400000 * 1).toISOString() },
+  { id: "cargo-02", branchId: mockBranchId, carrierName: "Aras Kargo", trackingNumber: "349182940192", status: "in_transit", notes: "Çiçek Sepeti numune katalog kutuları dağıtımda", createdAt: new Date(Date.now() - 86400000 * 2).toISOString() },
+  { id: "cargo-03", branchId: mockBranchId, carrierName: "MNG Kargo", trackingNumber: "558291039481", status: "delivered", notes: "Koç Holding lansman USB ve promosyon ürünleri", createdAt: new Date(Date.now() - 86400000 * 3).toISOString() },
+  { id: "cargo-04", branchId: "branch-ankara", carrierName: "Yurtiçi Kargo", trackingNumber: "991820491820", status: "delivered", notes: "Bilkent Teknopark sözleşme asılları teslim edildi", createdAt: new Date(Date.now() - 86400000 * 4).toISOString() },
+  { id: "cargo-05", branchId: "branch-izmir", carrierName: "Sürat Kargo", trackingNumber: "772619401823", status: "in_transit", notes: "Vestel Manisa fabrikası prototip tabela numuneleri", createdAt: new Date(Date.now() - 86400000 * 1).toISOString() },
+  { id: "cargo-06", branchId: "branch-bursa", carrierName: "UPS Kargo", trackingNumber: "1Z999999999999", status: "delivered", notes: "Teknosa Nilüfer şube yönlendirme tabelaları", createdAt: new Date(Date.now() - 86400000 * 5).toISOString() }
 ]
 
 export const mockProducts = [
-  { id: "prod-01", name: "Kuşe Kağıt Broşür (A4 Çift Yön, 1000 Adet)", description: "170 gr parlak kuşe ofset baskı", unit: "Paket", isActive: true },
-  { id: "prod-02", name: "Roll-up Banner (85x200 cm Alüminyum)", description: "Vinil branda baskılı fuar mekanizması", unit: "Adet", isActive: true }
+  { id: "prod-01", name: "Kuşe Kağıt Broşür (A4 Çift Yön, 1000 Adet)", description: "170 gr parlak kuşe ofset baskı", unit: "Paket", price: 3400, stock: 120, isActive: true },
+  { id: "prod-02", name: "Roll-up Banner (85x200 cm Alüminyum)", description: "Vinil branda baskılı fuar mekanizması", unit: "Adet", price: 1850, stock: 45, isActive: true },
+  { id: "prod-03", name: "Kurumsal Kartvizit (Laklı Kabartma, 1000 Adet)", description: "350 gr mat kuşe özel lak uygulamalı", unit: "Kutu", price: 950, stock: 200, isActive: true },
+  { id: "prod-04", name: "Işıklı Pleksi Kutu Harf Tabela (Metretül)", description: "Samsung LED modüllü dış mekan tabela", unit: "Metre", price: 8500, stock: 30, isActive: true },
+  { id: "prod-05", name: "Özel Tasarım Bez Çanta (Ham Bez Emprime)", description: "Doğa dostu ham pamuk fuar promosyon çantası", unit: "Adet", price: 75, stock: 500, isActive: true },
+  { id: "prod-06", name: "Mat Kuşe Katalog (64 Sayfa Tel Dikiş)", description: "Kapak kısmi laklı kurumsal ürün kataloğu", unit: "Adet", price: 120, stock: 250, isActive: true }
 ]

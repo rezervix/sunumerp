@@ -3,11 +3,11 @@
  * Centralized configuration for API base URL and other settings.
  */
 
-// In production (Electron build), we point to the remote central server.
-// In development, you might still want to use localhost or the remote IP.
-export const BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://crm.cicekantechmedia.com'
-  : (process.env.USE_REMOTE_API === 'true' ? 'https://crm.cicekantechmedia.com' : 'http://localhost:3000');
+// In client-side browser, always use relative URLs ('') so it works seamlessly on any domain/demo.
+// On server-side, fallback to VERCEL_URL or localhost.
+export const BASE_URL = typeof window !== 'undefined'
+  ? ''
+  : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 export const API_BASE = `${BASE_URL}/api`;
 

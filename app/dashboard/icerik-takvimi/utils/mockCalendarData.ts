@@ -50,7 +50,7 @@ export function generateMockCalendarData(
     targetBranches = [
       { 
         id: branchId && branchId !== "all" ? branchId : "mock-branch-1", 
-        name: "Arfa Holding", 
+        name: "Sunum Holding", 
         themeColor: "#041627", 
         logoUrl: null 
       },
@@ -160,7 +160,7 @@ export function generateMockShoots(
     targetBranches = [
       { 
         id: branchId && branchId !== "all" ? branchId : "mock-branch-1", 
-        name: "Arfa Holding", 
+        name: "Sunum Holding", 
         themeColor: "#041627" 
       },
       { id: "mock-branch-2", name: "Parfame Perfume", themeColor: "#E1306C" },
@@ -190,7 +190,7 @@ export function generateMockShoots(
         branchId: branch.id,
         shootDate: day.toISOString(),
         shootTime: "13:00",
-        location: "Arfa Stüdyoları, İstanbul",
+        location: "Merkez Prodüksiyon Stüdyoları, İstanbul",
         videographerIds: ["mock-videographer"],
         status: index === 5 ? "completed" : "planned",
         equipmentNotes: "Sony FX3, Tripod, Dji Mic 2",

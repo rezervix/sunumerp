@@ -1490,7 +1490,7 @@ export default function SettingsPage() {
                           const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config, null, 2))
                           const dlAnchor = document.createElement("a")
                           dlAnchor.setAttribute("href", dataStr)
-                          dlAnchor.setAttribute("download", `cicekana_erp_config_backup_${new Date().toISOString().slice(0, 10)}.json`)
+                          dlAnchor.setAttribute("download", `sunum_erp_config_backup_${new Date().toISOString().slice(0, 10)}.json`)
                           document.body.appendChild(dlAnchor)
                           dlAnchor.click()
                           dlAnchor.remove()

@@ -278,7 +278,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
           </p>
         </div>
         <div className="flex items-center gap-1 text-[9px] text-[#041627]/70 uppercase tracking-widest font-bold">
-          <span className="material-symbols-outlined text-[12px] text-orange-500 font-bold">bolt</span> GENERATED VIA CICEKANATECHMEDIA ERP SYSTEM
+          <span className="material-symbols-outlined text-[12px] text-orange-500 font-bold">bolt</span> GENERATED VIA SUNUM ERP SYSTEM
         </div>
       </footer>
     </div>

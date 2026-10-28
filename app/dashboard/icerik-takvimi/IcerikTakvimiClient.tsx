@@ -261,7 +261,7 @@ export default function IcerikTakvimiClient() {
       pdf.setFont("helvetica", "normal")
       pdf.setFontSize(8)
       pdf.setTextColor(120, 120, 120)
-      pdf.text("Generated via CicekanaTechMedia ERP System", 10, 206)
+      pdf.text("Generated via Sunum ERP System", 10, 206)
 
       pdf.save(`${selectedBranch.name}_${TURKISH_MONTHS[month]}_${year}_Icerik_Takvimi.pdf`)
       toast.success("PDF başarıyla oluşturuldu ve indirildi.")

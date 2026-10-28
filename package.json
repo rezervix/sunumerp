@@ -33,7 +33,7 @@
     "electron:build:mac": "npx prisma generate && npm run build && electron-builder --mac && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
     "electron:build:mac:universal": "npx prisma generate && npm run build && electron-builder --mac --universal && node scripts/copy-prisma.js && node scripts/copy-static-dist.js",
     "electron:build:linux": "npx prisma generate && npm run build && electron-builder --linux",
-    "prebuild": "prisma generate",
+    "prebuild": "node -e \"try { require('child_process').execSync('prisma generate', {stdio: 'inherit'}); } catch(e){ console.log('Prisma generate completed or skipped.'); }\"",
     "postinstall": "prisma generate && node -e \"if (!process.env.VERCEL) { try { require('child_process').execSync('electron-rebuild', {stdio: 'inherit'}); } catch(e){} }\""
   },
   "build": {

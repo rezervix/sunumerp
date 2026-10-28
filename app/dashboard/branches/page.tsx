@@ -327,7 +327,7 @@ export default function BranchesPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="ankara@arfamedya.com"
+                  placeholder="ankara@sunumerp.com"
                   className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
                 />
               </div>

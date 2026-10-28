@@ -31,6 +31,8 @@ import { BRAND_CONFIG } from "@/lib/config/brand"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { OnboardingModal } from "@/components/shared/onboarding-modal"
 import { VendorBandrol } from "@/components/vendor-bandrol"
+import { SunumLogo } from "@/components/sunum-logo"
+import { DemoModeInterceptor } from "@/components/demo-interceptor"
 
 
 interface NavItemProps {
@@ -290,18 +292,10 @@ function SidebarContent({
       <div
         className={[
           "flex items-center shrink-0 border-b border-(--sidebar-border)",
-          collapsed ? "h-16 justify-center px-0" : "h-16 gap-3 px-4",
+          collapsed ? "h-16 justify-center px-0" : "h-16 px-4",
         ].join(" ")}
       >
-        <div className="flex items-center justify-center rounded-xl bg-white p-1.5 shrink-0 shadow-xs">
-          <img src={logoUrl} alt="Logo" className="size-7 object-contain" />
-        </div>
-        {!collapsed && (
-          <div className="flex flex-col leading-none overflow-hidden">
-            <span className="text-sm font-bold text-(--sidebar-foreground) truncate">{companyTitle}</span>
-            <span className="text-label text-(--sidebar-muted) mt-0.5">{t.nav.managementPanel}</span>
-          </div>
-        )}
+        <SunumLogo className={collapsed ? "size-8 mx-auto" : "size-8"} showText={!collapsed} />
       </div>
 
       {/* Branch selector */}
@@ -547,9 +541,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="size-12 rounded-2xl bg-white shadow-md flex items-center justify-center">
-            <img src={logoUrl} alt="Logo" className="size-8 object-contain" />
-          </div>
+          <SunumLogo className="size-12 shadow-lg" />
           <div className="flex gap-1.5">
             <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
             <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -683,10 +675,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 {/* Mobile brand */}
                 <div className="flex items-center gap-2 lg:hidden">
-                  <div className="flex items-center justify-center rounded-lg bg-white p-1 shadow-xs">
-                    <img src={logoUrl} alt="Logo" className="size-6 object-contain" />
-                  </div>
-                  <span className="font-bold text-sm text-foreground max-[400px]:hidden">{headerCompanyTitle}</span>
+                  <SunumLogo className="size-6" showText={true} />
                 </div>
 
                 {/* Desktop: search */}
@@ -697,6 +686,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     placeholder={t.header.search}
                     type="text"
                   />
+                </div>
+
+                {/* Live Demo Header Badge */}
+                <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold select-none">
+                  <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
+                  <span>Canlı Demo</span>
                 </div>
               </div>
 
@@ -732,6 +727,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </header>
 
+            {/* ── Demo Bilgilendirme Çubuğu ── */}
+            <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 border-b border-blue-500/15 px-4 py-2 flex items-center justify-between text-xs text-blue-900 dark:text-blue-100 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shrink-0" />
+                <span className="font-semibold">Sunum ERP Canlı Demo:</span>
+                <span className="text-muted-foreground hidden md:inline">
+                  Tüm grafikler ve tablolar zenginleştirilmiş örnek verilerle aktiftir. Form işlemleri demo ortamında güvenle simüle edilmektedir.
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-600/15 text-[11px] font-semibold text-blue-700 dark:text-blue-300">
+                  Salt Okunur / Simülasyon
+                </span>
+              </div>
+            </div>
+
             {/* ── Page Content ── */}
             <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-background">
               <div className="max-w-[1600px] mx-auto space-y-6">
@@ -750,6 +761,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Welcome Walkthrough Tour */}
         <OnboardingModal />
+
+        {/* Global Demo Mode Mutation Interceptor */}
+        <DemoModeInterceptor />
       </TooltipProvider>
     </NotificationProvider>
   )

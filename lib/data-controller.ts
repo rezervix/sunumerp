@@ -2,27 +2,22 @@ import * as mockData from "./mock-data"
 
 /**
  * Checks if the Demo/Mock Mode is active.
- * Demo Mode is enabled:
- * - If ENABLE_DEMO_MODE environment variable is "true"
- * - If NEXT_PUBLIC_ENABLE_DEMO_MODE environment variable is "true"
- * - If not explicitly set to "false" and running in development mode
+ * For this Public Demo repo, Demo Mode is enabled by default so that
+ * all visitors get a rich, vibrant, zero-configuration showcase.
+ * It can only be disabled by setting DISABLE_DEMO_MODE="true" or ENABLE_DEMO_MODE="false".
  */
 export function isDemoModeActive(): boolean {
-  // Server-side environment checks
   const envDemo = process.env.ENABLE_DEMO_MODE
   const publicEnvDemo = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE
   const publicUseMock = process.env.NEXT_PUBLIC_USE_MOCK_DATA
+  const disableDemo = process.env.DISABLE_DEMO_MODE
 
-  if (envDemo === "false" || publicEnvDemo === "false" || publicUseMock === "false") {
+  if (disableDemo === "true" || envDemo === "false" || publicEnvDemo === "false" || publicUseMock === "false") {
     return false
   }
 
-  if (envDemo === "true" || publicEnvDemo === "true" || publicUseMock === "true") {
-    return true
-  }
-
-  // Fallback to NODE_ENV
-  return process.env.NODE_ENV === "development"
+  // Active by default for public showcase & demo
+  return true
 }
 
 /**

@@ -468,7 +468,7 @@ export default function PersonelDenetimPage() {
       doc.setFont("helvetica", "normal")
       doc.setFontSize(8)
       doc.setTextColor(120, 120, 120)
-      doc.text("Generated via CicekanaTechMedia ERP System", 10, 287)
+      doc.text("Generated via Sunum ERP System", 10, 287)
     }
     
     doc.save(`ERP_Personel_Performans_Raporu_${hrPeriod}.pdf`)

@@ -14,6 +14,7 @@ interface AuthContextType {
   userBranches: Branch[]
   loading: boolean
   login: (username: string, password: string) => Promise<void>
+  loginAsDemo: () => Promise<void>
   logout: () => void
   hasPermission: (resource: string, action: string) => boolean
   isSuperAdmin: boolean
@@ -82,13 +83,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const loginAsDemo = async () => {
+    const res = await fetch("/api/auth/demo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+
+    const sessionData = await handleResponse<AuthSession>(res)
+    setSession(sessionData)
+
+    const branches = sessionData.branches.map((b: any) => b.branch)
+    setUserBranches(branches)
+
+    if (branches.length > 0) {
+      setCurrentBranchState(branches[0])
+      localStorage.setItem("currentBranch", JSON.stringify(branches[0]))
+    }
+  }
+
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" })
     localStorage.removeItem("currentBranch")
     setSession(null)
     setCurrentBranchState(null)
     setUserBranches([])
-    window.location.href = "/"
+    window.location.href = "/?from=logout"
   }
 
   const setCurrentBranch = (branch: Branch) => {
@@ -126,6 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userBranches,
         loading,
         login,
+        loginAsDemo,
         logout,
         hasPermission,
         isSuperAdmin,
