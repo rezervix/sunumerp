@@ -47,7 +47,7 @@ export default function InventoryAiAndAnalyticsPage() {
   }, [])
 
   const activeForecast =
-    state.forecasts.find(f => f.id === selectedForecastId) || state.forecasts[0]
+      (state.forecasts || []).find(f => f.id === selectedForecastId) || (state.forecasts || [])[0] || null
 
   const handleRunAmaQuery = (questionText?: string) => {
     const q = questionText ?? amaInput
@@ -102,59 +102,58 @@ export default function InventoryAiAndAnalyticsPage() {
         {/* 1. SEKME: FORESIGHT-AI TALEP TAHMİNLEME VE STOK OPTİMİZASYONU */}
         <TabsContent value="foresight-forecasting" className="space-y-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {state.forecasts.map(fc => (
-              <Card
-                key={fc.id}
-                onClick={() => setSelectedForecastId(fc.id)}
-                className={`cursor-pointer transition-all ${
-                  activeForecast?.id === fc.id
-                    ? "border-2 border-purple-600 bg-purple-50/20 shadow-md"
-                    : "border-slate-200 hover:border-slate-300"
-                }`}
-              >
-                <CardContent className="p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-purple-700">
-                      {fc.sku}
-                    </span>
-                    <Badge
-                      className={
-                        fc.optimizationStatus === "STOCKOUT_IMMINENT"
-                          ? "bg-rose-600 text-white"
-                          : fc.optimizationStatus === "REORDER_NOW"
-                          ? "bg-amber-500 text-white"
-                          : "bg-emerald-600 text-white"
-                      }
-                    >
-                      {fc.daysUntilStockout} Gün Stok Ömrü
-                    </Badge>
-                  </div>
-                  <div className="font-semibold text-sm text-slate-900 line-clamp-1">
-                    {fc.itemName}
-                  </div>
-                  <div className="grid grid-cols-3 gap-1 pt-1 text-center bg-slate-50 rounded p-1.5 border border-slate-100 text-[11px]">
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">30 Gün</span>
-                      <strong>{fc.forecast30d}</strong>
+              {(state.forecasts || []).map(fc => (
+                <Card
+                  key={fc.id}
+                  onClick={() => setSelectedForecastId(fc.id)}
+                  className={`cursor-pointer transition-all ${activeForecast?.id === fc.id
+                      ? "border-2 border-purple-600 bg-purple-50/20 shadow-md"
+                      : "border-slate-200 hover:border-slate-300"
+                    }`}
+                >
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-bold text-purple-700">
+                        {fc.sku}
+                      </span>
+                      <Badge
+                        className={
+                          fc.optimizationStatus === "STOCKOUT_IMMINENT"
+                            ? "bg-rose-600 text-white"
+                            : fc.optimizationStatus === "REORDER_NOW"
+                              ? "bg-amber-500 text-white"
+                              : "bg-emerald-600 text-white"
+                        }
+                      >
+                        {fc.daysUntilStockout} Gün Stok Ömrü
+                      </Badge>
                     </div>
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">60 Gün</span>
-                      <strong>{fc.forecast60d}</strong>
+                    <div className="font-semibold text-sm text-slate-900 line-clamp-1">
+                      {fc.itemName}
                     </div>
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">90 Gün</span>
-                      <strong className="text-purple-700">{fc.forecast90d}</strong>
+                    <div className="grid grid-cols-3 gap-1 pt-1 text-center bg-slate-50 rounded p-1.5 border border-slate-100 text-[11px]">
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">30 Gün</span>
+                        <strong>{fc.forecast30d}</strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">60 Gün</span>
+                        <strong>{fc.forecast60d}</strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">90 Gün</span>
+                        <strong className="text-purple-700">{fc.forecast90d}</strong>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <span>AI Güven: <strong>%{fc.confidenceScorePercent}</strong></span>
-                    <span className="text-emerald-700 font-semibold">
-                      Öneri: +{fc.recommendedOrderQty} {fc.unit}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                      <span>AI Güven: <strong>%{fc.confidenceScorePercent}</strong></span>
+                      <span className="text-emerald-700 font-semibold">
+                        Öneri: +{fc.recommendedOrderQty} {fc.unit}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           {activeForecast && (
@@ -177,48 +176,50 @@ export default function InventoryAiAndAnalyticsPage() {
               <CardContent className="space-y-6">
                 {/* Görsel Aylık Gerçekleşen vs AI Tahmin Bar Grafiği */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-                  {activeForecast.monthlySeries.map((pt, idx) => {
-                    const maxVal = Math.max(
-                      ...activeForecast.monthlySeries.map(m => m.upperBound)
-                    )
-                    const heightPct = Math.max(18, Math.round((pt.forecast / maxVal) * 100))
-                    const isFuture = pt.actual === undefined
-                    return (
-                      <div
-                        key={idx}
-                        className={`rounded-lg border p-3 flex flex-col justify-between ${
-                          isFuture
-                            ? "border-purple-300 bg-purple-50/40"
-                            : "border-slate-200 bg-white"
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-slate-700">{pt.month}</div>
-                        <div className="my-3 h-28 flex items-end justify-center bg-slate-100/70 rounded p-2">
+                    {
+                      (activeForecast.monthlySeries || []).map((pt, idx) => {
+                        const series = activeForecast.monthlySeries || []
+                        const maxVal = Math.max(
+                      1,
+                          ...series.map(m => m.upperBound || 0)
+                        )
+                        const heightPct = Math.max(18, Math.round(((pt.forecast || 0) / maxVal) * 100))
+                        const isFuture = pt.actual === undefined
+                        return (
                           <div
-                            className={`w-full rounded-t transition-all ${
-                              isFuture ? "bg-purple-600" : "bg-slate-800"
-                            }`}
-                            style={{ height: `${heightPct}%` }}
-                          />
-                        </div>
-                        <div className="space-y-0.5 text-[11px]">
-                          {pt.actual !== undefined && (
-                            <div className="flex justify-between">
-                              <span className="text-slate-500">Gerçek:</span>
-                              <strong>{pt.actual}</strong>
+                            key={idx}
+                            className={`rounded-lg border p-3 flex flex-col justify-between ${isFuture
+                                ? "border-purple-300 bg-purple-50/40"
+                                : "border-slate-200 bg-white"
+                              }`}
+                          >
+                            <div className="text-xs font-semibold text-slate-700">{pt.month}</div>
+                            <div className="my-3 h-28 flex items-end justify-center bg-slate-100/70 rounded p-2">
+                              <div
+                                className={`w-full rounded-t transition-all ${isFuture ? "bg-purple-600" : "bg-slate-800"
+                                  }`}
+                                style={{ height: `${heightPct}%` }}
+                              />
                             </div>
-                          )}
-                          <div className="flex justify-between">
-                            <span className="text-purple-700 font-medium">AI Tahmin:</span>
-                            <strong className="text-purple-700">{pt.forecast}</strong>
+                            <div className="space-y-0.5 text-[11px]">
+                              {pt.actual !== undefined && (
+                                <div className="flex justify-between">
+                                  <span className="text-slate-500">Gerçek:</span>
+                                  <strong>{pt.actual}</strong>
+                                </div>
+                              )}
+                              <div className="flex justify-between">
+                                <span className="text-purple-700 font-medium">AI Tahmin:</span>
+                                <strong className="text-purple-700">{pt.forecast}</strong>
+                              </div>
+                              <div className="text-[10px] text-slate-400">
+                                Band: [{pt.lowerBound} – {pt.upperBound}]
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-[10px] text-slate-400">
-                            Band: [{pt.lowerBound} – {pt.upperBound}]
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
+                        )
+                      })
+                    }
                 </div>
               </CardContent>
             </Card>
@@ -304,23 +305,23 @@ export default function InventoryAiAndAnalyticsPage() {
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 uppercase text-slate-600 border-b">
                       <tr>
-                        {amaResult.columns.map(col => (
-                          <th key={col} className="p-2.5">
-                            {col}
-                          </th>
-                        ))}
+                          {(amaResult.columns || []).map(col => (
+                            <th key={col} className="p-2.5">
+                              {col}
+                            </th>
+                          ))}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {amaResult.rows.map((row, rIdx) => (
-                        <tr key={rIdx} className="hover:bg-slate-50">
-                          {amaResult.columns.map(col => (
-                            <td key={col} className="p-2.5 font-medium text-slate-800">
-                              {row[col]}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                        {(amaResult.rows || []).map((row, rIdx) => (
+                          <tr key={rIdx} className="hover:bg-slate-50">
+                              {(amaResult.columns || []).map(col => (
+                                <td key={col} className="p-2.5 font-medium text-slate-800">
+                                  {row[col]}
+                                </td>
+                              ))}
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -331,99 +332,99 @@ export default function InventoryAiAndAnalyticsPage() {
 
         {/* 3. SEKME: AI DESTEKLİ RAPOR ANLATILARI (NARRATIVE REPORTING) */}
         <TabsContent value="narrative-reporting" className="space-y-6">
-          {state.narrativeReports.map(rep => (
-            <Card key={rep.id} className="border-slate-200 shadow-sm">
-              <CardHeader className="border-b bg-slate-50/60">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <Badge className="bg-slate-900 text-white">{rep.periodLabel}</Badge>
-                    <CardTitle className="text-lg mt-2">{rep.title}</CardTitle>
-                  </div>
-                  <span className="text-xs text-slate-500 font-mono">
-                    Üretim Zamanı: {rep.generatedAt}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 space-y-6">
-                {/* Yönetici Manşeti */}
-                <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-4 text-sm font-medium text-slate-900 leading-relaxed">
-                  <strong className="text-amber-900 block mb-1 uppercase text-xs">
-                    Yönetim Kurulu Özet Manşeti (Executive Headline)
-                  </strong>
-                  {rep.executiveHeadline}
-                </div>
-
-                {/* KPI Öne Çıkanlar */}
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  {rep.kpiHighlights.map((kpi, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-lg border border-slate-200 p-3.5 bg-white"
-                    >
-                      <span className="text-xs text-slate-500">{kpi.label}</span>
-                      <div className="text-xl font-bold text-slate-900 mt-1">{kpi.value}</div>
-                      <div className="text-xs text-emerald-700 font-medium mt-0.5">
-                        {kpi.trend}
-                      </div>
+            {(state.narrativeReports || []).map(rep => (
+              <Card key={rep.id} className="border-slate-200 shadow-sm">
+                <CardHeader className="border-b bg-slate-50/60">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <Badge className="bg-slate-900 text-white">{rep.periodLabel}</Badge>
+                      <CardTitle className="text-lg mt-2">{rep.title}</CardTitle>
                     </div>
-                  ))}
-                </div>
-
-                {/* Detaylı Anlatı Paragrafları */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    AI Tarafından Oluşturulan Rapor Anlatısı
-                  </h3>
-                  {rep.narrativeParagraphs.map((p, idx) => (
-                    <p
-                      key={idx}
-                      className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-lg border border-slate-100"
-                    >
-                      {p}
-                    </p>
-                  ))}
-                </div>
-
-                {/* Tespit Edilen Anomaliler ve Önerilen Aksiyonlar */}
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                  <div className="space-y-2.5">
-                    <h4 className="text-xs font-bold uppercase text-rose-700">
-                      Tespit Edilen Kritik Anomaliler & Darboğazlar
-                    </h4>
-                    {rep.keyAnomalies.map((anom, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-rose-200 bg-rose-50/30 p-3 text-xs space-y-1"
-                      >
-                        <div className="font-bold text-slate-900">{anom.title}</div>
-                        <div className="text-slate-600">{anom.impact}</div>
-                      </div>
-                    ))}
+                    <span className="text-xs text-slate-500 font-mono">
+                      Üretim Zamanı: {rep.generatedAt}
+                    </span>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  {/* Yönetici Manşeti */}
+                  <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-4 text-sm font-medium text-slate-900 leading-relaxed">
+                    <strong className="text-amber-900 block mb-1 uppercase text-xs">
+                      Yönetim Kurulu Özet Manşeti (Executive Headline)
+                    </strong>
+                    {rep.executiveHeadline}
                   </div>
 
-                  <div className="space-y-2.5">
-                    <h4 className="text-xs font-bold uppercase text-emerald-700">
-                      Önerilen Yönetici Aksiyonları & Finansal Katkı
-                    </h4>
-                    {rep.actionRecommendations.map((act, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-3 text-xs space-y-1"
-                      >
-                        <div className="font-semibold text-slate-900">{act.action}</div>
-                        <div className="flex justify-between text-[11px] text-slate-600 pt-1">
-                          <span>Sorumlu: <strong>{act.ownerRole}</strong></span>
-                          <span className="font-bold text-emerald-700">
-                            Finansal Etki: +₺{act.financialBenefitTry.toLocaleString("tr-TR")}
-                          </span>
+                  {/* KPI Öne Çıkanlar */}
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      {(rep.kpiHighlights || []).map((kpi, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-lg border border-slate-200 p-3.5 bg-white"
+                        >
+                          <span className="text-xs text-slate-500">{kpi.label}</span>
+                          <div className="text-xl font-bold text-slate-900 mt-1">{kpi.value}</div>
+                          <div className="text-xs text-emerald-700 font-medium mt-0.5">
+                            {kpi.trend}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+
+                  {/* Detaylı Anlatı Paragrafları */}
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                      AI Tarafından Oluşturulan Rapor Anlatısı
+                    </h3>
+                      {(rep.narrativeParagraphs || []).map((p, idx) => (
+                        <p
+                          key={idx}
+                          className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded-lg border border-slate-100"
+                        >
+                          {p}
+                        </p>
+                      ))}
+                  </div>
+
+                  {/* Tespit Edilen Anomaliler ve Önerilen Aksiyonlar */}
+                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                    <div className="space-y-2.5">
+                      <h4 className="text-xs font-bold uppercase text-rose-700">
+                        Tespit Edilen Kritik Anomaliler & Darboğazlar
+                      </h4>
+                        {(rep.keyAnomalies || []).map((anom, idx) => (
+                          <div
+                            key={idx}
+                            className="rounded-lg border border-rose-200 bg-rose-50/30 p-3 text-xs space-y-1"
+                          >
+                            <div className="font-bold text-slate-900">{anom.title}</div>
+                            <div className="text-slate-600">{anom.impact}</div>
+                          </div>
+                        ))}
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <h4 className="text-xs font-bold uppercase text-emerald-700">
+                        Önerilen Yönetici Aksiyonları & Finansal Katkı
+                      </h4>
+                        {(rep.actionRecommendations || []).map((act, idx) => (
+                          <div
+                            key={idx}
+                            className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-3 text-xs space-y-1"
+                          >
+                            <div className="font-semibold text-slate-900">{act.action}</div>
+                            <div className="flex justify-between text-[11px] text-slate-600 pt-1">
+                              <span>Sorumlu: <strong>{act.ownerRole}</strong></span>
+                              <span className="font-bold text-emerald-700">
+                                Finansal Etki: +₺{act.financialBenefitTry.toLocaleString("tr-TR")}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
         </TabsContent>
       </Tabs>
     </div>

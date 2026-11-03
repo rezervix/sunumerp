@@ -125,16 +125,16 @@ export interface TraceabilityEvent {
   id: string
   eventDate: string
   eventType:
-    | "SUPPLIER_RECEIPT"
-    | "QC_INSPECTION"
-    | "PUTAWAY"
-    | "BOM_CONSUMPTION"
-    | "PRODUCTION_OUTPUT"
-    | "TRANSFER"
-    | "PICK_PACK"
-    | "CUSTOMER_SHIPMENT"
-    | "RMA_RETURN"
-    | "RECALL_HOLD"
+  | "SUPPLIER_RECEIPT"
+  | "QC_INSPECTION"
+  | "PUTAWAY"
+  | "BOM_CONSUMPTION"
+  | "PRODUCTION_OUTPUT"
+  | "TRANSFER"
+  | "PICK_PACK"
+  | "CUSTOMER_SHIPMENT"
+  | "RMA_RETURN"
+  | "RECALL_HOLD"
   title: string
   quantity: number
   unit: string
@@ -1258,156 +1258,279 @@ export function convertStockUnit(
 
 /**
  * FIFO, LIFO, Ağırlıklı Ortalama (Dönemsel) ve Standart Maliyet Değerleme Motoru
+ * Hem tekil InventoryItemRecord hem de CostLayerRecord[] katman dizisi ile çağrılabilir.
  */
 export function calculateStockValuation(
-  item: InventoryItemRecord,
-  issueQty: number
-): ValuationComparisonResult {
-  const safeQty = Math.max(1, issueQty)
-  const layersAsc = [...item.costLayers].sort(
-    (a, b) => new Date(a.layerDate).getTime() - new Date(b.layerDate).getTime()
-  )
-  const layersDesc = [...item.costLayers].sort(
-    (a, b) => new Date(b.layerDate).getTime() - new Date(a.layerDate).getTime()
-  )
+  itemOrLayers: InventoryItemRecord | CostLayerRecord[] | any,
+    methodOrIssueQty ?: ValuationMethod | number,
+    standardCostParam ?: number,
+    issueQtyParam ?: number
+): any {
+    // 1. Katmanları ve temel maliyetleri güvenli şekilde çıkart
+    let rawLayers: CostLayerRecord[] = []
+    let fallbackCost = 500
+    let itemId = "item-val"
+    let sku = "SKU-VAL"
+    let name = "Valuation Item"
 
-  // 1. FIFO Hesaplama (İlk Giren İlk Çıkar)
-  let remFifo = safeQty
-  let fifoTotalCost = 0
-  const consumedLayersFifo: ValuationComparisonResult["consumedLayersFifo"] = []
+    if (Array.isArray(itemOrLayers)) {
+      rawLayers = [...itemOrLayers]
+    } else if (itemOrLayers && typeof itemOrLayers === "object") {
+      rawLayers = Array.isArray(itemOrLayers.costLayers) ? [...itemOrLayers.costLayers] : []
+      fallbackCost = Number(itemOrLayers.fifoUnitCost || itemOrLayers.standardCost || itemOrLayers.currentAvgCost || 500)
+      itemId = itemOrLayers.id || itemId
+      sku = itemOrLayers.sku || sku
+      name = itemOrLayers.name || name
+    }
 
-  for (const layer of layersAsc) {
-    if (remFifo <= 0) break
-    const take = Math.min(remFifo, layer.remainingQty)
-    if (take > 0) {
-      const sub = take * layer.unitCost
-      fifoTotalCost += sub
-      remFifo -= take
+    // Güvenlik: Eğer hiçbir katman yoksa sanal varsayılan katman ekle
+    if (rawLayers.length === 0) {
+      rawLayers = [
+        {
+          id: "cl-default",
+          receiptDocNo: "GRN-DEFAULT",
+          layerDate: new Date().toISOString().split("T")[0],
+          warehouseCode: "DEP-01",
+          lotNumber: "LOT-DEFAULT",
+          initialQty: 1000,
+          remainingQty: 1000,
+          unitCost: Number(standardCostParam || fallbackCost || 500)
+        }
+      ]
+    }
+
+    // 2. Parametreleri çözümle
+    let selectedMethod: ValuationMethod = "FIFO"
+    let issueQty = 50
+
+    if (typeof methodOrIssueQty === "string") {
+      selectedMethod = methodOrIssueQty as ValuationMethod
+      issueQty = typeof issueQtyParam === "number" ? issueQtyParam : 50
+    } else if (typeof methodOrIssueQty === "number") {
+      issueQty = methodOrIssueQty
+    }
+
+    const safeQty = Math.max(1, issueQty)
+  const standardCost = Number(standardCostParam || fallbackCost || 500)
+
+    const layersAsc = [...rawLayers].sort(
+      (a, b) => new Date(a.layerDate).getTime() - new Date(b.layerDate).getTime()
+    )
+  const layersDesc = [...rawLayers].sort(
+      (a, b) => new Date(b.layerDate).getTime() - new Date(a.layerDate).getTime()
+    )
+
+    // Toplam mevcut envanter adedi ve maliyeti
+    const totalRemainingUnits = rawLayers.reduce((s, l) => s + (l.remainingQty || 0), 0)
+    const totalInventoryCost = rawLayers.reduce((s, l) => s + (l.remainingQty || 0) * (l.unitCost || 0), 0)
+    const avgCost = totalRemainingUnits > 0 ? Number((totalInventoryCost / totalRemainingUnits).toFixed(2)) : standardCost
+
+    // 1. FIFO Hesaplama (İlk Giren İlk Çıkar)
+    let remFifo = safeQty
+    let fifoTotalCost = 0
+    const consumedLayersFifo: Array<{ layerNo: string; qtyUsed: number; unitCost: number; subtotal: number; lotNumber?: string; consumedQty?: number }> = []
+    const consumedFifoBreakdown: Array<{ lotNumber: string; consumedQty: number; unitCost: number }> = []
+
+    for (const layer of layersAsc) {
+      if (remFifo <= 0) break
+      const take = Math.min(remFifo, layer.remainingQty || 0)
+      if (take > 0) {
+        const sub = take * layer.unitCost
+        fifoTotalCost += sub
+        remFifo -= take
+        consumedLayersFifo.push({
+          layerNo: `${layer.receiptDocNo || "GRN"} (${layer.lotNumber || "LOT"})`,
+          qtyUsed: take,
+          unitCost: layer.unitCost,
+        subtotal: sub,
+          lotNumber: layer.lotNumber || "LOT-FIFO",
+          consumedQty: take
+        })
+        consumedFifoBreakdown.push({
+          lotNumber: layer.lotNumber || "LOT-FIFO",
+          consumedQty: take,
+          unitCost: layer.unitCost
+        })
+      }
+    }
+    if (remFifo > 0) {
+      const cost = fallbackCost
+      fifoTotalCost += remFifo * cost
       consumedLayersFifo.push({
-        layerNo: `${layer.receiptDocNo} (${layer.lotNumber})`,
-        qtyUsed: take,
-        unitCost: layer.unitCost,
-        subtotal: sub
+        layerNo: "Son Katman Tamamlama",
+        qtyUsed: remFifo,
+      unitCost: cost,
+        subtotal: remFifo * cost,
+        lotNumber: "LOT-FALLBACK",
+        consumedQty: remFifo
+      })
+      consumedFifoBreakdown.push({
+        lotNumber: "LOT-FALLBACK",
+        consumedQty: remFifo,
+        unitCost: cost
       })
     }
-  }
-  if (remFifo > 0) {
-    const fallbackCost = item.fifoUnitCost || item.currentAvgCost
-    fifoTotalCost += remFifo * fallbackCost
-    consumedLayersFifo.push({
-      layerNo: "Son Katman Tamamlama",
-      qtyUsed: remFifo,
-      unitCost: fallbackCost,
-      subtotal: remFifo * fallbackCost
-    })
-  }
 
-  // 2. LIFO Hesaplama (Son Giren İlk Çıkar)
-  let remLifo = safeQty
-  let lifoTotalCost = 0
-  const consumedLayersLifo: ValuationComparisonResult["consumedLayersLifo"] = []
+    // 2. LIFO Hesaplama (Son Giren İlk Çıkar)
+    let remLifo = safeQty
+    let lifoTotalCost = 0
+    const consumedLayersLifo: Array<{ layerNo: string; qtyUsed: number; unitCost: number; subtotal: number; lotNumber?: string; consumedQty?: number }> = []
+    const consumedLifoBreakdown: Array<{ lotNumber: string; consumedQty: number; unitCost: number }> = []
 
-  for (const layer of layersDesc) {
-    if (remLifo <= 0) break
-    const take = Math.min(remLifo, layer.remainingQty)
-    if (take > 0) {
-      const sub = take * layer.unitCost
-      lifoTotalCost += sub
-      remLifo -= take
+    for (const layer of layersDesc) {
+      if (remLifo <= 0) break
+      const take = Math.min(remLifo, layer.remainingQty || 0)
+      if (take > 0) {
+        const sub = take * layer.unitCost
+        lifoTotalCost += sub
+        remLifo -= take
+        consumedLayersLifo.push({
+          layerNo: `${layer.receiptDocNo || "GRN"} (${layer.lotNumber || "LOT"})`,
+          qtyUsed: take,
+          unitCost: layer.unitCost,
+        subtotal: sub,
+          lotNumber: layer.lotNumber || "LOT-LIFO",
+          consumedQty: take
+        })
+        consumedLifoBreakdown.push({
+          lotNumber: layer.lotNumber || "LOT-LIFO",
+          consumedQty: take,
+          unitCost: layer.unitCost
+        })
+      }
+    }
+    if (remLifo > 0) {
+      const cost = fallbackCost
+      lifoTotalCost += remLifo * cost
       consumedLayersLifo.push({
-        layerNo: `${layer.receiptDocNo} (${layer.lotNumber})`,
-        qtyUsed: take,
-        unitCost: layer.unitCost,
-        subtotal: sub
+        layerNo: "İlk Katman Tamamlama",
+        qtyUsed: remLifo,
+      unitCost: cost,
+        subtotal: remLifo * cost,
+        lotNumber: "LOT-FALLBACK",
+        consumedQty: remLifo
+      })
+      consumedLifoBreakdown.push({
+        lotNumber: "LOT-FALLBACK",
+        consumedQty: remLifo,
+        unitCost: cost
       })
     }
-  }
-  if (remLifo > 0) {
-    const fallbackCost = item.lifoUnitCost || item.lastPurchaseCost
-    lifoTotalCost += remLifo * fallbackCost
-    consumedLayersLifo.push({
-      layerNo: "İlk Katman Tamamlama",
-      qtyUsed: remLifo,
-      unitCost: fallbackCost,
-      subtotal: remLifo * fallbackCost
-    })
-  }
 
-  // 3. Ağırlıklı Ortalama (Weighted Average)
-  const totalLayerUnits = item.costLayers.reduce((s, l) => s + l.remainingQty, 0)
-  const totalLayerCost = item.costLayers.reduce((s, l) => s + l.remainingQty * l.unitCost, 0)
-  const weightedAvgUnitCost =
-    totalLayerUnits > 0 ? Number((totalLayerCost / totalLayerUnits).toFixed(2)) : item.currentAvgCost
-  const weightedAvgTotalCost = Number((weightedAvgUnitCost * safeQty).toFixed(2))
+    // 3. Ağırlıklı Ortalama (Weighted Average)
+    const weightedAvgUnitCost = avgCost
+    const weightedAvgTotalCost = Number((weightedAvgUnitCost * safeQty).toFixed(2))
 
-  // 4. Standart Maliyet ve Sapma (Variance)
-  const standardUnitCost = item.standardCost
-  const standardTotalCost = Number((standardUnitCost * safeQty).toFixed(2))
-  const standardCostVariance = Number((fifoTotalCost - standardTotalCost).toFixed(2))
+    // 4. Standart Maliyet ve Sapma (Variance)
+    const standardUnitCost = standardCost
+    const standardTotalCost = Number((standardUnitCost * safeQty).toFixed(2))
+    const standardCostVariance = Number((fifoTotalCost - standardTotalCost).toFixed(2))
 
-  return {
-    itemId: item.id,
-    sku: item.sku,
-    name: item.name,
-    issueQty: safeQty,
-    fifoTotalCost: Number(fifoTotalCost.toFixed(2)),
-    fifoUnitCost: Number((fifoTotalCost / safeQty).toFixed(2)),
-    lifoTotalCost: Number(lifoTotalCost.toFixed(2)),
-    lifoUnitCost: Number((lifoTotalCost / safeQty).toFixed(2)),
-    weightedAvgTotalCost,
-    weightedAvgUnitCost,
-    standardTotalCost,
-    standardUnitCost,
-    standardCostVariance,
-    consumedLayersFifo,
-    consumedLayersLifo
-  }
-}
+    // Seçilen yönteme özel alanlar
+    let methodUnitCost = Number((fifoTotalCost / safeQty).toFixed(2))
+    let methodCogs = Number(fifoTotalCost.toFixed(2))
+    let methodConsumedBreakdown = consumedFifoBreakdown
 
-/**
- * BOM (Ürün Ağacı) Reçete Maliyet Roll-up Hesaplayıcı
- */
-export function calculateBomRollupCost(
-  bom: BomRecipeRecord,
-  batchCount = 1
-): {
-  fifoBatchCost: number
-  lifoBatchCost: number
-  avgBatchCost: number
-  standardBatchCost: number
-  maxProducibleBatches: number
-  bottleneckComponentSku: string
-} {
-  let fifoMat = 0
-  let lifoMat = 0
-  let avgMat = 0
-  let stdMat = 0
-  let maxProducibleBatches = 999999
-  let bottleneckComponentSku = "-"
+    if (selectedMethod === "LIFO") {
+      methodUnitCost = Number((lifoTotalCost / safeQty).toFixed(2))
+      methodCogs = Number(lifoTotalCost.toFixed(2))
+      methodConsumedBreakdown = consumedLifoBreakdown
+    } else if (selectedMethod === "WEIGHTED_AVERAGE") {
+      methodUnitCost = weightedAvgUnitCost
+      methodCogs = weightedAvgTotalCost
+      methodConsumedBreakdown = [{ lotNumber: "Ağırlıklı Ortalama Havuzu", consumedQty: safeQty, unitCost: weightedAvgUnitCost }]
+    } else if (selectedMethod === "STANDARD") {
+      methodUnitCost = standardUnitCost
+      methodCogs = standardTotalCost
+      methodConsumedBreakdown = [{ lotNumber: "Standart Reçete Maliyeti", consumedQty: safeQty, unitCost: standardUnitCost }]
+    }
 
-  for (const comp of bom.components) {
-    const effectiveQty = comp.quantity * (1 + comp.scrapPercent / 100) * batchCount
-    fifoMat += effectiveQty * comp.fifoUnitCost
-    lifoMat += effectiveQty * comp.lifoUnitCost
-    avgMat += effectiveQty * comp.avgUnitCost
-    stdMat += effectiveQty * comp.standardUnitCost
+    const endingInventoryValue = Math.max(0, totalInventoryCost - methodCogs)
 
-    const possibleForComp = Math.floor(comp.availableStock / comp.quantity)
-    if (possibleForComp < maxProducibleBatches) {
-      maxProducibleBatches = possibleForComp
-      bottleneckComponentSku = `${comp.componentSku} (${comp.availableStock} ${comp.unit} mevcut)`
+    return {
+      // UI Karşılaştırma Alanları (app/dashboard/stok/page.tsx ve inventoryAiEngine)
+      method: selectedMethod,
+      unitCost: methodUnitCost,
+      cogsForSimulatedIssue: methodCogs,
+      endingInventoryValue,
+      consumedLayersBreakdown: methodConsumedBreakdown,
+
+      // Standart ValuationComparisonResult Alanları (Geriye dönük tam uyum)
+      itemId,
+      sku,
+      name,
+      issueQty: safeQty,
+      fifoTotalCost: Number(fifoTotalCost.toFixed(2)),
+      fifoUnitCost: Number((fifoTotalCost / safeQty).toFixed(2)),
+      lifoTotalCost: Number(lifoTotalCost.toFixed(2)),
+      lifoUnitCost: Number((lifoTotalCost / safeQty).toFixed(2)),
+      weightedAvgTotalCost,
+      weightedAvgUnitCost,
+      standardTotalCost,
+      standardUnitCost,
+      standardCostVariance,
+      consumedLayersFifo,
+      consumedLayersLifo
     }
   }
 
-  const opsCost = (bom.laborCostPerBatch + bom.overheadCostPerBatch) * batchCount
+  /**
+   * BOM (Ürün Ağacı) Reçete Maliyet Roll-up Hesaplayıcı
+   */
+  export function calculateBomRollupCost(
+    bom?: BomRecipeRecord | null,
+    batchCount = 1
+  ): {
+    fifoBatchCost: number
+    lifoBatchCost: number
+    avgBatchCost: number
+    standardBatchCost: number
+    maxProducibleBatches: number
+    bottleneckComponentSku: string
+  } {
+    if (!bom) {
+      return {
+        fifoBatchCost: 0,
+        lifoBatchCost: 0,
+        avgBatchCost: 0,
+        standardBatchCost: 0,
+        maxProducibleBatches: 0,
+        bottleneckComponentSku: "-"
+      }
+    }
 
-  return {
-    fifoBatchCost: Number((fifoMat + opsCost).toFixed(2)),
-    lifoBatchCost: Number((lifoMat + opsCost).toFixed(2)),
-    avgBatchCost: Number((avgMat + opsCost).toFixed(2)),
-    standardBatchCost: Number((stdMat + opsCost).toFixed(2)),
-    maxProducibleBatches: maxProducibleBatches === 999999 ? 0 : maxProducibleBatches,
-    bottleneckComponentSku
-  }
-}
+    let fifoMat = 0
+    let lifoMat = 0
+    let avgMat = 0
+    let stdMat = 0
+    let maxProducibleBatches = 999999
+    let bottleneckComponentSku = "-"
+
+      const components = Array.isArray(bom.components) ? bom.components : []
+      for (const comp of components) {
+        const effectiveQty = (comp.quantity || 0) * (1 + (comp.scrapPercent || 0) / 100) * batchCount
+        fifoMat += effectiveQty * (comp.fifoUnitCost || 0)
+        lifoMat += effectiveQty * (comp.lifoUnitCost || 0)
+        avgMat += effectiveQty * (comp.avgUnitCost || 0)
+        stdMat += effectiveQty * (comp.standardUnitCost || 0)
+
+        const compQty = comp.quantity || 1
+        const possibleForComp = Math.floor((comp.availableStock || 0) / compQty)
+        if (possibleForComp < maxProducibleBatches) {
+          maxProducibleBatches = possibleForComp
+          bottleneckComponentSku = `${comp.componentSku || "-"} (${comp.availableStock || 0} ${comp.unit || "Adet"} mevcut)`
+        }
+      }
+
+      const opsCost = ((bom.laborCostPerBatch || 0) + (bom.overheadCostPerBatch || 0)) * batchCount
+
+      return {
+        fifoBatchCost: Number((fifoMat + opsCost).toFixed(2)),
+        lifoBatchCost: Number((lifoMat + opsCost).toFixed(2)),
+        avgBatchCost: Number((avgMat + opsCost).toFixed(2)),
+        standardBatchCost: Number((stdMat + opsCost).toFixed(2)),
+        maxProducibleBatches: maxProducibleBatches === 999999 ? 0 : maxProducibleBatches,
+        bottleneckComponentSku
+      }
+    }
 

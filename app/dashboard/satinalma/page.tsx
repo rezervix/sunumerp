@@ -78,20 +78,24 @@ export default function SmartProcurementAndConsignmentPage() {
   ])
 
   const kpiStats = useMemo(() => {
-    const criticalCount = state.reorderPolicies.filter(
+    const policies = state.reorderPolicies || []
+    const requisitions = state.purchaseRequisitions || []
+    const consignments = state.consignmentStocks || []
+
+    const criticalCount = policies.filter(
       p => p.status === "CRITICAL_BELOW_SAFETY" || p.status === "REORDER_TRIGGERED"
     ).length
-    const pendingPrValue = state.purchaseRequisitions
+    const pendingPrValue = requisitions
       .filter(r => r.status !== "APPROVED_PO_SENT")
-      .reduce((s, r) => s + r.totalEstimatedTry, 0)
-    const totalConsignmentUnits = state.consignmentStocks.reduce(
-      (s, c) => s + c.availableConsignQty,
+      .reduce((s, r) => s + (r.totalEstimatedTry || 0), 0)
+    const totalConsignmentUnits = consignments.reduce(
+      (s, c) => s + (c.availableConsignQty || 0),
       0
     )
-    const unbilledConsignmentTry = state.consignmentStocks.reduce(
-      (s, c) => s + c.unbilledPayableTry,
-      0
-    )
+    const unbilledConsignmentTry = consignments.reduce(
+        (s, c) => s + (c.unbilledPayableTry || 0),
+        0
+      )
     return {
       criticalCount,
       pendingPrValue,
@@ -374,48 +378,48 @@ export default function SmartProcurementAndConsignmentPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {state.reorderPolicies.map(pol => (
-                        <tr key={pol.id} className="hover:bg-slate-50">
-                          <td className="p-2.5">
-                            <div className="font-semibold text-slate-900">{pol.itemName}</div>
-                            <div className="font-mono text-[11px] text-slate-500">
-                              {pol.sku} • Tedarik: {pol.leadTimeDays} Gün
-                            </div>
-                          </td>
-                          <td className="p-2.5 text-right">
-                            <Badge variant="outline">×{pol.seasonalityIndex}</Badge>
-                            <div className="text-[10px] text-slate-500 mt-0.5">
-                              {pol.seasonalityLabel}
-                            </div>
-                          </td>
-                          <td className="p-2.5 text-right font-semibold text-amber-700">
-                            {pol.safetyStockQty} Adet
-                          </td>
-                          <td className="p-2.5 text-right font-bold text-indigo-700">
-                            {pol.reorderPointQty} Adet
-                          </td>
-                          <td className="p-2.5 text-right font-bold text-slate-900">
-                            {pol.currentAvailableQty} Adet
-                          </td>
-                          <td className="p-2.5">
-                            <Badge
-                              className={
-                                pol.status === "CRITICAL_BELOW_SAFETY"
-                                  ? "bg-rose-600 text-white"
+                        {(state.reorderPolicies || []).map(pol => (
+                          <tr key={pol.id} className="hover:bg-slate-50">
+                            <td className="p-2.5">
+                              <div className="font-semibold text-slate-900">{pol.itemName}</div>
+                              <div className="font-mono text-[11px] text-slate-500">
+                                {pol.sku} • Tedarik: {pol.leadTimeDays} Gün
+                              </div>
+                            </td>
+                            <td className="p-2.5 text-right">
+                              <Badge variant="outline">×{pol.seasonalityIndex}</Badge>
+                              <div className="text-[10px] text-slate-500 mt-0.5">
+                                {pol.seasonalityLabel}
+                              </div>
+                            </td>
+                            <td className="p-2.5 text-right font-semibold text-amber-700">
+                              {pol.safetyStockQty} Adet
+                            </td>
+                            <td className="p-2.5 text-right font-bold text-indigo-700">
+                              {pol.reorderPointQty} Adet
+                            </td>
+                            <td className="p-2.5 text-right font-bold text-slate-900">
+                              {pol.currentAvailableQty} Adet
+                            </td>
+                            <td className="p-2.5">
+                              <Badge
+                                className={
+                                  pol.status === "CRITICAL_BELOW_SAFETY"
+                                    ? "bg-rose-600 text-white"
+                                    : pol.status === "REORDER_TRIGGERED"
+                                      ? "bg-amber-500 text-white"
+                                      : "bg-emerald-600 text-white"
+                                }
+                              >
+                                {pol.status === "CRITICAL_BELOW_SAFETY"
+                                  ? `KRİTİK • +${pol.recommendedOrderQty} Sipariş Ver`
                                   : pol.status === "REORDER_TRIGGERED"
-                                  ? "bg-amber-500 text-white"
-                                  : "bg-emerald-600 text-white"
-                              }
-                            >
-                              {pol.status === "CRITICAL_BELOW_SAFETY"
-                                ? `KRİTİK • +${pol.recommendedOrderQty} Sipariş Ver`
-                                : pol.status === "REORDER_TRIGGERED"
-                                ? `ROP TETİKLENDİ • +${pol.recommendedOrderQty}`
-                                : "GÜVENLİ SEVİYE"}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
+                                    ? `ROP TETİKLENDİ • +${pol.recommendedOrderQty}`
+                                    : "GÜVENLİ SEVİYE"}
+                              </Badge>
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -436,88 +440,87 @@ export default function SmartProcurementAndConsignmentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {state.purchaseRequisitions.map(req => (
-                <div
-                  key={req.id}
-                  className={`rounded-xl border p-4 transition-all ${
-                    req.status === "APPROVED_PO_SENT"
-                      ? "border-emerald-200 bg-emerald-50/20"
-                      : req.urgency === "CRITICAL"
-                      ? "border-rose-300 bg-rose-50/20"
-                      : "border-amber-200 bg-white"
-                  }`}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm font-bold text-slate-900">
-                        {req.reqNo}
-                      </span>
-                      <Badge
-                        className={
-                          req.urgency === "CRITICAL"
-                            ? "bg-rose-600 text-white"
-                            : "bg-amber-500 text-white"
-                        }
-                      >
-                        {req.urgency === "CRITICAL" ? "ACİL KRİTİK STOK UYARISI" : "ROP DÜŞÜK STOK UYARISI"}
-                      </Badge>
-                      <Badge variant="outline" className="font-mono text-xs">
-                        {req.warehouseCode}
-                      </Badge>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      {req.status === "APPROVED_PO_SENT" ? (
-                        <Badge className="bg-emerald-600 text-white gap-1">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          PO ONAYLANDI VE TEDARİKÇİYE İLETİLDİ
-                        </Badge>
-                      ) : (
-                        <Button
-                          size="sm"
-                          onClick={() => handleApprovePr(req.id)}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 text-xs"
+                {(state.purchaseRequisitions || []).map(req => (
+                  <div
+                    key={req.id}
+                    className={`rounded-xl border p-4 transition-all ${req.status === "APPROVED_PO_SENT"
+                        ? "border-emerald-200 bg-emerald-50/20"
+                        : req.urgency === "CRITICAL"
+                          ? "border-rose-300 bg-rose-50/20"
+                          : "border-amber-200 bg-white"
+                      }`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-sm font-bold text-slate-900">
+                          {req.reqNo}
+                        </span>
+                        <Badge
+                          className={
+                            req.urgency === "CRITICAL"
+                              ? "bg-rose-600 text-white"
+                              : "bg-amber-500 text-white"
+                          }
                         >
-                          <ShoppingCart className="h-3.5 w-3.5" />
-                          Satın Alma Talebini Onayla & PO Gönder
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+                          {req.urgency === "CRITICAL" ? "ACİL KRİTİK STOK UYARISI" : "ROP DÜŞÜK STOK UYARISI"}
+                        </Badge>
+                        <Badge variant="outline" className="font-mono text-xs">
+                          {req.warehouseCode}
+                        </Badge>
+                      </div>
 
-                  <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4 text-xs">
-                    <div>
-                      <span className="text-slate-500 block">Stok Kartı</span>
-                      <strong className="text-slate-900 text-sm">{req.itemName}</strong>
-                      <div className="font-mono text-slate-500">{req.sku}</div>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Önerilen Tedarikçi</span>
-                      <strong className="text-indigo-700 text-sm">{req.supplierName}</strong>
-                      <div className="text-slate-500">Teslimat: {req.expectedDeliveryDate}</div>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Önerilen Sipariş Miktarı</span>
-                      <strong className="text-emerald-700 text-sm">
-                        {req.orderQty.toLocaleString("tr-TR")} {req.unit}
-                      </strong>
-                      <div className="text-slate-500">
-                        Birim: ₺{req.estimatedUnitCostTry.toLocaleString("tr-TR")}
+                      <div className="flex items-center gap-2">
+                        {req.status === "APPROVED_PO_SENT" ? (
+                          <Badge className="bg-emerald-600 text-white gap-1">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            PO ONAYLANDI VE TEDARİKÇİYE İLETİLDİ
+                          </Badge>
+                        ) : (
+                          <Button
+                            size="sm"
+                            onClick={() => handleApprovePr(req.id)}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 text-xs"
+                          >
+                            <ShoppingCart className="h-3.5 w-3.5" />
+                            Satın Alma Talebini Onayla & PO Gönder
+                          </Button>
+                        )}
                       </div>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Tahmini Sipariş Tutarı</span>
-                      <strong className="text-slate-900 text-base">
-                        ₺{req.totalEstimatedTry.toLocaleString("tr-TR")}
-                      </strong>
+
+                    <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-4 text-xs">
+                      <div>
+                        <span className="text-slate-500 block">Stok Kartı</span>
+                        <strong className="text-slate-900 text-sm">{req.itemName}</strong>
+                        <div className="font-mono text-slate-500">{req.sku}</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Önerilen Tedarikçi</span>
+                        <strong className="text-indigo-700 text-sm">{req.supplierName}</strong>
+                        <div className="text-slate-500">Teslimat: {req.expectedDeliveryDate}</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Önerilen Sipariş Miktarı</span>
+                        <strong className="text-emerald-700 text-sm">
+                          {req.orderQty.toLocaleString("tr-TR")} {req.unit}
+                        </strong>
+                        <div className="text-slate-500">
+                          Birim: ₺{req.estimatedUnitCostTry.toLocaleString("tr-TR")}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Tahmini Sipariş Tutarı</span>
+                        <strong className="text-slate-900 text-base">
+                          ₺{req.totalEstimatedTry.toLocaleString("tr-TR")}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 rounded bg-slate-100 px-3 py-2 text-xs text-slate-700">
+                      <strong>Algoritma Tetikleme Gerekçesi:</strong> {req.triggerReason}
                     </div>
                   </div>
-
-                  <div className="mt-3 rounded bg-slate-100 px-3 py-2 text-xs text-slate-700">
-                    <strong>Algoritma Tetikleme Gerekçesi:</strong> {req.triggerReason}
-                  </div>
-                </div>
-              ))}
+                ))}
             </CardContent>
           </Card>
         </TabsContent>
@@ -535,93 +538,93 @@ export default function SmartProcurementAndConsignmentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {state.consignmentStocks.map(con => (
-                <div
-                  key={con.id}
-                  className="rounded-xl border border-slate-200 p-4 space-y-3 hover:border-indigo-200 transition-all"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-indigo-600 text-white font-mono">
-                        {con.agreementNo}
-                      </Badge>
-                      <span className="font-semibold text-sm text-slate-900">
-                        {con.supplierName}
-                      </span>
-                      <Badge variant="outline" className="font-mono text-xs">
-                        {con.warehouseName} ({con.binCode})
+                {(state.consignmentStocks || []).map(con => (
+                  <div
+                    key={con.id}
+                    className="rounded-xl border border-slate-200 p-4 space-y-3 hover:border-indigo-200 transition-all"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-indigo-600 text-white font-mono">
+                          {con.agreementNo}
+                        </Badge>
+                        <span className="font-semibold text-sm text-slate-900">
+                          {con.supplierName}
+                        </span>
+                        <Badge variant="outline" className="font-mono text-xs">
+                          {con.warehouseName} ({con.binCode})
+                        </Badge>
+                      </div>
+                      <Badge
+                        className={
+                          con.status === "SETTLED"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : con.status === "SETTLEMENT_READY"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-blue-100 text-blue-800"
+                        }
+                      >
+                        {con.status === "SETTLED"
+                          ? "MUTABAKAT KAPATILDI"
+                          : con.status === "SETTLEMENT_READY"
+                            ? "HAKEDİŞ FATURASI BEKLİYOR"
+                            : "AKTİF KONSİNYE HAVUZU"}
                       </Badge>
                     </div>
-                    <Badge
-                      className={
-                        con.status === "SETTLED"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : con.status === "SETTLEMENT_READY"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-blue-100 text-blue-800"
-                      }
-                    >
-                      {con.status === "SETTLED"
-                        ? "MUTABAKAT KAPATILDI"
-                        : con.status === "SETTLEMENT_READY"
-                        ? "HAKEDİŞ FATURASI BEKLİYOR"
-                        : "AKTİF KONSİNYE HAVUZU"}
-                    </Badge>
-                  </div>
 
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-5 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
-                    <div className="sm:col-span-2">
-                      <span className="text-slate-500 block">Konsinye Ürün & Lot</span>
-                      <strong className="text-slate-900 text-sm">{con.itemName}</strong>
-                      <div className="font-mono text-slate-500">
-                        {con.sku} • Lot: {con.lotNumber}
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-5 text-xs bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <div className="sm:col-span-2">
+                        <span className="text-slate-500 block">Konsinye Ürün & Lot</span>
+                        <strong className="text-slate-900 text-sm">{con.itemName}</strong>
+                        <div className="font-mono text-slate-500">
+                          {con.sku} • Lot: {con.lotNumber}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Kalan Emanet Stok</span>
+                        <strong className="text-indigo-700 text-base">
+                          {con.availableConsignQty} / {con.vendorOwnedTotalQty} {con.unit}
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Tüketilen / Satılan</span>
+                        <strong className="text-amber-700 text-base">
+                          {con.consumedOrSoldQty} {con.unit}
+                        </strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Ödenecek Hakediş Tutarı</span>
+                        <strong className="text-emerald-700 text-base">
+                          ₺{con.unbilledPayableTry.toLocaleString("tr-TR")}
+                        </strong>
                       </div>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Kalan Emanet Stok</span>
-                      <strong className="text-indigo-700 text-base">
-                        {con.availableConsignQty} / {con.vendorOwnedTotalQty} {con.unit}
-                      </strong>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Tüketilen / Satılan</span>
-                      <strong className="text-amber-700 text-base">
-                        {con.consumedOrSoldQty} {con.unit}
-                      </strong>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Ödenecek Hakediş Tutarı</span>
-                      <strong className="text-emerald-700 text-base">
-                        ₺{con.unbilledPayableTry.toLocaleString("tr-TR")}
-                      </strong>
-                    </div>
-                  </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                    <span className="text-xs text-slate-500">
-                      Birim Anlaşma Maliyeti: <strong>₺{con.agreedUnitCostTry}</strong> • Son Mutabakat: <strong>{con.lastSettlementDate}</strong>
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleConsignmentAction(con.id, 10)}
-                        className="h-8 text-xs"
-                      >
-                        +10 {con.unit} Konsinye Tüket (Mülkiyet Devri)
-                      </Button>
-                      <Button
-                        size="sm"
-                        disabled={con.unbilledPayableTry === 0}
-                        onClick={() => handleConsignmentAction(con.id, 0)}
-                        className="h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
-                      >
-                        Hakediş Mutabakatı Yap & Fatura Kapat
-                      </Button>
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                      <span className="text-xs text-slate-500">
+                        Birim Anlaşma Maliyeti: <strong>₺{con.agreedUnitCostTry}</strong> • Son Mutabakat: <strong>{con.lastSettlementDate}</strong>
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleConsignmentAction(con.id, 10)}
+                          className="h-8 text-xs"
+                        >
+                          +10 {con.unit} Konsinye Tüket (Mülkiyet Devri)
+                        </Button>
+                        <Button
+                          size="sm"
+                          disabled={con.unbilledPayableTry === 0}
+                          onClick={() => handleConsignmentAction(con.id, 0)}
+                          className="h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+                        >
+                          Hakediş Mutabakatı Yap & Fatura Kapat
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </CardContent>
           </Card>
         </TabsContent>

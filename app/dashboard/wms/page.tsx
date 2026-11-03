@@ -54,37 +54,37 @@ const WORKFLOW_STAGES: {
   subtitle: string
   badgeColor: string
 }[] = [
-  {
-    key: "GOODS_RECEIPT",
-    title: "1. Mal Kabul (ASN / GRN)",
-    subtitle: "Rampa İndirme & GS1 Barkod Kontrol",
-    badgeColor: "bg-blue-600 text-white"
-  },
-  {
-    key: "QC_INSPECTION",
-    title: "2. Kalite Kontrol (QC)",
-    subtitle: "Tazelik, Soğuk Zincir & Numune Onayı",
-    badgeColor: "bg-amber-600 text-white"
-  },
-  {
-    key: "PUTAWAY",
-    title: "3. Rafa Yerleştirme (Put-Away)",
-    subtitle: "Lokasyon Direktifi ile Hücreye İstif",
-    badgeColor: "bg-indigo-600 text-white"
-  },
-  {
-    key: "WAVE_PICK",
-    title: "4. Dalga Toplama (Wave Pick)",
-    subtitle: "FEFO & Rota Optimizasyonlu Toplama",
-    badgeColor: "bg-purple-600 text-white"
-  },
-  {
-    key: "PACKING",
-    title: "5. Paketleme (Pack & LPN)",
-    subtitle: "Koli/LPN Kapama & Kargo Etiketi",
-    badgeColor: "bg-emerald-600 text-white"
-  }
-]
+    {
+      key: "GOODS_RECEIPT",
+      title: "1. Mal Kabul (ASN / GRN)",
+      subtitle: "Rampa İndirme & GS1 Barkod Kontrol",
+      badgeColor: "bg-blue-600 text-white"
+    },
+    {
+      key: "QC_INSPECTION",
+      title: "2. Kalite Kontrol (QC)",
+      subtitle: "Tazelik, Soğuk Zincir & Numune Onayı",
+      badgeColor: "bg-amber-600 text-white"
+    },
+    {
+      key: "PUTAWAY",
+      title: "3. Rafa Yerleştirme (Put-Away)",
+      subtitle: "Lokasyon Direktifi ile Hücreye İstif",
+      badgeColor: "bg-indigo-600 text-white"
+    },
+    {
+      key: "WAVE_PICK",
+      title: "4. Dalga Toplama (Wave Pick)",
+      subtitle: "FEFO & Rota Optimizasyonlu Toplama",
+      badgeColor: "bg-purple-600 text-white"
+    },
+    {
+      key: "PACKING",
+      title: "5. Paketleme (Pack & LPN)",
+      subtitle: "Koli/LPN Kapama & Kargo Etiketi",
+      badgeColor: "bg-emerald-600 text-white"
+    }
+  ]
 
 export default function AdvancedWmsOperationsPage() {
   const [state, setState] = useState(() => enterpriseInventoryService.getState())
@@ -112,12 +112,13 @@ export default function AdvancedWmsOperationsPage() {
   }, [])
 
   const filteredBins = useMemo(() => {
-    if (selectedZoneFilter === "ALL") return state.wmsBins
-    return state.wmsBins.filter(b => b.zoneType === selectedZoneFilter)
+    const bins = state.wmsBins || []
+    if (selectedZoneFilter === "ALL") return bins
+    return bins.filter(b => b.zoneType === selectedZoneFilter)
   }, [state.wmsBins, selectedZoneFilter])
 
   const activeCountSession = useMemo(
-    () => state.countSessions.find(s => s.id === selectedSessionId) || state.countSessions[0],
+    () => (state.countSessions || []).find(s => s.id === selectedSessionId) || (state.countSessions || [])[0] || null,
     [state.countSessions, selectedSessionId]
   )
 
@@ -224,7 +225,7 @@ export default function AdvancedWmsOperationsPage() {
               <span className="text-xs font-medium text-slate-500">Aktif Hücre (Storage Bin)</span>
               <MapPin className="h-4 w-4 text-indigo-600" />
             </div>
-            <div className="mt-2 text-2xl font-bold text-slate-900">{state.wmsBins.length} Hücre</div>
+            <div className="mt-2 text-2xl font-bold text-slate-900">{(state.wmsBins || []).length} Hücre</div>
             <p className="mt-1 text-xs text-slate-500">
               Zone → Aisle → Rack → Level → Bin Hiyerarşisi
             </p>
@@ -238,7 +239,7 @@ export default function AdvancedWmsOperationsPage() {
               <PackageCheck className="h-4 w-4 text-emerald-600" />
             </div>
             <div className="mt-2 text-2xl font-bold text-slate-900">
-              {state.wmsTasks.length} İş Emri
+              {(state.wmsTasks || []).length} İş Emri
             </div>
             <p className="mt-1 text-xs text-emerald-600 font-medium">
               Mal Kabul, QC, Put-Away, Wave Pick & Pack
@@ -253,7 +254,7 @@ export default function AdvancedWmsOperationsPage() {
               <QrCode className="h-4 w-4 text-purple-600" />
             </div>
             <div className="mt-2 text-2xl font-bold text-slate-900">
-              {state.licensePlates.length} Aktif LPN
+              {(state.licensePlates || []).length} Aktif LPN
             </div>
             <p className="mt-1 text-xs text-slate-500">
               SSCC-18 Palet, Flora Arabası & Koli Takibi
@@ -268,7 +269,7 @@ export default function AdvancedWmsOperationsPage() {
               <ClipboardCheck className="h-4 w-4 text-amber-600" />
             </div>
             <div className="mt-2 text-2xl font-bold text-slate-900">
-              {state.countSessions.length} Oturum
+              {(state.countSessions || []).length} Oturum
             </div>
             <p className="mt-1 text-xs text-amber-700 font-medium">
               Kör Sayım (Blind) & Smart Cycle Count Aktif
@@ -331,13 +332,12 @@ export default function AdvancedWmsOperationsPage() {
                 {filteredBins.map(bin => (
                   <div
                     key={bin.id}
-                    className={`rounded-xl border p-4 space-y-2.5 transition-all ${
-                      bin.status === "QUARANTINE_LOCKED"
+                    className={`rounded-xl border p-4 space-y-2.5 transition-all ${bin.status === "QUARANTINE_LOCKED"
                         ? "border-rose-300 bg-rose-50/40"
                         : bin.occupancyPercent >= 80
-                        ? "border-amber-300 bg-amber-50/30"
-                        : "border-slate-200 bg-white"
-                    }`}
+                          ? "border-amber-300 bg-amber-50/30"
+                          : "border-slate-200 bg-white"
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
@@ -348,8 +348,8 @@ export default function AdvancedWmsOperationsPage() {
                           bin.status === "QUARANTINE_LOCKED"
                             ? "bg-rose-600 text-white"
                             : bin.status === "FULL"
-                            ? "bg-amber-600 text-white"
-                            : "bg-emerald-600 text-white"
+                              ? "bg-amber-600 text-white"
+                              : "bg-emerald-600 text-white"
                         }
                       >
                         %{bin.occupancyPercent} Dolu
@@ -556,49 +556,49 @@ export default function AdvancedWmsOperationsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {state.licensePlates.map(lpn => (
-                  <div
-                    key={lpn.id}
-                    className="rounded-lg border border-slate-200 p-3.5 space-y-2 hover:border-purple-300 transition-all"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div>
-                        <span className="font-mono text-sm font-bold text-purple-700">
-                          {lpn.lpnCode}
+                  {(state.licensePlates || []).map(lpn => (
+                    <div
+                      key={lpn.id}
+                      className="rounded-lg border border-slate-200 p-3.5 space-y-2 hover:border-purple-300 transition-all"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                          <span className="font-mono text-sm font-bold text-purple-700">
+                            {lpn.lpnCode}
+                          </span>
+                          <div className="font-mono text-[11px] text-slate-500">
+                            GS1 SSCC-18: {lpn.sscc18}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Badge variant="outline">{lpn.containerType}</Badge>
+                          <Badge className="bg-emerald-100 text-emerald-800">{lpn.status}</Badge>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between text-xs text-slate-600">
+                        <span>
+                          Depo/Hücre: <strong className="font-mono">{lpn.warehouseCode} / {lpn.currentBinCode}</strong>
                         </span>
-                        <div className="font-mono text-[11px] text-slate-500">
-                          GS1 SSCC-18: {lpn.sscc18}
-                        </div>
+                        <span>
+                          Brüt Ağırlık: <strong>{lpn.totalWeightKg} kg</strong>
+                        </span>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <Badge variant="outline">{lpn.containerType}</Badge>
-                        <Badge className="bg-emerald-100 text-emerald-800">{lpn.status}</Badge>
+
+                      <div className="rounded bg-slate-50 p-2 border border-slate-100 space-y-1">
+                        {lpn.items.map((it, idx) => (
+                          <div key={idx} className="flex justify-between text-xs">
+                            <span>
+                              <strong>{it.itemName}</strong> ({it.sku})
+                            </span>
+                            <span className="font-mono font-semibold text-slate-900">
+                              {it.qty} {it.unit} ({it.lotNumber})
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-
-                    <div className="flex justify-between text-xs text-slate-600">
-                      <span>
-                        Depo/Hücre: <strong className="font-mono">{lpn.warehouseCode} / {lpn.currentBinCode}</strong>
-                      </span>
-                      <span>
-                        Brüt Ağırlık: <strong>{lpn.totalWeightKg} kg</strong>
-                      </span>
-                    </div>
-
-                    <div className="rounded bg-slate-50 p-2 border border-slate-100 space-y-1">
-                      {lpn.items.map((it, idx) => (
-                        <div key={idx} className="flex justify-between text-xs">
-                          <span>
-                            <strong>{it.itemName}</strong> ({it.sku})
-                          </span>
-                          <span className="font-mono font-semibold text-slate-900">
-                            {it.qty} {it.unit} ({it.lotNumber})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </CardContent>
             </Card>
 
@@ -626,46 +626,46 @@ export default function AdvancedWmsOperationsPage() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                {state.transferOrders.map(trf => (
-                  <div
-                    key={trf.id}
-                    className="rounded-lg border border-slate-200 p-3.5 space-y-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-sm font-bold text-slate-900">
-                        {trf.transferNo}
-                      </span>
-                      <Badge
-                        className={
-                          trf.status === "IN_TRANSIT"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-amber-100 text-amber-800"
-                        }
-                      >
-                        {trf.status === "IN_TRANSIT" ? "YOLDA (IN-TRANSIT)" : "TOPLANIYOR"}
-                      </Badge>
-                    </div>
+                  {(state.transferOrders || []).map(trf => (
+                    <div
+                      key={trf.id}
+                      className="rounded-lg border border-slate-200 p-3.5 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-sm font-bold text-slate-900">
+                          {trf.transferNo}
+                        </span>
+                        <Badge
+                          className={
+                            trf.status === "IN_TRANSIT"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-amber-100 text-amber-800"
+                          }
+                        >
+                          {trf.status === "IN_TRANSIT" ? "YOLDA (IN-TRANSIT)" : "TOPLANIYOR"}
+                        </Badge>
+                      </div>
 
-                    <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                      <span>{trf.fromWarehouseName}</span>
-                      <ArrowRight className="h-3.5 w-3.5 text-indigo-600" />
-                      <span>{trf.toWarehouseName}</span>
-                    </div>
+                      <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
+                        <span>{trf.fromWarehouseName}</span>
+                        <ArrowRight className="h-3.5 w-3.5 text-indigo-600" />
+                        <span>{trf.toWarehouseName}</span>
+                      </div>
 
-                    <div className="text-xs text-slate-600">
-                      Ürün: <strong>{trf.itemName}</strong> ({trf.sku}) —{" "}
-                      <strong className="text-emerald-700">
-                        {trf.quantity} {trf.unit}
-                      </strong>
-                    </div>
+                      <div className="text-xs text-slate-600">
+                        Ürün: <strong>{trf.itemName}</strong> ({trf.sku}) —{" "}
+                        <strong className="text-emerald-700">
+                          {trf.quantity} {trf.unit}
+                        </strong>
+                      </div>
 
-                    <div className="flex flex-wrap justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
-                      <span>LPN: {trf.lpnCode}</span>
-                      <span>Araç: {trf.carrierVehiclePlate}</span>
-                      <span>E-İrsaliye: {trf.eWaybillNo}</span>
+                      <div className="flex flex-wrap justify-between gap-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
+                        <span>LPN: {trf.lpnCode}</span>
+                        <span>Araç: {trf.carrierVehiclePlate}</span>
+                        <span>E-İrsaliye: {trf.eWaybillNo}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </CardContent>
             </Card>
           </div>
@@ -674,67 +674,66 @@ export default function AdvancedWmsOperationsPage() {
         {/* 4. SEKME: TAM SAYIM, DÖNGÜSEL SAYIM (SMART COUNT) VE KÖR SAYIM + OTOMATİK MAHSUPLAŞMA */}
         <TabsContent value="cycle-counting" className="space-y-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {state.countSessions.map(sess => (
-              <Card
-                key={sess.id}
-                onClick={() => setSelectedSessionId(sess.id)}
-                className={`cursor-pointer transition-all ${
-                  activeCountSession?.id === sess.id
-                    ? "border-2 border-indigo-600 bg-indigo-50/20"
-                    : "border-slate-200 hover:border-slate-300"
-                }`}
-              >
-                <CardContent className="p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-slate-900">
-                      {sess.sessionNo}
-                    </span>
-                    <Badge
-                      className={
-                        sess.countType === "BLIND_COUNT"
-                          ? "bg-slate-900 text-white"
-                          : sess.countType === "SMART_CYCLE_COUNT"
-                          ? "bg-indigo-600 text-white"
-                          : "bg-emerald-600 text-white"
-                      }
-                    >
-                      {sess.countType === "BLIND_COUNT"
-                        ? "Kör Sayım (Blind Count)"
-                        : sess.countType === "SMART_CYCLE_COUNT"
-                        ? "Döngüsel (Smart Count)"
-                        : "Yıllık Tam Sayım"}
-                    </Badge>
-                  </div>
-                  <div className="font-semibold text-sm text-slate-900">
-                    {sess.warehouseName} — {sess.zoneFilter}
-                  </div>
-                  <div className="flex justify-between text-xs text-slate-600">
-                    <span>İlerleme: {sess.countedBinsCount}/{sess.totalBinsToCount} Hücre</span>
-                    <span
-                      className={
-                        sess.totalVarianceTry < 0
-                          ? "text-rose-600 font-bold"
-                          : sess.totalVarianceTry > 0
-                          ? "text-emerald-600 font-bold"
-                          : "text-slate-600"
-                      }
-                    >
-                      Fark: ₺{sess.totalVarianceTry.toLocaleString("tr-TR")}
-                    </span>
-                  </div>
-                  <div className="pt-1 flex items-center justify-between">
-                    <Badge variant="outline" className="text-[10px]">
-                      Durum: {sess.status}
-                    </Badge>
-                    {sess.reconciledJournalNo && (
-                      <span className="font-mono text-[10px] text-emerald-700 font-semibold">
-                        Fiş: {sess.reconciledJournalNo}
+              {(state.countSessions || []).map(sess => (
+                <Card
+                  key={sess.id}
+                  onClick={() => setSelectedSessionId(sess.id)}
+                  className={`cursor-pointer transition-all ${activeCountSession?.id === sess.id
+                      ? "border-2 border-indigo-600 bg-indigo-50/20"
+                      : "border-slate-200 hover:border-slate-300"
+                    }`}
+                >
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-bold text-slate-900">
+                        {sess.sessionNo}
                       </span>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      <Badge
+                        className={
+                          sess.countType === "BLIND_COUNT"
+                            ? "bg-slate-900 text-white"
+                            : sess.countType === "SMART_CYCLE_COUNT"
+                              ? "bg-indigo-600 text-white"
+                              : "bg-emerald-600 text-white"
+                        }
+                      >
+                        {sess.countType === "BLIND_COUNT"
+                          ? "Kör Sayım (Blind Count)"
+                          : sess.countType === "SMART_CYCLE_COUNT"
+                            ? "Döngüsel (Smart Count)"
+                            : "Yıllık Tam Sayım"}
+                      </Badge>
+                    </div>
+                    <div className="font-semibold text-sm text-slate-900">
+                      {sess.warehouseName} — {sess.zoneFilter}
+                    </div>
+                    <div className="flex justify-between text-xs text-slate-600">
+                      <span>İlerleme: {sess.countedBinsCount}/{sess.totalBinsToCount} Hücre</span>
+                      <span
+                        className={
+                          sess.totalVarianceTry < 0
+                            ? "text-rose-600 font-bold"
+                            : sess.totalVarianceTry > 0
+                              ? "text-emerald-600 font-bold"
+                              : "text-slate-600"
+                        }
+                      >
+                        Fark: ₺{sess.totalVarianceTry.toLocaleString("tr-TR")}
+                      </span>
+                    </div>
+                    <div className="pt-1 flex items-center justify-between">
+                      <Badge variant="outline" className="text-[10px]">
+                        Durum: {sess.status}
+                      </Badge>
+                      {sess.reconciledJournalNo && (
+                        <span className="font-mono text-[10px] text-emerald-700 font-semibold">
+                          Fiş: {sess.reconciledJournalNo}
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           {activeCountSession && (
@@ -807,99 +806,101 @@ export default function AdvancedWmsOperationsPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {activeCountSession.lines.map(line => {
-                        const hideSystem =
-                          activeCountSession.isBlindMode &&
-                          !revealBlindSystemQty &&
-                          activeCountSession.status !== "RECONCILED"
-                        return (
-                          <tr key={line.id} className="hover:bg-slate-50">
-                            <td className="p-3 font-mono text-xs">
-                              <div className="font-bold text-slate-900">{line.binCode}</div>
-                              <div className="text-slate-500">Lot: {line.lotNumber}</div>
-                            </td>
-                            <td className="p-3">
-                              <div className="font-medium text-slate-900">{line.itemName}</div>
-                              <div className="font-mono text-xs text-slate-500">{line.sku}</div>
-                            </td>
-                            <td className="p-3 text-right font-mono">
-                              {hideSystem ? (
-                                <Badge variant="secondary" className="font-mono">
-                                  🔒 GİZLİ (KÖR SAYIM)
-                                </Badge>
-                              ) : (
-                                <span className="font-semibold">
-                                  {line.systemQty} {line.unit}
-                                </span>
-                              )}
-                            </td>
-                            <td className="p-3 text-right font-bold text-indigo-700">
-                              {line.countedQty !== null ? `${line.countedQty} ${line.unit}` : "Bekliyor"}
-                            </td>
-                            <td className="p-3 text-right font-bold">
-                              {hideSystem || line.countedQty === null ? (
-                                "-"
-                              ) : (
-                                <span
-                                  className={
-                                    line.varianceQty < 0
-                                      ? "text-rose-600"
-                                      : line.varianceQty > 0
-                                      ? "text-emerald-600"
-                                      : "text-slate-500"
-                                  }
-                                >
-                                  {line.varianceQty > 0 ? `+${line.varianceQty}` : line.varianceQty}{" "}
-                                  {line.unit}
-                                </span>
-                              )}
-                            </td>
-                            <td className="p-3 text-right font-semibold">
-                              {hideSystem || line.countedQty === null ? (
-                                "-"
-                              ) : (
-                                <span
-                                  className={
-                                    line.varianceCostTry < 0
-                                      ? "text-rose-600"
-                                      : line.varianceCostTry > 0
-                                      ? "text-emerald-600"
-                                      : "text-slate-500"
-                                  }
-                                >
-                                  ₺{line.varianceCostTry.toLocaleString("tr-TR")}
-                                </span>
-                              )}
-                            </td>
-                            <td className="p-3">
-                              <div className="flex items-center gap-2">
-                                <Input
-                                  type="number"
-                                  placeholder={
-                                    line.countedQty !== null ? String(line.countedQty) : "Adet girin"
-                                  }
-                                  value={countInputs[line.id] ?? ""}
-                                  onChange={e =>
-                                    setCountInputs(prev => ({
-                                      ...prev,
-                                      [line.id]: e.target.value
-                                    }))
-                                  }
-                                  className="h-8 w-24 text-xs"
-                                />
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleSaveCountLine(line.id)}
-                                  className="h-8 text-xs"
-                                >
-                                  Kaydet
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        )
-                      })}
+                        {
+                          (activeCountSession.lines || []).map(line => {
+                            const hideSystem =
+                              activeCountSession.isBlindMode &&
+                              !revealBlindSystemQty &&
+                              activeCountSession.status !== "RECONCILED"
+                            return (
+                              <tr key={line.id} className="hover:bg-slate-50">
+                                <td className="p-3 font-mono text-xs">
+                                  <div className="font-bold text-slate-900">{line.binCode}</div>
+                                  <div className="text-slate-500">Lot: {line.lotNumber}</div>
+                                </td>
+                                <td className="p-3">
+                                  <div className="font-medium text-slate-900">{line.itemName}</div>
+                                  <div className="font-mono text-xs text-slate-500">{line.sku}</div>
+                                </td>
+                                <td className="p-3 text-right font-mono">
+                                  {hideSystem ? (
+                                    <Badge variant="secondary" className="font-mono">
+                                      🔒 GİZLİ (KÖR SAYIM)
+                                    </Badge>
+                                  ) : (
+                                    <span className="font-semibold">
+                                      {line.systemQty} {line.unit}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3 text-right font-bold text-indigo-700">
+                                  {line.countedQty !== null ? `${line.countedQty} ${line.unit}` : "Bekliyor"}
+                                </td>
+                                <td className="p-3 text-right font-bold">
+                                  {hideSystem || line.countedQty === null ? (
+                                    "-"
+                                  ) : (
+                                    <span
+                                      className={
+                                        line.varianceQty < 0
+                                          ? "text-rose-600"
+                                          : line.varianceQty > 0
+                                            ? "text-emerald-600"
+                                            : "text-slate-500"
+                                      }
+                                    >
+                                      {line.varianceQty > 0 ? `+${line.varianceQty}` : line.varianceQty}{" "}
+                                      {line.unit}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3 text-right font-semibold">
+                                  {hideSystem || line.countedQty === null ? (
+                                    "-"
+                                  ) : (
+                                    <span
+                                      className={
+                                        line.varianceCostTry < 0
+                                          ? "text-rose-600"
+                                          : line.varianceCostTry > 0
+                                            ? "text-emerald-600"
+                                            : "text-slate-500"
+                                      }
+                                    >
+                                      ₺{line.varianceCostTry.toLocaleString("tr-TR")}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    <Input
+                                      type="number"
+                                      placeholder={
+                                        line.countedQty !== null ? String(line.countedQty) : "Adet girin"
+                                      }
+                                      value={countInputs[line.id] ?? ""}
+                                      onChange={e =>
+                                        setCountInputs(prev => ({
+                                          ...prev,
+                                          [line.id]: e.target.value
+                                        }))
+                                      }
+                                      className="h-8 w-24 text-xs"
+                                    />
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleSaveCountLine(line.id)}
+                                      className="h-8 text-xs"
+                                    >
+                                      Kaydet
+                                    </Button>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          })
+                        }
                     </tbody>
                   </table>
                 </div>

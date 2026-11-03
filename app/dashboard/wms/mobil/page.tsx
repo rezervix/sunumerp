@@ -60,17 +60,26 @@ export default function MobileFieldScannerPwaPage() {
   const [isSyncing, setIsSyncing] = useState(false)
 
   useEffect(() => {
-    getOfflineWmsQueue().then(setQueue)
+    getOfflineWmsQueue().then(res => setQueue(res || []))
   }, [])
 
-  const pendingOfflineCount = queue.filter(q => q.syncStatus === "QUEUED_OFFLINE").length
+  const pendingOfflineCount = (queue || []).filter(q => q.syncStatus === "QUEUED_OFFLINE").length
 
   const handleSimulateHardwareScan = async (
     mode: "BARCODE_SCAN" | "QR_LOT_SCAN" | "RFID_BULK_READ"
   ) => {
     setScanMode(mode)
+    const items = inventoryState.items || []
     const matchedItem =
-      inventoryState.items.find(i => i.sku === selectedSku) || inventoryState.items[0]
+    items.find(i => i.sku === selectedSku) ||
+      items[0] || {
+      sku: selectedSku || "SKU-GEN-001",
+      name: "Genel Stok Kalemi",
+      rfidEpcPrefix: "3034257BF",
+      gtin: "8690001100000",
+      barcode: "8690001100000",
+      baseUnit: "Adet"
+    }
 
     const effectiveQty =
       mode === "RFID_BULK_READ" ? 48 : Math.max(1, Number(quantity) || 15)
@@ -78,8 +87,8 @@ export default function MobileFieldScannerPwaPage() {
       mode === "RFID_BULK_READ"
         ? `EPC-${matchedItem.rfidEpcPrefix || "3034257BF"}-BATCH(${effectiveQty})`
         : mode === "QR_LOT_SCAN"
-        ? `GS1-01${matchedItem.gtin}1726111810${lotNumber}`
-        : matchedItem.barcode
+            ? `GS1-01${matchedItem.gtin || "8690001100000"}1726111810${lotNumber}`
+            : matchedItem.barcode || "8690001100000"
 
     setScannedCode(generatedCode)
 
@@ -95,13 +104,13 @@ export default function MobileFieldScannerPwaPage() {
         binCode,
         lpnCode,
         quantity: effectiveQty,
-        unit: matchedItem.baseUnit
+        unit: matchedItem.baseUnit || "Adet"
       },
       isOfflineMode
     )
 
     const updated = await getOfflineWmsQueue()
-    setQueue(updated)
+    setQueue(updated || [])
 
     if (isOfflineMode) {
       toast.warning("Çevrimdışı (Offline) Kayıt IndexedDB Kuyruğuna Yazıldı", {
@@ -225,11 +234,10 @@ export default function MobileFieldScannerPwaPage() {
                 type="button"
                 variant={scanMode === "BARCODE_SCAN" ? "default" : "outline"}
                 onClick={() => handleSimulateHardwareScan("BARCODE_SCAN")}
-                className={`h-16 flex-col gap-1 text-xs ${
-                  scanMode === "BARCODE_SCAN"
+                className={`h-16 flex-col gap-1 text-xs ${scanMode === "BARCODE_SCAN"
                     ? "bg-emerald-600 hover:bg-emerald-700 text-white"
                     : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                }`}
+                  }`}
               >
                 <Barcode className="h-5 w-5" />
                 1D Barkod Okut
@@ -238,11 +246,10 @@ export default function MobileFieldScannerPwaPage() {
                 type="button"
                 variant={scanMode === "QR_LOT_SCAN" ? "default" : "outline"}
                 onClick={() => handleSimulateHardwareScan("QR_LOT_SCAN")}
-                className={`h-16 flex-col gap-1 text-xs ${
-                  scanMode === "QR_LOT_SCAN"
+                className={`h-16 flex-col gap-1 text-xs ${scanMode === "QR_LOT_SCAN"
                     ? "bg-indigo-600 hover:bg-indigo-700 text-white"
                     : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                }`}
+                  }`}
               >
                 <QrCode className="h-5 w-5" />
                 GS1 QR / Lot Okut
@@ -251,11 +258,10 @@ export default function MobileFieldScannerPwaPage() {
                 type="button"
                 variant={scanMode === "RFID_BULK_READ" ? "default" : "outline"}
                 onClick={() => handleSimulateHardwareScan("RFID_BULK_READ")}
-                className={`h-16 flex-col gap-1 text-xs ${
-                  scanMode === "RFID_BULK_READ"
+                className={`h-16 flex-col gap-1 text-xs ${scanMode === "RFID_BULK_READ"
                     ? "bg-purple-600 hover:bg-purple-700 text-white"
                     : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                }`}
+                  }`}
               >
                 <Radio className="h-5 w-5" />
                 Toplu RFID (48x)
@@ -361,65 +367,64 @@ export default function MobileFieldScannerPwaPage() {
                 </CardDescription>
               </div>
               <Badge variant="outline" className="font-mono">
-                Toplam Kayıt: {queue.length}
+                Toplam Kayıt: {(queue || []).length}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            {queue.map(op => (
-              <div
-                key={op.id}
-                className={`rounded-lg border p-3.5 space-y-2 ${
-                  op.syncStatus === "QUEUED_OFFLINE"
-                    ? "border-amber-300 bg-amber-50/40"
-                    : "border-slate-200 bg-white"
-                }`}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-slate-900 text-white font-mono text-[10px]">
-                      {op.operationType}
+              {(queue || []).map(op => (
+                <div
+                  key={op.id}
+                  className={`rounded-lg border p-3.5 space-y-2 ${op.syncStatus === "QUEUED_OFFLINE"
+                      ? "border-amber-300 bg-amber-50/40"
+                      : "border-slate-200 bg-white"
+                    }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-slate-900 text-white font-mono text-[10px]">
+                        {op.operationType}
+                      </Badge>
+                      <span className="font-mono text-xs font-bold text-indigo-700">
+                        {op.codeScanned}
+                      </span>
+                    </div>
+                    <Badge
+                      className={
+                        op.syncStatus === "QUEUED_OFFLINE"
+                          ? "bg-amber-500 text-white"
+                          : "bg-emerald-600 text-white"
+                      }
+                    >
+                      {op.syncStatus === "QUEUED_OFFLINE"
+                        ? "OFFLINE KUYRUKTA (BEKLİYOR)"
+                        : "SUNUCUYA SENKRONİZE EDİLDİ"}
                     </Badge>
-                    <span className="font-mono text-xs font-bold text-indigo-700">
-                      {op.codeScanned}
-                    </span>
                   </div>
-                  <Badge
-                    className={
-                      op.syncStatus === "QUEUED_OFFLINE"
-                        ? "bg-amber-500 text-white"
-                        : "bg-emerald-600 text-white"
-                    }
-                  >
-                    {op.syncStatus === "QUEUED_OFFLINE"
-                      ? "OFFLINE KUYRUKTA (BEKLİYOR)"
-                      : "SUNUCUYA SENKRONİZE EDİLDİ"}
-                  </Badge>
-                </div>
 
-                <div className="flex flex-wrap justify-between text-xs">
-                  <div>
-                    <strong className="text-slate-900">{op.itemName}</strong> ({op.sku})
+                  <div className="flex flex-wrap justify-between text-xs">
+                    <div>
+                      <strong className="text-slate-900">{op.itemName}</strong> ({op.sku})
+                    </div>
+                    <div className="font-bold text-emerald-700">
+                      {op.quantity} {op.unit}
+                    </div>
                   </div>
-                  <div className="font-bold text-emerald-700">
-                    {op.quantity} {op.unit}
-                  </div>
-                </div>
 
-                <div className="flex flex-wrap justify-between text-[11px] text-slate-500 font-mono">
-                  <span>Hücre: {op.binCode}</span>
-                  <span>LPN: {op.lpnCode || "-"}</span>
-                  <span>Cihaz: {op.deviceId} ({op.operatorName})</span>
-                  <span>Kayıt: {op.queuedAt}</span>
-                </div>
-
-                {op.conflictNote && (
-                  <div className="text-[11px] text-amber-800 bg-amber-100/60 px-2.5 py-1 rounded">
-                    {op.conflictNote}
+                  <div className="flex flex-wrap justify-between text-[11px] text-slate-500 font-mono">
+                    <span>Hücre: {op.binCode}</span>
+                    <span>LPN: {op.lpnCode || "-"}</span>
+                    <span>Cihaz: {op.deviceId} ({op.operatorName})</span>
+                    <span>Kayıt: {op.queuedAt}</span>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {op.conflictNote && (
+                    <div className="text-[11px] text-amber-800 bg-amber-100/60 px-2.5 py-1 rounded">
+                      {op.conflictNote}
+                    </div>
+                  )}
+                </div>
+              ))}
           </CardContent>
         </Card>
       </div>

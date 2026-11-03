@@ -206,32 +206,32 @@ export default function EcosystemApiMigrationAndSaasPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {state.apiKeys.map(ak => (
-                  <div
-                    key={ak.id}
-                    className="rounded-lg border border-slate-200 p-3.5 space-y-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-slate-900">{ak.name}</span>
-                      <Badge className="bg-emerald-100 text-emerald-800">{ak.iotOrSystemType}</Badge>
+                  {(state.apiKeys || []).map(ak => (
+                    <div
+                      key={ak.id}
+                      className="rounded-lg border border-slate-200 p-3.5 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-sm text-slate-900">{ak.name}</span>
+                        <Badge className="bg-emerald-100 text-emerald-800">{ak.iotOrSystemType}</Badge>
+                      </div>
+                      <div className="font-mono text-xs bg-slate-100 px-2.5 py-1 rounded text-slate-700">
+                        {ak.maskedKey}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {ak.scopes.map(sc => (
+                          <Badge key={sc} variant="outline" className="font-mono text-[10px]">
+                            {sc}
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="flex justify-between text-[11px] text-slate-500">
+                        <span>Limit: {ak.rateLimitPerMin} req/dk</span>
+                        <span>Bugün: <strong>{ak.requestsToday.toLocaleString("tr-TR")} çağrı</strong></span>
+                        <span>Son: {ak.lastUsedAt}</span>
+                      </div>
                     </div>
-                    <div className="font-mono text-xs bg-slate-100 px-2.5 py-1 rounded text-slate-700">
-                      {ak.maskedKey}
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {ak.scopes.map(sc => (
-                        <Badge key={sc} variant="outline" className="font-mono text-[10px]">
-                          {sc}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex justify-between text-[11px] text-slate-500">
-                      <span>Limit: {ak.rateLimitPerMin} req/dk</span>
-                      <span>Bugün: <strong>{ak.requestsToday.toLocaleString("tr-TR")} çağrı</strong></span>
-                      <span>Son: {ak.lastUsedAt}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
 
                 {/* Canlı /api/v1/inventory Test Konsolu */}
                 <div className="rounded-xl bg-slate-950 text-white p-4 space-y-3">
@@ -271,37 +271,37 @@ export default function EcosystemApiMigrationAndSaasPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {state.webhooks.map(whk => (
-                  <div
-                    key={whk.id}
-                    className="rounded-lg border border-slate-200 p-3.5 space-y-2"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-slate-900">{whk.name}</span>
-                      <Badge className="bg-emerald-600 text-white">
-                        HTTP {whk.lastStatusCode} OK
-                      </Badge>
-                    </div>
-                    <div className="font-mono text-xs text-indigo-700 break-all">
-                      {whk.targetUrl}
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {whk.subscribedEvents.map(ev => (
-                        <Badge key={ev} variant="secondary" className="font-mono text-[10px]">
-                          {ev}
+                  {(state.webhooks || []).map(whk => (
+                    <div
+                      key={whk.id}
+                      className="rounded-lg border border-slate-200 p-3.5 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-sm text-slate-900">{whk.name}</span>
+                        <Badge className="bg-emerald-600 text-white">
+                          HTTP {whk.lastStatusCode} OK
                         </Badge>
-                      ))}
+                      </div>
+                      <div className="font-mono text-xs text-indigo-700 break-all">
+                        {whk.targetUrl}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {whk.subscribedEvents.map(ev => (
+                          <Badge key={ev} variant="secondary" className="font-mono text-[10px]">
+                            {ev}
+                          </Badge>
+                        ))}
+                      </div>
+                      <pre className="rounded bg-slate-900 text-emerald-400 p-2.5 text-[10px] font-mono overflow-x-auto">
+                        {whk.lastPayloadSample}
+                      </pre>
+                      <div className="flex justify-between text-[11px] text-slate-500">
+                        <span>Başarılı Teslimat: <strong>{whk.successCount}</strong></span>
+                        <span>Hata: {whk.failureCount}</span>
+                        <span>Son Tetikleme: {whk.lastTriggeredAt}</span>
+                      </div>
                     </div>
-                    <pre className="rounded bg-slate-900 text-emerald-400 p-2.5 text-[10px] font-mono overflow-x-auto">
-                      {whk.lastPayloadSample}
-                    </pre>
-                    <div className="flex justify-between text-[11px] text-slate-500">
-                      <span>Başarılı Teslimat: <strong>{whk.successCount}</strong></span>
-                      <span>Hata: {whk.failureCount}</span>
-                      <span>Son Tetikleme: {whk.lastTriggeredAt}</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </CardContent>
             </Card>
           </div>
@@ -310,48 +310,48 @@ export default function EcosystemApiMigrationAndSaasPage() {
         {/* 2. SEKME: ÜÇÜNCÜ TARAF EKLENTİ MAĞAZASI (PLUGIN MARKETPLACE) */}
         <TabsContent value="plugin-marketplace" className="space-y-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {state.plugins.map(plg => (
-              <Card key={plg.id} className="border-slate-200 flex flex-col justify-between">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline">{plg.category}</Badge>
-                    <span className="text-xs font-semibold text-amber-600">
-                      ★ {plg.rating} ({plg.installCount} Kurulum)
-                    </span>
-                  </div>
-                  <CardTitle className="text-base mt-1.5">{plg.name}</CardTitle>
-                  <CardDescription className="text-xs">
-                    Geliştirici: <strong>{plg.vendor}</strong> • v{plg.version}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-xs">
-                  <p className="text-slate-600 leading-relaxed">{plg.description}</p>
-                  <div className="space-y-1">
-                    {plg.features.map((f, i) => (
-                      <div key={i} className="flex items-center gap-1.5 text-slate-700">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                        <span>{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="font-semibold text-slate-900">{plg.pricingTier}</span>
-                    <Button
-                      size="sm"
-                      variant={plg.isInstalled ? "outline" : "default"}
-                      onClick={() => handleTogglePlugin(plg.id)}
-                      className={
-                        plg.isInstalled
-                          ? "border-emerald-300 text-emerald-700 h-8 text-xs"
-                          : "bg-indigo-600 hover:bg-indigo-700 text-white h-8 text-xs"
-                      }
-                    >
-                      {plg.isInstalled ? "Kurulu (Devre Dışı Bırak)" : "Tek Tıkla Kur & Aktifleştir"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+              {(state.plugins || []).map(plg => (
+                <Card key={plg.id} className="border-slate-200 flex flex-col justify-between">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline">{plg.category}</Badge>
+                      <span className="text-xs font-semibold text-amber-600">
+                        ★ {plg.rating} ({plg.installCount} Kurulum)
+                      </span>
+                    </div>
+                    <CardTitle className="text-base mt-1.5">{plg.name}</CardTitle>
+                    <CardDescription className="text-xs">
+                      Geliştirici: <strong>{plg.vendor}</strong> • v{plg.version}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-xs">
+                    <p className="text-slate-600 leading-relaxed">{plg.description}</p>
+                    <div className="space-y-1">
+                      {plg.features.map((f, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-slate-700">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                      <span className="font-semibold text-slate-900">{plg.pricingTier}</span>
+                      <Button
+                        size="sm"
+                        variant={plg.isInstalled ? "outline" : "default"}
+                        onClick={() => handleTogglePlugin(plg.id)}
+                        className={
+                          plg.isInstalled
+                            ? "border-emerald-300 text-emerald-700 h-8 text-xs"
+                            : "bg-indigo-600 hover:bg-indigo-700 text-white h-8 text-xs"
+                        }
+                      >
+                        {plg.isInstalled ? "Kurulu (Devre Dışı Bırak)" : "Tek Tıkla Kur & Aktifleştir"}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </TabsContent>
 
@@ -437,20 +437,20 @@ export default function EcosystemApiMigrationAndSaasPage() {
                   <div className="text-xs font-bold uppercase text-slate-600">
                     Son Çalıştırılan Veri Geçiş İşleri (Migration Jobs)
                   </div>
-                  {state.migrationJobs.map(job => (
-                    <div
-                      key={job.id}
-                      className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-3 text-xs space-y-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <strong className="text-slate-900">{job.jobName}</strong>
-                        <Badge className="bg-emerald-600 text-white">
-                          {job.migratedRecords.toLocaleString("tr-TR")} Kayıt Aktarıldı
-                        </Badge>
+                    {(state.migrationJobs || []).map(job => (
+                      <div
+                        key={job.id}
+                        className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-3 text-xs space-y-1"
+                      >
+                        <div className="flex items-center justify-between">
+                          <strong className="text-slate-900">{job.jobName}</strong>
+                          <Badge className="bg-emerald-600 text-white">
+                            {job.migratedRecords.toLocaleString("tr-TR")} Kayıt Aktarıldı
+                          </Badge>
+                        </div>
+                        <div className="text-slate-600">{job.validationNotes[0]}</div>
                       </div>
-                      <div className="text-slate-600">{job.validationNotes[0]}</div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -473,11 +473,10 @@ export default function EcosystemApiMigrationAndSaasPage() {
                     <div
                       key={sc.id}
                       onClick={() => setActiveSimId(sc.id)}
-                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2 transition-all ${
-                        activeSimId === sc.id
+                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2 transition-all ${activeSimId === sc.id
                           ? "border-2 border-emerald-600 bg-emerald-50/20"
                           : "border-slate-200 bg-white"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <Badge variant="outline" className="text-[10px]">
@@ -530,7 +529,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
               <CardContent className="p-4 space-y-2">
                 <span className="text-xs text-slate-500">Depo & Şube Kotası</span>
                 <div className="text-xl font-bold text-slate-900">
-                  {state.saasUsage.currentWarehouses} / {state.saasUsage.maxWarehouses} Depo
+                  {state.saasUsage?.currentWarehouses || 0} / {state.saasUsage?.maxWarehouses || 10} Depo
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
@@ -539,7 +538,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
                       width: `${Math.min(
                         100,
                         Math.round(
-                          (state.saasUsage.currentWarehouses / state.saasUsage.maxWarehouses) * 100
+                            ((state.saasUsage?.currentWarehouses || 0) / (state.saasUsage?.maxWarehouses || 1)) * 100
                         )
                       )}%`
                     }}
@@ -552,8 +551,8 @@ export default function EcosystemApiMigrationAndSaasPage() {
               <CardContent className="p-4 space-y-2">
                 <span className="text-xs text-slate-500">Aktif SKU Limiti</span>
                 <div className="text-xl font-bold text-slate-900">
-                  {state.saasUsage.currentActiveSkus.toLocaleString("tr-TR")} /{" "}
-                  {state.saasUsage.maxActiveSkus.toLocaleString("tr-TR")}
+                  {(state.saasUsage?.currentActiveSkus || 0).toLocaleString("tr-TR")} /{" "}
+                  {(state.saasUsage?.maxActiveSkus || 0).toLocaleString("tr-TR")}
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
@@ -562,7 +561,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
                       width: `${Math.min(
                         100,
                         Math.round(
-                          (state.saasUsage.currentActiveSkus / state.saasUsage.maxActiveSkus) * 100
+                            ((state.saasUsage?.currentActiveSkus || 0) / (state.saasUsage?.maxActiveSkus || 1)) * 100
                         )
                       )}%`
                     }}
@@ -575,8 +574,8 @@ export default function EcosystemApiMigrationAndSaasPage() {
               <CardContent className="p-4 space-y-2">
                 <span className="text-xs text-slate-500">Aylık Omnichannel Sipariş Hacmi</span>
                 <div className="text-xl font-bold text-slate-900">
-                  {state.saasUsage.currentMonthlyOrders.toLocaleString("tr-TR")} /{" "}
-                  {state.saasUsage.maxMonthlyOrders.toLocaleString("tr-TR")}
+                  {(state.saasUsage?.currentMonthlyOrders || 0).toLocaleString("tr-TR")} /{" "}
+                  {(state.saasUsage?.maxMonthlyOrders || 0).toLocaleString("tr-TR")}
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
@@ -585,9 +584,9 @@ export default function EcosystemApiMigrationAndSaasPage() {
                       width: `${Math.min(
                         100,
                         Math.round(
-                          (state.saasUsage.currentMonthlyOrders /
-                            state.saasUsage.maxMonthlyOrders) *
-                            100
+                          ((state.saasUsage?.currentMonthlyOrders || 0) /
+                            (state.saasUsage?.maxMonthlyOrders || 1)) *
+                          100
                         )
                       )}%`
                     }}
@@ -600,8 +599,8 @@ export default function EcosystemApiMigrationAndSaasPage() {
               <CardContent className="p-4 space-y-2">
                 <span className="text-xs text-slate-500">Aylık API / IoT / RFID İşlem Hacmi</span>
                 <div className="text-xl font-bold text-slate-900">
-                  {state.saasUsage.currentMonthlyApiCalls.toLocaleString("tr-TR")} /{" "}
-                  {state.saasUsage.maxMonthlyApiCalls.toLocaleString("tr-TR")}
+                  {(state.saasUsage?.currentMonthlyApiCalls || 0).toLocaleString("tr-TR")} /{" "}
+                  {(state.saasUsage?.maxMonthlyApiCalls || 0).toLocaleString("tr-TR")}
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
@@ -610,9 +609,9 @@ export default function EcosystemApiMigrationAndSaasPage() {
                       width: `${Math.min(
                         100,
                         Math.round(
-                          (state.saasUsage.currentMonthlyApiCalls /
-                            state.saasUsage.maxMonthlyApiCalls) *
-                            100
+                          ((state.saasUsage?.currentMonthlyApiCalls || 0) /
+                            (state.saasUsage?.maxMonthlyApiCalls || 1)) *
+                          100
                         )
                       )}%`
                     }}
@@ -625,15 +624,14 @@ export default function EcosystemApiMigrationAndSaasPage() {
           {/* 3 Modüler SaaS Abonelik Paketi */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {SAAS_TIERS.map(tier => {
-              const isCurrent = state.saasUsage.activeTierId === tier.id
+              const isCurrent = (state.saasUsage?.activeTierId || "enterprise_omni") === tier.id
               return (
                 <Card
                   key={tier.id}
-                  className={`flex flex-col justify-between ${
-                    isCurrent
+                  className={`flex flex-col justify-between ${isCurrent
                       ? "border-2 border-indigo-600 bg-indigo-50/20 shadow-lg"
                       : "border-slate-200"
-                  }`}
+                    }`}
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -683,11 +681,10 @@ export default function EcosystemApiMigrationAndSaasPage() {
                     <Button
                       onClick={() => handleSelectSaasTier(tier.id)}
                       disabled={isCurrent}
-                      className={`w-full ${
-                        isCurrent
+                      className={`w-full ${isCurrent
                           ? "bg-emerald-600 text-white"
                           : "bg-slate-900 hover:bg-slate-800 text-white"
-                      }`}
+                        }`}
                     >
                       {isCurrent ? "Şu Anda Bu Pakettesiniz" : "Bu Pakete Ölçekle"}
                     </Button>

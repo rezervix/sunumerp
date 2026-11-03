@@ -175,48 +175,48 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
         {/* 1. SEKME: GERÇEK ZAMANLI OMNICHANNEL STOK SENKRONİZASYONU */}
         <TabsContent value="realtime-channels" className="space-y-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {state.channels.map(ch => (
-              <Card key={ch.id} className="border-slate-200 hover:border-blue-300 transition-all">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="font-mono text-xs">
-                      {ch.platformType}
-                    </Badge>
-                    <Badge className="bg-emerald-100 text-emerald-800 gap-1">
-                      <Zap className="h-3 w-3" />
-                      {ch.webhookLatencyMs} ms
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-base mt-1">{ch.channelName}</CardTitle>
-                  <CardDescription className="text-xs">
-                    Mağaza Kodu: <strong>{ch.storeCode}</strong> • Son Sync: {ch.lastSyncAt}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-xs">
-                  <div className="grid grid-cols-3 gap-2 rounded-lg bg-slate-50 p-2.5 border border-slate-100 text-center">
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">Eşitlenen SKU</span>
-                      <strong className="text-slate-900 text-sm">{ch.syncedSkuCount}</strong>
+              {(state.channels || []).map(ch => (
+                <Card key={ch.id} className="border-slate-200 hover:border-blue-300 transition-all">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="outline" className="font-mono text-xs">
+                        {ch.platformType}
+                      </Badge>
+                      <Badge className="bg-emerald-100 text-emerald-800 gap-1">
+                        <Zap className="h-3 w-3" />
+                        {ch.webhookLatencyMs} ms
+                      </Badge>
                     </div>
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">Tampon Stok</span>
-                      <strong className="text-amber-700 text-sm">{ch.bufferStockFloor} Adet</strong>
+                    <CardTitle className="text-base mt-1">{ch.channelName}</CardTitle>
+                    <CardDescription className="text-xs">
+                      Mağaza Kodu: <strong>{ch.storeCode}</strong> • Son Sync: {ch.lastSyncAt}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-xs">
+                    <div className="grid grid-cols-3 gap-2 rounded-lg bg-slate-50 p-2.5 border border-slate-100 text-center">
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">Eşitlenen SKU</span>
+                        <strong className="text-slate-900 text-sm">{ch.syncedSkuCount}</strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">Tampon Stok</span>
+                        <strong className="text-amber-700 text-sm">{ch.bufferStockFloor} Adet</strong>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px]">ATP Oranı</span>
+                        <strong className="text-blue-700 text-sm">%{ch.allocationPercent}</strong>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">ATP Oranı</span>
-                      <strong className="text-blue-700 text-sm">%{ch.allocationPercent}</strong>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center justify-between pt-1 text-slate-600">
-                    <span>Günlük Sipariş: <strong>{ch.dailyOrdersCount} Adet</strong></span>
-                    <span className="font-bold text-emerald-700">
-                      Ciro: ₺{ch.dailyGmvTry.toLocaleString("tr-TR")}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex items-center justify-between pt-1 text-slate-600">
+                      <span>Günlük Sipariş: <strong>{ch.dailyOrdersCount} Adet</strong></span>
+                      <span className="font-bold text-emerald-700">
+                        Ciro: ₺{ch.dailyGmvTry.toLocaleString("tr-TR")}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </TabsContent>
 
@@ -232,64 +232,64 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {state.omnichannelOrders.map(ord => (
-                <div
-                  key={ord.id}
-                  className="rounded-xl border border-slate-200 p-4 space-y-3 bg-white"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm font-bold text-slate-900">
-                        {ord.orderNo}
-                      </span>
-                      <Badge variant="outline">{ord.channelName}</Badge>
-                      <Badge
-                        className={
-                          ord.fulfillmentMode === "SPLIT_SHIPMENT"
-                            ? "bg-indigo-600 text-white"
+                {(state.omnichannelOrders || []).map(ord => (
+                  <div
+                    key={ord.id}
+                    className="rounded-xl border border-slate-200 p-4 space-y-3 bg-white"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-sm font-bold text-slate-900">
+                          {ord.orderNo}
+                        </span>
+                        <Badge variant="outline">{ord.channelName}</Badge>
+                        <Badge
+                          className={
+                            ord.fulfillmentMode === "SPLIT_SHIPMENT"
+                              ? "bg-indigo-600 text-white"
+                              : ord.fulfillmentMode === "DROPSHIPPING"
+                                ? "bg-purple-600 text-white"
+                                : "bg-amber-600 text-white"
+                          }
+                        >
+                          {ord.fulfillmentMode === "SPLIT_SHIPMENT"
+                            ? "PARÇALI SEVKİYAT (MULTI-NODE SPLIT)"
                             : ord.fulfillmentMode === "DROPSHIPPING"
-                            ? "bg-purple-600 text-white"
-                            : "bg-amber-600 text-white"
-                        }
-                      >
-                        {ord.fulfillmentMode === "SPLIT_SHIPMENT"
-                          ? "PARÇALI SEVKİYAT (MULTI-NODE SPLIT)"
-                          : ord.fulfillmentMode === "DROPSHIPPING"
-                          ? "DOĞRUDAN TEDARİKÇİ DROPSHIPPING"
-                          : "BEKLEYEN SİPARİŞ (BACKORDER)"}
-                      </Badge>
-                    </div>
-                    <div className="font-bold text-slate-900">
-                      ₺{ord.totalAmountTry.toLocaleString("tr-TR")} • {ord.customerName} ({ord.customerCity})
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                    {ord.splitLines.map(line => (
-                      <div
-                        key={line.splitId}
-                        className="rounded-lg bg-slate-50 p-3 border border-slate-200 text-xs space-y-1"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono font-bold text-indigo-700">
-                            {line.fulfillmentNodeCode} — {line.fulfillmentNodeName}
-                          </span>
-                          <Badge variant="secondary" className="text-[10px]">
-                            {line.status}
-                          </Badge>
-                        </div>
-                        <div className="font-medium text-slate-900">
-                          {line.itemName} ({line.sku}) — <strong>{line.qty} Adet</strong>
-                        </div>
-                        <div className="flex justify-between text-[11px] text-slate-500 font-mono">
-                          <span>Kargo: {line.carrierName}</span>
-                          <span>Takip: {line.trackingNumber}</span>
-                        </div>
+                              ? "DOĞRUDAN TEDARİKÇİ DROPSHIPPING"
+                              : "BEKLEYEN SİPARİŞ (BACKORDER)"}
+                        </Badge>
                       </div>
-                    ))}
+                      <div className="font-bold text-slate-900">
+                        ₺{ord.totalAmountTry.toLocaleString("tr-TR")} • {ord.customerName} ({ord.customerCity})
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                        {(ord.splitLines || []).map(line => (
+                          <div
+                            key={line.splitId}
+                            className="rounded-lg bg-slate-50 p-3 border border-slate-200 text-xs space-y-1"
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-mono font-bold text-indigo-700">
+                                {line.fulfillmentNodeCode} — {line.fulfillmentNodeName}
+                              </span>
+                              <Badge variant="secondary" className="text-[10px]">
+                                {line.status}
+                              </Badge>
+                            </div>
+                            <div className="font-medium text-slate-900">
+                              {line.itemName} ({line.sku}) — <strong>{line.qty} Adet</strong>
+                            </div>
+                            <div className="flex justify-between text-[11px] text-slate-500 font-mono">
+                              <span>Kargo: {line.carrierName}</span>
+                              <span>Takip: {line.trackingNumber}</span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </CardContent>
           </Card>
 
@@ -305,56 +305,56 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {state.rmaReturns.map(rma => (
-                <div
-                  key={rma.id}
-                  className="rounded-lg border border-slate-200 p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
-                >
-                  <div className="space-y-1 text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-sm text-slate-900">
-                        {rma.rmaNo}
-                      </span>
-                      <Badge variant="outline">Sipariş: {rma.originalOrderNo}</Badge>
-                      <Badge className="bg-slate-100 text-slate-800">{rma.channelName}</Badge>
-                      <Badge
-                        className={
-                          rma.status === "RESTOCKED"
-                            ? "bg-emerald-600 text-white"
-                            : "bg-amber-500 text-white"
-                        }
-                      >
-                        {rma.status}
-                      </Badge>
+                {(state.rmaReturns || []).map(rma => (
+                  <div
+                    key={rma.id}
+                    className="rounded-lg border border-slate-200 p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div className="space-y-1 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-sm text-slate-900">
+                          {rma.rmaNo}
+                        </span>
+                        <Badge variant="outline">Sipariş: {rma.originalOrderNo}</Badge>
+                        <Badge className="bg-slate-100 text-slate-800">{rma.channelName}</Badge>
+                        <Badge
+                          className={
+                            rma.status === "RESTOCKED"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-amber-500 text-white"
+                          }
+                        >
+                          {rma.status}
+                        </Badge>
+                      </div>
+                      <div className="font-semibold text-sm text-slate-900">
+                        {rma.itemName} ({rma.sku}) — {rma.quantity} Adet • İade Tutarı: ₺{rma.refundAmountTry.toLocaleString("tr-TR")}
+                      </div>
+                      <div className="text-slate-600">
+                        Müşteri: <strong>{rma.customerName}</strong> • İade Nedeni: {rma.returnReason} • QC: <strong>{rma.qcGrade}</strong>
+                      </div>
                     </div>
-                    <div className="font-semibold text-sm text-slate-900">
-                      {rma.itemName} ({rma.sku}) — {rma.quantity} Adet • İade Tutarı: ₺{rma.refundAmountTry.toLocaleString("tr-TR")}
-                    </div>
-                    <div className="text-slate-600">
-                      Müşteri: <strong>{rma.customerName}</strong> • İade Nedeni: {rma.returnReason} • QC: <strong>{rma.qcGrade}</strong>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleRmaDisposition(rma.id, "RESTOCK_A_GRADE")}
-                      className="text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-50"
-                    >
-                      A-Grade Stoka Geri Al
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleRmaDisposition(rma.id, "QUARANTINE_REWORK")}
-                      className="text-xs border-rose-300 text-rose-700 hover:bg-rose-50"
-                    >
-                      Karantinaya Ayır
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleRmaDisposition(rma.id, "RESTOCK_A_GRADE")}
+                        className="text-xs border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                      >
+                        A-Grade Stoka Geri Al
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleRmaDisposition(rma.id, "QUARANTINE_REWORK")}
+                        className="text-xs border-rose-300 text-rose-700 hover:bg-rose-50"
+                      >
+                        Karantinaya Ayır
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </CardContent>
           </Card>
         </TabsContent>
@@ -363,31 +363,31 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
         <TabsContent value="logistics-edocument" className="space-y-6">
           {/* 3PL ve Kargo Adaptörleri */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {state.logisticsAdapters.map(adp => (
-              <Card key={adp.id} className="border-slate-200">
-                <CardContent className="p-4 space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <Badge className="bg-slate-900 text-white">{adp.providerCode}</Badge>
-                    <Badge className="bg-emerald-100 text-emerald-800">{adp.status}</Badge>
-                  </div>
-                  <div className="font-bold text-sm text-slate-900">{adp.providerName}</div>
-                  <div className="text-slate-500">{adp.serviceType}</div>
-                  <div className="pt-2 border-t border-slate-100 space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Aktif Gönderi:</span>
-                      <strong>{adp.activeShipments} Paket</strong>
+              {(state.logisticsAdapters || []).map(adp => (
+                <Card key={adp.id} className="border-slate-200">
+                  <CardContent className="p-4 space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-slate-900 text-white">{adp.providerCode}</Badge>
+                      <Badge className="bg-emerald-100 text-emerald-800">{adp.status}</Badge>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Zamanında Teslim SLA:</span>
-                      <strong className="text-emerald-700">%{adp.onTimeDeliveryRate}</strong>
+                    <div className="font-bold text-sm text-slate-900">{adp.providerName}</div>
+                    <div className="text-slate-500">{adp.serviceType}</div>
+                    <div className="pt-2 border-t border-slate-100 space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Aktif Gönderi:</span>
+                        <strong>{adp.activeShipments} Paket</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Zamanında Teslim SLA:</span>
+                        <strong className="text-emerald-700">%{adp.onTimeDeliveryRate}</strong>
+                      </div>
+                      <div className="font-mono text-[10px] text-slate-400 truncate">
+                        {adp.apiEndpoint}
+                      </div>
                     </div>
-                    <div className="font-mono text-[10px] text-slate-400 truncate">
-                      {adp.apiEndpoint}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
 
           {/* GİB UBL-TR 2.1 E-İrsaliye ve E-Fatura Kayıtları */}
@@ -414,64 +414,64 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              {state.eDocuments.map(doc => (
-                <div
-                  key={doc.id}
-                  className="rounded-lg border border-slate-200 p-4 space-y-2 hover:border-indigo-300 transition-all"
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-indigo-600 text-white font-mono">
-                        {doc.documentType}
-                      </Badge>
-                      <span className="font-mono text-sm font-bold text-slate-900">
-                        {doc.documentNo}
-                      </span>
-                      <Badge variant="outline" className="font-mono text-[11px]">
-                        {doc.profileId}
-                      </Badge>
+                {(state.eDocuments || []).map(doc => (
+                  <div
+                    key={doc.id}
+                    className="rounded-lg border border-slate-200 p-4 space-y-2 hover:border-indigo-300 transition-all"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-indigo-600 text-white font-mono">
+                          {doc.documentType}
+                        </Badge>
+                        <span className="font-mono text-sm font-bold text-slate-900">
+                          {doc.documentNo}
+                        </span>
+                        <Badge variant="outline" className="font-mono text-[11px]">
+                          {doc.profileId}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-emerald-100 text-emerald-800">
+                          {doc.gibStatusText}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedXmlDoc(doc)}
+                          className="h-7 text-xs"
+                        >
+                          UBL-TR 2.1 XML & QR Görüntüle
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-emerald-100 text-emerald-800">
-                        {doc.gibStatusText}
-                      </Badge>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedXmlDoc(doc)}
-                        className="h-7 text-xs"
-                      >
-                        UBL-TR 2.1 XML & QR Görüntüle
-                      </Button>
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 text-xs pt-1">
-                    <div>
-                      <span className="text-slate-500 block">Alıcı Kurum & VKN</span>
-                      <strong className="text-slate-900">{doc.receiverTitle}</strong> ({doc.receiverVkn})
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 text-xs pt-1">
+                      <div>
+                        <span className="text-slate-500 block">Alıcı Kurum & VKN</span>
+                        <strong className="text-slate-900">{doc.receiverTitle}</strong> ({doc.receiverVkn})
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Taşıyıcı & Plaka</span>
+                        <strong className="text-slate-900">{doc.carrierName}</strong> • {doc.vehiclePlate}
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Sürücü & TCKN</span>
+                        <strong className="text-slate-900">{doc.driverName}</strong> ({doc.driverTckn})
+                      </div>
+                      <div className="text-right">
+                        <span className="text-slate-500 block">Genel Toplam (KDV Dahil)</span>
+                        <strong className="text-emerald-700 text-sm">
+                          ₺{doc.totalGrossTry.toLocaleString("tr-TR")}
+                        </strong>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Taşıyıcı & Plaka</span>
-                      <strong className="text-slate-900">{doc.carrierName}</strong> • {doc.vehiclePlate}
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Sürücü & TCKN</span>
-                      <strong className="text-slate-900">{doc.driverName}</strong> ({doc.driverTckn})
-                    </div>
-                    <div className="text-right">
-                      <span className="text-slate-500 block">Genel Toplam (KDV Dahil)</span>
-                      <strong className="text-emerald-700 text-sm">
-                        ₺{doc.totalGrossTry.toLocaleString("tr-TR")}
-                      </strong>
-                    </div>
-                  </div>
 
-                  <div className="text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-100">
-                    ETTN UUID: {doc.ettnUuid} • Sipariş: {doc.relatedOrderNo} • İçerik: {doc.itemsSummary}
+                    <div className="text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-100">
+                      ETTN UUID: {doc.ettnUuid} • Sipariş: {doc.relatedOrderNo} • İçerik: {doc.itemsSummary}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </CardContent>
           </Card>
         </TabsContent>
@@ -583,7 +583,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           </DialogHeader>
           {selectedXmlDoc && (
             <pre className="rounded-lg bg-slate-950 p-4 text-[11px] text-emerald-400 font-mono overflow-x-auto max-h-80">
-{`<?xml version="1.0" encoding="UTF-8"?>
+              {`<?xml version="1.0" encoding="UTF-8"?>
 <DespatchAdvice xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
