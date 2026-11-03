@@ -140,87 +140,24 @@ export default function CoreInventoryArchitecturePage() {
 
   // Filtrelenmiş Ürün Listesi
   const filteredItems = useMemo(() => {
+    const items = state.items || []
     return items.filter(item => {
+      const q = searchQuery.toLowerCase()
       const matchesSearch =
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.barcode.includes(searchQuery) ||
-        item.category.toLowerCase().includes(searchQuery.toLowerCase())
-          (item.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.sku || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.barcode || "").includes(searchQuery) ||
-        (item.category || "").toLowerCase().includes(searchQuery.toLowerCase())
+        (item.name || "").toLowerCase().includes(q) ||
+        (item.sku || "").toLowerCase().includes(q) ||
+        (item.barcode || "").includes(q) ||
+        (item.category || "").toLowerCase().includes(q)
+
       const matchesType = selectedItemType === "ALL" || item.itemType === selectedItemType
       const matchesWh =
         selectedWarehouseId === "ALL" ||
-        item.warehouseBalances.some(b => b.warehouseId === selectedWarehouseId && b.onHandQty > 0)
-          (item.warehouseBalances || []).some(b => b.warehouseId === selectedWarehouseId && b.onHandQty > 0)
+        (item.warehouseBalances || []).some(b => b.warehouseId === selectedWarehouseId && b.onHandQty > 0)
+
       return matchesSearch && matchesType && matchesWh
     })
   }, [state.items, searchQuery, selectedItemType, selectedWarehouseId])
-  const items = state.items || []
-  return items.filter(item => {
-    const q = searchQuery.toLowerCase()
-    const matchesSearch =
-      (item.name || "").toLowerCase().includes(q) ||
-      (item.sku || "").toLowerCase().includes(q) ||
-      (item.barcode || "").includes(q) ||
-      (item.category || "").toLowerCase().includes(q)
 
-    // KPI Özetleri
-    const kpiSummary = useMemo(() => {
-      const nonParentItems = state.items.filter(i => i.itemType !== "MATRIX_PARENT")
-      const totalOnHand = nonParentItems.reduce((s, i) => s + i.totalOnHand, 0)
-      const totalAvailable = nonParentItems.reduce((s, i) => s + i.totalAvailable, 0)
-      const nonParentItems = (state.items || []).filter(i => i.itemType !== "MATRIX_PARENT")
-      const totalOnHand = nonParentItems.reduce((s, i) => s + (i.totalOnHand || 0), 0)
-      const totalAvailable = nonParentItems.reduce((s, i) => s + (i.totalAvailable || 0), 0)
-      const totalInventoryValue = nonParentItems.reduce(
-        (s, i) => s + i.totalOnHand * i.fifoUnitCost,
-        (s, i) => s + (i.totalOnHand || 0) * (i.fifoUnitCost || 0),
-        0
-      )
-      const expiringLots = state.lotBatches.filter(
-        l => l.status === "EXPIRING_SOON" || l.daysUntilExpiry <= 15
-    const expiringLots = (state.lotBatches || []).filter(
-          l => l.status === "EXPIRING_SOON" || (l.daysUntilExpiry || 99) <= 15
-        ).length
-      return {
-        warehouseCount: state.warehouses.length,
-        skuCount: state.items.length,
-        warehouseCount: (state.warehouses || []).length,
-        skuCount: (state.items || []).length,
-        totalOnHand,
-        totalAvailable,
-        totalInventoryValue,
-        expiringLots
-      }
-    }, [state.items, state.warehouses, state.lotBatches])
-    const matchesType = selectedItemType === "ALL" || item.itemType === selectedItemType
-    const matchesWh =
-      selectedWarehouseId === "ALL" ||
-      (item.warehouseBalances || []).some(b => b.warehouseId === selectedWarehouseId && b.onHandQty > 0)
-
-    // Matrix Ebeveyn ve Alt Varyantlar
-    const matrixParent = useMemo(
-      () => state.items.find(i => i.itemType === "MATRIX_PARENT") || state.items[0],
-      () => (state.items || []).find(i => i.itemType === "MATRIX_PARENT") || (state.items || [])[0] || null,
-      [state.items]
-    )
-    const matrixVariants = useMemo(
-      () => state.items.filter(i => i.parentItemId === matrixParent?.id),
-      () => (state.items || []).filter(i => i.parentItemId === matrixParent?.id),
-      [state.items, matrixParent]
-    )
-    return matchesSearch && matchesType && matchesWh
-  })
-}, [state.items, searchQuery, selectedItemType, selectedWarehouseId])
-
-// Seçili Lot Kaydı
-const activeLotRecord = useMemo(
-  () => state.lotBatches.find(l => l.id === selectedLotId) || state.lotBatches[0],
-  () => (state.lotBatches || []).find(l => l.id === selectedLotId) || (state.lotBatches || [])[0] || null,
-  [state.lotBatches, selectedLotId]
   // Kritik Özet Metrikleri
   const kpiSummary = useMemo(() => {
     const nonParentItems = (state.items || []).filter(i => i.itemType !== "MATRIX_PARENT")
@@ -237,174 +174,89 @@ const activeLotRecord = useMemo(
       i => (i.totalAvailable || 0) <= (i.minStockLevel || 20)
     ).length
 
-    // Çoklu Birim Dönüştürme Sonucu
-    const selectedUomItem = useMemo(
-      () => state.items.find(i => i.id === uomItemId) || state.items[0],
-      () => (state.items || []).find(i => i.id === uomItemId) || (state.items || [])[0] || null,
-      [state.items, uomItemId]
-    )
-    const availableUnitsForSelected = useMemo(() => {
-      if (!selectedUomItem) return ["Adet"]
-      const units = new Set<string>([selectedUomItem.baseUnit])
-      selectedUomItem.unitConversions.forEach(c => {
-        units.add(c.fromUnit)
-        units.add(c.toUnit)
-        const units = new Set<string>([selectedUomItem.baseUnit || "Adet"])
-          ; (selectedUomItem.unitConversions || []).forEach(c => {
-            if (c.fromUnit) units.add(c.fromUnit)
-            if (c.toUnit) units.add(c.toUnit)
-          })
-        return Array.from(units)
-      }, [selectedUomItem])
-      return {
-        warehouseCount: (state.warehouses || []).length,
-        skuCount: (state.items || []).length,
-        totalOnHand,
-        totalAvailable,
-        totalInventoryValue,
-        expiringLots,
-        criticalStockItems
-      }
-    }, [state.items, state.warehouses, state.lotBatches])
+    return {
+      warehouseCount: (state.warehouses || []).length,
+      skuCount: (state.items || []).length,
+      totalOnHand,
+      totalAvailable,
+      totalInventoryValue,
+      expiringLots,
+      criticalStockItems
+    }
+  }, [state.items, state.warehouses, state.lotBatches])
 
-    const uomConversionResult = useMemo(() => {
-      if (!selectedUomItem) return null
-      const qty = Math.max(0.01, Number(uomInputQty) || 1)
-      return convertStockUnit(
-        qty,
-        uomFromUnit,
-        uomToUnit,
-        selectedUomItem.baseUnit,
-        selectedUomItem.unitConversions
   // Matrix Ebeveyn ve Alt Varyantlar
   const matrixParent = useMemo(
-          () => (state.items || []).find(i => i.itemType === "MATRIX_PARENT") || (state.items || [])[0] || null,
-          [state.items]
-        )
-      const matrixVariants = useMemo(
-        () => (state.items || []).filter(i => i.parentItemId === matrixParent?.id),
-        [state.items, matrixParent]
-      )
+    () => (state.items || []).find(i => i.itemType === "MATRIX_PARENT") || (state.items || [])[0] || null,
+    [state.items]
+  )
+  const matrixVariants = useMemo(
+    () => (state.items || []).filter(i => i.parentItemId === matrixParent?.id),
+    [state.items, matrixParent]
+  )
 
-      // Seçili Lot Kaydı
-      const activeLotRecord = useMemo(
-        () => (state.lotBatches || []).find(l => l.id === selectedLotId) || (state.lotBatches || [])[0] || null,
-        [state.lotBatches, selectedLotId]
-      )
+  // Seçili Lot Kaydı
+  const activeLotRecord = useMemo(
+    () => (state.lotBatches || []).find(l => l.id === selectedLotId) || (state.lotBatches || [])[0] || null,
+    [state.lotBatches, selectedLotId]
+  )
 
-      // Çoklu Birim Çevrim Hesabı
-      const selectedUomItem = useMemo(
-        () => (state.items || []).find(i => i.id === uomItemId) || (state.items || [])[0] || null,
-        [state.items, uomItemId]
-      )
-      const availableUnitsForSelected = useMemo(() => {
-        if (!selectedUomItem) return ["Adet"]
-        const units = new Set<string>([selectedUomItem.baseUnit || "Adet"])
-          ; (selectedUomItem.unitConversions || []).forEach(c => {
-            if (c.fromUnit) units.add(c.fromUnit)
-            if (c.toUnit) units.add(c.toUnit)
-          })
-        return Array.from(units)
-      }, [selectedUomItem])
+  // Çoklu Birim Çevrim Hesabı
+  const selectedUomItem = useMemo(
+    () => (state.items || []).find(i => i.id === uomItemId) || (state.items || [])[0] || null,
+    [state.items, uomItemId]
+  )
+  const availableUnitsForSelected = useMemo(() => {
+    if (!selectedUomItem) return ["Adet"]
+    const units = new Set<string>([selectedUomItem.baseUnit || "Adet"])
+    ;(selectedUomItem.unitConversions || []).forEach(c => {
+      if (c.fromUnit) units.add(c.fromUnit)
+      if (c.toUnit) units.add(c.toUnit)
+    })
+    return Array.from(units)
+  }, [selectedUomItem])
 
-      const uomConversionResult = useMemo(() => {
-        if (!selectedUomItem) return null
-        const qty = Math.max(0.01, Number(uomInputQty) || 1)
-        return convertStockUnit(
-          qty,
-          uomFromUnit,
-          uomToUnit,
-          selectedUomItem.baseUnit || "Adet",
-          selectedUomItem.unitConversions || []
-        )
-      }, [selectedUomItem, uomInputQty, uomFromUnit, uomToUnit])
+  const uomConversionResult = useMemo(() => {
+    if (!selectedUomItem) return null
+    const qty = Math.max(0.01, Number(uomInputQty) || 1)
+    return convertStockUnit(
+      qty,
+      uomFromUnit,
+      uomToUnit,
+      selectedUomItem.baseUnit || "Adet",
       selectedUomItem.unitConversions || []
     )
   }, [selectedUomItem, uomInputQty, uomFromUnit, uomToUnit])
 
-// Maliyet Değerleme Karşılaştırması (FIFO / LIFO / Ağırlıklı Ortalama / Standart)
-const selectedValItem = useMemo(
-  () => state.items.find(i => i.id === valItemId && i.costLayers.length > 0) || state.items[0],
-  () => (state.items || []).find(i => i.id === valItemId && (i.costLayers?.length ?? 0) > 0) || (state.items || [])[0] || null,
-  [state.items, valItemId]
   // 4 Yöntemli Maliyet Değerleme Hesabı
   const selectedValItem = useMemo(
     () => (state.items || []).find(i => i.id === valItemId && (i.costLayers?.length ?? 0) > 0) || (state.items || [])[0] || null,
     [state.items, valItemId]
   )
-const valuationComparisons = useMemo(() => {
-  if (!selectedValItem) return null
-  const issueQty = Math.max(1, Number(valIssueQty) || 50)
-  const methods: ValuationMethod[] = ["FIFO", "LIFO", "WEIGHTED_AVERAGE", "STANDARD"]
-  return methods.map(method =>
-    calculateStockValuation(
-      selectedValItem.costLayers || [],
-      method,
-      selectedValItem.standardCost || 500,
-      issueQty
-    )
-      const valuationComparisons = useMemo(() => {
-      if (!selectedValItem) return null
-      const issueQty = Math.max(1, Number(valIssueQty) || 50)
-      const methods: ValuationMethod[] = ["FIFO", "LIFO", "WEIGHTED_AVERAGE", "STANDARD"]
-      return methods.map(method =>
-        calculateStockValuation(
-          selectedValItem.costLayers,
-          selectedValItem.costLayers || [],
-          method,
-          selectedValItem.standardCost,
-          selectedValItem.standardCost || 500,
-          issueQty
-        )
+  const valuationComparisons = useMemo(() => {
+    if (!selectedValItem) return null
+    const issueQty = Math.max(1, Number(valIssueQty) || 50)
+    const methods: ValuationMethod[] = ["FIFO", "LIFO", "WEIGHTED_AVERAGE", "STANDARD"]
+    return methods.map(method =>
+      calculateStockValuation(
+        selectedValItem.costLayers || [],
+        method,
+        selectedValItem.standardCost || 500,
+        issueQty
       )
-    }, [selectedValItem, valIssueQty])
     )
   }, [selectedValItem, valIssueQty])
 
-// BOM Rollup Hesabı
-const selectedBom = useMemo(
-  () => state.bomRecipes.find(b => b.id === selectedBomId) || state.bomRecipes[0],
-  () => (state.bomRecipes || []).find(b => b.id === selectedBomId) || (state.bomRecipes || [])[0] || null,
-  [state.bomRecipes, selectedBomId]
-)
-const bomCalculation = useMemo(() => {
-  if (!selectedBom) return null
-  return calculateBomRollupCost(selectedBom)
-}, [selectedBom])
-return calculateBomRollupCost(selectedBom, Number(bomBatchMultiplier) || 1)
-    }, [selectedBom, bomBatchMultiplier])
-// BOM (Reçete) Rollup Hesabı
-const selectedBom = useMemo(
-  () => (state.bomRecipes || []).find(b => b.id === selectedBomId) || (state.bomRecipes || [])[0] || null,
-  [state.bomRecipes, selectedBomId]
-)
-const bomCalculation = useMemo(() => {
-  if (!selectedBom) return null
-  return calculateBomRollupCost(selectedBom, Number(bomBatchMultiplier) || 1)
-}, [selectedBom, bomBatchMultiplier])
+  // BOM (Reçete) Rollup Hesabı
+  const selectedBom = useMemo(
+    () => (state.bomRecipes || []).find(b => b.id === selectedBomId) || (state.bomRecipes || [])[0] || null,
+    [state.bomRecipes, selectedBomId]
+  )
+  const bomCalculation = useMemo(() => {
+    if (!selectedBom) return null
+    return calculateBomRollupCost(selectedBom, Number(bomBatchMultiplier) || 1)
+  }, [selectedBom, bomBatchMultiplier])
 
-const handleCreateItem = async () => {
-  if (!newName.trim()) {
-    toast.error("Lütfen stok kartı adını giriniz.")
-    return
-  }
-  const created = enterpriseInventoryService.addInventoryItem({
-    sku: newSku.trim() || undefined,
-    name: newName.trim(),
-    category: newCategory,
-    valuationMethod: newValuationMethod,
-    warehouseId: newWhId,
-    initialQty: Number(newInitialQty) || 50,
-    standardCost: Number(newUnitCost) || 450,
-    salesPrice: Number(newSalesPrice) || 890
-  })
-  setState({ ...enterpriseInventoryService.getState() })
-  setIsAddModalOpen(false)
-  setNewSku("")
-  setNewName("")
-  toast.success(`${created.sku} — ${created.name} stok kartı oluşturuldu`, {
-    description: "Depo bakiyesi, barkod ve FIFO maliyet katmanı otomatik açıldı."
-  })
   // Yeni Stok Kartı Ekleme
   const handleCreateItem = () => {
     if (!newName.trim()) {
@@ -435,6 +287,7 @@ const handleCreateItem = async () => {
     })
   }
 
+  // Varyant Oluşturma
   const handleGenerateVariant = () => {
     if (!matrixParent) return
     const created = enterpriseInventoryService.generateMatrixVariants({
@@ -444,72 +297,38 @@ const handleCreateItem = async () => {
       initialQty: Number(variantInitialQty) || 30,
       unitCost: Number(variantUnitCost) || 740,
       salesPrice: Number(variantSalesPrice) || 1390
-  // Varyant Oluşturma
-  const handleGenerateVariant = () => {
-        if (!matrixParent) return
-        const created = enterpriseInventoryService.generateMatrixVariants({
-          parentItemId: matrixParent.id,
-          color: variantColor,
-          size: variantSize,
-          initialQty: Number(variantInitialQty) || 30,
-          unitCost: Number(variantUnitCost) || 740,
-          salesPrice: Number(variantSalesPrice) || 1390
-        })
-        if (created) {
-          setState({ ...enterpriseInventoryService.getState() })
-          toast.success(`Yeni varyant üretildi: ${created.sku}`, {
-            description: `Ana kart toplam stoğu ${matrixParent.totalOnHand} adede güncellendi.`
-          })
-          if (created) {
-            setState({ ...enterpriseInventoryService.getState() })
-            toast.success(`Varyant üretildi: ${created.sku}`, {
-              description: `Matrix ana kart (${matrixParent.sku}) toplam stoğu otomatik olarak ${matrixParent.totalOnHand} adede güncellendi.`
-            })
-          }
-        }
-      }
+    })
+    if (created) {
+      setState({ ...enterpriseInventoryService.getState() })
+      toast.success(`Yeni varyant üretildi: ${created.sku}`, {
+        description: `Ana kart toplam stoğu ${matrixParent.totalOnHand} adede güncellendi.`
+      })
+    }
+  }
 
-    const handleCreateLot = () => {
-        const created = enterpriseInventoryService.addLotBatchRecord({
-          itemId: newLotItemId,
-          lotNumber: newLotNumber.trim() || undefined,
-          expiryDate: newLotExpiry,
-          initialQty: Number(newLotQty) || 100,
-          supplierName: newLotSupplier
-        })
-        setState({ ...enterpriseInventoryService.getState() })
-        setSelectedLotId(created.id)
-        setIsLotModalOpen(false)
-        setNewLotNumber("")
-        toast.success(`${created.lotNumber} lot kaydı ve izlenebilirlik zinciri açıldı.`)
-      }
   // Lot Kaydı Oluşturma
   const handleCreateLot = () => {
-        const created = enterpriseInventoryService.addLotBatchRecord({
-          itemId: newLotItemId,
-          lotNumber: newLotNumber.trim() || undefined,
-          expiryDate: newLotExpiry,
-          initialQty: Number(newLotQty) || 100,
-          supplierName: newLotSupplier
-        })
-        setState({ ...enterpriseInventoryService.getState() })
-        setSelectedLotId(created.id)
-        setIsLotModalOpen(false)
-        toast.success(`Lot/Parti kaydı açıldı: ${created.lotNumber}`, {
-          description: `SKT: ${created.expiryDate} • Tedarikçi: ${created.supplierName}`
-        })
-      }
+    const created = enterpriseInventoryService.addLotBatchRecord({
+      itemId: newLotItemId,
+      lotNumber: newLotNumber.trim() || undefined,
+      expiryDate: newLotExpiry,
+      initialQty: Number(newLotQty) || 100,
+      supplierName: newLotSupplier
+    })
+    setState({ ...enterpriseInventoryService.getState() })
+    setSelectedLotId(created.id)
+    setIsLotModalOpen(false)
+    toast.success(`Lot/Parti kaydı açıldı: ${created.lotNumber}`, {
+      description: `SKT: ${created.expiryDate} • Tedarikçi: ${created.supplierName}`
+    })
+  }
 
-    return(
-      <div className = "space-y-6 p-6" >
-          {/* Üst Başlık & Hızlı Geçiş Barı */ }
-          < div className = "flex flex-col gap-4 md:flex-row md:items-center md:justify-between" >
   const openItemDetails = (item: InventoryItemRecord) => {
-          setSelectedItemForDrawer(item)
-          setIsDrawerOpen(true)
-        }
+    setSelectedItemForDrawer(item)
+    setIsDrawerOpen(true)
+  }
 
-  return(
+  return (
     <TooltipProvider>
       <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
         {/* 1. ÜST YAPAY ZEKÂ ÖZETİ & HIZLI AKSIYON BARI */}
@@ -567,729 +386,395 @@ const handleCreateItem = async () => {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <Badge className="bg-emerald-600 text-white hover:bg-emerald-700">
-                Faz 1 • Çekirdek Stok & Envanter Mimarisi
-              </Badge>
-              <Badge variant="outline" className="border-blue-300 text-blue-700 bg-blue-50">
-                Gerçek Zamanlı ATP & FEFO Aktif
-              </Badge>
               <Boxes className="h-6 w-6 text-indigo-600" />
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
                 Stok Takip & Envanter Yönetimi
               </h1>
             </div>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-              Kurumsal Stok, Varyant Matrix, Lot/SKT İzlenebilirlik & Maliyet Motoru
-            </h1>
-            <p className="text-sm text-slate-600">
-              Çoklu depo/şube anlık stok takibi, ebeveyn-alt madde (Matrix) otomatik varyant toplamları,
-              uçtan uca Lot/Parti/SKT soykütüğü, çoklu birim dönüştürme ve FIFO/LIFO/BOM maliyet değerleme merkezi.
-              <p className="text-sm text-slate-500 mt-1">
-                {isExpertMode
-                  ? "Uzman Modu: FIFO/LIFO maliyet katmanları, çoklu birim çevrimleri, matrix varyantlar ve BOM reçeteleri devrede."
-                  : "Sade Görünüm: Tüm temel stok hareketleri, raf lokasyonları ve anlık adetler tek bakışta."}
+            <p className="text-sm text-slate-500 mt-1">
+              {isExpertMode
+                ? "Uzman Modu: FIFO/LIFO maliyet katmanları, çoklu birim çevrimleri, matrix varyantlar ve BOM reçeteleri devrede."
+                : "Sade Görünüm: Tüm temel stok hareketleri, raf lokasyonları ve anlık adetler tek bakışta."}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
+            <span className="text-xs font-medium text-slate-600">Sade Görünüm</span>
+            <Switch
+              checked={isExpertMode}
+              onCheckedChange={setIsExpertMode}
+              id="expert-mode-toggle"
+            />
+            <Label htmlFor="expert-mode-toggle" className="text-xs font-semibold text-indigo-700 cursor-pointer flex items-center gap-1">
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+              Uzman Modu
+            </Label>
+          </div>
+        </div>
+
+        {/* 3. DÖRT NET ÖZET KARTI (EYLEM ODAKLI) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <Card className="border-slate-200/80 shadow-xs hover:border-indigo-200 transition-colors">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">Mevcut Fiziki Stok</span>
+                <Boxes className="h-4 w-4 text-indigo-600" />
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-2xl font-bold text-slate-900">
+                  {kpiSummary.totalOnHand.toLocaleString("tr-TR")}
+                </span>
+                <span className="text-xs text-slate-500">Adet</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                Satılabilir: <strong className="text-emerald-700">{kpiSummary.totalAvailable.toLocaleString("tr-TR")}</strong>
               </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-slate-200/80 shadow-xs hover:border-indigo-200 transition-colors">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">Envanter Değeri (FIFO)</span>
+                <TrendingUp className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-2xl font-bold text-slate-900">
+                  ₺{Math.round(kpiSummary.totalInventoryValue).toLocaleString("tr-TR")}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                {kpiSummary.skuCount} aktif ürün kartı
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={`border-slate-200/80 shadow-xs transition-colors ${kpiSummary.criticalStockItems > 0 ? "bg-amber-50/40 border-amber-200" : ""}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">Kritik Eşik Uyarısı</span>
+                <AlertTriangle className={`h-4 w-4 ${kpiSummary.criticalStockItems > 0 ? "text-amber-600" : "text-slate-400"}`} />
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className={`text-2xl font-bold ${kpiSummary.criticalStockItems > 0 ? "text-amber-700" : "text-slate-900"}`}>
+                  {kpiSummary.criticalStockItems}
+                </span>
+                <span className="text-xs text-slate-500">Ürün azaldı</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                Güvenlik stoğunun altında
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={`border-slate-200/80 shadow-xs transition-colors ${kpiSummary.expiringLots > 0 ? "bg-rose-50/40 border-rose-200" : ""}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-500">SKT Yaklaşan Partiler</span>
+                <Clock className={`h-4 w-4 ${kpiSummary.expiringLots > 0 ? "text-rose-600" : "text-slate-400"}`} />
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className={`text-2xl font-bold ${kpiSummary.expiringLots > 0 ? "text-rose-700" : "text-slate-900"}`}>
+                  {kpiSummary.expiringLots}
+                </span>
+                <span className="text-xs text-slate-500">Parti (15 gün)</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                SKT öncelikli çıkış (FEFO) gerekli
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* 4. MODÜL SEKMELERİ (SIFIR ÖZELLİK KAYBI) */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <div className="flex items-center justify-between overflow-x-auto pb-1">
+            <TabsList className="bg-slate-100 p-1">
+              <TabsTrigger value="products" className="text-xs sm:text-sm gap-1.5">
+                <Boxes className="h-4 w-4" />
+                Ürün & Stok Listesi
+              </TabsTrigger>
+              <TabsTrigger value="variants" className="text-xs sm:text-sm gap-1.5">
+                <Layers className="h-4 w-4" />
+                Renk/Beden Varyantları
+              </TabsTrigger>
+              <TabsTrigger value="lots" className="text-xs sm:text-sm gap-1.5">
+                <Clock className="h-4 w-4" />
+                Lot & SKT Takibi
+              </TabsTrigger>
+              <TabsTrigger value="units" className="text-xs sm:text-sm gap-1.5">
+                <Scale className="h-4 w-4" />
+                Birim Çevirici
+              </TabsTrigger>
+              {isExpertMode && (
+                <>
+                  <TabsTrigger value="costing" className="text-xs sm:text-sm gap-1.5">
+                    <Calculator className="h-4 w-4" />
+                    Maliyet Değerleme
+                  </TabsTrigger>
+                  <TabsTrigger value="bom" className="text-xs sm:text-sm gap-1.5">
+                    <PackageCheck className="h-4 w-4" />
+                    Ürün Reçetesi (BOM)
+                  </TabsTrigger>
+                </>
+              )}
+            </TabsList>
+
+            {!isExpertMode && (
+              <span className="text-xs text-slate-400 hidden md:inline">
+                *İleri düzey maliyet & BOM araçları için üstten &quot;Uzman Modu&quot;nu açabilirsiniz.
+              </span>
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <Link href="/dashboard/wms">
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <Warehouse className="h-4 w-4 text-indigo-600" />
-                WMS & Saha Operasyonları
-              </Button>
-            </Link>
-            <Link href="/dashboard/stok-ai">
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <Sparkles className="h-4 w-4 text-amber-600" />
-                ForesightAI & AMA Asistan
-              </Button>
-            </Link>
-            <Button
-              size="sm"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              Yeni Stok Kartı Aç
-            </Button>
-            <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
-              <span className="text-xs font-medium text-slate-600">Sade Görünüm</span>
-              <Switch
-                checked={isExpertMode}
-                onCheckedChange={setIsExpertMode}
-                id="expert-mode-toggle"
-              />
-              <Label htmlFor="expert-mode-toggle" className="text-xs font-semibold text-indigo-700 cursor-pointer flex items-center gap-1">
-                <SlidersHorizontal className="h-3.5 w-3.5" />
-                Uzman Modu
-              </Label>
+          {/* TAB 1: ANA ÜRÜN VE STOK LİSTESİ (SADE & TEMİZ TABLO) */}
+          <TabsContent value="products" className="space-y-4">
+            {/* Arama ve Filtreleme */}
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Input
+                  placeholder="Ürün adı, barkod veya SKU ara..."
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-slate-50 border-slate-200"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Select value={selectedWarehouseId} onValueChange={setSelectedWarehouseId}>
+                  <SelectTrigger className="w-[180px] bg-slate-50 text-xs">
+                    <SelectValue placeholder="Tüm Depolar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Tüm Depolar</SelectItem>
+                    {state.warehouses.map(w => (
+                      <SelectItem key={w.id} value={w.id}>
+                        {w.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {isExpertMode && (
+                  <Select value={selectedItemType} onValueChange={setSelectedItemType}>
+                    <SelectTrigger className="w-[170px] bg-slate-50 text-xs">
+                      <SelectValue placeholder="Tüm Tipler" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">Tüm Kart Tipleri</SelectItem>
+                      <SelectItem value="FINISHED_GOOD">Mamul Ürün</SelectItem>
+                      <SelectItem value="RAW_MATERIAL">Hammadde</SelectItem>
+                      <SelectItem value="MATRIX_PARENT">Matrix Ana Kart</SelectItem>
+                      <SelectItem value="MATRIX_VARIANT">Alt Varyant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Üst KPI Kartları */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <Card className="border-slate-200 bg-white shadow-sm">
-              {/* 3. DÖRT NET ÖZET KARTI (EYLEM ODAKLI) */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <Card className="border-slate-200/80 shadow-xs hover:border-indigo-200 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-slate-500">Aktif Depo & Şube Ağı</span>
-                      <Warehouse className="h-4 w-4 text-indigo-600" />
-                      <span className="text-xs font-medium text-slate-500">Mevcut Fiziki Stok</span>
-                      <Boxes className="h-4 w-4 text-indigo-600" />
-                    </div>
-                    <div className="mt-2 text-2xl font-bold text-slate-900">{kpiSummary.warehouseCount} Depo</div>
-                    <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-slate-900">
-                        {kpiSummary.totalOnHand.toLocaleString("tr-TR")}
-                      </span>
-                      <span className="text-xs text-slate-500">Adet</span>
-                    </div>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Merkez, Bölge, Soğuk Hava & Karantina
-                      Satılabilir: <strong className="text-emerald-700">{kpiSummary.totalAvailable.toLocaleString("tr-TR")}</strong>
-                    </p>
-                  </CardContent>
-                </Card>
+            {/* Sadeleştirilmiş Ana Tablo (Sadece 6 Kritik Sütun) */}
+            <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-slate-50/80 text-xs uppercase text-slate-500 border-b border-slate-200">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold">Ürün Bilgisi</th>
+                      <th className="px-4 py-3 font-semibold">Lokasyon / Depo</th>
+                      <th className="px-4 py-3 font-semibold text-right">Stok Miktarı</th>
+                      <th className="px-4 py-3 font-semibold text-right">Birim Fiyat</th>
+                      <th className="px-4 py-3 font-semibold text-center">Durum</th>
+                      <th className="px-4 py-3 font-semibold text-right">Aksiyon</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredItems.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
+                          Arama kriterlerine uygun stok kartı bulunamadı.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredItems.map(item => {
+                        const isCritical = (item.totalAvailable || 0) <= (item.minStockLevel || 20)
+                        const primaryBalance = (item.warehouseBalances || [])[0]
 
-                <Card className="border-slate-200 bg-white shadow-sm">
-                  <Card className="border-slate-200/80 shadow-xs hover:border-indigo-200 transition-colors">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-slate-500">Toplam Eldeki Stok (On-Hand)</span>
-                        <Boxes className="h-4 w-4 text-emerald-600" />
-                        <span className="text-xs font-medium text-slate-500">Envanter Değeri (FIFO)</span>
-                        <TrendingUp className="h-4 w-4 text-emerald-600" />
-                      </div>
-                      <div className="mt-2 text-2xl font-bold text-slate-900">
-                        {kpiSummary.totalOnHand.toLocaleString("tr-TR")} Birim
-                        <div className="mt-2 flex items-baseline gap-2">
-                          <span className="text-2xl font-bold text-slate-900">
-                            ₺{Math.round(kpiSummary.totalInventoryValue).toLocaleString("tr-TR")}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-xs text-emerald-600 font-medium">
-                          ATP Satılabilir: {kpiSummary.totalAvailable.toLocaleString("tr-TR")} Birim
-                          <p className="mt-1 text-xs text-slate-500">
-                            {kpiSummary.skuCount} aktif ürün kartı
-                          </p>
-                        </CardContent>
-                      </Card>
-
-                      <Card className="border-slate-200 bg-white shadow-sm">
-                        <Card className={`border-slate-200/80 shadow-xs transition-colors ${kpiSummary.criticalStockItems > 0 ? "bg-amber-50/40 border-amber-200" : ""}`}>
-                          <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-medium text-slate-500">FIFO Envanter Değeri</span>
-                              <Calculator className="h-4 w-4 text-blue-600" />
-                              <span className="text-xs font-medium text-slate-500">Kritik Eşik Uyarısı</span>
-                              <AlertTriangle className={`h-4 w-4 ${kpiSummary.criticalStockItems > 0 ? "text-amber-600" : "text-slate-400"}`} />
-                            </div>
-                            <div className="mt-2 text-2xl font-bold text-slate-900">
-                              ₺{kpiSummary.totalInventoryValue.toLocaleString("tr-TR")}
-                              <div className="mt-2 flex items-baseline gap-2">
-                                <span className={`text-2xl font-bold ${kpiSummary.criticalStockItems > 0 ? "text-amber-700" : "text-slate-900"}`}>
-                                  {kpiSummary.criticalStockItems}
-                                </span>
-                                <span className="text-xs text-slate-500">Ürün azaldı</span>
-                              </div>
-                              <p className="mt-1 text-xs text-slate-500">
-                                FIFO / LIFO / Ağırlıklı Ort. Katmanlı
-                                Güvenlik stoğunun altında
-                              </p>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border-slate-200 bg-white shadow-sm">
-                          <Card className={`border-slate-200/80 shadow-xs transition-colors ${kpiSummary.expiringLots > 0 ? "bg-rose-50/40 border-rose-200" : ""}`}>
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-slate-500">Matrix Ana & Alt Varyant</span>
-                                <GitBranch className="h-4 w-4 text-purple-600" />
-                                <span className="text-xs font-medium text-slate-500">SKT Yaklaşan Partiler</span>
-                                <Clock className={`h-4 w-4 ${kpiSummary.expiringLots > 0 ? "text-rose-600" : "text-slate-400"}`} />
-                              </div>
-                              <div className="mt-2 text-2xl font-bold text-slate-900">
-                                {matrixVariants.length} Varyant
-                                <div className="mt-2 flex items-baseline gap-2">
-                                  <span className={`text-2xl font-bold ${kpiSummary.expiringLots > 0 ? "text-rose-700" : "text-slate-900"}`}>
-                                    {kpiSummary.expiringLots}
-                                  </span>
-                                  <span className="text-xs text-slate-500">Parti (15 gün)</span>
-                                </div>
-                                <p className="mt-1 text-xs text-purple-600 font-medium">
-                                  Ana Kart Stoğu: {matrixParent?.totalOnHand || 0} Adet (Auto-Rollup)
-                                </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border-slate-200 bg-white shadow-sm">
-                            <CardContent className="p-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-slate-500">SKT / FEFO Risk İzleme</span>
-                                <AlertTriangle className="h-4 w-4 text-amber-600" />
-                              </div>
-                              <div className="mt-2 text-2xl font-bold text-amber-600">
-                                {kpiSummary.expiringLots} Parti (Lot)
-                              </div>
-                              <p className="mt-1 text-xs text-slate-500">
-                                FEFO öncelikli sevkiyat direktifi aktif
-                                SKT öncelikli çıkış (FEFO) gerekli
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-
-                        {/* 5 Ana Sekme (Faz 1'in 5 Maddesi) */}
-                        {/* 4. MODÜL SEKMELERİ (SIFIR ÖZELLİK KAYBI) */}
-                        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                          <TabsList className="flex flex-wrap h-auto gap-1 bg-slate-100 p-1">
-                            <TabsTrigger value="multi-warehouse" className="gap-1.5 text-xs sm:text-sm">
-                              <Warehouse className="h-4 w-4" />
-                              1. Çoklu Depo & Anlık Stok (ATP)
-                            </TabsTrigger>
-                            <TabsTrigger value="matrix-variants" className="gap-1.5 text-xs sm:text-sm">
-                              <Layers className="h-4 w-4" />
-                              2. Ebeveyn-Alt Madde (Matrix) Varyant
-                            </TabsTrigger>
-                            <TabsTrigger value="traceability" className="gap-1.5 text-xs sm:text-sm">
-                              <QrCode className="h-4 w-4" />
-                              3. Lot, Parti, Seri No & SKT İzlenebilirlik
-                            </TabsTrigger>
-                            <TabsTrigger value="uom-alternatives" className="gap-1.5 text-xs sm:text-sm">
-                              <Scale className="h-4 w-4" />
-                              4. Çoklu Birim & Muadil Ürünler
-                            </TabsTrigger>
-                            <TabsTrigger value="bom-valuation" className="gap-1.5 text-xs sm:text-sm">
-                              <Calculator className="h-4 w-4" />
-                              5. Ürün Ağacı (BOM) & FIFO/LIFO Maliyet
-                            </TabsTrigger>
-                          </TabsList>
-                          <div className="flex items-center justify-between overflow-x-auto pb-1">
-                            <TabsList className="bg-slate-100 p-1">
-                              <TabsTrigger value="products" className="text-xs sm:text-sm gap-1.5">
-                                <Boxes className="h-4 w-4" />
-                                Ürün & Stok Listesi
-                              </TabsTrigger>
-                              <TabsTrigger value="variants" className="text-xs sm:text-sm gap-1.5">
-                                <Layers className="h-4 w-4" />
-                                Renk/Beden Varyantları
-                              </TabsTrigger>
-                              <TabsTrigger value="lots" className="text-xs sm:text-sm gap-1.5">
-                                <Clock className="h-4 w-4" />
-                                Lot & SKT Takibi
-                              </TabsTrigger>
-                              <TabsTrigger value="units" className="text-xs sm:text-sm gap-1.5">
-                                <Scale className="h-4 w-4" />
-                                Birim Çevirici
-                              </TabsTrigger>
-                              {isExpertMode && (
-                                <>
-                                  <TabsTrigger value="costing" className="text-xs sm:text-sm gap-1.5">
-                                    <Calculator className="h-4 w-4" />
-                                    Maliyet Değerleme
-                                  </TabsTrigger>
-                                  <TabsTrigger value="bom" className="text-xs sm:text-sm gap-1.5">
+                        return (
+                          <tr
+                            key={item.id}
+                            className="hover:bg-slate-50/70 cursor-pointer transition-colors group"
+                            onClick={() => openItemDetails(item)}
+                          >
+                            <td className="px-4 py-3.5">
+                              <div className="flex items-center gap-3">
+                                <div className="h-9 w-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">
+                                  {item.itemType === "MATRIX_PARENT" ? (
+                                    <Layers className="h-4 w-4" />
+                                  ) : item.itemType === "RAW_MATERIAL" ? (
+                                    <Boxes className="h-4 w-4" />
+                                  ) : (
                                     <PackageCheck className="h-4 w-4" />
-                                    Ürün Reçetesi (BOM)
-                                  </TabsTrigger>
-                                </>
-                              )}
-                            </TabsList>
-
-                            {/* 1. SEKME: ÇOKLU DEPO VE ŞUBE BAZLI ANLIK STOK TAKİBİ */}
-                            <TabsContent value="multi-warehouse" className="space-y-6">
-                              {/* Depo Kartları */}
-                              <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5">
-                                {state.warehouses.map(wh => (
-                                  <Card
-                                    key={wh.id}
-                                    onClick={() =>
-                                      setSelectedWarehouseId(prev => (prev === wh.id ? "ALL" : wh.id))
-                                    }
-                                    className={`cursor-pointer transition-all ${selectedWarehouseId === wh.id
-                                      ? "border-2 border-emerald-600 bg-emerald-50/30 shadow-md"
-                                      : "border-slate-200 hover:border-slate-300"
-                                      }`}
-                                  >
-                                    <CardContent className="p-4 space-y-2">
-                                      <div className="flex items-center justify-between">
-                                        <Badge variant="outline" className="font-mono text-xs">
-                                          {wh.code}
-                                        </Badge>
-                                        <Badge
-                                          className={
-                                            wh.type === "COLD_CHAIN"
-                                              ? "bg-cyan-100 text-cyan-800"
-                                              : wh.type === "QUARANTINE"
-                                                ? "bg-rose-100 text-rose-800"
-                                                : "bg-slate-100 text-slate-800"
-                                          }
-                                        >
-                                          {wh.temperatureRange}
-                                        </Badge>
-                                      </div>
-                                      <div className="font-semibold text-sm text-slate-900 line-clamp-1">
-                                        {wh.name}
-                                      </div>
-                                      <div className="text-xs text-slate-500">
-                                        {wh.branchName} • {wh.city}
-                                      </div>
-                                      <div className="pt-1">
-                                        <div className="flex justify-between text-xs mb-1">
-                                          <span className="text-slate-500">Doluluk ({wh.usedPallets}/{wh.capacityPallets} Palet)</span>
-                                          <span className="font-semibold text-slate-800">%{wh.occupancyRate}</span>
-                                        </div>
-                                        <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
-                                          <div
-                                            className={`h-full rounded-full ${wh.occupancyRate > 80 ? "bg-amber-500" : "bg-emerald-600"
-                                              }`}
-                                            style={{ width: `${wh.occupancyRate}%` }}
-                                          />
-                                        </div>
-                                      </div>
-                                    </CardContent>
-                                  </Card>
-                                ))}
-                                {!isExpertMode && (
-                                  <span className="text-xs text-slate-400 hidden md:inline">
-                                    *İleri düzey maliyet & BOM araçları için üstten &quot;Uzman Modu&quot;nu açabilirsiniz.
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* TAB 1: ANA ÜRÜN VE STOK LİSTESİ (SADE & TEMİZ TABLO) */}
-                              <TabsContent value="products" className="space-y-4">
-                                {/* Arama ve Filtreleme */}
-                                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
-                                  <div className="relative flex-1 max-w-md">
-                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                                    <Input
-                                      placeholder="Ürün adı, barkod veya SKU ara..."
-                                      value={searchQuery}
-                                      onChange={e => setSearchQuery(e.target.value)}
-                                      className="pl-9 bg-slate-50 border-slate-200"
-                                    />
+                                  )}
+                                </div>
+                                <div>
+                                  <div className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                                    {item.name}
                                   </div>
-
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <Select value={selectedWarehouseId} onValueChange={setSelectedWarehouseId}>
-                                      <SelectTrigger className="w-[180px] bg-slate-50 text-xs">
-                                        <SelectValue placeholder="Tüm Depolar" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="ALL">Tüm Depolar</SelectItem>
-                                        {state.warehouses.map(w => (
-                                          <SelectItem key={w.id} value={w.id}>
-                                            {w.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-
-                                    {isExpertMode && (
-                                      <Select value={selectedItemType} onValueChange={setSelectedItemType}>
-                                        <SelectTrigger className="w-[170px] bg-slate-50 text-xs">
-                                          <SelectValue placeholder="Tüm Tipler" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          <SelectItem value="ALL">Tüm Kart Tipleri</SelectItem>
-                                          <SelectItem value="FINISHED_GOOD">Mamul Ürün</SelectItem>
-                                          <SelectItem value="RAW_MATERIAL">Hammadde</SelectItem>
-                                          <SelectItem value="MATRIX_PARENT">Matrix Ana Kart</SelectItem>
-                                          <SelectItem value="MATRIX_VARIANT">Alt Varyant</SelectItem>
-                                        </SelectContent>
-                                      </Select>
+                                  <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                                    <span>{item.sku}</span>
+                                    <span>•</span>
+                                    <span>{item.category}</span>
+                                    {item.barcode && (
+                                      <>
+                                        <span>•</span>
+                                        <span className="font-mono text-[11px]">{item.barcode}</span>
+                                      </>
                                     )}
                                   </div>
                                 </div>
+                              </div>
+                            </td>
 
-                                {/* Filtre ve Arama Barı */}
-                                {/* Sadeleştirilmiş Ana Tablo (Sadece 5 Kritik Sütun) */}
-                                <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs">
-                                  <div className="overflow-x-auto">
-                                    <table className="w-full text-sm text-left">
-                                      <thead className="bg-slate-50/80 text-xs uppercase text-slate-500 border-b border-slate-200">
-                                        <tr>
-                                          <th className="px-4 py-3 font-semibold">Ürün Bilgisi</th>
-                                          <th className="px-4 py-3 font-semibold">Lokasyon / Depo</th>
-                                          <th className="px-4 py-3 font-semibold text-right">Stok Miktarı</th>
-                                          <th className="px-4 py-3 font-semibold text-right">Birim Fiyat</th>
-                                          <th className="px-4 py-3 font-semibold text-center">Durum</th>
-                                          <th className="px-4 py-3 font-semibold text-right">Aksiyon</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody className="divide-y divide-slate-100">
-                                        {filteredItems.length === 0 ? (
-                                          <tr>
-                                            <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
-                                              Arama kriterlerine uygun stok kartı bulunamadı.
-                                            </td>
-                                          </tr>
-                                        ) : (
-                                          filteredItems.map(item => {
-                                            const isCritical = (item.totalAvailable || 0) <= (item.minStockLevel || 20)
-                                            const primaryBalance = (item.warehouseBalances || [])[0]
-
-                                            return (
-                                              <tr
-                                                key={item.id}
-                                                className="hover:bg-slate-50/70 cursor-pointer transition-colors group"
-                                                onClick={() => openItemDetails(item)}
-                                              >
-                                                <td className="px-4 py-3.5">
-                                                  <div className="flex items-center gap-3">
-                                                    <div className="h-9 w-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">
-                                                      {item.itemType === "MATRIX_PARENT" ? (
-                                                        <Layers className="h-4 w-4" />
-                                                      ) : item.itemType === "RAW_MATERIAL" ? (
-                                                        <Boxes className="h-4 w-4" />
-                                                      ) : (
-                                                        <PackageCheck className="h-4 w-4" />
-                                                      )}
-                                                    </div>
-                                                    <div>
-                                                      <div className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                                                        {item.name}
-                                                      </div>
-                                                      <div className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
-                                                        <span>{item.sku}</span>
-                                                        <span>•</span>
-                                                        <span>{item.category}</span>
-                                                        {item.barcode && (
-                                                          <>
-                                                            <span>•</span>
-                                                            <span className="font-mono text-[11px]">{item.barcode}</span>
-                                                          </>
-                                                        )}
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-slate-600 text-xs">
-                                                  {primaryBalance ? (
-                                                    <div>
-                                                      <div className="font-medium text-slate-800">{primaryBalance.warehouseName}</div>
-                                                      <div className="text-slate-400 font-mono text-[11px]">{primaryBalance.binCode || "Genel Raf"}</div>
-                                                    </div>
-                                                  ) : (
-                                                    <span className="text-slate-400">Depo atanmadı</span>
-                                                  )}
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-right">
-                                                  <div className="font-bold text-slate-900">
-                                                    {(item.totalOnHand || 0).toLocaleString("tr-TR")} {item.baseUnit}
-                                                  </div>
-                                                  <div className="text-xs text-slate-400">
-                                                    Net Satılabilir: {(item.totalAvailable || 0).toLocaleString("tr-TR")}
-                                                  </div>
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-right">
-                                                  <div className="font-medium text-slate-900">
-                                                    ₺{(item.salesPrice || 0).toLocaleString("tr-TR")}
-                                                  </div>
-                                                  {isExpertMode && (
-                                                    <div className="text-xs text-slate-400">
-                                                      Maliyet: ₺{(item.fifoUnitCost || 0).toLocaleString("tr-TR")}
-                                                    </div>
-                                                  )}
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-center">
-                                                  {isCritical ? (
-                                                    <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 text-[11px]">
-                                                      Kritik Azalan
-                                                    </Badge>
-                                                  ) : (
-                                                    <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 text-[11px]">
-                                                      Yeterli Stok
-                                                    </Badge>
-                                                  )}
-                                                </td>
-
-                                                <td className="px-4 py-3.5 text-right">
-                                                  <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={(e) => {
-                                                      e.stopPropagation()
-                                                      openItemDetails(item)
-                                                    }}
-                                                    className="h-8 px-2.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50"
-                                                  >
-                                                    Detay
-                                                    <ChevronRight className="ml-1 h-3.5 w-3.5" />
-                                                  </Button>
-                                                </td>
-                                              </tr>
-                                            )
-                                          })
-                                        )}
-                                      </tbody>
-                                    </table>
-                                  </div>
+                            <td className="px-4 py-3.5 text-slate-600 text-xs">
+                              {primaryBalance ? (
+                                <div>
+                                  <div className="font-medium text-slate-800">{primaryBalance.warehouseName}</div>
+                                  <div className="text-slate-400 font-mono text-[11px]">{primaryBalance.binCode || "Genel Raf"}</div>
                                 </div>
-                              </TabsContent>
+                              ) : (
+                                <span className="text-slate-400">Depo atanmadı</span>
+                              )}
+                            </td>
 
-                              {/* TAB 2: MATRIX VARYANT SİHİRBAZI */}
-                              <TabsContent value="variants" className="space-y-4">
-                                <Card className="border-slate-200">
-                                  <CardHeader className="pb-3">
-                                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                      <CardHeader>
-                                        <div className="flex items-center justify-between">
-                                          <div>
-                                            <CardTitle className="text-base">
-                                              Çoklu Depo ve Lokasyon Bazlı Anlık Stok Matrisi (ATP / Rezerve / Yoldaki / Karantina / Konsinye)
-                                              <CardTitle className="text-base flex items-center gap-2">
-                                                <Layers className="h-4 w-4 text-indigo-600" />
-                                                Renk ve Beden Matrix Varyant Üretici
-                                              </CardTitle>
-                                              <CardDescription>
-                                                Depo kartlarına tıklayarak filtreleyebilir veya barkod/SKU ile anlık sorgulama yapabilirsiniz.
-                                                Ebeveyn stok kartı altında saniyeler içinde yeni renk ve beden kombinasyonları üretin. Ana kart stoğu otomatik toplanır (Auto-Rollup).
-                                              </CardDescription>
-                                          </div>
-                                          <div className="flex flex-wrap items-center gap-2">
-                                            <div className="relative w-64">
-                                              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
-                                              <Input
-                                                placeholder="SKU, Barkod veya Ürün ara..."
-                                                value={searchQuery}
-                                                onChange={e => setSearchQuery(e.target.value)}
-                                                className="pl-8 h-9 text-sm"
-                                              />
-                                            </div>
-                                            <Select value={selectedItemType} onValueChange={setSelectedItemType}>
-                                              <SelectTrigger className="w-44 h-9 text-xs">
-                                                <SelectValue placeholder="Stok Tipi" />
-                                              </SelectTrigger>
-                                              <SelectContent>
-                                                <SelectItem value="ALL">Tüm Stok Tipleri</SelectItem>
-                                                <SelectItem value="FINISHED_GOOD">Mamul Ürün</SelectItem>
-                                                <SelectItem value="RAW_MATERIAL">Hammadde / Canlı</SelectItem>
-                                                <SelectItem value="MATRIX_PARENT">Matrix Ana Kart</SelectItem>
-                                                <SelectItem value="MATRIX_VARIANT">Matrix Alt Varyant</SelectItem>
-                                              </SelectContent>
-                                            </Select>
-                                            {selectedWarehouseId !== "ALL" && (
-                                              <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => setSelectedWarehouseId("ALL")}
-                                                className="text-xs text-rose-600"
-                                              >
-                                                Depo Filtresini Temizle
-                                              </Button>
-                                            )}
-                                          </div>
-                                          {matrixParent && (
-                                            <Badge variant="secondary" className="bg-indigo-50 text-indigo-700 font-mono">
-                                              Ana Kart: {matrixParent.sku} ({matrixParent.totalOnHand} Adet)
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      </CardHeader>
-                                      <CardContent>
-                                        <div className="overflow-x-auto rounded-lg border border-slate-200">
-                                          <table className="w-full text-left text-sm">
-                                            <thead className="bg-slate-50 text-xs uppercase text-slate-600 border-b">
-                                              <tr>
-                                                <th className="p-3">SKU & Barkod</th>
-                                                <th className="p-3">Stok Kartı & Kategori</th>
-                                                <th className="p-3">Tip & ABC/XYZ</th>
-                                                <th className="p-3 text-right">Eldeki (On-Hand)</th>
-                                                <th className="p-3 text-right">Rezerve</th>
-                                                <th className="p-3 text-right text-emerald-700">ATP (Satılabilir)</th>
-                                                <th className="p-3 text-right">Yoldaki / Karantina</th>
-                                                <th className="p-3 text-right">FIFO Birim Maliyet</th>
-                                                <th className="p-3">Depo & Hücre Dağılımı</th>
-                                              </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-slate-200">
-                                              {filteredItems.map(item => (
-                                                <tr
-                                                  key={item.id}
-                                                  className={`hover:bg-slate-50/80 ${item.itemType === "MATRIX_PARENT" ? "bg-purple-50/40 font-medium" : ""
-                                                    }`}
-                                                >
-                                                  <td className="p-3 align-top">
-                                                    <div className="font-mono text-xs font-semibold text-slate-900">
-                                                      {item.sku}
-                                                    </div>
-                                                    <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
-                                                      <Barcode className="h-3 w-3" />
-                                                      {item.barcode}
-                                                    </div>
-                                                  </td>
-                                                  <td className="p-3 align-top">
-                                                    <div className="font-medium text-slate-900">{item.name}</div>
-                                                    <div className="text-xs text-slate-500">
-                                                      {item.category} • {item.brand}
-                                                    </div>
-                                                    {item.variantAttributes && (
-                                                      <div className="mt-1 flex gap-1">
-                                                        {item.variantAttributes.renk && (
-                                                          <Badge variant="secondary" className="text-[10px]">
-                                                            Renk: {item.variantAttributes.renk}
-                                                          </Badge>
-                                                        )}
-                                                        {item.variantAttributes.beden && (
-                                                          <Badge variant="secondary" className="text-[10px]">
-                                                            Beden: {item.variantAttributes.beden}
-                                                          </Badge>
-                                                        )}
-                                                      </div>
-                                                    )}
-                                                  </td>
-                                                  <td className="p-3 align-top">
-                                                    <Badge
-                                                      variant="outline"
-                                                      className={
-                                                        item.itemType === "MATRIX_PARENT"
-                                                          ? "border-purple-300 bg-purple-100 text-purple-800"
-                                                          : item.itemType === "MATRIX_VARIANT"
-                                                            ? "border-indigo-300 bg-indigo-50 text-indigo-700"
-                                                            : "border-slate-300"
-                                                      }
-                                                    >
-                                                      {item.itemType}
-                                                    </Badge>
-                                                    <div className="mt-1 text-[11px] text-slate-500">
-                                                      Sınıf: <strong>{item.abcClass}/{item.xyzClass}</strong> • {item.valuationMethod}
-                                                    </div>
-                                                  </td>
-                                                  <td className="p-3 align-top text-right font-semibold text-slate-900">
-                                                    {item.totalOnHand.toLocaleString("tr-TR")} {item.baseUnit}
-                                                  </td>
-                                                  <td className="p-3 align-top text-right text-amber-700">
-                                                    {item.totalReserved.toLocaleString("tr-TR")} {item.baseUnit}
-                                                  </td>
-                                                  <td className="p-3 align-top text-right font-bold text-emerald-700">
-                                                    {item.totalAvailable.toLocaleString("tr-TR")} {item.baseUnit}
-                                                  </td>
-                                                  <td className="p-3 align-top text-right text-xs">
-                                                    <div className="text-blue-600">Yolda: {item.totalInTransit}</div>
-                                                    <div className="text-rose-600">Karantina: {item.totalQuarantine}</div>
-                                                    {item.totalConsignment > 0 && (
-                                                      <div className="text-purple-600">Konsinye: {item.totalConsignment}</div>
-                                                    )}
-                                                  </td>
-                                                  <td className="p-3 align-top text-right">
-                                                    <div className="font-semibold text-slate-900">
-                                                      ₺{item.fifoUnitCost.toLocaleString("tr-TR")}
-                                                    </div>
-                                                    <div className="text-[11px] text-slate-500">
-                                                      Satış: ₺{item.salesPrice.toLocaleString("tr-TR")}
-                                                    </div>
-                                                  </td>
-                                                  <td className="p-3 align-top">
-                                                    <div className="flex flex-col gap-1">
-                                                      {item.warehouseBalances.map((wb, idx) => (
-                                                        <div
-                                                          key={`${wb.warehouseId}-${idx}`}
-                                                          className="flex items-center justify-between gap-2 rounded bg-slate-100 px-2 py-1 text-[11px]"
-                                                        >
-                                                          <span className="font-mono font-medium text-slate-700">
-                                                            {wb.warehouseCode} ({wb.binCode})
-                                                          </span>
-                                                          <span className="font-bold text-slate-900">
-                                                            {wb.onHandQty} {item.baseUnit}
-                                                          </span>
-                                                        </div>
-                                                      ))}
-                                                    </div>
-                                                  </td>
-                                                </tr>
-                                              ))}
-                                            </tbody>
-                                          </table>
-                                          <CardContent className="space-y-6">
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                                              <div>
-                                                <Label className="text-xs">Varyant Rengi</Label>
-                                                <Input
-                                                  value={variantColor}
-                                                  onChange={e => setVariantColor(e.target.value)}
-                                                  placeholder="Örn: Zümrüt Yeşili"
-                                                  className="mt-1 bg-white"
-                                                />
-                                              </div>
-                                              <div>
-                                                <Label className="text-xs">Beden / Boyut</Label>
-                                                <Input
-                                                  value={variantSize}
-                                                  onChange={e => setVariantSize(e.target.value)}
-                                                  placeholder="Örn: XL, Standart"
-                                                  className="mt-1 bg-white"
-                                                />
-                                              </div>
-                                              <div>
-                                                <Label className="text-xs">İlk Stok Adedi</Label>
-                                                <Input
-                                                  type="number"
-                                                  value={variantInitialQty}
-                                                  onChange={e => setVariantInitialQty(e.target.value)}
-                                                  className="mt-1 bg-white"
-                                                />
-                                              </div>
-                                              <div>
-                                                <Label className="text-xs">Satış Fiyatı (₺)</Label>
-                                                <Input
-                                                  type="number"
-                                                  value={variantSalesPrice}
-                                                  onChange={e => setVariantSalesPrice(e.target.value)}
-                                                  className="mt-1 bg-white"
-                                                />
-                                              </div>
-                                              <div className="flex items-end">
-                                                <Button onClick={handleGenerateVariant} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
-                                                  <Plus className="mr-1.5 h-4 w-4" />
-                                                  Varyantı Üret
-                                                </Button>
-                                              </div>
-                                            </div>
-                                          </CardContent>
-                                        </Card>
-                                      </TabsContent>
+                            <td className="px-4 py-3.5 text-right">
+                              <div className="font-bold text-slate-900">
+                                {(item.totalOnHand || 0).toLocaleString("tr-TR")} {item.baseUnit}
+                              </div>
+                              <div className="text-xs text-slate-400">
+                                Net Satılabilir: {(item.totalAvailable || 0).toLocaleString("tr-TR")}
+                              </div>
+                            </td>
 
-                                      {/* 2. SEKME: EBEVEYN-ALT MADDE (MATRIX) VARYANT YAPISI */}
-                                      <TabsContent value="matrix-variants" className="space-y-6">
-                                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                                          {/* Sol: Matrix Ebeveyn Kartı ve Otomatik Rollup Özeti */}
-                                          <Card className="border-purple-200 bg-purple-50/20 lg:col-span-1">
-                                            <CardHeader>
-                                              <div className="flex items-center justify-between">
-                                                <Badge className="bg-purple-600 text-white">Ebeveyn Kart (MATRIX_PARENT)</Badge>
-                                                <Badge variant="outline" className="border-purple-300 text-purple-700">
-                                                  Canlı Auto-Rollup
-                                                </Badge>
-                                              </div>
-                                              <CardTitle className="mt-2 text-lg">{matrixParent?.name}</CardTitle>
-                                              <CardDescription className="font-mono text-xs">
-                                                SKU: {matrixParent?.sku} • Barkod: {matrixParent?.barcode}
-                                              </CardDescription>
-                                            </CardHeader>
-                                            <CardContent className="space-y-4">
-                                              <div className="rounded-lg bg-white p-4 border border-purple-200 space-y-2">
-                                                <div className="text-xs text-slate-500 uppercase font-semibold">
-                                                  Alt Varyantlardan Otomatik Toplanan Stok
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-3 pt-1">
-                                                  <div>
-                                                    <span className="text-xs text-slate-500">Toplam Eldeki:</span>
-                                                    <div className="text-xl font-bold text-slate-900">
-                                                      {matrixParent?.totalOnHand} Adet
-                                                      <div>
-                                                        <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-                                                          Mevcut Varyantlar ({matrixVariants.length} adet)
-                                                        </h4>
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                          {matrixVariants.map(v => (
+                            <td className="px-4 py-3.5 text-right">
+                              <div className="font-medium text-slate-900">
+                                ₺{(item.salesPrice || 0).toLocaleString("tr-TR")}
+                              </div>
+                              {isExpertMode && (
+                                <div className="text-xs text-slate-400">
+                                  Maliyet: ₺{(item.fifoUnitCost || 0).toLocaleString("tr-TR")}
+                                </div>
+                              )}
+                            </td>
+
+                            <td className="px-4 py-3.5 text-center">
+                              {isCritical ? (
+                                <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 text-[11px]">
+                                  Kritik Azalan
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 text-[11px]">
+                                  Yeterli Stok
+                                </Badge>
+                              )}
+                            </td>
+
+                            <td className="px-4 py-3.5 text-right">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  openItemDetails(item)
+                                }}
+                                className="h-8 px-2.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50"
+                              >
+                                Detay
+                                <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                              </Button>
+                            </td>
+                          </tr>
+                        )
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* TAB 2: MATRIX VARYANT SİHİRBAZI */}
+          <TabsContent value="variants" className="space-y-4">
+            <Card className="border-slate-200">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Layers className="h-4 w-4 text-indigo-600" />
+                      Renk ve Beden Matrix Varyant Üretici
+                    </CardTitle>
+                    <CardDescription>
+                      Ebeveyn stok kartı altında saniyeler içinde yeni renk ve beden kombinasyonları üretin. Ana kart stoğu otomatik toplanır (Auto-Rollup).
+                    </CardDescription>
+                  </div>
+                  {matrixParent && (
+                    <Badge variant="secondary" className="bg-indigo-50 text-indigo-700 font-mono">
+                      Ana Kart: {matrixParent.sku} ({matrixParent.totalOnHand} Adet)
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div>
+                    <Label className="text-xs">Varyant Rengi</Label>
+                    <Input
+                      value={variantColor}
+                      onChange={e => setVariantColor(e.target.value)}
+                      placeholder="Örn: Zümrüt Yeşili"
+                      className="mt-1 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Beden / Boyut</Label>
+                    <Input
+                      value={variantSize}
+                      onChange={e => setVariantSize(e.target.value)}
+                      placeholder="Örn: XL, Standart"
+                      className="mt-1 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">İlk Stok Adedi</Label>
+                    <Input
+                      type="number"
+                      value={variantInitialQty}
+                      onChange={e => setVariantInitialQty(e.target.value)}
+                      className="mt-1 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Satış Fiyatı (₺)</Label>
+                    <Input
+                      type="number"
+                      value={variantSalesPrice}
+                      onChange={e => setVariantSalesPrice(e.target.value)}
+                      className="mt-1 bg-white"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button onClick={handleGenerateVariant} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white">
+                      <Plus className="mr-1.5 h-4 w-4" />
+                      Varyantı Üret
+                    </Button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                    Mevcut Varyantlar ({matrixVariants.length} adet)
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {matrixVariants.map(v => (
                       <div key={v.id} className="p-3 bg-white border border-slate-200 rounded-lg flex items-center justify-between">
                         <div>
                           <div className="font-semibold text-slate-900 text-sm">{v.name}</div>
@@ -1303,224 +788,42 @@ const handleCreateItem = async () => {
                             </Badge>
                           </div>
                         </div>
-                      </div>
-                      <div>
-                        <span className="text-xs text-slate-500">Toplam ATP:</span>
-                        <div className="text-xl font-bold text-emerald-700">
-                          {matrixParent?.totalAvailable} Adet
                         <div className="text-right">
                           <div className="text-base font-bold text-indigo-700">{v.totalOnHand} Adet</div>
                           <div className="text-xs text-slate-500">₺{v.salesPrice}</div>
                         </div>
                       </div>
-                      <div>
-                        <span className="text-xs text-slate-500">Toplam Rezerve:</span>
-                        <div className="text-base font-semibold text-amber-700">
-                          {matrixParent?.totalReserved} Adet
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-xs text-slate-500">Alt Varyant Sayısı:</span>
-                        <div className="text-base font-semibold text-purple-700">
-                          {matrixVariants.length} SKU
-                        </div>
-                      </div>
-                    </div>
-                                                          ))}
-                                                        </div>
-                                                      </div>
-                                                    </CardContent>
-                                                  </Card>
-                                                </TabsContent>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-                                                {/* Yeni Varyant Ekleme Formu */}
-                                                <div className="rounded-lg bg-white p-4 border border-slate-200 space-y-3">
-                                                  <div className="font-semibold text-sm text-slate-900 flex items-center gap-1.5">
-                                                    <Plus className="h-4 w-4 text-purple-600" />
-                                                    Yeni Renk × Beden Varyantı Üret
-                                                  </div>
-                                                  <div className="grid grid-cols-2 gap-2">
-                                                    <div>
-                                                      <Label className="text-xs">Renk</Label>
-                                                      <Select value={variantColor} onValueChange={setVariantColor}>
-                                                        <SelectTrigger className="h-8 text-xs mt-1">
-                                                          <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                          <SelectItem value="Zümrüt Yeşili">Zümrüt Yeşili</SelectItem>
-                                                          <SelectItem value="Antrasit">Antrasit</SelectItem>
-                                                          <SelectItem value="Bordo">Bordo</SelectItem>
-                                                          <SelectItem value="Lacivert">Lacivert</SelectItem>
-                                                        </SelectContent>
-                                                      </Select>
-                                                    </div>
-                                                    <div>
-                                                      <Label className="text-xs">Beden</Label>
-                                                      <Select value={variantSize} onValueChange={setVariantSize}>
-                                                        <SelectTrigger className="h-8 text-xs mt-1">
-                                                          <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                          <SelectItem value="XS">XS</SelectItem>
-                                                          <SelectItem value="S">S</SelectItem>
-                                                          <SelectItem value="M">M</SelectItem>
-                                                          <SelectItem value="L">L</SelectItem>
-                                                          <SelectItem value="XL">XL</SelectItem>
-                                                          <SelectItem value="XXL">XXL</SelectItem>
-                                                        </SelectContent>
-                                                      </Select>
-                                                    </div>
-                                                  </div>
-                                                  <div className="grid grid-cols-3 gap-2">
-                                                    <div>
-                                                      <Label className="text-xs">Başlangıç Stok</Label>
-                                                      <Input
-                                                        type="number"
-                                                        value={variantInitialQty}
-                                                        onChange={e => setVariantInitialQty(e.target.value)}
-                                                        className="h-8 text-xs mt-1"
-                                                      />
-                                                    </div>
-                                                    <div>
-                                                      <Label className="text-xs">Birim Maliyet (₺)</Label>
-                                                      <Input
-                                                        type="number"
-                                                        value={variantUnitCost}
-                                                        onChange={e => setVariantUnitCost(e.target.value)}
-                                                        className="h-8 text-xs mt-1"
-                                                      />
-                                                    </div>
-                                                    <div>
-                                                      <Label className="text-xs">Satış Fiyatı (₺)</Label>
-                                                      <Input
-                                                        type="number"
-                                                        value={variantSalesPrice}
-                                                        onChange={e => setVariantSalesPrice(e.target.value)}
-                                                        className="h-8 text-xs mt-1"
-                                                      />
-                                                    </div>
-                                                  </div>
-                                                  <Button
-                                                    onClick={handleGenerateVariant}
-                                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs h-9"
-                                                  >
-                                                    Alt Varyantı Oluştur & Ebeveyn Stoğu Güncelle
-                                                  </Button>
-                                                </div>
-                                            </CardContent>
-                                          </Card>
+          {/* TAB 3: LOT & SKT TAKİBİ (FEFO SOYKÜTÜĞÜ) */}
+          <TabsContent value="lots" className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900">Lot, Seri No ve SKT Takip Merkezi</h3>
+                <p className="text-xs text-slate-500">
+                  Son Kullanma Tarihi (SKT) ve partilerin tedarikçiden depoya, raftan sevkiyata tüm geçmişi (FEFO).
+                </p>
+              </div>
+              <Button onClick={() => setIsLotModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Plus className="mr-1.5 h-4 w-4" />
+                Yeni Lot / Parti Girişi
+              </Button>
+            </div>
 
-                                          {/* Sağ: Alt Varyantlar Listesi ve Matrix Tablosu */}
-                                          <Card className="border-slate-200 lg:col-span-2">
-                                            <CardHeader>
-                                              <CardTitle className="text-base">
-                                                Ebeveyn Karta Bağlı Alt Varyantlar (Renk × Beden Kırılımı)
-                                              </CardTitle>
-                                              <CardDescription>
-                                                Herhangi bir alt varyantta stok hareketi olduğunda Ebeveyn Kart ({matrixParent?.sku}) bakiyesi gerçek zamanlı olarak yeniden hesaplanır.
-                                              </CardDescription>
-                                            </CardHeader>
-                                            <CardContent>
-                                              <div className="overflow-x-auto rounded-lg border border-slate-200">
-                                                <table className="w-full text-left text-sm">
-                                                  <thead className="bg-slate-50 text-xs uppercase text-slate-600 border-b">
-                                                    <tr>
-                                                      <th className="p-3">Varyant SKU</th>
-                                                      <th className="p-3">Renk</th>
-                                                      <th className="p-3">Beden</th>
-                                                      <th className="p-3 text-right">Eldeki Stok</th>
-                                                      <th className="p-3 text-right">Rezerve</th>
-                                                      <th className="p-3 text-right">ATP (Satılabilir)</th>
-                                                      <th className="p-3 text-right">FIFO Maliyet / Satış</th>
-                                                      <th className="p-3">Hücre Konumu</th>
-                                                    </tr>
-                                                  </thead>
-                                                  <tbody className="divide-y divide-slate-200">
-                                                    {matrixVariants.map(v => (
-                                                      <tr key={v.id} className="hover:bg-slate-50">
-                                                        <td className="p-3 font-mono text-xs font-semibold text-indigo-700">
-                                                          {v.sku}
-                                                        </td>
-                                                        <td className="p-3">
-                                                          <Badge variant="outline">{v.variantAttributes?.renk || "-"}</Badge>
-                                                        </td>
-                                                        <td className="p-3">
-                                                          <Badge className="bg-slate-800 text-white">
-                                                            {v.variantAttributes?.beden || "-"}
-                                                          </Badge>
-                                                        </td>
-                                                        <td className="p-3 text-right font-bold">{v.totalOnHand} Adet</td>
-                                                        <td className="p-3 text-right text-amber-700">{v.totalReserved} Adet</td>
-                                                        <td className="p-3 text-right font-bold text-emerald-700">
-                                                          {v.totalAvailable} Adet
-                                                        </td>
-                                                        <td className="p-3 text-right text-xs">
-                                                          <div>Maliyet: ₺{v.fifoUnitCost}</div>
-                                                          <div className="text-slate-500">Satış: ₺{v.salesPrice}</div>
-                                                        </td>
-                                                        <td className="p-3 font-mono text-xs text-slate-600">
-                                                          {v.warehouseBalances[0]?.binCode || "IST-Z2-A04"}
-                                                        </td>
-                                                      </tr>
-                                                    ))}
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                            </CardContent>
-                                          </Card>
-                                          {/* TAB 3: LOT & SKT TAKİBİ (FEFO SOYKÜTÜĞÜ) */}
-                                          <TabsContent value="lots" className="space-y-4">
-                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                              <div>
-                                                <h3 className="text-base font-semibold text-slate-900">Lot, Seri No ve SKT Takip Merkezi</h3>
-                                                <p className="text-xs text-slate-500">
-                                                  Son Kullanma Tarihi (SKT) ve partilerin tedarikçiden depoya, raftan sevkiyata tüm geçmişi (FEFO).
-                                                </p>
-                                              </div>
-                                              <Button onClick={() => setIsLotModalOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                                                <Plus className="mr-1.5 h-4 w-4" />
-                                                Yeni Lot / Parti Girişi
-                                              </Button>
-                                            </div>
-                                          </TabsContent>
-
-                                          {/* 3. SEKME: LOT, PARTİ, SERİ NO VE SKT (FEFO) İZLENEBİLİRLİK */}
-                                          <TabsContent value="traceability" className="space-y-6">
-                                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-                                              {/* Sol: Lot / Parti / Seri & SKT Listesi */}
-                                              <Card className="border-slate-200 lg:col-span-7">
-                                                <CardHeader className="pb-3">
-                                                  <div className="flex items-center justify-between">
-                                                    <div>
-                                                      <CardTitle className="text-base">
-                                                        Lot, Parti, Seri Numarası & SKT (FEFO) Kayıtları
-                                                      </CardTitle>
-                                                      <CardDescription>
-                                                        Bir partiye tıklayarak tedarikçiden müşteriye uçtan uca izlenebilirlik (Traceability) zincirini inceleyin.
-                                                      </CardDescription>
-                                                    </div>
-                                                    <Button
-                                                      size="sm"
-                                                      onClick={() => setIsLotModalOpen(true)}
-                                                      className="bg-indigo-600 hover:bg-indigo-700 text-white gap-1 text-xs"
-                                                    >
-                                                      <Plus className="h-3.5 w-3.5" />
-                                                      Yeni Lot/SKT Kaydı
-                                                    </Button>
-                                                  </div>
-                                                </CardHeader>
-                                                <CardContent>
-                                                  <div className="space-y-3">
-                                                    {state.lotBatches.map(lot => (
-                                                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                        {/* Lot Listesi */}
-                                                        <div className="md:col-span-1 space-y-2">
-                                                          <div className="text-xs font-semibold uppercase text-slate-500 px-1">Aktif Partiler</div>
-                                                          <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                                                            {state.lotBatches.map(lot => {
-                                                              const isSelected = lot.id === selectedLotId
-                                                              const isExpiring = lot.daysUntilExpiry <= 15
-                                                              return (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Lot Listesi */}
+              <div className="md:col-span-1 space-y-2">
+                <div className="text-xs font-semibold uppercase text-slate-500 px-1">Aktif Partiler</div>
+                <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                  {state.lotBatches.map(lot => {
+                    const isSelected = lot.id === selectedLotId
+                    const isExpiring = lot.daysUntilExpiry <= 15
+                    return (
                       <div
                         key={lot.id}
                         onClick={() => setSelectedLotId(lot.id)}
