@@ -1748,3 +1748,864 @@ model TrashItem {
   @@index([status])
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 1: ÇEKİRDEK STOK VE ENVANTER MİMARİSİ
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model Warehouse {
+  id               String   @id @default(uuid())
+  branchId         String
+  code             String   @unique
+  name             String
+  type             String   @default("MAIN") // MAIN, BRANCH_STORE, COLD_CHAIN, CONSIGNMENT, TRANSIT, QUARANTINE
+  address          String?
+  city             String?
+  managerName      String?
+  phone            String?
+  capacityVolumeM3 Float    @default(1000)
+  usedVolumeM3     Float    @default(0)
+  capacityWeightKg Float    @default(50000)
+  usedWeightKg     Float    @default(0)
+  temperatureRange String?
+  isDefault        Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  zones            WarehouseZone[]
+  bins             StorageBin[]
+  stockBalances    StockBalance[]
+  lotSerials       LotSerialRecord[]
+  costLayers       CostLayer[]
+  stockMovements   StockMovement[]
+  licensePlates    LicensePlate[]
+  countSessions    InventoryCountSession[]
+
+  @@index([branchId])
+  @@index([type])
+}
+
+model InventoryItem {
+  id                String   @id @default(uuid())
+  productId         String?
+  sku               String   @unique
+  barcode           String?
+  gtin              String?
+  rfidEpcPrefix     String?
+  name              String
+  description       String?
+  category          String   @default("Genel")
+  brand             String?
+  itemType          String   @default("FINISHED_GOOD") // RAW_MATERIAL, SEMI_FINISHED, FINISHED_GOOD, MERCHANDISE, CONSUMABLE, MATRIX_PARENT, MATRIX_VARIANT
+  parentItemId      String?
+  variantAttributes String?  // JSON: {"renk": "Siyah", "beden": "L"}
+  baseUnit          String   @default("Adet")
+  valuationMethod   String   @default("FIFO") // FIFO, LIFO, WEIGHTED_AVERAGE, STANDARD
+  standardCost      Float    @default(0)
+  currentAvgCost    Float    @default(0)
+  fifoUnitCost      Float    @default(0)
+  lifoUnitCost      Float    @default(0)
+  lastPurchaseCost  Float    @default(0)
+  salesPrice        Float    @default(0)
+  currency          String   @default("TRY")
+  taxRate           Float    @default(20)
+  trackLot          Boolean  @default(false)
+  trackSerial       Boolean  @default(false)
+  trackExpiry       Boolean  @default(false)
+  shelfLifeDays     Int?
+  abcClass          String   @default("A")
+  xyzClass          String   @default("X")
+  weightKg          Float    @default(0.5)
+  volumeM3          Float    @default(0.01)
+  minStockLevel     Float    @default(10)
+  maxStockLevel     Float    @default(500)
+  leadTimeDays      Int      @default(5)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  parentItem        InventoryItem?       @relation("MatrixVariants", fields: [parentItemId], references: [id], onDelete: Cascade)
+  variants          InventoryItem[]      @relation("MatrixVariants")
+  stockBalances     StockBalance[]
+  unitConversions   UnitConversion[]
+  alternativesFrom  AlternativeProduct[] @relation("SourceItemAlternatives")
+  alternativesTo    AlternativeProduct[] @relation("SubstituteItemAlternatives")
+  lotSerials        LotSerialRecord[]
+  bomHeaders        BomHeader[]          @relation("FinishedItemBoms")
+  bomComponents     BomComponent[]       @relation("ComponentItemBoms")
+  costLayers        CostLayer[]
+  stockMovements    StockMovement[]
+  reorderPolicies   ReorderPolicy[]
+  consignmentStocks ConsignmentStock[]
+  demandForecasts   DemandForecastRecord[]
+
+  @@index([category])
+  @@index([parentItemId])
+  @@index([itemType])
+  @@index([barcode])
+}
+
+model StockBalance {
+  id             String   @id @default(uuid())
+  itemId         String
+  warehouseId    String
+  binCode        String?
+  onHandQty      Float    @default(0)
+  reservedQty    Float    @default(0)
+  availableQty   Float    @default(0)
+  inTransitQty   Float    @default(0)
+  quarantineQty  Float    @default(0)
+  consignmentQty Float    @default(0)
+  updatedAt      DateTime @updatedAt
+
+  item           InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  warehouse      Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, warehouseId])
+  @@index([warehouseId])
+}
+
+model UnitConversion {
+  id                String   @id @default(uuid())
+  itemId            String
+  fromUnit          String
+  toUnit            String
+  multiplier        Float
+  barcode           String?
+  weightKg          Float?
+  volumeM3          Float?
+  isDefaultPurchase Boolean  @default(false)
+  isDefaultSales    Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  item              InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+}
+
+model AlternativeProduct {
+  id                    String   @id @default(uuid())
+  sourceItemId          String
+  substituteItemId      String
+  relationType          String   @default("EXACT_SUBSTITUTE") // EXACT_SUBSTITUTE, UPGRADE, DOWNGRADE, COMPATIBLE, CROSS_SELL
+  priority              Int      @default(1)
+  conversionRatio       Float    @default(1.0)
+  priceDiffPercent      Float    @default(0)
+  autoSuggestOnOutStock Boolean  @default(true)
+  isBidirectional       Boolean  @default(true)
+  notes                 String?
+  createdAt             DateTime @default(now())
+
+  sourceItem            InventoryItem @relation("SourceItemAlternatives", fields: [sourceItemId], references: [id], onDelete: Cascade)
+  substituteItem        InventoryItem @relation("SubstituteItemAlternatives", fields: [substituteItemId], references: [id], onDelete: Cascade)
+
+  @@index([sourceItemId])
+  @@index([substituteItemId])
+}
+
+model LotSerialRecord {
+  id                String    @id @default(uuid())
+  itemId            String
+  warehouseId       String
+  binCode           String?
+  lotNumber         String
+  batchNumber       String?
+  serialNumber      String?
+  manufacturingDate DateTime?
+  expiryDate        DateTime?
+  supplierName      String?
+  supplierLotNo     String?
+  status            String    @default("AVAILABLE") // AVAILABLE, QUARANTINE, EXPIRED, RECALLED, CONSUMED, SOLD
+  initialQty        Float     @default(0)
+  remainingQty      Float     @default(0)
+  unitCost          Float     @default(0)
+  originDocType     String?
+  originDocNo       String?
+  qcStatus          String    @default("PASSED")
+  notes             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  item              InventoryItem     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  warehouse         Warehouse         @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  traceLogs         TraceabilityLog[]
+
+  @@index([itemId, expiryDate])
+  @@index([lotNumber])
+  @@index([serialNumber])
+  @@index([status])
+}
+
+model TraceabilityLog {
+  id              String   @id @default(uuid())
+  lotSerialId     String
+  eventType       String   // SUPPLIER_RECEIPT, QC_INSPECTION, PUTAWAY, BOM_CONSUMPTION, PRODUCTION_OUTPUT, TRANSFER, PICK_PACK, CUSTOMER_SHIPMENT, RMA_RETURN, RECALL_HOLD
+  eventDate       DateTime @default(now())
+  quantity        Float
+  fromLocation    String?
+  toLocation      String?
+  referenceDocNo  String?
+  partnerName     String?
+  operatorName    String?
+  notes           String?
+
+  lotSerial       LotSerialRecord @relation(fields: [lotSerialId], references: [id], onDelete: Cascade)
+
+  @@index([lotSerialId, eventDate])
+  @@index([referenceDocNo])
+}
+
+model BomHeader {
+  id                   String   @id @default(uuid())
+  finishedItemId       String
+  code                 String   @unique
+  name                 String
+  version              String   @default("v1.0")
+  outputQty            Float    @default(1)
+  outputUnit           String   @default("Adet")
+  laborCostPerBatch    Float    @default(0)
+  overheadCostPerBatch Float    @default(0)
+  scrapRatePercent     Float    @default(2.0)
+  leadTimeHours        Float    @default(4.0)
+  isActive             Boolean  @default(true)
+  notes                String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  finishedItem         InventoryItem  @relation("FinishedItemBoms", fields: [finishedItemId], references: [id], onDelete: Cascade)
+  components           BomComponent[]
+
+  @@index([finishedItemId])
+}
+
+model BomComponent {
+  id               String  @id @default(uuid())
+  bomId            String
+  componentItemId  String
+  quantity         Float
+  unit             String  @default("Adet")
+  scrapPercent     Float   @default(0)
+  isOptional       Boolean @default(false)
+  operationStep    String?
+  notes            String?
+
+  bom              BomHeader     @relation(fields: [bomId], references: [id], onDelete: Cascade)
+  componentItem    InventoryItem @relation("ComponentItemBoms", fields: [componentItemId], references: [id], onDelete: Cascade)
+
+  @@index([bomId])
+  @@index([componentItemId])
+}
+
+model CostLayer {
+  id            String   @id @default(uuid())
+  itemId        String
+  warehouseId   String
+  lotNumber     String?
+  receiptDocNo  String
+  layerDate     DateTime @default(now())
+  initialQty    Float
+  remainingQty  Float
+  unitCost      Float
+  currency      String   @default("TRY")
+  isExhausted   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  item          InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  warehouse     Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, warehouseId, isExhausted, layerDate])
+}
+
+model StockMovement {
+  id                   String   @id @default(uuid())
+  itemId               String
+  warehouseId          String
+  movementType         String   // RECEIPT, ISSUE, TRANSFER_OUT, TRANSFER_IN, PRODUCTION_CONSUME, PRODUCTION_OUTPUT, COUNT_ADJUSTMENT, CONSIGNMENT_CONSUME, RMA_RETURN
+  quantity             Float
+  unit                 String   @default("Adet")
+  valuationMethodUsed  String   @default("FIFO")
+  unitCost             Float    @default(0)
+  totalCost            Float    @default(0)
+  standardCostVariance Float    @default(0)
+  lotNumber            String?
+  serialNumber         String?
+  fromBinCode          String?
+  toBinCode            String?
+  lpnCode              String?
+  referenceDocNo       String?
+  performedBy          String?
+  notes                String?
+  createdAt            DateTime @default(now())
+
+  item                 InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  warehouse            Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, createdAt])
+  @@index([warehouseId, createdAt])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 2: İLERİ SEVİYE DEPO YÖNETİM SİSTEMİ (WMS) VE MOBİL/SAHA OPERASYONLARI
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model WarehouseZone {
+  id              String   @id @default(uuid())
+  warehouseId     String
+  code            String
+  name            String
+  zoneType        String   @default("STORAGE") // RECEIVING, QC, FAST_PICK, BULK_STORAGE, COLD_STORAGE, QUARANTINE, PACKING, SHIPPING
+  temperatureMin  Float?
+  temperatureMax  Float?
+  humidityMax     Float?
+  createdAt       DateTime @default(now())
+
+  warehouse       Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  bins            StorageBin[]
+
+  @@index([warehouseId])
+}
+
+model StorageBin {
+  id               String   @id @default(uuid())
+  warehouseId      String
+  zoneId           String
+  code             String   @unique
+  aisle            String
+  rack             String
+  level            String
+  binPosition      String
+  binType          String   @default("STANDARD_PALLET")
+  abcVelocity      String   @default("A")
+  maxWeightKg      Float    @default(1200)
+  currentWeightKg  Float    @default(0)
+  maxVolumeM3      Float    @default(2.4)
+  currentVolumeM3  Float    @default(0)
+  occupancyPercent Float    @default(0)
+  allowMixedSku    Boolean  @default(true)
+  allowMixedLot    Boolean  @default(false)
+  isBlocked        Boolean  @default(false)
+  blockReason      String?
+  rfidGateTag      String?
+  updatedAt        DateTime @updatedAt
+
+  warehouse        Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  zone             WarehouseZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+
+  @@index([warehouseId, zoneId])
+  @@index([abcVelocity])
+}
+
+model LocationDirective {
+  id                String   @id @default(uuid())
+  name              String
+  directiveType     String   // PUTAWAY, PICK, REPLENISH
+  priority          Int      @default(1)
+  warehouseId       String?
+  itemCategory      String?
+  abcClassFilter    String?
+  requiresColdChain Boolean  @default(false)
+  strategy          String   // FEFO_FIRST, FIFO_FIRST, FIXED_BIN_CONSOLIDATE, EMPTY_BIN_LOWEST_LEVEL, ZONE_VELOCITY_MATCH
+  targetZoneCode    String
+  maxSplitLocations Int      @default(2)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+
+  @@index([directiveType, priority])
+}
+
+model WmsTask {
+  id               String   @id @default(uuid())
+  taskNumber       String   @unique
+  workflowStage    String   // GOODS_RECEIPT, QC_INSPECTION, PUTAWAY, WAVE_PICK, PACKING, SHIPPING
+  waveNumber       String?
+  warehouseId      String
+  sourceDocType    String
+  sourceDocNo      String
+  partnerName      String?
+  priority         String   @default("NORMAL")
+  status           String   @default("PENDING") // PENDING, IN_PROGRESS, QC_HOLD, COMPLETED, CANCELLED
+  assignedOperator String?
+  lpnCode          String?
+  totalLines       Int      @default(1)
+  completedLines   Int      @default(0)
+  notes            String?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  lines            WmsTaskLine[]
+
+  @@index([workflowStage, status])
+  @@index([warehouseId])
+}
+
+model WmsTaskLine {
+  id               String    @id @default(uuid())
+  taskId           String
+  itemId           String
+  sku              String
+  itemName         String
+  lotNumber        String?
+  serialNumber     String?
+  expiryDate       DateTime?
+  expectedQty      Float
+  processedQty     Float     @default(0)
+  rejectedQty      Float     @default(0)
+  unit             String    @default("Adet")
+  suggestedFromBin String?
+  suggestedToBin   String?
+  actualBin        String?
+  lpnCode          String?
+  qcResult         String?
+  scanMethod       String?
+  status           String    @default("OPEN")
+
+  task             WmsTask   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+}
+
+model WarehouseTransferOrder {
+  id              String    @id @default(uuid())
+  transferNumber  String    @unique
+  fromWarehouseId String
+  toWarehouseId   String
+  status          String    @default("DRAFT") // DRAFT, APPROVED, PICKED, IN_TRANSIT, RECEIVED, DISCREPANCY
+  transferReason  String?
+  lpnCode         String?
+  carrierName     String?
+  vehiclePlate    String?
+  driverName      String?
+  itemsJson       String
+  requestedBy     String?
+  approvedBy      String?
+  shippedAt       DateTime?
+  receivedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([fromWarehouseId])
+  @@index([toWarehouseId])
+  @@index([status])
+}
+
+model LicensePlate {
+  id             String   @id @default(uuid())
+  lpnCode        String   @unique
+  containerType  String   @default("PALLET_EUR") // PALLET_EUR, PLASTIC_TOTE, MASTER_CARTON, ROLL_CAGE
+  warehouseId    String
+  currentBinCode String
+  parentLpnCode  String?
+  status         String   @default("ACTIVE") // ACTIVE, SEALED, IN_TRANSIT, CONSUMED, SHIPPED
+  totalWeightKg  Float    @default(0)
+  contentsJson   String
+  rfidTagEpc     String?
+  createdBy      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  warehouse      Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@index([warehouseId, currentBinCode])
+  @@index([status])
+}
+
+model InventoryCountSession {
+  id                  String   @id @default(uuid())
+  sessionNumber       String   @unique
+  warehouseId         String
+  zoneFilter          String?
+  abcClassFilter      String?
+  countType           String   // FULL_COUNT, CYCLE_SMART_COUNT, BLIND_COUNT
+  hideSystemQty       Boolean  @default(false)
+  status              String   @default("IN_PROGRESS") // PLANNED, IN_PROGRESS, PENDING_APPROVAL, RECONCILED
+  assignedCounters    String?
+  totalBinsCounted    Int      @default(0)
+  accuracyPercent     Float    @default(100)
+  totalVarianceValue  Float    @default(0)
+  reconciledJournalNo String?
+  reconciledAt        DateTime?
+  reconciledBy        String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  warehouse           Warehouse            @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  lines               InventoryCountLine[]
+
+  @@index([warehouseId, status])
+}
+
+model InventoryCountLine {
+  id              String    @id @default(uuid())
+  sessionId       String
+  itemId          String
+  sku             String
+  itemName        String
+  binCode         String
+  lotNumber       String?
+  lpnCode         String?
+  systemQty       Float
+  countedQty      Float?
+  varianceQty     Float     @default(0)
+  unitCost        Float     @default(0)
+  varianceAmount  Float     @default(0)
+  scanMethod      String    @default("BARCODE")
+  countedBy       String?
+  countedAt       DateTime?
+  isReconciled    Boolean   @default(false)
+  adjustmentDocNo String?
+
+  session         InventoryCountSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
+
+model WmsOfflineSyncLog {
+  id             String   @id @default(uuid())
+  deviceId       String
+  operatorName   String
+  operationType  String
+  payloadJson    String
+  queuedAt       DateTime
+  syncedAt       DateTime @default(now())
+  status         String   @default("SYNCED")
+  resolutionNote String?
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 3: AKILLI SATIN ALMA, TEDARİK VE KONSİNYE YÖNETİMİ
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model Supplier {
+  id                  String   @id @default(uuid())
+  code                String   @unique
+  name                String
+  contactPerson       String?
+  email               String?
+  phone               String?
+  taxNumber           String?
+  address             String?
+  leadTimeDays        Int      @default(5)
+  onTimeDeliveryRate  Float    @default(95.0)
+  qualityAcceptance   Float    @default(98.5)
+  paymentTermsDays    Int      @default(30)
+  supportsConsignment Boolean  @default(false)
+  supportsDropship    Boolean  @default(false)
+  rating              Float    @default(4.8)
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  reorderPolicies     ReorderPolicy[]
+  consignmentStocks   ConsignmentStock[]
+}
+
+model ReorderPolicy {
+  id                    String   @id @default(uuid())
+  itemId                String
+  warehouseId           String
+  supplierId            String
+  avgDailyDemand        Float    @default(10)
+  demandStdDev          Float    @default(2.5)
+  leadTimeDays          Int      @default(5)
+  serviceLevelZ         Float    @default(1.65)
+  seasonalityMultiplier Float    @default(1.0)
+  calculatedSafetyStock Float    @default(15)
+  calculatedRop         Float    @default(65)
+  economicOrderQty      Float    @default(150)
+  minOrderQtyMoq        Float    @default(25)
+  autoCreatePo          Boolean  @default(true)
+  lastCalculatedAt      DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  item                  InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  supplier              Supplier      @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, warehouseId])
+}
+
+model LowStockAlert {
+  id                  String   @id @default(uuid())
+  itemId              String
+  sku                 String
+  itemName            String
+  warehouseId         String
+  warehouseName       String
+  currentAvailableQty Float
+  reorderPointRop     Float
+  safetyStock         Float
+  recommendedOrderQty Float
+  supplierName        String
+  estimatedCost       Float
+  severity            String   @default("CRITICAL")
+  status              String   @default("OPEN")
+  requisitionNo       String?
+  triggeredAt         DateTime @default(now())
+}
+
+model PurchaseRequisition {
+  id            String    @id @default(uuid())
+  reqNumber     String    @unique
+  warehouseId   String
+  supplierId    String
+  supplierName  String
+  triggerSource String    @default("AUTO_ROP_ENGINE")
+  status        String    @default("PENDING_APPROVAL")
+  priority      String    @default("HIGH")
+  totalAmount   Float     @default(0)
+  currency      String    @default("TRY")
+  expectedDate  DateTime?
+  linesJson     String
+  approvedBy    String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ConsignmentStock {
+  id                  String    @id @default(uuid())
+  agreementNo         String
+  supplierId          String
+  itemId              String
+  warehouseId         String
+  binCode             String?
+  lotNumber           String?
+  receivedConsignQty  Float     @default(0)
+  availableConsignQty Float     @default(0)
+  consumedOrSoldQty   Float     @default(0)
+  returnedToVendorQty Float     @default(0)
+  agreedUnitCost      Float     @default(0)
+  commissionPercent   Float     @default(0)
+  unbilledPayableAmt  Float     @default(0)
+  lastSettlementDate  DateTime?
+  status              String    @default("ACTIVE")
+  updatedAt           DateTime  @updatedAt
+
+  supplier            Supplier      @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  item                InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
+  @@index([itemId])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 4: OMNICHANNEL SATIŞ, LOJİSTİK, 3PL VE E-DÖNÜŞÜM
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model SalesChannel {
+  id                 String   @id @default(uuid())
+  code               String   @unique
+  name               String
+  channelType        String
+  syncStatus         String   @default("CONNECTED")
+  stockBufferPercent Float    @default(5)
+  minStockThreshold  Int      @default(2)
+  autoPriceSync      Boolean  @default(true)
+  autoOrderPull      Boolean  @default(true)
+  lastSyncAt         DateTime @default(now())
+  syncedSkuCount     Int      @default(0)
+  dailyOrderCount    Int      @default(0)
+  dailyRevenue       Float    @default(0)
+  webhookLatencyMs   Int      @default(140)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model OmnichannelOrder {
+  id                  String   @id @default(uuid())
+  orderNumber         String   @unique
+  channelCode         String
+  channelOrderRef     String
+  customerName        String
+  customerCity        String
+  fulfillmentStrategy String   @default("STANDARD_WAREHOUSE")
+  status              String   @default("PROCESSING")
+  totalAmount         Float    @default(0)
+  currency            String   @default("TRY")
+  shipmentsJson       String
+  backorderQty        Float    @default(0)
+  dropshipSupplier    String?
+  eInvoiceNo          String?
+  eWaybillNo          String?
+  orderDate           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([channelCode, status])
+  @@index([fulfillmentStrategy])
+}
+
+model ReturnRmaRecord {
+  id                 String   @id @default(uuid())
+  rmaNumber          String   @unique
+  orderNumber        String
+  channelCode        String
+  customerName       String
+  sku                String
+  itemName           String
+  returnQty          Float
+  returnReason       String
+  qcInspectionResult String   @default("PENDING_INSPECTION")
+  targetWarehouseId  String?
+  targetBinCode      String?
+  refundAmount       Float    @default(0)
+  refundStatus       String   @default("PENDING")
+  returnTrackingNo   String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model LogisticsAdapterConfig {
+  id                String   @id @default(uuid())
+  providerCode      String   @unique
+  providerName      String
+  adapterType       String
+  status            String   @default("ACTIVE")
+  apiEndpoint       String
+  supportsZplLabel  Boolean  @default(true)
+  supportsColdChain Boolean  @default(false)
+  avgDeliveryDays   Float    @default(1.5)
+  baseRateTry       Float    @default(65.0)
+  activeShipments   Int      @default(0)
+  slaSuccessPercent Float    @default(97.5)
+  lastPingAt        DateTime @default(now())
+}
+
+model EDocumentRecord {
+  id                String   @id @default(uuid())
+  ettnUuid          String   @unique
+  documentNo        String   @unique
+  documentType      String
+  profileId         String
+  relatedOrderNo    String?
+  receiverTitle     String
+  receiverVknTckn   String
+  receiverTaxOffice String?
+  dispatchDate      DateTime @default(now())
+  carrierName       String?
+  carrierVkn        String?
+  vehiclePlate      String?
+  driverName        String?
+  driverTckn        String?
+  totalNetAmount    Float    @default(0)
+  totalVatAmount    Float    @default(0)
+  totalGrossAmount  Float    @default(0)
+  currency          String   @default("TRY")
+  gibStatusCode     String   @default("1300")
+  gibStatusText     String   @default("GİB Onaylı - Alıcıya İletildi")
+  linesJson         String
+  createdAt         DateTime @default(now())
+
+  @@index([documentType])
+  @@index([relatedOrderNo])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 5: YAPAY ZEKÂ (AI) VE İLERİ ANALİTİK MODÜLLERİ
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model DemandForecastRecord {
+  id                    String   @id @default(uuid())
+  itemId                String
+  sku                   String
+  itemName              String
+  category              String
+  warehouseName         String
+  currentStock          Float
+  historical30dSales    Float
+  forecastNext30d       Float
+  forecastNext60d       Float
+  forecastNext90d       Float
+  confidencePercent     Float    @default(92.5)
+  seasonalityTrend      String
+  predictedStockoutDays Int
+  riskStatus            String
+  aiRecommendedOrderQty Float
+  expectedRevenueImpact Float
+  algorithmUsed         String   @default("ForesightAI Holt-Winters + Channel Velocity")
+  generatedAt           DateTime @default(now())
+
+  item                  InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([riskStatus])
+}
+
+model AiNarrativeReport {
+  id                  String   @id @default(uuid())
+  title               String
+  reportScope         String
+  periodLabel         String
+  executiveSummary    String
+  keyFindingsJson     String
+  anomaliesJson       String
+  recommendationsJson String
+  kpisSnapshotJson    String
+  generatedByModel    String   @default("Sunum ERP Foresight Narrative Engine v2.4")
+  createdAt           DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FAZ 6: MİMARİ KALİTE, API EKOSİSTEMİ, VERİ GEÇİŞİ VE SAAS LİSANSLAMA
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model InventoryApiKey {
+  id              String    @id @default(uuid())
+  name            String
+  keyPrefix       String
+  maskedKey       String
+  scopes          String
+  rateLimitPerMin Int       @default(1200)
+  requestsToday   Int       @default(0)
+  lastUsedAt      DateTime?
+  iotDeviceType   String?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+}
+
+model InventoryWebhook {
+  id               String    @id @default(uuid())
+  name             String
+  targetUrl        String
+  secretHeader     String
+  subscribedEvents String
+  isActive         Boolean   @default(true)
+  successCount     Int       @default(0)
+  failureCount     Int       @default(0)
+  lastStatusCode   Int       @default(200)
+  lastTriggeredAt  DateTime?
+  createdAt        DateTime  @default(now())
+}
+
+model MarketplacePlugin {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  name         String
+  vendor       String
+  category     String
+  description  String
+  version      String   @default("2.1.0")
+  isInstalled  Boolean  @default(false)
+  isConfigured Boolean  @default(false)
+  pricingTier  String   @default("Ücretsiz / Dahil")
+  rating       Float    @default(4.9)
+  installCount Int      @default(1200)
+  configJson   String?
+  updatedAt    DateTime @updatedAt
+}
+
+model ErpMigrationJob {
+  id                String    @id @default(uuid())
+  sourceSystem      String
+  jobName           String
+  entitiesSelected  String
+  totalRecordsFound Int       @default(0)
+  validRecords      Int       @default(0)
+  warningRecords    Int       @default(0)
+  migratedRecords   Int       @default(0)
+  fieldMappingJson  String
+  status            String    @default("COMPLETED")
+  validationLogJson String
+  startedAt         DateTime  @default(now())
+  completedAt       DateTime?
+}

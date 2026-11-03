@@ -105,6 +105,44 @@ interface JsonDbData {
   aiConversationMemory: any[]
   aiAgentLog: any[]
   trashItem: any[]
+  // ── Faz 1–6: Stok, WMS, Satın Alma, Omnichannel, AI & Ekosistem ──
+  warehouse: any[]
+  inventoryItem: any[]
+  stockBalance: any[]
+  unitConversion: any[]
+  alternativeProduct: any[]
+  lotSerialRecord: any[]
+  traceabilityLog: any[]
+  bomHeader: any[]
+  bomComponent: any[]
+  costLayer: any[]
+  stockMovement: any[]
+  warehouseZone: any[]
+  storageBin: any[]
+  locationDirective: any[]
+  wmsTask: any[]
+  wmsTaskLine: any[]
+  warehouseTransferOrder: any[]
+  licensePlate: any[]
+  inventoryCountSession: any[]
+  inventoryCountLine: any[]
+  wmsOfflineSyncLog: any[]
+  supplier: any[]
+  reorderPolicy: any[]
+  lowStockAlert: any[]
+  purchaseRequisition: any[]
+  consignmentStock: any[]
+  salesChannel: any[]
+  omnichannelOrder: any[]
+  returnRmaRecord: any[]
+  logisticsAdapterConfig: any[]
+  eDocumentRecord: any[]
+  demandForecastRecord: any[]
+  aiNarrativeReport: any[]
+  inventoryApiKey: any[]
+  inventoryWebhook: any[]
+  marketplacePlugin: any[]
+  erpMigrationJob: any[]
 }
 
 const initialData: JsonDbData = {
@@ -192,7 +230,45 @@ const initialData: JsonDbData = {
   // ── WhatsApp AI Agent Initial Datasets ──────────────
   aiKnowledgeChunk: [],
   aiConversationMemory: [],
-  aiAgentLog: []
+  aiAgentLog: [],
+  // ── Faz 1–6: Stok, WMS, Satın Alma, Omnichannel, AI & Ekosistem ──
+  warehouse: [],
+  inventoryItem: [],
+  stockBalance: [],
+  unitConversion: [],
+  alternativeProduct: [],
+  lotSerialRecord: [],
+  traceabilityLog: [],
+  bomHeader: [],
+  bomComponent: [],
+  costLayer: [],
+  stockMovement: [],
+  warehouseZone: [],
+  storageBin: [],
+  locationDirective: [],
+  wmsTask: [],
+  wmsTaskLine: [],
+  warehouseTransferOrder: [],
+  licensePlate: [],
+  inventoryCountSession: [],
+  inventoryCountLine: [],
+  wmsOfflineSyncLog: [],
+  supplier: [],
+  reorderPolicy: [],
+  lowStockAlert: [],
+  purchaseRequisition: [],
+  consignmentStock: [],
+  salesChannel: [],
+  omnichannelOrder: [],
+  returnRmaRecord: [],
+  logisticsAdapterConfig: [],
+  eDocumentRecord: [],
+  demandForecastRecord: [],
+  aiNarrativeReport: [],
+  inventoryApiKey: [],
+  inventoryWebhook: [],
+  marketplacePlugin: [],
+  erpMigrationJob: []
 }
 
 // JSON DB Yardımcıları
@@ -574,6 +650,57 @@ class ModelSimulate {
       if (include.branch) enriched.branch = (db.branch || []).find((b: any) => b.id === item.branchId) ?? null
     }
 
+    if (this.modelName === "inventoryItem" && include) {
+      if (include.variants) enriched.variants = (db.inventoryItem || []).filter((v: any) => v.parentItemId === item.id)
+      if (include.parentItem && item.parentItemId) enriched.parentItem = (db.inventoryItem || []).find((p: any) => p.id === item.parentItemId) ?? null
+      if (include.stockBalances) {
+        enriched.stockBalances = (db.stockBalance || []).filter((sb: any) => sb.itemId === item.id).map((sb: any) => ({
+          ...sb,
+          warehouse: (db.warehouse || []).find((w: any) => w.id === sb.warehouseId) ?? null
+        }))
+      }
+      if (include.unitConversions) enriched.unitConversions = (db.unitConversion || []).filter((u: any) => u.itemId === item.id)
+      if (include.alternativesFrom) {
+        enriched.alternativesFrom = (db.alternativeProduct || []).filter((a: any) => a.sourceItemId === item.id).map((a: any) => ({
+          ...a,
+          substituteItem: (db.inventoryItem || []).find((it: any) => it.id === a.substituteItemId) ?? null
+        }))
+      }
+      if (include.lotSerials) enriched.lotSerials = (db.lotSerialRecord || []).filter((l: any) => l.itemId === item.id)
+      if (include.costLayers) enriched.costLayers = (db.costLayer || []).filter((c: any) => c.itemId === item.id)
+    }
+
+    if (this.modelName === "warehouse" && include) {
+      if (include.zones) enriched.zones = (db.warehouseZone || []).filter((z: any) => z.warehouseId === item.id)
+      if (include.bins) enriched.bins = (db.storageBin || []).filter((b: any) => b.warehouseId === item.id)
+      if (include.stockBalances) enriched.stockBalances = (db.stockBalance || []).filter((sb: any) => sb.warehouseId === item.id)
+    }
+
+    if (this.modelName === "lotSerialRecord" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+      if (include.traceLogs) enriched.traceLogs = (db.traceabilityLog || []).filter((t: any) => t.lotSerialId === item.id)
+    }
+
+    if (this.modelName === "bomHeader" && include) {
+      if (include.finishedItem) enriched.finishedItem = (db.inventoryItem || []).find((it: any) => it.id === item.finishedItemId) ?? null
+      if (include.components) {
+        enriched.components = (db.bomComponent || []).filter((c: any) => c.bomId === item.id).map((c: any) => ({
+          ...c,
+          componentItem: (db.inventoryItem || []).find((it: any) => it.id === c.componentItemId) ?? null
+        }))
+      }
+    }
+
+    if (this.modelName === "wmsTask" && include) {
+      if (include.lines) enriched.lines = (db.wmsTaskLine || []).filter((l: any) => l.taskId === item.id)
+    }
+
+    if (this.modelName === "inventoryCountSession" && include) {
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+      if (include.lines) enriched.lines = (db.inventoryCountLine || []).filter((l: any) => l.sessionId === item.id)
+    }
+
     return enriched
   }
 
@@ -877,7 +1004,45 @@ export const prisma = new Proxy(rawPrisma, {
       "userBlock",
       "broadcastList",
       "broadcastListMember",
-      "chatWallpaper"
+      "chatWallpaper",
+      // ── Faz 1–6: Stok, WMS, Satın Alma, Omnichannel, AI & Ekosistem ──
+      "warehouse",
+      "inventoryItem",
+      "stockBalance",
+      "unitConversion",
+      "alternativeProduct",
+      "lotSerialRecord",
+      "traceabilityLog",
+      "bomHeader",
+      "bomComponent",
+      "costLayer",
+      "stockMovement",
+      "warehouseZone",
+      "storageBin",
+      "locationDirective",
+      "wmsTask",
+      "wmsTaskLine",
+      "warehouseTransferOrder",
+      "licensePlate",
+      "inventoryCountSession",
+      "inventoryCountLine",
+      "wmsOfflineSyncLog",
+      "supplier",
+      "reorderPolicy",
+      "lowStockAlert",
+      "purchaseRequisition",
+      "consignmentStock",
+      "salesChannel",
+      "omnichannelOrder",
+      "returnRmaRecord",
+      "logisticsAdapterConfig",
+      "eDocumentRecord",
+      "demandForecastRecord",
+      "aiNarrativeReport",
+      "inventoryApiKey",
+      "inventoryWebhook",
+      "marketplacePlugin",
+      "erpMigrationJob"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

@@ -23,7 +23,8 @@ import {
   StickyNote, Calculator, CreditCard, Megaphone, Building2,
   Shield, MessageCircle, Bell, Settings, LogOut, Menu,
   PanelLeftClose, PanelLeftOpen, ChevronRight, CalendarDays, Library, ClipboardCheck,
-  Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal
+  Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
+  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle
 } from "lucide-react"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
@@ -250,6 +251,16 @@ function SidebarContent({
     { name: "Geliştirici Konsolu", href: "/dashboard/developer-console", icon: Terminal, devOnly: true },
   ]
 
+  const inventoryNav = [
+    { name: (t.nav as any).inventory || "Stok & Varyant Matrix", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
+    { name: (t.nav as any).wms || "WMS Depo Yönetimi", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
+    { name: (t.nav as any).wmsMobile || "WMS Mobil Terminal", href: "/dashboard/wms/mobil", icon: Smartphone, resource: "wms" },
+    { name: (t.nav as any).procurement || "Akıllı Satın Alma & ROP", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
+    { name: (t.nav as any).omnichannel || "Omnichannel & E-İrsaliye", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
+    { name: (t.nav as any).inventoryAi || "Stok AI & Foresight", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
+    { name: (t.nav as any).ecosystem || "API, Eklentiler & SaaS", href: "/dashboard/envanter-ekosistem", icon: Puzzle, resource: "ekosistem" },
+  ]
+
   const commsNav = [
     { name: t.nav.chat, href: "/dashboard/chat", icon: MessageCircle, resource: "chat" },
     { name: t.nav.announcements, href: "/dashboard/announcements", icon: Bell, resource: "duyurular" },
@@ -272,6 +283,12 @@ function SidebarContent({
     }
     if (isSuperAdmin) return true;
     return hasPermission(item.resource, "read");
+  })
+
+  const filteredInventoryNav = inventoryNav.filter(item => {
+    if (subPlan === "free") return false
+    if (isSuperAdmin) return true
+    return hasPermission(item.resource, "read")
   })
 
   const filteredCommsNav = commsNav.filter(item => {
@@ -320,6 +337,25 @@ function SidebarContent({
             onClick={onNavClick}
           />
         ))}
+
+        {filteredInventoryNav.length > 0 && (
+          <div className="pt-3 mt-2 border-t border-(--sidebar-border)">
+            {!collapsed && (
+              <p className="text-label text-(--sidebar-muted) px-3 mb-1.5 font-bold text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                Stok, WMS & Omnichannel
+              </p>
+            )}
+            {filteredInventoryNav.map(item => (
+              <NavItem
+                key={item.href}
+                item={item}
+                isActive={isActive(item)}
+                collapsed={collapsed}
+                onClick={onNavClick}
+              />
+            ))}
+          </div>
+        )}
 
         {filteredAdmin.length > 0 && (
           <div className={collapsed ? "pt-3 mt-2 border-t border-(--sidebar-border)" : "pt-3 mt-2 border-t border-(--sidebar-border)"}>

@@ -105,8 +105,17 @@ export function DemoModeInterceptor() {
       const isMutation = ["POST", "PUT", "DELETE", "PATCH"].includes(method)
 
       if (isMutation && url.includes("/api/")) {
-        // Exempt auth routes so login / demo session works
-        if (url.includes("/api/auth/")) {
+        // Exempt auth and enterprise inventory/WMS/Omnichannel routes so real API handlers run
+        if (
+          url.includes("/api/auth/") ||
+          url.includes("/api/inventory") ||
+          url.includes("/api/wms") ||
+          url.includes("/api/procurement") ||
+          url.includes("/api/omnichannel") ||
+          url.includes("/api/inventory-ai") ||
+          url.includes("/api/ecosystem") ||
+          url.includes("/api/v1/")
+        ) {
           return originalFetch.apply(this, args)
         }
 

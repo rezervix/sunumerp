@@ -45,6 +45,14 @@ export const RESOURCE_ALIASES: Record<string, string> = {
   icerik_magazasi_analitik: "icerik_magazasi_analitik",
   trash: "trash",
   "geri-donusum": "trash",
+  stok: "stok",
+  inventory: "stok",
+  wms: "wms",
+  satinalma: "satinalma",
+  procurement: "satinalma",
+  omnichannel: "omnichannel",
+  "stok-ai": "stok-ai",
+  ekosistem: "ekosistem",
 }
 
 export function normalizePermissionResource(resource: string): string {
