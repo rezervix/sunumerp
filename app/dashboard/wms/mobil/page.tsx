@@ -15,7 +15,15 @@ import {
   ArrowLeft,
   PackagePlus,
   Layers,
-  AlertCircle
+  AlertCircle,
+  Truck,
+  MapPin,
+  PackageCheck,
+  ClipboardCheck,
+  Check,
+  SlidersHorizontal,
+  Volume2,
+  ScanLine
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -29,6 +37,13 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle
+} from "@/components/ui/sheet"
 import { toast } from "sonner"
 import {
   getOfflineWmsQueue,
@@ -38,26 +53,35 @@ import {
 } from "@/lib/wms/offlineSyncEngine"
 import { enterpriseInventoryService } from "@/lib/services/enterpriseInventorySuite"
 
+type OperationType = "PUTAWAY_CONFIRM" | "PICK_CONFIRM" | "BLIND_COUNT_ENTRY" | "GOODS_RECEIPT"
+
 export default function MobileFieldScannerPwaPage() {
   const [inventoryState] = useState(() => enterpriseInventoryService.getState())
   const [isOfflineMode, setIsOfflineMode] = useState(false)
   const [queue, setQueue] = useState<OfflineWmsOperation[]>([])
-  const [scanMode, setScanMode] = useState<"BARCODE_SCAN" | "QR_LOT_SCAN" | "RFID_BULK_READ">(
-    "BARCODE_SCAN"
-  )
-  const [operationTaskType, setOperationTaskType] = useState<
-    "PUTAWAY_CONFIRM" | "PICK_CONFIRM" | "BLIND_COUNT_ENTRY" | "LPN_TRANSFER"
-  >("PUTAWAY_CONFIRM")
+  const [scanMode, setScanMode] = useState<"BARCODE_SCAN" | "QR_LOT_SCAN" | "RFID_BULK_READ">("BARCODE_SCAN")
+  const [selectedAction, setSelectedAction] = useState<OperationType>("PUTAWAY_CONFIRM")
 
+  // Cihaz ve Operatör Bilgileri (Drawer içinde gizli)
   const [deviceId, setDeviceId] = useState("ZEBRA-TC58-IST-04")
   const [operatorName, setOperatorName] = useState("Murat Karahan")
   const [selectedSku, setSelectedSku] = useState("SKU-FLR-001")
-  const [scannedCode, setScannedCode] = useState("8690001001014")
   const [binCode, setBinCode] = useState("IST-Z1-A01-R01-L02-B01")
   const [lpnCode, setLpnCode] = useState("LPN-TR-2026-000891")
   const [lotNumber, setLotNumber] = useState("LOT-2026-1101")
   const [quantity, setQuantity] = useState("25")
   const [isSyncing, setIsSyncing] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+
+  // Son Yapılan Başarılı Tarama Ekranı
+  const [lastScannedResult, setLastScannedResult] = useState<{
+    code: string
+    itemName: string
+    qty: number
+    unit: string
+    targetBin: string
+    timestamp: string
+  } | null>(null)
 
   useEffect(() => {
     getOfflineWmsQueue().then(res => setQueue(res || []))
@@ -65,370 +89,366 @@ export default function MobileFieldScannerPwaPage() {
 
   const pendingOfflineCount = (queue || []).filter(q => q.syncStatus === "QUEUED_OFFLINE").length
 
-  const handleSimulateHardwareScan = async (
-    mode: "BARCODE_SCAN" | "QR_LOT_SCAN" | "RFID_BULK_READ"
-  ) => {
-    setScanMode(mode)
-    const items = inventoryState.items || []
-    const matchedItem =
-    items.find(i => i.sku === selectedSku) ||
-      items[0] || {
-      sku: selectedSku || "SKU-GEN-001",
-      name: "Genel Stok Kalemi",
-      rfidEpcPrefix: "3034257BF",
-      gtin: "8690001100000",
-      barcode: "8690001100000",
-      baseUnit: "Adet"
-    }
+    // Donanım Taraması Simülasyonu
+    const handlePerformScan = async (mode: "BARCODE_SCAN" | "QR_LOT_SCAN" | "RFID_BULK_READ" = scanMode) => {
+      const items = inventoryState.items || []
+          const matchedItem = items.find(i => i.sku === selectedSku) || items[0] || {
+            sku: selectedSku || "SKU-GEN-001",
+            name: "Ekvador Gül Buketi",
+            rfidEpcPrefix: "3034257BF",
+            gtin: "8690001100000",
+            barcode: "8690001100000",
+            baseUnit: "Adet"
+          }
 
-    const effectiveQty =
-      mode === "RFID_BULK_READ" ? 48 : Math.max(1, Number(quantity) || 15)
+    const effectiveQty = mode === "RFID_BULK_READ" ? 48 : Math.max(1, Number(quantity) || 15)
     const generatedCode =
-      mode === "RFID_BULK_READ"
-        ? `EPC-${matchedItem.rfidEpcPrefix || "3034257BF"}-BATCH(${effectiveQty})`
-        : mode === "QR_LOT_SCAN"
-            ? `GS1-01${matchedItem.gtin || "8690001100000"}1726111810${lotNumber}`
-            : matchedItem.barcode || "8690001100000"
-
-    setScannedCode(generatedCode)
+            mode === "RFID_BULK_READ"
+              ? `EPC-${matchedItem.rfidEpcPrefix || "3034257BF"}-BATCH(${effectiveQty})`
+              : mode === "QR_LOT_SCAN"
+                  ? `GS1-01${matchedItem.gtin || "8690001100000"}1726111810${lotNumber}`
+                  : matchedItem.barcode || "8690001100000"
 
     const created = await enqueueOfflineWmsOperation(
-      {
-        deviceId,
-        operatorName,
-        operationType: mode === "RFID_BULK_READ" ? "RFID_BULK_READ" : operationTaskType,
-        codeScanned: generatedCode,
-        sku: matchedItem.sku,
-        itemName: matchedItem.name,
-        lotNumber,
-        binCode,
-        lpnCode,
-        quantity: effectiveQty,
-        unit: matchedItem.baseUnit || "Adet"
-      },
-      isOfflineMode
-    )
+                    {
+                      deviceId,
+                      operatorName,
+                      operationType: mode === "RFID_BULK_READ" ? "RFID_BULK_READ" : selectedAction,
+                      codeScanned: generatedCode,
+                      sku: matchedItem.sku,
+                      itemName: matchedItem.name,
+                      lotNumber,
+                      binCode,
+                      lpnCode,
+                      quantity: effectiveQty,
+                      unit: matchedItem.baseUnit || "Adet"
+                    },
+                    isOfflineMode
+                  )
 
     const updated = await getOfflineWmsQueue()
     setQueue(updated || [])
 
-    if (isOfflineMode) {
-      toast.warning("Çevrimdışı (Offline) Kayıt IndexedDB Kuyruğuna Yazıldı", {
-        description: `${created.codeScanned} (${created.quantity} ${created.unit}) yerel veritabanına alındı. Bağlantı geldiğinde senkronize edilecek.`
-      })
-    } else {
-      toast.success("Saha Tarama İşlemi Anlık Senkronize Edildi", {
-        description: `${created.sku} • ${created.binCode} hücresine ${created.quantity} ${created.unit} işlendi.`
-      })
-    }
+        setLastScannedResult({
+          code: generatedCode,
+          itemName: matchedItem.name,
+          qty: effectiveQty,
+          unit: matchedItem.baseUnit || "Adet",
+          targetBin: binCode,
+          timestamp: new Date().toLocaleTimeString("tr-TR")
+        })
+
+      if (isOfflineMode) {
+      toast.warning("Çevrimdışı (Offline) Kaydedildi", {
+            description: `İnternet yokken yerel veritabanına alındı. Bağlantı geldiğinde senkronize edilecek.`
+          })
+        } else {
+      toast.success("Barkod Başarıyla Okundu & Kaydedildi!", {
+              description: `${matchedItem.name} — ${binCode} rafına işlendi.`
+            })
+          }
   }
 
+  // Toplu Senkronizasyon
   const handleBatchSync = async () => {
-    setIsSyncing(true)
-    try {
-      const result = await syncAllOfflineWmsOperations()
-      setQueue(result.operations)
-      setIsOfflineMode(false)
-      toast.success(`${result.syncedCount} Çevrimdışı Saha İşlemi Sunucuyla Senkronize Edildi!`, {
-        description: "IndexedDB (sunum_wms_offline_db) kuyruğu sıfırlandı ve stok bakiyeleri güncellendi."
-      })
-    } finally {
-      setIsSyncing(false)
-    }
-  }
+          setIsSyncing(true)
+          try {
+            const result = await syncAllOfflineWmsOperations()
+            setQueue(result.operations)
+            setIsOfflineMode(false)
+      toast.success(`${result.syncedCount} Saha Kaydı Sunucuya Aktarıldı!`, {
+                description: "IndexedDB kuyruğu ana ERP veritabanına başarıyla yazıldı."
+              })
+            } finally {
+              setIsSyncing(false)
+            }
+          }
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Üst Başlık */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <Link href="/dashboard/wms">
-              <Button variant="ghost" size="sm" className="h-7 px-2 gap-1 text-xs">
-                <ArrowLeft className="h-3.5 w-3.5" />
-                WMS Merkezine Dön
-              </Button>
-            </Link>
-            <Badge className="bg-slate-900 text-white">
-              Faz 2 • PWA & IndexedDB Offline-First Mobil Saha Terminali
-            </Badge>
+                <div className="min-h-screen bg-slate-950 text-white p-3 sm:p-6 flex flex-col justify-between max-w-lg mx-auto">
+                  {/* ÜST BAR: DURUM VE HIZLI GEÇİŞ */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Link href="/dashboard/wms">
+                        <Button variant="ghost" size="sm" className="h-8 px-2 text-slate-300 hover:text-white hover:bg-slate-800 text-xs gap-1">
+                          <ArrowLeft className="h-4 w-4" />
+                          Depo Merkezine Dön
+                        </Button>
+                      </Link>
+
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setIsSettingsOpen(true)}
+                          className="h-8 px-2 text-slate-300 hover:text-white hover:bg-slate-800 text-xs gap-1"
+                        >
+                          <SlidersHorizontal className="h-3.5 w-3.5" />
+                          Ayarlar
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setIsOfflineMode(prev => !prev)
+                            toast.info(!isOfflineMode ? "Çevrimdışı (Offline) moda geçildi." : "Çevrimiçi moda dönüldü.")
+                          }}
+                          className={`h-8 px-2.5 rounded-full text-xs font-semibold ${isOfflineMode ? "bg-amber-500/20 text-amber-400 border border-amber-500/40" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                            }`}
+                        >
+                          {isOfflineMode ? <WifiOff className="mr-1 h-3.5 w-3.5" /> : <Wifi className="mr-1 h-3.5 w-3.5" />}
+                          {isOfflineMode ? "Çevrimdışı" : "Online"}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Offline Uyarı ve Eşitleme Butonu */}
+                    {pendingOfflineCount > 0 && (
+                      <div className="bg-amber-500/20 border border-amber-500/40 rounded-xl p-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
+                          <span className="text-xs text-amber-200">
+                            {pendingOfflineCount} işlem çevrimdışı sırada bekliyor.
+                          </span>
+                        </div>
+                        <Button
+                          size="sm"
+                          onClick={handleBatchSync}
+                          disabled={isSyncing}
+                          className="h-7 px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs"
+                        >
+                          <RefreshCw className={`mr-1 h-3 w-3 ${isSyncing ? "animate-spin" : ""}`} />
+                          Eşitle
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* 4 DEV OPERASYON BUTONU (SIFIR EĞİTİM GEREKTİRİR) */}
+                    <div>
+                          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 px-1 block mb-2">
+                            Yapmak İstediğiniz İşlemi Seçin:
+                          </span>
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <button
+                              onClick={() => setSelectedAction("GOODS_RECEIPT")}
+                              className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between h-24 ${selectedAction === "GOODS_RECEIPT"
+                                  ? "bg-emerald-600 border-emerald-400 shadow-lg shadow-emerald-950/50 ring-2 ring-emerald-400"
+                                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                                }`}
+                            >
+                              <Truck className="h-6 w-6" />
+                              <div>
+                                <div className="font-bold text-sm">Mal Kabul Yap</div>
+                                <div className="text-[10px] text-white/80">Rampada Gelen Mal</div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={() => setSelectedAction("PUTAWAY_CONFIRM")}
+                              className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between h-24 ${selectedAction === "PUTAWAY_CONFIRM"
+                                  ? "bg-blue-600 border-blue-400 shadow-lg shadow-blue-950/50 ring-2 ring-blue-400"
+                                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                                }`}
+                            >
+                              <MapPin className="h-6 w-6" />
+                              <div>
+                                <div className="font-bold text-sm">Rafa Yerleştir</div>
+                                <div className="text-[10px] text-white/80">Hücreye İstif</div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={() => setSelectedAction("PICK_CONFIRM")}
+                              className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between h-24 ${selectedAction === "PICK_CONFIRM"
+                                  ? "bg-purple-600 border-purple-400 shadow-lg shadow-purple-950/50 ring-2 ring-purple-400"
+                                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                                }`}
+                            >
+                              <PackageCheck className="h-6 w-6" />
+                              <div>
+                                <div className="font-bold text-sm">Sipariş Topla</div>
+                                <div className="text-[10px] text-white/80">FEFO Öncelikli Çıkış</div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={() => setSelectedAction("BLIND_COUNT_ENTRY")}
+                              className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between h-24 ${selectedAction === "BLIND_COUNT_ENTRY"
+                                  ? "bg-amber-600 border-amber-400 shadow-lg shadow-amber-950/50 ring-2 ring-amber-400"
+                                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                                }`}
+                            >
+                              <ClipboardCheck className="h-6 w-6" />
+                              <div>
+                                <div className="font-bold text-sm">Hızlı Sayım Yap</div>
+                                <div className="text-[10px] text-white/80">Raf / Hücre Sayımı</div>
+                              </div>
+                            </button>
+                          </div>
+                      </div>
+
+                      {/* KAMERA / BARKOD OKUMA VİZÖRÜ (ORTA ALAN) */}
+                      <div className="relative rounded-2xl border-2 border-dashed border-indigo-500/50 bg-slate-900/60 p-6 flex flex-col items-center justify-center min-h-[200px] text-center overflow-hidden">
+                        {/* Hareketli Tarama Çizgisi Simülasyonu */}
+                        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-pulse" />
+
+                        <ScanLine className="h-12 w-12 text-indigo-400 mb-2 animate-bounce" />
+                        <div className="text-sm font-semibold text-slate-200">
+                          Kamera Vizörü Hazır
+                        </div>
+                        <div className="text-xs text-slate-400 mt-1 max-w-[260px]">
+                          Barkodu veya QR kodu telefon/terminal kamerasına gösterin.
+                        </div>
+
+                        <div className="mt-4 flex items-center gap-2">
+                          <Badge variant="outline" className="border-slate-700 bg-slate-800 text-slate-300 font-mono text-[11px]">
+                            Hedef Hücre: {binCode}
+                          </Badge>
+                          <Badge variant="outline" className="border-slate-700 bg-slate-800 text-slate-300 text-[11px]">
+                            Miktar: {quantity} Adet
+                          </Badge>
+                        </div>
+                      </div>
+
+                        {/* BÜYÜK OKUTMA BUTONLARI (1D / 2D / RFID) */}
+                        <div className="space-y-2">
+                          <Button
+                            onClick={() => handlePerformScan("BARCODE_SCAN")}
+                            className="w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-base rounded-xl shadow-lg gap-2"
+                          >
+                            <Barcode className="h-5 w-5" />
+                            Barkodu Okut (Tek Tık)
+                          </Button>
+
+                          <div className="grid grid-cols-2 gap-2">
+                            <Button
+                              onClick={() => handlePerformScan("QR_LOT_SCAN")}
+                              className="h-11 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg gap-1.5"
+                            >
+                              <QrCode className="h-4 w-4 text-indigo-400" />
+                              GS1 QR / Lot Oku
+                            </Button>
+                            <Button
+                              onClick={() => handlePerformScan("RFID_BULK_READ")}
+                              className="h-11 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg gap-1.5"
+                            >
+                              <Radio className="h-4 w-4 text-purple-400" />
+                              Toplu UHF RFID Oku (48 Adet)
+                            </Button>
+                          </div>
+                        </div>
+
+                              {/* SON TARAMA BİLGİ KARTI (ONAY VE YÖNLENDİRME) */}
+                              {lastScannedResult && (
+          <div className="p-3.5 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1.5 animate-in fade-in">
+            <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                İşlem Başarılı
+              </span>
+              <span className="font-mono text-[10px] text-slate-400">{lastScannedResult.timestamp}</span>
+            </div>
+            <div className="font-bold text-slate-100 text-sm">
+              {lastScannedResult.itemName}
+            </div>
+            <div className="flex items-center justify-between text-xs text-slate-300">
+              <span>Okunan: <strong>{lastScannedResult.qty} {lastScannedResult.unit}</strong></span>
+              <span className="font-mono text-emerald-400">Hedef: {lastScannedResult.targetBin}</span>
+            </div>
           </div>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-            Mobil El Terminali: Barkod, QR Kod & Toplu UHF RFID Saha Tarayıcı
-          </h1>
-          <p className="text-sm text-slate-600">
-            Soğuk hava deposu veya ölü Wi-Fi noktalarında çevrimdışı (IndexedDB) çalışıp bağlantı sağlandığında otomatik senkronize olan saha modülü.
-          </p>
-        </div>
-
-        {/* Çevrimiçi / Çevrimdışı (Offline) Simülasyon Anahtarı */}
-        <div className="flex items-center gap-3">
-          <Button
-            variant={isOfflineMode ? "destructive" : "outline"}
-            onClick={() => {
-              setIsOfflineMode(prev => !prev)
-              toast.info(
-                !isOfflineMode
-                  ? "Cihaz Çevrimdışı (Offline) Moda Alındı: Tüm okumalar IndexedDB'ye kaydedilecek."
-                  : "Cihaz Çevrimiçi (Online) Moda Geçti: Bekleyen kuyruğu senkronize edebilirsiniz."
-              )
-            }}
-            className="gap-2"
-          >
-            {isOfflineMode ? (
-              <>
-                <WifiOff className="h-4 w-4" />
-                Çevrimdışı Mod Aktif (IndexedDB Queue)
-              </>
-            ) : (
-              <>
-                <Wifi className="h-4 w-4 text-emerald-600" />
-                Çevrimiçi (Canlı WMS Bağlantısı)
-              </>
-            )}
-          </Button>
-
-          <Button
-            onClick={handleBatchSync}
-            disabled={pendingOfflineCount === 0 || isSyncing}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
-          >
-            <RefreshCw className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
-            Bekleyenleri Senkronize Et ({pendingOfflineCount})
-          </Button>
-        </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Sol: Endüstriyel El Terminali (Zebra / Honeywell) Simülatörü */}
-        <Card className="border-2 border-slate-800 bg-slate-950 text-white lg:col-span-5 shadow-xl">
-          <CardHeader className="border-b border-slate-800 pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Smartphone className="h-5 w-5 text-emerald-400" />
-                <span className="font-mono text-xs font-bold text-emerald-400">
-                  {deviceId}
-                </span>
-              </div>
-              <Badge
-                className={
-                  isOfflineMode
-                    ? "bg-amber-500 text-slate-950 font-bold"
-                    : "bg-emerald-500 text-slate-950 font-bold"
-                }
-              >
-                {isOfflineMode ? "OFFLINE • INDEXED_DB" : "ONLINE • 5G / WIFI-6"}
-              </Badge>
-            </div>
-            <CardTitle className="text-base text-white mt-2">
-              Endüstriyel Saha Okuyucu Ekranı
-            </CardTitle>
-            <CardDescription className="text-slate-400 text-xs">
-              1D/2D Barkod, GS1-128 Karekod (QR) veya Toplu UHF RFID Anten tetikleyicisi.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-4 space-y-4">
-            {/* 3 Tarama Teknolojisi Seçimi */}
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                type="button"
-                variant={scanMode === "BARCODE_SCAN" ? "default" : "outline"}
-                onClick={() => handleSimulateHardwareScan("BARCODE_SCAN")}
-                className={`h-16 flex-col gap-1 text-xs ${scanMode === "BARCODE_SCAN"
-                    ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                    : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                  }`}
-              >
-                <Barcode className="h-5 w-5" />
-                1D Barkod Okut
-              </Button>
-              <Button
-                type="button"
-                variant={scanMode === "QR_LOT_SCAN" ? "default" : "outline"}
-                onClick={() => handleSimulateHardwareScan("QR_LOT_SCAN")}
-                className={`h-16 flex-col gap-1 text-xs ${scanMode === "QR_LOT_SCAN"
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                    : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                  }`}
-              >
-                <QrCode className="h-5 w-5" />
-                GS1 QR / Lot Okut
-              </Button>
-              <Button
-                type="button"
-                variant={scanMode === "RFID_BULK_READ" ? "default" : "outline"}
-                onClick={() => handleSimulateHardwareScan("RFID_BULK_READ")}
-                className={`h-16 flex-col gap-1 text-xs ${scanMode === "RFID_BULK_READ"
-                    ? "bg-purple-600 hover:bg-purple-700 text-white"
-                    : "bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
-                  }`}
-              >
-                <Radio className="h-5 w-5" />
-                Toplu RFID (48x)
-              </Button>
+      {/* ALT BİLGİ */}
+      <div className="pt-4 text-center text-[11px] text-slate-500">
+        Operatör: {operatorName} • Cihaz: {deviceId}
+      </div>
+
+      {/* CİHAZ VE İLERİ DÜZEY AYARLAR DRAWER (SHEET) */}
+      <Sheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+        <SheetContent side="right" className="bg-slate-900 border-slate-800 text-white w-full sm:max-w-md p-6">
+          <SheetHeader>
+            <SheetTitle className="text-white text-base">Terminal & Saha Ayarları</SheetTitle>
+            <SheetDescription className="text-slate-400 text-xs">
+              El terminali parametrelerini ve manuel SKU seçimlerini yapılandırın.
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="space-y-4 py-4 text-xs">
+            <div>
+              <Label className="text-slate-300 text-xs">Operatör Adı</Label>
+              <Input
+                value={operatorName}
+                onChange={e => setOperatorName(e.target.value)}
+                className="mt-1 bg-slate-800 border-slate-700 text-white"
+              />
             </div>
 
-            {/* Lazer Okuma Vizörü */}
-            <div className="rounded-lg border border-emerald-500/40 bg-slate-900 p-3 font-mono text-xs space-y-1">
-              <div className="flex justify-between text-[10px] text-emerald-400">
-                <span>LAZER / EPC OKUMA TAMPONU</span>
-                <span>{scanMode}</span>
-              </div>
-              <div className="text-sm font-bold text-white break-all">{scannedCode}</div>
+            <div>
+              <Label className="text-slate-300 text-xs">Cihaz Kimliği (Hardware ID)</Label>
+              <Input
+                value={deviceId}
+                onChange={e => setDeviceId(e.target.value)}
+                className="mt-1 bg-slate-800 border-slate-700 font-mono text-white"
+              />
             </div>
 
-            {/* Saha Operasyon Parametreleri */}
-            <div className="space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label className="text-slate-300 text-xs">Saha İşlem Tipi</Label>
-                  <Select
-                    value={operationTaskType}
-                    onValueChange={v => setOperationTaskType(v as any)}
-                  >
-                    <SelectTrigger className="mt-1 bg-slate-900 border-slate-700 text-white h-9 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PUTAWAY_CONFIRM">Rafa Yerleştirme (Put-Away)</SelectItem>
-                      <SelectItem value="PICK_CONFIRM">Sipariş / Dalga Toplama (Pick)</SelectItem>
-                      <SelectItem value="BLIND_COUNT_ENTRY">Kör Sayım Girişi (Blind Count)</SelectItem>
-                      <SelectItem value="LPN_TRANSFER">LPN Palet Transferi</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label className="text-slate-300 text-xs">Miktar</Label>
-                  <Input
-                    type="number"
-                    value={quantity}
-                    onChange={e => setQuantity(e.target.value)}
-                    className="mt-1 bg-slate-900 border-slate-700 text-white h-9 text-xs"
-                  />
-                </div>
-              </div>
+            <div>
+              <Label className="text-slate-300 text-xs">Okutulacak Test Ürünü</Label>
+              <Select value={selectedSku} onValueChange={setSelectedSku}>
+                <SelectTrigger className="mt-1 bg-slate-800 border-slate-700 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-850 border-slate-700 text-white">
+                  {(inventoryState.items || []).map(i => (
+                    <SelectItem key={i.id} value={i.sku}>{i.name} ({i.sku})</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-slate-300 text-xs">Stok Kartı (SKU)</Label>
-                <Select value={selectedSku} onValueChange={setSelectedSku}>
-                  <SelectTrigger className="mt-1 bg-slate-900 border-slate-700 text-white h-9 text-xs">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {inventoryState.items.map(item => (
-                      <SelectItem key={item.id} value={item.sku}>
-                        {item.sku} — {item.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label className="text-slate-300 text-xs">Hedef Hücre (Bin)</Label>
+                <Input
+                  value={binCode}
+                  onChange={e => setBinCode(e.target.value)}
+                  className="mt-1 bg-slate-800 border-slate-700 font-mono text-white"
+                />
               </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label className="text-slate-300 text-xs">Hücre Adresi (Bin)</Label>
-                  <Input
-                    value={binCode}
-                    onChange={e => setBinCode(e.target.value)}
-                    className="mt-1 bg-slate-900 border-slate-700 text-white h-9 text-xs font-mono"
-                  />
-                </div>
-                <div>
-                  <Label className="text-slate-300 text-xs">LPN / Palet Kodu</Label>
-                  <Input
-                    value={lpnCode}
-                    onChange={e => setLpnCode(e.target.value)}
-                    className="mt-1 bg-slate-900 border-slate-700 text-white h-9 text-xs font-mono"
-                  />
-                </div>
-              </div>
-
-              <Button
-                onClick={() => handleSimulateHardwareScan(scanMode)}
-                className="w-full h-10 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs"
-              >
-                Tetikle & {isOfflineMode ? "IndexedDB Kuyruğuna Yaz" : "Anlık Sunucuya İşle"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Sağ: IndexedDB & Çevrimdışı Senkronizasyon Kuyruğu */}
-        <Card className="border-slate-200 lg:col-span-7">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Database className="h-4 w-4 text-indigo-600" />
-                  IndexedDB (`sunum_wms_offline_db`) Saha İşlem & Senkronizasyon Kuyruğu
-                </CardTitle>
-                <CardDescription>
-                  Çevrimdışı okutulan barkod, QR ve UHF RFID paketlerinin yerel veritabanı kayıtları ve sunucu mutabakat durumu.
-                </CardDescription>
+                <Label className="text-slate-300 text-xs">Miktar</Label>
+                <Input
+                  type="number"
+                  value={quantity}
+                  onChange={e => setQuantity(e.target.value)}
+                  className="mt-1 bg-slate-800 border-slate-700 text-white"
+                />
               </div>
-              <Badge variant="outline" className="font-mono">
-                Toplam Kayıt: {(queue || []).length}
-              </Badge>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-              {(queue || []).map(op => (
-                <div
-                  key={op.id}
-                  className={`rounded-lg border p-3.5 space-y-2 ${op.syncStatus === "QUEUED_OFFLINE"
-                      ? "border-amber-300 bg-amber-50/40"
-                      : "border-slate-200 bg-white"
-                    }`}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-slate-900 text-white font-mono text-[10px]">
-                        {op.operationType}
-                      </Badge>
-                      <span className="font-mono text-xs font-bold text-indigo-700">
-                        {op.codeScanned}
-                      </span>
+
+            <div className="pt-4 border-t border-slate-800">
+              <div className="text-xs font-semibold text-slate-300 mb-2">
+                IndexedDB Çevrimdışı Kuyruk ({queue.length} işlem)
+              </div>
+              <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                {queue.map(q => (
+                  <div key={q.id} className="p-2 bg-slate-800 rounded text-[11px] flex justify-between">
+                    <div>
+                      <div className="font-semibold text-white">{q.itemName}</div>
+                      <div className="text-slate-400 font-mono">{q.operationType} • {q.binCode}</div>
                     </div>
-                    <Badge
-                      className={
-                        op.syncStatus === "QUEUED_OFFLINE"
-                          ? "bg-amber-500 text-white"
-                          : "bg-emerald-600 text-white"
-                      }
-                    >
-                      {op.syncStatus === "QUEUED_OFFLINE"
-                        ? "OFFLINE KUYRUKTA (BEKLİYOR)"
-                        : "SUNUCUYA SENKRONİZE EDİLDİ"}
+                    <Badge variant="outline" className="border-slate-600 text-slate-300 text-[10px]">
+                      {q.syncStatus}
                     </Badge>
                   </div>
-
-                  <div className="flex flex-wrap justify-between text-xs">
-                    <div>
-                      <strong className="text-slate-900">{op.itemName}</strong> ({op.sku})
-                    </div>
-                    <div className="font-bold text-emerald-700">
-                      {op.quantity} {op.unit}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap justify-between text-[11px] text-slate-500 font-mono">
-                    <span>Hücre: {op.binCode}</span>
-                    <span>LPN: {op.lpnCode || "-"}</span>
-                    <span>Cihaz: {op.deviceId} ({op.operatorName})</span>
-                    <span>Kayıt: {op.queuedAt}</span>
-                  </div>
-
-                  {op.conflictNote && (
-                    <div className="text-[11px] text-amber-800 bg-amber-100/60 px-2.5 py-1 rounded">
-                      {op.conflictNote}
-                    </div>
-                  )}
-                </div>
-              ))}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  )
+                ))}
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+                          </div>
+                          )
 }
-
