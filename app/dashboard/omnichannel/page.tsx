@@ -214,7 +214,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                         </div>
                         <div className="mt-2 flex items-baseline gap-2">
                           <span className="text-2xl font-bold text-slate-900">
-                            ₺{Math.round(totalDailyGmv).toLocaleString("tr-TR")}
+                            ₺{(Math.round(totalDailyGmv) || 0).toLocaleString("tr-TR")}
                           </span>
                         </div>
                         <p className="mt-1 text-xs text-slate-500">{totalDailyOrders} adet sipariş</p>
@@ -276,7 +276,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                         {/* TAB 1: PAZARYERLERİ & KANALLAR */}
                                         <TabsContent value="realtime-channels" className="space-y-4">
                                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                            {state.channels.map(ch => (
+                                            {(state.channels || []).map(ch => (
                                               <Card key={ch.id} className="border-slate-200 hover:border-blue-300 transition-all shadow-xs">
                                                 <CardHeader className="pb-3 border-b">
                                                   <div className="flex items-center justify-between">
@@ -312,7 +312,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
 
                                             <div className="flex items-center justify-between text-xs text-slate-600">
                                               <span>Bugün: <strong>{ch.dailyOrdersCount} Sipariş</strong></span>
-                                              <span className="font-bold text-emerald-700">₺{ch.dailyGmvTry.toLocaleString("tr-TR")}</span>
+                                              <span className="font-bold text-emerald-700">₺{(ch.dailyGmvTry || 0).toLocaleString("tr-TR")}</span>
                                             </div>
                                           </CardContent>
                                         </Card>
@@ -323,7 +323,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                               {/* TAB 2: SİPARİŞLER VE SEVKİYAT MODELLERİ */}
                                               <TabsContent value="orders-fulfillment" className="space-y-4">
                                                 <div className="space-y-3">
-                                                  {state.omnichannelOrders.map(ord => (
+                                                  {(state.omnichannelOrders || []).map(ord => (
               <div key={ord.id} className="p-4 bg-white border border-slate-200 rounded-xl space-y-3 shadow-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -344,7 +344,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                     </Badge>
                   </div>
                   <div className="font-bold text-sm text-slate-900">
-                    ₺{ord.totalAmountTry.toLocaleString("tr-TR")}
+                    ₺{(ord.totalAmountTry || 0).toLocaleString("tr-TR")}
                   </div>
                 </div>
 
@@ -353,7 +353,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                                         </div>
 
                                                           <div className="bg-slate-50 p-2.5 rounded-lg space-y-1.5">
-                                                            {ord.items.map((it, idx) => (
+                                                            {(ord.items || []).map((it, idx) => (
                                                               <div key={idx} className="flex justify-between text-xs">
                                                                 <span><strong>{it.itemName}</strong> ({it.sku})</span>
                                                                 <span className="font-mono text-slate-700 font-medium">
@@ -374,7 +374,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                                     </div>
 
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                      {state.rmaReturns.map(rma => {
+                                                      {(state.rmaReturns || []).map(rma => {
                                                         const isPending = rma.status === "RECEIVED_AT_HUB"
 
                                                         return (
@@ -448,7 +448,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                                             </tr>
                                                           </thead>
                                                           <tbody className="divide-y divide-slate-100">
-                                                            {state.eDocuments.map(doc => (
+                                                            {(state.eDocuments || []).map(doc => (
                                                               <tr key={doc.id} className="hover:bg-slate-50/70 transition-colors">
                                                                 <td className="px-4 py-3.5">
                                                                   <div className="font-mono font-bold text-slate-900 text-xs">{doc.documentNo}</div>
@@ -466,7 +466,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                                                                 </td>
 
                                                                 <td className="px-4 py-3.5 text-right font-bold text-slate-900">
-                                                                  ₺{doc.totalGrossTry.toLocaleString("tr-TR")}
+                                                                  ₺{(doc.totalGrossTry || 0).toLocaleString("tr-TR")}
                                                                 </td>
 
                                                                 <td className="px-4 py-3.5 text-center">
@@ -597,7 +597,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
                 </div>
                 <div className="flex justify-between pt-2 border-t">
                   <span className="text-slate-500">KDV Dahil Toplam:</span>
-                  <strong className="text-base text-slate-900">₺{selectedXmlDoc.totalGrossTry.toLocaleString("tr-TR")}</strong>
+                  <strong className="text-base text-slate-900">₺{(selectedXmlDoc?.totalGrossTry || 0).toLocaleString("tr-TR")}</strong>
                 </div>
               </div>
 

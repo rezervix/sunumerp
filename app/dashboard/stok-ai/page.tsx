@@ -216,7 +216,7 @@ export default function InventoryAiAndAnalyticsPage() {
                                     Önerilen Aksiyonlar:
                                   </span>
                                   <div className="flex flex-wrap gap-2">
-                                    {amaResult.recommendedActions.map((act, idx) => (
+                                    {(amaResult?.recommendedActions || []).map((act, idx) => (
                                       <Button
                                         key={idx}
                                         size="sm"
@@ -239,7 +239,7 @@ export default function InventoryAiAndAnalyticsPage() {
                       {/* TAB 2: FORESIGHT-AI TALEP TAHMİNLERİ */}
                       <TabsContent value="foresight-forecasting" className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                              {state.forecasts.map(fc => {
+                              {(state.forecasts || []).map(fc => {
                                 const isSelected = activeForecast?.id === fc.id
                                 const isRisk = fc.optimizationStatus === "STOCKOUT_IMMINENT"
 
@@ -312,7 +312,7 @@ export default function InventoryAiAndAnalyticsPage() {
                                           </CardDescription>
                                         </div>
                                         <Badge className="bg-purple-600 text-white">
-                                          Korunan Ciro: ₺{activeForecast.projectedRevenueImpactTry.toLocaleString("tr-TR")}
+                                          Korunan Ciro: ₺{(activeForecast.projectedRevenueImpactTry || 0).toLocaleString("tr-TR")}
                                         </Badge>
                                     </div>
                                 </CardHeader>
@@ -358,7 +358,7 @@ export default function InventoryAiAndAnalyticsPage() {
                                                     {/* TAB 3: YÖNETİCİ RAPOR ANLATILARI */}
                                                     <TabsContent value="narrative-reporting" className="space-y-4">
                                                       <div className="space-y-4">
-                                                        {state.narrativeReports.map(rep => (
+                                                        {(state.narrativeReports || []).map(rep => (
                                                           <Card key={rep.id} className="border-slate-200">
                                                             <CardHeader className="pb-3 border-b">
                                                               <div className="flex items-center justify-between">
@@ -377,7 +377,7 @@ export default function InventoryAiAndAnalyticsPage() {
                       Temel Bulgular & Dikkat Edilmesi Gerekenler:
                     </span>
                     <ul className="space-y-1.5 text-xs text-slate-600">
-                      {rep.keyFindings.map((finding, idx) => (
+                      {(rep.keyFindings || []).map((finding, idx) => (
                         <li key={idx} className="flex items-start gap-2">
                           <span className="h-1.5 w-1.5 rounded-full bg-purple-600 mt-1.5 shrink-0" />
                           <span>{finding}</span>

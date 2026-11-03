@@ -130,15 +130,15 @@ export default function AdvancedWmsOperationsPage() {
   const [isBinDrawerOpen, setIsBinDrawerOpen] = useState(false)
 
   // Kör Sayım Gizlilik Modu & Sayım Girişi
-  const [selectedSessionId, setSelectedSessionId] = useState<string>("cnt-001")
+  const [selectedSessionId, setSelectedSessionId] = useState<string>("cnt-session-01")
   const [revealBlindSystemQty, setRevealBlindSystemQty] = useState(false)
   const [countInputs, setCountInputs] = useState<Record<string, string>>({})
 
   // Depolar Arası Transfer Modalı
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
-  const [trfFromWh, setTrfFromWh] = useState("DEP-IST-MRK")
-  const [trfToWh, setTrfToWh] = useState("DEP-ANK-BOL")
-  const [trfSku, setTrfSku] = useState("SKU-FLR-001")
+  const [trfFromWh, setTrfFromWh] = useState("DEP-IST-01")
+  const [trfToWh, setTrfToWh] = useState("DEP-GBZ-04")
+  const [trfSku, setTrfSku] = useState("MTX-PRO-JACKET-NVY-M")
   const [trfQty, setTrfQty] = useState("48")
   const [trfLpn, setTrfLpn] = useState("LPN-TR-2026-000950")
   const [trfPlate, setTrfPlate] = useState("34 SNR 808")
@@ -153,7 +153,7 @@ export default function AdvancedWmsOperationsPage() {
   const filteredBins = useMemo(() => {
     const bins = state.wmsBins || []
     if (selectedZoneFilter === "ALL") return bins
-    return bins.filter(b => b.zoneType === selectedZoneFilter)
+    return bins.filter(b => b.zoneType === selectedZoneFilter || (b as any).zoneCode?.includes(selectedZoneFilter))
   }, [state.wmsBins, selectedZoneFilter])
 
   // Aktif Sayım Oturumu
@@ -170,17 +170,18 @@ export default function AdvancedWmsOperationsPage() {
   // Toplam Bekleyen Görevler
   const activeTasksCount = (state.wmsTasks || []).filter(t => t.status !== "COMPLETED").length
 
-  // Görevi Bir Sonraki Aşamaya İlerletme (İş Mantığı Korunur)
+  // Görevi Bir Sonraki Aşamaya İlerletme
   const handleAdvanceTask = (taskId: string) => {
     const updated = enterpriseInventoryService.advanceWmsTaskStage(taskId)
     if (updated) {
       setState({ ...enterpriseInventoryService.getState() })
+      const tNo = updated.taskNumber || (updated as any).taskNo || updated.id
       if (updated.status === "COMPLETED") {
-        toast.success(`${updated.taskNo} numaralı görev tamamen tamamlandı!`, {
+        toast.success(`${tNo} numaralı görev tamamen tamamlandı!`, {
           description: "Paket sevkiyata hazırlandı ve kargo etiketi üretildi."
         })
       } else {
-        toast.success(`${updated.taskNo} sonraki aşamaya iletildi`, {
+        toast.success(`${tNo} sonraki aşamaya iletildi`, {
           description: `Yeni Aşama: ${updated.workflowStage}`
         })
       }
@@ -203,8 +204,9 @@ export default function AdvancedWmsOperationsPage() {
     })
     setState({ ...enterpriseInventoryService.getState() })
     setIsTransferModalOpen(false)
-    toast.success(`${created.transferNo} Transfer Emri Oluşturuldu!`, {
-      description: `LPN: ${created.lpnCode} • E-İrsaliye: ${created.eWaybillNo}`
+    const trfNum = created.transferNumber || (created as any).transferNo || created.id
+    toast.success(`${trfNum} Transfer Emri Oluşturuldu!`, {
+      description: `LPN: ${created.lpnCode} • Plaka: ${created.vehiclePlate || (created as any).carrierVehiclePlate || "34 SNR"}`
     })
   }
 
@@ -226,8 +228,9 @@ export default function AdvancedWmsOperationsPage() {
     const reconciled = enterpriseInventoryService.reconcileCountSession(sessionId)
     if (reconciled) {
       setState({ ...enterpriseInventoryService.getState() })
-      toast.success(`${reconciled.sessionNo} Mahsuplaşması Başarıyla Tamamlandı!`, {
-        description: `Muhasebe Fişi: ${reconciled.reconciledJournalNo} • Stok bakiyeleri otomatik eşitlendi.`
+      const sNo = reconciled.sessionNumber || (reconciled as any).sessionNo || reconciled.id
+      toast.success(`${sNo} Mahsuplaşması Başarıyla Tamamlandı!`, {
+        description: `Muhasebe Fişi: ${reconciled.reconciledJournalNo || "MAH-FIN-2026"} • Stok bakiyeleri otomatik eşitlendi.`
       })
     }
   }
@@ -256,7 +259,7 @@ export default function AdvancedWmsOperationsPage() {
                 </div>
                 <p className="mt-1 text-sm text-slate-600">
                   Bugün depoda <span className="font-semibold text-slate-900">{activeTasksCount} aktif görev</span> bulunuyor.
-                  Rampa 2&apos;ye gelen sevkiyat kabul bekliyor, 2 palet rafa yerleştirilmeye hazır.
+                  Rampa kabulü ve rafa yerleştirme iş emirleri hazır.
                 </p>
               </div>
             </div>
@@ -463,68 +466,74 @@ export default function AdvancedWmsOperationsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {currentStepTasks.map(task => (
-                    <Card key={task.id} className="border-slate-200 bg-white hover:border-indigo-200 transition-colors shadow-xs">
-                      <CardHeader className="pb-3 border-b">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
-                            {task.taskNo}
-                          </span>
-                          <div className="flex items-center gap-1.5">
-                            {task.priority === "URGENT" && (
-                              <Badge className="bg-rose-100 text-rose-700 border-rose-200 text-[10px]">
-                                Acil
+                  {currentStepTasks.map(task => {
+                    const tNo = task.taskNumber || (task as any).taskNo || task.id
+                    const fromLoc = task.suggestedFromBin || (task as any).sourceBin || "Peron 1"
+                    const toLoc = task.suggestedToBin || (task as any).targetBin || "Hücreye İstif"
+
+                    return (
+                      <Card key={task.id} className="border-slate-200 bg-white hover:border-indigo-200 transition-colors shadow-xs">
+                        <CardHeader className="pb-3 border-b">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+                              {tNo}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              {task.priority === "URGENT" && (
+                                <Badge className="bg-rose-100 text-rose-700 border-rose-200 text-[10px]">
+                                  Acil
+                                </Badge>
+                              )}
+                              <Badge variant="outline" className="text-[10px]">
+                                {task.status}
                               </Badge>
-                            )}
-                            <Badge variant="outline" className="text-[10px]">
-                              {task.status}
-                            </Badge>
-                          </div>
-                        </div>
-                        <CardTitle className="text-base text-slate-900 mt-2">
-                          {task.itemName}
-                        </CardTitle>
-                        <CardDescription className="font-mono text-xs">
-                          SKU: {task.sku} • Hedef Miktar: <strong className="text-slate-800">{task.expectedQty} {task.unit}</strong>
-                        </CardDescription>
-                      </CardHeader>
-
-                      <CardContent className="pt-3 space-y-3">
-                        <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg text-xs font-mono">
-                          <div>
-                            <span className="text-slate-400 block text-[10px]">Kaynak Lokasyon:</span>
-                            <span className="font-bold text-slate-800">{task.sourceBin}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-400 block text-[10px]">Önerilen Hedef Hücre:</span>
-                            <span className="font-bold text-indigo-700">{task.targetBin}</span>
-                          </div>
-                          {task.lpnCode && (
-                            <div className="col-span-2 pt-1 border-t border-slate-200">
-                              <span className="text-slate-400 text-[10px]">Palet / Koli No (LPN): </span>
-                              <span className="font-bold text-slate-700">{task.lpnCode}</span>
                             </div>
+                          </div>
+                          <CardTitle className="text-base text-slate-900 mt-2">
+                            {task.itemName}
+                          </CardTitle>
+                          <CardDescription className="font-mono text-xs">
+                            SKU: {task.sku} • Hedef Miktar: <strong className="text-slate-800">{task.expectedQty} {task.unit}</strong>
+                          </CardDescription>
+                        </CardHeader>
+
+                        <CardContent className="pt-3 space-y-3">
+                          <div className="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-lg text-xs font-mono">
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">Kaynak Lokasyon:</span>
+                              <span className="font-bold text-slate-800">{fromLoc}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">Önerilen Hedef Hücre:</span>
+                              <span className="font-bold text-indigo-700">{toLoc}</span>
+                            </div>
+                            {task.lpnCode && (
+                              <div className="col-span-2 pt-1 border-t border-slate-200">
+                                <span className="text-slate-400 text-[10px]">Palet / Koli No (LPN): </span>
+                                <span className="font-bold text-slate-700">{task.lpnCode}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center justify-between text-xs text-slate-500">
+                            <span>Saha Görevlisi: <strong>{task.assignedOperator}</strong></span>
+                          </div>
+
+                          {task.status !== "COMPLETED" && (
+                            <Button
+                              onClick={() => handleAdvanceTask(task.id)}
+                              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-9 gap-1.5"
+                            >
+                              <Check className="h-4 w-4" />
+                              {selectedWizardStep === "PACKING"
+                                ? "Paketlemeyi Bitir & Sevkiyata Ver"
+                                : "Bu Adımı Onayla ve Sonrakine Geç"}
+                            </Button>
                           )}
-                        </div>
-
-                        <div className="flex items-center justify-between text-xs text-slate-500">
-                          <span>Saha Görevlisi: <strong>{task.assignedOperator}</strong></span>
-                        </div>
-
-                        {task.status !== "COMPLETED" && (
-                          <Button
-                            onClick={() => handleAdvanceTask(task.id)}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-9 gap-1.5"
-                          >
-                            <Check className="h-4 w-4" />
-                            {selectedWizardStep === "PACKING"
-                              ? "Paketlemeyi Bitir & Sevkiyata Ver"
-                              : "Bu Adımı Onayla ve Sonrakine Geç"}
-                          </Button>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -544,19 +553,24 @@ export default function AdvancedWmsOperationsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ALL">Tüm Bölgeler (Zones)</SelectItem>
-                  <SelectItem value="Z1_COLD_FLORA">Z1 — Soğuk Hava (+2°C/+6°C)</SelectItem>
-                  <SelectItem value="Z2_FAST_PICK">Z2 — Hızlı Toplama (Golden Zone)</SelectItem>
-                  <SelectItem value="Z3_PALLET_RESERVE">Z3 — Yüksek Palet Rezerv</SelectItem>
-                  <SelectItem value="Z4_PACKING">Z4 — Paketleme & Sevkiyat</SelectItem>
-                  <SelectItem value="Z5_QUARANTINE">Z5 — Karantina & Blokeli</SelectItem>
+                  <SelectItem value="FAST_PICK">Z2 — Hızlı Toplama (Golden Zone)</SelectItem>
+                  <SelectItem value="COLD_STORAGE">Z3 — Soğuk Hava Deposu</SelectItem>
+                  <SelectItem value="BULK_STORAGE">Z4 — Yüksek Palet Rezerv</SelectItem>
+                  <SelectItem value="PACKING">Z5 — Paketleme & Sevkiyat</SelectItem>
+                  <SelectItem value="QUARANTINE">Z6 — Karantina & Blokeli</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {filteredBins.map(bin => {
-                const isFull = bin.occupancyPercent >= 80
-                const isQuarantine = bin.status === "QUARANTINE_LOCKED"
+                const occupancy = bin.occupancyPercent ?? 0
+                const isFull = occupancy >= 80
+                const isQuarantine = bin.isBlocked || bin.zoneType === "QUARANTINE"
+                const itemSku = bin.storedSku || (bin as any).currentSku
+                const itemName = bin.storedItemName || (bin as any).currentItemName
+                const itemQty = bin.storedQty ?? (bin as any).currentQty ?? 0
+                const tempText = bin.temperatureRange || (bin as any).temperatureC || "Standart"
 
                 return (
                   <div
@@ -577,7 +591,7 @@ export default function AdvancedWmsOperationsPage() {
                       <Badge className={
                         isQuarantine ? "bg-rose-600 text-white" : isFull ? "bg-amber-600 text-white" : "bg-emerald-600 text-white"
                       }>
-                        %{bin.occupancyPercent} Dolu
+                        %{occupancy} Dolu
                       </Badge>
                     </div>
 
@@ -590,11 +604,11 @@ export default function AdvancedWmsOperationsPage() {
                       <div>Göz: <strong>{bin.position}</strong></div>
                     </div>
 
-                    {bin.currentSku ? (
+                    {itemSku ? (
                       <div className="mt-2 p-2 bg-indigo-50/60 rounded text-xs">
-                        <div className="font-semibold text-slate-900 truncate">{bin.currentItemName}</div>
+                        <div className="font-semibold text-slate-900 truncate">{itemName}</div>
                         <div className="font-mono text-[11px] text-indigo-700 mt-0.5">
-                          {bin.currentSku} • <strong>{bin.currentQty} Adet</strong>
+                          {itemSku} • <strong>{itemQty} Adet</strong>
                         </div>
                       </div>
                     ) : (
@@ -604,8 +618,8 @@ export default function AdvancedWmsOperationsPage() {
                     )}
 
                     <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>{bin.currentWeightKg}/{bin.maxWeightKg} kg</span>
-                      <span>{bin.temperatureC}°C</span>
+                      <span>{bin.currentWeightKg ?? 0}/{bin.maxWeightKg ?? 1000} kg</span>
+                      <span>{tempText}</span>
                     </div>
                   </div>
                 )
@@ -629,23 +643,23 @@ export default function AdvancedWmsOperationsPage() {
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-600 uppercase border-b">
                         <tr>
-                          <th className="p-2.5">Öncelik & Kod</th>
+                          <th className="p-2.5">Öncelik</th>
                           <th className="p-2.5">Kural Adı</th>
                           <th className="p-2.5">Operasyon</th>
                           <th className="p-2.5">Hedef Bölge</th>
-                          <th className="p-2.5">Açıklama</th>
+                          <th className="p-2.5">Strateji</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {state.directives.map(dir => (
+                        {(state.directives || []).map(dir => (
                           <tr key={dir.id}>
-                            <td className="p-2.5 font-mono font-bold text-indigo-700">#{dir.priority} • {dir.code}</td>
+                            <td className="p-2.5 font-mono font-bold text-indigo-700">#{dir.priority}</td>
                             <td className="p-2.5 font-medium text-slate-900">{dir.name}</td>
                             <td className="p-2.5">
-                              <Badge variant="outline" className="text-[10px]">{dir.operation}</Badge>
+                              <Badge variant="outline" className="text-[10px]">{dir.directiveType || (dir as any).operation}</Badge>
                             </td>
-                            <td className="p-2.5 font-mono">{dir.targetZone}</td>
-                            <td className="p-2.5 text-slate-600">{dir.ruleDescription}</td>
+                            <td className="p-2.5 font-mono">{dir.targetZoneCode || (dir as any).targetZone}</td>
+                            <td className="p-2.5 text-slate-600">{dir.strategy}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -671,25 +685,27 @@ export default function AdvancedWmsOperationsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {state.licensePlates.map(lpn => (
+                  {(state.licensePlates || []).map(lpn => (
                     <div key={lpn.id} className="p-3.5 bg-white border border-slate-200 rounded-xl space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
                           <span className="font-mono text-sm font-bold text-purple-700">{lpn.lpnCode}</span>
-                          <span className="text-xs text-slate-400 block font-mono">SSCC-18: {lpn.sscc18}</span>
+                          <span className="text-xs text-slate-400 block font-mono">
+                            EPC: {lpn.rfidTagEpc || (lpn as any).sscc18 || lpn.lpnCode}
+                          </span>
                         </div>
                         <Badge className="bg-emerald-100 text-emerald-800">{lpn.status}</Badge>
                       </div>
 
                       <div className="flex items-center justify-between text-xs text-slate-600">
                         <span>Konum: <strong className="font-mono">{lpn.warehouseCode} / {lpn.currentBinCode}</strong></span>
-                        <span>Ağırlık: <strong>{lpn.totalWeightKg} kg</strong></span>
+                        <span>Ağırlık: <strong>{lpn.totalWeightKg ?? 0} kg</strong></span>
                       </div>
 
                       <div className="bg-slate-50 p-2 rounded text-xs space-y-1">
-                        {lpn.items.map((it, idx) => (
+                        {(lpn.items || []).map((it, idx) => (
                           <div key={idx} className="flex justify-between">
-                            <span><strong>{it.itemName}</strong> ({it.sku})</span>
+                            <span><strong>{it.name || (it as any).itemName}</strong> ({it.sku})</span>
                             <span className="font-mono font-bold text-slate-800">{it.qty} {it.unit}</span>
                           </div>
                         ))}
@@ -717,30 +733,36 @@ export default function AdvancedWmsOperationsPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {state.transferOrders.map(trf => (
-                    <div key={trf.id} className="p-3.5 bg-white border border-slate-200 rounded-xl space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-sm font-bold text-slate-900">{trf.transferNo}</span>
-                        <Badge className="bg-blue-100 text-blue-800">{trf.status}</Badge>
-                      </div>
+                  {(state.transferOrders || []).map(trf => {
+                    const trfNum = trf.transferNumber || (trf as any).transferNo || trf.id
+                    const trfQty = trf.sentQty ?? (trf as any).quantity ?? 0
+                    const plate = trf.vehiclePlate || (trf as any).carrierVehiclePlate || "34 SNR"
 
-                      <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                        <span>{trf.fromWarehouseName}</span>
-                        <ArrowRight className="h-3.5 w-3.5 text-indigo-600" />
-                        <span>{trf.toWarehouseName}</span>
-                      </div>
+                    return (
+                      <div key={trf.id} className="p-3.5 bg-white border border-slate-200 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-sm font-bold text-slate-900">{trfNum}</span>
+                          <Badge className="bg-blue-100 text-blue-800">{trf.status}</Badge>
+                        </div>
 
-                      <div className="text-xs text-slate-600">
-                        Ürün: <strong>{trf.itemName}</strong> • <strong className="text-emerald-700">{trf.quantity} {trf.unit}</strong>
-                      </div>
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
+                          <span>{trf.fromWarehouseName}</span>
+                          <ArrowRight className="h-3.5 w-3.5 text-indigo-600" />
+                          <span>{trf.toWarehouseName}</span>
+                        </div>
 
-                      <div className="pt-2 border-t flex justify-between text-[11px] text-slate-400 font-mono">
-                        <span>LPN: {trf.lpnCode}</span>
-                        <span>Araç: {trf.carrierVehiclePlate}</span>
-                        <span>İrsaliye: {trf.eWaybillNo}</span>
+                        <div className="text-xs text-slate-600">
+                          Ürün: <strong>{trf.itemName}</strong> • <strong className="text-emerald-700">{trfQty} {trf.unit}</strong>
+                        </div>
+
+                        <div className="pt-2 border-t flex justify-between text-[11px] text-slate-400 font-mono">
+                          <span>LPN: {trf.lpnCode}</span>
+                          <span>Araç: {plate}</span>
+                          <span>Tarih: {trf.shippedAt}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </CardContent>
               </Card>
             </div>
@@ -749,8 +771,12 @@ export default function AdvancedWmsOperationsPage() {
           {/* TAB 4: HIZLI SAYIM & FARK MAHSUPLAŞMASI */}
           <TabsContent value="counting" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {state.countSessions.map(sess => {
+              {(state.countSessions || []).map(sess => {
                 const isSelected = activeCountSession?.id === sess.id
+                const sNum = sess.sessionNumber || (sess as any).sessionNo || sess.id
+                const totalVariance = Number(sess.totalVarianceValueTry ?? (sess as any).totalVarianceTry ?? 0)
+                const countedCount = sess.lines ? sess.lines.filter(l => l.countedQty !== null).length : 0
+                const totalCount = sess.lines ? sess.lines.length : 0
 
                 return (
                   <div
@@ -761,7 +787,7 @@ export default function AdvancedWmsOperationsPage() {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-slate-900">{sess.sessionNo}</span>
+                      <span className="font-mono text-xs font-bold text-slate-900">{sNum}</span>
                       <Badge className={sess.countType === "BLIND_COUNT" ? "bg-slate-900 text-white" : "bg-indigo-600 text-white"}>
                         {sess.countType === "BLIND_COUNT" ? "Kör Sayım (Ezbersiz)" : "Döngüsel Sayım"}
                       </Badge>
@@ -770,9 +796,9 @@ export default function AdvancedWmsOperationsPage() {
                     <div className="font-semibold text-xs text-slate-800 mt-2">{sess.warehouseName}</div>
 
                     <div className="mt-2 flex justify-between text-xs text-slate-500">
-                      <span>İlerleme: {sess.countedBinsCount}/{sess.totalBinsToCount} Hücre</span>
-                      <span className={sess.totalVarianceTry < 0 ? "text-rose-600 font-bold" : "text-emerald-600 font-bold"}>
-                        Fark: ₺{sess.totalVarianceTry.toLocaleString("tr-TR")}
+                      <span>İlerleme: {countedCount}/{totalCount} Hücre</span>
+                      <span className={totalVariance < 0 ? "text-rose-600 font-bold" : totalVariance > 0 ? "text-emerald-600 font-bold" : "text-slate-600"}>
+                        Fark: ₺{totalVariance.toLocaleString("tr-TR")}
                       </span>
                     </div>
 
@@ -794,7 +820,7 @@ export default function AdvancedWmsOperationsPage() {
                     <div>
                       <CardTitle className="text-base flex items-center gap-2">
                         <ClipboardCheck className="h-4 w-4 text-indigo-600" />
-                        {activeCountSession.sessionNo} — Sayım ve Fark Mutabakat Paneli
+                        {activeCountSession.sessionNumber || (activeCountSession as any).sessionNo} — Sayım ve Fark Mutabakat Paneli
                       </CardTitle>
                       <CardDescription>
                         Fark tespit edilen ürünler tek tıkla envantere ve muhasebe mahsup fişine yansıtılır.
@@ -802,7 +828,7 @@ export default function AdvancedWmsOperationsPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {activeCountSession.isBlindMode && (
+                      {(activeCountSession.hideSystemQty || (activeCountSession as any).isBlindMode) && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -841,8 +867,10 @@ export default function AdvancedWmsOperationsPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {activeCountSession.lines.map(line => {
-                          const hideSystem = activeCountSession.isBlindMode && !revealBlindSystemQty && activeCountSession.status !== "RECONCILED"
+                        {(activeCountSession.lines || []).map(line => {
+                          const isBlind = (activeCountSession.hideSystemQty || (activeCountSession as any).isBlindMode) && !revealBlindSystemQty && activeCountSession.status !== "RECONCILED"
+                          const lineVarianceAmount = Number(line.varianceAmountTry ?? (line as any).varianceCostTry ?? 0)
+                          const lineUnit = (line as any).unit || "Adet"
 
                           return (
                             <tr key={line.id}>
@@ -854,19 +882,19 @@ export default function AdvancedWmsOperationsPage() {
                               </td>
 
                               <td className="p-3 text-right font-mono">
-                                {hideSystem ? (
+                                {isBlind ? (
                                   <Badge variant="secondary" className="text-[10px]">🔒 GİZLİ</Badge>
                                 ) : (
-                                  <strong>{line.systemQty} {line.unit}</strong>
+                                  <strong>{line.systemQty} {lineUnit}</strong>
                                 )}
                               </td>
 
                               <td className="p-3 text-right font-bold text-indigo-700">
-                                {line.countedQty !== null ? `${line.countedQty} ${line.unit}` : "Girilmedi"}
+                                {line.countedQty !== null ? `${line.countedQty} ${lineUnit}` : "Girilmedi"}
                               </td>
 
                               <td className="p-3 text-right font-bold">
-                                {hideSystem || line.countedQty === null ? (
+                                {isBlind || line.countedQty === null ? (
                                   "-"
                                 ) : (
                                   <span className={line.varianceQty < 0 ? "text-rose-600" : line.varianceQty > 0 ? "text-emerald-600" : "text-slate-500"}>
@@ -876,10 +904,10 @@ export default function AdvancedWmsOperationsPage() {
                               </td>
 
                               <td className="p-3 text-right font-bold">
-                                {hideSystem || line.countedQty === null ? (
+                                {isBlind || line.countedQty === null ? (
                                   "-"
                                 ) : (
-                                  <span>₺{line.varianceCostTry.toLocaleString("tr-TR")}</span>
+                                  <span>₺{lineVarianceAmount.toLocaleString("tr-TR")}</span>
                                 )}
                               </td>
 
@@ -935,7 +963,7 @@ export default function AdvancedWmsOperationsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {state.warehouses.map(w => (
+                      {(state.warehouses || []).map(w => (
                         <SelectItem key={w.id} value={w.code}>{w.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -949,7 +977,7 @@ export default function AdvancedWmsOperationsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {state.warehouses.map(w => (
+                      {(state.warehouses || []).map(w => (
                         <SelectItem key={w.id} value={w.code}>{w.name}</SelectItem>
                       ))}
                     </SelectContent>
@@ -964,7 +992,7 @@ export default function AdvancedWmsOperationsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {state.items.map(i => (
+                    {(state.items || []).map(i => (
                       <SelectItem key={i.id} value={i.sku}>{i.name} ({i.sku})</SelectItem>
                     ))}
                   </SelectContent>
@@ -1028,15 +1056,15 @@ export default function AdvancedWmsOperationsPage() {
                 <div className="space-y-3 bg-slate-50 p-4 rounded-xl text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Doluluk Oranı:</span>
-                    <strong className="text-indigo-700">%{selectedBinForDrawer.occupancyPercent}</strong>
+                    <strong className="text-indigo-700">%{selectedBinForDrawer.occupancyPercent ?? 0}</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Ağırlık Yükü:</span>
-                    <strong>{selectedBinForDrawer.currentWeightKg} / {selectedBinForDrawer.maxWeightKg} kg</strong>
+                    <strong>{selectedBinForDrawer.currentWeightKg ?? 0} / {selectedBinForDrawer.maxWeightKg ?? 1000} kg</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Sıcaklık:</span>
-                    <strong>{selectedBinForDrawer.temperatureC}°C</strong>
+                    <strong>{selectedBinForDrawer.temperatureRange || (selectedBinForDrawer as any).temperatureC || "Standart"}</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500">Konum Koordinatı:</span>
@@ -1044,14 +1072,14 @@ export default function AdvancedWmsOperationsPage() {
                   </div>
                 </div>
 
-                {selectedBinForDrawer.currentSku ? (
+                {selectedBinForDrawer.storedSku || (selectedBinForDrawer as any).currentSku ? (
                   <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-2 text-xs">
                     <span className="text-slate-400 block text-[10px] uppercase font-semibold">İçindeki Ürün</span>
-                    <div className="font-bold text-slate-900 text-sm">{selectedBinForDrawer.currentItemName}</div>
-                    <div className="font-mono text-indigo-700">{selectedBinForDrawer.currentSku}</div>
+                    <div className="font-bold text-slate-900 text-sm">{selectedBinForDrawer.storedItemName || (selectedBinForDrawer as any).currentItemName}</div>
+                    <div className="font-mono text-indigo-700">{selectedBinForDrawer.storedSku || (selectedBinForDrawer as any).currentSku}</div>
                     <div className="flex justify-between pt-2 border-t text-slate-600">
-                      <span>Mevcut Adet: <strong>{selectedBinForDrawer.currentQty}</strong></span>
-                      <span>Lot: <strong className="font-mono">{selectedBinForDrawer.currentLot}</strong></span>
+                      <span>Mevcut Adet: <strong>{selectedBinForDrawer.storedQty ?? (selectedBinForDrawer as any).currentQty ?? 0}</strong></span>
+                      <span>Lot: <strong className="font-mono">{selectedBinForDrawer.storedLot || (selectedBinForDrawer as any).currentLot || "-"}</strong></span>
                     </div>
                   </div>
                 ) : (

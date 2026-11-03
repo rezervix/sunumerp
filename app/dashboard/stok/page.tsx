@@ -346,7 +346,7 @@ export default function CoreInventoryArchitecturePage() {
                   </Badge>
                 </div>
                 <p className="mt-1 text-sm text-slate-600 leading-relaxed">
-                  Şu an <span className="font-semibold text-slate-900">{kpiSummary.warehouseCount} depoda</span> toplam <span className="font-semibold text-slate-900">{kpiSummary.totalOnHand.toLocaleString("tr-TR")} adet</span> ürününüz var.
+                  Şu an <span className="font-semibold text-slate-900">{kpiSummary.warehouseCount} depoda</span> toplam <span className="font-semibold text-slate-900">{(kpiSummary.totalOnHand || 0).toLocaleString("tr-TR")} adet</span> ürününüz var.
                   {kpiSummary.criticalStockItems > 0 && (
                     <span className="text-amber-700 font-medium"> {kpiSummary.criticalStockItems} ürün kritik sipariş eşiğinin altında</span>
                   )}
@@ -422,12 +422,12 @@ export default function CoreInventoryArchitecturePage() {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-slate-900">
-                  {kpiSummary.totalOnHand.toLocaleString("tr-TR")}
+                  {(kpiSummary.totalOnHand || 0).toLocaleString("tr-TR")}
                 </span>
                 <span className="text-xs text-slate-500">Adet</span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
-                Satılabilir: <strong className="text-emerald-700">{kpiSummary.totalAvailable.toLocaleString("tr-TR")}</strong>
+                Satılabilir: <strong className="text-emerald-700">{(kpiSummary.totalAvailable || 0).toLocaleString("tr-TR")}</strong>
               </p>
             </CardContent>
           </Card>
@@ -440,7 +440,7 @@ export default function CoreInventoryArchitecturePage() {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-slate-900">
-                  ₺{Math.round(kpiSummary.totalInventoryValue).toLocaleString("tr-TR")}
+                  ₺{Math.round(kpiSummary.totalInventoryValue || 0).toLocaleString("tr-TR")}
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
@@ -548,7 +548,7 @@ export default function CoreInventoryArchitecturePage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="ALL">Tüm Depolar</SelectItem>
-                    {state.warehouses.map(w => (
+                    {(state.warehouses || []).map(w => (
                       <SelectItem key={w.id} value={w.id}>
                         {w.name}
                       </SelectItem>
@@ -820,7 +820,7 @@ export default function CoreInventoryArchitecturePage() {
               <div className="md:col-span-1 space-y-2">
                 <div className="text-xs font-semibold uppercase text-slate-500 px-1">Aktif Partiler</div>
                 <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                  {state.lotBatches.map(lot => {
+                  {(state.lotBatches || []).map(lot => {
                     const isSelected = lot.id === selectedLotId
                     const isExpiring = lot.daysUntilExpiry <= 15
                     return (
@@ -906,7 +906,7 @@ export default function CoreInventoryArchitecturePage() {
                           Uçtan Uca İzlenebilirlik Olayları (Traceability)
                         </h4>
                         <div className="border-l-2 border-indigo-200 ml-2 pl-4 space-y-3">
-                          {activeLotRecord.events.map(ev => (
+                          {(activeLotRecord.events || []).map(ev => (
                             <div key={ev.id} className="relative text-xs">
                               <div className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-indigo-600 ring-4 ring-white" />
                               <div className="font-semibold text-slate-800">{ev.title}</div>
@@ -951,7 +951,7 @@ export default function CoreInventoryArchitecturePage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {state.items.map(item => (
+                        {(state.items || []).map(item => (
                           <SelectItem key={item.id} value={item.id}>
                             {item.name} ({item.sku})
                           </SelectItem>
@@ -1044,7 +1044,7 @@ export default function CoreInventoryArchitecturePage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {state.items.map(item => (
+                          {(state.items || []).map(item => (
                             <SelectItem key={item.id} value={item.id}>
                               {item.name} ({item.sku})
                             </SelectItem>
@@ -1084,10 +1084,10 @@ export default function CoreInventoryArchitecturePage() {
                           <span className="text-xl font-bold text-slate-900">₺{res.unitCogs.toFixed(2)}</span>
                         </div>
                         <div className="mt-2 text-xs text-slate-600">
-                          Toplam Maliyet: <strong>₺{Math.round(res.totalCogs).toLocaleString("tr-TR")}</strong>
+                          Toplam Maliyet: <strong>₺{Math.round(res.totalCogs || 0).toLocaleString("tr-TR")}</strong>
                         </div>
                         <div className="mt-1 text-xs text-slate-500">
-                          Kalan Stok Değeri: ₺{Math.round(res.endingInventoryValue).toLocaleString("tr-TR")}
+                          Kalan Stok Değeri: ₺{Math.round(res.endingInventoryValue || 0).toLocaleString("tr-TR")}
                         </div>
                       </div>
                     ))}
@@ -1119,7 +1119,7 @@ export default function CoreInventoryArchitecturePage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {state.bomRecipes.map(b => (
+                          {(state.bomRecipes || []).map(b => (
                             <SelectItem key={b.id} value={b.id}>
                               {b.recipeName} ({b.finishedGoodSku})
                             </SelectItem>
@@ -1161,7 +1161,7 @@ export default function CoreInventoryArchitecturePage() {
 
                       <div>
                         <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
-                          Reçete Kalemleri & Girdiler ({selectedBom?.lines.length} bileşen)
+                          Reçete Kalemleri & Girdiler ({selectedBom?.lines?.length || 0} bileşen)
                         </h4>
                         <div className="border border-slate-200 rounded-lg overflow-hidden">
                           <table className="w-full text-xs text-left">
@@ -1175,7 +1175,7 @@ export default function CoreInventoryArchitecturePage() {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100">
-                              {selectedBom?.lines.map(line => (
+                              {(selectedBom?.lines || []).map(line => (
                                 <tr key={line.id}>
                                   <td className="p-2.5 font-medium text-slate-900">{line.componentName} ({line.sku})</td>
                                   <td className="p-2.5 text-slate-500">{line.componentType}</td>
@@ -1238,7 +1238,7 @@ export default function CoreInventoryArchitecturePage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {state.warehouses.map(w => (
+                        {(state.warehouses || []).map(w => (
                           <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>
                         ))}
                       </SelectContent>
@@ -1507,7 +1507,7 @@ export default function CoreInventoryArchitecturePage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {state.items.map(i => (
+                    {(state.items || []).map(i => (
                       <SelectItem key={i.id} value={i.id}>{i.name} ({i.sku})</SelectItem>
                     ))}
                   </SelectContent>

@@ -156,10 +156,9 @@ const handleApprovePr = (reqId: string) => {
       setState({ ...enterpriseInventoryService.getState() })
       if (consumeQty > 0) {
         toast.info(`${consumeQty} ${updated.unit} Konsinye Stok Tüketildi`, {
-            description: `Mülkiyet devri gerçekleşti. Hakediş borcuna ₺${(
-              consumeQty * updated.agreedUnitCostTry
-          ).toLocaleString("tr-TR")
-      } eklendi.`
+          description: `Mülkiyet devri gerçekleşti. Hakediş borcuna ₺${(
+            consumeQty * (updated.agreedUnitCostTry || 0)
+          ).toLocaleString("tr-TR")} eklendi.`
         })
       } else {
         toast.success(`${ updated.agreementNo } Konsinye Hakedişi Kapatıldı!`, {
@@ -248,7 +247,7 @@ const handleApprovePr = (reqId: string) => {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-slate-900">
-                  ₺{kpiStats.pendingPrValue.toLocaleString("tr-TR")}
+                  ₺{(kpiStats.pendingPrValue || 0).toLocaleString("tr-TR")}
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
@@ -265,7 +264,7 @@ const handleApprovePr = (reqId: string) => {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-slate-900">
-                  {kpiStats.totalConsignmentUnits.toLocaleString("tr-TR")}
+                  {(kpiStats.totalConsignmentUnits || 0).toLocaleString("tr-TR")}
                 </span>
                 <span className="text-xs text-slate-500">Adet Depoda</span>
               </div>
@@ -281,7 +280,7 @@ const handleApprovePr = (reqId: string) => {
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-2xl font-bold text-emerald-700">
-                  ₺{kpiStats.unbilledConsignmentTry.toLocaleString("tr-TR")}
+                  ₺{(kpiStats.unbilledConsignmentTry || 0).toLocaleString("tr-TR")}
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-500">Kullanılan emanet stoklar</p>
@@ -322,7 +321,7 @@ const handleApprovePr = (reqId: string) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {state.purchaseRequisitions.map(req => {
+                  {(state.purchaseRequisitions || []).map(req => {
                     const isApproved = req.status === "APPROVED_PO_SENT"
 
                     return (
@@ -349,7 +348,7 @@ const handleApprovePr = (reqId: string) => {
                         </td>
 
                         <td className="px-4 py-3.5 text-right font-bold text-slate-900">
-                          ₺{req.totalEstimatedTry.toLocaleString("tr-TR")}
+                          ₺{(req.totalEstimatedTry || 0).toLocaleString("tr-TR")}
                         </td>
 
                         <td className="px-4 py-3.5 text-center">
@@ -397,7 +396,7 @@ const handleApprovePr = (reqId: string) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {state.consignmentStocks.map(consign => (
+              {(state.consignmentStocks || []).map(consign => (
                 <Card key={consign.id} className="border-slate-200">
                   <CardHeader className="pb-3 border-b">
                     <div className="flex items-center justify-between">
@@ -433,7 +432,7 @@ const handleApprovePr = (reqId: string) => {
                       <div>
                         <span className="text-slate-400 block text-[10px]">Bekleyen Borç</span>
                         <span className="font-bold text-emerald-700 text-sm">
-                          ₺{consign.unbilledPayableTry.toLocaleString("tr-TR")}
+                          ₺{(consign.unbilledPayableTry || 0).toLocaleString("tr-TR")}
                         </span>
                       </div>
                     </div>
