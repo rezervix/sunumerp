@@ -22,6 +22,7 @@ import { StorageBinGrid } from './components/StorageBinGrid';
 import { InventoryCountManager } from './components/InventoryCountManager';
 import { InterWarehouseTransfers } from './components/InterWarehouseTransfers';
 import { CreateWmsTaskModal } from './components/CreateWmsTaskModal';
+import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 
 export default function WmsDashboardPage() {
   const [loading, setLoading] = useState(true);
@@ -121,6 +122,9 @@ export default function WmsDashboardPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+      {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
+      <InventoryModuleNav />
+
       {/* 1. ÜST ÖZET KARTLAR VE HIZLI BUTONLAR */}
       <WmsSummaryCards
         stats={stats}

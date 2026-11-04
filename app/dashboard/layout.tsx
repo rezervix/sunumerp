@@ -344,16 +344,14 @@ function SidebarContent({
     },
     {
       id: "stok",
-      title: "Stok, Depo & Tedarik",
+      title: "Stok ve Depo Yönetimi",
       icon: Boxes,
       items: [
-        { name: (t.nav as any).inventory || "Stok & Varyant Matrix", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
-        { name: (t.nav as any).wms || "WMS Depo Yönetimi", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
-        { name: (t.nav as any).wmsMobile || "WMS Mobil Terminal", href: "/dashboard/wms/mobil", icon: Smartphone, resource: "wms" },
-        { name: (t.nav as any).procurement || "Akıllı Satın Alma & ROP", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
-        { name: (t.nav as any).omnichannel || "Omnichannel & E-İrsaliye", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
-        { name: (t.nav as any).inventoryAi || "Stok AI & Foresight", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
-        { name: (t.nav as any).ecosystem || "API, Eklentiler & SaaS", href: "/dashboard/envanter-ekosistem", icon: Puzzle, resource: "ekosistem" },
+        { name: "1. Stok Kartları & Envanter", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
+        { name: "2. Depo Operasyonları & Sayım (WMS)", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
+        { name: "3. Satın Alma & Otomatik Sipariş", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
+        { name: "4. Çok Kanallı Satış & Sevkiyat", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
+        { name: "5. AI Analiz & Ayarlar", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
       ],
     },
     {

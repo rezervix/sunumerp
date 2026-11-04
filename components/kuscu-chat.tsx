@@ -3,8 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "@/lib/auth/context"
-import { executeInventoryAmaQuery } from "@/lib/services/inventoryAiEngine"
-import { Sparkles, Send, X, ArrowUpRight } from "lucide-react"
+import { Sparkles, Send, X, ArrowUpRight, Loader2 } from "lucide-react"
 
 interface ChatMessage {
   id: string
@@ -18,34 +17,68 @@ export function KuscuChat() {
   const { session } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome-msg",
       role: "assistant",
-      text: "Merhaba! Ben Daron (Ask Me Anything — AMA Stok, WMS & Finans Yapay Zekâ Asistanı). Bana doğal dille SKT/FEFO risklerini, kritik stokları (ROP), FIFO/LIFO maliyetlerini veya konsinye hakedişlerini sorabilirsiniz."
+      text: "Merhaba! Ben Daron (Ask Me Anything — AMA Stok, WMS & Tedarik Yapay Zekâ Asistanı). Bana doğal dille SKT/FEFO risklerini, kritik stokları (ROP), en çok satanları veya depo envanter değerlerini sorabilirsiniz."
     }
   ])
 
   if (!session) return null
 
-  const handleSend = (customQuery?: string) => {
+  const handleSend = async (customQuery?: string) => {
     const q = (customQuery ?? input).trim()
-    if (!q) return
+    if (!q || loading) return
     const userMsg: ChatMessage = {
       id: `u-${Date.now()}`,
       role: "user",
       text: q
     }
-    const result = executeInventoryAmaQuery(q)
-    const aiMsg: ChatMessage = {
-      id: `a-${Date.now() + 1}`,
-      role: "assistant",
-      text: result.answerNarrative,
-      intent: result.intentDetected,
-      rowsPreview: result.rows.slice(0, 3)
-    }
-    setMessages(prev => [...prev, userMsg, aiMsg])
+    setMessages(prev => [...prev, userMsg])
     setInput("")
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/inventory-ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "ama_query", question: q })
+      })
+      const json = await res.json()
+      const result = json.data
+      if (json.success && result) {
+        const aiMsg: ChatMessage = {
+          id: `a-${Date.now() + 1}`,
+          role: "assistant",
+          text: result.answerNarrative,
+          intent: result.intentDetected,
+          rowsPreview: (result.rows || []).slice(0, 3)
+        }
+        setMessages(prev => [...prev, aiMsg])
+      } else {
+        setMessages(prev => [
+          ...prev,
+          {
+            id: `a-${Date.now() + 1}`,
+            role: "assistant",
+            text: "Veritabanı sorgusu tamamlanamadı, lütfen tekrar deneyin."
+          }
+        ])
+      }
+    } catch {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `a-${Date.now() + 1}`,
+          role: "assistant",
+          text: "Sunucu ile bağlantı kurulamadı."
+        }
+      ])
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -72,7 +105,7 @@ export function KuscuChat() {
             <div className="flex-1">
               <h3 className="text-sm font-bold leading-none">Daron • Ask Me Anything (AMA)</h3>
               <p className="text-[11px] text-slate-300 mt-0.5">
-                Doğal Dil Stok, WMS & Maliyet AI Asistanı
+                Canlı Veritabanı Stok, WMS & Maliyet AI Asistanı
               </p>
             </div>
             <Link
@@ -119,6 +152,12 @@ export function KuscuChat() {
                 )}
               </div>
             ))}
+            {loading && (
+              <div className="flex items-center gap-2 text-xs text-slate-500 px-2">
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-600" />
+                <span>Veritabanı sorgulanıyor...</span>
+              </div>
+            )}
           </div>
 
           {/* Hızlı Sorgu Önerileri */}
@@ -126,8 +165,8 @@ export function KuscuChat() {
             {[
               "Kritik ROP stokları",
               "SKT & FEFO riskleri",
-              "FIFO vs LIFO farkı",
-              "Konsinye hakediş"
+              "En çok satanlar & devir hızı",
+              "Depo bazlı envanter değeri"
             ].map((q, idx) => (
               <button
                 key={idx}
@@ -151,7 +190,8 @@ export function KuscuChat() {
             />
             <button
               onClick={() => handleSend()}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg"
+              disabled={loading}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
             </button>

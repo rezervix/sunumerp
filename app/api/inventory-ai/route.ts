@@ -1,20 +1,27 @@
 import { NextResponse } from "next/server"
 import {
-  enterpriseInventoryService,
-  executeInventoryAmaQuery
-} from "@/lib/services/enterpriseInventorySuite"
+  getInventoryAiDashboardFromDb,
+  runRealAmaQueryOnDb,
+  createPurchaseRequisitionFromAiRecommendation
+} from "@/lib/services/inventoryAiServerDb"
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const state = enterpriseInventoryService.getState()
+    const { searchParams } = new URL(request.url)
+    const q = searchParams.get("q") || undefined
+    const dashboard = await getInventoryAiDashboardFromDb(q)
+
     return NextResponse.json({
       success: true,
-      forecasts: state.forecasts,
-      narrativeReports: state.narrativeReports
+      forecasts: dashboard.forecasts,
+      executiveBanner: dashboard.executiveBanner,
+      narrativeReports: dashboard.narrativeReports,
+      defaultAmaResult: dashboard.defaultAmaResult,
+      meta: dashboard.meta
     })
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: error.message || "AI analiz verileri alınamadı" },
+      { success: false, error: error.message || "AI analiz verileri veritabanından alınamadı" },
       { status: 500 }
     )
   }
@@ -25,33 +32,53 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { action, question } = body
 
-    if (action === "ama_query" || question) {
-      const result = executeInventoryAmaQuery(question || "")
+    if (action === "create_ai_requisition") {
+      const pr = await createPurchaseRequisitionFromAiRecommendation({
+        itemId: body.itemId,
+        sku: body.sku,
+        itemName: body.itemName,
+        recommendedQty: Number(body.recommendedQty || 10),
+        unit: body.unit || "Adet",
+        unitCostTry: Number(body.unitCostTry || 250),
+        reason: body.reason
+      })
+      return NextResponse.json({
+        success: true,
+        requisition: pr,
+        message: `${pr.requisitionNo} numaralı satın alma talebi veritabanına kaydedildi.`
+      })
+    }
 
-      // Opsiyonel: GEMINI_API_KEY tanımlıysa Gemini ile ek yönetici yorumu zenginleştirme
+    if (action === "ama_query" || question) {
+      const result = await runRealAmaQueryOnDb(question || "")
+
+      // Opsiyonel: GEMINI_API_KEY tanımlıysa gerçek veritabanı sonucunu Gemini ile doğal dilde özetle
       if (process.env.GEMINI_API_KEY) {
         try {
           const { GoogleGenerativeAI } = await import("@google/generative-ai")
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
           const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
-          const prompt = `Sen Sunum ERP Stok ve WMS Yapay Zeka Asistanısın. Kullanıcı sorusu: "${question}". Sistem veritabanı sonucu: ${result.answerNarrative}. Türkçe, 2-3 cümlelik net bir yönetici özeti ver.`
+          const prompt = `Sen Sunum ERP Stok ve WMS Yapay Zeka Asistanısın. Kullanıcı sorusu: "${question}". Gerçek veritabanı sorgu sonucu: ${result.answerNarrative}. Satırlar: ${JSON.stringify(result.rows.slice(0, 5))}. Türkçe, 2-3 cümlelik net bir yönetici özeti ver.`
           const aiResp = await model.generateContent(prompt)
           const text = aiResp.response.text()
           if (text && text.trim().length > 15) {
             result.answerNarrative = text.trim()
           }
         } catch {
-          // Deterministik NLQ motoru sonucu doğrudan kullanılır
+          // Gerçek veritabanı NLQ özeti doğrudan kullanılır
         }
       }
 
       return NextResponse.json({ success: true, data: result })
     }
 
+    const dashboard = await getInventoryAiDashboardFromDb()
     return NextResponse.json({
       success: true,
-      forecasts: enterpriseInventoryService.getState().forecasts,
-      narrativeReports: enterpriseInventoryService.getState().narrativeReports
+      forecasts: dashboard.forecasts,
+      executiveBanner: dashboard.executiveBanner,
+      narrativeReports: dashboard.narrativeReports,
+      defaultAmaResult: dashboard.defaultAmaResult
     })
   } catch (error: any) {
     return NextResponse.json(
@@ -60,4 +87,3 @@ export async function POST(request: Request) {
     )
   }
 }
-

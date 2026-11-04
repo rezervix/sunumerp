@@ -10,6 +10,8 @@ import {
   RefreshCw
 } from "lucide-react"
 
+import { InventoryModuleNav } from "./components/InventoryModuleNav"
+import { ExecutiveAiBanner } from "./components/ExecutiveAiBanner"
 import { StockSummaryCards } from "./components/StockSummaryCards"
 import { StockTable } from "./components/StockTable"
 import { CreateItemModal } from "./components/CreateItemModal"
@@ -19,6 +21,7 @@ import { ItemDetailDrawer } from "./components/ItemDetailDrawer"
 export default function StockDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [aiRefreshKey, setAiRefreshKey] = useState(0)
   const [items, setItems] = useState<any[]>([])
   const [warehouses, setWarehouses] = useState<any[]>([])
   const [stats, setStats] = useState({
@@ -56,6 +59,7 @@ export default function StockDashboardPage() {
             totalItemCount: 0
           }
         )
+        setAiRefreshKey(prev => prev + 1)
       } else {
         toast.error("Stok verileri alınamadı: " + (data.error || "Bilinmeyen hata"))
       }
@@ -88,15 +92,29 @@ export default function StockDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="min-h-screen bg-slate-50/60 p-4 sm:p-6 lg:p-8 space-y-5">
       {/* ══════════════════════════════════════════════════════════
-          1. ÜST BAR: BAŞLIK + 3 NET ÇALIŞAN AKSİYON BUTONU
+          0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON
+         ══════════════════════════════════════════════════════════ */}
+      <InventoryModuleNav />
+
+      {/* ══════════════════════════════════════════════════════════
+          1. GERÇEK VERİTABANI ANALİZİNDEN BESLENEN 2 CÜMLELİK
+             "AKILLI YÖNETİCİ ÖZETİ VE ÖNERİ" BANDI (FAZ 4)
+         ══════════════════════════════════════════════════════════ */}
+      <ExecutiveAiBanner
+        refreshTrigger={aiRefreshKey}
+        onQuickStockEntry={itemId => handleOpenQuickMove("IN", itemId)}
+      />
+
+      {/* ══════════════════════════════════════════════════════════
+          2. ÜST BAR: BAŞLIK + 3 NET ÇALIŞAN AKSİYON BUTONU
          ══════════════════════════════════════════════════════════ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-              Stok ve Envanter Yönetimi
+              Stok Kartları & Envanter Yönetimi
             </h1>
             <Button
               variant="ghost"
@@ -151,12 +169,12 @@ export default function StockDashboardPage() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          2. 4 NET ÖZET KART
+          3. 4 NET ÖZET KART
          ══════════════════════════════════════════════════════════ */}
       <StockSummaryCards stats={stats} loading={loading} />
 
       {/* ══════════════════════════════════════════════════════════
-          3. SADELEŞTİRİLMİŞ 6 SÜTUNLU ANA STOK TABLOSU
+          4. SADELEŞTİRİLMİŞ 6 SÜTUNLU ANA STOK TABLOSU
          ══════════════════════════════════════════════════════════ */}
       <StockTable
         items={items}
@@ -166,7 +184,7 @@ export default function StockDashboardPage() {
       />
 
       {/* ══════════════════════════════════════════════════════════
-          4. CANLI VERİTABANI DETAY ÇEKMECESİ (DRAWER)
+          5. CANLI VERİTABANI DETAY ÇEKMECESİ (DRAWER)
          ══════════════════════════════════════════════════════════ */}
       <ItemDetailDrawer
         itemId={selectedItemId}
@@ -179,7 +197,7 @@ export default function StockDashboardPage() {
       />
 
       {/* ══════════════════════════════════════════════════════════
-          5. "+ YENİ ÜRÜN TANIMLA" MODAL (4 TEMEL ALAN + GELİŞMİŞ)
+          6. "+ YENİ ÜRÜN TANIMLA" MODAL (4 TEMEL ALAN + GELİŞMİŞ)
          ══════════════════════════════════════════════════════════ */}
       <CreateItemModal
         isOpen={isCreateOpen}
@@ -193,7 +211,7 @@ export default function StockDashboardPage() {
       />
 
       {/* ══════════════════════════════════════════════════════════
-          6. HIZLI STOK GİRİŞİ / ÇIKIŞI MODAL
+          7. HIZLI STOK GİRİŞİ / ÇIKIŞI MODAL
          ══════════════════════════════════════════════════════════ */}
       <QuickStockMovementModal
         isOpen={isQuickMoveOpen}

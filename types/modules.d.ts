@@ -204,7 +204,35 @@ declare module 'lucide-react' {
   export const Lock: LucideIcon
   export const Unlock: LucideIcon
   export const Info: LucideIcon
+  export const Loader2: LucideIcon
+  export const ArrowDownLeft: LucideIcon
+  export const History: LucideIcon
+  export const Calendar: LucideIcon
+  export const DollarSign: LucideIcon
+  export const ArrowDownToLine: LucideIcon
+  export const Save: LucideIcon
+  export const Thermometer: LucideIcon
+  export const Weight: LucideIcon
+  export const Maximize2: LucideIcon
+  export const ArrowLeft: LucideIcon
+  export const SlidersHorizontal: LucideIcon
+  export const ScanLine: LucideIcon
+  export const Camera: LucideIcon
+  export const Package: LucideIcon
+  export const MinusCircle: LucideIcon
+  export const Building: LucideIcon
+  export const TrendingDown: LucideIcon
+  export const Key: LucideIcon
+  export const Server: LucideIcon
+  export const Flame: LucideIcon
 
   export const icons: Record<string, LucideIcon>
+}
+
+declare module '@google/generative-ai' {
+  export class GoogleGenerativeAI {
+    constructor(apiKey: string)
+    getGenerativeModel(config: { model: string; [key: string]: any }): any
+  }
 }
 

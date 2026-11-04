@@ -17,6 +17,7 @@ import { CriticalStockRopTable } from './components/CriticalStockRopTable';
 import { PurchaseRequisitionsList } from './components/PurchaseRequisitionsList';
 import { ConsignmentStockManager } from './components/ConsignmentStockManager';
 import { CreateRequisitionModal } from './components/CreateRequisitionModal';
+import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 
 export default function SmartProcurementAndConsignmentPage() {
   const [loading, setLoading] = useState(true);
@@ -112,6 +113,9 @@ export default function SmartProcurementAndConsignmentPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+      {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
+      <InventoryModuleNav />
+
       {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR */}
       <ProcurementSummaryCards
         stats={stats}

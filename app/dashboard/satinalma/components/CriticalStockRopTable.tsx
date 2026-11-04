@@ -152,7 +152,7 @@ export function CriticalStockRopTable({
             Kritik Stok & Otomatik Yeniden Sipariş (ROP) Listesi
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Dinamik $ROP = (\text{Talep} \times L) + SS$ formülü ile anlık tetiklenen ikmal önerileri
+            Dinamik ROP = (Günlük Talep × Tedarik Süresi) + Güvenlik Stoğu formülü ile anlık tetiklenen ikmal önerileri
           </p>
         </div>
 

@@ -19,6 +19,7 @@ import { OmnichannelOrdersManager } from './components/OmnichannelOrdersManager'
 import { RmaReturnManager } from './components/RmaReturnManager';
 import { SalesChannelsAndLogistics } from './components/SalesChannelsAndLogistics';
 import { EDocumentViewer } from './components/EDocumentViewer';
+import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 
 export default function OmnichannelLogisticsAndEDocumentPage() {
   const [loading, setLoading] = useState(true);
@@ -140,6 +141,9 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+      {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
+      <InventoryModuleNav />
+
       {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR */}
       <OmnichannelSummaryCards
         stats={stats}
