@@ -3,92 +3,48 @@
 
 @custom-variant dark (&:is(.dark, .dark *));
 
-/* ── Light Mode Tokens ───────────────────────────── */
-:root {
-  --background: #F7F3EE;
-  --foreground: #111827;
-  --card: #FFFFFF;
-  --card-foreground: #111827;
-  --popover: #FFFFFF;
-  --popover-foreground: #111827;
-  --primary: #D37112;
-  --primary-foreground: #FFFFFF;
-  --secondary: #F9E2B6;
-  --secondary-foreground: #111827;
-  --muted: #F0E8DD;
-  --muted-foreground: #6B6358;
-  --accent: #D32F28;
-  --accent-foreground: #FFFFFF;
-  --destructive: #E2483E;
-  --destructive-foreground: #FFFFFF;
-  --border: rgba(17, 24, 39, 0.08);
-  --input: rgba(17, 24, 39, 0.08);
-  --ring: #D37112;
-  --radius: 0.625rem;
-
-  /* Sidebar */
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #111827;
-  --sidebar-border: rgba(17, 24, 39, 0.07);
-  --sidebar-muted: #6B6B6B;
-  --sidebar-accent: #FEF2E7;
-  --sidebar-accent-foreground: #D37112;
-  --sidebar-primary: #D37112;
-
-  /* Header */
-  --header: #FFFFFF;
-  --header-border: rgba(17, 24, 39, 0.07);
-
-  /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-  /* Deprecated alias kept for compat */
-  --shadow-soft: var(--shadow-sm);
-}
-
-/* ── Dark Mode Tokens (Luxury Deep Navy-Black) ───── */
+/* ── Ambient Dark & Glassmorphism Tokens ─────────── */
+:root,
 .dark {
-  --background: #0D1324;
-  --foreground: #F8EFDF;
-  --card: #152033;
-  --card-foreground: #F8EFDF;
-  --popover: #1E2A3F;
-  --popover-foreground: #F8EFDF;
+  --background: #090D16;
+  --foreground: #F8FAFC;
+  --card: rgba(15, 23, 42, 0.65);
+  --card-foreground: #F8FAFC;
+  --popover: #0F172A;
+  --popover-foreground: #F8FAFC;
   --primary: #E8B44F;
   --primary-foreground: #0F172A;
-  --secondary: #243649;
-  --secondary-foreground: #D7CAB1;
-  --muted: #1D2838;
-  --muted-foreground: #9AA1B3;
-  --accent: #D65A4A;
-  --accent-foreground: #FFFFFF;
-  --destructive: #F57A6E;
+  --secondary: rgba(30, 41, 59, 0.7);
+  --secondary-foreground: #E2E8F0;
+  --muted: rgba(30, 41, 59, 0.6);
+  --muted-foreground: #94A3B8;
+  --accent: rgba(255, 255, 255, 0.08);
+  --accent-foreground: #F8FAFC;
+  --destructive: #F43F5E;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(248, 239, 226, 0.1);
-  --input: rgba(248, 239, 226, 0.08);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.08);
   --ring: #E8B44F;
+  --radius: 0.75rem;
 
   /* Sidebar */
-  --sidebar: #111C2D;
-  --sidebar-foreground: #F8EFDF;
-  --sidebar-border: rgba(248, 239, 226, 0.08);
-  --sidebar-muted: #A0A9BB;
-  --sidebar-accent: #283B58;
+  --sidebar: rgba(15, 23, 42, 0.6);
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-border: rgba(255, 255, 255, 0.12);
+  --sidebar-muted: #94A3B8;
+  --sidebar-accent: rgba(255, 255, 255, 0.08);
   --sidebar-accent-foreground: #E8B44F;
   --sidebar-primary: #E8B44F;
 
   /* Header */
-  --header: #111C2D;
-  --header-border: rgba(248, 239, 226, 0.08);
+  --header: rgba(15, 23, 42, 0.6);
+  --header-border: rgba(255, 255, 255, 0.12);
 
   /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.55);
 
   --shadow-soft: var(--shadow-sm);
 }
@@ -147,7 +103,13 @@
   }
 
   body {
-    background-color: var(--background);
+    background-color: #060913;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.11) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.13) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(232, 180, 79, 0.08) 0px, transparent 55%),
+      linear-gradient(135deg, #060913 0%, #0b1222 50%, #0f172a 100%);
+    background-attachment: fixed;
     color: var(--foreground);
     height: 100vh;
     overflow: hidden;
@@ -237,3 +199,21 @@
 
 .sparkline-down { stroke: #ef4444; }
 .sparkline-neutral { stroke: #64748b; }
+
+/* ── Glassmorphism Utilities ─────────────────────── */
+.glass-panel {
+  @apply bg-slate-900/60 backdrop-blur-xl border border-white/15 shadow-xl;
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg transition-all;
+}
+
+.glass-input {
+  @apply bg-black/20 backdrop-blur-sm border border-white/10 focus:border-white/30 text-white placeholder:text-white/40 rounded-xl;
+}
+
+.glass-table-container {
+  @apply bg-slate-950/80 backdrop-blur-lg border border-white/10 rounded-2xl;
+}
+

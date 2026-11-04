@@ -98,49 +98,49 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
-      <div>
-        <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <Handshake className="w-5 h-5 text-blue-600" />
+    <div className="space-y-4">
+      <div className="glass-panel p-5 rounded-2xl">
+        <h3 className="text-base font-bold text-white flex items-center gap-2">
+          <Handshake className="w-5 h-5 text-sky-400" />
           Konsinye (Emanet) Stok & Tedarikçi Hakediş Yönetimi
         </h3>
-        <p className="text-xs text-slate-500 mt-0.5">
+        <p className="text-xs text-white/60 mt-0.5">
           Mülkiyeti tedarikçide olan, deponuzda bulunan ve satıldıkça hakedişi tahakkuk eden emanet stoklar
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {consignmentStocks.length === 0 ? (
-          <div className="text-center py-10 text-slate-400 text-xs">
+          <div className="text-center py-10 glass-card rounded-2xl text-white/45 text-xs">
             Kayıtlı konsinye stok anlaşması bulunamadı.
           </div>
         ) : (
           consignmentStocks.map((item) => (
             <div
               key={item.id}
-              className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-slate-50 transition"
+              className="glass-card p-5 rounded-2xl space-y-3"
             >
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-3 border-b border-slate-200/60 dark:border-slate-800">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600">
-                    <Handshake className="w-4 h-4" />
+                  <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                    <Handshake className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white text-sm">
+                      <span className="font-bold text-white text-sm">
                         {item.item?.name || 'Ürün'}
                       </span>
-                      <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                      <span className="rounded-full px-3 py-0.5 text-xs font-mono bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
                         {item.agreementNo}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                      <Building className="w-3 h-3 text-slate-400" />
+                    <div className="text-xs text-white/60 flex items-center gap-2 mt-1">
+                      <Building className="w-3.5 h-3.5 text-white/40" />
                       <span>{item.supplier?.name || 'Tedarikçi'}</span>
                       {item.binCode && (
                         <>
                           <span>•</span>
-                          <span>Hücre: <strong>{item.binCode}</strong></span>
+                          <span>Hücre: <strong className="text-white">{item.binCode}</strong></span>
                         </>
                       )}
                     </div>
@@ -149,23 +149,23 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
 
                 {/* Stok Miktarları */}
                 <div className="grid grid-cols-3 gap-3 text-xs w-full lg:w-auto">
-                  <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-right">
-                    <div className="text-[11px] text-slate-400">Teslim Alınan</div>
-                    <div className="font-bold text-slate-900 dark:text-white">
+                  <div className="bg-black/25 p-3 rounded-xl border border-white/10 text-right">
+                    <div className="text-[11px] text-white/45">Teslim Alınan</div>
+                    <div className="font-bold text-white mt-0.5">
                       {item.receivedConsignQty} {item.item?.baseUnit || 'Adet'}
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-right">
-                    <div className="text-[11px] text-slate-400">Kullanılabilir Konsinye</div>
-                    <div className="font-bold text-blue-600 dark:text-blue-400">
+                  <div className="bg-black/25 p-3 rounded-xl border border-white/10 text-right">
+                    <div className="text-[11px] text-white/45">Kullanılabilir Konsinye</div>
+                    <div className="font-bold text-sky-400 mt-0.5">
                       {item.availableConsignQty} {item.item?.baseUnit || 'Adet'}
                     </div>
                   </div>
 
-                  <div className="bg-white dark:bg-slate-800/80 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-right">
-                    <div className="text-[11px] text-slate-400">Satılan / Tüketilen</div>
-                    <div className="font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="bg-black/25 p-3 rounded-xl border border-white/10 text-right">
+                    <div className="text-[11px] text-white/45">Satılan / Tüketilen</div>
+                    <div className="font-bold text-emerald-400 mt-0.5">
                       {item.consumedOrSoldQty} {item.item?.baseUnit || 'Adet'}
                     </div>
                   </div>
@@ -174,8 +174,8 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
                 {/* Hakediş ve Aksiyon Butonu */}
                 <div className="flex items-center gap-3 w-full lg:w-auto justify-end">
                   <div className="text-right">
-                    <div className="text-[11px] text-slate-400">Ödenecek Hakediş</div>
-                    <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <div className="text-[11px] text-white/45">Ödenecek Hakediş</div>
+                    <div className="text-sm font-bold text-emerald-400">
                       ₺{Number(item.unbilledPayableAmt || 0).toLocaleString('tr-TR')}
                     </div>
                   </div>
@@ -186,7 +186,7 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
                       setConsumeQty('5');
                     }}
                     disabled={item.availableConsignQty <= 0}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition active:scale-95 disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-sky-500/20 transition active:scale-95 disabled:opacity-50"
                   >
                     <MinusCircle className="w-3.5 h-3.5" />
                     Satış / Sarfiyat Düş
@@ -194,8 +194,8 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
                 </div>
               </div>
 
-              <div className="mt-2.5 text-[11px] text-slate-400 flex items-center justify-between">
-                <span>Anlaşılan Birim Maliyet: <strong>₺{item.agreedUnitCost}</strong> / Adet</span>
+              <div className="text-[11px] text-white/50 flex items-center justify-between">
+                <span>Anlaşılan Birim Maliyet: <strong className="text-white">₺{item.agreedUnitCost}</strong> / Adet</span>
                 {item.lastSettlementDate && (
                   <span>Son Hakediş Tarihi: {new Date(item.lastSettlementDate).toLocaleString('tr-TR')}</span>
                 )}
@@ -207,39 +207,39 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
 
       {/* Sarfiyat Düşme Modalı */}
       {selectedRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <MinusCircle className="w-4 h-4 text-blue-600" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl w-full max-w-md p-6 shadow-2xl relative text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <MinusCircle className="w-4 h-4 text-sky-400" />
                 Konsinye Stok Tüketimi / Satış Kaydı
               </h3>
               <button
                 onClick={() => setSelectedRecord(null)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
+                className="text-white/50 hover:text-white text-lg font-bold"
               >
                 &times;
               </button>
             </div>
 
-            <form onSubmit={handleSettleSubmit} className="mt-4 space-y-3">
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl text-xs space-y-1">
-                <div className="font-semibold text-slate-900 dark:text-white">
+            <form onSubmit={handleSettleSubmit} className="mt-4 space-y-3.5">
+              <div className="p-3.5 bg-white/5 border border-white/10 rounded-xl text-xs space-y-1">
+                <div className="font-semibold text-white">
                   {selectedRecord.item?.name}
                 </div>
-                <div className="text-slate-500">
+                <div className="text-white/60">
                   Tedarikçi: {selectedRecord.supplier?.name}
                 </div>
-                <div className="text-blue-600 font-bold">
+                <div className="text-sky-400 font-bold">
                   Mevcut Konsinye Stok: {selectedRecord.availableConsignQty} Adet
                 </div>
-                <div className="text-slate-600">
+                <div className="text-white/70">
                   Birim Maliyet: ₺{selectedRecord.agreedUnitCost}
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-semibold text-white/70 mb-1.5">
                   Kullanılan / Satılan Miktar *
                 </label>
                 <input
@@ -249,38 +249,38 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
                   value={consumeQty}
                   onChange={(e) => setConsumeQty(e.target.value)}
                   required
-                  className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs glass-input p-2.5 font-bold focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-semibold text-white/70 mb-1.5">
                   Kullanım Açıklaması / Sipariş No
                 </label>
                 <input
                   type="text"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs glass-input p-2.5 focus:outline-none"
                 />
               </div>
 
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-xs text-emerald-800 dark:text-emerald-300">
+              <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 rounded-xl text-xs text-emerald-300">
                 Tahakkuk Edecek Hakediş: <strong>₺{(parseFloat(consumeQty) || 0) * selectedRecord.agreedUnitCost}</strong>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-white/10 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setSelectedRecord(null)}
-                  className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-100 transition"
+                  className="px-4 py-2 border border-white/15 bg-white/5 text-white/80 text-xs font-semibold rounded-xl hover:bg-white/10 transition"
                 >
                   Vazgeç
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition shadow-sm disabled:opacity-50"
+                  className="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-xl transition shadow-lg shadow-sky-500/20 disabled:opacity-50"
                 >
                   {submitting ? 'İşleniyor...' : 'Stoğu Düş ve Hakedişi Kaydet'}
                 </button>
@@ -292,4 +292,3 @@ export function ConsignmentStockManager({ consignmentStocks, onUpdated }: Props)
     </div>
   );
 }
-

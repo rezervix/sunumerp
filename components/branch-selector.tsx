@@ -23,21 +23,21 @@ export function BranchSelector({ branches, currentBranch, onBranchChange }: Bran
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between glass-input hover:bg-white/10 text-white border-white/10 h-9 px-3 text-xs font-medium"
         >
           <div className="flex items-center gap-2 truncate">
             {currentBranch && (
               <div
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-2 ring-white/20"
                 style={{ backgroundColor: currentBranch.themeColor }}
               />
             )}
             <span className="truncate">{currentBranch ? currentBranch.name : "Şube seçin..."}</span>
           </div>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-60" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] p-0" align="start">
+      <PopoverContent className="w-[260px] p-0 glass-panel rounded-xl overflow-hidden border-white/15" align="start">
         <Command>
           <CommandInput placeholder="Şube ara..." />
           <CommandList>

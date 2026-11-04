@@ -77,77 +77,80 @@ export function ItemDetailDrawer({
 
   return (
     <Sheet open={isOpen} onOpenChange={open => !open && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-xl p-0 overflow-y-auto bg-white flex flex-col">
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-xl p-0 overflow-y-auto backdrop-blur-xl bg-slate-950/85 border-l border-white/15 shadow-2xl flex flex-col text-white"
+      >
         {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-slate-500 gap-2">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-white/60 gap-2">
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
             <p className="text-xs">Veritabanından ürün ve maliyet katmanları çekiliyor...</p>
           </div>
         ) : !item ? (
-          <div className="p-6 text-center text-xs text-slate-500">Ürün bilgisi yüklenemedi.</div>
+          <div className="p-6 text-center text-xs text-white/50">Ürün bilgisi yüklenemedi.</div>
         ) : (
           <>
             {/* 1. ÇEKMECE ÜST BİLGİ ALANI */}
-            <div className="p-6 border-b border-slate-200 bg-slate-50/50 space-y-3">
+            <div className="p-6 border-b border-white/10 bg-white/[0.03] space-y-3">
               <SheetHeader className="text-left space-y-1">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-[11px] font-mono bg-white">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-mono text-[11px] bg-white/10 text-white border border-white/15 rounded-full px-3 py-0.5">
                     {item.sku}
-                  </Badge>
-                  <Badge variant="secondary" className="text-[11px]">
+                  </span>
+                  <span className="bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full px-3 py-0.5 text-[11px]">
                     {item.category}
-                  </Badge>
+                  </span>
                   {item.trackExpiry && (
-                    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 text-[10px] border-amber-200">
+                    <span className="bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full px-3 py-0.5 text-[10px] font-semibold">
                       SKT Hassas
-                    </Badge>
+                    </span>
                   )}
                 </div>
-                <SheetTitle className="text-lg font-bold text-slate-900 leading-snug">
+                <SheetTitle className="text-lg font-bold text-white leading-snug">
                   {item.name}
                 </SheetTitle>
-                <SheetDescription className="text-xs text-slate-500">
-                  Barkod: <span className="font-mono text-slate-700">{item.barcode || item.sku}</span> | Değerleme: <span className="font-medium text-slate-700">{item.valuationMethod}</span>
+                <SheetDescription className="text-xs text-white/55">
+                  Barkod: <span className="font-mono text-white/85">{item.barcode || item.sku}</span> | Değerleme: <span className="font-medium text-emerald-400">{item.valuationMethod}</span>
                 </SheetDescription>
               </SheetHeader>
 
               {/* Hızlı Özet İstatistikleri */}
-              <div className="grid grid-cols-3 gap-2 pt-2">
-                <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
+              <div className="grid grid-cols-3 gap-2.5 pt-2">
+                <div className="p-3 rounded-xl glass-card">
+                  <span className="text-[10px] font-medium text-white/50 uppercase tracking-wider block">
                     Mevcut Stok
                   </span>
-                  <span className="text-base font-bold text-slate-900">
+                  <span className="text-base font-bold text-white mt-0.5 block">
                     {(item.stockBalances || []).reduce((s: number, b: any) => s + Number(b.onHandQty || 0), 0)} {item.baseUnit}
                   </span>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
+                <div className="p-3 rounded-xl glass-card">
+                  <span className="text-[10px] font-medium text-white/50 uppercase tracking-wider block">
                     Birim Maliyet (FIFO)
                   </span>
-                  <span className="text-base font-bold text-emerald-600">
+                  <span className="text-base font-bold text-emerald-400 mt-0.5 block">
                     {formatCurrency(item.fifoUnitCost || item.standardCost || 0)}
                   </span>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-white border border-slate-200">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
+                <div className="p-3 rounded-xl glass-card">
+                  <span className="text-[10px] font-medium text-white/50 uppercase tracking-wider block">
                     Satış Fiyatı
                   </span>
-                  <span className="text-base font-bold text-blue-600">
+                  <span className="text-base font-bold text-sky-400 mt-0.5 block">
                     {formatCurrency(item.salesPrice || 0)}
                   </span>
                 </div>
               </div>
 
               {/* Çekmece İçi Hızlı Aksiyon Butonları */}
-              <div className="flex gap-2 pt-1">
+              <div className="flex gap-2.5 pt-1">
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => onQuickMove("IN", item.id)}
-                  className="flex-1 text-xs gap-1.5 text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+                  className="flex-1 text-xs gap-1.5 bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25 rounded-xl cursor-pointer"
                 >
                   <ArrowDownLeft className="h-3.5 w-3.5" />
                   Stok Girişi Yap
@@ -156,7 +159,7 @@ export function ItemDetailDrawer({
                   size="sm"
                   variant="outline"
                   onClick={() => onQuickMove("OUT", item.id)}
-                  className="flex-1 text-xs gap-1.5 text-blue-700 border-blue-200 hover:bg-blue-50"
+                  className="flex-1 text-xs gap-1.5 bg-sky-500/15 text-sky-300 border-sky-500/30 hover:bg-sky-500/25 rounded-xl cursor-pointer"
                 >
                   <ArrowUpRight className="h-3.5 w-3.5" />
                   Stok Çıkışı Yap
@@ -167,7 +170,7 @@ export function ItemDetailDrawer({
             {/* 2. ÇEKMECE SEKMELERİ */}
             <div className="flex-1 p-6">
               <Tabs defaultValue="locations" className="w-full">
-                <TabsList className="grid grid-cols-4 w-full bg-slate-100 p-0.5 mb-4">
+                <TabsList className="grid grid-cols-4 w-full bg-black/30 border border-white/10 p-1 rounded-xl mb-4">
                   <TabsTrigger value="locations" className="text-xs py-1.5 gap-1">
                     <Warehouse className="h-3.5 w-3.5" />
                     Depo / Raf
@@ -188,12 +191,12 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 1: DEPO VE RAF DAĞILIMI */}
                 <TabsContent value="locations" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-white/80 uppercase tracking-wide">
                     Depo ve Raf Bazında Anlık Stok
                   </h4>
 
                   {(!item.stockBalances || item.stockBalances.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-slate-400 border border-dashed rounded-lg">
+                    <div className="text-center py-6 text-xs text-white/45 border border-dashed border-white/15 rounded-xl">
                       Bu ürüne ait henüz kayıtlı stok hareketi bulunmuyor.
                     </div>
                   ) : (
@@ -201,27 +204,27 @@ export function ItemDetailDrawer({
                       {item.stockBalances.map((bal: any) => (
                         <div
                           key={bal.id}
-                          className="p-3 rounded-lg border border-slate-200 bg-white hover:border-slate-300 transition-colors flex items-center justify-between"
+                          className="p-3.5 rounded-xl glass-card hover:border-white/25 transition-colors flex items-center justify-between"
                         >
-                          <div className="space-y-0.5">
-                            <span className="text-xs font-medium text-slate-900 block">
+                          <div className="space-y-1">
+                            <span className="text-xs font-semibold text-white block">
                               {bal.warehouse?.name || "Depo"}
                             </span>
-                            <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                            <div className="flex items-center gap-1.5 text-[11px] text-white/55">
                               <span>Raf / Lokasyon:</span>
-                              <Badge variant="secondary" className="font-mono text-[10px] px-1.5 py-0">
+                              <span className="font-mono text-[10px] bg-white/10 text-white/90 border border-white/15 rounded-full px-2 py-0.5">
                                 {bal.storageBin?.code || bal.binCode || "Genel Depo"}
-                              </Badge>
+                              </span>
                               {bal.storageBin?.binPosition && (
-                                <span className="text-slate-400">({bal.storageBin.binPosition})</span>
+                                <span className="text-white/45">({bal.storageBin.binPosition})</span>
                               )}
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-sm font-bold text-slate-900 block">
+                            <span className="text-sm font-bold text-white block">
                               {bal.onHandQty} {item.baseUnit}
                             </span>
-                            <span className="text-[10px] text-emerald-600 block">
+                            <span className="text-[10px] text-emerald-400 block">
                               {bal.availableQty} kullanılabilir
                             </span>
                           </div>
@@ -234,16 +237,16 @@ export function ItemDetailDrawer({
                 {/* SEKME 2: FIFO / LIFO MALİYET KATMANLARI */}
                 <TabsContent value="costlayers" className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-white/80 uppercase tracking-wide">
                       Aktif Maliyet Katmanları (CostLayers)
                     </h4>
-                    <span className="text-[11px] text-slate-500">
-                      Yöntem: <strong>{item.valuationMethod}</strong>
+                    <span className="text-[11px] text-white/55">
+                      Yöntem: <strong className="text-emerald-400">{item.valuationMethod}</strong>
                     </span>
                   </div>
 
                   {(!item.costLayers || item.costLayers.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-slate-400 border border-dashed rounded-lg">
+                    <div className="text-center py-6 text-xs text-white/45 border border-dashed border-white/15 rounded-xl">
                       Aktif maliyet katmanı bulunmuyor.
                     </div>
                   ) : (
@@ -251,24 +254,24 @@ export function ItemDetailDrawer({
                       {item.costLayers.map((layer: any, idx: number) => (
                         <div
                           key={layer.id}
-                          className="p-3 rounded-lg border border-slate-200 bg-white space-y-1.5"
+                          className="p-3.5 rounded-xl glass-card space-y-1.5"
                         >
                           <div className="flex items-center justify-between text-xs">
                             <div className="flex items-center gap-2">
-                              <span className="h-5 w-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-bold">
+                              <span className="h-5 w-5 rounded-full bg-white/10 text-white/80 flex items-center justify-center text-[10px] font-bold">
                                 {idx + 1}
                               </span>
-                              <span className="font-mono font-medium text-slate-800">
+                              <span className="font-mono font-medium text-white">
                                 {layer.receiptDocNo}
                               </span>
                             </div>
-                            <span className="font-semibold text-emerald-600">
+                            <span className="font-semibold text-emerald-400">
                               {formatCurrency(layer.unitCost)} / {item.baseUnit}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+                          <div className="flex items-center justify-between text-[11px] text-white/55 pt-1 border-t border-white/10">
                             <span>Giriş: {new Date(layer.layerDate).toLocaleDateString("tr-TR")}</span>
-                            <span>Kalan: <strong>{layer.remainingQty}</strong> / {layer.initialQty} {item.baseUnit}</span>
+                            <span>Kalan: <strong className="text-white">{layer.remainingQty}</strong> / {layer.initialQty} {item.baseUnit}</span>
                           </div>
                         </div>
                       ))}
@@ -277,12 +280,12 @@ export function ItemDetailDrawer({
 
                   {/* Canlı Değerleme Özeti */}
                   {valuation && (
-                    <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs space-y-1.5">
-                      <span className="font-semibold text-slate-800 block">Değerleme Karşılaştırması:</span>
-                      <div className="grid grid-cols-3 gap-2 text-[11px]">
-                        <div>FIFO Maliyeti: <strong className="text-emerald-700">{formatCurrency(valuation.fifoUnitCost)}</strong></div>
-                        <div>LIFO Maliyeti: <strong className="text-blue-700">{formatCurrency(valuation.lifoUnitCost)}</strong></div>
-                        <div>Ağırlıklı Ort: <strong className="text-slate-800">{formatCurrency(valuation.weightedAvgUnitCost)}</strong></div>
+                    <div className="mt-4 p-3.5 rounded-xl glass-card text-xs space-y-1.5">
+                      <span className="font-semibold text-white/90 block">Değerleme Karşılaştırması:</span>
+                      <div className="grid grid-cols-3 gap-2 text-[11px] text-white/65">
+                        <div>FIFO Maliyeti: <strong className="text-emerald-400">{formatCurrency(valuation.fifoUnitCost)}</strong></div>
+                        <div>LIFO Maliyeti: <strong className="text-sky-400">{formatCurrency(valuation.lifoUnitCost)}</strong></div>
+                        <div>Ağırlıklı Ort: <strong className="text-white">{formatCurrency(valuation.weightedAvgUnitCost)}</strong></div>
                       </div>
                     </div>
                   )}
@@ -290,12 +293,12 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 3: ÇOKLU BİRİM ÇEVRİMLERİ */}
                 <TabsContent value="units" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-white/80 uppercase tracking-wide">
                     Tanımlı Birim Çevrim Katsayıları
                   </h4>
 
                   {(!item.unitConversions || item.unitConversions.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-slate-400 border border-dashed rounded-lg">
+                    <div className="text-center py-6 text-xs text-white/45 border border-dashed border-white/15 rounded-xl">
                       Bu ürüne tanımlanmış ek birim çevrimi yok. Baz birim: {item.baseUnit}
                     </div>
                   ) : (
@@ -304,16 +307,16 @@ export function ItemDetailDrawer({
                         {item.unitConversions.map((uc: any) => (
                           <div
                             key={uc.id}
-                            className="p-2.5 rounded-lg border border-slate-200 bg-white flex items-center justify-between text-xs"
+                            className="p-3 rounded-xl glass-card flex items-center justify-between text-xs"
                           >
-                            <span className="font-medium text-slate-800">
+                            <span className="font-medium text-white">
                               1 {uc.fromUnit} = {uc.multiplier} {item.baseUnit}
                             </span>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => handleQuickConvert(uc)}
-                              className="text-[11px] h-7 text-blue-600 hover:text-blue-700"
+                              className="text-[11px] h-7 text-sky-400 hover:text-sky-300 hover:bg-sky-500/15"
                             >
                               Hesapla
                             </Button>
@@ -322,26 +325,26 @@ export function ItemDetailDrawer({
                       </div>
 
                       {/* Hızlı Çevrim Aracı */}
-                      <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
-                        <span className="text-xs font-semibold text-slate-700 block">Canlı Birim Dönüştürücü:</span>
+                      <div className="p-3.5 glass-card rounded-xl space-y-2">
+                        <span className="text-xs font-semibold text-white/80 block">Canlı Birim Dönüştürücü:</span>
                         <div className="flex gap-2">
                           <Input
                             type="number"
                             value={convertQty}
                             onChange={e => setConvertQty(e.target.value)}
                             placeholder="Miktar"
-                            className="text-xs h-8 bg-white w-24"
+                            className="text-xs h-8 glass-input w-24"
                           />
                           <Button
                             size="sm"
                             onClick={() => handleQuickConvert(item.unitConversions[0])}
-                            className="text-xs h-8 bg-slate-800 text-white hover:bg-slate-900"
+                            className="text-xs h-8 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold"
                           >
                             Çevir
                           </Button>
                         </div>
                         {convertedResult && (
-                          <div className="text-xs font-medium text-emerald-700 bg-emerald-50 p-2 rounded border border-emerald-200">
+                          <div className="text-xs font-medium text-emerald-300 bg-emerald-500/15 p-2 rounded-xl border border-emerald-500/30">
                             {convertedResult}
                           </div>
                         )}
@@ -352,12 +355,12 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 4: LOT VE SKT GEÇMİŞİ */}
                 <TabsContent value="lots" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-800 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-white/80 uppercase tracking-wide">
                     Parti, Lot ve Son Kullanma Tarihleri
                   </h4>
 
                   {(!item.lotSerials || item.lotSerials.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-slate-400 border border-dashed rounded-lg">
+                    <div className="text-center py-6 text-xs text-white/45 border border-dashed border-white/15 rounded-xl">
                       Bu üründe henüz kayıtlı Lot / Seri bulunmuyor.
                     </div>
                   ) : (
@@ -370,30 +373,30 @@ export function ItemDetailDrawer({
                         return (
                           <div
                             key={lot.id}
-                            className="p-3 rounded-lg border border-slate-200 bg-white space-y-1.5"
+                            className="p-3.5 rounded-xl glass-card space-y-1.5"
                           >
                             <div className="flex items-center justify-between text-xs">
-                              <span className="font-mono font-bold text-slate-900">
+                              <span className="font-mono font-bold text-white">
                                 {lot.lotNumber}
                               </span>
                               {daysLeft !== null && (
-                                <Badge className={`text-[10px] ${
+                                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold border ${
                                   daysLeft <= 7
-                                    ? "bg-rose-100 text-rose-700 border-rose-200"
+                                    ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
                                     : daysLeft <= 15
-                                    ? "bg-amber-100 text-amber-700 border-amber-200"
-                                    : "bg-emerald-100 text-emerald-700 border-emerald-200"
+                                    ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                                    : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
                                 }`}>
                                   {daysLeft <= 0 ? "SKT Doldu!" : `${daysLeft} gün kaldı`}
-                                </Badge>
+                                </span>
                               )}
                             </div>
-                            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+                            <div className="flex items-center justify-between text-[11px] text-white/55 pt-1 border-t border-white/10">
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
                                 {lot.expiryDate ? new Date(lot.expiryDate).toLocaleDateString("tr-TR") : "Süresiz"}
                               </span>
-                              <span>Kalan: <strong>{lot.remainingQty}</strong> {item.baseUnit}</span>
+                              <span>Kalan: <strong className="text-white">{lot.remainingQty}</strong> {item.baseUnit}</span>
                             </div>
                           </div>
                         )
@@ -404,25 +407,25 @@ export function ItemDetailDrawer({
                   {/* Son Hareketler */}
                   {item.stockMovements && item.stockMovements.length > 0 && (
                     <div className="pt-4 space-y-2">
-                      <div className="flex items-center gap-1 text-xs font-semibold text-slate-700">
-                        <History className="h-3.5 w-3.5" />
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-white/80">
+                        <History className="h-3.5 w-3.5 text-sky-400" />
                         Son Stok Hareketleri
                       </div>
-                      <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+                      <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                         {item.stockMovements.map((move: any) => (
                           <div
                             key={move.id}
-                            className="text-[11px] p-2 rounded bg-slate-50 border flex items-center justify-between"
+                            className="text-[11px] p-2.5 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-between"
                           >
                             <div>
-                              <span className={move.movementType === "RECEIPT" ? "text-emerald-600 font-semibold" : "text-blue-600 font-semibold"}>
+                              <span className={move.movementType === "RECEIPT" ? "text-emerald-400 font-semibold" : "text-sky-400 font-semibold"}>
                                 {move.movementType === "RECEIPT" ? "Giriş (+)" : "Çıkış (-)"}
                               </span>
-                              <span className="text-slate-500 ml-1.5">
+                              <span className="text-white/50 ml-1.5">
                                 {new Date(move.createdAt).toLocaleDateString("tr-TR")}
                               </span>
                             </div>
-                            <span className="font-mono font-medium">
+                            <span className="font-mono font-medium text-white">
                               {move.quantity} {move.unit}
                             </span>
                           </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Globe,
   RefreshCw,
@@ -37,17 +38,17 @@ export function OmnichannelSummaryCards({
   return (
     <div className="space-y-4">
       {/* Üst Başlık ve Hızlı Aksiyon Butonları */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-panel p-5 rounded-2xl">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
               Omnichannel Sipariş, Lojistik & E-Dönüşüm
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+            <span className="bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full px-3 py-0.5 text-xs font-semibold">
               Canlı Pazaryeri & Kargo
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-white/60 mt-1">
             Trendyol, Hepsiburada, Shopify ve B2B sipariş karşılama, parçalı sevkiyat, muadil ürün ve RMA iade yönetimi
           </p>
         </div>
@@ -56,7 +57,7 @@ export function OmnichannelSummaryCards({
           <button
             onClick={onSyncAll}
             disabled={isSyncing}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition active:scale-95 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-lg shadow-sky-500/25 transition active:scale-95 disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
             {isSyncing ? 'Eşitleniyor...' : 'Tüm Kanalları Eşitle'}
@@ -64,9 +65,9 @@ export function OmnichannelSummaryCards({
 
           <button
             onClick={onNewEDocumentClick}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs sm:text-sm font-semibold rounded-xl transition active:scale-95"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-indigo-400" />
             Yeni E-İrsaliye Kes
           </button>
         </div>
@@ -75,83 +76,94 @@ export function OmnichannelSummaryCards({
       {/* 4 Ana Metrik Kartı */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Kart 1: Bağlı Kanallar ve Günlük Sipariş */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm hover:shadow transition">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Aktif Satış Kanalları</span>
-            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 flex items-center justify-center text-blue-600">
-              <Globe className="w-4 h-4" />
+            <span className="text-sm text-white/60">Aktif Satış Kanalları</span>
+            <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+              <Globe className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-white mt-1">
               {stats.connectedChannelsCount} Kanal
             </span>
-            <span className="text-xs font-semibold text-emerald-600">
+            <span className="text-xs font-semibold text-emerald-400">
               ({stats.totalDailyOrders} Sipariş/Gün)
             </span>
           </div>
-          <div className="mt-1 text-xs text-slate-400">
+          <div className="mt-3 text-xs text-white/50">
             Trendyol, Hepsiburada, Shopify, B2B
           </div>
-        </div>
+        </motion.div>
 
         {/* Kart 2: Günlük Ciro */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm hover:shadow transition">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Günlük Omnichannel Ciro</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-600">
-              <TrendingUp className="w-4 h-4" />
+            <span className="text-sm text-white/60">Günlük Omnichannel Ciro</span>
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <TrendingUp className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-white mt-1">
               ₺{stats.totalDailyRevenue.toLocaleString('tr-TR')}
             </span>
           </div>
-          <div className="mt-1 text-xs text-slate-400">
+          <div className="mt-3 text-xs text-emerald-400">
             Tüm kanallardan canlı satış toplamı
           </div>
-        </div>
+        </motion.div>
 
         {/* Kart 3: Lojistik & Kargo SLA */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm hover:shadow transition">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">Kargo & Lojistik SLA</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/60 flex items-center justify-center text-purple-600">
-              <Truck className="w-4 h-4" />
+            <span className="text-sm text-white/60">Kargo & Lojistik SLA</span>
+            <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+              <Truck className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-white mt-1">
               %{stats.averageSlaPercent}
             </span>
-            <span className="text-xs text-slate-500">Zamanında Teslim</span>
+            <span className="text-xs text-purple-300 font-medium">Zamanında Teslim</span>
           </div>
-          <div className="mt-1 text-xs text-slate-400">
+          <div className="mt-3 text-xs text-white/50">
             {stats.activeShipmentsCount} adet aktif sevkiyat yolda
           </div>
-        </div>
+        </motion.div>
 
         {/* Kart 4: İade (RMA) & Satılabilir Stok */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm hover:shadow transition">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500">İade (RMA) Bekleyen</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center text-amber-600">
-              <Boxes className="w-4 h-4" />
+            <span className="text-sm text-white/60">İade (RMA) Bekleyen</span>
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <Boxes className="w-5 h-5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-white mt-1">
               {stats.pendingRmaCount}
             </span>
-            <span className="text-xs text-amber-600 font-semibold">Muayene Bekliyor</span>
+            <span className="text-xs text-amber-400 font-semibold">Muayene Bekliyor</span>
           </div>
-          <div className="mt-1 text-xs text-slate-400">
-            Yayınlanan Stok (ATP): <strong>{stats.totalPublishedStock} Adet</strong>
+          <div className="mt-3 text-xs text-white/50">
+            Yayınlanan Stok (ATP): <strong className="text-white">{stats.totalPublishedStock} Adet</strong>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
 }
-

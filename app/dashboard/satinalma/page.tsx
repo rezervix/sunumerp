@@ -102,9 +102,9 @@ export default function SmartProcurementAndConsignmentPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4">
-        <RefreshCw className="w-8 h-8 text-indigo-600 animate-spin" />
-        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 glass-panel rounded-2xl m-6">
+        <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" />
+        <p className="text-sm font-medium text-white/70">
           Akıllı Satın Alma ve ROP Motoru Yükleniyor...
         </p>
       </div>
@@ -124,29 +124,29 @@ export default function SmartProcurementAndConsignmentPage() {
       />
 
       {/* Durum & Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-white/50 glass-panel px-4 py-2.5 rounded-xl">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-          <span>Prisma / PostgreSQL Bağlantısı Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span className="text-white/70">Prisma / PostgreSQL Bağlantısı Aktif</span>
           {refreshing && (
-            <span className="text-indigo-600 font-medium flex items-center gap-1">
+            <span className="text-indigo-400 font-medium flex items-center gap-1">
               <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => fetchProcurementData()}
-            className="flex items-center gap-1 hover:text-indigo-600 transition"
+            className="flex items-center gap-1.5 text-white/70 hover:text-indigo-400 transition"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
           </button>
-          <span>•</span>
+          <span className="text-white/20">•</span>
           <button
             onClick={handleResetSeed}
-            className="flex items-center gap-1 hover:text-amber-600 transition"
+            className="flex items-center gap-1.5 text-white/70 hover:text-amber-400 transition"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Örnek Verileri Sıfırla
@@ -156,28 +156,28 @@ export default function SmartProcurementAndConsignmentPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-3 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-2xl h-auto border border-slate-200/80 dark:border-slate-800">
+        <TabsList className="grid grid-cols-1 sm:grid-cols-3 glass-panel p-1.5 rounded-2xl h-auto">
           <TabsTrigger
             value="critical-rop"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-amber-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-amber-500/30 data-[state=active]:shadow-lg"
           >
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
             Kritik Stok & ROP Listesi ({criticalItems.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="requisitions"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-indigo-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-indigo-500/30 data-[state=active]:shadow-lg"
           >
-            <FileCheck2 className="w-4 h-4 text-indigo-600" />
+            <FileCheck2 className="w-4 h-4 text-indigo-400" />
             Satın Alma Talepleri (PR / PO) ({purchaseRequisitions.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="consignment"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-sky-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-sky-500/30 data-[state=active]:shadow-lg"
           >
-            <Handshake className="w-4 h-4 text-blue-600" />
+            <Handshake className="w-4 h-4 text-sky-400" />
             Konsinye (Emanet) Stoklar ({consignmentStocks.length})
           </TabsTrigger>
         </TabsList>

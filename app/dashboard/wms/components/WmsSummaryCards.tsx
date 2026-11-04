@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
   Boxes,
   MapPin,
@@ -13,9 +14,7 @@ import {
   TrendingUp,
   AlertTriangle
 } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 
 interface WmsSummaryCardsProps {
   stats: {
@@ -43,15 +42,15 @@ export function WmsSummaryCards({
       {/* ÜST BAŞLIK VE HIZLI AKSİYON BUTONLARI */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
               Depo Yönetim Sistemi (WMS)
             </h1>
-            <Badge variant="outline" className="border-indigo-200 bg-indigo-50 text-indigo-700 text-xs">
+            <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full px-3 py-0.5 text-xs font-medium">
               Canlı Depo
-            </Badge>
+            </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-white/60 mt-1">
             Raf adresleme, adım adım iş akışı, kör sayım ve mobil saha operasyonları
           </p>
         </div>
@@ -61,7 +60,7 @@ export function WmsSummaryCards({
           <Link href="/dashboard/wms/mobil">
             <Button
               size="sm"
-              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-xs gap-1.5"
+              className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-xs rounded-xl gap-1.5 backdrop-blur-md"
             >
               <Smartphone className="h-4 w-4 text-emerald-400" />
               <span>Mobil Saha Terminali</span>
@@ -71,7 +70,7 @@ export function WmsSummaryCards({
           <Button
             size="sm"
             onClick={onNewTaskClick}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs gap-1"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-indigo-500/25 gap-1"
           >
             <Plus className="h-4 w-4" />
             <span>+ Yeni Görev</span>
@@ -81,9 +80,9 @@ export function WmsSummaryCards({
             size="sm"
             variant="outline"
             onClick={onNewTransferClick}
-            className="text-xs font-medium border-slate-200 bg-white hover:bg-slate-50 gap-1"
+            className="text-xs font-medium border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl gap-1.5"
           >
-            <Truck className="h-3.5 w-3.5 text-blue-600" />
+            <Truck className="h-3.5 w-3.5 text-sky-400" />
             <span>Depo Transferi</span>
           </Button>
 
@@ -91,112 +90,115 @@ export function WmsSummaryCards({
             size="sm"
             variant="outline"
             onClick={onNewCountClick}
-            className="text-xs font-medium border-slate-200 bg-white hover:bg-slate-50 gap-1"
+            className="text-xs font-medium border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl gap-1.5"
           >
-            <ClipboardCheck className="h-3.5 w-3.5 text-amber-600" />
+            <ClipboardCheck className="h-3.5 w-3.5 text-amber-400" />
             <span>Yeni Sayım</span>
           </Button>
         </div>
       </div>
 
       {/* 4 NET ÖZET KART */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* KART 1: BEKLEYEN GÖREVLER */}
-        <Card className="border-slate-200/80 shadow-xs hover:border-indigo-200 transition-colors">
-          <CardContent className="p-4 space-y-1.5">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-medium">Bekleyen Görevler</span>
-              <div className="h-8 w-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <Boxes className="h-4 w-4" />
-              </div>
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white/60">Bekleyen Görevler</span>
+            <div className="h-10 w-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
+              <Boxes className="h-5 w-5" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                {stats.totalPendingTasks + stats.inProgressTasks}
-              </span>
-              <span className="text-[11px] text-slate-500">
-                ({stats.inProgressTasks} işlemde)
-              </span>
-            </div>
-            <div className="text-[11px] text-indigo-600 font-medium flex items-center gap-1">
-              <span>Mal kabul, toplama & istif</span>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-2xl font-bold text-white mt-1">
+              {stats.totalPendingTasks + stats.inProgressTasks}
+            </span>
+            <span className="text-xs text-white/50">
+              ({stats.inProgressTasks} işlemde)
+            </span>
+          </div>
+          <div className="text-xs text-indigo-400 font-medium flex items-center gap-1 mt-3">
+            <span>Mal kabul, toplama & istif</span>
+          </div>
+        </motion.div>
 
         {/* KART 2: RAF DOLULUK ORANI */}
-        <Card className="border-slate-200/80 shadow-xs hover:border-blue-200 transition-colors">
-          <CardContent className="p-4 space-y-1.5">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-medium">Raf Doluluk Oranı</span>
-              <div className="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                <MapPin className="h-4 w-4" />
-              </div>
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white/60">Raf Doluluk Oranı</span>
+            <div className="h-10 w-10 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-400 flex items-center justify-center">
+              <MapPin className="h-5 w-5" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                %{stats.averageOccupancy}
-              </span>
-              <span className="text-[11px] text-slate-500">
-                {stats.occupiedBins} / {stats.totalBins} raf dolu
-              </span>
-            </div>
-            <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-              <div
-                className="bg-blue-600 h-full rounded-full transition-all"
-                style={{ width: `${Math.min(100, stats.averageOccupancy)}%` }}
-              />
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-2xl font-bold text-white mt-1">
+              %{stats.averageOccupancy}
+            </span>
+            <span className="text-xs text-white/50">
+              {stats.occupiedBins} / {stats.totalBins} raf dolu
+            </span>
+          </div>
+          <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden mt-3">
+            <div
+              className="bg-gradient-to-r from-sky-400 to-indigo-400 h-full rounded-full transition-all"
+              style={{ width: `${Math.min(100, stats.averageOccupancy)}%` }}
+            />
+          </div>
+        </motion.div>
 
         {/* KART 3: AKTİF SAYIM OTURUMLARI */}
-        <Card className="border-slate-200/80 shadow-xs hover:border-amber-200 transition-colors">
-          <CardContent className="p-4 space-y-1.5">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-medium">Aktif Sayım Oturumu</span>
-              <div className="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                <ClipboardCheck className="h-4 w-4" />
-              </div>
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white/60">Aktif Sayım Oturumu</span>
+            <div className="h-10 w-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+              <ClipboardCheck className="h-5 w-5" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                {stats.openCountSessions}
-              </span>
-              <span className="text-[11px] text-amber-700 font-medium">
-                {stats.openCountSessions > 0 ? "Açık Sayım Var" : "Tüm Depo Eşit"}
-              </span>
-            </div>
-            <div className="text-[11px] text-slate-500">
-              Kör / Tam / Döngüsel Sayım
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-2xl font-bold text-white mt-1">
+              {stats.openCountSessions}
+            </span>
+            <span className="text-xs text-amber-400 font-medium">
+              {stats.openCountSessions > 0 ? "Açık Sayım Var" : "Tüm Depo Eşit"}
+            </span>
+          </div>
+          <div className="text-xs text-white/50 mt-3">
+            Kör / Tam / Döngüsel Sayım
+          </div>
+        </motion.div>
 
         {/* KART 4: DEPOLAR ARASI TRANSFERLER */}
-        <Card className="border-slate-200/80 shadow-xs hover:border-emerald-200 transition-colors">
-          <CardContent className="p-4 space-y-1.5">
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-medium">Aktif Transferler</span>
-              <div className="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <Truck className="h-4 w-4" />
-              </div>
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-white/60">Aktif Transferler</span>
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+              <Truck className="h-5 w-5" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold tracking-tight text-slate-900">
-                {stats.activeTransfers}
-              </span>
-              <span className="text-[11px] text-emerald-700 font-medium">
-                Yolda / Onaylı
-              </span>
-            </div>
-            <div className="text-[11px] text-slate-500">
-              Şube & atölye sevkiyatları
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="flex items-baseline gap-2 mt-2">
+            <span className="text-2xl font-bold text-white mt-1">
+              {stats.activeTransfers}
+            </span>
+            <span className="text-xs text-emerald-400 font-medium">
+              Yolda / Onaylı
+            </span>
+          </div>
+          <div className="text-xs text-white/50 mt-3">
+            Şube & atölye sevkiyatları
+          </div>
+        </motion.div>
       </div>
     </div>
   )
 }
-

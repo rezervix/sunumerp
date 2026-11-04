@@ -24,8 +24,10 @@ import {
   Shield, MessageCircle, Bell, Settings, LogOut, Menu,
   PanelLeftClose, PanelLeftOpen, ChevronRight, ChevronDown, CalendarDays, Library, ClipboardCheck,
   Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
-  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle, Search, X
+  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle, Search, X,
+  ShieldAlert, AlertTriangle, AlertCircle, ExternalLink
 } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
 import { BRAND_CONFIG } from "@/lib/config/brand"
@@ -91,19 +93,19 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
         type="button"
         onClick={handleClick}
         className={[
-          "sidebar-item group relative w-full text-left",
-          "hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 text-red-600/90 dark:text-red-400/90",
-          collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "",
+          "sidebar-item group relative w-full text-left rounded-xl transition-all duration-200",
+          "text-rose-400/90 hover:bg-rose-500/15 hover:text-rose-300 border border-transparent hover:border-rose-500/25",
+          collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "px-3 py-2",
         ].join(" ")}
-        style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" } : {}}
+        style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" } : {}}
       >
         <div className="relative flex items-center justify-center">
           <Icon
             size={18}
-            className="shrink-0 transition-transform duration-150 text-red-500 group-hover:scale-105"
+            className="shrink-0 transition-transform duration-200 text-rose-400 group-hover:scale-110"
           />
         </div>
-        {!collapsed && <span className="truncate">{item.name}</span>}
+        {!collapsed && <span className="truncate text-xs font-medium">{item.name}</span>}
       </button>
     )
 
@@ -111,7 +113,7 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
       return (
         <Tooltip>
           <TooltipTrigger asChild>{btnContent}</TooltipTrigger>
-          <TooltipContent side="right" sideOffset={8}>
+          <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/15">
             {item.name}
           </TooltipContent>
         </Tooltip>
@@ -126,15 +128,17 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
       href={item.href}
       onClick={handleClick}
       className={[
-        "sidebar-item group relative",
-        isActive ? "sidebar-item-active font-semibold" : "hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground)",
-        collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "",
+        "sidebar-item group relative rounded-xl transition-all duration-200",
+        isActive
+          ? "bg-gradient-to-r from-primary/25 via-primary/10 to-transparent text-white font-semibold border border-primary/30 shadow-sm shadow-primary/10"
+          : "text-white/70 hover:text-white hover:bg-white/8 border border-transparent",
+        collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "px-3 py-2",
       ].join(" ")}
-      style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" } : {}}
+      style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" } : {}}
     >
       {isActive && !collapsed && (
         <span
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary"
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-primary shadow-[0_0_8px_var(--color-primary)]"
           aria-hidden
         />
       )}
@@ -142,20 +146,19 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
         <Icon
           size={18}
           className={[
-            "shrink-0 transition-transform duration-150",
-            isActive ? "text-(--sidebar-accent-foreground)" : "text-(--sidebar-muted)",
-            "group-hover:text-(--sidebar-accent-foreground)",
+            "shrink-0 transition-all duration-200",
+            isActive ? "text-primary scale-105" : "text-white/60 group-hover:text-white group-hover:scale-105",
           ].join(" ")}
         />
         {collapsed && count > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[9px] font-bold text-white leading-none shadow-xs border border-background">
+          <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white leading-none shadow-xs border border-slate-900">
             {count}
           </span>
         )}
       </div>
-      {!collapsed && <span className="truncate">{item.name}</span>}
+      {!collapsed && <span className="truncate text-xs">{item.name}</span>}
       {!collapsed && count > 0 && (
-        <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-600 px-1.5 text-[10px] font-bold text-white leading-none shadow-xs border border-background">
+        <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500/90 px-1.5 text-[10px] font-bold text-white leading-none shadow-xs border border-white/15">
           {count}
         </span>
       )}
@@ -166,7 +169,7 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right" sideOffset={8}>
+        <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/15">
           {item.name}
         </TooltipContent>
       </Tooltip>
@@ -205,39 +208,40 @@ function LanguageSwitcher({ collapsed }: { collapsed: boolean }) {
           <TooltipTrigger asChild>
             <button
               onClick={() => setOpen(o => !o)}
-              className="sidebar-item hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground) justify-center px-0 mx-auto"
-              style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
+              className="sidebar-item hover:bg-white/10 text-white/70 hover:text-white justify-center px-0 mx-auto rounded-xl border border-transparent hover:border-white/10 transition-all"
+              style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
             >
-              <Globe size={18} className="text-(--sidebar-muted)" />
+              <Globe size={18} className="text-white/70" />
             </button>
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="right" className="glass-panel text-white border-white/15">
             {currentLabel.flag} {currentLabel.label}
           </TooltipContent>
         </Tooltip>
       ) : (
         <button
           onClick={() => setOpen(o => !o)}
-          className="sidebar-item w-full text-left hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground)"
+          className="sidebar-item w-full text-left rounded-xl px-3 py-2 text-xs text-white/75 hover:text-white hover:bg-white/8 border border-transparent hover:border-white/10 transition-all"
         >
-          <Globe size={18} className="text-(--sidebar-muted) shrink-0" />
+          <Globe size={16} className="text-white/60 shrink-0" />
           <span className="flex-1 truncate">{currentLabel.flag} {currentLabel.label}</span>
+          <ChevronDown size={13} className={`text-white/40 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
         </button>
       )}
 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className={`absolute ${collapsed ? "left-12 bottom-0" : "left-0 bottom-full mb-1"} z-50 w-44 bg-card border border-border rounded-xl shadow-lg py-1 overflow-hidden`}>
+          <div className={`absolute ${collapsed ? "left-12 bottom-0" : "left-0 bottom-full mb-1.5"} z-50 w-44 glass-panel rounded-xl py-1.5 overflow-hidden text-white`}>
             {(Object.entries(LOCALE_LABELS) as [SupportedLocale, { label: string; flag: string }][]).map(([code, { label, flag }]) => (
               <button
                 key={code}
                 onClick={() => { setLocale(code); setOpen(false) }}
-                className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-muted/60 transition-colors ${locale === code ? "text-primary font-semibold bg-primary/5" : "text-foreground"}`}
+                className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer ${locale === code ? "text-primary font-semibold bg-primary/10" : "text-white/80"}`}
               >
                 <span>{flag}</span>
                 <span>{label}</span>
-                {locale === code && <span className="ml-auto text-xs">✓</span>}
+                {locale === code && <span className="ml-auto text-xs text-primary">✓</span>}
               </button>
             ))}
           </div>
@@ -516,20 +520,30 @@ function SidebarContent({
     : userBranches.filter(b => b.id !== "local-debug-branch")
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full text-white">
       {/* Logo / Brand */}
       <div
         className={[
-          "flex items-center shrink-0 border-b border-(--sidebar-border)",
+          "flex items-center justify-between shrink-0 border-b border-white/10",
           collapsed ? "h-16 justify-center px-0" : "h-16 px-4",
         ].join(" ")}
       >
-        <SunumLogo className={collapsed ? "size-8 mx-auto" : "size-8"} showText={!collapsed} />
+        <SunumLogo className={collapsed ? "size-9 mx-auto" : "size-8"} showText={!collapsed} />
+        {!collapsed && onToggle && (
+          <button
+            type="button"
+            onClick={onToggle}
+            className="hidden lg:flex size-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 items-center justify-center text-white/60 hover:text-white transition-all cursor-pointer shrink-0"
+            title={t.nav.collapse}
+          >
+            <PanelLeftClose size={14} />
+          </button>
+        )}
       </div>
 
       {/* Branch selector */}
       {!collapsed && filteredUserBranches.length > 0 && (
-        <div className="px-3 pt-3 pb-1">
+        <div className="px-3 pt-3 pb-1 shrink-0">
           <BranchSelector
             branches={filteredUserBranches}
             currentBranch={currentBranch}
@@ -540,7 +554,7 @@ function SidebarContent({
 
       {/* ── Search Bar (Between Branch Selector and Navigation) ── */}
       {!collapsed ? (
-        <div className="px-3 pt-2 pb-1 shrink-0">
+        <div className="px-3 pt-2.5 pb-1.5 shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -556,79 +570,87 @@ function SidebarContent({
             }}
             aria-expanded={isSearchOpen}
             className={[
-              "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border cursor-pointer select-none",
+              "w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium transition-all duration-200 cursor-pointer select-none glass-input",
               isSearchOpen
-                ? "bg-(--sidebar-accent) text-(--sidebar-accent-foreground) border-primary/40 shadow-xs"
-                : "bg-muted/40 hover:bg-muted/70 text-(--sidebar-muted) hover:text-(--sidebar-foreground) border-border/50",
+                ? "border-primary/50 ring-2 ring-primary/15 text-white"
+                : "hover:border-white/25 text-white/70 hover:text-white",
             ].join(" ")}
           >
             <Search
               size={14}
               className={[
                 "shrink-0 transition-colors",
-                isSearchOpen ? "text-primary" : "text-(--sidebar-muted)",
+                isSearchOpen ? "text-primary" : "text-white/50",
               ].join(" ")}
             />
             <span className="flex-1 text-left truncate">Menüde ara...</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-background/70 border border-border/40 text-muted-foreground">
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/50">
               {isSearchOpen ? "ESC" : "⌘K"}
             </span>
           </button>
 
           {/* Açılır Arama Alanı (Dropdown / Expandable Input) */}
-          {isSearchOpen && (
-            <div className="mt-1.5 transition-all duration-200 ease-out animate-in fade-in slide-in-from-top-1">
-              <div className="relative flex items-center bg-background border border-primary/50 ring-2 ring-primary/15 rounded-lg px-2.5 py-1.5 shadow-sm">
-                <Search size={13} className="text-primary shrink-0 mr-2" />
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Escape") {
-                      setSearchQuery("")
-                      setIsSearchOpen(false)
-                    }
-                  }}
-                  placeholder="Menü adı yazın..."
-                  className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground outline-none"
-                />
-                {searchQuery ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("")
-                      searchInputRef.current?.focus()
+          <AnimatePresence>
+            {isSearchOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="overflow-hidden"
+              >
+                <div className="mt-2 relative flex items-center glass-input border-primary/50 ring-2 ring-primary/15 px-3 py-2 shadow-sm">
+                  <Search size={13} className="text-primary shrink-0 mr-2" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Escape") {
+                        setSearchQuery("")
+                        setIsSearchOpen(false)
+                      }
                     }}
-                    className="text-muted-foreground hover:text-foreground p-0.5 rounded cursor-pointer"
-                    title="Temizle"
-                  >
-                    <X size={13} />
-                  </button>
-                ) : null}
-              </div>
-
-              {searchQuery && (
-                <div className="flex items-center justify-between mt-1 px-1 text-[11px] text-muted-foreground">
-                  <span>{totalMatchingCount} menü bulundu</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery("")
-                      setIsSearchOpen(false)
-                    }}
-                    className="hover:text-foreground text-[10px] underline cursor-pointer"
-                  >
-                    Temizle (ESC)
-                  </button>
+                    placeholder="Menü adı yazın..."
+                    className="w-full bg-transparent text-xs text-white placeholder:text-white/40 outline-none"
+                  />
+                  {searchQuery ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("")
+                        searchInputRef.current?.focus()
+                      }}
+                      className="text-white/50 hover:text-white p-0.5 rounded cursor-pointer"
+                      title="Temizle"
+                    >
+                      <X size={13} />
+                    </button>
+                  ) : null}
                 </div>
-              )}
-            </div>
-          )}
+
+                {searchQuery && (
+                  <div className="flex items-center justify-between mt-1.5 px-1 text-[11px] text-white/55">
+                    <span>{totalMatchingCount} menü bulundu</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("")
+                        setIsSearchOpen(false)
+                      }}
+                      className="hover:text-white text-[10px] underline cursor-pointer"
+                    >
+                      Temizle (ESC)
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
-        <div className="px-2 pt-2 pb-1 shrink-0 flex justify-center">
+        <div className="px-2 pt-2.5 pb-1 shrink-0 flex justify-center">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -638,13 +660,13 @@ function SidebarContent({
                   setIsSearchOpen(true)
                   setTimeout(() => searchInputRef.current?.focus(), 150)
                 }}
-                className="sidebar-item hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground) justify-center px-0 mx-auto"
-                style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
+                className="glass-input hover:bg-white/10 hover:border-white/25 flex items-center justify-center transition-all cursor-pointer"
+                style={{ width: 40, height: 40 }}
               >
-                <Search size={18} className="text-(--sidebar-muted)" />
+                <Search size={17} className="text-white/70" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right">Menüde ara...</TooltipContent>
+            <TooltipContent side="right" className="glass-panel text-white border-white/15">Menüde ara...</TooltipContent>
           </Tooltip>
         </div>
       )}
@@ -654,7 +676,7 @@ function SidebarContent({
         <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
           {availableCategories.map((cat, idx) => (
             <div key={cat.id} className="space-y-1">
-              {idx > 0 && <div className="h-px bg-border/40 my-1.5 mx-1" />}
+              {idx > 0 && <div className="h-px bg-white/10 my-2 mx-1.5" />}
               {cat.items.map(item => (
                 <NavItem
                   key={item.href + item.name}
@@ -669,7 +691,7 @@ function SidebarContent({
           ))}
         </nav>
       ) : (
-        <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-2 px-2.5 space-y-1.5">
           {displayedCategories.map(cat => {
             const isOpen = isCategoryOpen(cat.id)
             const categoryUnreadCount = cat.items.reduce(
@@ -680,32 +702,33 @@ function SidebarContent({
             const isAnyItemActive = cat.items.some(item => isItemActive(item))
 
             return (
-              <div key={cat.id} className="rounded-lg transition-colors">
+              <div key={cat.id} className="rounded-xl transition-colors">
                 <button
                   type="button"
                   onClick={() => toggleCategory(cat.id)}
                   className={[
-                    "w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-semibold transition-all duration-150 select-none group cursor-pointer",
+                    "w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 select-none group cursor-pointer border",
                     isOpen
-                      ? "text-(--sidebar-foreground) bg-(--sidebar-accent)/60 shadow-xs"
+                      ? "text-white bg-white/8 border-white/15 shadow-xs"
                       : isAnyItemActive
-                        ? "text-primary bg-primary/5 font-semibold"
-                        : "text-(--sidebar-muted) hover:text-(--sidebar-foreground) hover:bg-(--sidebar-accent)/30",
+                        ? "text-primary bg-primary/10 border-primary/25 font-semibold"
+                        : "text-white/70 border-transparent hover:text-white hover:bg-white/5",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <CategoryIcon
-                      size={16}
+                    <span
                       className={[
-                        "shrink-0 transition-colors",
+                        "size-7 rounded-lg flex items-center justify-center shrink-0 transition-all border",
                         isOpen || isAnyItemActive
-                          ? "text-primary"
-                          : "text-(--sidebar-muted) group-hover:text-(--sidebar-foreground)",
+                          ? "bg-primary/20 border-primary/30 text-primary shadow-xs"
+                          : "bg-white/5 border-white/10 text-white/60 group-hover:text-white group-hover:border-white/20",
                       ].join(" ")}
-                    />
+                    >
+                      <CategoryIcon size={15} />
+                    </span>
                     <span className="truncate tracking-wide text-left">{cat.title}</span>
                     {!isOpen && categoryUnreadCount > 0 && (
-                      <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[9px] font-bold text-white shadow-xs">
+                      <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-xs">
                         {categoryUnreadCount}
                       </span>
                     )}
@@ -713,43 +736,53 @@ function SidebarContent({
 
                   <div className="flex items-center gap-1.5 shrink-0 ml-1">
                     {isSearching && (
-                      <span className="text-[10px] text-primary font-medium px-1.5 py-0.2 rounded-full bg-primary/10">
+                      <span className="text-[10px] text-primary font-medium px-1.5 py-0.5 rounded-full bg-primary/15 border border-primary/25">
                         {cat.items.length}
                       </span>
                     )}
                     <ChevronDown
                       size={14}
                       className={[
-                        "shrink-0 transition-transform duration-200 text-(--sidebar-muted) group-hover:text-(--sidebar-foreground)",
+                        "shrink-0 transition-transform duration-200 text-white/50 group-hover:text-white",
                         isOpen ? "rotate-0 text-primary" : "-rotate-90",
                       ].join(" ")}
                     />
                   </div>
                 </button>
 
-                {isOpen && (
-                  <div className="pl-3 pr-1 py-1 space-y-0.5 border-l border-primary/20 ml-4.5 my-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
-                    {cat.items.map(item => (
-                      <NavItem
-                        key={item.href + item.name}
-                        item={item}
-                        isActive={isItemActive(item)}
-                        collapsed={false}
-                        onClick={onNavClick}
-                        onLogout={onLogout}
-                      />
-                    ))}
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.18, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pl-3 pr-1 py-1.5 space-y-1 border-l border-white/15 ml-4 my-0.5">
+                        {cat.items.map(item => (
+                          <NavItem
+                            key={item.href + item.name}
+                            item={item}
+                            isActive={isItemActive(item)}
+                            collapsed={false}
+                            onClick={onNavClick}
+                            onLogout={onLogout}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )
           })}
 
           {isSearching && displayedCategories.length === 0 && (
-            <div className="py-8 px-4 text-center">
-              <Search size={22} className="mx-auto text-muted-foreground/40 mb-2" />
-              <p className="text-xs font-semibold text-foreground">Sonuç bulunamadı</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">
+            <div className="py-8 px-4 text-center glass-card my-2">
+              <Search size={22} className="mx-auto text-white/30 mb-2" />
+              <p className="text-xs font-semibold text-white">Sonuç bulunamadı</p>
+              <p className="text-[11px] text-white/50 mt-0.5">
                 &ldquo;{searchQuery}&rdquo; ile eşleşen bir menü bulunamadı
               </p>
               <button
@@ -768,7 +801,7 @@ function SidebarContent({
       )}
 
       {/* Footer */}
-      <div className="shrink-0 border-t border-(--sidebar-border) p-2 space-y-1">
+      <div className="shrink-0 border-t border-white/10 p-2.5 space-y-1.5 bg-black/10">
         {/* Language Switcher */}
         <LanguageSwitcher collapsed={collapsed} />
 
@@ -779,53 +812,62 @@ function SidebarContent({
                 <Link
                   href="/dashboard/settings"
                   onClick={onNavClick}
-                  className="sidebar-item hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground) justify-center px-0 mx-auto"
-                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
+                  className="sidebar-item hover:bg-white/10 text-white/70 hover:text-white justify-center px-0 mx-auto rounded-xl border border-transparent hover:border-white/10 transition-all"
+                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
-                  <Settings size={18} className="text-(--sidebar-muted)" />
+                  <Settings size={18} />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">{t.nav.settings}</TooltipContent>
+              <TooltipContent side="right" className="glass-panel text-white border-white/15">{t.nav.settings}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   type="button"
                   onClick={onLogout}
-                  className="sidebar-item hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 justify-center mx-auto"
-                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
+                  className="sidebar-item hover:bg-rose-500/15 text-rose-400/90 hover:text-rose-300 justify-center mx-auto rounded-xl border border-transparent hover:border-rose-500/25 transition-all cursor-pointer"
+                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
-                  <LogOut size={18} className="text-(--sidebar-muted)" />
+                  <LogOut size={18} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right">{t.nav.logout}</TooltipContent>
+              <TooltipContent side="right" className="glass-panel text-white border-white/15">{t.nav.logout}</TooltipContent>
             </Tooltip>
           </>
         ) : (
           <>
             {session && (
-              <Link
-                href="/dashboard/settings"
-                onClick={onNavClick}
-                className="flex items-center gap-3 mt-1.5 px-3 py-2 rounded-lg hover:bg-(--sidebar-accent) transition-colors group"
-              >
-                {session.user.avatarUrl ? (
-                  <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-full object-cover shrink-0 border border-gray-200 dark:border-gray-800" />
-                ) : (
-                  <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0">
-                    {session.user.fullName?.substring(0, 2).toUpperCase() || "US"}
+              <div className="flex items-center gap-1.5 mt-1 p-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
+                <Link
+                  href="/dashboard/settings"
+                  onClick={onNavClick}
+                  className="flex items-center gap-2.5 flex-1 min-w-0 px-1.5 py-1 rounded-lg hover:bg-white/5 transition-colors group"
+                >
+                  {session.user.avatarUrl ? (
+                    <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-xl object-cover shrink-0 border border-white/20" />
+                  ) : (
+                    <div className="size-8 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 text-primary border border-primary/30 flex items-center justify-center text-xs font-bold shrink-0">
+                      {session.user.fullName?.substring(0, 2).toUpperCase() || "US"}
+                    </div>
+                  )}
+                  <div className="flex flex-col leading-none overflow-hidden min-w-0">
+                    <span className="text-xs font-semibold text-white truncate group-hover:text-primary transition-colors">
+                      {session.user.fullName}
+                    </span>
+                    <span className="text-[11px] truncate text-white/55 mt-0.5">
+                      {isSuperAdmin ? "Süper Yönetici" : ((currentBranch as any)?.role?.name || (session.user as any).position || "Kullanıcı")}
+                    </span>
                   </div>
-                )}
-                <div className="flex flex-col leading-none overflow-hidden min-w-0">
-                  <span className="text-sm font-semibold text-(--sidebar-foreground) truncate">
-                    {session.user.fullName}
-                  </span>
-                  <span className="text-caption truncate text-(--sidebar-muted)">
-                    {isSuperAdmin ? "Süper Yönetici" : ((currentBranch as any)?.role?.name || (session.user as any).position || "Kullanıcı")}
-                  </span>
-                </div>
-                <ChevronRight size={14} className="text-(--sidebar-muted) shrink-0 ml-auto group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+                </Link>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  title={t.nav.logout}
+                  className="size-8 rounded-lg flex items-center justify-center text-rose-400/80 hover:text-rose-300 hover:bg-rose-500/15 border border-transparent hover:border-rose-500/25 transition-all shrink-0 cursor-pointer"
+                >
+                  <LogOut size={15} />
+                </button>
+              </div>
             )}
           </>
         )}
@@ -936,8 +978,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#060913] via-[#0b1222] to-[#0f172a]">
+        <div className="flex flex-col items-center gap-4 glass-panel p-8 rounded-3xl">
           <SunumLogo className="size-12 shadow-lg" />
           <div className="flex gap-1.5">
             <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -955,29 +997,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isTampered && !isSecurityDisabledLocally) {
     return (
-      <div className="fixed inset-0 z-[99999] bg-background/95 backdrop-blur-md flex items-center justify-center p-6 select-none animate-fade-in">
-        <div className="w-full max-w-md bg-card border border-border rounded-3xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden text-card-foreground">
+      <div className="fixed inset-0 z-[99999] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-6 select-none animate-fade-in">
+        <div className="w-full max-w-md glass-panel rounded-3xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden text-white">
           <div className="absolute top-0 left-0 w-full h-1.5 bg-destructive" />
           
-          <div className="size-16 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto text-destructive">
-            <span className="material-symbols-outlined text-[36px]">shield_alert</span>
+          <div className="size-16 rounded-2xl bg-destructive/15 border border-destructive/30 flex items-center justify-center mx-auto text-destructive">
+            <ShieldAlert size={36} />
           </div>
 
           <div className="space-y-2">
             <h1 className="text-xl font-bold tracking-tight text-destructive flex items-center justify-center gap-2">
-              <span className="material-symbols-outlined text-[20px]">warning</span> LİSANS İHLALİ ALGILANDI
+              <AlertTriangle size={20} /> LİSANS İHLALİ ALGILANDI
             </h1>
-            <p className="text-xs text-muted-foreground font-mono">Çiçekana ERP Lisans Koruma Sistemi</p>
+            <p className="text-xs text-white/60 font-mono">Çiçekana ERP Lisans Koruma Sistemi</p>
           </div>
 
-          <div className="bg-muted/50 border border-border p-5 rounded-2xl text-xs text-left leading-relaxed text-muted-foreground font-sans space-y-3">
+          <div className="glass-card p-5 rounded-2xl text-xs text-left leading-relaxed text-white/70 font-sans space-y-3">
             <p className="text-destructive font-bold uppercase tracking-wider flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[14px]">error</span> Hata Kodu: 0x800F_BRANDING_BYPASS
+              <AlertCircle size={14} /> Hata Kodu: 0x800F_BRANDING_BYPASS
             </p>
-            <p className="text-sm font-semibold text-foreground mt-1">
+            <p className="text-sm font-semibold text-white mt-1">
               System License Modification Detected. Please contact Çiçekana Teknoloji.
             </p>
-            <p className="text-muted-foreground text-[11px] leading-normal">
+            <p className="text-white/60 text-[11px] leading-normal">
               Yazılımın lisans bandrolünü gizleme, silme veya üzerinde izinsiz değişiklik yapma girişimi tespit edildi. Sistem bütünlüğü korunması amacıyla paneline erişim askıya alınmıştır.
             </p>
           </div>
@@ -987,10 +1029,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href="https://cicekanatech.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground border border-border text-xs font-bold transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-bold transition-all"
             >
               Çiçekana Teknoloji &amp; Medya
-              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              <ExternalLink size={14} />
             </a>
           </div>
         </div>
@@ -1016,22 +1058,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <NotificationProvider>
       <TooltipProvider delayDuration={200}>
-        <div className="flex h-screen overflow-hidden bg-background text-foreground">
+        <div className="relative flex h-screen overflow-hidden bg-gradient-to-br from-[#060913] via-[#0b1222] to-[#0f172a] text-white p-2.5 lg:p-3.5 gap-2.5 lg:gap-3.5">
 
-          {/* ── Desktop Sidebar ── */}
+          {/* ── Ambient Background Glow Layers ── */}
+          <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+            <div className="absolute -top-36 -left-36 h-96 w-96 rounded-full bg-indigo-500/15 blur-[130px]" />
+            <div className="absolute top-1/4 right-1/5 h-[28rem] w-[28rem] rounded-full bg-sky-500/10 blur-[150px]" />
+            <div className="absolute -bottom-36 left-1/3 h-96 w-96 rounded-full bg-amber-500/10 blur-[140px]" />
+          </div>
+
+          {/* ── Desktop Floating Glass Sidebar ── */}
           <aside
             className={[
-              "hidden lg:flex flex-col shrink-0 bg-(--sidebar) border-r border-(--sidebar-border)",
-              "transition-[width] duration-200 ease-in-out overflow-hidden",
-              collapsed ? "w-[68px]" : "w-[240px]",
+              "relative z-20 hidden lg:flex flex-col shrink-0 glass-panel rounded-2xl",
+              "transition-[width] duration-300 ease-in-out",
+              collapsed ? "w-[76px]" : "w-[264px]",
             ].join(" ")}
           >
-            <SidebarContent {...sidebarProps} />
+            <div className="flex flex-col h-full overflow-hidden rounded-2xl">
+              <SidebarContent {...sidebarProps} />
+            </div>
 
             {/* Collapse toggle */}
             <button
               onClick={toggleCollapsed}
-              className="absolute bottom-32 -right-3 z-10 hidden lg:flex size-6 rounded-full bg-card border border-border shadow-sm items-center justify-center text-muted-foreground hover:text-foreground hover:shadow-md transition-all"
+              className="absolute bottom-28 -right-3 z-30 hidden lg:flex size-6 rounded-full glass-panel items-center justify-center text-white/70 hover:text-primary hover:scale-110 transition-all cursor-pointer"
               title={collapsed ? t.nav.expand : t.nav.collapse}
             >
               {collapsed
@@ -1045,7 +1096,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetContent
               side="left"
-              className="w-[260px] p-0 bg-(--sidebar) border-r border-(--sidebar-border)"
+              className="w-[272px] p-0 glass-panel border-r border-white/15 text-white"
             >
               <SidebarContent
                 {...sidebarProps}
@@ -1056,43 +1107,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Sheet>
 
           {/* ── Main Column ── */}
-          <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+          <div className="relative z-10 flex flex-col flex-1 min-w-0 overflow-hidden gap-2.5 lg:gap-3">
 
-            {/* ── Header ── */}
-            <header className="h-14 shrink-0 bg-(--header) border-b border-(--header-border) flex items-center justify-between px-4 lg:px-5 z-20">
+            {/* ── Floating Glass Header ── */}
+            <header className="h-16 shrink-0 glass-panel rounded-2xl flex items-center justify-between px-4 lg:px-5 z-20">
               <div className="flex items-center gap-3">
                 {/* Mobile menu trigger */}
                 <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="lg:hidden text-muted-foreground">
-                      <Menu size={20} />
+                    <Button variant="ghost" size="icon" className="lg:hidden size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80">
+                      <Menu size={18} />
                     </Button>
                   </SheetTrigger>
                 </Sheet>
 
                 {/* Mobile brand */}
                 <div className="flex items-center gap-2 lg:hidden">
-                  <SunumLogo className="size-6" showText={true} />
+                  <SunumLogo className="size-7" showText={true} />
                 </div>
 
-                {/* Desktop: search */}
-                <div className="hidden lg:flex items-center gap-2 bg-muted/60 border border-border rounded-lg px-3 py-1.5 w-64 xl:w-80 group focus-within:ring-2 focus-within:ring-ring/30 focus-within:border-ring transition-all">
-                  <span className="material-symbols-outlined text-[18px] text-muted-foreground group-focus-within:text-primary transition-colors">search</span>
+                {/* Desktop: search (.glass-input) */}
+                <div className="hidden lg:flex items-center gap-2.5 glass-input px-3.5 py-2 w-64 xl:w-88 group focus-within:ring-2 focus-within:ring-white/15 transition-all">
+                  <Search size={16} className="text-white/50 group-focus-within:text-primary transition-colors shrink-0" />
                   <input
-                    className="flex-1 bg-transparent text-sm outline-none placeholder-muted-foreground text-foreground"
+                    className="flex-1 bg-transparent text-sm outline-none text-white placeholder:text-white/40"
                     placeholder={t.header.search}
                     type="text"
                   />
                 </div>
 
                 {/* Live Demo Header Badge */}
-                <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold select-none">
-                  <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/15 backdrop-blur-md border border-blue-400/25 text-blue-300 text-xs font-semibold select-none">
+                  <span className="size-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_#60a5fa]" />
                   <span>Canlı Demo</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 lg:gap-2">
+              <div className="flex items-center gap-1.5 lg:gap-2">
                 {/* Branch selector — desktop only */}
                 {(isPlatformDeveloper ? userBranches : userBranches.filter(b => b.id !== "local-debug-branch")).length > 0 && (
                   <div className="hidden xl:block">
@@ -1106,42 +1157,66 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                 <ThemeToggle />
                 <NotificationCenter />
-                <ContextualHelp size={20} className="text-muted-foreground mr-1" />
+                <div className="size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all">
+                  <ContextualHelp size={18} className="text-white/70 hover:text-white" />
+                </div>
 
-                {/* User avatar */}
-                <Link
-                  href="/dashboard/settings"
-                  className="hidden lg:flex items-center gap-2.5 pl-3 ml-1 border-l border-border hover:opacity-80 transition-opacity"
-                >
-                  <div className="text-right hidden xl:block">
-                    <p className="text-sm font-semibold text-foreground leading-tight">{session.user.fullName}</p>
-                    <p className="text-caption">{isSuperAdmin ? t.nav.superAdmin : ((session.user as any).position || t.nav.user)}</p>
-                  </div>
-                  <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold border border-border">
-                    {session.user.fullName.substring(0, 2).toUpperCase()}
-                  </div>
-                </Link>
+                {/* User profile & session controls */}
+                <div className="hidden lg:flex items-center gap-1.5 pl-2 ml-1 border-l border-white/10">
+                  <Link
+                    href="/dashboard/settings"
+                    className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
+                  >
+                    <div className="text-right hidden xl:block">
+                      <p className="text-xs font-semibold text-white leading-tight group-hover:text-primary transition-colors">{session.user.fullName}</p>
+                      <p className="text-[11px] text-white/55">{isSuperAdmin ? t.nav.superAdmin : ((session.user as any).position || t.nav.user)}</p>
+                    </div>
+                    {session.user.avatarUrl ? (
+                      <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-xl object-cover border border-white/20" />
+                    ) : (
+                      <div className="size-8 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 text-primary flex items-center justify-center text-xs font-bold border border-primary/30">
+                        {session.user.fullName.substring(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                  </Link>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={logout}
+                        aria-label={t.nav.logout}
+                        className="size-9 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 hover:text-rose-300 flex items-center justify-center transition-all cursor-pointer"
+                      >
+                        <LogOut size={16} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="glass-panel text-white border-white/15">
+                      {t.nav.logout}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
             </header>
 
             {/* ── Demo Bilgilendirme Çubuğu ── */}
-            <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 border-b border-blue-500/15 px-4 py-2 flex items-center justify-between text-xs text-blue-900 dark:text-blue-100 shrink-0">
+            <div className="glass-card rounded-xl bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-blue-500/15 border-blue-400/20 px-4 py-2 flex items-center justify-between text-xs text-blue-100 shrink-0">
               <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse shrink-0" />
-                <span className="font-semibold">Sunum ERP Canlı Demo:</span>
-                <span className="text-muted-foreground hidden md:inline">
+                <span className="size-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
+                <span className="font-semibold text-white">Sunum ERP Canlı Demo:</span>
+                <span className="text-white/70 hidden md:inline">
                   Tüm grafikler ve tablolar zenginleştirilmiş örnek verilerle aktiftir. Form işlemleri demo ortamında güvenle simüle edilmektedir.
                 </span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-600/15 text-[11px] font-semibold text-blue-700 dark:text-blue-300">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/25 text-[11px] font-semibold text-blue-200">
                   Salt Okunur / Simülasyon
                 </span>
               </div>
             </div>
 
             {/* ── Page Content ── */}
-            <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-background">
+            <main className="flex-1 overflow-y-auto px-1 py-1 lg:px-2 lg:py-2 bg-transparent">
               <div className="max-w-[1600px] mx-auto space-y-6">
                 {children}
               </div>

@@ -88,9 +88,9 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-indigo-200/80 bg-gradient-to-r from-indigo-50/90 via-purple-50/50 to-white p-4 shadow-xs flex items-center gap-3">
-        <Loader2 className="h-5 w-5 animate-spin text-indigo-600 shrink-0" />
-        <span className="text-xs text-slate-600 font-medium">
+      <div className="bg-gradient-to-r from-emerald-500/10 via-slate-900/60 to-indigo-500/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 shadow-xl flex items-center gap-3">
+        <Loader2 className="h-5 w-5 animate-spin text-emerald-400 shrink-0" />
+        <span className="text-xs text-white/75 font-medium">
           Yapay Zekâ veritabanı stok hareketlerini, devir hızını ve SKT risklerini analiz ediyor...
         </span>
       </div>
@@ -100,36 +100,36 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
   if (!banner) return null
 
   return (
-    <div className="rounded-2xl border border-indigo-200/90 bg-gradient-to-r from-indigo-50/90 via-purple-50/50 to-white p-4 sm:p-5 shadow-xs">
+    <div className="bg-gradient-to-r from-emerald-500/10 via-slate-900/60 to-indigo-500/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 sm:p-5 shadow-xl">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-start gap-3.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-xs">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/30 to-indigo-500/30 border border-emerald-400/30 text-emerald-300 shadow-sm">
             <Sparkles className="h-5 w-5" />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-700">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
                 Akıllı Yönetici Özeti ve Öneri
               </span>
-              <Badge variant="outline" className="border-indigo-200 bg-white text-indigo-700 text-[11px]">
+              <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-400/30 rounded-full px-3 py-0.5 text-[11px] font-medium">
                 Canlı Veritabanı Analizi • Devir Hızı: {banner.avgTurnoverRate}x
-              </Badge>
+              </span>
               {banner.criticalSkuCount > 0 && (
-                <Badge className="bg-rose-600 text-white text-[11px]">
+                <span className="bg-rose-500/15 text-rose-300 border border-rose-500/30 rounded-full px-3 py-0.5 text-[11px] font-semibold">
                   {banner.criticalSkuCount} Kritik Stok
-                </Badge>
+                </span>
               )}
               {banner.expiringLotCount > 0 && (
-                <Badge className="bg-amber-500 text-white text-[11px]">
+                <span className="bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full px-3 py-0.5 text-[11px] font-semibold">
                   {banner.expiringLotCount} Yaklaşan SKT
-                </Badge>
+                </span>
               )}
             </div>
 
             {/* 2 Cümlelik Sade Yönetici Özeti */}
-            <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-medium">
               {banner.sentence1}{" "}
-              <span className="text-indigo-950 font-semibold">{banner.sentence2}</span>
+              <span className="text-emerald-300 font-semibold">{banner.sentence2}</span>
             </p>
           </div>
         </div>
@@ -140,7 +140,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
             <Link href="/dashboard/satinalma">
               <Button
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-9 gap-1.5 shadow-xs"
+                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-xs h-9 gap-1.5 shadow-sm rounded-xl cursor-pointer"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 Talep Açıldı ({createdPrNo}) → Satın Almaya Git
@@ -151,7 +151,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
               size="sm"
               onClick={handleOneClickAction}
               disabled={creatingPr}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-9 gap-1.5 shadow-xs font-semibold"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs h-9 gap-1.5 shadow-sm font-semibold rounded-xl cursor-pointer"
             >
               {creatingPr ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -170,9 +170,9 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
               size="sm"
               variant="outline"
               onClick={() => onQuickStockEntry(banner.criticalTopItem?.id)}
-              className="border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50 text-xs h-9 gap-1"
+              className="glass-input hover:bg-white/10 text-white border-white/15 text-xs h-9 gap-1.5 cursor-pointer"
             >
-              <ShoppingCart className="h-3.5 w-3.5" />
+              <ShoppingCart className="h-3.5 w-3.5 text-emerald-400" />
               Hızlı Stok Gir
             </Button>
           )}
@@ -181,7 +181,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
             <Button
               size="sm"
               variant="ghost"
-              className="text-slate-600 hover:text-indigo-700 text-xs h-9 gap-1"
+              className="text-white/75 hover:text-emerald-300 hover:bg-white/10 text-xs h-9 gap-1 rounded-xl cursor-pointer"
             >
               AI Analiz & Sor <ArrowRight className="h-3.5 w-3.5" />
             </Button>

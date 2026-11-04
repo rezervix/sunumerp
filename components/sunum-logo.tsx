@@ -43,16 +43,16 @@ export function SunumLogo({
       {showText && (
         <div className={`flex flex-col leading-none overflow-hidden ${textClassName}`}>
           <div className="flex items-center gap-1.5">
-            <span className="font-bold text-sm tracking-tight text-foreground truncate">
+            <span className="font-bold text-sm tracking-tight text-white truncate">
               Sunum ERP
             </span>
             {badgeText && (
-              <span className="px-1.5 py-0.5 text-[9px] font-bold rounded bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-600/20 uppercase tracking-wider">
+              <span className="px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-blue-500/20 text-blue-300 border border-blue-400/30 uppercase tracking-wider">
                 {badgeText}
               </span>
             )}
           </div>
-          <span className="text-[11px] font-medium text-muted-foreground mt-0.5 truncate">
+          <span className="text-[11px] font-medium text-white/55 mt-0.5 truncate">
             Demo Yönetim Paneli
           </span>
         </div>

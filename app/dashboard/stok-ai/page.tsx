@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
   Sparkles,
   BrainCircuit,
@@ -21,10 +22,8 @@ import {
   Flame,
   Clock
 } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 import { InventoryModuleNav } from "../stok/components/InventoryModuleNav"
@@ -179,27 +178,27 @@ export default function InventoryAiAndAnalyticsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
       {/* 1. ÜST AI YÖNETİCİ BRİFİNGİ */}
-      <div className="rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50/90 via-indigo-50/50 to-white p-4 sm:p-5 shadow-xs">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white shadow-xs">
+      <div className="bg-gradient-to-r from-emerald-500/10 via-slate-900/60 to-indigo-500/10 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 shadow-[0_0_20px_rgba(99,102,241,0.25)]">
               <BrainCircuit className="h-5 w-5" />
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-slate-900">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-base sm:text-xl font-bold text-white">
                   AI Analiz, Talep Tahminleme & Sistem Ayarları
                 </h1>
-                <Badge variant="outline" className="border-purple-300 bg-white text-purple-700 text-xs font-medium">
+                <span className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-full px-3 py-0.5 text-xs font-medium">
                   Canlı Prisma Veritabanı Analitiği
-                </Badge>
+                </span>
               </div>
-              <p className="mt-1 text-xs sm:text-sm text-slate-600">
+              <p className="mt-1.5 text-xs sm:text-sm text-white/70 leading-relaxed">
                 {executiveBanner
                   ? `${executiveBanner.sentence1} ${executiveBanner.sentence2}`
                   : "Stok hareketleri, devir hızı, ölü stoklar ve yaklaşan SKT riskleri gerçek veritabanı kayıtlarından matematiksel olarak hesaplanır."}
@@ -207,13 +206,13 @@ export default function InventoryAiAndAnalyticsPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={() => fetchAiDashboard(true)}
               disabled={loading || refreshing}
-              className="text-xs h-9 gap-1.5"
+              className="text-xs h-9 gap-1.5 border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
               Analizi Yenile
@@ -221,7 +220,7 @@ export default function InventoryAiAndAnalyticsPage() {
             <Button
               size="sm"
               onClick={() => setActiveTab("ask-me-anything")}
-              className="bg-purple-600 hover:bg-purple-700 text-white text-xs h-9 gap-1.5 shadow-xs"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs h-9 gap-1.5 rounded-xl shadow-lg shadow-indigo-500/25"
             >
               <Sparkles className="h-4 w-4" />
               Soru Sor (AMA)
@@ -231,22 +230,34 @@ export default function InventoryAiAndAnalyticsPage() {
       </div>
 
       {/* 2. ANA SEKMELER */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="bg-white border border-slate-200 p-1 h-auto flex flex-wrap gap-1">
-          <TabsTrigger value="ask-me-anything" className="text-xs sm:text-sm gap-1.5">
-            <MessageSquareText className="h-4 w-4" />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="glass-panel p-1.5 rounded-2xl h-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5">
+          <TabsTrigger
+            value="ask-me-anything"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-indigo-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-indigo-500/30 data-[state=active]:shadow-lg"
+          >
+            <MessageSquareText className="h-4 w-4 text-indigo-400" />
             1. Doğal Dil Sorgulama (AMA Asistanı)
           </TabsTrigger>
-          <TabsTrigger value="foresight-forecasting" className="text-xs sm:text-sm gap-1.5">
-            <TrendingUp className="h-4 w-4" />
-            2. Talep Tahmini, Devir Hızı & Ölü Stok (ForesightAI)
+          <TabsTrigger
+            value="foresight-forecasting"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-emerald-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-emerald-500/30 data-[state=active]:shadow-lg"
+          >
+            <TrendingUp className="h-4 w-4 text-emerald-400" />
+            2. Talep Tahmini & Ölü Stok (ForesightAI)
           </TabsTrigger>
-          <TabsTrigger value="narrative-reporting" className="text-xs sm:text-sm gap-1.5">
-            <FileText className="h-4 w-4" />
+          <TabsTrigger
+            value="narrative-reporting"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-purple-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-purple-500/30 data-[state=active]:shadow-lg"
+          >
+            <FileText className="h-4 w-4 text-purple-400" />
             3. Yönetici Rapor Anlatıları
           </TabsTrigger>
-          <TabsTrigger value="api-settings" className="text-xs sm:text-sm gap-1.5">
-            <Settings className="h-4 w-4" />
+          <TabsTrigger
+            value="api-settings"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-sky-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-sky-500/30 data-[state=active]:shadow-lg"
+          >
+            <Settings className="h-4 w-4 text-sky-400" />
             4. Açık API, Entegrasyon & Ayarlar
           </TabsTrigger>
         </TabsList>
@@ -254,31 +265,32 @@ export default function InventoryAiAndAnalyticsPage() {
         {/* ══════════════════════════════════════════════════════════
             TAB 1: DOĞAL DİL SORGULAMA ("ASK ME ANYTHING" - AMA)
            ══════════════════════════════════════════════════════════ */}
-        <TabsContent value="ask-me-anything" className="space-y-4">
-          <Card className="border-indigo-100 shadow-xs">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <MessageSquareText className="h-4 w-4 text-indigo-600" />
+        <TabsContent value="ask-me-anything" className="space-y-5 focus-visible:outline-none">
+          <div className="glass-panel rounded-2xl p-6 space-y-5">
+            <div>
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <MessageSquareText className="h-5 w-5 text-indigo-400" />
                 Doğal Dil Veritabanı Sorgulama Asistanı (Ask Me Anything)
-              </CardTitle>
-              <CardDescription>
-                Sorunuzu günlük Türkçe ile yazın; arka planda gerçek Prisma sorguları (Kritik stoklar, en çok satanlar, ölü stoklar, depo bazlı envanter değeri, yaklaşan SKT'ler, konsinye hakedişler) çalıştırılıp tablo ve özet olarak sunulsun.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Soru Giriş Çubuğu */}
-              <div className="flex flex-col sm:flex-row gap-2">
+              </h2>
+              <p className="text-xs text-white/60 mt-1">
+                Sorunuzu günlük Türkçe ile yazın; arka planda gerçek Prisma sorguları (Kritik stoklar, en çok satanlar, ölü stoklar, depo bazlı envanter değeri, yaklaşan SKT&apos;ler, konsinye hakedişler) çalıştırılıp tablo ve özet olarak sunulsun.
+              </p>
+            </div>
+
+            {/* AI Komut Merkezi Arama Barı */}
+            <div className="bg-black/40 border border-white/15 rounded-2xl p-4 space-y-4 shadow-inner">
+              <div className="flex flex-col sm:flex-row gap-2.5">
                 <Input
                   value={amaInput}
                   onChange={e => setAmaInput(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && handleRunAmaQuery()}
                   placeholder="Örn: SKT'si yaklaşan lotlar hangileri? veya Depo bazlı envanter değerimiz nedir?"
-                  className="bg-slate-50 h-11 text-sm border-slate-200"
+                  className="glass-input h-11 text-sm flex-1"
                 />
                 <Button
                   onClick={() => handleRunAmaQuery()}
                   disabled={amaLoading}
-                  className="h-11 bg-indigo-600 hover:bg-indigo-700 text-white px-6 gap-2 text-xs font-semibold shrink-0"
+                  className="h-11 bg-indigo-600 hover:bg-indigo-500 text-white px-6 gap-2 text-xs font-semibold rounded-xl shadow-lg shadow-indigo-500/25 shrink-0"
                 >
                   {amaLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -291,7 +303,7 @@ export default function InventoryAiAndAnalyticsPage() {
 
               {/* Hızlı Soru Rozetleri */}
               <div>
-                <span className="text-xs text-slate-400 block mb-1.5">
+                <span className="text-xs text-white/45 block mb-2">
                   Hızlı Veritabanı Sorguları:
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -303,59 +315,60 @@ export default function InventoryAiAndAnalyticsPage() {
                     "Depo bazlı envanter değeri ve FIFO maliyet dağılımı nedir?",
                     "Konsinye (emanet) stoklarımızın tedarikçi hakediş durumu nedir?"
                   ].map((sampleQ, idx) => (
-                    <Button
+                    <button
                       key={idx}
-                      variant="outline"
-                      size="sm"
+                      type="button"
                       onClick={() => handleRunAmaQuery(sampleQ)}
-                      className="h-7 text-xs bg-white hover:bg-indigo-50 border-slate-200 text-slate-700"
+                      className="rounded-full px-3.5 py-1.5 text-xs bg-white/5 hover:bg-indigo-500/20 border border-white/10 hover:border-indigo-500/30 text-white/75 hover:text-white transition"
                     >
                       {sampleQ}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Yapay Zekâ Yanıt Kartı + Gerçek Veritabanı Tablosu */}
-              {amaResult && (
-                <div className="rounded-xl border border-indigo-100 bg-indigo-50/30 p-5 space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-100 pb-3">
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-indigo-600 text-white text-xs">
-                        {amaResult.intentDetected}
-                      </Badge>
-                      <span className="text-xs text-slate-500">
-                        Güven Skoru: <strong>%{amaResult.confidencePercent}</strong> ({amaResult.executionTimeMs} ms)
-                      </span>
-                    </div>
-                    <code className="font-mono text-[11px] text-indigo-700 bg-white px-2 py-0.5 rounded border border-indigo-100">
-                      {amaResult.executedQueryExpression}
-                    </code>
+            {/* Yapay Zekâ Yanıt Kartı + Gerçek Veritabanı Tablosu */}
+            {amaResult && (
+              <div className="bg-black/40 border border-white/15 rounded-2xl p-5 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full px-3 py-0.5 text-xs font-semibold">
+                      {amaResult.intentDetected}
+                    </span>
+                    <span className="text-xs text-white/60">
+                      Güven Skoru: <strong className="text-emerald-400">%{amaResult.confidencePercent}</strong> ({amaResult.executionTimeMs} ms)
+                    </span>
                   </div>
+                  <code className="font-mono text-[11px] text-indigo-300 bg-white/5 px-3 py-1 rounded-lg border border-white/10">
+                    {amaResult.executedQueryExpression}
+                  </code>
+                </div>
 
-                  {/* Özet Cümle */}
-                  <div className="text-sm text-slate-800 leading-relaxed font-medium bg-white p-3.5 rounded-xl border border-indigo-100">
-                    {amaResult.answerNarrative}
-                  </div>
+                {/* Özet Cümle */}
+                <div className="text-sm text-white/90 leading-relaxed font-medium glass-card p-4 rounded-2xl">
+                  {amaResult.answerNarrative}
+                </div>
 
-                  {/* Gerçek Veritabanı Sonuç Tablosu */}
-                  {amaResult.columns && amaResult.columns.length > 0 && (
-                    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                {/* Gerçek Veritabanı Sonuç Tablosu */}
+                {amaResult.columns && amaResult.columns.length > 0 && (
+                  <div className="glass-table-container overflow-hidden">
+                    <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs">
-                        <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
+                        <thead className="bg-white/[0.03] text-white/50 border-b border-white/10 uppercase text-[11px]">
                           <tr>
                             {amaResult.columns.map(col => (
-                              <th key={col} className="px-3.5 py-2.5 font-semibold">
+                              <th key={col} className="px-4 py-3 font-semibold">
                                 {col}
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody>
                           {(amaResult.rows || []).map((row, rIdx) => (
-                            <tr key={rIdx} className="hover:bg-slate-50/80">
+                            <tr key={rIdx} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
                               {amaResult.columns.map(col => (
-                                <td key={col} className="px-3.5 py-2.5 text-slate-700 font-medium">
+                                <td key={col} className="px-4 py-3 text-white/85 font-medium">
                                   {String(row[col] ?? "-")}
                                 </td>
                               ))}
@@ -364,37 +377,37 @@ export default function InventoryAiAndAnalyticsPage() {
                         </tbody>
                       </table>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Önerilen Aksiyonlar */}
-                  {amaResult.recommendedActions && amaResult.recommendedActions.length > 0 && (
-                    <div className="pt-2 border-t border-indigo-100 flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex flex-wrap gap-2">
-                        {amaResult.recommendedActions.map((act, idx) => (
-                          <Link key={idx} href="/dashboard/satinalma">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 text-xs bg-white border-indigo-200 text-indigo-700 hover:bg-indigo-50"
-                            >
-                              <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 text-indigo-600" />
-                              {act}
-                            </Button>
-                          </Link>
-                        ))}
-                      </div>
+                {/* Önerilen Aksiyonlar */}
+                {amaResult.recommendedActions && amaResult.recommendedActions.length > 0 && (
+                  <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {amaResult.recommendedActions.map((act, idx) => (
+                        <Link key={idx} href="/dashboard/satinalma">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 text-xs bg-indigo-500/15 border-indigo-500/30 text-indigo-200 hover:bg-indigo-500/25 rounded-xl"
+                          >
+                            <CheckCircle2 className="mr-1.5 h-3.5 w-3.5 text-emerald-400" />
+                            {act}
+                          </Button>
+                        </Link>
+                      ))}
                     </div>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         {/* ══════════════════════════════════════════════════════════
             TAB 2: FORESIGHT-AI TALEP TAHMİNİ, DEVİR HIZI VE ÖLÜ STOK
            ══════════════════════════════════════════════════════════ */}
-        <TabsContent value="foresight-forecasting" className="space-y-6">
+        <TabsContent value="foresight-forecasting" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {forecasts.map(fc => {
               const isSelected = activeForecast?.id === fc.id
@@ -403,62 +416,70 @@ export default function InventoryAiAndAnalyticsPage() {
                 fc.currentAvailableStock <= fc.minStockLevel
 
               return (
-                <Card
+                <motion.div
                   key={fc.id}
+                  whileHover={{ y: -4 }}
                   onClick={() => setSelectedForecastId(fc.id)}
-                  className={`cursor-pointer transition-all ${
+                  className={`cursor-pointer glass-card p-6 rounded-2xl flex flex-col justify-between space-y-3.5 ${
                     isSelected
-                      ? "border-2 border-purple-600 bg-purple-50/20 shadow-xs"
-                      : "border-slate-200 hover:border-slate-300"
+                      ? "border-indigo-400/60 ring-1 ring-indigo-400/40 shadow-[0_0_25px_rgba(99,102,241,0.2)]"
+                      : "hover:border-white/25"
                   }`}
                 >
-                  <CardHeader className="p-4 pb-2">
+                  <div>
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-xs font-bold text-purple-700">{fc.sku}</span>
+                      <span className="font-mono text-xs font-bold text-indigo-300">{fc.sku}</span>
                       {fc.isDeadStock ? (
-                        <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800 text-[10px]">
-                          Hareketsiz (Ölü) Stok
-                        </Badge>
+                        <span className="bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full px-3 py-0.5 text-xs font-semibold">
+                          Hareketsiz Stok
+                        </span>
                       ) : (
-                        <Badge className={isRisk ? "bg-rose-600 text-white text-[10px]" : "bg-emerald-600 text-white text-[10px]"}>
-                          {fc.daysUntilStockout >= 900 ? "Stok Yeterli" : `${fc.daysUntilStockout} Gün Stok Ömrü`}
-                        </Badge>
+                        <span
+                          className={`rounded-full px-3 py-0.5 text-xs font-semibold border ${
+                            isRisk
+                              ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
+                              : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                          }`}
+                        >
+                          {fc.daysUntilStockout >= 900 ? "Stok Yeterli" : `${fc.daysUntilStockout} Gün Ömür`}
+                        </span>
                       )}
                     </div>
-                    <CardTitle className="text-sm text-slate-900 mt-1 line-clamp-1">
+                    <h3 className="text-sm font-bold text-white mt-2 line-clamp-1">
                       {fc.itemName}
-                    </CardTitle>
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
-                      <span>Mevcut: <strong>{fc.currentAvailableStock} {fc.unit}</strong></span>
-                      <span>Devir Hızı: <strong>{fc.turnoverRateAnnual}x/yıl</strong></span>
+                    </h3>
+                    <div className="flex items-center justify-between text-xs text-white/60 pt-1">
+                      <span>Mevcut: <strong className="text-white">{fc.currentAvailableStock} {fc.unit}</strong></span>
+                      <span>Devir: <strong className="text-sky-300">{fc.turnoverRateAnnual}x/yıl</strong></span>
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-4 pt-1 space-y-3">
-                    <div className="grid grid-cols-3 gap-1 bg-slate-50 p-2 rounded text-center text-[11px]">
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-1.5 bg-black/30 border border-white/10 p-2.5 rounded-xl text-center text-xs">
                       <div>
-                        <span className="text-slate-400 block text-[10px]">30 Gün</span>
-                        <strong>{fc.forecast30d}</strong>
+                        <span className="text-white/45 block text-[10px]">30 Gün</span>
+                        <strong className="text-white">{fc.forecast30d}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">60 Gün</span>
-                        <strong>{fc.forecast60d}</strong>
+                        <span className="text-white/45 block text-[10px]">60 Gün</span>
+                        <strong className="text-white">{fc.forecast60d}</strong>
                       </div>
                       <div>
-                        <span className="text-slate-400 block text-[10px]">90 Gün</span>
-                        <strong className="text-purple-700">{fc.forecast90d}</strong>
+                        <span className="text-white/45 block text-[10px]">90 Gün</span>
+                        <strong className="text-indigo-300">{fc.forecast90d}</strong>
                       </div>
                     </div>
 
                     {fc.nearestExpiryDays !== null && fc.nearestExpiryDays <= 30 && (
-                      <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 px-2 py-1 rounded border border-amber-200">
-                        <Clock className="h-3 w-3 shrink-0" />
+                      <div className="flex items-center gap-1.5 text-[11px] text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30">
+                        <Clock className="h-3 w-3 shrink-0 text-amber-400" />
                         <span>SKT Riski: {fc.nearestExpiryDays} gün kaldı ({fc.expiringLotQty} {fc.unit})</span>
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between text-xs pt-1">
-                      <span className="text-slate-500">Önerilen Sipariş:</span>
-                      <strong className={fc.recommendedOrderQty > 0 ? "text-rose-600" : "text-emerald-700"}>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-white/60">Önerilen Sipariş:</span>
+                      <strong className={fc.recommendedOrderQty > 0 ? "text-rose-400" : "text-emerald-400"}>
                         {fc.recommendedOrderQty > 0 ? `+${fc.recommendedOrderQty} ${fc.unit}` : "Sipariş Gerekmiyor"}
                       </strong>
                     </div>
@@ -470,7 +491,7 @@ export default function InventoryAiAndAnalyticsPage() {
                         e.stopPropagation()
                         handleTriggerReorderFromForecast(fc)
                       }}
-                      className="w-full h-8 text-xs bg-purple-600 hover:bg-purple-700 text-white gap-1"
+                      className="w-full h-9 text-xs bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-500/20 gap-1.5"
                     >
                       {creatingPrId === fc.id ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -479,228 +500,236 @@ export default function InventoryAiAndAnalyticsPage() {
                       )}
                       Tek Tıkla Sipariş Talebi Aç
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </motion.div>
               )
             })}
           </div>
 
           {/* Seçili Ürünün Gelecek Trend Grafiği */}
           {activeForecast && (
-            <Card className="border-slate-200">
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-base text-slate-900">
-                      {activeForecast.itemName} ({activeForecast.sku}) — Gerçek Hareket & 90 Günlük Talep Projeksiyonu
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                      {activeForecast.channelTrendLabel} • Mevsimsellik Katsayısı: ×{activeForecast.seasonalityFactor} • Güven Skoru: %{activeForecast.confidenceScorePercent}
-                    </CardDescription>
-                  </div>
-                  <Badge className="bg-purple-600 text-white">
-                    30 Günlük Ciro Etkisi: ₺{(activeForecast.projectedRevenueImpactTry || 0).toLocaleString("tr-TR")}
-                  </Badge>
+            <div className="glass-card p-6 rounded-2xl space-y-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-base font-bold text-white">
+                    {activeForecast.itemName} ({activeForecast.sku}) — Gerçek Hareket & 90 Günlük Talep Projeksiyonu
+                  </h3>
+                  <p className="text-xs text-white/60 mt-0.5">
+                    {activeForecast.channelTrendLabel} • Mevsimsellik Katsayısı: ×{activeForecast.seasonalityFactor} • Güven Skoru: %{activeForecast.confidenceScorePercent}
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {(activeForecast.monthlySeries || []).map((pt, idx) => {
-                    const isFuture = pt.actual === undefined
-                    const maxVal = Math.max(
-                      10,
-                      ...activeForecast.monthlySeries.map(m => Math.max(m.actual || 0, m.forecast || 0))
-                    )
-                    const barHeightPercent = Math.min(100, Math.max(18, Math.round(((pt.forecast || 1) / maxVal) * 100)))
+                <span className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-full px-3.5 py-1 text-xs font-semibold">
+                  30 Günlük Ciro Etkisi: ₺{(activeForecast.projectedRevenueImpactTry || 0).toLocaleString("tr-TR")}
+                </span>
+              </div>
 
-                    return (
-                      <div
-                        key={idx}
-                        className={`p-3 rounded-xl border flex flex-col justify-between ${
-                          isFuture ? "border-purple-300 bg-purple-50/40" : "border-slate-200 bg-white"
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-slate-700">{pt.month}</div>
-                        <div className="my-2 h-20 flex items-end justify-center bg-slate-100/70 rounded p-1.5">
-                          <div
-                            className={`w-full rounded-t transition-all ${
-                              isFuture ? "bg-purple-600" : "bg-slate-800"
-                            }`}
-                            style={{ height: `${barHeightPercent}%` }}
-                          />
-                        </div>
-                        <div className="text-[11px] space-y-0.5">
-                          {pt.actual !== undefined && (
-                            <div className="flex justify-between text-slate-500">
-                              <span>Gerçekleşen:</span>
-                              <strong>{pt.actual} {activeForecast.unit}</strong>
-                            </div>
-                          )}
-                          <div className="flex justify-between text-purple-700">
-                            <span>Tahmin:</span>
-                            <strong>{pt.forecast} {activeForecast.unit}</strong>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+                {(activeForecast.monthlySeries || []).map((pt, idx) => {
+                  const isFuture = pt.actual === undefined
+                  const maxVal = Math.max(
+                    10,
+                    ...activeForecast.monthlySeries.map(m => Math.max(m.actual || 0, m.forecast || 0))
+                  )
+                  const barHeightPercent = Math.min(100, Math.max(18, Math.round(((pt.forecast || 1) / maxVal) * 100)))
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3.5 rounded-2xl border flex flex-col justify-between ${
+                        isFuture
+                          ? "border-indigo-400/40 bg-indigo-500/10"
+                          : "border-white/10 bg-white/5"
+                      }`}
+                    >
+                      <div className="text-xs font-semibold text-white/85">{pt.month}</div>
+                      <div className="my-2.5 h-24 flex items-end justify-center bg-black/30 rounded-xl p-2 border border-white/5">
+                        <div
+                          className={`w-full rounded-t-lg transition-all ${
+                            isFuture
+                              ? "bg-gradient-to-t from-indigo-500 to-sky-400"
+                              : "bg-gradient-to-t from-emerald-600 to-emerald-400"
+                          }`}
+                          style={{ height: `${barHeightPercent}%` }}
+                        />
+                      </div>
+                      <div className="text-[11px] space-y-1">
+                        {pt.actual !== undefined && (
+                          <div className="flex justify-between text-white/60">
+                            <span>Gerçekleşen:</span>
+                            <strong className="text-emerald-400">{pt.actual} {activeForecast.unit}</strong>
                           </div>
+                        )}
+                        <div className="flex justify-between text-white/60">
+                          <span>Tahmin:</span>
+                          <strong className="text-indigo-300">{pt.forecast} {activeForecast.unit}</strong>
                         </div>
                       </div>
-                    )
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           )}
         </TabsContent>
 
         {/* ══════════════════════════════════════════════════════════
             TAB 3: YÖNETİCİ RAPOR ANLATILARI (NARRATIVE REPORTING)
            ══════════════════════════════════════════════════════════ */}
-        <TabsContent value="narrative-reporting" className="space-y-4">
+        <TabsContent value="narrative-reporting" className="space-y-5 focus-visible:outline-none">
           {narrativeReports.map(rep => (
-            <Card key={rep.id} className="border-slate-200">
-              <CardHeader className="pb-3 border-b">
+            <div key={rep.id} className="glass-card p-6 rounded-2xl space-y-5">
+              <div className="pb-4 border-b border-white/10">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded">
+                  <span className="font-mono text-xs font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30 px-3 py-0.5 rounded-full">
                     {rep.reportCode}
                   </span>
-                  <span className="text-xs text-slate-400">{rep.generatedAt}</span>
+                  <span className="text-xs text-white/45">{rep.generatedAt}</span>
                 </div>
-                <CardTitle className="text-base text-slate-900 mt-2">{rep.title}</CardTitle>
-                <CardDescription className="text-xs font-medium text-slate-700 mt-1">
+                <h3 className="text-base font-bold text-white mt-2.5">{rep.title}</h3>
+                <p className="text-xs font-medium text-white/70 mt-1">
                   {rep.executiveBrief}
-                </CardDescription>
-              </CardHeader>
+                </p>
+              </div>
 
-              <CardContent className="pt-4 space-y-4">
-                {/* KPI Kartları */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                  {(rep.kpiHighlights || []).map((kpi, idx) => (
-                    <div key={idx} className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
-                      <span className="text-[11px] text-slate-500 block">{kpi.label}</span>
-                      <strong className="text-sm sm:text-base text-slate-900">{kpi.value}</strong>
-                      <span className="text-[10px] text-emerald-700 block mt-0.5">{kpi.trend}</span>
-                    </div>
+              {/* KPI Kartları */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {(rep.kpiHighlights || []).map((kpi, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ y: -4 }}
+                    className="glass-card p-6 rounded-2xl"
+                  >
+                    <span className="text-sm text-white/60 block">{kpi.label}</span>
+                    <strong className="text-2xl font-bold text-white mt-1 block">{kpi.value}</strong>
+                    <span className="text-xs text-emerald-400 block mt-2">{kpi.trend}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Detay Paragraflar */}
+              <div className="space-y-2.5">
+                {(rep.narrativeParagraphs || []).map((p, idx) => (
+                  <p key={idx} className="text-xs sm:text-sm text-white/80 leading-relaxed bg-black/25 p-4 rounded-xl border border-white/10">
+                    {p}
+                  </p>
+                ))}
+              </div>
+
+              {/* Temel Bulgular */}
+              <div>
+                <span className="text-xs font-semibold text-white/60 uppercase tracking-wider block mb-2.5">
+                  Veritabanı Temel Bulguları:
+                </span>
+                <ul className="space-y-2 text-xs text-white/75">
+                  {(rep.keyFindings || []).map((finding, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
+                      <span>{finding}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
+              </div>
 
-                {/* Detay Paragraflar */}
-                <div className="space-y-2">
-                  {(rep.narrativeParagraphs || []).map((p, idx) => (
-                    <p key={idx} className="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3 rounded-lg border border-slate-100">
-                      {p}
-                    </p>
-                  ))}
-                </div>
-
-                {/* Temel Bulgular */}
-                <div>
-                  <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-2">
-                    Veritabanı Temel Bulguları:
-                  </span>
-                  <ul className="space-y-1.5 text-xs text-slate-600">
-                    {(rep.keyFindings || []).map((finding, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-purple-600 mt-1.5 shrink-0" />
-                        <span>{finding}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="p-3.5 bg-purple-50/60 rounded-xl border border-purple-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                  <span className="text-purple-900 font-medium">{rep.financialRiskSummary}</span>
-                  <Link href="/dashboard/satinalma">
-                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white text-xs h-8">
-                      Satın Alma & Otomatik Siparişe Git
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+              <div className="p-4 bg-gradient-to-r from-indigo-500/15 via-slate-900/60 to-purple-500/15 rounded-2xl border border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <span className="text-white/90 font-medium">{rep.financialRiskSummary}</span>
+                <Link href="/dashboard/satinalma">
+                  <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs h-9 rounded-xl shadow-lg shadow-indigo-500/20">
+                    Satın Alma & Otomatik Siparişe Git
+                  </Button>
+                </Link>
+              </div>
+            </div>
           ))}
         </TabsContent>
 
         {/* ══════════════════════════════════════════════════════════
             TAB 4: AÇIK API, ENTEGRASYON & SİSTEM AYARLARI
            ══════════════════════════════════════════════════════════ */}
-        <TabsContent value="api-settings" className="space-y-4">
+        <TabsContent value="api-settings" className="space-y-5 focus-visible:outline-none">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <Card className="border-slate-200 lg:col-span-7">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-indigo-600" />
+            <div className="glass-panel rounded-2xl p-6 lg:col-span-7 space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Terminal className="h-5 w-5 text-sky-400" />
                   Açık REST API v1 (`/api/v1/inventory`) & Dış Sistem Bağlantısı
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-white/60 mt-1">
                   Pazaryerleri, 3PL kargo firmaları ve barkod el terminalleri için gerçek zamanlı PostgreSQL/Prisma stok uç noktası.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded-xl bg-slate-950 text-white p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
-                      <Terminal className="h-4 w-4" />
-                      GET /api/v1/inventory
-                    </div>
-                    <Button
-                      size="sm"
-                      onClick={handleTestRestApi}
-                      disabled={isTestingApi}
-                      className="h-7 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs gap-1"
-                    >
-                      <Play className="h-3 w-3" />
-                      Canlı API Test Et
-                    </Button>
+                </p>
+              </div>
+
+              {/* AI Komut Merkezi Görünümlü API / Webhook Test Konsolu */}
+              <div className="bg-black/40 border border-white/15 rounded-2xl p-5 space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+                    <Terminal className="h-4 w-4" />
+                    GET /api/v1/inventory
                   </div>
-                  {apiTestResponse && (
-                    <pre className="text-[11px] font-mono text-slate-300 overflow-x-auto max-h-56 bg-slate-900 p-2.5 rounded">
-                      {apiTestResponse}
-                    </pre>
-                  )}
+                  <Button
+                    size="sm"
+                    onClick={handleTestRestApi}
+                    disabled={isTestingApi}
+                    className="h-8 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs gap-1.5 rounded-xl"
+                  >
+                    <Play className="h-3 w-3" />
+                    Canlı API Test Et
+                  </Button>
                 </div>
+                {apiTestResponse && (
+                  <pre className="text-[11px] font-mono text-emerald-200/90 overflow-x-auto max-h-56 bg-slate-950/90 border border-white/10 p-3.5 rounded-xl">
+                    {apiTestResponse}
+                  </pre>
+                )}
+              </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-xs text-slate-500">
-                    Gelişmiş ERP Veri Geçiş Sihirbazı, Webhook ve Eklenti ayarları için:
-                  </span>
-                  <Link href="/dashboard/envanter-ekosistem">
-                    <Button variant="outline" size="sm" className="text-xs h-8">
-                      Tam Ekran API & Veri Geçiş Sihirbazı
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2">
+                <span className="text-xs text-white/60">
+                  Gelişmiş ERP Veri Geçiş Sihirbazı, Webhook ve Eklenti ayarları için:
+                </span>
+                <Link href="/dashboard/envanter-ekosistem">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-9 border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
+                  >
+                    Tam Ekran API & Veri Geçiş Sihirbazı
+                  </Button>
+                </Link>
+              </div>
+            </div>
 
-            <Card className="border-slate-200 lg:col-span-5">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Webhook className="h-4 w-4 text-emerald-600" />
+            <div className="glass-card rounded-2xl p-6 lg:col-span-5 space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Webhook className="h-5 w-5 text-emerald-400" />
                   Canlı Sistem Kapasite & Veritabanı Özeti
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-white/60 mt-1">
                   Aktif Prisma/PostgreSQL tablolarındaki kayıt ve kota durumu.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-xs">
-                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="text-slate-600">Aktif Depo Sayısı</span>
-                  <strong className="text-slate-900">
+                </p>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-black/30 border border-white/10">
+                  <span className="text-white/60">Aktif Depo Sayısı</span>
+                  <strong className="text-white font-mono">
                     {ecosystemData?.saasUsage?.currentWarehouses || 3} Depo
                   </strong>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="text-slate-600">Aktif Stok Kartı (SKU)</span>
-                  <strong className="text-slate-900">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-black/30 border border-white/10">
+                  <span className="text-white/60">Aktif Stok Kartı (SKU)</span>
+                  <strong className="text-emerald-400 font-mono">
                     {ecosystemData?.saasUsage?.currentActiveSkus || forecasts.length} Ürün
                   </strong>
                 </div>
-                <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="text-slate-600">Omnichannel Sipariş Kaydı</span>
-                  <strong className="text-slate-900">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-black/30 border border-white/10">
+                  <span className="text-white/60">Omnichannel Sipariş Kaydı</span>
+                  <strong className="text-sky-400 font-mono">
                     {ecosystemData?.saasUsage?.currentMonthlyOrders || 4} Sipariş
                   </strong>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </TabsContent>
       </Tabs>

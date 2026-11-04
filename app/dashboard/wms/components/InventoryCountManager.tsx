@@ -15,8 +15,6 @@ import {
   FileSpreadsheet
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Dialog,
@@ -207,19 +205,19 @@ export function InventoryCountManager({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* ÜST FİLTRE VE EYLEM ÇUBUĞU */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-panel p-4 rounded-2xl">
         <div className="flex items-center gap-3">
           {/* Oturum Seçici */}
           <Select
             value={activeSession?.id || ""}
             onValueChange={setSelectedSessionId}
           >
-            <SelectTrigger className="w-56 text-xs bg-slate-50 border-slate-200 font-semibold">
+            <SelectTrigger className="w-60 text-xs glass-input h-10 font-semibold">
               <SelectValue placeholder="Sayım Oturumu Seçiniz" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-950/95 border-white/15 text-white backdrop-blur-xl">
               {sessions.map(s => (
                 <SelectItem key={s.id} value={s.id} className="text-xs">
                   {s.sessionNumber} ({s.countType === "BLIND_COUNT" ? "Kör Sayım" : "Tam Sayım"})
@@ -229,29 +227,28 @@ export function InventoryCountManager({
           </Select>
 
           {activeSession && (
-            <Badge
-              className={`text-[10px] font-bold ${
-                activeSession.status === "RECONCILED"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-blue-100 text-blue-800"
-              }`}
+            <span
+              className={`rounded-full px-3 py-0.5 text-xs font-semibold border ${activeSession.status === "RECONCILED"
+                  ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                  : "bg-sky-500/15 text-sky-300 border-sky-500/30"
+                }`}
             >
               {activeSession.status === "RECONCILED" ? "Mahsuplaştı" : "Devam Ediyor"}
-            </Badge>
+            </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* KÖR SAYIM GÖZ BUTONU (YÖNETİCİ AÇMA / KAPAMA) */}
           {activeSession?.countType === "BLIND_COUNT" && (
             <Button
               size="sm"
               variant="outline"
               onClick={() => setIsRevealMode(prev => !prev)}
-              className="text-xs border-slate-200 gap-1.5 h-8"
+              className="text-xs border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl gap-1.5 h-9"
               title="Yönetici Gözü: Kör sayımda sistem miktarlarını göster/gizle"
             >
-              {isRevealMode ? <EyeOff className="h-3.5 w-3.5 text-slate-500" /> : <Eye className="h-3.5 w-3.5 text-indigo-600" />}
+              {isRevealMode ? <EyeOff className="h-3.5 w-3.5 text-white/60" /> : <Eye className="h-3.5 w-3.5 text-indigo-400" />}
               <span>{isRevealMode ? "Miktarları Gizle" : "Miktarları Göster"}</span>
             </Button>
           )}
@@ -259,9 +256,9 @@ export function InventoryCountManager({
           <Button
             size="sm"
             onClick={() => setIsNewSessionModalOpen(true)}
-            className="h-8 text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold gap-1"
+            className="h-9 text-xs bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold rounded-xl gap-1.5"
           >
-            <Plus className="h-3.5 w-3.5" />
+            <Plus className="h-3.5 w-3.5 text-amber-400" />
             <span>Yeni Sayım</span>
           </Button>
 
@@ -270,7 +267,7 @@ export function InventoryCountManager({
               size="sm"
               disabled={isReconciling}
               onClick={handleReconcile}
-              className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-1 shadow-xs"
+              className="h-9 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl gap-1.5 shadow-lg shadow-emerald-500/20"
             >
               {isReconciling ? (
                 <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -285,14 +282,14 @@ export function InventoryCountManager({
 
       {/* KÖR SAYIM BİLGİLENDİRME AFİŞİ */}
       {isBlindActive && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between text-xs text-amber-900">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+        <div className="p-4 bg-amber-500/10 border border-amber-500/30 backdrop-blur-md rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-200">
+          <div className="flex items-center gap-2.5">
+            <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
             <span>
-              <strong>Kör Sayım Modu Aktif:</strong> Personelin manipüle etmemesi için sistemdeki beklenen miktarlar gizlenmiştir.
+              <strong className="text-amber-300">Kör Sayım Modu Aktif:</strong> Personelin manipüle etmemesi için sistemdeki beklenen miktarlar gizlenmiştir.
             </span>
           </div>
-          <span className="text-[11px] text-amber-700 font-medium font-mono">
+          <span className="text-[11px] text-amber-300 font-medium font-mono bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
             Sistem Miktarı: [GİZLİ]
           </span>
         </div>
@@ -300,56 +297,56 @@ export function InventoryCountManager({
 
       {/* SAYIM SATIRLARI TABLOSU */}
       {!activeSession || !activeSession.lines || activeSession.lines.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200/80 p-8 text-center text-xs text-slate-500">
+        <div className="glass-card rounded-2xl p-10 text-center text-xs text-white/50">
           Aktif sayım satırı bulunmuyor.
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-xs">
+        <div className="glass-table-container overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50/75 border-b border-slate-200 text-[11px] text-slate-500 uppercase font-semibold">
-                  <th className="py-3 px-3.5">Raf Hücresi</th>
-                  <th className="py-3 px-3">Ürün Bilgisi</th>
-                  <th className="py-3 px-3 text-right">Sistem Miktarı</th>
-                  <th className="py-3 px-3 text-center">Sayılan Miktar</th>
-                  <th className="py-3 px-3 text-right">Fark</th>
-                  <th className="py-3 px-3 text-right">Fark Tutarı</th>
-                  <th className="py-3 px-3 text-center pr-3.5">İşlem</th>
+                <tr className="bg-white/[0.03] border-b border-white/10 text-[11px] text-white/50 uppercase font-semibold">
+                  <th className="py-3.5 px-4">Raf Hücresi</th>
+                  <th className="py-3.5 px-3">Ürün Bilgisi</th>
+                  <th className="py-3.5 px-3 text-right">Sistem Miktarı</th>
+                  <th className="py-3.5 px-3 text-center">Sayılan Miktar</th>
+                  <th className="py-3.5 px-3 text-right">Fark</th>
+                  <th className="py-3.5 px-3 text-right">Fark Tutarı</th>
+                  <th className="py-3.5 px-4 text-center">İşlem</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody>
                 {activeSession.lines.map(line => {
                   const isSaving = savingLineId === line.id
                   const isCounted = line.countedQty !== null && line.countedQty !== undefined
                   const variance = isCounted ? Number(line.varianceQty || 0) : 0
 
                   return (
-                    <tr key={line.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={line.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
                       {/* Raf Hücresi */}
-                      <td className="py-3 px-3.5 font-mono font-bold text-slate-900">
+                      <td className="py-3.5 px-4 font-mono font-bold text-indigo-300">
                         {line.binCode}
                       </td>
 
                       {/* Ürün */}
-                      <td className="py-3 px-3">
-                        <div className="font-semibold text-slate-900">{line.itemName}</div>
-                        <div className="text-[11px] text-slate-500 font-mono">SKU: {line.sku}</div>
+                      <td className="py-3.5 px-3">
+                        <div className="font-semibold text-white">{line.itemName}</div>
+                        <div className="text-[11px] text-white/45 font-mono">SKU: {line.sku}</div>
                       </td>
 
                       {/* Sistem Miktarı */}
-                      <td className="py-3 px-3 text-right font-mono font-medium">
+                      <td className="py-3.5 px-3 text-right font-mono font-medium text-white/85">
                         {isBlindActive ? (
-                          <span className="text-slate-400 italic">***</span>
+                          <span className="text-white/35 italic">***</span>
                         ) : (
                           `${line.systemQty} Adet`
                         )}
                       </td>
 
                       {/* Sayılan Miktar Girişi */}
-                      <td className="py-3 px-3 text-center">
+                      <td className="py-3.5 px-3 text-center">
                         {activeSession.status === "RECONCILED" ? (
-                          <span className="font-bold font-mono text-slate-900">
+                          <span className="font-bold font-mono text-white">
                             {line.countedQty ?? line.systemQty} Adet
                           </span>
                         ) : (
@@ -360,14 +357,14 @@ export function InventoryCountManager({
                               placeholder={isCounted ? String(line.countedQty) : "Girin"}
                               value={countInputs[line.id] !== undefined ? countInputs[line.id] : (isCounted ? String(line.countedQty) : "")}
                               onChange={e => setCountInputs({ ...countInputs, [line.id]: e.target.value })}
-                              className="h-8 w-20 text-center font-bold font-mono text-xs bg-slate-50 border-slate-300"
+                              className="h-8 w-20 text-center font-bold font-mono text-xs glass-input"
                             />
                             <Button
                               size="sm"
                               variant="outline"
                               disabled={isSaving}
                               onClick={() => handleSaveLine(line.id)}
-                              className="h-8 px-2 text-xs border-slate-300 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300"
+                              className="h-8 px-2.5 text-xs border-white/15 bg-white/5 hover:bg-indigo-500/20 hover:text-indigo-300 hover:border-indigo-500/30 text-white rounded-xl"
                             >
                               {isSaving ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
                             </Button>
@@ -376,46 +373,46 @@ export function InventoryCountManager({
                       </td>
 
                       {/* Fark */}
-                      <td className="py-3 px-3 text-right font-mono font-bold">
+                      <td className="py-3.5 px-3 text-right font-mono font-bold">
                         {isBlindActive ? (
-                          <span className="text-slate-400 italic">***</span>
+                          <span className="text-white/35 italic">***</span>
                         ) : isCounted ? (
-                          <span className={variance < 0 ? "text-rose-600" : variance > 0 ? "text-emerald-600" : "text-slate-600"}>
+                          <span className={variance < 0 ? "text-rose-400" : variance > 0 ? "text-emerald-400" : "text-white/60"}>
                             {variance > 0 ? `+${variance}` : variance}
                           </span>
                         ) : (
-                          <span className="text-slate-400">-</span>
+                          <span className="text-white/35">-</span>
                         )}
                       </td>
 
                       {/* Fark Tutarı */}
-                      <td className="py-3 px-3 text-right font-mono font-semibold">
+                      <td className="py-3.5 px-3 text-right font-mono font-semibold">
                         {isBlindActive ? (
-                          <span className="text-slate-400 italic">***</span>
+                          <span className="text-white/35 italic">***</span>
                         ) : isCounted ? (
-                          <span className={variance < 0 ? "text-rose-600" : variance > 0 ? "text-emerald-600" : "text-slate-500"}>
+                          <span className={variance < 0 ? "text-rose-400" : variance > 0 ? "text-emerald-400" : "text-white/60"}>
                             {formatCurrency(Number(line.varianceAmount || 0))}
                           </span>
                         ) : (
-                          <span className="text-slate-400">-</span>
+                          <span className="text-white/35">-</span>
                         )}
                       </td>
 
                       {/* Durum Rozeti */}
-                      <td className="py-3 px-3 text-center pr-3.5">
+                      <td className="py-3.5 px-4 text-center">
                         {line.isReconciled ? (
-                          <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">
-                            <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />
+                          <span className="inline-flex items-center bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-full px-3 py-0.5 text-xs font-medium">
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
                             İşlendi
-                          </Badge>
+                          </span>
                         ) : isCounted ? (
-                          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200">
+                          <span className="inline-flex items-center bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full px-3 py-0.5 text-xs font-medium">
                             Sayıldı
-                          </Badge>
+                          </span>
                         ) : (
-                          <Badge variant="outline" className="text-[10px] bg-slate-50 text-slate-500 border-slate-200">
+                          <span className="inline-flex items-center bg-white/10 text-white/60 border border-white/15 rounded-full px-3 py-0.5 text-xs font-medium">
                             Bekliyor
-                          </Badge>
+                          </span>
                         )}
                       </td>
                     </tr>
@@ -429,24 +426,24 @@ export function InventoryCountManager({
 
       {/* YENİ SAYIM BAŞLATMA MODALI */}
       <Dialog open={isNewSessionModalOpen} onOpenChange={setIsNewSessionModalOpen}>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-md backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl shadow-2xl text-white">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-slate-900">
+            <DialogTitle className="text-base font-bold text-white">
               Yeni Sayım Oturumu Başlat
             </DialogTitle>
-            <DialogDescription className="text-xs text-slate-500">
+            <DialogDescription className="text-xs text-white/60">
               Kör sayım veya tam depo sayımı başlatarak gerçek envanteri doğrulayın.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 py-2 text-xs">
-            <div className="space-y-1">
-              <Label className="text-xs text-slate-700">Sayılacak Depo</Label>
+          <div className="space-y-3.5 py-2 text-xs">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/75">Sayılacak Depo</Label>
               <Select value={newWhId} onValueChange={setNewWhId}>
-                <SelectTrigger className="text-xs bg-slate-50">
+                <SelectTrigger className="text-xs glass-input h-10">
                   <SelectValue placeholder="Depo Seçiniz" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-950/95 border-white/15 text-white backdrop-blur-xl">
                   {warehouses.map(w => (
                     <SelectItem key={w.id} value={w.id} className="text-xs">
                       {w.name}
@@ -456,14 +453,14 @@ export function InventoryCountManager({
               </Select>
             </div>
 
-            <div className="space-y-1">
-              <Label className="text-xs text-slate-700">Sayım Türü</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/75">Sayım Türü</Label>
               <Select value={newCountType} onValueChange={setNewCountType}>
-                <SelectTrigger className="text-xs bg-slate-50">
+                <SelectTrigger className="text-xs glass-input h-10">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="BLIND_COUNT" className="text-xs font-semibold text-indigo-700">
+                <SelectContent className="bg-slate-950/95 border-white/15 text-white backdrop-blur-xl">
+                  <SelectItem value="BLIND_COUNT" className="text-xs font-semibold text-indigo-300">
                     Kör Sayım (Sistem Miktarları Gizli - Tavsiye Edilen)
                   </SelectItem>
                   <SelectItem value="FULL_COUNT" className="text-xs">
@@ -476,23 +473,23 @@ export function InventoryCountManager({
               </Select>
             </div>
 
-            <div className="space-y-1">
-              <Label className="text-xs text-slate-700">Görevli Sayım Ekibi</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-white/75">Görevli Sayım Ekibi</Label>
               <Input
                 value={newCounters}
                 onChange={e => setNewCounters(e.target.value)}
                 placeholder="Örn: Ahmet Yılmaz, Elif Demir"
-                className="text-xs bg-slate-50"
+                className="text-xs glass-input h-10"
               />
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsNewSessionModalOpen(false)}
-              className="text-xs"
+              className="text-xs border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl"
             >
               Vazgeç
             </Button>
@@ -500,7 +497,7 @@ export function InventoryCountManager({
               size="sm"
               disabled={isCreatingSession}
               onClick={handleCreateSession}
-              className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+              className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20"
             >
               {isCreatingSession ? "Başlatılıyor..." : "Sayımı Başlat"}
             </Button>
@@ -510,4 +507,3 @@ export function InventoryCountManager({
     </div>
   )
 }
-

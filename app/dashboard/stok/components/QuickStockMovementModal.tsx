@@ -156,19 +156,21 @@ export function QuickStockMovementModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg bg-white">
+      <DialogContent className="sm:max-w-lg backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl shadow-2xl text-white">
         <DialogHeader>
-          <div className="flex items-center gap-2">
-            <div className={`p-2 rounded-lg ${
-              movementType === "IN" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"
+          <div className="flex items-center gap-2.5">
+            <div className={`p-2 rounded-xl border ${
+              movementType === "IN"
+                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+                : "bg-sky-500/15 text-sky-400 border-sky-500/30"
             }`}>
               {movementType === "IN" ? <ArrowDownLeft className="h-5 w-5" /> : <ArrowUpRight className="h-5 w-5" />}
             </div>
             <div>
-              <DialogTitle className="text-lg font-semibold text-slate-900">
+              <DialogTitle className="text-lg font-semibold text-white">
                 {movementType === "IN" ? "Hızlı Stok Girişi (Alış / İrsaliye)" : "Hızlı Stok Çıkışı (Satış / Sarf)"}
               </DialogTitle>
-              <DialogDescription className="text-xs text-slate-500">
+              <DialogDescription className="text-xs text-white/60">
                 {movementType === "IN"
                   ? "Tedarikçiden gelen mal kabulü, irsaliye girişi ve anlık stok artışı."
                   : "Müşteri satışı, üretim sarfiyatı veya depodan anlık stok düşümü."}
@@ -178,7 +180,7 @@ export function QuickStockMovementModal({
         </DialogHeader>
 
         {errorMsg && (
-          <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -186,12 +188,14 @@ export function QuickStockMovementModal({
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
           {/* Hareket Türü Seçici */}
-          <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-lg">
+          <div className="grid grid-cols-2 gap-2 bg-black/30 border border-white/10 p-1 rounded-xl">
             <button
               type="button"
               onClick={() => setMovementType("IN")}
-              className={`py-1.5 text-xs font-medium rounded-md transition-all flex items-center justify-center gap-1.5 ${
-                movementType === "IN" ? "bg-white text-emerald-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                movementType === "IN"
+                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shadow-xs"
+                  : "text-white/60 hover:text-white"
               }`}
             >
               <ArrowDownLeft className="h-3.5 w-3.5" />
@@ -200,8 +204,10 @@ export function QuickStockMovementModal({
             <button
               type="button"
               onClick={() => setMovementType("OUT")}
-              className={`py-1.5 text-xs font-medium rounded-md transition-all flex items-center justify-center gap-1.5 ${
-                movementType === "OUT" ? "bg-white text-blue-700 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                movementType === "OUT"
+                  ? "bg-sky-500/20 text-sky-300 border border-sky-500/30 shadow-xs"
+                  : "text-white/60 hover:text-white"
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -211,12 +217,12 @@ export function QuickStockMovementModal({
 
           {/* Ürün Seçimi */}
           <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-slate-700">İşlem Yapılacak Ürün *</Label>
+            <Label className="text-xs font-medium text-white/75">İşlem Yapılacak Ürün *</Label>
             <Select value={selectedItemId} onValueChange={setSelectedItemId}>
-              <SelectTrigger className="w-full text-xs">
+              <SelectTrigger className="w-full text-xs glass-input">
                 <SelectValue placeholder="Ürün seçin..." />
               </SelectTrigger>
-              <SelectContent className="max-h-56">
+              <SelectContent className="max-h-56 backdrop-blur-xl bg-slate-950/95 border-white/15 text-white">
                 {items.map(item => (
                   <SelectItem key={item.id} value={item.id} className="text-xs">
                     {item.name} ({item.sku}) — Stok: {item.totalAvailable || 0} {item.baseUnit}
@@ -229,12 +235,12 @@ export function QuickStockMovementModal({
           {/* Depo & Raf Seçimi */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">Hedef Depo *</Label>
+              <Label className="text-xs font-medium text-white/75">Hedef Depo *</Label>
               <Select value={selectedWarehouseId} onValueChange={setSelectedWarehouseId}>
-                <SelectTrigger className="w-full text-xs">
+                <SelectTrigger className="w-full text-xs glass-input">
                   <SelectValue placeholder="Depo seçin..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="backdrop-blur-xl bg-slate-950/95 border-white/15 text-white">
                   {warehouses.map(wh => (
                     <SelectItem key={wh.id} value={wh.id} className="text-xs">
                       {wh.name}
@@ -243,20 +249,20 @@ export function QuickStockMovementModal({
                 </SelectContent>
               </Select>
               {movementType === "OUT" && (
-                <p className="text-[11px] text-slate-500">
-                  Bu depodaki mevcut: <span className="font-semibold text-slate-800">{availableQty} {currentItem?.baseUnit || "Adet"}</span>
+                <p className="text-[11px] text-white/55">
+                  Bu depodaki mevcut: <span className="font-semibold text-emerald-400">{availableQty} {currentItem?.baseUnit || "Adet"}</span>
                 </p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">Raf / Lokasyon (Opsiyonel)</Label>
+              <Label className="text-xs font-medium text-white/75">Raf / Lokasyon (Opsiyonel)</Label>
               <Select value={selectedStorageBinId} onValueChange={setSelectedStorageBinId}>
-                <SelectTrigger className="w-full text-xs">
+                <SelectTrigger className="w-full text-xs glass-input">
                   <SelectValue placeholder="Raf seçin (Opsiyonel)..." />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none" className="text-xs text-slate-400">Genel Depo Alanı</SelectItem>
+                <SelectContent className="backdrop-blur-xl bg-slate-950/95 border-white/15 text-white">
+                  <SelectItem value="none" className="text-xs text-white/50">Genel Depo Alanı</SelectItem>
                   {availableBins.map((bin: any) => (
                     <SelectItem key={bin.id} value={bin.id} className="text-xs">
                       {bin.code} {bin.binPosition ? `(${bin.binPosition})` : ""}
@@ -270,7 +276,7 @@ export function QuickStockMovementModal({
           {/* Miktar & Birim Maliyet */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">
+              <Label className="text-xs font-medium text-white/75">
                 Miktar ({currentItem?.baseUnit || "Adet"}) *
               </Label>
               <Input
@@ -280,13 +286,13 @@ export function QuickStockMovementModal({
                 value={quantity}
                 onChange={e => setQuantity(e.target.value)}
                 placeholder="Örn: 10"
-                className="text-xs"
+                className="text-xs glass-input"
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">
+              <Label className="text-xs font-medium text-white/75">
                 {movementType === "IN" ? "Birim Alış Maliyeti (₺)" : "Birim Satış Tutarı (₺)"}
               </Label>
               <Input
@@ -296,7 +302,7 @@ export function QuickStockMovementModal({
                 value={unitCost}
                 onChange={e => setUnitCost(e.target.value)}
                 placeholder="0.00"
-                className="text-xs"
+                className="text-xs glass-input"
               />
             </div>
           </div>
@@ -304,25 +310,25 @@ export function QuickStockMovementModal({
           {/* Belge No & Lot / SKT */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">İrsaliye / Belge No</Label>
+              <Label className="text-xs font-medium text-white/75">İrsaliye / Belge No</Label>
               <Input
                 type="text"
                 value={docNo}
                 onChange={e => setDocNo(e.target.value)}
                 placeholder="IRS-2026-..."
-                className="text-xs font-mono"
+                className="text-xs font-mono glass-input"
               />
             </div>
 
             {movementType === "IN" && (
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-slate-700">Parti / Lot No (Opsiyonel)</Label>
+                <Label className="text-xs font-medium text-white/75">Parti / Lot No (Opsiyonel)</Label>
                 <Input
                   type="text"
                   value={lotNumber}
                   onChange={e => setLotNumber(e.target.value)}
                   placeholder="LOT-2026-..."
-                  className="text-xs font-mono"
+                  className="text-xs font-mono glass-input"
                 />
               </div>
             )}
@@ -330,37 +336,48 @@ export function QuickStockMovementModal({
 
           {movementType === "IN" && currentItem?.trackExpiry && (
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-slate-700">Son Kullanma Tarihi (SKT)</Label>
+              <Label className="text-xs font-medium text-white/75">Son Kullanma Tarihi (SKT)</Label>
               <Input
                 type="date"
                 value={expiryDate}
                 onChange={e => setExpiryDate(e.target.value)}
-                className="text-xs"
+                className="text-xs glass-input"
               />
             </div>
           )}
 
           {/* Açıklama */}
           <div className="space-y-1.5">
-            <Label className="text-xs font-medium text-slate-700">Hareket Notu / Açıklama</Label>
+            <Label className="text-xs font-medium text-white/75">Hareket Notu / Açıklama</Label>
             <Textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
               placeholder="Örn: Haftalık taze mezat alımı..."
               rows={2}
-              className="text-xs resize-none"
+              className="text-xs resize-none glass-input"
             />
           </div>
 
           <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={loading}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              disabled={loading}
+              className="glass-input hover:bg-white/10 text-white border-white/15 cursor-pointer"
+            >
               İptal
             </Button>
             <Button
               type="submit"
               size="sm"
               disabled={loading}
-              className={movementType === "IN" ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-blue-600 hover:bg-blue-700 text-white"}
+              className={
+                movementType === "IN"
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold cursor-pointer"
+                  : "bg-sky-500 hover:bg-sky-600 text-slate-950 font-semibold cursor-pointer"
+              }
             >
               {loading && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
               {movementType === "IN" ? "Stoğa Giriş Yap" : "Stoktan Çıkış Yap"}

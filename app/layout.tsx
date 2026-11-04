@@ -29,12 +29,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="tr" className="dark" suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.className} antialiased h-screen overflow-hidden flex flex-col bg-background text-foreground`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className={`${inter.className} antialiased h-screen overflow-hidden flex flex-col text-foreground`}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <LanguageProvider>
             <AuthProvider>
               <SystemNotificationProvider>

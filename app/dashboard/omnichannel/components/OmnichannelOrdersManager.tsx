@@ -211,31 +211,31 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
     switch (status) {
       case 'PROCESSING':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">
-            <Clock className="w-3 h-3 text-blue-600" /> Hazırlanıyor
+          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">
+            <Clock className="w-3 h-3 text-sky-400" /> Hazırlanıyor
           </span>
         );
       case 'PARTIALLY_SHIPPED':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
-            <Split className="w-3 h-3 text-amber-600" /> Parçalı Sevk Edildi
+          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+            <Split className="w-3 h-3 text-amber-400" /> Parçalı Sevk Edildi
           </span>
         );
       case 'BACKORDERED':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">
-            <Clock className="w-3 h-3 text-purple-600" /> Bekleyen Sipariş (Backorder)
+          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-purple-500/15 text-purple-300 border border-purple-500/30">
+            <Clock className="w-3 h-3 text-purple-400" /> Bekleyen Sipariş (Backorder)
           </span>
         );
       case 'DELIVERED':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Teslim Edildi
+          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Teslim Edildi
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-white/10 text-white/70 border border-white/15">
             {status}
           </span>
         );
@@ -243,15 +243,15 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
+    <div className="space-y-4">
       {/* Filtre Barı */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 glass-panel p-5 rounded-2xl">
         <div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-blue-600" />
+          <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <ShoppingBag className="w-5 h-5 text-sky-400" />
             Omnichannel Sipariş Karşılama & Sevkiyat Yönetimi
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-white/60 mt-0.5">
             Pazaryeri ve e-ticaret siparişlerinin stok rezervasyonu, parçalı sevkiyat ve muadil ürün çözümleri
           </p>
         </div>
@@ -259,51 +259,54 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="text-xs glass-input p-2 focus:outline-none"
         >
-          <option value="ALL">Tüm Siparişler</option>
-          <option value="PROCESSING">Hazırlananlar</option>
-          <option value="PARTIALLY_SHIPPED">Parçalı Sevk Edilenler</option>
-          <option value="BACKORDERED">Bekleyen Siparişler (Backorder)</option>
-          <option value="DELIVERED">Teslim Edilenler</option>
+          <option value="ALL" className="bg-slate-900 text-white">Tüm Siparişler</option>
+          <option value="PROCESSING" className="bg-slate-900 text-white">Hazırlananlar</option>
+          <option value="PARTIALLY_SHIPPED" className="bg-slate-900 text-white">Parçalı Sevk Edilenler</option>
+          <option value="BACKORDERED" className="bg-slate-900 text-white">Bekleyen Siparişler (Backorder)</option>
+          <option value="DELIVERED" className="bg-slate-900 text-white">Teslim Edilenler</option>
         </select>
       </div>
 
       {/* Siparişler Listesi */}
       <div className="space-y-4">
         {filteredOrders.length === 0 ? (
-          <div className="text-center py-10 text-slate-400 text-xs">
+          <div className="text-center py-10 glass-card rounded-2xl text-white/45 text-xs">
             Kayıtlı sipariş bulunamadı.
           </div>
         ) : (
           filteredOrders.map((ord) => (
             <div
               key={ord.id}
-              className="p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-slate-50 transition"
+              className="p-5 rounded-2xl glass-card space-y-4"
             >
               {/* Başlık Satırı */}
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-800">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 pb-3 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 font-bold text-xs">
+                  <div className="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 font-bold text-xs">
                     {ord.channelCode.slice(0, 3)}
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white text-sm">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-bold text-white text-sm">
                         {ord.orderNumber}
                       </span>
+                      <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full px-3 py-0.5 text-xs font-mono font-semibold">
+                        {ord.channelCode}
+                      </span>
                       {getStatusBadge(ord.status)}
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-white/45">
                         {new Date(ord.orderDate).toLocaleDateString('tr-TR')}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-500 flex items-center gap-3 mt-0.5">
-                      <span className="flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300">
-                        <User className="w-3 h-3 text-slate-400" />
+                    <div className="text-xs text-white/60 flex items-center gap-3 mt-1">
+                      <span className="flex items-center gap-1 font-medium text-white/85">
+                        <User className="w-3 h-3 text-white/45" />
                         {ord.customerName}
                       </span>
                       <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-slate-400" />
+                        <MapPin className="w-3 h-3 text-white/45" />
                         {ord.customerCity}
                       </span>
                     </div>
@@ -313,20 +316,20 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                 {/* Tutar ve Aksiyonlar */}
                 <div className="flex items-center gap-3 w-full lg:w-auto justify-end">
                   <div className="text-right">
-                    <div className="text-[11px] text-slate-400">Sipariş Tutarı</div>
-                    <div className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+                    <div className="text-[11px] text-white/45">Sipariş Tutarı</div>
+                    <div className="text-sm font-bold text-emerald-400">
                       ₺{Number(ord.totalAmount || 0).toLocaleString('tr-TR')}
                     </div>
                   </div>
 
                   {ord.status !== 'DELIVERED' && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => {
                           setSplitModalOrder(ord);
                           setSelectedLineId(ord.shipmentLines?.[0]?.id || '');
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition active:scale-95"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-sky-500/20 transition active:scale-95"
                       >
                         <Split className="w-3.5 h-3.5" />
                         Parçalı Sevk
@@ -335,7 +338,7 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                       {ord.status !== 'BACKORDERED' && (
                         <button
                           onClick={() => handleBackorder(ord.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-800 dark:bg-purple-950 dark:text-purple-300 rounded-lg text-xs font-semibold transition"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-semibold transition"
                         >
                           <Clock className="w-3.5 h-3.5" />
                           Backorder
@@ -347,73 +350,75 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
               </div>
 
               {/* Sipariş Kalemleri Tablosu */}
-              <div className="mt-3 overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="text-slate-400 text-left border-b border-slate-100 dark:border-slate-800">
-                      <th className="pb-1.5 font-medium">Ürün / SKU</th>
-                      <th className="pb-1.5 font-medium text-right">Sipariş</th>
-                      <th className="pb-1.5 font-medium text-right">Sevk Edilen</th>
-                      <th className="pb-1.5 font-medium text-right">Kalan</th>
-                      <th className="pb-1.5 font-medium text-right">Kargo Takip</th>
-                      <th className="pb-1.5 font-medium text-right">Aksiyon</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
-                    {ord.shipmentLines && ord.shipmentLines.length > 0 ? (
-                      ord.shipmentLines.map((line) => {
-                        const remaining = Math.max(0, line.quantity - line.shippedQty);
-                        return (
-                          <tr key={line.id} className="text-slate-700 dark:text-slate-300">
-                            <td className="py-2">
-                              <div className="font-semibold text-slate-900 dark:text-white">
-                                {line.itemName || line.item?.name}
-                              </div>
-                              <div className="text-[11px] font-mono text-slate-400">
-                                {line.sku || line.item?.sku}
-                              </div>
-                            </td>
-                            <td className="py-2 text-right font-medium">
-                              {line.quantity} Adet
-                            </td>
-                            <td className="py-2 text-right font-bold text-emerald-600 dark:text-emerald-400">
-                              {line.shippedQty} Adet
-                            </td>
-                            <td className="py-2 text-right font-bold text-amber-600 dark:text-amber-400">
-                              {remaining} Adet
-                            </td>
-                            <td className="py-2 text-right text-[11px]">
-                              {line.carrierTracking ? (
-                                <span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
-                                  {line.carrierTracking}
-                                </span>
-                              ) : (
-                                <span className="text-slate-400 italic">Sevk Bekliyor</span>
-                              )}
-                            </td>
-                            <td className="py-2 text-right">
-                              {remaining > 0 && line.itemId && (
-                                <button
-                                  onClick={() => handleOpenSubstituteModal(ord, line)}
-                                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline"
-                                >
-                                  <Sparkles className="w-3 h-3" />
-                                  Muadil Öner
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan={6} className="py-2 text-slate-400 italic text-center">
-                          Kalem bilgisi bulunamadı.
-                        </td>
+              <div className="glass-table-container overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-white/50 text-left bg-white/[0.03] border-b border-white/10 uppercase text-[11px]">
+                        <th className="py-2.5 px-4 font-semibold">Ürün / SKU</th>
+                        <th className="py-2.5 px-3 font-semibold text-right">Sipariş</th>
+                        <th className="py-2.5 px-3 font-semibold text-right">Sevk Edilen</th>
+                        <th className="py-2.5 px-3 font-semibold text-right">Kalan</th>
+                        <th className="py-2.5 px-3 font-semibold text-right">Kargo Takip</th>
+                        <th className="py-2.5 px-4 font-semibold text-right">Aksiyon</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {ord.shipmentLines && ord.shipmentLines.length > 0 ? (
+                        ord.shipmentLines.map((line) => {
+                          const remaining = Math.max(0, line.quantity - line.shippedQty);
+                          return (
+                            <tr key={line.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors text-white/80">
+                              <td className="py-3 px-4">
+                                <div className="font-semibold text-white">
+                                  {line.itemName || line.item?.name}
+                                </div>
+                                <div className="text-[11px] font-mono text-white/45">
+                                  {line.sku || line.item?.sku}
+                                </div>
+                              </td>
+                              <td className="py-3 px-3 text-right font-medium text-white">
+                                {line.quantity} Adet
+                              </td>
+                              <td className="py-3 px-3 text-right font-bold text-emerald-400">
+                                {line.shippedQty} Adet
+                              </td>
+                              <td className="py-3 px-3 text-right font-bold text-amber-400">
+                                {remaining} Adet
+                              </td>
+                              <td className="py-3 px-3 text-right text-[11px]">
+                                {line.carrierTracking ? (
+                                  <span className="font-mono bg-white/10 text-white px-2.5 py-0.5 rounded-full border border-white/15">
+                                    {line.carrierTracking}
+                                  </span>
+                                ) : (
+                                  <span className="text-white/40 italic">Sevk Bekliyor</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-4 text-right">
+                                {remaining > 0 && line.itemId && (
+                                  <button
+                                    onClick={() => handleOpenSubstituteModal(ord, line)}
+                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-300 hover:text-indigo-200 bg-indigo-500/15 border border-indigo-500/30 rounded-full px-3 py-0.5 transition"
+                                  >
+                                    <Sparkles className="w-3 h-3" />
+                                    Muadil Öner
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="py-3 text-white/40 italic text-center">
+                            Kalem bilgisi bulunamadı.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           ))
@@ -422,34 +427,34 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
 
       {/* Parçalı Sevkiyat Modalı */}
       {splitModalOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-md p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Split className="w-4 h-4 text-blue-600" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl w-full max-w-md p-6 shadow-2xl relative text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Split className="w-4 h-4 text-sky-400" />
                 Parçalı Sevkiyat (Split Shipment)
               </h3>
               <button
                 onClick={() => setSplitModalOrder(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-white/50 hover:text-white p-1"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSplitShipment} className="mt-4 space-y-3">
+            <form onSubmit={handleSplitShipment} className="mt-4 space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-semibold text-white/70 mb-1.5">
                   Sevk Edilecek Kalem *
                 </label>
                 <select
                   value={selectedLineId}
                   onChange={(e) => setSelectedLineId(e.target.value)}
                   required
-                  className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs glass-input p-2.5 focus:outline-none"
                 >
                   {splitModalOrder.shipmentLines?.map((l) => (
-                    <option key={l.id} value={l.id}>
+                    <option key={l.id} value={l.id} className="bg-slate-900 text-white">
                       {l.itemName} (Kalan: {l.quantity - l.shippedQty} Adet)
                     </option>
                   ))}
@@ -457,7 +462,7 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-semibold text-white/70 mb-1.5">
                   Bu Pakette Sevk Edilecek Miktar *
                 </label>
                 <input
@@ -466,28 +471,28 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                   value={splitQty}
                   onChange={(e) => setSplitQty(e.target.value)}
                   required
-                  className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs glass-input p-2.5 font-bold focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-white/70 mb-1.5">
                     Kargo Firması
                   </label>
                   <select
                     value={carrierName}
                     onChange={(e) => setCarrierName(e.target.value)}
-                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs glass-input p-2.5 focus:outline-none"
                   >
-                    <option value="Yurtiçi Kargo VIP">Yurtiçi Kargo</option>
-                    <option value="Aras Kargo">Aras Kargo</option>
-                    <option value="UPS Express Kurumsal">UPS Express</option>
+                    <option value="Yurtiçi Kargo VIP" className="bg-slate-900 text-white">Yurtiçi Kargo</option>
+                    <option value="Aras Kargo" className="bg-slate-900 text-white">Aras Kargo</option>
+                    <option value="UPS Express Kurumsal" className="bg-slate-900 text-white">UPS Express</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-white/70 mb-1.5">
                     Kargo Takip No
                   </label>
                   <input
@@ -495,23 +500,23 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                     value={trackingNo}
                     onChange={(e) => setTrackingNo(e.target.value)}
                     required
-                    className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs glass-input p-2.5 font-mono focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2">
+              <div className="pt-3 border-t border-white/10 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setSplitModalOrder(null)}
-                  className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-xl hover:bg-slate-100 transition"
+                  className="px-4 py-2 border border-white/15 bg-white/5 text-white/80 text-xs font-semibold rounded-xl hover:bg-white/10 transition"
                 >
                   Vazgeç
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition shadow-sm disabled:opacity-50"
+                  className="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-xl transition shadow-lg shadow-sky-500/20 disabled:opacity-50"
                 >
                   {submitting ? 'Sevk Ediliyor...' : 'Paketi Yola Çıkar'}
                 </button>
@@ -523,62 +528,62 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
 
       {/* Muadil Ürün Öneri Modalı */}
       {substituteModalOrder && substituteLine && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-600" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-indigo-400" />
                 Muadil & İkame Ürün Önerisi
               </h3>
               <button
                 onClick={() => setSubstituteModalOrder(null)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-white/50 hover:text-white p-1"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="mt-4 space-y-3">
-              <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl text-xs text-amber-800 dark:text-amber-300">
-                Siparişteki Ürün: <strong>{substituteLine.itemName}</strong> (Miktar: {substituteLine.quantity} Adet)
+            <div className="mt-4 space-y-3.5">
+              <div className="p-3 bg-amber-500/15 border border-amber-500/30 rounded-xl text-xs text-amber-200">
+                Siparişteki Ürün: <strong className="text-white">{substituteLine.itemName}</strong> (Miktar: {substituteLine.quantity} Adet)
               </div>
 
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+              <div className="text-xs font-semibold text-white/70">
                 Stokta Bulunan Alternatifler:
               </div>
 
               {loadingSuggestions ? (
-                <div className="text-center py-6 text-slate-400 text-xs">
+                <div className="text-center py-6 text-white/50 text-xs">
                   Uygun muadiller taranıyor...
                 </div>
               ) : suggestions.length === 0 ? (
-                <div className="text-center py-6 text-slate-400 text-xs">
+                <div className="text-center py-6 text-white/50 text-xs">
                   Bu ürün için tanımlı veya aynı kategoride stokta muadil bulunamadı.
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {suggestions.map((s) => (
                     <div
                       key={s.id}
-                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:bg-slate-50 transition text-xs"
+                      className="p-3.5 rounded-xl border border-white/10 bg-white/5 flex items-center justify-between hover:bg-white/10 transition text-xs"
                     >
                       <div>
-                        <div className="font-semibold text-slate-900 dark:text-white">
+                        <div className="font-semibold text-white">
                           {s.name}
                         </div>
-                        <div className="text-slate-400 text-[11px] font-mono">
-                          {s.sku} • Stok: <strong className="text-emerald-600">{s.availableQty} {s.unit}</strong>
+                        <div className="text-white/50 text-[11px] font-mono mt-0.5">
+                          {s.sku} • Stok: <strong className="text-emerald-400">{s.availableQty} {s.unit}</strong>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-slate-800 dark:text-slate-200">
+                        <span className="font-bold text-white">
                           ₺{s.salesPrice}
                         </span>
                         <button
                           onClick={() => handleApplySubstitute(s.id)}
                           disabled={submitting}
-                          className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow-sm transition active:scale-95 disabled:opacity-50"
+                          className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold shadow-lg shadow-indigo-500/20 transition active:scale-95 disabled:opacity-50"
                         >
                           Seç & Değiştir
                         </button>
@@ -594,4 +599,3 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
     </div>
   );
 }
-
