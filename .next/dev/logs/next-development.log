@@ -1,0 +1,12 @@
+{"timestamp":"00:00:09.370","source":"Server","level":"LOG","message":"- Experiments (use with caution):"}
+{"timestamp":"00:00:09.371","source":"Server","level":"LOG","message":"  · serverActions"}
+{"timestamp":"00:00:09.371","source":"Server","level":"LOG","message":"  ✓ webpackBuildWorker"}
+{"timestamp":"00:00:09.372","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:12.981","source":"Server","level":"LOG","message":"○ Compiling /dashboard/stok ..."}
+{"timestamp":"00:00:56.517","source":"Server","level":"LOG","message":"🚀 İçerik Takvimi Otomatik Hatırlatıcı & Takip Servisi başlatıldı."}
+{"timestamp":"00:01:01.685","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'contentItem.findMany' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}
+{"timestamp":"00:01:01.726","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'productionShoot.findMany' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}
+{"timestamp":"00:01:01.739","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'contentItem.findMany' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}
+{"timestamp":"00:01:01.745","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'activeTask.findMany' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}
+{"timestamp":"00:01:01.762","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'internalTask.findMany' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}
+{"timestamp":"00:01:01.776","source":"Server","level":"WARN","message":"[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). 'inventoryItem.count' isteği otomatik olarak yerel JSON DB'ye yönlendirildi."}

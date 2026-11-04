@@ -143,6 +143,10 @@ interface JsonDbData {
   inventoryWebhook: any[]
   marketplacePlugin: any[]
   erpMigrationJob: any[]
+  transferOrderLine: any[]
+  purchaseRequisitionLine: any[]
+  orderShipmentLine: any[]
+  licensePlateContent: any[]
 }
 
 const initialData: JsonDbData = {
@@ -268,7 +272,11 @@ const initialData: JsonDbData = {
   inventoryApiKey: [],
   inventoryWebhook: [],
   marketplacePlugin: [],
-  erpMigrationJob: []
+  erpMigrationJob: [],
+  transferOrderLine: [],
+  purchaseRequisitionLine: [],
+  orderShipmentLine: [],
+  licensePlateContent: []
 }
 
 // JSON DB Yardımcıları
@@ -332,12 +340,16 @@ class ModelSimulate {
       for (const [key, value] of Object.entries(where)) {
         if (value === undefined) continue
         
-        // nested objects like { in: [...] } veya { contains: "text" }
-        if (value && typeof value === "object") {
+        // nested objects like { in: [...] }, { contains: "text" }, { gte/lte }, veya bileşik anahtar { itemId, warehouseId, storageBinId }
+        if (value && typeof value === "object" && !Array.isArray(value) && !(value instanceof Date)) {
           const valObj = value as any
           if ("in" in valObj) {
             if (!Array.isArray(valObj.in)) return false
             if (!valObj.in.includes(item[key])) return false
+            continue
+          }
+          if ("not" in valObj) {
+            if (item[key] === valObj.not) return false
             continue
           }
           if ("contains" in valObj) {
@@ -352,11 +364,48 @@ class ModelSimulate {
             if (!itemVal.startsWith(query)) return false
             continue
           }
+          if ("gte" in valObj) {
+            if (item[key] < valObj.gte) return false
+            continue
+          }
+          if ("lte" in valObj) {
+            if (item[key] > valObj.lte) return false
+            continue
+          }
+          if ("gt" in valObj) {
+            if (item[key] <= valObj.gt) return false
+            continue
+          }
+          if ("lt" in valObj) {
+            if (item[key] >= valObj.lt) return false
+            continue
+          }
+
+          // Bileşik anahtar eşleşmesi kontrolü (Örn: itemId_warehouseId_storageBinId)
+          let isCompoundMatch = true
+          let hasCompoundKeys = false
+          for (const [subKey, subVal] of Object.entries(valObj)) {
+            if (subKey in item || subKey === "storageBinId" || subKey === "warehouseId" || subKey === "itemId") {
+              hasCompoundKeys = true
+              const actualVal = item[subKey] === undefined ? null : item[subKey]
+              const expectedVal = subVal === undefined ? null : subVal
+              if (actualVal !== expectedVal) {
+                isCompoundMatch = false
+                break
+              }
+            }
+          }
+          if (hasCompoundKeys) {
+            if (!isCompoundMatch) return false
+            continue
+          }
         }
 
         // Normal eşleşme (Prisma'da NULL ile undefined yerel JSON eşleşmesini düzeltmek için)
         let itemVal = item[key]
-        if (typeof value === "boolean" && (itemVal === undefined || itemVal === null)) {
+        if (key === "isActive" && (itemVal === undefined || itemVal === null)) {
+          itemVal = true
+        } else if (typeof value === "boolean" && (itemVal === undefined || itemVal === null)) {
           itemVal = false
         } else if (itemVal === undefined) {
           itemVal = null
@@ -656,7 +705,8 @@ class ModelSimulate {
       if (include.stockBalances) {
         enriched.stockBalances = (db.stockBalance || []).filter((sb: any) => sb.itemId === item.id).map((sb: any) => ({
           ...sb,
-          warehouse: (db.warehouse || []).find((w: any) => w.id === sb.warehouseId) ?? null
+          warehouse: (db.warehouse || []).find((w: any) => w.id === sb.warehouseId) ?? null,
+          storageBin: (db.storageBin || []).find((b: any) => b.id === sb.storageBinId) ?? null
         }))
       }
       if (include.unitConversions) enriched.unitConversions = (db.unitConversion || []).filter((u: any) => u.itemId === item.id)
@@ -735,10 +785,8 @@ class ModelSimulate {
 
   async findUnique(args: any = {}) {
     const items = this.getCollection()
-    const match = items.find((item) => {
-      if (args.where.id) return item.id === args.where.id
-      return false
-    })
+    const filtered = this.filterByWhere(items, args.where)
+    const match = filtered[0] ?? null
     return match ? this.enrichItem(match, args.include) : null
   }
 
@@ -812,12 +860,36 @@ class ModelSimulate {
     return result
   }
 
+  private applyUpdateOperations(target: any, updateData: any) {
+    if (!updateData) return target
+    const result = { ...target }
+    for (const [key, val] of Object.entries(updateData)) {
+      if (val !== null && typeof val === "object" && !Array.isArray(val) && !(val instanceof Date)) {
+        if (typeof (val as any).increment === "number") {
+          result[key] = (Number(result[key]) || 0) + (val as any).increment
+          continue
+        }
+        if (typeof (val as any).decrement === "number") {
+          result[key] = (Number(result[key]) || 0) - (val as any).decrement
+          continue
+        }
+        if (typeof (val as any).set !== "undefined") {
+          result[key] = (val as any).set
+          continue
+        }
+      }
+      result[key] = val
+    }
+    return result
+  }
+
   async create(args: any = {}) {
     const collection = this.getCollection()
     const newItem = {
       id: args.data.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      isActive: args.data?.isActive ?? true,
       ...args.data,
     }
     collection.push(newItem)
@@ -826,22 +898,14 @@ class ModelSimulate {
   }
 
   async upsert(args: any = {}) {
-    let match = null
     const collection = this.getCollection()
-    if (args.where) {
-      match = collection.find((item) => {
-        for (const [key, value] of Object.entries(args.where)) {
-          if (item[key] === value) return true
-        }
-        return false
-      })
-    }
+    const filtered = this.filterByWhere(collection, args.where)
+    const match = filtered[0]
 
     if (match) {
       const idx = collection.findIndex((item) => item.id === match.id)
       collection[idx] = {
-        ...collection[idx],
-        ...args.update,
+        ...this.applyUpdateOperations(collection[idx], args.update),
         updatedAt: new Date().toISOString()
       }
       this.saveCollection(collection)
@@ -861,12 +925,13 @@ class ModelSimulate {
 
   async update(args: any = {}) {
     const collection = this.getCollection()
-    const idx = collection.findIndex((item) => item.id === args.where.id)
-    if (idx === -1) throw new Error(`Kayıt bulunamadı: ${args.where.id}`)
+    const filtered = this.filterByWhere(collection, args.where)
+    const match = filtered[0]
+    if (!match) throw new Error(`Kayıt bulunamadı: ${JSON.stringify(args.where)}`)
     
+    const idx = collection.findIndex((item) => item.id === match.id)
     collection[idx] = {
-      ...collection[idx],
-      ...args.data,
+      ...this.applyUpdateOperations(collection[idx], args.data),
       updatedAt: new Date().toISOString()
     }
     this.saveCollection(collection)
@@ -875,8 +940,10 @@ class ModelSimulate {
 
   async delete(args: any = {}) {
     const collection = this.getCollection()
-    const idx = collection.findIndex((item) => item.id === args.where.id)
-    if (idx === -1) throw new Error(`Kayıt bulunamadı: ${args.where.id}`)
+    const filtered = this.filterByWhere(collection, args.where)
+    const match = filtered[0]
+    if (!match) throw new Error(`Kayıt bulunamadı: ${JSON.stringify(args.where)}`)
+    const idx = collection.findIndex((item) => item.id === match.id)
     const deleted = collection.splice(idx, 1)[0]
     this.saveCollection(collection)
     return deleted
@@ -925,6 +992,10 @@ class ModelSimulate {
 // ═══════════════════════════════════════════════════════════════════════════════
 // PRISMA CLIENT PROXY INTERCEPTOR
 // ═══════════════════════════════════════════════════════════════════════════════
+
+let isDbOfflineCached = false
+let lastOfflineCheck = 0
+const OFFLINE_CACHE_MS = 60000
 
 export const prisma = new Proxy(rawPrisma, {
   get(target, prop) {
@@ -1042,7 +1113,11 @@ export const prisma = new Proxy(rawPrisma, {
       "inventoryApiKey",
       "inventoryWebhook",
       "marketplacePlugin",
-      "erpMigrationJob"
+      "erpMigrationJob",
+      "transferOrderLine",
+      "purchaseRequisitionLine",
+      "orderShipmentLine",
+      "licensePlateContent"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
@@ -1103,9 +1178,20 @@ export const prisma = new Proxy(rawPrisma, {
           if (typeof originalMethod !== "function") return originalMethod
 
           return async function (...args: any[]) {
+            const now = Date.now()
+            if (isDbOfflineCached && now - lastOfflineCheck < OFFLINE_CACHE_MS) {
+              const simulator = new ModelSimulate(propStr as keyof JsonDbData)
+              const simMethod = (simulator as any)[modelProp]
+              if (typeof simMethod === "function") {
+                return await simMethod.apply(simulator, args)
+              }
+            }
+
             try {
               // 1. Orijinal Prisma çağrısını dene
-              return await originalMethod.apply(modelTarget, args)
+              const result = await originalMethod.apply(modelTarget, args)
+              isDbOfflineCached = false
+              return result
             } catch (err: any) {
               const isConnectionError = 
                 err.message?.includes("P1001") || 
@@ -1114,6 +1200,8 @@ export const prisma = new Proxy(rawPrisma, {
                 err.code === "P1001"
 
               if (isConnectionError) {
+                isDbOfflineCached = true
+                lastOfflineCheck = Date.now()
                 console.warn(
                   `[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). ` +
                   `'${propStr}.${String(modelProp)}' isteği otomatik olarak yerel JSON DB'ye yönlendirildi.`

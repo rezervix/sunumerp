@@ -333,6 +333,7 @@ model Product {
 
   prices        BranchPrice[]
   stockRequests StockRequest[]
+  inventoryItem InventoryItem?
 }
 
 model BranchPrice {
@@ -1788,7 +1789,7 @@ model Warehouse {
 
 model InventoryItem {
   id                String   @id @default(uuid())
-  productId         String?
+  productId         String?  @unique
   sku               String   @unique
   barcode           String?
   gtin              String?
@@ -1825,20 +1826,25 @@ model InventoryItem {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  parentItem        InventoryItem?       @relation("MatrixVariants", fields: [parentItemId], references: [id], onDelete: Cascade)
-  variants          InventoryItem[]      @relation("MatrixVariants")
-  stockBalances     StockBalance[]
-  unitConversions   UnitConversion[]
-  alternativesFrom  AlternativeProduct[] @relation("SourceItemAlternatives")
-  alternativesTo    AlternativeProduct[] @relation("SubstituteItemAlternatives")
-  lotSerials        LotSerialRecord[]
-  bomHeaders        BomHeader[]          @relation("FinishedItemBoms")
-  bomComponents     BomComponent[]       @relation("ComponentItemBoms")
-  costLayers        CostLayer[]
-  stockMovements    StockMovement[]
-  reorderPolicies   ReorderPolicy[]
-  consignmentStocks ConsignmentStock[]
-  demandForecasts   DemandForecastRecord[]
+  product                  Product?                 @relation(fields: [productId], references: [id], onDelete: SetNull)
+  parentItem               InventoryItem?           @relation("MatrixVariants", fields: [parentItemId], references: [id], onDelete: Cascade)
+  variants                 InventoryItem[]          @relation("MatrixVariants")
+  stockBalances            StockBalance[]
+  unitConversions          UnitConversion[]
+  alternativesFrom         AlternativeProduct[]     @relation("SourceItemAlternatives")
+  alternativesTo           AlternativeProduct[]     @relation("SubstituteItemAlternatives")
+  lotSerials               LotSerialRecord[]
+  bomHeaders               BomHeader[]              @relation("FinishedItemBoms")
+  bomComponents            BomComponent[]           @relation("ComponentItemBoms")
+  costLayers               CostLayer[]
+  stockMovements           StockMovement[]
+  reorderPolicies          ReorderPolicy[]
+  consignmentStocks        ConsignmentStock[]
+  demandForecasts          DemandForecastRecord[]
+  transferOrderLines       TransferOrderLine[]
+  purchaseRequisitionLines PurchaseRequisitionLine[]
+  orderShipmentLines       OrderShipmentLine[]
+  licensePlateContents     LicensePlateContent[]
 
   @@index([category])
   @@index([parentItemId])
@@ -1850,6 +1856,7 @@ model StockBalance {
   id             String   @id @default(uuid())
   itemId         String
   warehouseId    String
+  storageBinId   String?
   binCode        String?
   onHandQty      Float    @default(0)
   reservedQty    Float    @default(0)
@@ -1861,9 +1868,11 @@ model StockBalance {
 
   item           InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
   warehouse      Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  storageBin     StorageBin?   @relation(fields: [storageBinId], references: [id], onDelete: SetNull)
 
-  @@unique([itemId, warehouseId])
+  @@unique([itemId, warehouseId, storageBinId])
   @@index([warehouseId])
+  @@index([storageBinId])
 }
 
 model UnitConversion {
@@ -2091,6 +2100,7 @@ model StorageBin {
 
   warehouse        Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
   zone             WarehouseZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  stockBalances    StockBalance[]
 
   @@index([warehouseId, zoneId])
   @@index([abcVelocity])
@@ -2178,7 +2188,7 @@ model WarehouseTransferOrder {
   carrierName     String?
   vehiclePlate    String?
   driverName      String?
-  itemsJson       String
+  itemsJson       String?
   requestedBy     String?
   approvedBy      String?
   shippedAt       DateTime?
@@ -2186,9 +2196,34 @@ model WarehouseTransferOrder {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
+  lines           TransferOrderLine[]
+
   @@index([fromWarehouseId])
   @@index([toWarehouseId])
   @@index([status])
+}
+
+model TransferOrderLine {
+  id              String                 @id @default(uuid())
+  transferOrderId String
+  itemId          String
+  sku             String?
+  itemName        String?
+  requestedQty    Float
+  shippedQty      Float                  @default(0)
+  receivedQty     Float                  @default(0)
+  unit            String                 @default("Adet")
+  lotNumber       String?
+  fromBinCode     String?
+  toBinCode       String?
+  notes           String?
+  createdAt       DateTime               @default(now())
+
+  transferOrder   WarehouseTransferOrder @relation(fields: [transferOrderId], references: [id], onDelete: Cascade)
+  item            InventoryItem          @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([transferOrderId])
+  @@index([itemId])
 }
 
 model LicensePlate {
@@ -2200,16 +2235,36 @@ model LicensePlate {
   parentLpnCode  String?
   status         String   @default("ACTIVE") // ACTIVE, SEALED, IN_TRANSIT, CONSUMED, SHIPPED
   totalWeightKg  Float    @default(0)
-  contentsJson   String
+  contentsJson   String?
   rfidTagEpc     String?
   createdBy      String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  warehouse      Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  warehouse      Warehouse             @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  contents       LicensePlateContent[]
 
   @@index([warehouseId, currentBinCode])
   @@index([status])
+}
+
+model LicensePlateContent {
+  id             String        @id @default(uuid())
+  licensePlateId String
+  itemId         String
+  sku            String?
+  lotNumber      String?
+  serialNumber   String?
+  quantity       Float
+  unit           String        @default("Adet")
+  expiryDate     DateTime?
+  createdAt      DateTime      @default(now())
+
+  licensePlate   LicensePlate  @relation(fields: [licensePlateId], references: [id], onDelete: Cascade)
+  item           InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([licensePlateId])
+  @@index([itemId])
 }
 
 model InventoryCountSession {
@@ -2357,11 +2412,33 @@ model PurchaseRequisition {
   totalAmount   Float     @default(0)
   currency      String    @default("TRY")
   expectedDate  DateTime?
-  linesJson     String
+  linesJson     String?
   approvedBy    String?
   notes         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  lines         PurchaseRequisitionLine[]
+}
+
+model PurchaseRequisitionLine {
+  id            String              @id @default(uuid())
+  requisitionId String
+  itemId        String
+  sku           String?
+  itemName      String?
+  quantity      Float
+  unit          String              @default("Adet")
+  estimatedCost Float               @default(0)
+  totalCost     Float               @default(0)
+  notes         String?
+  createdAt     DateTime            @default(now())
+
+  requisition   PurchaseRequisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  item          InventoryItem       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([requisitionId])
+  @@index([itemId])
 }
 
 model ConsignmentStock {
@@ -2424,7 +2501,7 @@ model OmnichannelOrder {
   status              String   @default("PROCESSING")
   totalAmount         Float    @default(0)
   currency            String   @default("TRY")
-  shipmentsJson       String
+  shipmentsJson       String?
   backorderQty        Float    @default(0)
   dropshipSupplier    String?
   eInvoiceNo          String?
@@ -2432,8 +2509,31 @@ model OmnichannelOrder {
   orderDate           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
+  shipmentLines       OrderShipmentLine[]
+
   @@index([channelCode, status])
   @@index([fulfillmentStrategy])
+}
+
+model OrderShipmentLine {
+  id              String           @id @default(uuid())
+  orderId         String
+  itemId          String?
+  sku             String
+  itemName        String
+  quantity        Float
+  shippedQty      Float            @default(0)
+  unitPrice       Float            @default(0)
+  carrierTracking String?
+  carrierName     String?
+  status          String           @default("PENDING")
+  createdAt       DateTime         @default(now())
+
+  order           OmnichannelOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  item            InventoryItem?   @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([itemId])
 }
 
 model ReturnRmaRecord {

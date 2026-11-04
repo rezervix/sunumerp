@@ -161,63 +161,15 @@ class EnterpriseInventoryService {
 
   constructor() {
     this.state = getInitialState()
-    if (typeof window !== "undefined") {
-      try {
-        const saved = window.localStorage.getItem(STORAGE_KEY)
-        if (saved) {
-          const parsed = JSON.parse(saved)
-          const safeItems = Array.isArray(parsed.items) && parsed.items.length > 0
-            ? parsed.items.map((it: any) => ({
-              ...it,
-              costLayers: Array.isArray(it.costLayers) ? it.costLayers : [],
-              unitConversions: Array.isArray(it.unitConversions) ? it.unitConversions : [],
-              warehouseBalances: Array.isArray(it.warehouseBalances) ? it.warehouseBalances : []
-            }))
-            : this.state.items
-
-          this.state = {
-            ...this.state,
-            ...parsed,
-            items: safeItems,
-            warehouses: Array.isArray(parsed.warehouses) && parsed.warehouses.length > 0 ? parsed.warehouses : this.state.warehouses,
-            lotBatches: Array.isArray(parsed.lotBatches) ? parsed.lotBatches : this.state.lotBatches,
-            bomRecipes: Array.isArray(parsed.bomRecipes) ? parsed.bomRecipes : this.state.bomRecipes,
-            wmsBins: Array.isArray(parsed.wmsBins) ? parsed.wmsBins : this.state.wmsBins,
-            directives: Array.isArray(parsed.directives) ? parsed.directives : this.state.directives,
-            wmsTasks: Array.isArray(parsed.wmsTasks) ? parsed.wmsTasks : this.state.wmsTasks,
-            licensePlates: Array.isArray(parsed.licensePlates) ? parsed.licensePlates : this.state.licensePlates,
-            transferOrders: Array.isArray(parsed.transferOrders) ? parsed.transferOrders : this.state.transferOrders,
-            countSessions: Array.isArray(parsed.countSessions) ? parsed.countSessions : this.state.countSessions,
-            suppliers: Array.isArray(parsed.suppliers) ? parsed.suppliers : this.state.suppliers,
-            reorderPolicies: Array.isArray(parsed.reorderPolicies) ? parsed.reorderPolicies : this.state.reorderPolicies,
-            purchaseRequisitions: Array.isArray(parsed.purchaseRequisitions) ? parsed.purchaseRequisitions : this.state.purchaseRequisitions,
-            consignmentStocks: Array.isArray(parsed.consignmentStocks) ? parsed.consignmentStocks : this.state.consignmentStocks,
-            channels: Array.isArray(parsed.channels) ? parsed.channels : this.state.channels,
-            omnichannelOrders: Array.isArray(parsed.omnichannelOrders) ? parsed.omnichannelOrders : this.state.omnichannelOrders,
-            rmaReturns: Array.isArray(parsed.rmaReturns) ? parsed.rmaReturns : this.state.rmaReturns,
-            logisticsAdapters: Array.isArray(parsed.logisticsAdapters) ? parsed.logisticsAdapters : this.state.logisticsAdapters,
-            eDocuments: Array.isArray(parsed.eDocuments) ? parsed.eDocuments : this.state.eDocuments,
-            forecasts: Array.isArray(parsed.forecasts) ? parsed.forecasts : this.state.forecasts,
-            narrativeReports: Array.isArray(parsed.narrativeReports) ? parsed.narrativeReports : this.state.narrativeReports,
-            apiKeys: Array.isArray(parsed.apiKeys) ? parsed.apiKeys : this.state.apiKeys,
-            webhooks: Array.isArray(parsed.webhooks) ? parsed.webhooks : this.state.webhooks,
-            plugins: Array.isArray(parsed.plugins) ? parsed.plugins : this.state.plugins,
-            migrationJobs: Array.isArray(parsed.migrationJobs) ? parsed.migrationJobs : this.state.migrationJobs
-          }
-        }
-      } catch {
-        // Varsayılan tohum verisi kullanılır
-      }
-    }
   }
 
   private persist() {
+    // LocalStorage bağımlılığı kaldırıldı; gerçek veri Prisma / API üzerinden yönetilmektedir.
     if (typeof window !== "undefined") {
       try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state))
         window.dispatchEvent(new CustomEvent("sunum-inventory-change"))
       } catch {
-        // Quota aşımı vb. gözardı edilir
+        // Gözardı edilir
       }
     }
   }
