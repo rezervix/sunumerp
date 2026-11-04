@@ -337,8 +337,20 @@ class ModelSimulate {
   private filterByWhere(items: any[], where: any): any[] {
     if (!where) return items
     return items.filter((item) => {
+      // Prisma OR koşulu kontrolü
+      if (where.OR && Array.isArray(where.OR)) {
+        const passesOr = where.OR.some((subWhere: any) => this.filterByWhere([item], subWhere).length > 0)
+        if (!passesOr) return false
+      }
+
+      // Prisma AND koşulu kontrolü
+      if (where.AND && Array.isArray(where.AND)) {
+        const passesAnd = where.AND.every((subWhere: any) => this.filterByWhere([item], subWhere).length > 0)
+        if (!passesAnd) return false
+      }
+
       for (const [key, value] of Object.entries(where)) {
-        if (value === undefined) continue
+        if (value === undefined || key === "OR" || key === "AND") continue
         
         // nested objects like { in: [...] }, { contains: "text" }, { gte/lte }, veya bileşik anahtar { itemId, warehouseId, storageBinId }
         if (value && typeof value === "object" && !Array.isArray(value) && !(value instanceof Date)) {
@@ -744,6 +756,29 @@ class ModelSimulate {
 
     if (this.modelName === "wmsTask" && include) {
       if (include.lines) enriched.lines = (db.wmsTaskLine || []).filter((l: any) => l.taskId === item.id)
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
+    if (this.modelName === "warehouseTransferOrder" && include) {
+      if (include.lines) enriched.lines = (db.transferOrderLine || []).filter((l: any) => l.transferOrderId === item.id)
+      if (include.fromWarehouse) enriched.fromWarehouse = (db.warehouse || []).find((w: any) => w.id === item.fromWarehouseId) ?? null
+      if (include.toWarehouse) enriched.toWarehouse = (db.warehouse || []).find((w: any) => w.id === item.toWarehouseId) ?? null
+    }
+
+    if (this.modelName === "storageBin" && include) {
+      if (include.zone) enriched.zone = (db.warehouseZone || []).find((z: any) => z.id === item.zoneId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+      if (include.stockBalances) {
+        enriched.stockBalances = (db.stockBalance || []).filter((sb: any) => sb.storageBinId === item.id).map((sb: any) => ({
+          ...sb,
+          item: (db.inventoryItem || []).find((it: any) => it.id === sb.itemId) ?? null
+        }))
+      }
+    }
+
+    if (this.modelName === "warehouseZone" && include) {
+      if (include.bins) enriched.bins = (db.storageBin || []).filter((b: any) => b.zoneId === item.id)
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
     }
 
     if (this.modelName === "inventoryCountSession" && include) {

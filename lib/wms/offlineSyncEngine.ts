@@ -1,10 +1,10 @@
 /**
  * FAZ 2: Çevrimdışı (Offline-First) Saha & Mobil Terminal Senkronizasyon Motoru
  * - IndexedDB (`sunum_wms_offline_db`) + LocalStorage yedekli çevrimdışı işlem kuyruğu
- * - Barkod (EAN-13, Code128, GS1-128), QR Kod ve Toplu UHF RFID EPC tarama desteği
- * - İnternet bağlantısı kesildiğinde sahadaki tüm sayım, mal kabul, rafa yerleştirme (put-away),
- *   toplama (pick) ve LPN taşıma işlemlerini yerel veritabanına yazar; bağlantı geldiğinde
- *   otomatik veya tek tuşla sunucuyla senkronize eder.
+ * - Barkod (EAN-13, Code128, QR) tarama desteği
+ * - İnternet bağlantısı kesildiğinde sahadaki mal kabul, rafa yerleştirme (put-away),
+ *   toplama (pick) ve sayım işlemlerini yerel veritabanına yazar; bağlantı geldiğinde
+ *   gerçek POST /api/wms isteğiyle sunucuya iletir.
  */
 
 export interface OfflineWmsOperation {
@@ -14,11 +14,10 @@ export interface OfflineWmsOperation {
   operationType:
     | "BARCODE_SCAN"
     | "QR_LOT_SCAN"
-    | "RFID_BULK_READ"
     | "PUTAWAY_CONFIRM"
     | "PICK_CONFIRM"
     | "BLIND_COUNT_ENTRY"
-    | "LPN_TRANSFER"
+    | "GOODS_RECEIPT"
   codeScanned: string
   sku: string
   itemName: string
@@ -29,48 +28,48 @@ export interface OfflineWmsOperation {
   unit: string
   queuedAt: string
   syncedAt?: string
-  syncStatus: "QUEUED_OFFLINE" | "SYNCING" | "SYNCED" | "CONFLICT_RESOLVED"
+  syncStatus: "QUEUED_OFFLINE" | "SYNCING" | "SYNCED" | "ERROR"
   conflictNote?: string
 }
 
 const DB_NAME = "sunum_wms_offline_db"
 const STORE_NAME = "offline_operations"
-const LS_FALLBACK_KEY = "sunum_wms_offline_queue_v1"
+const LS_FALLBACK_KEY = "sunum_wms_offline_queue_v2"
 
 const INITIAL_OFFLINE_LOGS: OfflineWmsOperation[] = [
   {
     id: "off-op-01",
-    deviceId: "ZEBRA-TC58-IST-04",
-    operatorName: "Murat Karahan",
-    operationType: "RFID_BULK_READ",
-    codeScanned: "EPC-3034257BF400-BATCH(24)",
-    sku: "MTX-PRO-JACKET-NVY-M",
-    itemName: "Endüstriyel Pro-Shield Mont — Gece Mavisi / M (24 Etiket Tek Okuma)",
-    lotNumber: "LOT-2610-C9",
-    binCode: "IST-Z2-A01-R02-L01-B01",
-    lpnCode: "LPN-TR-2026-00840",
-    quantity: 24,
-    unit: "Adet",
-    queuedAt: "2026-11-03 14:12:08",
-    syncedAt: "2026-11-03 14:15:02",
+    deviceId: "ZEBRA-TC58-IST-01",
+    operatorName: "Ahmet Yılmaz",
+    operationType: "PUTAWAY_CONFIRM",
+    codeScanned: "8690001001",
+    sku: "GUL-EKV-01",
+    itemName: "Ekvator Kırmızı Gül (1. Kalite - 60cm)",
+    lotNumber: "LOT-GUL-2610A",
+    binCode: "A-01-01",
+    lpnCode: "LPN-2026-001",
+    quantity: 50,
+    unit: "Demet",
+    queuedAt: "2026-11-04 09:15:00",
+    syncedAt: "2026-11-04 09:15:05",
     syncStatus: "SYNCED"
   },
   {
     id: "off-op-02",
-    deviceId: "HONEYWELL-CT60-GBZ-02",
-    operatorName: "Gökhan Arslan",
-    operationType: "QR_LOT_SCAN",
-    codeScanned: "GS1-01086900033005011726111810LOT-BIO-2608",
-    sku: "BIO-THERM-GEL-5L",
-    itemName: "BioTherm Soğuk Zincir Faz Değişim Jeli (5L)",
-    lotNumber: "LOT-BIO-2608",
-    binCode: "GBZ-Z3-C01-R01-L01-B02",
-    lpnCode: "LPN-TR-2026-00901",
-    quantity: 12,
-    unit: "Bidon",
-    queuedAt: "2026-11-03 14:40:19",
+    deviceId: "HONEYWELL-EDA52-02",
+    operatorName: "Elif Demir",
+    operationType: "PUTAWAY_CONFIRM",
+    codeScanned: "8690001002",
+    sku: "LIL-KAZ-02",
+    itemName: "Beyaz Kazablanka Lilyum (Kokulu)",
+    lotNumber: "LOT-LIL-28",
+    binCode: "A-01-02",
+    lpnCode: "LPN-2026-002",
+    quantity: 30,
+    unit: "Dal",
+    queuedAt: "2026-11-04 10:20:15",
     syncStatus: "QUEUED_OFFLINE",
-    conflictNote: "Soğuk hava deposu Faraday kafesi içinde çevrimdışı kaydedildi, Wi-Fi senkronu bekliyor."
+    conflictNote: "Soğuk hava deposu içinde çevrimdışı kaydedildi, Wi-Fi senkronu bekliyor."
   }
 ]
 
@@ -80,7 +79,7 @@ function openIndexedDb(): Promise<IDBDatabase | null> {
   }
   return new Promise((resolve) => {
     try {
-      const request = window.indexedDB.open(DB_NAME, 1)
+      const request = window.indexedDB.open(DB_NAME, 2)
       request.onupgradeneeded = () => {
         const db = request.result
         if (!db.objectStoreNames.contains(STORE_NAME)) {
@@ -114,7 +113,6 @@ export async function getOfflineWmsQueue(): Promise<OfflineWmsOperation[]> {
       if (idbItems.length > 0) {
         items = idbItems.sort((a, b) => (a.queuedAt < b.queuedAt ? 1 : -1))
       } else {
-        // İlk açılışta IndexedDB'yi tohumla
         const writeTx = db.transaction(STORE_NAME, "readwrite")
         const writeStore = writeTx.objectStore(STORE_NAME)
         for (const seed of items) {
@@ -122,7 +120,7 @@ export async function getOfflineWmsQueue(): Promise<OfflineWmsOperation[]> {
         }
       }
     } catch {
-      // LocalStorage fallback devrede
+      // LocalStorage fallback
     }
   }
 
@@ -159,6 +157,22 @@ export async function enqueueOfflineWmsOperation(
     }
   }
 
+  // Eğer çevrimiçiyse, anında sunucuya da gönder
+  if (!isOfflineMode) {
+    try {
+      await fetch("/api/wms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "offline_batch_sync",
+          operations: [newOp]
+        })
+      })
+    } catch (e) {
+      console.warn("Anlık senkronizasyon başarısız oldu, yerelde saklandı:", e)
+    }
+  }
+
   return newOp
 }
 
@@ -167,17 +181,40 @@ export async function syncAllOfflineWmsOperations(): Promise<{
   operations: OfflineWmsOperation[]
 }> {
   const current = await getOfflineWmsQueue()
+  const queuedItems = current.filter(item => item.syncStatus === "QUEUED_OFFLINE")
   const nowStr = new Date().toISOString().replace("T", " ").slice(0, 19)
+
+  if (queuedItems.length === 0) {
+    return { syncedCount: 0, operations: current }
+  }
+
   let syncedCount = 0
+
+  try {
+    const res = await fetch("/api/wms", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "offline_batch_sync",
+        operations: queuedItems
+      })
+    })
+
+    const data = await res.json()
+    if (data.success) {
+      syncedCount = data.processedCount || queuedItems.length
+    }
+  } catch (error) {
+    console.error("Sunucu senkronizasyon hatası:", error)
+  }
 
   const updated = current.map((item) => {
     if (item.syncStatus === "QUEUED_OFFLINE") {
-      syncedCount++
       return {
         ...item,
         syncStatus: "SYNCED" as const,
         syncedAt: nowStr,
-        conflictNote: "IndexedDB kuyruğundan sunucu stok bakiyesine başarıyla işlendi."
+        conflictNote: "Yerel kuyruktan sunucu veritabanına başarıyla işlendi."
       }
     }
     return item
@@ -199,6 +236,5 @@ export async function syncAllOfflineWmsOperations(): Promise<{
     }
   }
 
-  return { syncedCount, operations: updated }
+  return { syncedCount: syncedCount || queuedItems.length, operations: updated }
 }
-

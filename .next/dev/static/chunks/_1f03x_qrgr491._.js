@@ -11625,10 +11625,18 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     ()=>INITIAL_WAREHOUSES,
     "calculateBomRollupCost",
     ()=>calculateBomRollupCost,
+    "calculateBomRollupFromDb",
+    ()=>calculateBomRollupFromDb,
+    "calculateItemValuationFromDb",
+    ()=>calculateItemValuationFromDb,
     "calculateStockValuation",
     ()=>calculateStockValuation,
     "convertStockUnit",
-    ()=>convertStockUnit
+    ()=>convertStockUnit,
+    "convertStockUnitFromDb",
+    ()=>convertStockUnitFromDb,
+    "seedRealisticInventoryData",
+    ()=>seedRealisticInventoryData
 ]);
 const INITIAL_WAREHOUSES = [
     {
@@ -13139,6 +13147,943 @@ function calculateBomRollupCost(bom, batchCount = 1) {
         maxProducibleBatches: maxProducibleBatches === 999999 ? 0 : maxProducibleBatches,
         bottleneckComponentSku
     };
+}
+async function calculateItemValuationFromDb(itemId, issueQty = 1, method = "FIFO") {
+    try {
+        const prisma = await getPrisma();
+        const item = await prisma.inventoryItem.findUnique({
+            where: {
+                id: itemId
+            },
+            include: {
+                costLayers: {
+                    where: {
+                        isExhausted: false
+                    },
+                    orderBy: {
+                        layerDate: "asc"
+                    }
+                },
+                stockBalances: {
+                    include: {
+                        warehouse: true,
+                        storageBin: true
+                    }
+                },
+                unitConversions: true
+            }
+        });
+        if (!item) {
+            throw new Error(`Ürün bulunamadı: ${itemId}`);
+        }
+        const rawLayers = (item.costLayers || []).map((l)=>({
+                id: l.id,
+                receiptDocNo: l.receiptDocNo || "GRN",
+                layerDate: l.layerDate instanceof Date ? l.layerDate.toISOString() : String(l.layerDate),
+                warehouseCode: l.warehouseId,
+                lotNumber: l.lotNumber || "GENEL",
+                initialQty: Number(l.initialQty || 0),
+                remainingQty: Number(l.remainingQty || 0),
+                unitCost: Number(l.unitCost || 0)
+            }));
+        const valuation = calculateStockValuation(rawLayers, method || item.valuationMethod || "FIFO", Number(item.standardCost || item.currentAvgCost || 0), issueQty);
+        const totalStock = (item.stockBalances || []).reduce((acc, b)=>acc + Number(b.onHandQty || 0), 0);
+        const totalAvailable = (item.stockBalances || []).reduce((acc, b)=>acc + Number(b.availableQty || 0), 0);
+        return {
+            success: true,
+            item: {
+                id: item.id,
+                sku: item.sku,
+                name: item.name,
+                baseUnit: item.baseUnit,
+                totalStock,
+                totalAvailable,
+                salesPrice: Number(item.salesPrice || 0)
+            },
+            valuation
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message || "Değerleme hesaplanırken hata oluştu"
+        };
+    }
+}
+async function convertStockUnitFromDb(itemId, quantity, fromUnit, toUnit) {
+    try {
+        const prisma = await getPrisma();
+        const item = await prisma.inventoryItem.findUnique({
+            where: {
+                id: itemId
+            },
+            include: {
+                unitConversions: true
+            }
+        });
+        if (!item) {
+            throw new Error(`Ürün bulunamadı: ${itemId}`);
+        }
+        const record = {
+            ...item,
+            variantAttributes: undefined,
+            warehouseBalances: [],
+            costLayers: [],
+            unitConversions: (item.unitConversions || []).map((u)=>({
+                    id: u.id,
+                    fromUnit: u.fromUnit,
+                    toUnit: u.toUnit,
+                    multiplier: Number(u.multiplier || 1),
+                    barcode: u.barcode || "",
+                    weightKg: Number(u.weightKg || 0),
+                    volumeM3: Number(u.volumeM3 || 0),
+                    isDefaultPurchase: Boolean(u.isDefaultPurchase),
+                    isDefaultSales: Boolean(u.isDefaultSales)
+                })),
+            totalOnHand: 0,
+            totalReserved: 0,
+            totalAvailable: 0,
+            totalInTransit: 0,
+            totalQuarantine: 0,
+            totalConsignment: 0
+        };
+        const result = convertStockUnit(record, quantity, fromUnit, toUnit);
+        return {
+            success: true,
+            data: result
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message || "Birim çevrimi başarısız"
+        };
+    }
+}
+async function calculateBomRollupFromDb(bomId, batchCount = 1) {
+    try {
+        const prisma = await getPrisma();
+        const bom = await prisma.bomHeader.findUnique({
+            where: {
+                id: bomId
+            },
+            include: {
+                finishedItem: true,
+                components: {
+                    include: {
+                        componentItem: {
+                            include: {
+                                stockBalances: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        if (!bom) {
+            throw new Error(`BOM reçetesi bulunamadı: ${bomId}`);
+        }
+        const components = (bom.components || []).map((comp)=>{
+            const cItem = comp.componentItem;
+            const availableStock = (cItem?.stockBalances || []).reduce((sum, b)=>sum + Number(b.availableQty || 0), 0);
+            return {
+                id: comp.id,
+                componentItemId: comp.componentItemId,
+                componentSku: cItem?.sku || "SKU",
+                componentName: cItem?.name || "Bileşen",
+                itemType: cItem?.itemType || "RAW_MATERIAL",
+                quantity: Number(comp.quantity || 1),
+                unit: comp.unit || cItem?.baseUnit || "Adet",
+                scrapPercent: Number(comp.scrapPercent || 0),
+                fifoUnitCost: Number(cItem?.fifoUnitCost || cItem?.standardCost || 0),
+                lifoUnitCost: Number(cItem?.lifoUnitCost || cItem?.standardCost || 0),
+                avgUnitCost: Number(cItem?.currentAvgCost || cItem?.standardCost || 0),
+                standardUnitCost: Number(cItem?.standardCost || 0),
+                availableStock,
+                operationStep: comp.operationStep || "Standart Montaj / Hazırlık"
+            };
+        });
+        const bomRecord = {
+            id: bom.id,
+            code: bom.code,
+            name: bom.name,
+            version: bom.version,
+            finishedItemId: bom.finishedItemId,
+            finishedSku: bom.finishedItem?.sku || "SKU",
+            finishedName: bom.finishedItem?.name || "Mamul",
+            outputQty: Number(bom.outputQty || 1),
+            outputUnit: bom.outputUnit || "Adet",
+            laborCostPerBatch: Number(bom.laborCostPerBatch || 0),
+            overheadCostPerBatch: Number(bom.overheadCostPerBatch || 0),
+            scrapRatePercent: Number(bom.scrapRatePercent || 0),
+            leadTimeHours: Number(bom.leadTimeHours || 1),
+            components,
+            isActive: Boolean(bom.isActive)
+        };
+        const rollup = calculateBomRollupCost(bomRecord, batchCount);
+        return {
+            success: true,
+            bom: bomRecord,
+            rollup
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message || "BOM maliyet hesaplama başarısız"
+        };
+    }
+}
+async function seedRealisticInventoryData() {
+    try {
+        const prisma = await getPrisma();
+        const existingItems = await prisma.inventoryItem.findMany().catch(()=>[]);
+        const existingSkus = new Set(existingItems.map((i)=>i.sku));
+        if (existingSkus.size >= 7 && existingSkus.has("GUL-EKV-01") && existingSkus.has("ARJ-VIP-07")) {
+            return {
+                seeded: false,
+                message: "Veritabanında mevcut ürünler var, tohum verisi atlandı."
+            };
+        }
+        // 1. Şube Kontrolü veya Oluşturma
+        let branch = await prisma.branch.findFirst().catch(()=>null);
+        if (!branch) {
+            branch = await prisma.branch.create({
+                data: {
+                    id: "branch-hq-main",
+                    name: "Merkez Genel Merkez",
+                    code: "HQ-01",
+                    city: "İstanbul"
+                }
+            }).catch(()=>({
+                    id: "local-debug-branch"
+                }));
+        }
+        const branchId = branch?.id || "local-debug-branch";
+        // 2. Depoları Bul veya Oluştur
+        let whMerkez = await prisma.warehouse.findFirst({
+            where: {
+                code: "DEP-MRK-01"
+            }
+        }).catch(()=>null);
+        if (!whMerkez) {
+            whMerkez = await prisma.warehouse.create({
+                data: {
+                    id: "wh-merkez-01",
+                    branchId,
+                    code: "DEP-MRK-01",
+                    name: "Merkez Soğuk Hava & Lojistik Deposu (+4°C)",
+                    type: "MAIN",
+                    city: "İstanbul / Tuzla",
+                    temperatureRange: "+2°C / +4°C (Soğuk Zincir)",
+                    capacityVolumeM3: 4500,
+                    usedVolumeM3: 1800,
+                    isDefault: true,
+                    isActive: true
+                }
+            });
+        }
+        let whKadikoy = await prisma.warehouse.findFirst({
+            where: {
+                code: "DEP-KDK-02"
+            }
+        }).catch(()=>null);
+        if (!whKadikoy) {
+            whKadikoy = await prisma.warehouse.create({
+                data: {
+                    id: "wh-kadikoy-02",
+                    branchId,
+                    code: "DEP-KDK-02",
+                    name: "Kadıköy Butik Mağaza & Showroom",
+                    type: "BRANCH_STORE",
+                    city: "İstanbul / Kadıköy",
+                    temperatureRange: "+18°C / +22°C (Oda Sıcaklığı)",
+                    capacityVolumeM3: 1200,
+                    usedVolumeM3: 650,
+                    isDefault: false,
+                    isActive: true
+                }
+            });
+        }
+        let whOnline = await prisma.warehouse.findFirst({
+            where: {
+                code: "DEP-ETC-03"
+            }
+        }).catch(()=>null);
+        if (!whOnline) {
+            whOnline = await prisma.warehouse.create({
+                data: {
+                    id: "wh-online-03",
+                    branchId,
+                    code: "DEP-ETC-03",
+                    name: "E-Ticaret & Hızlı Dağıtım Hub",
+                    type: "TRANSIT",
+                    city: "İstanbul / Ümraniye",
+                    capacityVolumeM3: 2000,
+                    usedVolumeM3: 900,
+                    isDefault: false,
+                    isActive: true
+                }
+            });
+        }
+        // 3. Depo Rafları (StorageBins)
+        let binMerkezGuller = await prisma.storageBin.findFirst({
+            where: {
+                code: "A-01-01"
+            }
+        }).catch(()=>null);
+        if (!binMerkezGuller) {
+            binMerkezGuller = await prisma.storageBin.create({
+                data: {
+                    id: "bin-mrk-gul",
+                    warehouseId: whMerkez.id,
+                    zoneId: "zone-cold",
+                    code: "A-01-01",
+                    aisle: "A",
+                    rack: "01",
+                    level: "01",
+                    binPosition: "Sol Raf",
+                    binType: "COLD_CELL"
+                }
+            }).catch(()=>({
+                    id: "bin-mrk-gul",
+                    code: "A-01-01"
+                }));
+        }
+        let binMerkezLilyum = await prisma.storageBin.findFirst({
+            where: {
+                code: "A-01-02"
+            }
+        }).catch(()=>null);
+        if (!binMerkezLilyum) {
+            binMerkezLilyum = await prisma.storageBin.create({
+                data: {
+                    id: "bin-mrk-lil",
+                    warehouseId: whMerkez.id,
+                    zoneId: "zone-cold",
+                    code: "A-01-02",
+                    aisle: "A",
+                    rack: "01",
+                    level: "02",
+                    binPosition: "Orta Raf",
+                    binType: "COLD_CELL"
+                }
+            }).catch(()=>({
+                    id: "bin-mrk-lil",
+                    code: "A-01-02"
+                }));
+        }
+        let binMerkezVazo = await prisma.storageBin.findFirst({
+            where: {
+                code: "B-01-01"
+            }
+        }).catch(()=>null);
+        if (!binMerkezVazo) {
+            binMerkezVazo = await prisma.storageBin.create({
+                data: {
+                    id: "bin-mrk-vaz",
+                    warehouseId: whMerkez.id,
+                    zoneId: "zone-dry",
+                    code: "B-01-01",
+                    aisle: "B",
+                    rack: "01",
+                    level: "01",
+                    binPosition: "Alt Palet",
+                    binType: "STANDARD_PALLET"
+                }
+            }).catch(()=>({
+                    id: "bin-mrk-vaz",
+                    code: "B-01-01"
+                }));
+        }
+        let binMerkezSunger = await prisma.storageBin.findFirst({
+            where: {
+                code: "B-01-02"
+            }
+        }).catch(()=>null);
+        if (!binMerkezSunger) {
+            binMerkezSunger = await prisma.storageBin.create({
+                data: {
+                    id: "bin-mrk-sng",
+                    warehouseId: whMerkez.id,
+                    zoneId: "zone-dry",
+                    code: "B-01-02",
+                    aisle: "B",
+                    rack: "01",
+                    level: "02",
+                    binPosition: "Üst Raf",
+                    binType: "SHELF"
+                }
+            }).catch(()=>({
+                    id: "bin-mrk-sng",
+                    code: "B-01-02"
+                }));
+        }
+        let binKadikoyShowroom = await prisma.storageBin.findFirst({
+            where: {
+                code: "MAG-01"
+            }
+        }).catch(()=>null);
+        if (!binKadikoyShowroom) {
+            binKadikoyShowroom = await prisma.storageBin.create({
+                data: {
+                    id: "bin-kdk-show",
+                    warehouseId: whKadikoy.id,
+                    zoneId: "zone-store",
+                    code: "MAG-01",
+                    aisle: "M",
+                    rack: "01",
+                    level: "01",
+                    binPosition: "Vitrin Teşhir",
+                    binType: "SHOWCASE"
+                }
+            }).catch(()=>({
+                    id: "bin-kdk-show",
+                    code: "MAG-01"
+                }));
+        }
+        // 4. ÜRÜNLERİ TANIMLA
+        // Ürün 1: Ekvator Kırmızı Gül (1. Kalite - 60cm)
+        let itemGul = existingItems.find((i)=>i.sku === "GUL-EKV-01");
+        if (!itemGul) {
+            const prodGul = await prisma.product.create({
+                data: {
+                    id: "prod-gul-01",
+                    name: "Ekvator Kırmızı Gül (1. Kalite - 60cm)",
+                    description: "İthal taze 60cm canlı kadife dokulu Ekvator gülleri",
+                    unit: "Demet"
+                }
+            }).catch(()=>({
+                    id: "prod-gul-01"
+                }));
+            itemGul = await prisma.inventoryItem.create({
+                data: {
+                    id: "item-gul-01",
+                    productId: prodGul.id,
+                    sku: "GUL-EKV-01",
+                    barcode: "8690001001",
+                    name: "Ekvator Kırmızı Gül (1. Kalite - 60cm)",
+                    category: "Kesme Çiçek",
+                    itemType: "RAW_MATERIAL",
+                    baseUnit: "Demet",
+                    valuationMethod: "FIFO",
+                    standardCost: 250,
+                    currentAvgCost: 250,
+                    fifoUnitCost: 250,
+                    lifoUnitCost: 260,
+                    lastPurchaseCost: 260,
+                    salesPrice: 650,
+                    minStockLevel: 20,
+                    maxStockLevel: 500,
+                    trackLot: true,
+                    trackExpiry: true,
+                    isActive: true
+                }
+            });
+            // Gül Stok Bakiyeleri
+            await prisma.stockBalance.create({
+                data: {
+                    itemId: itemGul.id,
+                    warehouseId: whMerkez.id,
+                    storageBinId: binMerkezGuller.id,
+                    binCode: "A-01-01",
+                    onHandQty: 120,
+                    reservedQty: 10,
+                    availableQty: 110
+                }
+            });
+            await prisma.stockBalance.create({
+                data: {
+                    itemId: itemGul.id,
+                    warehouseId: whKadikoy.id,
+                    storageBinId: binKadikoyShowroom.id,
+                    binCode: "MAG-01",
+                    onHandQty: 35,
+                    reservedQty: 0,
+                    availableQty: 35
+                }
+            });
+            // Gül Maliyet Katmanları
+            await prisma.costLayer.create({
+                data: {
+                    itemId: itemGul.id,
+                    warehouseId: whMerkez.id,
+                    receiptDocNo: "IRS-2026-001",
+                    layerDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                    initialQty: 100,
+                    remainingQty: 55,
+                    unitCost: 240,
+                    isExhausted: false
+                }
+            });
+            await prisma.costLayer.create({
+                data: {
+                    itemId: itemGul.id,
+                    warehouseId: whMerkez.id,
+                    receiptDocNo: "IRS-2026-002",
+                    layerDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                    initialQty: 100,
+                    remainingQty: 100,
+                    unitCost: 260,
+                    isExhausted: false
+                }
+            });
+            // Gül Çoklu Birim Çevrimi
+            await prisma.unitConversion.create({
+                data: {
+                    itemId: itemGul.id,
+                    fromUnit: "Adet",
+                    toUnit: "Demet",
+                    multiplier: 0.05,
+                    barcode: "8690001001-ADT"
+                }
+            });
+            await prisma.unitConversion.create({
+                data: {
+                    itemId: itemGul.id,
+                    fromUnit: "Koli",
+                    toUnit: "Demet",
+                    multiplier: 5.0,
+                    barcode: "8690001001-KOL"
+                }
+            });
+            // Gül Lot & SKT (6 gün kaldı)
+            await prisma.lotSerialRecord.create({
+                data: {
+                    itemId: itemGul.id,
+                    warehouseId: whMerkez.id,
+                    lotNumber: "LOT-GUL-2026-A",
+                    manufacturingDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                    expiryDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+                    supplierName: "Ekvator Flora Lojistik A.Ş.",
+                    initialQty: 155,
+                    remainingQty: 155,
+                    unitCost: 250,
+                    status: "AVAILABLE",
+                    qcStatus: "PASSED"
+                }
+            });
+        }
+        // Ürün 2: Beyaz Kazablanka Lilyum (Dal)
+        const prodLil = await prisma.product.create({
+            data: {
+                id: "prod-lil-02",
+                name: "Beyaz Kazablanka Lilyum (Kokulu)",
+                unit: "Dal"
+            }
+        }).catch(()=>({
+                id: "prod-lil-02"
+            }));
+        const itemLil = await prisma.inventoryItem.create({
+            data: {
+                id: "item-lil-02",
+                productId: prodLil.id,
+                sku: "LIL-KAZ-02",
+                barcode: "8690001002",
+                name: "Beyaz Kazablanka Lilyum (Kokulu)",
+                category: "Kesme Çiçek",
+                itemType: "RAW_MATERIAL",
+                baseUnit: "Dal",
+                valuationMethod: "FIFO",
+                standardCost: 120,
+                currentAvgCost: 120,
+                fifoUnitCost: 120,
+                lifoUnitCost: 120,
+                lastPurchaseCost: 120,
+                salesPrice: 320,
+                minStockLevel: 15,
+                trackLot: true,
+                trackExpiry: true
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: itemLil.id,
+                warehouseId: whMerkez.id,
+                storageBinId: binMerkezLilyum.id,
+                binCode: "A-01-02",
+                onHandQty: 60,
+                reservedQty: 0,
+                availableQty: 60
+            }
+        });
+        await prisma.costLayer.create({
+            data: {
+                itemId: itemLil.id,
+                warehouseId: whMerkez.id,
+                receiptDocNo: "IRS-2026-003",
+                layerDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                initialQty: 80,
+                remainingQty: 60,
+                unitCost: 120,
+                isExhausted: false
+            }
+        });
+        await prisma.lotSerialRecord.create({
+            data: {
+                itemId: itemLil.id,
+                warehouseId: whMerkez.id,
+                lotNumber: "LOT-LIL-2026-B",
+                manufacturingDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                expiryDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+                supplierName: "Yalova Çiçek Kooperatifi",
+                initialQty: 80,
+                remainingQty: 60,
+                unitCost: 120,
+                status: "AVAILABLE",
+                qcStatus: "PASSED"
+            }
+        });
+        // Ürün 3: İthal Mat Antrasit Seramik Vazo (25cm)
+        const prodVaz = await prisma.product.create({
+            data: {
+                id: "prod-vaz-03",
+                name: "İthal Mat Antrasit Seramik Vazo (25cm)",
+                unit: "Adet"
+            }
+        }).catch(()=>({
+                id: "prod-vaz-03"
+            }));
+        const itemVaz = await prisma.inventoryItem.create({
+            data: {
+                id: "item-vaz-03",
+                productId: prodVaz.id,
+                sku: "VAZ-ANT-03",
+                barcode: "8690001003",
+                name: "İthal Mat Antrasit Seramik Vazo (25cm)",
+                category: "Vazo & Saksı",
+                itemType: "RAW_MATERIAL",
+                baseUnit: "Adet",
+                valuationMethod: "FIFO",
+                standardCost: 180,
+                currentAvgCost: 180,
+                fifoUnitCost: 180,
+                lifoUnitCost: 180,
+                salesPrice: 480,
+                minStockLevel: 10
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: itemVaz.id,
+                warehouseId: whMerkez.id,
+                storageBinId: binMerkezVazo.id,
+                binCode: "B-01-01",
+                onHandQty: 45,
+                reservedQty: 0,
+                availableQty: 45
+            }
+        });
+        await prisma.costLayer.create({
+            data: {
+                itemId: itemVaz.id,
+                warehouseId: whMerkez.id,
+                receiptDocNo: "IRS-2026-004",
+                layerDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+                initialQty: 50,
+                remainingQty: 45,
+                unitCost: 180,
+                isExhausted: false
+            }
+        });
+        // Ürün 4: Oasis Islak Çiçek Süngeri (Koli)
+        const prodSng = await prisma.product.create({
+            data: {
+                id: "prod-sng-04",
+                name: "Oasis Islak Çiçek Süngeri (20'li Koli)",
+                unit: "Koli"
+            }
+        }).catch(()=>({
+                id: "prod-sng-04"
+            }));
+        const itemSng = await prisma.inventoryItem.create({
+            data: {
+                id: "item-sng-04",
+                productId: prodSng.id,
+                sku: "SNG-OAS-04",
+                barcode: "8690001004",
+                name: "Oasis Islak Çiçek Süngeri (20'li Koli)",
+                category: "Sarf Malzeme",
+                itemType: "CONSUMABLE",
+                baseUnit: "Koli",
+                valuationMethod: "FIFO",
+                standardCost: 340,
+                currentAvgCost: 340,
+                fifoUnitCost: 340,
+                lifoUnitCost: 340,
+                salesPrice: 620,
+                minStockLevel: 5
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: itemSng.id,
+                warehouseId: whMerkez.id,
+                storageBinId: binMerkezSunger.id,
+                binCode: "B-01-02",
+                onHandQty: 18,
+                reservedQty: 0,
+                availableQty: 18
+            }
+        });
+        await prisma.costLayer.create({
+            data: {
+                itemId: itemSng.id,
+                warehouseId: whMerkez.id,
+                receiptDocNo: "IRS-2026-005",
+                layerDate: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+                initialQty: 20,
+                remainingQty: 18,
+                unitCost: 340,
+                isExhausted: false
+            }
+        });
+        // Ürün 5: Mor Phalaenopsis Orkide (KRİTİK STOK: 3 Adet, Min: 10)
+        const prodOrk = await prisma.product.create({
+            data: {
+                id: "prod-ork-05",
+                name: "Mor Phalaenopsis Orkide (Çift Dal)",
+                unit: "Saksı"
+            }
+        }).catch(()=>({
+                id: "prod-ork-05"
+            }));
+        const itemOrk = await prisma.inventoryItem.create({
+            data: {
+                id: "item-ork-05",
+                productId: prodOrk.id,
+                sku: "ORK-MOR-05",
+                barcode: "8690001005",
+                name: "Mor Phalaenopsis Orkide (Çift Dal)",
+                category: "Saksılı Çiçek",
+                itemType: "FINISHED_GOOD",
+                baseUnit: "Saksı",
+                valuationMethod: "FIFO",
+                standardCost: 420,
+                currentAvgCost: 420,
+                fifoUnitCost: 420,
+                lifoUnitCost: 420,
+                salesPrice: 950,
+                minStockLevel: 10 // Mevcut 3 olduğu için Kritik Stoğa Düşenler kartında görünecek!
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: itemOrk.id,
+                warehouseId: whMerkez.id,
+                storageBinId: binMerkezLilyum.id,
+                binCode: "A-01-02",
+                onHandQty: 3,
+                reservedQty: 0,
+                availableQty: 3
+            }
+        });
+        await prisma.costLayer.create({
+            data: {
+                itemId: itemOrk.id,
+                warehouseId: whMerkez.id,
+                receiptDocNo: "IRS-2026-006",
+                layerDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+                initialQty: 15,
+                remainingQty: 3,
+                unitCost: 420,
+                isExhausted: false
+            }
+        });
+        // Ürün 6: Gelin Buketi - Romantik Pastel (Matrix Parent & Varyantlar)
+        const prodBkt = await prisma.product.create({
+            data: {
+                id: "prod-bkt-06",
+                name: "Gelin Buketi - Romantik Pastel",
+                unit: "Adet"
+            }
+        }).catch(()=>({
+                id: "prod-bkt-06"
+            }));
+        const itemBktParent = await prisma.inventoryItem.create({
+            data: {
+                id: "item-bkt-parent-06",
+                productId: prodBkt.id,
+                sku: "BKT-PST-06",
+                barcode: "8690001006",
+                name: "Gelin Buketi - Romantik Pastel (Tasarım Serisi)",
+                category: "Tasarım Buket",
+                itemType: "MATRIX_PARENT",
+                baseUnit: "Adet",
+                valuationMethod: "FIFO",
+                standardCost: 850,
+                currentAvgCost: 850,
+                fifoUnitCost: 850,
+                lifoUnitCost: 850,
+                salesPrice: 2200,
+                minStockLevel: 5
+            }
+        });
+        const varPudra = await prisma.inventoryItem.create({
+            data: {
+                id: "item-bkt-var-pud",
+                parentItemId: itemBktParent.id,
+                sku: "BKT-PST-06-PUD",
+                barcode: "8690001006-PUD",
+                name: "Gelin Buketi - Pudra Pembe",
+                category: "Tasarım Buket",
+                itemType: "MATRIX_VARIANT",
+                variantAttributes: JSON.stringify({
+                    Renk: "Pudra Pembe"
+                }),
+                baseUnit: "Adet",
+                valuationMethod: "FIFO",
+                standardCost: 850,
+                salesPrice: 2200,
+                minStockLevel: 2
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: varPudra.id,
+                warehouseId: whKadikoy.id,
+                storageBinId: binKadikoyShowroom.id,
+                binCode: "MAG-01",
+                onHandQty: 4,
+                reservedQty: 0,
+                availableQty: 4
+            }
+        });
+        const varBeyaz = await prisma.inventoryItem.create({
+            data: {
+                id: "item-bkt-var-bey",
+                parentItemId: itemBktParent.id,
+                sku: "BKT-PST-06-BEY",
+                barcode: "8690001006-BEY",
+                name: "Gelin Buketi - Kar Beyazı",
+                category: "Tasarım Buket",
+                itemType: "MATRIX_VARIANT",
+                variantAttributes: JSON.stringify({
+                    Renk: "Kar Beyazı"
+                }),
+                baseUnit: "Adet",
+                valuationMethod: "FIFO",
+                standardCost: 850,
+                salesPrice: 2200,
+                minStockLevel: 2
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: varBeyaz.id,
+                warehouseId: whKadikoy.id,
+                storageBinId: binKadikoyShowroom.id,
+                binCode: "MAG-01",
+                onHandQty: 6,
+                reservedQty: 0,
+                availableQty: 6
+            }
+        });
+        // Ürün 7: Premium VIP Seramik Aranjman (Ürün Ağacı / BOM Reçeteli)
+        const prodArj = await prisma.product.create({
+            data: {
+                id: "prod-arj-07",
+                name: "Premium VIP Seramik Aranjman (Reçeteli)",
+                unit: "Adet"
+            }
+        }).catch(()=>({
+                id: "prod-arj-07"
+            }));
+        const itemArj = await prisma.inventoryItem.create({
+            data: {
+                id: "item-arj-07",
+                productId: prodArj.id,
+                sku: "ARJ-VIP-07",
+                barcode: "8690001007",
+                name: "Premium VIP Seramik Aranjman (Reçeteli)",
+                category: "Özel Tasarım Aranjman",
+                itemType: "FINISHED_GOOD",
+                baseUnit: "Adet",
+                valuationMethod: "FIFO",
+                standardCost: 650,
+                currentAvgCost: 650,
+                fifoUnitCost: 650,
+                lifoUnitCost: 650,
+                salesPrice: 1850,
+                minStockLevel: 5
+            }
+        });
+        await prisma.stockBalance.create({
+            data: {
+                itemId: itemArj.id,
+                warehouseId: whMerkez.id,
+                storageBinId: binMerkezGuller.id,
+                binCode: "A-01-01",
+                onHandQty: 8,
+                reservedQty: 0,
+                availableQty: 8
+            }
+        });
+        // BOM Reçetesi Oluştur: 1 Gül + 2 Lilyum + 1 Seramik Vazo + 0.1 Koli Sünger
+        const bomArj = await prisma.bomHeader.create({
+            data: {
+                id: "bom-arj-vip",
+                finishedItemId: itemArj.id,
+                code: "BOM-ARJ-VIP-V1",
+                name: "VIP Seramik Aranjman Standart İmalat Reçetesi",
+                version: "v1.0",
+                outputQty: 1,
+                outputUnit: "Adet",
+                laborCostPerBatch: 120,
+                overheadCostPerBatch: 40,
+                scrapRatePercent: 2.0,
+                leadTimeHours: 1.5,
+                isActive: true
+            }
+        });
+        await prisma.bomComponent.create({
+            data: {
+                bomId: bomArj.id,
+                componentItemId: itemGul.id,
+                quantity: 1,
+                unit: "Demet",
+                scrapPercent: 1.0,
+                operationStep: "10 - Taze Gül Temizleme & Budama"
+            }
+        });
+        await prisma.bomComponent.create({
+            data: {
+                bomId: bomArj.id,
+                componentItemId: itemLil.id,
+                quantity: 2,
+                unit: "Dal",
+                scrapPercent: 1.0,
+                operationStep: "20 - Lilyum Çiçek Yerleşimi"
+            }
+        });
+        await prisma.bomComponent.create({
+            data: {
+                bomId: bomArj.id,
+                componentItemId: itemVaz.id,
+                quantity: 1,
+                unit: "Adet",
+                scrapPercent: 0,
+                operationStep: "05 - Taban Vazo Hazırlığı"
+            }
+        });
+        await prisma.bomComponent.create({
+            data: {
+                bomId: bomArj.id,
+                componentItemId: itemSng.id,
+                quantity: 0.05,
+                unit: "Koli",
+                scrapPercent: 2.0,
+                operationStep: "06 - Oasis Islak Sünger Kesimi & Sabitleme"
+            }
+        });
+        return {
+            seeded: true,
+            message: "Gerçekçi KOBİ / Ticari Çiçek & Aranjman başlangıç verileri başarıyla oluşturuldu."
+        };
+    } catch (error) {
+        console.error("seedRealisticInventoryData error:", error);
+        return {
+            seeded: false,
+            error: error.message || "Tohum verisi oluşturulamadı."
+        };
+    }
 }
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);

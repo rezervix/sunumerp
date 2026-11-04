@@ -1,6 +1,9 @@
 {
   "app": {
-    "[project]/app/dashboard/stok/page": [
+    "[project]/app/dashboard/wms/mobil/page": [
+      "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
+    ],
+    "[project]/app/dashboard/wms/page": [
       "static/media/07c7676b89ed2778-s.p.2bn3s6zvc0dyp.woff2"
     ]
   },

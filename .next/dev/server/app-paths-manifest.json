@@ -1,4 +1,5 @@
 {
-  "/api/inventory/route": "app/api/inventory/route.js",
-  "/dashboard/stok/page": "app/dashboard/stok/page.js"
+  "/api/wms/route": "app/api/wms/route.js",
+  "/dashboard/wms/mobil/page": "app/dashboard/wms/mobil/page.js",
+  "/dashboard/wms/page": "app/dashboard/wms/page.js"
 }
