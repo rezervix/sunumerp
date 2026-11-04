@@ -76,47 +76,47 @@ const FRIENDLY_STEPS: {
   actionPrompt: string
   icon: any
 }[] = [
-  {
-    key: "GOODS_RECEIPT",
-    stepNumber: 1,
-    title: "1. Mal Kabul",
-    plainTitle: "Kamyondan İndirme & Barkod Okutma",
-    actionPrompt: "Gelen sevkiyatın barkodunu okutup rampa kabulünü onaylayın.",
-    icon: Truck
-  },
-  {
-    key: "QC_INSPECTION",
-    stepNumber: 2,
-    title: "2. Kalite Kontrol",
-    plainTitle: "Tazelik, Sıcaklık & Hasar Testi",
-    actionPrompt: "Ürünün sağlamlık ve kalite kriterlerine uygunluğunu onaylayın.",
-    icon: ShieldCheck
-  },
-  {
-    key: "PUTAWAY",
-    stepNumber: 3,
-    title: "3. Rafa Yerleştirme",
-    plainTitle: "Sistemin Önerdiği Raf Hücresine İstif",
-    actionPrompt: "Ürünü sistemin akıllı direktifle önerdiği raf hücresine bırakın.",
-    icon: MapPin
-  },
-  {
-    key: "WAVE_PICK",
-    stepNumber: 4,
-    title: "4. Sipariş Toplama",
-    plainTitle: "SKT Öncelikli Çıkış (FEFO) ile Toplama",
-    actionPrompt: "Sipariş kalemlerini en kısa rotada ve SKT sırasına göre toplayın.",
-    icon: PackageCheck
-  },
-  {
-    key: "PACKING",
-    stepNumber: 5,
-    title: "5. Paketleme & Sevkiyat",
-    plainTitle: "Koli Kapama, Etiketleme & Kargoya Teslim",
-    actionPrompt: "Paketi kapatıp koli/palet etiketini yapıştırın ve kargoya verin.",
-    icon: QrCode
-  }
-]
+    {
+      key: "GOODS_RECEIPT",
+      stepNumber: 1,
+      title: "1. Mal Kabul",
+      plainTitle: "Kamyondan İndirme & Barkod Okutma",
+      actionPrompt: "Gelen sevkiyatın barkodunu okutup rampa kabulünü onaylayın.",
+      icon: Truck
+    },
+    {
+      key: "QC_INSPECTION",
+      stepNumber: 2,
+      title: "2. Kalite Kontrol",
+      plainTitle: "Tazelik, Sıcaklık & Hasar Testi",
+      actionPrompt: "Ürünün sağlamlık ve kalite kriterlerine uygunluğunu onaylayın.",
+      icon: ShieldCheck
+    },
+    {
+      key: "PUTAWAY",
+      stepNumber: 3,
+      title: "3. Rafa Yerleştirme",
+      plainTitle: "Sistemin Önerdiği Raf Hücresine İstif",
+      actionPrompt: "Ürünü sistemin akıllı direktifle önerdiği raf hücresine bırakın.",
+      icon: MapPin
+    },
+    {
+      key: "WAVE_PICK",
+      stepNumber: 4,
+      title: "4. Sipariş Toplama",
+      plainTitle: "SKT Öncelikli Çıkış (FEFO) ile Toplama",
+      actionPrompt: "Sipariş kalemlerini en kısa rotada ve SKT sırasına göre toplayın.",
+      icon: PackageCheck
+    },
+    {
+      key: "PACKING",
+      stepNumber: 5,
+      title: "5. Paketleme & Sevkiyat",
+      plainTitle: "Koli Kapama, Etiketleme & Kargoya Teslim",
+      actionPrompt: "Paketi kapatıp koli/palet etiketini yapıştırın ve kargoya verin.",
+      icon: QrCode
+    }
+  ]
 
 export default function AdvancedWmsOperationsPage() {
   const [state, setState] = useState(() => enterpriseInventoryService.getState())
@@ -412,16 +412,14 @@ export default function AdvancedWmsOperationsPage() {
                   <button
                     key={step.key}
                     onClick={() => setSelectedWizardStep(step.key)}
-                    className={`p-3 rounded-lg text-left transition-all relative flex flex-col justify-between ${
-                      isSelected
-                        ? "bg-indigo-50 border-2 border-indigo-600 shadow-xs"
-                        : "bg-slate-50/70 border border-slate-200 hover:bg-slate-100"
-                    }`}
+                    className={`p-3 rounded-lg text-left transition-all relative flex flex-col justify-between ${isSelected
+                      ? "bg-indigo-50 border-2 border-indigo-600 shadow-xs"
+                      : "bg-slate-50/70 border border-slate-200 hover:bg-slate-100"
+                      }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                        isSelected ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-700"
-                      }`}>
+                      <div className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold ${isSelected ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-700"
+                        }`}>
                         {step.stepNumber}
                       </div>
                       <Badge variant="secondary" className="text-[10px] font-mono">
@@ -576,13 +574,12 @@ export default function AdvancedWmsOperationsPage() {
                   <div
                     key={bin.id}
                     onClick={() => openBinDetails(bin)}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all hover:shadow-xs ${
-                      isQuarantine
-                        ? "border-rose-300 bg-rose-50/40"
-                        : isFull
-                          ? "border-amber-300 bg-amber-50/30"
-                          : "border-slate-200 bg-white hover:border-indigo-300"
-                    }`}
+                    className={`p-3.5 rounded-xl border cursor-pointer transition-all hover:shadow-xs ${isQuarantine
+                      ? "border-rose-300 bg-rose-50/40"
+                      : isFull
+                        ? "border-amber-300 bg-amber-50/30"
+                        : "border-slate-200 bg-white hover:border-indigo-300"
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
@@ -782,9 +779,8 @@ export default function AdvancedWmsOperationsPage() {
                   <div
                     key={sess.id}
                     onClick={() => setSelectedSessionId(sess.id)}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
-                      isSelected ? "border-indigo-600 bg-indigo-50/30 ring-2 ring-indigo-600/20" : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
+                    className={`p-3.5 rounded-xl border cursor-pointer transition-all ${isSelected ? "border-indigo-600 bg-indigo-50/30 ring-2 ring-indigo-600/20" : "border-slate-200 bg-white hover:border-slate-300"
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-slate-900">{sNum}</span>

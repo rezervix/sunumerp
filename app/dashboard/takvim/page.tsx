@@ -12,12 +12,12 @@ import { getUpcomingSpecialDays, getSpecialDaysForDate, SPECIAL_DAYS, type Speci
 import type { CalendarEvent } from "@/app/api/calendar/events/route"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 // Yardımcı
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 
 const TURKISH_MONTHS = [
-  "Ocak","Åubat","Mart","Nisan","Mayıs","Haziran",
+  "Ocak","Şubat","Mart","Nisan","Mayıs","Haziran",
   "Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık",
 ]
 const TURKISH_DAYS_SHORT = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"]
@@ -55,9 +55,9 @@ function specialDayColor(sd: SpecialDay) {
   return sd.color
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 // Randevu Oluştur Modal
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface AppointmentModalProps {
   date: Date | null
@@ -142,7 +142,7 @@ function AppointmentModal({ date, branchId, onClose, onSaved }: AppointmentModal
           {/* Tarih bilgisi */}
           <div className="text-sm text-muted-foreground flex items-center gap-1.5">
             <Clock size={14} />
-            {date ? formatDateLabel(date.toISOString()) : "â€”"}
+            {date ? formatDateLabel(date.toISOString()) : "—"}
           </div>
 
           {/* Başlık */}
@@ -250,9 +250,9 @@ function AppointmentModal({ date, branchId, onClose, onSaved }: AppointmentModal
   )
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 // Ana Takvim Sayfası
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────────────────
 
 type ViewMode = "month" | "week" | "agenda"
 
@@ -285,7 +285,7 @@ export default function TakvimPage() {
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
 
-  // â”€â”€ Yaklaşan Özel Günler Bildirimi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Yaklaşan Özel Günler Bildirimi ──────────────────────────────
   useEffect(() => {
     if (specialDayAlertShown) return
     const upcoming = getUpcomingSpecialDays(3)
@@ -293,8 +293,8 @@ export default function TakvimPage() {
       upcoming.forEach((sd) => {
         toast(
           sd.daysLeft === 1
-            ? `ğŸ‰ Yarın: ${sd.title}`
-            : `ğŸ“… ${sd.daysLeft} gün sonra: ${sd.title}`,
+            ? `🎉 Yarın: ${sd.title}`
+            : `📅 ${sd.daysLeft} gün sonra: ${sd.title}`,
           {
             description: sd.description || "",
             duration: 6000,
@@ -306,7 +306,7 @@ export default function TakvimPage() {
     }
   }, [specialDayAlertShown])
 
-  // â”€â”€ Event Yükle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Event Yükle ─────────────────────────────────────────────────
   const loadEvents = useCallback(async () => {
     const branchId = currentBranch?.id || "local-debug-branch"
     setLoading(true)
@@ -329,7 +329,7 @@ export default function TakvimPage() {
 
   useEffect(() => { loadEvents() }, [loadEvents])
 
-  // â”€â”€ Takvim Izgara Oluştur â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Takvim Izgara Oluştur ────────────────────────────────────────
   function buildCalendarDays(): Date[] {
     const firstDay = new Date(year, month, 1)
     // Pazartesi bazlı (0=Pzt)
@@ -368,7 +368,7 @@ export default function TakvimPage() {
   const next = () => setCurrentDate(new Date(year, month + 1, 1))
   const goToday = () => setCurrentDate(new Date())
 
-  // â”€â”€ Agenda View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Agenda View ─────────────────────────────────────────────────
   function AgendaView() {
     const grouped: Record<string, (CalendarEvent | (SpecialDay & { isSpecial: true }))[]> = {}
 
@@ -411,7 +411,7 @@ export default function TakvimPage() {
                 if ("isSpecial" in entry && entry.isSpecial) {
                   return (
                     <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ backgroundColor: `${entry.color}15`, borderLeft: `3px solid ${entry.color}` }}>
-                      <span className="text-sm font-medium" style={{ color: entry.color }}>ğŸ‰ {entry.title}</span>
+                      <span className="text-sm font-medium" style={{ color: entry.color }}>🎉 {entry.title}</span>
                     </div>
                   )
                 }
@@ -422,7 +422,7 @@ export default function TakvimPage() {
                     <div className="size-2 rounded-full shrink-0" style={{ backgroundColor: ev.color }} />
                     <span className={`text-sm font-medium flex-1 ${meta.text}`}>{ev.title}</span>
                     {!ev.allDay && <span className="text-xs text-muted-foreground">{formatTime(ev.date)}</span>}
-                    {ev.amount && <span className="text-xs font-semibold text-foreground">â‚º{ev.amount.toLocaleString("tr-TR")}</span>}
+                    {ev.amount && <span className="text-xs font-semibold text-foreground">₺{ev.amount.toLocaleString("tr-TR")}</span>}
                   </div>
                 )
               })}
@@ -433,7 +433,7 @@ export default function TakvimPage() {
     )
   }
 
-  // â”€â”€ Event Detay Paneli â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Event Detay Paneli ───────────────────────────────────────────
   function EventDetail() {
     if (!selectedEvent) return null
     const meta = eventTypeMeta(selectedEvent.type)
@@ -496,7 +496,7 @@ export default function TakvimPage() {
               )}
               {selectedEvent.amount && (
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-foreground text-base">â‚º{selectedEvent.amount.toLocaleString("tr-TR")}</span>
+                  <span className="font-semibold text-foreground text-base">₺{selectedEvent.amount.toLocaleString("tr-TR")}</span>
                 </div>
               )}
               {selectedEvent.description && (
@@ -529,7 +529,7 @@ export default function TakvimPage() {
   return (
     <div className="flex flex-col gap-6">
 
-      {/* â”€â”€ Sayfa Başlığı â”€â”€ */}
+      {/* ── Sayfa Başlığı ── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Takvim</h1>
@@ -557,7 +557,7 @@ export default function TakvimPage() {
         </div>
       </div>
 
-      {/* â”€â”€ Legend â”€â”€ */}
+      {/* ── Legend ── */}
       <div className="flex flex-wrap gap-3 text-xs font-medium">
         {[
           { color: "#3B82F6", label: "Müşteri Randevusu" },
@@ -573,7 +573,7 @@ export default function TakvimPage() {
         ))}
       </div>
 
-      {/* â”€â”€ Ana Takvim Kartı â”€â”€ */}
+      {/* ── Ana Takvim Kartı ── */}
       <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-border overflow-hidden">
 
         {/* Navigasyon Başlığı */}
@@ -642,7 +642,7 @@ export default function TakvimPage() {
                           style={{ backgroundColor: `${sd.color}25`, color: sd.color }}
                           title={sd.title}
                         >
-                          ğŸ‰ {sd.title}
+                          🎉 {sd.title}
                         </div>
                       ))}
 
@@ -671,7 +671,7 @@ export default function TakvimPage() {
         </div>
       </div>
 
-      {/* â”€â”€ Yaklaşan Etkinlikler â”€â”€ */}
+      {/* ── Yaklaşan Etkinlikler ── */}
       {events.filter(e => {
         const d = new Date(e.date)
         const diff = Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
@@ -703,7 +703,7 @@ export default function TakvimPage() {
                       {new Date(ev.date).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
                     </span>
                     {ev.amount && (
-                      <span className="text-xs font-semibold text-foreground">â‚º{ev.amount.toLocaleString("tr-TR")}</span>
+                      <span className="text-xs font-semibold text-foreground">₺{ev.amount.toLocaleString("tr-TR")}</span>
                     )}
                   </div>
                 )
