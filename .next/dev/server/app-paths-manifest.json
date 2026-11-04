@@ -1,5 +1,0 @@
-{
-  "/api/wms/route": "app/api/wms/route.js",
-  "/dashboard/wms/mobil/page": "app/dashboard/wms/mobil/page.js",
-  "/dashboard/wms/page": "app/dashboard/wms/page.js"
-}

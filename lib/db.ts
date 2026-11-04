@@ -786,6 +786,41 @@ class ModelSimulate {
       if (include.lines) enriched.lines = (db.inventoryCountLine || []).filter((l: any) => l.sessionId === item.id)
     }
 
+    if (this.modelName === "purchaseRequisition" && include) {
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+      if (include.lines) {
+        enriched.lines = (db.purchaseRequisitionLine || []).filter((l: any) => l.requisitionId === item.id).map((l: any) => ({
+          ...l,
+          item: (db.inventoryItem || []).find((it: any) => it.id === l.itemId) ?? null
+        }))
+      }
+    }
+
+    if (this.modelName === "purchaseRequisitionLine" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
+      if (include.requisition) enriched.requisition = (db.purchaseRequisition || []).find((r: any) => r.id === item.requisitionId) ?? null
+    }
+
+    if (this.modelName === "consignmentStock" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
+      if (include.supplier) enriched.supplier = (db.supplier || []).find((s: any) => s.id === item.supplierId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
+    if (this.modelName === "omnichannelOrder" && include) {
+      if (include.shipmentLines) {
+        enriched.shipmentLines = (db.orderShipmentLine || []).filter((l: any) => l.orderId === item.id).map((l: any) => ({
+          ...l,
+          item: (db.inventoryItem || []).find((it: any) => it.id === l.itemId) ?? null
+        }))
+      }
+    }
+
+    if (this.modelName === "orderShipmentLine" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
+      if (include.order) enriched.order = (db.omnichannelOrder || []).find((o: any) => o.id === item.orderId) ?? null
+    }
+
     return enriched
   }
 
