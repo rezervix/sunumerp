@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -22,9 +22,9 @@ import {
   FolderOpen, TrendingUp, Truck, FileText, CheckSquare,
   StickyNote, Calculator, CreditCard, Megaphone, Building2,
   Shield, MessageCircle, Bell, Settings, LogOut, Menu,
-  PanelLeftClose, PanelLeftOpen, ChevronRight, CalendarDays, Library, ClipboardCheck,
+  PanelLeftClose, PanelLeftOpen, ChevronRight, ChevronDown, CalendarDays, Library, ClipboardCheck,
   Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
-  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle
+  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle, Search, X
 } from "lucide-react"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
@@ -36,22 +36,95 @@ import { SunumLogo } from "@/components/sunum-logo"
 import { DemoModeInterceptor } from "@/components/demo-interceptor"
 
 
+function normalizeSearchText(str: string): string {
+  return str
+    .toLocaleLowerCase("tr")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+}
+
+interface NavItemDef {
+  name: string
+  href: string
+  icon: React.ElementType
+  exact?: boolean
+  resource?: string
+  adminOnly?: boolean
+  devOnly?: boolean
+  isLogout?: boolean
+}
+
+interface NavCategoryDef {
+  id: string
+  title: string
+  icon: React.ElementType
+  items: NavItemDef[]
+}
+
 interface NavItemProps {
-  item: { name: string; href: string; icon: React.ElementType; exact?: boolean; resource?: string }
+  item: NavItemDef
   isActive: boolean
   collapsed: boolean
   onClick?: () => void
+  onLogout?: () => void
 }
 
-function NavItem({ item, isActive, collapsed, onClick }: NavItemProps) {
+function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps) {
   const Icon = item.icon
   const { unreadCounts } = useNotificationStore()
   const count = item.resource ? (unreadCounts[item.resource] || 0) : 0
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (item.isLogout) {
+      e.preventDefault()
+      onClick?.()
+      onLogout?.()
+    } else {
+      onClick?.()
+    }
+  }
+
+  if (item.isLogout) {
+    const btnContent = (
+      <button
+        type="button"
+        onClick={handleClick}
+        className={[
+          "sidebar-item group relative w-full text-left",
+          "hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 text-red-600/90 dark:text-red-400/90",
+          collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "",
+        ].join(" ")}
+        style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" } : {}}
+      >
+        <div className="relative flex items-center justify-center">
+          <Icon
+            size={18}
+            className="shrink-0 transition-transform duration-150 text-red-500 group-hover:scale-105"
+          />
+        </div>
+        {!collapsed && <span className="truncate">{item.name}</span>}
+      </button>
+    )
+
+    if (collapsed) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>{btnContent}</TooltipTrigger>
+          <TooltipContent side="right" sideOffset={8}>
+            {item.name}
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
+
+    return btnContent
+  }
+
   const content = (
     <Link
       href={item.href}
-      onClick={onClick}
+      onClick={handleClick}
       className={[
         "sidebar-item group relative",
         isActive ? "sidebar-item-active font-semibold" : "hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground)",
@@ -183,9 +256,18 @@ function SidebarContent({
 
   const { t } = useLanguage()
   const { isPlatformDeveloper } = useAuth()
+  const { unreadCounts } = useNotificationStore()
   const [logoUrl, setLogoUrl] = useState<string>("/images/logo.png")
   const [subPlan, setSubPlan] = useState<string | null>(null)
   const [companyTitle, setCompanyTitle] = useState<string>(BRAND_CONFIG.name || "Ajans Yönetim Paneli")
+
+  // Search state
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  // Accordion state - stores ID of the open category (single open)
+  const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadConfig() {
@@ -217,91 +299,223 @@ function SidebarContent({
     return () => window.removeEventListener("system-config-updated", handleUpdate)
   }, [])
 
-  const mainNav = [
-    { name: t.nav.dashboard, href: "/dashboard", icon: LayoutDashboard, exact: true, resource: "dashboard" },
-    { name: t.nav.calendar, href: "/dashboard/takvim", icon: CalendarDays, resource: "takvim" },
-    { name: t.nav.orders, href: "/dashboard/orders", icon: ShoppingBag, resource: "orders" },
-    { name: t.nav.store, href: "/dashboard/b2b", icon: Store, resource: "magaza" },
-    { name: t.nav.customers, href: "/dashboard/customers", icon: Users, resource: "customers" },
-    { name: t.nav.hr, href: "/dashboard/hr", icon: UserCheck, resource: "hr" },
-    { name: t.nav.staffRequests, href: "/dashboard/personel-talepleri", icon: ClipboardCheck, resource: "personel-talepleri" },
-    { name: t.nav.projects, href: "/dashboard/projects", icon: FolderOpen, resource: "projects" },
-    { name: t.nav.leads, href: "/dashboard/leads", icon: TrendingUp, resource: "leads" },
-    { name: t.nav.cargo, href: "/dashboard/cargo", icon: Truck, resource: "cargo" },
-    { name: t.nav.files, href: "/dashboard/files", icon: FileText, resource: "files" },
-    { name: t.nav.agencyLibrary, href: "/dashboard/ajans-kutuphanesi", icon: Library, resource: "ajans-kutuphanesi" },
-    { name: t.nav.contentStore, href: "/dashboard/icerik-magazasi", icon: Images, resource: "icerik-magazasi" },
-    { name: t.nav.tasks, href: "/dashboard/tasks", icon: ClipboardList, resource: "dashboard" },
-    { name: t.nav.personelDenetim, href: "/dashboard/personel-denetim", icon: ClipboardCheck, resource: "dashboard" },
-    { name: t.nav.endOfDayReport, href: "/dashboard/personel-denetim/gun-sonu", icon: ClipboardCheck, resource: "dashboard" },
-    { name: t.nav.customerRequests, href: "/dashboard/personel-denetim/musteri-talepleri", icon: MessageCircle, resource: "dashboard" },
-    { name: t.nav.todos, href: "/dashboard/todos", icon: CheckSquare, resource: "yapilacaklar" },
-    { name: t.nav.notes, href: "/dashboard/notes", icon: StickyNote, resource: "notlarim" },
-    { name: t.nav.calculator, href: "/dashboard/hesaplama-araci", icon: Calculator, resource: "hesaplama" },
-    { name: t.nav.finance, href: "/dashboard/finance", icon: CreditCard, resource: "financial" },
-    { name: t.nav.socialMedia, href: "/dashboard/sosyal-medya", icon: Megaphone, resource: "sosyal-medya" },
-    { name: t.nav.contentCalendar, href: "/dashboard/icerik-takvimi", icon: CalendarCheck2, resource: "icerik-takvimi" },
-  ]
+  // Keyboard shortcuts: Ctrl+K / Cmd+K opens search, ESC closes
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        if (collapsed) {
+          onToggle?.()
+        }
+        setIsSearchOpen(true)
+        setTimeout(() => searchInputRef.current?.focus(), 60)
+      } else if (e.key === "Escape" && isSearchOpen) {
+        setSearchQuery("")
+        setIsSearchOpen(false)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [collapsed, isSearchOpen, onToggle])
 
-  const adminNav = [
-    { name: t.nav.branches, href: "/dashboard/branches", icon: Building2, adminOnly: true },
-    { name: t.nav.users, href: "/dashboard/users", icon: Shield, adminOnly: true },
-    { name: t.nav.technicalSupport, href: "/dashboard/support-tickets", icon: LifeBuoy, adminOnly: true },
-    { name: "Geri Dönüşüm Kutusu", href: "/dashboard/trash", icon: Trash2, resource: "trash" },
-    { name: "Geliştirici Konsolu", href: "/dashboard/developer-console", icon: Terminal, devOnly: true },
-  ]
+  const rawCategories: NavCategoryDef[] = useMemo(() => [
+    {
+      id: "genel",
+      title: (t.nav as any).general || "Genel",
+      icon: LayoutDashboard,
+      items: [
+        { name: t.nav.dashboard, href: "/dashboard", icon: LayoutDashboard, exact: true, resource: "dashboard" },
+        { name: t.nav.calendar, href: "/dashboard/takvim", icon: CalendarDays, resource: "takvim" },
+        { name: t.nav.todos, href: "/dashboard/todos", icon: CheckSquare, resource: "yapilacaklar" },
+        { name: t.nav.notes, href: "/dashboard/notes", icon: StickyNote, resource: "notlarim" },
+      ],
+    },
+    {
+      id: "satis",
+      title: (t.nav as any).sales || "Satış / Operasyon",
+      icon: ShoppingBag,
+      items: [
+        { name: t.nav.orders, href: "/dashboard/orders", icon: ShoppingBag, resource: "orders" },
+        { name: t.nav.store, href: "/dashboard/b2b", icon: Store, resource: "magaza" },
+        { name: t.nav.customers, href: "/dashboard/customers", icon: Users, resource: "customers" },
+        { name: t.nav.leads, href: "/dashboard/leads", icon: TrendingUp, resource: "leads" },
+        { name: t.nav.cargo, href: "/dashboard/cargo", icon: Truck, resource: "cargo" },
+      ],
+    },
+    {
+      id: "stok",
+      title: "Stok, Depo & Tedarik",
+      icon: Boxes,
+      items: [
+        { name: (t.nav as any).inventory || "Stok & Varyant Matrix", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
+        { name: (t.nav as any).wms || "WMS Depo Yönetimi", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
+        { name: (t.nav as any).wmsMobile || "WMS Mobil Terminal", href: "/dashboard/wms/mobil", icon: Smartphone, resource: "wms" },
+        { name: (t.nav as any).procurement || "Akıllı Satın Alma & ROP", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
+        { name: (t.nav as any).omnichannel || "Omnichannel & E-İrsaliye", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
+        { name: (t.nav as any).inventoryAi || "Stok AI & Foresight", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
+        { name: (t.nav as any).ecosystem || "API, Eklentiler & SaaS", href: "/dashboard/envanter-ekosistem", icon: Puzzle, resource: "ekosistem" },
+      ],
+    },
+    {
+      id: "proje",
+      title: t.nav.projects || "Proje & Görevler",
+      icon: FolderOpen,
+      items: [
+        { name: t.nav.projects, href: "/dashboard/projects", icon: FolderOpen, resource: "projects" },
+        { name: t.nav.tasks, href: "/dashboard/tasks", icon: ClipboardList, resource: "dashboard" },
+        { name: t.nav.personelDenetim, href: "/dashboard/personel-denetim", icon: ClipboardCheck, resource: "dashboard" },
+        { name: t.nav.endOfDayReport, href: "/dashboard/personel-denetim/gun-sonu", icon: ClipboardCheck, resource: "dashboard" },
+        { name: t.nav.customerRequests, href: "/dashboard/personel-denetim/musteri-talepleri", icon: MessageCircle, resource: "dashboard" },
+        { name: t.nav.files, href: "/dashboard/files", icon: FileText, resource: "files" },
+      ],
+    },
+    {
+      id: "pazarlama",
+      title: "Pazarlama & İçerik",
+      icon: Megaphone,
+      items: [
+        { name: t.nav.socialMedia, href: "/dashboard/sosyal-medya", icon: Megaphone, resource: "sosyal-medya" },
+        { name: t.nav.contentCalendar, href: "/dashboard/icerik-takvimi", icon: CalendarCheck2, resource: "icerik-takvimi" },
+        { name: t.nav.agencyLibrary, href: "/dashboard/ajans-kutuphanesi", icon: Library, resource: "ajans-kutuphanesi" },
+        { name: t.nav.contentStore, href: "/dashboard/icerik-magazasi", icon: Images, resource: "icerik-magazasi" },
+      ],
+    },
+    {
+      id: "finans",
+      title: "Finans & Hesaplama",
+      icon: CreditCard,
+      items: [
+        { name: t.nav.finance, href: "/dashboard/finance", icon: CreditCard, resource: "financial" },
+        { name: t.nav.calculator, href: "/dashboard/hesaplama-araci", icon: Calculator, resource: "hesaplama" },
+      ],
+    },
+    {
+      id: "ik",
+      title: t.nav.hr || "İnsan Kaynakları",
+      icon: UserCheck,
+      items: [
+        { name: t.nav.hr, href: "/dashboard/hr", icon: UserCheck, resource: "hr" },
+        { name: t.nav.staffRequests, href: "/dashboard/personel-talepleri", icon: ClipboardCheck, resource: "personel-talepleri" },
+      ],
+    },
+    {
+      id: "iletisim",
+      title: t.nav.communication || "İletişim & Destek",
+      icon: MessageCircle,
+      items: [
+        { name: t.nav.chat, href: "/dashboard/chat", icon: MessageCircle, resource: "chat" },
+        { name: t.nav.announcements, href: "/dashboard/announcements", icon: Bell, resource: "duyurular" },
+        { name: "SSS / Yardım", href: "/dashboard/sss", icon: HelpCircle, resource: "dashboard" },
+      ],
+    },
+    {
+      id: "sistem",
+      title: "Sistem",
+      icon: Shield,
+      items: [
+        { name: t.nav.branches, href: "/dashboard/branches", icon: Building2, adminOnly: true },
+        { name: t.nav.users, href: "/dashboard/users", icon: Shield, adminOnly: true },
+        { name: t.nav.technicalSupport, href: "/dashboard/support-tickets", icon: LifeBuoy, adminOnly: true },
+        { name: "Geri Dönüşüm Kutusu", href: "/dashboard/trash", icon: Trash2, resource: "trash" },
+        { name: "Geliştirici Konsolu", href: "/dashboard/developer-console", icon: Terminal, devOnly: true },
+        { name: t.nav.settings, href: "/dashboard/settings", icon: Settings },
+        { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
+      ],
+    },
+  ], [t])
 
-  const inventoryNav = [
-    { name: (t.nav as any).inventory || "Stok & Varyant Matrix", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
-    { name: (t.nav as any).wms || "WMS Depo Yönetimi", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
-    { name: (t.nav as any).wmsMobile || "WMS Mobil Terminal", href: "/dashboard/wms/mobil", icon: Smartphone, resource: "wms" },
-    { name: (t.nav as any).procurement || "Akıllı Satın Alma & ROP", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
-    { name: (t.nav as any).omnichannel || "Omnichannel & E-İrsaliye", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
-    { name: (t.nav as any).inventoryAi || "Stok AI & Foresight", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
-    { name: (t.nav as any).ecosystem || "API, Eklentiler & SaaS", href: "/dashboard/envanter-ekosistem", icon: Puzzle, resource: "ekosistem" },
-  ]
-
-  const commsNav = [
-    { name: t.nav.chat, href: "/dashboard/chat", icon: MessageCircle, resource: "chat" },
-    { name: t.nav.announcements, href: "/dashboard/announcements", icon: Bell, resource: "duyurular" },
-    { name: "SSS / Yardım", href: "/dashboard/sss", icon: HelpCircle, resource: "dashboard" },
-  ]
-
-  const filteredAdmin = adminNav.filter(i => {
-    if ((i as any).devOnly) {
+  const isItemAllowed = useCallback((item: NavItemDef) => {
+    if (item.devOnly) {
       return isPlatformDeveloper
     }
-    if (subPlan === "free") {
-      return i.href === "/dashboard/support-tickets"
+    if (item.adminOnly) {
+      if (subPlan === "free") {
+        return item.href === "/dashboard/support-tickets"
+      }
+      return isSuperAdmin
     }
-    return !i.adminOnly || isSuperAdmin
-  })
-
-  const filteredMainNav = mainNav.filter(item => {
     if (subPlan === "free") {
-      return item.resource === "dashboard"
+      if (
+        item.href === "/dashboard" ||
+        item.href === "/dashboard/support-tickets" ||
+        item.href === "/dashboard/sss" ||
+        item.href === "/dashboard/settings" ||
+        item.isLogout
+      ) {
+        return true
+      }
+      return false
     }
-    if (isSuperAdmin) return true;
-    return hasPermission(item.resource, "read");
-  })
-
-  const filteredInventoryNav = inventoryNav.filter(item => {
-    if (subPlan === "free") return false
     if (isSuperAdmin) return true
-    return hasPermission(item.resource, "read")
-  })
-
-  const filteredCommsNav = commsNav.filter(item => {
-    if (subPlan === "free") {
-      return item.name === "SSS / Yardım"
-    }
+    if (item.resource) return hasPermission(item.resource, "read")
     return true
-  })
+  }, [isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
 
-  const filteredUserBranches = isPlatformDeveloper ? userBranches : userBranches.filter(b => b.id !== "local-debug-branch")
+  // Filter allowed categories and items
+  const availableCategories = useMemo(() => {
+    return rawCategories
+      .map(cat => ({
+        ...cat,
+        items: cat.items.filter(isItemAllowed),
+      }))
+      .filter(cat => cat.items.length > 0)
+  }, [rawCategories, isItemAllowed])
 
-  const isActive = (item: { href: string; exact?: boolean }) =>
-    item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + "/")
+  const isItemActive = useCallback(
+    (item: NavItemDef) => {
+      if (item.isLogout) return false
+      return item.exact
+        ? pathname === item.href
+        : pathname === item.href || pathname.startsWith(item.href + "/")
+    },
+    [pathname]
+  )
+
+  // Open active category automatically on mount or route change
+  useEffect(() => {
+    for (const cat of availableCategories) {
+      if (cat.items.some(item => isItemActive(item))) {
+        setOpenCategoryId(cat.id)
+        break
+      }
+    }
+  }, [pathname, availableCategories, isItemActive])
+
+  // Search filtering
+  const normalizedQuery = normalizeSearchText(searchQuery)
+  const isSearching = normalizedQuery.length > 0
+
+  const displayedCategories = useMemo(() => {
+    if (!isSearching) return availableCategories
+
+    return availableCategories
+      .map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => {
+          const normName = normalizeSearchText(item.name)
+          return normName.includes(normalizedQuery) || item.name.toLocaleLowerCase("tr").includes(searchQuery.trim().toLocaleLowerCase("tr"))
+        }),
+      }))
+      .filter(cat => cat.items.length > 0)
+  }, [availableCategories, isSearching, normalizedQuery, searchQuery])
+
+  const totalMatchingCount = useMemo(() => {
+    if (!isSearching) return 0
+    return displayedCategories.reduce((sum, cat) => sum + cat.items.length, 0)
+  }, [displayedCategories, isSearching])
+
+  const isCategoryOpen = (categoryId: string) => {
+    if (isSearching) return true
+    return openCategoryId === categoryId
+  }
+
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategoryId(prev => (prev === categoryId ? null : categoryId))
+  }
+
+  const filteredUserBranches = isPlatformDeveloper
+    ? userBranches
+    : userBranches.filter(b => b.id !== "local-debug-branch")
 
   return (
     <div className="flex flex-col h-full">
@@ -326,74 +540,237 @@ function SidebarContent({
         </div>
       )}
 
+      {/* ── Search Bar (Between Branch Selector and Navigation) ── */}
+      {!collapsed ? (
+        <div className="px-3 pt-2 pb-1 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              setIsSearchOpen(prev => {
+                const next = !prev
+                if (next) {
+                  setTimeout(() => searchInputRef.current?.focus(), 60)
+                } else {
+                  setSearchQuery("")
+                }
+                return next
+              })
+            }}
+            aria-expanded={isSearchOpen}
+            className={[
+              "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 border cursor-pointer select-none",
+              isSearchOpen
+                ? "bg-(--sidebar-accent) text-(--sidebar-accent-foreground) border-primary/40 shadow-xs"
+                : "bg-muted/40 hover:bg-muted/70 text-(--sidebar-muted) hover:text-(--sidebar-foreground) border-border/50",
+            ].join(" ")}
+          >
+            <Search
+              size={14}
+              className={[
+                "shrink-0 transition-colors",
+                isSearchOpen ? "text-primary" : "text-(--sidebar-muted)",
+              ].join(" ")}
+            />
+            <span className="flex-1 text-left truncate">Menüde ara...</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-background/70 border border-border/40 text-muted-foreground">
+              {isSearchOpen ? "ESC" : "⌘K"}
+            </span>
+          </button>
+
+          {/* Açılır Arama Alanı (Dropdown / Expandable Input) */}
+          {isSearchOpen && (
+            <div className="mt-1.5 transition-all duration-200 ease-out animate-in fade-in slide-in-from-top-1">
+              <div className="relative flex items-center bg-background border border-primary/50 ring-2 ring-primary/15 rounded-lg px-2.5 py-1.5 shadow-sm">
+                <Search size={13} className="text-primary shrink-0 mr-2" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === "Escape") {
+                      setSearchQuery("")
+                      setIsSearchOpen(false)
+                    }
+                  }}
+                  placeholder="Menü adı yazın..."
+                  className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground outline-none"
+                />
+                {searchQuery ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("")
+                      searchInputRef.current?.focus()
+                    }}
+                    className="text-muted-foreground hover:text-foreground p-0.5 rounded cursor-pointer"
+                    title="Temizle"
+                  >
+                    <X size={13} />
+                  </button>
+                ) : null}
+              </div>
+
+              {searchQuery && (
+                <div className="flex items-center justify-between mt-1 px-1 text-[11px] text-muted-foreground">
+                  <span>{totalMatchingCount} menü bulundu</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("")
+                      setIsSearchOpen(false)
+                    }}
+                    className="hover:text-foreground text-[10px] underline cursor-pointer"
+                  >
+                    Temizle (ESC)
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="px-2 pt-2 pb-1 shrink-0 flex justify-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => {
+                  onToggle?.()
+                  setIsSearchOpen(true)
+                  setTimeout(() => searchInputRef.current?.focus(), 150)
+                }}
+                className="sidebar-item hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground) justify-center px-0 mx-auto"
+                style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
+              >
+                <Search size={18} className="text-(--sidebar-muted)" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Menüde ara...</TooltipContent>
+          </Tooltip>
+        </div>
+      )}
+
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-        {filteredMainNav.map(item => (
-          <NavItem
-            key={item.href}
-            item={item}
-            isActive={isActive(item)}
-            collapsed={collapsed}
-            onClick={onNavClick}
-          />
-        ))}
+      {collapsed ? (
+        <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+          {availableCategories.map((cat, idx) => (
+            <div key={cat.id} className="space-y-1">
+              {idx > 0 && <div className="h-px bg-border/40 my-1.5 mx-1" />}
+              {cat.items.map(item => (
+                <NavItem
+                  key={item.href + item.name}
+                  item={item}
+                  isActive={isItemActive(item)}
+                  collapsed={true}
+                  onClick={onNavClick}
+                  onLogout={onLogout}
+                />
+              ))}
+            </div>
+          ))}
+        </nav>
+      ) : (
+        <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+          {displayedCategories.map(cat => {
+            const isOpen = isCategoryOpen(cat.id)
+            const categoryUnreadCount = cat.items.reduce(
+              (sum, item) => sum + (item.resource ? (unreadCounts[item.resource] || 0) : 0),
+              0
+            )
+            const CategoryIcon = cat.icon
+            const isAnyItemActive = cat.items.some(item => isItemActive(item))
 
-        {filteredInventoryNav.length > 0 && (
-          <div className="pt-3 mt-2 border-t border-(--sidebar-border)">
-            {!collapsed && (
-              <p className="text-label text-(--sidebar-muted) px-3 mb-1.5 font-bold text-xs uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                Stok, WMS & Omnichannel
+            return (
+              <div key={cat.id} className="rounded-lg transition-colors">
+                <button
+                  type="button"
+                  onClick={() => toggleCategory(cat.id)}
+                  className={[
+                    "w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-semibold transition-all duration-150 select-none group cursor-pointer",
+                    isOpen
+                      ? "text-(--sidebar-foreground) bg-(--sidebar-accent)/60 shadow-xs"
+                      : isAnyItemActive
+                        ? "text-primary bg-primary/5 font-semibold"
+                        : "text-(--sidebar-muted) hover:text-(--sidebar-foreground) hover:bg-(--sidebar-accent)/30",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <CategoryIcon
+                      size={16}
+                      className={[
+                        "shrink-0 transition-colors",
+                        isOpen || isAnyItemActive
+                          ? "text-primary"
+                          : "text-(--sidebar-muted) group-hover:text-(--sidebar-foreground)",
+                      ].join(" ")}
+                    />
+                    <span className="truncate tracking-wide text-left">{cat.title}</span>
+                    {!isOpen && categoryUnreadCount > 0 && (
+                      <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-600 px-1 text-[9px] font-bold text-white shadow-xs">
+                        {categoryUnreadCount}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                    {isSearching && (
+                      <span className="text-[10px] text-primary font-medium px-1.5 py-0.2 rounded-full bg-primary/10">
+                        {cat.items.length}
+                      </span>
+                    )}
+                    <ChevronDown
+                      size={14}
+                      className={[
+                        "shrink-0 transition-transform duration-200 text-(--sidebar-muted) group-hover:text-(--sidebar-foreground)",
+                        isOpen ? "rotate-0 text-primary" : "-rotate-90",
+                      ].join(" ")}
+                    />
+                  </div>
+                </button>
+
+                {isOpen && (
+                  <div className="pl-3 pr-1 py-1 space-y-0.5 border-l border-primary/20 ml-4.5 my-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                    {cat.items.map(item => (
+                      <NavItem
+                        key={item.href + item.name}
+                        item={item}
+                        isActive={isItemActive(item)}
+                        collapsed={false}
+                        onClick={onNavClick}
+                        onLogout={onLogout}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+
+          {isSearching && displayedCategories.length === 0 && (
+            <div className="py-8 px-4 text-center">
+              <Search size={22} className="mx-auto text-muted-foreground/40 mb-2" />
+              <p className="text-xs font-semibold text-foreground">Sonuç bulunamadı</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                &ldquo;{searchQuery}&rdquo; ile eşleşen bir menü bulunamadı
               </p>
-            )}
-            {filteredInventoryNav.map(item => (
-              <NavItem
-                key={item.href}
-                item={item}
-                isActive={isActive(item)}
-                collapsed={collapsed}
-                onClick={onNavClick}
-              />
-            ))}
-          </div>
-        )}
-
-        {filteredAdmin.length > 0 && (
-          <div className={collapsed ? "pt-3 mt-2 border-t border-(--sidebar-border)" : "pt-3 mt-2 border-t border-(--sidebar-border)"}>
-            {!collapsed && (
-              <p className="text-label text-(--sidebar-muted) px-3 mb-1.5">{t.nav.management}</p>
-            )}
-            {filteredAdmin.map(item => (
-              <NavItem
-                key={item.href}
-                item={item}
-                isActive={isActive(item)}
-                collapsed={collapsed}
-                onClick={onNavClick}
-              />
-            ))}
-          </div>
-        )}
-
-        {filteredCommsNav.length > 0 && (
-          <div className="pt-3 mt-2 border-t border-(--sidebar-border)">
-            {!collapsed && (
-              <p className="text-label text-(--sidebar-muted) px-3 mb-1.5">{t.nav.communication}</p>
-            )}
-            {filteredCommsNav.map(item => (
-              <NavItem
-                key={item.href}
-                item={item}
-                isActive={isActive(item)}
-                collapsed={collapsed}
-                onClick={onNavClick}
-              />
-            ))}
-          </div>
-        )}
-      </nav>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("")
+                  searchInputRef.current?.focus()
+                }}
+                className="mt-2 text-xs font-medium text-primary hover:underline cursor-pointer"
+              >
+                Aramayı Temizle
+              </button>
+            </div>
+          )}
+        </nav>
+      )}
 
       {/* Footer */}
-      <div className="shrink-0 border-t border-(--sidebar-border) p-2 space-y-0.5">
+      <div className="shrink-0 border-t border-(--sidebar-border) p-2 space-y-1">
         {/* Language Switcher */}
         <LanguageSwitcher collapsed={collapsed} />
 
@@ -415,6 +792,7 @@ function SidebarContent({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
+                  type="button"
                   onClick={onLogout}
                   className="sidebar-item hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400 justify-center mx-auto"
                   style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "var(--radius)" }}
@@ -427,26 +805,11 @@ function SidebarContent({
           </>
         ) : (
           <>
-            <Link
-              href="/dashboard/settings"
-              onClick={onNavClick}
-              className="sidebar-item hover:bg-(--sidebar-accent) hover:text-(--sidebar-accent-foreground)"
-            >
-              <Settings size={18} className="text-(--sidebar-muted) shrink-0" />
-              <span>{t.nav.settings}</span>
-            </Link>
-            <button
-              onClick={onLogout}
-              className="sidebar-item w-full text-left hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
-            >
-              <LogOut size={18} className="text-(--sidebar-muted) shrink-0" />
-              <span>{t.nav.logout}</span>
-            </button>
-
             {session && (
               <Link
                 href="/dashboard/settings"
-                className="flex items-center gap-3 mt-2 px-3 py-2.5 rounded-lg hover:bg-(--sidebar-accent) transition-colors"
+                onClick={onNavClick}
+                className="flex items-center gap-3 mt-1.5 px-3 py-2 rounded-lg hover:bg-(--sidebar-accent) transition-colors group"
               >
                 {session.user.avatarUrl ? (
                   <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-full object-cover shrink-0 border border-gray-200 dark:border-gray-800" />
@@ -455,7 +818,7 @@ function SidebarContent({
                     {session.user.fullName?.substring(0, 2).toUpperCase() || "US"}
                   </div>
                 )}
-                <div className="flex flex-col leading-none overflow-hidden">
+                <div className="flex flex-col leading-none overflow-hidden min-w-0">
                   <span className="text-sm font-semibold text-(--sidebar-foreground) truncate">
                     {session.user.fullName}
                   </span>
@@ -463,7 +826,7 @@ function SidebarContent({
                     {isSuperAdmin ? "Süper Yönetici" : ((currentBranch as any)?.role?.name || (session.user as any).position || "Kullanıcı")}
                   </span>
                 </div>
-                <ChevronRight size={14} className="text-(--sidebar-muted) shrink-0 ml-auto" />
+                <ChevronRight size={14} className="text-(--sidebar-muted) shrink-0 ml-auto group-hover:translate-x-0.5 transition-transform" />
               </Link>
             )}
           </>
