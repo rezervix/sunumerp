@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/context/LanguageContext"
-
-
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/context"
 import { getAllBranches, createBranch, updateBranch, deleteBranch } from "@/lib/api/branches"
@@ -35,7 +33,7 @@ export default function BranchesPage() {
     address: "",
     phone: "",
     email: "",
-    themeColor: "#3B82F6",
+    themeColor: "#34D399",
     logoUrl: "",
     isActive: true,
   })
@@ -86,7 +84,7 @@ export default function BranchesPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bu subeyi devre disi birakmak istediginizden emin misiniz?")) return
+    if (!confirm("Bu şubeyi devre dışı bırakmak istediğinizden emin misiniz?")) return
 
     try {
       const token = localStorage.getItem("authToken") || "mock-token"
@@ -105,7 +103,7 @@ export default function BranchesPage() {
       address: branch.address || "",
       phone: branch.phone || "",
       email: branch.email || "",
-      themeColor: branch.themeColor,
+      themeColor: branch.themeColor || "#34D399",
       logoUrl: branch.logoUrl || "",
       isActive: branch.isActive,
     })
@@ -119,7 +117,7 @@ export default function BranchesPage() {
       address: "",
       phone: "",
       email: "",
-      themeColor: "#3B82F6",
+      themeColor: "#34D399",
       logoUrl: "",
       isActive: true,
     })
@@ -136,124 +134,124 @@ export default function BranchesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Sube Yonetimi</h1>
-          <p className="text-sm text-gray-500 mt-1">Sistemdeki tum subeleri goruntuleyin ve yonetin</p>
+          <h1 className="text-3xl font-light text-white tracking-tight">Şube Yönetimi</h1>
+          <p className="text-xs text-zinc-400 mt-1">Sistemdeki tüm şubeleri görüntüleyin ve yönetin</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-[18px]">search</span>
             <input
               type="text"
-              placeholder="Sube ara..."
+              placeholder="Şube ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full sm:w-64 pl-10 pr-4 py-2 bg-[#111513] border border-white/[0.06] rounded-full text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all"
             />
           </div>
           <button
             onClick={() => setIsCreateDialogOpen(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors shadow-soft"
+            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] text-xs font-medium rounded-full transition-colors shadow-md shadow-emerald-500/20 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[20px]">add</span>
-            Yeni Sube Ekle
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            <span>Yeni Şube Ekle</span>
           </button>
         </div>
       </div>
 
       {/* Main Content Card */}
-      <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-2xl overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50/50 dark:bg-[#1e1e1e]/50 border-b border-gray-200 dark:border-gray-800">
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Sube Adi</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Kod</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Iletisim</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Adres</th>
-                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Durum</th>
-                <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Islemler</th>
+              <tr className="bg-white/[0.02] border-b border-white/[0.06]">
+                <th className="px-6 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Şube Adı</th>
+                <th className="px-6 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Kod</th>
+                <th className="px-6 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">İletişim</th>
+                <th className="px-6 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Adres</th>
+                <th className="px-6 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Durum</th>
+                <th className="px-6 py-4 text-right text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">İşlemler</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody className="divide-y divide-white/[0.06] text-sm">
               {filteredBranches.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center text-gray-500">
-                      <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-gray-300">store</span>
-                      <p className="text-sm font-medium">Sube bulunamadi</p>
-                      {searchQuery && <p className="text-xs text-gray-400 mt-1">Arama kriterlerinize uyan sube yok.</p>}
+                    <div className="flex flex-col items-center justify-center text-zinc-500">
+                      <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-zinc-600">store</span>
+                      <p className="text-sm font-medium text-zinc-300">Şube bulunamadı</p>
+                      {searchQuery && <p className="text-xs text-zinc-500 mt-1">Arama kriterlerinize uyan şube yok.</p>}
                     </div>
                   </td>
                 </tr>
               ) : (
                 filteredBranches.map((branch) => (
-                  <tr key={branch.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors">
+                  <tr key={branch.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-100 shrink-0 overflow-hidden border border-gray-100 dark:border-gray-800">
+                        <div className="size-10 rounded-xl flex items-center justify-center bg-white/[0.04] shrink-0 overflow-hidden border border-white/[0.08]">
                           {branch.logoUrl ? (
-                            <img src={branch.logoUrl} alt={branch.name} className="w-full h-full object-cover" />
+                            <img src={branch.logoUrl} alt={branch.name} className="size-full object-cover" />
                           ) : (
-                            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: branch.themeColor || '#3B82F6' }} />
+                            <div className="size-4 rounded-full" style={{ backgroundColor: branch.themeColor || '#34D399' }} />
                           )}
                         </div>
-                        <div className="font-medium text-gray-900 dark:text-white">{branch.name}</div>
+                        <div className="font-medium text-white text-sm">{branch.name}</div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-mono text-gray-600 dark:text-gray-400 font-medium">
-                      <span className="inline-flex items-center px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs">
+                    <td className="px-6 py-4 font-mono text-zinc-400 text-xs font-medium">
+                      <span className="inline-flex items-center px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-emerald-400">
                         {branch.code}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="space-y-1.5 text-sm">
+                      <div className="space-y-1 text-xs">
                         {branch.phone && (
-                          <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                            <span className="material-symbols-outlined text-[16px]">phone</span>
+                          <div className="flex items-center gap-1.5 text-zinc-300">
+                            <span className="material-symbols-outlined text-[15px] text-zinc-500">phone</span>
                             {branch.phone}
                           </div>
                         )}
                         {branch.email && (
-                          <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                            <span className="material-symbols-outlined text-[16px]">mail</span>
+                          <div className="flex items-center gap-1.5 text-zinc-300">
+                            <span className="material-symbols-outlined text-[15px] text-zinc-500">mail</span>
                             {branch.email}
                           </div>
                         )}
                         {!branch.phone && !branch.email && (
-                          <span className="text-gray-400 text-xs italic">Belirtilmedi</span>
+                          <span className="text-zinc-500 text-xs italic">Belirtilmedi</span>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       {branch.address ? (
-                        <div className="flex items-start gap-1.5 text-sm text-gray-600 dark:text-gray-400 max-w-xs">
-                          <span className="material-symbols-outlined text-[16px] mt-0.5 shrink-0">location_on</span>
+                        <div className="flex items-start gap-1.5 text-xs text-zinc-300 max-w-xs">
+                          <span className="material-symbols-outlined text-[15px] mt-0.5 shrink-0 text-zinc-500">location_on</span>
                           <span className="line-clamp-2" title={branch.address}>{branch.address}</span>
                         </div>
                       ) : (
-                        <span className="text-gray-400 text-xs italic">Adres girilmedi</span>
+                        <span className="text-zinc-500 text-xs italic">Adres girilmedi</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${branch.isActive ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium ${branch.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-white/[0.04] text-zinc-400 border border-white/[0.06]'}`}>
                         {branch.isActive ? "Aktif" : "Pasif"}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => openEditDialog(branch)}
-                          className="p-1.5 text-gray-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center tooltip-trigger"
-                          title="Duzenle"
+                          className="p-1.5 text-zinc-400 hover:text-emerald-300 hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                          title="Düzenle"
                         >
-                          <span className="material-symbols-outlined text-[20px]">edit_note</span>
+                          <span className="material-symbols-outlined text-[18px]">edit_note</span>
                         </button>
                         <button
                           onClick={() => handleDelete(branch.id)}
-                          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center tooltip-trigger"
-                          title="Devre Disi Birak/Sil"
+                          className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                          title="Devre Dışı Bırak / Sil"
                         >
-                          <span className="material-symbols-outlined text-[20px]">delete</span>
+                          <span className="material-symbols-outlined text-[18px]">delete</span>
                         </button>
                       </div>
                     </td>
@@ -267,131 +265,131 @@ export default function BranchesPage() {
 
       {/* Create Dialog */}
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#111513] rounded-[24px] shadow-2xl w-full max-w-lg border border-white/[0.08] text-white overflow-hidden flex flex-col">
 
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+            <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yeni Sube Olustur</h2>
-                <p className="text-sm text-gray-500 mt-1">Yeni bir sube eklemek icin bilgileri girin</p>
+                <h2 className="text-base font-medium text-white">Yeni Şube Oluştur</h2>
+                <p className="text-xs text-zinc-400 mt-0.5">Yeni bir şube eklemek için bilgileri girin</p>
               </div>
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 text-zinc-400 hover:text-white rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined">close</span>
+                <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-1.5">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sube Adi *</label>
+                <label htmlFor="name" className="block text-xs font-medium text-zinc-300">Şube Adı *</label>
                 <input
                   id="name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Ankara Merkez"
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sube Kodu *</label>
+                <label htmlFor="code" className="block text-xs font-medium text-zinc-300">Şube Kodu *</label>
                 <input
                   id="code"
                   type="text"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                   placeholder="ANK-001"
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon</label>
+                <label htmlFor="phone" className="block text-xs font-medium text-zinc-300">Telefon</label>
                 <input
                   id="phone"
                   type="text"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+90 312 111 2233"
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">E-posta</label>
+                <label htmlFor="email" className="block text-xs font-medium text-zinc-300">E-posta</label>
                 <input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="ankara@sunumerp.com"
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Adres</label>
+                <label htmlFor="address" className="block text-xs font-medium text-zinc-300">Adres</label>
                 <textarea
                   id="address"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   placeholder="Tam adres"
                   rows={2}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm resize-none"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all text-xs resize-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="themeColor" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tema Rengi</label>
+                <label htmlFor="themeColor" className="block text-xs font-medium text-zinc-300">Tema Rengi</label>
                 <div className="flex items-center gap-3">
                   <input
                     id="themeColor"
                     type="color"
                     value={formData.themeColor}
                     onChange={(e) => setFormData({ ...formData, themeColor: e.target.value })}
-                    className="w-12 h-10 p-1 border border-gray-200 rounded-lg cursor-pointer bg-white"
+                    className="w-10 h-9 p-0.5 border border-white/[0.08] rounded-lg cursor-pointer bg-[#111513]"
                   />
                   <input
                     type="text"
                     value={formData.themeColor}
                     onChange={(e) => setFormData({ ...formData, themeColor: e.target.value })}
-                    placeholder="#3B82F6"
-                    className="block w-full flex-1 px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-mono"
+                    placeholder="#34D399"
+                    className="block w-full flex-1 px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5 pt-2">
                 <FilePicker
-                  label="Sube Logosu"
+                  label="Şube Logosu"
                   maxFiles={1}
                   onFilesSelected={(urls) => setFormData({ ...formData, logoUrl: urls[0] || "" })}
                   accept="image/*"
                 />
                 {formData.logoUrl && (
-                  <div className="mt-2 p-2 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-gray-800 inline-block">
-                    <img src={formData.logoUrl} alt="Logo Onizleme" className="h-12 w-auto object-contain" />
+                  <div className="mt-2 p-2 bg-white/[0.03] rounded-xl border border-white/[0.08] inline-block">
+                    <img src={formData.logoUrl} alt="Logo Önizleme" className="h-12 w-auto object-contain" />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
+            <div className="p-6 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-xs font-medium text-zinc-300 border border-white/[0.08] rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
-                Iptal
+                İptal
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.name || !formData.code}
-                className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-gray-800 transition-colors shadow-soft disabled:opacity-50 flex items-center gap-2"
+                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
               >
-                {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+                {loading && <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : "Kaydet"}
               </button>
             </div>
@@ -401,142 +399,144 @@ export default function BranchesPage() {
 
       {/* Edit Dialog */}
       {isEditDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#111513] rounded-[24px] shadow-2xl w-full max-w-lg border border-white/[0.08] text-white overflow-hidden flex flex-col">
 
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+            <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Sube Duzenle</h2>
-                <p className="text-sm text-gray-500 mt-1">Sube bilgilerini guncelleyin</p>
+                <h2 className="text-base font-medium text-white">Şubeyi Düzenle</h2>
+                <p className="text-xs text-zinc-400 mt-0.5">Şube bilgilerini güncelleyin</p>
               </div>
               <button
                 onClick={() => setIsEditDialogOpen(false)}
-                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 text-zinc-400 hover:text-white rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
-                <span className="material-symbols-outlined">close</span>
+                <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-1.5">
-                <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sube Adi *</label>
+                <label htmlFor="edit-name" className="block text-xs font-medium text-zinc-300">Şube Adı *</label>
                 <input
                   id="edit-name"
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="edit-code" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Sube Kodu *</label>
+                <label htmlFor="edit-code" className="block text-xs font-medium text-zinc-300">Şube Kodu *</label>
                 <input
                   id="edit-code"
                   type="text"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="edit-phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon</label>
+                <label htmlFor="edit-phone" className="block text-xs font-medium text-zinc-300">Telefon</label>
                 <input
                   id="edit-phone"
                   type="text"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="edit-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">E-posta</label>
+                <label htmlFor="edit-email" className="block text-xs font-medium text-zinc-300">E-posta</label>
                 <input
                   id="edit-email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="edit-address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Adres</label>
+                <label htmlFor="edit-address" className="block text-xs font-medium text-zinc-300">Adres</label>
                 <textarea
                   id="edit-address"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   rows={2}
-                  className="block w-full px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm resize-none"
+                  className="block w-full px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs resize-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="edit-themeColor" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tema Rengi</label>
+                <label htmlFor="edit-themeColor" className="block text-xs font-medium text-zinc-300">Tema Rengi</label>
                 <div className="flex items-center gap-3">
                   <input
                     id="edit-themeColor"
                     type="color"
                     value={formData.themeColor}
                     onChange={(e) => setFormData({ ...formData, themeColor: e.target.value })}
-                    className="w-12 h-10 p-1 border border-gray-200 rounded-lg cursor-pointer bg-white"
+                    className="w-10 h-9 p-0.5 border border-white/[0.08] rounded-lg cursor-pointer bg-[#111513]"
                   />
                   <input
                     type="text"
                     value={formData.themeColor}
                     onChange={(e) => setFormData({ ...formData, themeColor: e.target.value })}
-                    className="block w-full flex-1 px-3 py-2 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-mono"
+                    className="block w-full flex-1 px-3.5 py-2 border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all text-xs font-mono"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5 pt-2">
                 <FilePicker
-                  label="Sube Logosu"
+                  label="Şube Logosu"
                   maxFiles={1}
                   onFilesSelected={(urls) => setFormData({ ...formData, logoUrl: urls[0] || "" })}
                   accept="image/*"
                 />
                 {formData.logoUrl && (
-                  <div className="mt-2 p-2 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-200 dark:border-gray-800 inline-block">
-                    <img src={formData.logoUrl} alt="Logo Onizleme" className="h-12 w-auto object-contain" />
+                  <div className="mt-2 p-2 bg-white/[0.03] rounded-xl border border-white/[0.08] inline-block">
+                    <img src={formData.logoUrl} alt="Logo Önizleme" className="h-12 w-auto object-contain" />
                   </div>
                 )}
               </div>
 
               <div className="pt-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={formData.isActive ?? true}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                      className="peer sr-only"
-                    />
-                    <div className="w-10 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                  </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Sube Aktif Durumu
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-zinc-300">
+                    Şube Aktif Durumu
                   </span>
-                </label>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, isActive: !(formData.isActive ?? true) })}
+                    className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                      formData.isActive
+                        ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                        : "bg-zinc-800 justify-start"
+                    }`}
+                  >
+                    <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
+            <div className="p-6 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5">
               <button
                 onClick={() => setIsEditDialogOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-xs font-medium text-zinc-300 border border-white/[0.08] rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer"
               >
-                Iptal
+                İptal
               </button>
               <button
                 onClick={handleEdit}
                 disabled={loading || !formData.name || !formData.code}
-                className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-gray-800 transition-colors shadow-soft disabled:opacity-50 flex items-center gap-2"
+                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
               >
-                {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
+                {loading && <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : "Kaydet"}
               </button>
             </div>

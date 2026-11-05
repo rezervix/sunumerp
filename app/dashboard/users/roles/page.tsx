@@ -177,26 +177,26 @@ export default function RolesPage() {
             <ArrowLeft size={16} className="text-muted-foreground" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Shield size={24} className="text-primary" /> Rol ve Yetki Yönetimi
+            <h1 className="text-3xl font-light text-white tracking-tight flex items-center gap-2">
+              <Shield size={22} className="text-emerald-400" /> Rol ve Yetki Yönetimi
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">Sistemdeki yetki kalıplarını ve granular modül erişimlerini düzenleyin</p>
+            <p className="text-xs text-zinc-400 mt-1">Sistemdeki yetki kalıplarını ve granular modül erişimlerini düzenleyin</p>
           </div>
         </div>
         <button 
           onClick={openCreate} 
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-blue-600 transition-colors shadow-sm hover:shadow-md shrink-0"
+          className="flex items-center gap-2 px-4 py-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] text-xs font-medium rounded-full transition-colors shadow-md shadow-emerald-500/20 shrink-0 cursor-pointer"
         >
-          <Plus size={16} /> Yeni Rol
+          <Plus size={15} /> Yeni Rol
         </button>
       </div>
 
       {/* Info Card */}
-      <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-2xl flex gap-3 text-blue-800 dark:text-blue-200">
-        <Info size={20} className="shrink-0 mt-0.5" />
-        <p className="text-xs leading-relaxed">
-          <strong>Nasıl Çalışır?</strong> Tanımladığınız roller şube bazlı olarak kullanıcılara atanır. Bir kullanıcının birden fazla şubede farklı rolleri olabilir. 
-          Özel (Custom) rol matrisleri, sisteme yeni modüller eklendiğinde otomatik olarak genişler. İzinlerin aktifleşmesi için kullanıcının sonraki API isteğinde oturum kontrolü otomatik tetiklenir.
+      <div className="p-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] flex gap-3 text-zinc-300">
+        <Info size={18} className="shrink-0 mt-0.5 text-emerald-400" />
+        <p className="text-xs leading-relaxed text-zinc-400">
+          <strong className="text-white">Nasıl Çalışır?</strong> Tanımladığınız roller şube bazlı olarak kullanıcılara atanır. Bir kullanıcının birden fazla şubede farklı rolleri olabilir. 
+          Özel rol matrisleri, sisteme yeni modüller eklendiğinde otomatik olarak genişler.
         </p>
       </div>
 
@@ -207,44 +207,44 @@ export default function RolesPage() {
           const totalPermsCount = Object.values(role.permissions || {}).reduce((acc, curr) => acc + curr.length, 0)
 
           return (
-            <div key={role.id} className="bg-card border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group relative overflow-hidden">
+            <div key={role.id} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 shadow-2xl transition-all flex flex-col justify-between group relative overflow-hidden">
               {isSystemRole && (
-                <div className="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-xl border-l border-b border-primary/10">
+                <div className="absolute top-0 right-0 bg-emerald-500/10 text-emerald-400 text-[10px] font-medium uppercase tracking-wider px-3 py-1 rounded-bl-xl border-l border-b border-emerald-500/20">
                   Sistem Rolü
                 </div>
               )}
               <div>
-                <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
+                <h3 className="font-medium text-base text-white flex items-center gap-2">
                   {role.name}
                 </h3>
-                <p className="text-xs text-muted-foreground mt-1.5 h-10 overflow-hidden line-clamp-2">
+                <p className="text-xs text-zinc-400 mt-1.5 h-10 overflow-hidden line-clamp-2">
                   {role.description || "Açıklama belirtilmemiş"}
                 </p>
                 
-                <div className="mt-4 pt-4 border-t border-border space-y-2">
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                <div className="mt-4 pt-4 border-t border-white/[0.06] space-y-2">
+                  <div className="flex justify-between text-xs text-zinc-400">
                     <span>Etkin İzin Sayısı</span>
-                    <span className="font-semibold text-foreground">{totalPermsCount} yetki</span>
+                    <span className="font-mono text-emerald-400 font-medium">{totalPermsCount} yetki</span>
                   </div>
-                  <div className="flex justify-between text-xs text-muted-foreground">
+                  <div className="flex justify-between text-xs text-zinc-400">
                     <span>Modül İzinleri</span>
-                    <span className="font-semibold text-foreground">{Object.keys(role.permissions || {}).length} modül</span>
+                    <span className="font-mono text-zinc-200">{Object.keys(role.permissions || {}).length} modül</span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
+              <div className="mt-6 flex justify-end gap-2 border-t border-white/[0.06] pt-4">
                 <button 
                   onClick={() => openEdit(role)} 
                   disabled={role.name === "Super Admin"}
-                  className="flex items-center gap-1.5 px-3 py-1.5 border border-border hover:bg-muted/40 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-white/[0.08] hover:bg-white/[0.06] text-zinc-300 hover:text-white rounded-full text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <Edit2 size={12} /> Düzenle
                 </button>
                 <button 
                   onClick={() => handleDelete(role)} 
                   disabled={isSystemRole}
-                  className="flex items-center gap-1.5 px-3 py-1.5 border border-red-200 dark:border-red-900 bg-red-50/20 dark:bg-red-950/10 text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 rounded-full text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <Trash2 size={12} /> Sil
                 </button>
@@ -298,18 +298,24 @@ export default function RolesPage() {
                       {/* Body */}
                       <div className="divide-y divide-border max-h-[300px] overflow-y-auto custom-scrollbar">
                         {modules.map(m => (
-                          <div key={m.key} className="px-4 py-3 grid grid-cols-5 gap-2 items-center hover:bg-muted/20 transition-colors">
-                            <span className="text-sm font-semibold text-foreground truncate">{m.label}</span>
+                          <div key={m.key} className="px-4 py-3 grid grid-cols-5 gap-2 items-center hover:bg-white/[0.02] transition-colors">
+                            <span className="text-xs font-medium text-white truncate">{m.label}</span>
                             {ACTIONS.map(action => {
                               const has = (permissions[m.key] || []).includes(action)
                               return (
-                                <button 
-                                  key={action} 
-                                  onClick={() => togglePermission(m.key, action)}
-                                  className={`mx-auto size-6 rounded-md border-2 flex items-center justify-center transition-all ${has ? "bg-primary border-primary" : "border-border hover:border-primary/50 bg-background"}`}
-                                >
-                                  {has && <Check size={14} className="text-white" />}
-                                </button>
+                                <div key={action} className="flex justify-center">
+                                  <button 
+                                    type="button"
+                                    onClick={() => togglePermission(m.key, action)}
+                                    className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                                      has
+                                        ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
+                                        : "bg-zinc-800 justify-start"
+                                    }`}
+                                  >
+                                    <span className="size-4 rounded-full bg-white shadow-xs" />
+                                  </button>
+                                </div>
                               )
                             })}
                           </div>
@@ -336,12 +342,12 @@ export default function RolesPage() {
 }
 
 // —— Common styles & helper components
-const inp = "w-full px-3.5 py-2.5 text-sm border border-border rounded-xl bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+const inp = "w-full px-3.5 py-2 text-sm border border-white/[0.08] rounded-xl bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/30 transition-all shadow-sm"
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5 flex flex-col">
-      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">{label}</label>
+      <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider ml-1">{label}</label>
       {children}
     </div>
   )
@@ -349,11 +355,11 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function ModalWrapper({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted/20 shrink-0">
-          <h2 className="text-xl font-bold text-foreground">{title}</h2>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-muted transition-colors"><X size={20} className="text-muted-foreground" /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#080A09]/60 shrink-0">
+          <h2 className="text-base font-medium text-white">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-white/[0.06] text-zinc-400 hover:text-white transition-colors cursor-pointer"><X size={18} /></button>
         </div>
         <div className="flex-1 overflow-hidden flex flex-col">{children}</div>
       </div>
@@ -363,9 +369,9 @@ function ModalWrapper({ title, onClose, children }: { title: string; onClose: ()
 
 function ModalFooter({ onCancel, onSave, saving, saveLabel, disabled }: { onCancel: () => void; onSave: () => void; saving: boolean; saveLabel: string; disabled?: boolean }) {
   return (
-    <div className="px-6 py-4 border-t border-border bg-muted/20 flex justify-end gap-3 shrink-0">
-      <button onClick={onCancel} className="px-5 py-2.5 text-sm font-semibold text-foreground border border-border rounded-xl hover:bg-muted transition-colors shadow-sm bg-card">İptal</button>
-      <button onClick={onSave} disabled={saving || disabled} className="px-5 py-2.5 text-sm font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md">
+    <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 shrink-0">
+      <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-zinc-300 border border-white/[0.08] rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer">İptal</button>
+      <button onClick={onSave} disabled={saving || disabled} className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer">
         {saving ? "İşleniyor..." : saveLabel}
       </button>
     </div>

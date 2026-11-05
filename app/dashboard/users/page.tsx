@@ -262,80 +262,97 @@ export default function UsersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Users size={24} className="text-primary" /> Kullanıcı Yönetimi
+          <h1 className="text-3xl font-light text-white tracking-tight flex items-center gap-2">
+            <Users size={24} className="text-emerald-400" /> Kullanıcı Yönetimi
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">{users.length} kullanıcı • {users.filter(u=>u.isActive).length} aktif</p>
+          <p className="text-xs text-zinc-400 mt-1">{users.length} kullanıcı • {users.filter(u=>u.isActive).length} aktif hesap</p>
         </div>
         <div className="flex flex-wrap gap-2.5 max-sm:w-full">
           <div className="relative max-sm:w-full">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tText("common.search", "Ara...")} className="pl-9 pr-4 py-2 text-sm border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 w-56 max-sm:w-full transition-all" />
+            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <input
+              value={search}
+              onChange={e=>setSearch(e.target.value)}
+              placeholder={tText("common.search", "Kullanıcı ara...")}
+              className="pl-9 pr-4 py-2 text-xs border border-white/[0.06] rounded-full bg-[#111513] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 w-56 max-sm:w-full transition-all"
+            />
           </div>
-          <button onClick={() => router.push("/dashboard/users/roles")} className="flex items-center justify-center gap-2 px-4 py-2 border border-border bg-card hover:bg-muted/40 text-foreground text-sm font-medium rounded-xl transition-colors shadow-sm max-sm:flex-1">
-            <Shield size={16} /> Rol Yönetimi
+          <button
+            onClick={() => router.push("/dashboard/users/roles")}
+            className="flex items-center justify-center gap-1.5 px-4 py-2 border border-white/[0.08] bg-[#111513] hover:bg-white/[0.04] text-zinc-300 hover:text-white text-xs font-medium rounded-full transition-colors cursor-pointer max-sm:flex-1"
+          >
+            <Shield size={14} /> <span>Rol Yönetimi</span>
           </button>
-          <button onClick={openCreate} className="flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-xl hover:bg-blue-600 transition-colors shadow-sm hover:shadow-md max-sm:flex-1">
-            <Plus size={16} /> Yeni Kullanıcı
+          <button
+            onClick={openCreate}
+            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] text-xs font-medium rounded-full transition-colors shadow-md shadow-emerald-500/20 cursor-pointer max-sm:flex-1"
+          >
+            <Plus size={15} /> <span>Yeni Kullanıcı</span>
           </button>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-card border border-border rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-muted/40 border-b border-border">
+          <table className="w-full text-sm text-left border-collapse">
+            <thead className="bg-white/[0.02] border-b border-white/[0.06]">
               <tr>
                 {["Kullanıcı","Kullanıcı Adı","Departman / Pozisyon","Şube & Rol","Durum","İşlemler"].map(h=>(
-                  <th key={h} className="px-5 py-3.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">{h}</th>
+                  <th key={h} className="px-5 py-4 text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-white/[0.06]">
               {filtered.length === 0 ? (
-                <tr><td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">
+                <tr><td colSpan={6} className="px-5 py-12 text-center text-zinc-500">
                   <Users size={40} className="mx-auto mb-3 opacity-30" />
-                  <p>Kullanıcı bulunamadı</p>
+                  <p className="text-zinc-300 text-sm">Kullanıcı bulunamadı</p>
                 </td></tr>
               ) : filtered.map(u => (
-                <tr key={u.id} className="hover:bg-muted/30 transition-colors group">
+                <tr key={u.id} className="hover:bg-white/[0.02] transition-colors group">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold shrink-0 border border-primary/20">
+                      <div className="size-9 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs font-medium shrink-0 border border-emerald-500/20">
                         {u.fullName.substring(0,2).toUpperCase()}
                       </div>
-                      <span className="font-semibold text-foreground">{u.fullName}</span>
+                      <span className="font-medium text-white text-sm">{u.fullName}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-muted-foreground font-mono text-xs">@{u.username}</td>
+                  <td className="px-5 py-4 text-zinc-400 font-mono text-xs">@{u.username}</td>
                   <td className="px-5 py-4">
-                    <div className="text-sm font-medium text-foreground">{u.department||"—"}</div>
-                    <div className="text-xs text-muted-foreground">{u.position||""}</div>
+                    <div className="text-xs font-medium text-white">{u.department||"—"}</div>
+                    <div className="text-[11px] text-zinc-500">{u.position||""}</div>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex flex-wrap gap-1.5">
-                      {u.branches.length === 0 ? <span className="text-xs text-muted-foreground italic">Atanmamış</span>
+                      {u.branches.length === 0 ? <span className="text-xs text-zinc-500 italic">Atanmamış</span>
                         : u.branches.map((b,i) => (
-                          <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium border"
-                            style={{ borderColor:`${b.roleColor}40`, color: b.roleColor, backgroundColor:`${b.roleColor}10` }}>
-                            <Shield size={12} />{b.branchName}: {b.roleName}
+                          <span key={i} className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+                            <Shield size={11} />{b.branchName}: {b.roleName}
                           </span>
                         ))}
                     </div>
                   </td>
                   <td className="px-5 py-4">
-                    <button onClick={() => handleToggleActive(u)} title={u.isActive ? "Pasif yap" : "Aktif yap"}
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${u.isActive ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-800" : "bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"}`}>
-                      {u.isActive ? <><ToggleRight size={14}/>Aktif</> : <><ToggleLeft size={14}/>Pasif</>}
+                    <button
+                      onClick={() => handleToggleActive(u)}
+                      title={u.isActive ? "Pasif yap" : "Aktif yap"}
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors cursor-pointer ${
+                        u.isActive
+                          ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                          : "bg-white/[0.04] text-zinc-500 border border-white/[0.06]"
+                      }`}
+                    >
+                      {u.isActive ? <><ToggleRight size={13}/>Aktif</> : <><ToggleLeft size={13}/>Pasif</>}
                     </button>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
-                      <button onClick={() => openView(u)} title="Görüntüle" className="p-1.5 rounded-lg text-muted-foreground hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"><Eye size={16}/></button>
-                      <button onClick={() => openEdit(u)} title="Düzenle" className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"><Edit2 size={16}/></button>
-                      <button onClick={() => openAssignRole(u)} title="Rol ata" className="p-1.5 rounded-lg text-muted-foreground hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-colors"><ShieldCheck size={16}/></button>
-                      <button onClick={() => openResetPw(u)} title="Şifre sıfırla" className="p-1.5 rounded-lg text-muted-foreground hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-colors"><Key size={16}/></button>
+                      <button onClick={() => openView(u)} title="Görüntüle" className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"><Eye size={15}/></button>
+                      <button onClick={() => openEdit(u)} title="Düzenle" className="p-1.5 rounded-full text-zinc-400 hover:text-emerald-300 hover:bg-white/[0.06] transition-colors cursor-pointer"><Edit2 size={15}/></button>
+                      <button onClick={() => openAssignRole(u)} title="Rol ata" className="p-1.5 rounded-full text-zinc-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors cursor-pointer"><ShieldCheck size={15}/></button>
+                      <button onClick={() => openResetPw(u)} title="Şifre sıfırla" className="p-1.5 rounded-full text-zinc-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"><Key size={15}/></button>
                     </div>
                   </td>
                 </tr>
@@ -348,17 +365,17 @@ export default function UsersPage() {
       {/* —— View User Modal —— */}
       {modalMode === "view" && selectedUser && (
         <ModalWrapper title="Kullanıcı Detayları" onClose={() => setModalMode(null)}>
-          <div className="flex flex-col h-full bg-muted/10">
+          <div className="flex flex-col h-full bg-[#111513]">
             {/* Header info */}
-            <div className="p-6 bg-card border-b border-border flex items-center gap-5">
-              <div className="size-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-2xl font-bold border border-primary/20 shrink-0 shadow-sm">
+            <div className="p-6 bg-[#080A09]/60 border-b border-white/[0.06] flex items-center gap-5">
+              <div className="size-14 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg font-medium border border-emerald-500/20 shrink-0 shadow-sm">
                 {selectedUser.fullName.substring(0,2).toUpperCase()}
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold text-foreground">{selectedUser.fullName}</h2>
-                <p className="text-muted-foreground font-mono text-sm">@{selectedUser.username}</p>
+                <h2 className="text-lg font-medium text-white">{selectedUser.fullName}</h2>
+                <p className="text-zinc-400 font-mono text-xs mt-0.5">@{selectedUser.username}</p>
                 <div className="mt-2 flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold ${selectedUser.isActive ? "bg-emerald-50 text-emerald-600" : "bg-gray-100 text-gray-500"}`}>
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium ${selectedUser.isActive ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.04] text-zinc-500"}`}>
                     {selectedUser.isActive ? "Aktif Hesap" : "Pasif Hesap"}
                   </span>
                 </div>
@@ -366,59 +383,59 @@ export default function UsersPage() {
             </div>
             
             {/* Tabs */}
-            <div className="px-6 pt-3 border-b border-border flex gap-6 bg-card">
-              <button onClick={() => setViewTab("info")} className={`pb-3 text-sm font-medium transition-colors border-b-2 ${viewTab === "info" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}>Kişisel Bilgiler</button>
-              <button onClick={() => setViewTab("roles")} className={`pb-3 text-sm font-medium transition-colors border-b-2 ${viewTab === "roles" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}>Şube ve Yetkiler</button>
+            <div className="px-6 pt-3 border-b border-white/[0.06] flex gap-6 bg-[#080A09]/40">
+              <button onClick={() => setViewTab("info")} className={`pb-3 text-xs font-medium transition-colors border-b-2 cursor-pointer ${viewTab === "info" ? "border-emerald-400 text-emerald-400" : "border-transparent text-zinc-400 hover:text-white"}`}>Kişisel Bilgiler</button>
+              <button onClick={() => setViewTab("roles")} className={`pb-3 text-xs font-medium transition-colors border-b-2 cursor-pointer ${viewTab === "roles" ? "border-emerald-400 text-emerald-400" : "border-transparent text-zinc-400 hover:text-white"}`}>Şube ve Yetkiler</button>
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[50vh]">
               {viewTab === "info" ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-1"><Mail size={14}/> <span className="text-xs font-semibold uppercase">E-posta</span></div>
-                      <p className="text-sm font-medium">{selectedUser.email || "Belirtilmemiş"}</p>
+                    <div className="p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px]">
+                      <div className="flex items-center gap-2 text-zinc-400 mb-1"><Mail size={13}/> <span className="text-[11px] font-medium uppercase tracking-wider">E-posta</span></div>
+                      <p className="text-xs font-medium text-white">{selectedUser.email || "Belirtilmemiş"}</p>
                     </div>
-                    <div className="p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-1"><Phone size={14}/> <span className="text-xs font-semibold uppercase">Telefon</span></div>
-                      <p className="text-sm font-medium">{selectedUser.phone || "Belirtilmemiş"}</p>
+                    <div className="p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px]">
+                      <div className="flex items-center gap-2 text-zinc-400 mb-1"><Phone size={13}/> <span className="text-[11px] font-medium uppercase tracking-wider">Telefon</span></div>
+                      <p className="text-xs font-medium text-white">{selectedUser.phone || "Belirtilmemiş"}</p>
                     </div>
-                    <div className="p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-1"><Building2 size={14}/> <span className="text-xs font-semibold uppercase">Departman</span></div>
-                      <p className="text-sm font-medium">{selectedUser.department || "Belirtilmemiş"}</p>
+                    <div className="p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px]">
+                      <div className="flex items-center gap-2 text-zinc-400 mb-1"><Building2 size={13}/> <span className="text-[11px] font-medium uppercase tracking-wider">Departman</span></div>
+                      <p className="text-xs font-medium text-white">{selectedUser.department || "Belirtilmemiş"}</p>
                     </div>
-                    <div className="p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground mb-1"><Briefcase size={14}/> <span className="text-xs font-semibold uppercase">Pozisyon</span></div>
-                      <p className="text-sm font-medium">{selectedUser.position || "Belirtilmemiş"}</p>
+                    <div className="p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px]">
+                      <div className="flex items-center gap-2 text-zinc-400 mb-1"><Briefcase size={13}/> <span className="text-[11px] font-medium uppercase tracking-wider">Pozisyon</span></div>
+                      <p className="text-xs font-medium text-white">{selectedUser.position || "Belirtilmemiş"}</p>
                     </div>
                   </div>
-                  <div className="p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm flex items-center gap-3">
-                    <Calendar size={18} className="text-muted-foreground" />
+                  <div className="p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px] flex items-center gap-3">
+                    <Calendar size={16} className="text-zinc-400" />
                     <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase">Kayıt Tarihi</p>
-                      <p className="text-sm font-medium">{selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString("tr-TR", { year: 'numeric', month: 'long', day: 'numeric' }) : "Bilinmiyor"}</p>
+                      <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">Kayıt Tarihi</p>
+                      <p className="text-xs font-medium text-white mt-0.5">{selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString("tr-TR", { year: 'numeric', month: 'long', day: 'numeric' }) : "Bilinmiyor"}</p>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {selectedUser.branches.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground border border-dashed border-border rounded-xl">
+                    <div className="text-center py-8 text-zinc-500 border border-dashed border-white/[0.08] rounded-[20px]">
                       <Shield size={32} className="mx-auto mb-2 opacity-50"/>
-                      <p className="text-sm">Henüz hiçbir şubede yetkisi yok.</p>
+                      <p className="text-xs">Henüz hiçbir şubede yetkisi yok.</p>
                     </div>
                   ) : (
                     selectedUser.branches.map((b, i) => (
-                      <div key={i} className="flex items-center justify-between p-4 bg-white dark:bg-[#1e1e1e] border border-border rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                      <div key={i} className="flex items-center justify-between p-4 bg-[#080A09]/60 border border-white/[0.06] rounded-[20px]">
                         <div className="flex items-center gap-4">
-                          <div className="size-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: `${b.roleColor}15`, color: b.roleColor }}>
-                            <Building2 size={20} />
+                          <div className="size-9 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <Building2 size={18} />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-foreground">{b.branchName}</p>
-                            <div className="flex items-center gap-1.5 mt-1">
-                              <Shield size={12} className="text-muted-foreground"/>
-                              <p className="text-xs font-medium text-muted-foreground">Rol: {b.roleName}</p>
+                            <p className="text-xs font-medium text-white">{b.branchName}</p>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <Shield size={11} className="text-zinc-500"/>
+                              <p className="text-[11px] text-zinc-400">Rol: {b.roleName}</p>
                             </div>
                           </div>
                         </div>
@@ -428,8 +445,8 @@ export default function UsersPage() {
                 </div>
               )}
             </div>
-            <div className="p-4 bg-card border-t border-border mt-auto flex justify-end">
-              <button onClick={() => setModalMode(null)} className="px-4 py-2 bg-muted hover:bg-muted/80 text-sm font-medium rounded-xl transition-colors">{tText("common.close", "Kapat")}</button>
+            <div className="p-4 bg-[#080A09]/60 border-t border-white/[0.06] mt-auto flex justify-end">
+              <button onClick={() => setModalMode(null)} className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer">{tText("common.close", "Kapat")}</button>
             </div>
           </div>
         </ModalWrapper>
@@ -438,7 +455,7 @@ export default function UsersPage() {
       {/* —— Create Modal —— */}
       {modalMode === "create" && (
         <ModalWrapper title="Yeni Kullanıcı Oluştur" onClose={() => setModalMode(null)}>
-          <div className="space-y-4 p-6 overflow-y-auto max-h-[65vh] bg-card">
+          <div className="space-y-4 p-6 overflow-y-auto max-h-[65vh] bg-[#111513]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Kullanıcı Adı *"><input className={inp} value={form.username} onChange={e=>setForm(f=>({...f,username:e.target.value}))} placeholder="kullanici.adi"/></Field>
               <Field label="Ad Soyad *"><input className={inp} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))} placeholder="Ad Soyad"/></Field>
@@ -452,23 +469,23 @@ export default function UsersPage() {
               <Field label="Departman"><input className={inp} value={form.department} onChange={e=>setForm(f=>({...f,department:e.target.value}))} placeholder="Muhasebe"/></Field>
               <Field label="Pozisyon"><input className={inp} value={form.position} onChange={e=>setForm(f=>({...f,position:e.target.value}))} placeholder="Uzman"/></Field>
             </div>
-            <div className="p-5 bg-muted/30 rounded-xl space-y-4 border border-border">
-              <div className="flex items-center gap-2 border-b border-border pb-2">
-                <ShieldCheck size={16} className="text-primary"/>
-                <p className="text-sm font-bold text-foreground">Başlangıç Yetkisi <span className="text-muted-foreground font-normal">(Opsiyonel)</span></p>
+            <div className="p-4 bg-[#080A09]/60 rounded-[20px] space-y-4 border border-white/[0.06]">
+              <div className="flex items-center gap-2 border-b border-white/[0.06] pb-2">
+                <ShieldCheck size={16} className="text-emerald-400"/>
+                <p className="text-xs font-medium text-white">Başlangıç Yetkisi <span className="text-zinc-500 font-normal">(Opsiyonel)</span></p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Şube">
                   <select className={inp} value={form.branchId} onChange={e=>setForm(f=>({...f,branchId:e.target.value}))}>
-                    <option value="">Şube Seçin</option>
-                    {userBranches.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
+                    <option value="" className="bg-[#111513]">Şube Seçin</option>
+                    {userBranches.map(b=><option key={b.id} value={b.id} className="bg-[#111513]">{b.name}</option>)}
                   </select>
                 </Field>
                 <Field label="Rol Kalıbı">
                   <select className={inp} value={selectedTemplate} onChange={e=>handleTemplateChange(e.target.value)}>
-                    <option value="">Seçin</option>
-                    {dbRoles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}
-                    <option value="custom">Özel (Granüler İzinler)</option>
+                    <option value="" className="bg-[#111513]">Seçin</option>
+                    {dbRoles.map(r=><option key={r.id} value={r.name} className="bg-[#111513]">{r.name}</option>)}
+                    <option value="custom" className="bg-[#111513]">Özel (Granüler İzinler)</option>
                   </select>
                 </Field>
               </div>
@@ -482,7 +499,7 @@ export default function UsersPage() {
       {/* —— Edit Modal —— */}
       {modalMode === "edit" && selectedUser && (
         <ModalWrapper title={`Düzenle: ${selectedUser.fullName}`} onClose={() => setModalMode(null)}>
-          <div className="space-y-4 p-6 bg-card">
+          <div className="space-y-4 p-6 bg-[#111513]">
             <Field label="Ad Soyad"><input className={inp} value={form.fullName} onChange={e=>setForm(f=>({...f,fullName:e.target.value}))}/></Field>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="E-posta"><input type="email" className={inp} value={form.email} onChange={e=>setForm(f=>({...f,email:e.target.value}))}/></Field>
@@ -500,10 +517,10 @@ export default function UsersPage() {
       {/* —— Reset Password Modal —— */}
       {modalMode === "reset-password" && selectedUser && (
         <ModalWrapper title={`Şifre Sıfırla: ${selectedUser.fullName}`} onClose={() => setModalMode(null)}>
-          <div className="p-6 space-y-4 bg-card">
-            <div className="p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-800 rounded-xl flex gap-3 text-amber-800 dark:text-amber-200">
-              <Key size={20} className="shrink-0 mt-0.5" />
-              <p className="text-sm">Kullanıcı için yeni şifre belirleyin (en az 6 karakter). Şifre sıfırlandıktan sonra kullanıcının mevcut oturumları kapatılacaktır.</p>
+          <div className="p-6 space-y-4 bg-[#111513]">
+            <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-[20px] flex gap-3 text-amber-300">
+              <Key size={18} className="shrink-0 mt-0.5 text-amber-400" />
+              <p className="text-xs leading-relaxed">Kullanıcı için yeni şifre belirleyin (en az 6 karakter). Şifre sıfırlandıktan sonra kullanıcının mevcut oturumları kapatılacaktır.</p>
             </div>
             <Field label="Yeni Şifre">
               <input type="password" className={inp} value={newPassword} onChange={e=>setNewPassword(e.target.value)} placeholder="••••••••"/>
@@ -516,19 +533,18 @@ export default function UsersPage() {
       {/* —— Assign Role Modal —— */}
       {modalMode === "assign-role" && selectedUser && (
         <ModalWrapper title={`Rol Yönetimi: ${selectedUser.fullName}`} onClose={() => setModalMode(null)}>
-          <div className="space-y-6 p-6 overflow-y-auto max-h-[70vh] bg-card">
+          <div className="space-y-6 p-6 overflow-y-auto max-h-[70vh] bg-[#111513]">
             
-            {/* Mevcut roller gösterimi eklenebilir, şimdilik sadece atama var */}
             {selectedUser.branches.length > 0 && (
               <div className="space-y-2">
-                <label className="text-xs font-bold text-foreground uppercase tracking-wider">Mevcut Roller</label>
+                <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">Mevcut Roller</label>
                 <div className="grid gap-2">
                   {selectedUser.branches.map((b, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-muted/40 border border-border rounded-lg">
+                    <div key={i} className="flex items-center justify-between p-3 bg-[#080A09]/60 border border-white/[0.06] rounded-xl">
                       <div className="flex items-center gap-3">
-                        <Building2 size={16} className="text-muted-foreground"/>
-                        <span className="text-sm font-semibold">{b.branchName}</span>
-                        <span className="text-xs font-medium px-2 py-0.5 bg-primary/10 text-primary rounded-md">{b.roleName}</span>
+                        <Building2 size={15} className="text-zinc-500"/>
+                        <span className="text-xs font-medium text-white">{b.branchName}</span>
+                        <span className="text-[10px] font-medium px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">{b.roleName}</span>
                       </div>
                     </div>
                   ))}
@@ -536,19 +552,19 @@ export default function UsersPage() {
               </div>
             )}
 
-            <div className="p-5 border border-border rounded-xl bg-muted/20 space-y-4">
-              <h3 className="text-sm font-bold border-b border-border pb-2">Yeni Rol Ata</h3>
+            <div className="p-4 border border-white/[0.06] rounded-[20px] bg-[#080A09]/60 space-y-4">
+              <h3 className="text-xs font-medium text-white border-b border-white/[0.06] pb-2">Yeni Rol Ata</h3>
               <Field label="Şube">
                 <select className={inp} value={form.branchId} onChange={e=>setForm(f=>({...f,branchId:e.target.value}))}>
-                  <option value="">Şube Seçin</option>
-                  {userBranches.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}
+                  <option value="" className="bg-[#111513]">Şube Seçin</option>
+                  {userBranches.map(b=><option key={b.id} value={b.id} className="bg-[#111513]">{b.name}</option>)}
                 </select>
               </Field>
               <Field label="Rol Kalıbı">
                 <select className={inp} value={selectedTemplate} onChange={e=>handleTemplateChange(e.target.value)}>
-                  <option value="">Seçin</option>
-                  {dbRoles.map(r=><option key={r.id} value={r.name}>{r.name}</option>)}
-                  <option value="custom">Özel (Granüler İzinler)</option>
+                  <option value="" className="bg-[#111513]">Seçin</option>
+                  {dbRoles.map(r=><option key={r.id} value={r.name} className="bg-[#111513]">{r.name}</option>)}
+                  <option value="custom" className="bg-[#111513]">Özel (Granüler İzinler)</option>
                 </select>
               </Field>
               {showCustomPerms && <CustomPermsGrid perms={form.customPerms} onToggle={togglePerm}/>}
@@ -562,13 +578,13 @@ export default function UsersPage() {
 }
 
 // —— Ortak input stili
-const inp = "w-full px-3.5 py-2.5 text-sm border border-border rounded-xl bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
+const inp = "w-full px-3.5 py-2 text-xs border border-white/[0.08] rounded-xl bg-white/[0.03] text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/30 transition-all"
 
 // —— Küçük yardımcı bileşenler
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5 flex flex-col">
-      <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">{label}</label>
+      <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider ml-1">{label}</label>
       {children}
     </div>
   )
@@ -576,11 +592,11 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function ModalWrapper({ title, onClose, children }: { title: string; onClose: ()=>void; children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted/20 shrink-0">
-          <h2 className="text-xl font-bold text-foreground">{title}</h2>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-muted transition-colors"><X size={20} className="text-muted-foreground"/></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#080A09]/60 shrink-0">
+          <h2 className="text-base font-medium text-white">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-white/[0.06] text-zinc-400 hover:text-white transition-colors cursor-pointer"><X size={18}/></button>
         </div>
         <div className="flex-1 overflow-hidden flex flex-col">{children}</div>
       </div>
@@ -591,9 +607,9 @@ function ModalWrapper({ title, onClose, children }: { title: string; onClose: ()
 function ModalFooter({ onCancel, onSave, saving, saveLabel, disabled }: { onCancel:()=>void; onSave:()=>void; saving:boolean; saveLabel:string; disabled?:boolean }) {
   const { tText } = useLanguage()
   return (
-    <div className="px-6 py-4 border-t border-border bg-muted/20 flex justify-end gap-3 shrink-0">
-      <button onClick={onCancel} className="px-5 py-2.5 text-sm font-semibold text-foreground border border-border rounded-xl hover:bg-muted transition-colors shadow-sm bg-card">{tText("common.cancel", "İptal")}</button>
-      <button onClick={onSave} disabled={saving||disabled} className="px-5 py-2.5 text-sm font-semibold text-white bg-primary rounded-xl hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md">
+    <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 shrink-0">
+      <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-zinc-300 border border-white/[0.08] rounded-full hover:bg-white/[0.06] transition-colors cursor-pointer">{tText("common.cancel", "İptal")}</button>
+      <button onClick={onSave} disabled={saving||disabled} className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/20 cursor-pointer">
         {saving ? "İşleniyor..." : saveLabel}
       </button>
     </div>
@@ -602,22 +618,32 @@ function ModalFooter({ onCancel, onSave, saving, saveLabel, disabled }: { onCanc
 
 function CustomPermsGrid({ perms, onToggle }: { perms: Record<string,string[]>; onToggle:(r:string,a:string)=>void }) {
   return (
-    <div className="mt-4 border border-border rounded-xl overflow-hidden shadow-sm bg-card">
-      <div className="bg-muted/40 px-4 py-3 grid grid-cols-5 gap-2 border-b border-border">
-        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Modül</span>
-        {ACTIONS.map(a=><span key={a} className="text-xs font-bold text-center text-muted-foreground uppercase tracking-wider">{a}</span>)}
+    <div className="mt-4 border border-white/[0.06] rounded-[20px] overflow-hidden bg-[#080A09]/80">
+      <div className="bg-white/[0.02] px-4 py-2.5 grid grid-cols-5 gap-2 border-b border-white/[0.06]">
+        <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">Modül</span>
+        {ACTIONS.map(a=><span key={a} className="text-[11px] font-medium text-center text-zinc-400 uppercase tracking-wider">{a}</span>)}
       </div>
-      <div className="divide-y divide-border max-h-[300px] overflow-y-auto custom-scrollbar">
+      <div className="divide-y divide-white/[0.06] max-h-[300px] overflow-y-auto custom-scrollbar">
         {ALL_RESOURCES.map(r => (
-          <div key={r.key} className="px-4 py-3 grid grid-cols-5 gap-2 items-center hover:bg-muted/20 transition-colors">
-            <span className="text-sm font-semibold text-foreground truncate">{r.label}</span>
+          <div key={r.key} className="px-4 py-2.5 grid grid-cols-5 gap-2 items-center hover:bg-white/[0.02] transition-colors">
+            <span className="text-xs font-medium text-white truncate">{r.label}</span>
             {ACTIONS.map(a => {
               const has = (perms[r.key]||[]).includes(a)
               return (
-                <button key={a} onClick={()=>onToggle(r.key,a)}
-                  className={`mx-auto size-6 rounded-md border-2 flex items-center justify-center transition-all ${has ? "bg-primary border-primary" : "border-border hover:border-primary/50 bg-background"}`}>
-                  {has && <Check size={14} className="text-white"/>}
-                </button>
+                <div key={a} className="flex justify-center">
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={()=>onToggle(r.key,a)}
+                    className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                      has
+                        ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
+                        : "bg-zinc-800 justify-start"
+                    }`}
+                  >
+                    <span className="size-4 rounded-full bg-white shadow-xs" />
+                  </button>
+                </div>
               )
             })}
           </div>

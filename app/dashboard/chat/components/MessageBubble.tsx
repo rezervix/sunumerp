@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react"
+import { motion } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -271,14 +272,17 @@ export function MessageBubble({
   const quickEmojis = ["👍", "❤️", "😂", "😮", "😢", "🙏"]
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
       className={`flex flex-col group/bubble relative ${
         isMe ? "items-end" : "items-start"
       } mb-4 max-w-[85%] ${isMe ? "ml-auto" : "mr-auto"}`}
     >
       {/* Sender Name (for groups/channels) */}
       {!isMe && msg.conversation?.type !== "dm" && (
-        <span className="text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-1 ml-2 uppercase tracking-wider">
+        <span className="text-[11px] font-semibold text-zinc-400 mb-1 ml-2 uppercase tracking-wider">
           {msg.fromUser?.fullName}
         </span>
       )}
@@ -287,11 +291,11 @@ export function MessageBubble({
       {msg.replyToMessageId && (
         <button
           onClick={() => onSelectRepliedMessage(msg.replyToMessageId)}
-          className={`flex flex-col text-left px-3 py-2 rounded-t-2xl border-l-4 bg-gray-50 dark:bg-black/20 text-xs text-gray-500 max-w-full truncate transition-all hover:bg-gray-100/50 dark:hover:bg-black/30 ${
-            isMe ? "border-primary" : "border-gray-300 dark:border-gray-600"
+          className={`flex flex-col text-left px-3 py-2 rounded-t-2xl border-l-2 bg-white/[0.04] text-xs text-zinc-400 max-w-full truncate transition-all hover:bg-white/[0.08] ${
+            isMe ? "border-emerald-400" : "border-zinc-600"
           }`}
         >
-          <span className="font-semibold text-[10px] text-primary">
+          <span className="font-semibold text-[10px] text-emerald-400">
             {msg.replyFromUserId === currentUserId ? "Sen" : msg.replyToMessage?.fromUser?.fullName || "Kullanıcı"}
           </span>
           <span className="truncate opacity-80">
@@ -310,34 +314,34 @@ export function MessageBubble({
           <div className="opacity-0 group-hover/bubble:opacity-100 transition-opacity flex items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400">
+                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-zinc-400">
                   <span className="material-symbols-outlined text-[20px]">more_vert</span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-1 shadow-lg">
-                <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2">
+              <DropdownMenuContent className="bg-[#111513] border border-white/[0.08] text-white rounded-xl p-1 shadow-2xl">
+                <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                   <span className="material-symbols-outlined text-[18px]">reply</span> Yanıtla
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onForward} className="rounded-lg gap-2 cursor-pointer py-2">
+                <DropdownMenuItem onClick={onForward} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                   <span className="material-symbols-outlined text-[18px]">forward</span> İlet
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onStar} className="rounded-lg gap-2 cursor-pointer py-2">
+                <DropdownMenuItem onClick={onStar} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                   <span className="material-symbols-outlined text-[18px]">star</span> Yıldızla
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onPin} className="rounded-lg gap-2 cursor-pointer py-2">
+                <DropdownMenuItem onClick={onPin} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                   <span className="material-symbols-outlined text-[18px]">push_pin</span> Sabitle
                 </DropdownMenuItem>
                 {msg.contentType === "text" && !isDeleted && (
-                  <DropdownMenuItem onClick={() => setIsEditing(true)} className="rounded-lg gap-2 cursor-pointer py-2">
+                  <DropdownMenuItem onClick={() => setIsEditing(true)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                     <span className="material-symbols-outlined text-[18px]">edit</span> Düzenle
                   </DropdownMenuItem>
                 )}
                 {!isDeleted && (
                   <>
-                    <DropdownMenuItem onClick={() => onDelete(false)} className="rounded-lg gap-2 cursor-pointer py-2 text-red-500">
+                    <DropdownMenuItem onClick={() => onDelete(false)} className="rounded-lg gap-2 cursor-pointer py-2 text-rose-400 hover:bg-rose-500/10">
                       <span className="material-symbols-outlined text-[18px]">delete</span> Benden Sil
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDelete(true)} className="rounded-lg gap-2 cursor-pointer py-2 text-red-500 font-semibold">
+                    <DropdownMenuItem onClick={() => onDelete(true)} className="rounded-lg gap-2 cursor-pointer py-2 text-rose-400 hover:bg-rose-500/10 font-semibold">
                       <span className="material-symbols-outlined text-[18px]">delete_forever</span> Herkesten Sil
                     </DropdownMenuItem>
                   </>
@@ -349,10 +353,10 @@ export function MessageBubble({
 
         {/* Balloon Body */}
         <div
-          className={`relative rounded-3xl shadow-xs overflow-hidden flex flex-col p-3 border ${
+          className={`relative rounded-3xl shadow-sm overflow-hidden flex flex-col p-3.5 border ${
             isMe
-              ? "bg-primary text-white border-primary-foreground/10 rounded-tr-none"
-              : "bg-white dark:bg-[#1f1f1f] text-gray-800 dark:text-gray-200 border-gray-100 dark:border-gray-800 rounded-tl-none"
+              ? "bg-[#34D399] text-[#061811] font-normal border-emerald-300/30 rounded-tr-none shadow-emerald-500/10"
+              : "bg-[#111513] text-zinc-200 border-white/[0.08] rounded-tl-none shadow-xl"
           }`}
           style={{ minWidth: "120px" }}
         >
@@ -813,17 +817,17 @@ export function MessageBubble({
       {/* Floating Reactions display at balloon bottom */}
       {(msg.reactions || []).length > 0 && (
         <div
-          className={`flex items-center gap-1 mt-[-6px] bg-white dark:bg-[#1a1a1a] border border-gray-100 dark:border-gray-800 rounded-full px-2 py-0.5 shadow-xs z-10 select-none ${
+          className={`flex items-center gap-1 mt-[-6px] bg-[#111513] border border-white/[0.08] rounded-full px-2 py-0.5 shadow-lg z-10 select-none ${
             isMe ? "mr-3" : "ml-3"
           }`}
         >
           {Object.entries(reactionsMap).map(([emoji, count]) => (
             <span key={emoji} className="text-xs">
-              {emoji} <span className="text-[10px] font-bold text-gray-500">{count as number}</span>
+              {emoji} <span className="text-[10px] font-bold text-zinc-400">{count as number}</span>
             </span>
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }

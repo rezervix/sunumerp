@@ -259,19 +259,19 @@ export default function DeveloperConsolePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-6 rounded-2xl border border-border shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#111513]/90 p-6 rounded-[20px] border border-white/[0.06] shadow-2xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-primary/10 text-primary">
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               <Terminal className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold text-foreground tracking-tight">Geliştirici Konsolu</h1>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <h1 className="text-xl font-light text-white tracking-tight">Geliştirici Konsolu</h1>
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               PLATFORM DEVELOPER ONLY
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Platform mimarisi, debug ortam değişkenleri, performans izleme ve tehlikeli sistem operasyonlarını yönetin.
+          <p className="text-xs text-zinc-400 mt-1">
+            Platform mimarisi, debug ortam değişkenleri, performans izleme ve sistem operasyonlarını yönetin.
           </p>
         </div>
 
@@ -279,7 +279,7 @@ export default function DeveloperConsolePage() {
           <button
             onClick={() => handleClearCache()}
             disabled={saving}
-            className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border text-foreground hover:bg-muted transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${saving ? "animate-spin" : ""}`} />
             Cache Temizle
@@ -299,14 +299,14 @@ export default function DeveloperConsolePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all shrink-0 lg:shrink cursor-pointer border ${
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${
                     isActive
                       ? tab.danger
-                        ? "bg-destructive/10 border-destructive/30 text-destructive shadow-xs"
-                        : "bg-primary/10 border-primary/30 text-primary shadow-xs"
+                        ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-sm"
+                        : "bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-sm"
                       : tab.danger
-                      ? "border-transparent text-destructive/80 hover:bg-destructive/10"
-                      : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "border-transparent text-rose-400/80 hover:bg-rose-500/10"
+                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-white"
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -317,18 +317,18 @@ export default function DeveloperConsolePage() {
           </nav>
 
           {/* Dev Info Box */}
-          <div className="p-4 bg-muted/40 rounded-2xl border border-border space-y-2 text-xs">
-            <div className="flex items-center justify-between text-muted-foreground">
+          <div className="p-4 bg-[#111513]/90 rounded-[20px] border border-white/[0.06] space-y-2 text-xs">
+            <div className="flex items-center justify-between text-zinc-400">
               <span>Ortam:</span>
-              <span className="font-mono font-bold text-foreground">{devInfo?.environment || "production"}</span>
+              <span className="font-mono font-medium text-white">{devInfo?.environment || "production"}</span>
             </div>
-            <div className="flex items-center justify-between text-muted-foreground">
+            <div className="flex items-center justify-between text-zinc-400">
               <span>Sürüm:</span>
-              <span className="font-mono text-foreground">{devInfo?.version || "v1.0 Kurumsal"}</span>
+              <span className="font-mono text-white">{devInfo?.version || "v1.0 Kurumsal"}</span>
             </div>
-            <div className="flex items-center justify-between text-muted-foreground">
+            <div className="flex items-center justify-between text-zinc-400">
               <span>Geliştirici:</span>
-              <span className="font-semibold text-primary">{session?.user?.fullName}</span>
+              <span className="font-medium text-emerald-400">{session?.user?.fullName}</span>
             </div>
           </div>
         </div>
@@ -341,47 +341,55 @@ export default function DeveloperConsolePage() {
             <>
               {/* TAB 1: Ortam & Sürüm */}
               {activeTab === "environment" && (
-                <div className="bg-card rounded-2xl border border-border p-6 space-y-6">
+                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <Server className="w-5 h-5 text-primary" />
+                    <h3 className="text-base font-light text-white flex items-center gap-2">
+                      <Server className="w-5 h-5 text-emerald-400" />
                       Ortam & Çalışma Sürümü Yapılandırması
                     </h3>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-zinc-400 mt-1">
                       Local Debug Branch ve platform geliştirme ortamı ayarlarını yapılandırın.
                     </p>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-background border border-border space-y-3">
+                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-bold text-foreground">Local Debug Branch Seçeneği</h4>
-                          <p className="text-[11px] text-muted-foreground">
+                          <h4 className="text-xs font-medium text-white">Local Debug Branch Seçeneği</h4>
+                          <p className="text-[11px] text-zinc-400 mt-0.5">
                             Etkinleştirildiğinde şube seçicide yalnızca yetkili geliştiricilere özel "Local Debug Branch" gösterilir.
                           </p>
                         </div>
-                        <input
-                          type="checkbox"
-                          checked={config.securityDisabled ?? false}
-                          onChange={(e) => {
-                            const updated = { ...config, securityDisabled: e.target.checked }
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = { ...config, securityDisabled: !(config.securityDisabled ?? false) }
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
-                        />
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                            config.securityDisabled
+                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              : "bg-zinc-800 justify-start"
+                          }`}
+                        >
+                          <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
+                        </button>
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-background border border-border space-y-3">
-                      <h4 className="text-xs font-bold text-foreground">Sunucu & Çalışma Zamanı Detayları</h4>
+                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
+                      <h4 className="text-xs font-medium text-white">Sunucu & Çalışma Zamanı Detayları</h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div className="p-3 rounded-lg bg-card border border-border font-mono text-[11px]">
-                          <span className="text-muted-foreground">Node Environment:</span> {devInfo?.environment}
+                        <div className="p-3 rounded-lg bg-[#111513] border border-white/[0.06] font-mono text-[11px]">
+                          <span className="text-zinc-500">Node Environment:</span> <span className="text-emerald-400">{devInfo?.environment}</span>
                         </div>
-                        <div className="p-3 rounded-lg bg-card border border-border font-mono text-[11px]">
-                          <span className="text-muted-foreground">Tamper Protection:</span> {config.tamperDetected ? "IHLAL TESPIT EDILDI" : "Normal"}
+                        <div className="p-3 rounded-lg bg-[#111513] border border-white/[0.06] font-mono text-[11px]">
+                          <span className="text-zinc-500">Tamper Protection:</span>{" "}
+                          <span className={config.tamperDetected ? "text-rose-400 font-bold" : "text-emerald-400"}>
+                            {config.tamperDetected ? "İHLAL TESPİT EDİLDİ" : "Normal (Aktif)"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -389,69 +397,147 @@ export default function DeveloperConsolePage() {
                 </div>
               )}
 
-                              {/* TAB 2: Diagnostik — Gerçek Ölçüm */}
+              {/* TAB 2: Diagnostik — Radial Gauge Göstergeleri */}
               {activeTab === "diagnostics" && (
-                <div className="bg-card rounded-2xl border border-border p-6 space-y-6">
+                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-primary" />
-                      Sistem Diagnostiği — Gerçek Ölçüm
+                    <h3 className="text-base font-light text-white flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-emerald-400" />
+                      Sistem Diagnostiği — Canlı Performans Kadranları
                     </h3>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      requestAnimationFrame ile anlık FPS, frame jank süresi ve API ping ölçümü.
-                      {diagnosticsLoading && <span className="ml-2 text-primary animate-pulse">Ölçülüyor...</span>}
+                    <p className="text-xs text-zinc-400 mt-1">
+                      requestAnimationFrame ile anlık UI FPS, frame jank süresi ve API ping ölçümü.
+                      {diagnosticsLoading && <span className="ml-2 text-emerald-400 animate-pulse">Ölçülüyor...</span>}
                     </p>
                   </div>
 
+                  {/* 3 Animasyonlu Radial Gauge / Gösterge Kartı */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-1">
-                      <p className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">Gerçek UI FPS</p>
-                      <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
-                        {diagnosticsLoading ? <span className="text-sm text-muted-foreground">Ölçülüyor...</span>
-                          : realFps !== null ? `${realFps} FPS` : "—"}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">requestAnimationFrame (60 frame)</p>
+                    {/* UI FPS Radial Gauge */}
+                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden group">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400 mb-2">Canlı UI FPS</p>
+                      
+                      {/* SVG Radial Gauge */}
+                      <div className="relative size-28 flex items-center justify-center my-1">
+                        <svg className="size-full -rotate-90" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            fill="transparent"
+                            stroke="#34D399"
+                            strokeWidth="8"
+                            strokeDasharray="251.2"
+                            strokeDashoffset={
+                              realFps !== null
+                                ? 251.2 - (Math.min(realFps, 60) / 60) * 251.2
+                                : 251.2
+                            }
+                            strokeLinecap="round"
+                            className="transition-all duration-700 ease-out"
+                            style={{ filter: "drop-shadow(0 0 6px rgba(52,211,153,0.6))" }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                            {diagnosticsLoading ? "..." : realFps !== null ? realFps : "—"}
+                          </span>
+                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">FPS</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] text-zinc-500 mt-2">Hedef 60 FPS (Akıcı)</p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 space-y-1">
-                      <p className="text-[11px] font-semibold text-orange-600 dark:text-orange-400">Maks Frame Süresi</p>
-                      <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
-                        {diagnosticsLoading ? <span className="text-sm text-muted-foreground">Ölçülüyor...</span>
-                          : jankMs !== null ? `${jankMs}ms` : "—"}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">Jank eşiği: 16ms (60fps)</p>
+                    {/* Maks Frame Jank Radial Gauge */}
+                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-amber-400 mb-2">Frame Gecikmesi</p>
+                      
+                      {/* SVG Gauge */}
+                      <div className="relative size-28 flex items-center justify-center my-1">
+                        <svg className="size-full -rotate-90" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            fill="transparent"
+                            stroke="#FBBF24"
+                            strokeWidth="8"
+                            strokeDasharray="251.2"
+                            strokeDashoffset={
+                              jankMs !== null
+                                ? Math.max(0, 251.2 - (Math.min(jankMs, 32) / 32) * 251.2)
+                                : 251.2
+                            }
+                            strokeLinecap="round"
+                            className="transition-all duration-700 ease-out"
+                            style={{ filter: "drop-shadow(0 0 6px rgba(251,191,36,0.5))" }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                            {diagnosticsLoading ? "..." : jankMs !== null ? `${jankMs}` : "—"}
+                          </span>
+                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] text-zinc-500 mt-2">Jank Eşiği: 16.6ms</p>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 space-y-1">
-                      <p className="text-[11px] font-semibold text-blue-600 dark:text-blue-400">API Ping Süresi</p>
-                      <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
-                        {apiPingMs === null ? (diagnosticsLoading ? "—" : "—")
-                          : apiPingMs === -1 ? "Hata" : `${apiPingMs}ms`}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">/api/developer/config GET</p>
+                    {/* API Ping Süresi Radial Gauge */}
+                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400 mb-2">API Ping</p>
+                      
+                      {/* SVG Gauge */}
+                      <div className="relative size-28 flex items-center justify-center my-1">
+                        <svg className="size-full -rotate-90" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.06)" strokeWidth="8" />
+                          <circle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            fill="transparent"
+                            stroke="#34D399"
+                            strokeWidth="8"
+                            strokeDasharray="251.2"
+                            strokeDashoffset={
+                              apiPingMs !== null && apiPingMs > 0
+                                ? Math.max(0, 251.2 - (Math.min(apiPingMs, 200) / 200) * 251.2)
+                                : 251.2
+                            }
+                            strokeLinecap="round"
+                            className="transition-all duration-700 ease-out"
+                            style={{ filter: "drop-shadow(0 0 6px rgba(52,211,153,0.5))" }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                            {apiPingMs === null ? (diagnosticsLoading ? "..." : "—") : apiPingMs === -1 ? "Err" : `${apiPingMs}`}
+                          </span>
+                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] text-zinc-500 mt-2">/api/developer/config</p>
                     </div>
                   </div>
 
-                  {/* Uyarı: GPU bilgisi Electron main process bilgisi gerektirir */}
-                  <div className="p-3 rounded-xl bg-muted/50 border border-border text-[11px] text-muted-foreground flex items-start gap-2">
-                    <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-primary" />
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-zinc-400 flex items-start gap-2">
+                    <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-400" />
                     <span>
-                      GPU ivmesi Electron main process üzerinden aktif edilmiştir (bkz. <code className="font-mono text-primary">electron/main.js</code>).
-                      Renderer tarafında GPU doğrulama için Electron DevTools &gt; More Tools &gt; Performance kullanın.
+                      GPU donanım ivmesi Electron ana süreci üzerinden aktiftir. Tarayıcı ve masaüstü uygulamasında 60 FPS akıcı render garantisi sağlanır.
                     </span>
                   </div>
 
-                  <button
-                    onClick={() => setActiveTab("")}  
-                    className="hidden"
-                    aria-hidden
-                  />
                   <button
                     onClick={() => {
                       setActiveTab("environment")
                       setTimeout(() => setActiveTab("diagnostics"), 50)
                     }}
-                    className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border text-foreground hover:bg-muted transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     Yeniden Ölç
@@ -461,35 +547,35 @@ export default function DeveloperConsolePage() {
 
               {/* TAB 3: Bakım & Banner */}
               {activeTab === "maintenance" && (
-                <div className="bg-card rounded-2xl border border-border p-6 space-y-6">
+                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
-                      <Wrench className="w-5 h-5 text-primary" />
+                    <h3 className="text-base font-light text-white flex items-center gap-2">
+                      <Wrench className="w-5 h-5 text-emerald-400" />
                       Sistem Bakımı ve Platform Duyuru Bannerı
                     </h3>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-zinc-400 mt-1">
                       Platform çapında bakım modunu ve üst duyuru bandını yönetin.
                     </p>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-background border border-border space-y-3">
+                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-bold text-foreground">Sistem Bakım Modu</h4>
-                          <p className="text-[11px] text-muted-foreground">
+                          <h4 className="text-xs font-medium text-white">Sistem Bakım Modu</h4>
+                          <p className="text-[11px] text-zinc-400 mt-0.5">
                             Aktif edildiğinde geliştirici dışındaki kullanıcılar bakım ekranına yönlendirilir.
                           </p>
                         </div>
-                        <input
-                          type="checkbox"
-                          checked={config.systemMaintenance?.maintenanceMode ?? false}
-                          onChange={(e) => {
+                        {/* Akıcı Zümrüt Switch/Toggle */}
+                        <button
+                          type="button"
+                          onClick={() => {
                             const updated = {
                               ...config,
                               systemMaintenance: {
                                 ...config.systemMaintenance,
-                                maintenanceMode: e.target.checked,
+                                maintenanceMode: !(config.systemMaintenance?.maintenanceMode ?? false),
                                 announcementBannerText: config.systemMaintenance?.announcementBannerText || "",
                                 showAnnouncementBanner: config.systemMaintenance?.showAnnouncementBanner || false
                               }
@@ -497,34 +583,46 @@ export default function DeveloperConsolePage() {
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
-                        />
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                            config.systemMaintenance?.maintenanceMode
+                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              : "bg-zinc-800 justify-start"
+                          }`}
+                        >
+                          <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
+                        </button>
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-background border border-border space-y-3">
+                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold text-foreground">Duyuru Bandını Göster</h4>
-                        <input
-                          type="checkbox"
-                          checked={config.systemMaintenance?.showAnnouncementBanner ?? false}
-                          onChange={(e) => {
+                        <h4 className="text-xs font-medium text-white">Duyuru Bandını Göster</h4>
+                        {/* Akıcı Zümrüt Switch/Toggle */}
+                        <button
+                          type="button"
+                          onClick={() => {
                             const updated = {
                               ...config,
                               systemMaintenance: {
                                 maintenanceMode: config.systemMaintenance?.maintenanceMode || false,
                                 announcementBannerText: config.systemMaintenance?.announcementBannerText || "",
-                                showAnnouncementBanner: e.target.checked
+                                showAnnouncementBanner: !(config.systemMaintenance?.showAnnouncementBanner ?? false)
                               }
                             }
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
-                        />
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                            config.systemMaintenance?.showAnnouncementBanner
+                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              : "bg-zinc-800 justify-start"
+                          }`}
+                        >
+                          <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
+                        </button>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-foreground">Duyuru Metni</label>
+                        <label className="text-xs font-medium text-zinc-300">Duyuru Metni</label>
                         <input
                           type="text"
                           value={config.systemMaintenance?.announcementBannerText || ""}
@@ -538,14 +636,14 @@ export default function DeveloperConsolePage() {
                               }
                             })
                           }}
-                          className="w-full px-3.5 py-2 bg-card border border-border rounded-xl text-xs"
+                          className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-xs text-white placeholder:text-zinc-500 outline-none"
                           placeholder="Örn: 24 Temmuz 23:00'da planlı sistem güncellemesi yapılacaktır."
                         />
                       </div>
                       <button
                         onClick={() => handleSaveDevConfig(config)}
                         disabled={saving}
-                        className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-semibold hover:bg-primary/90 transition-all flex items-center gap-1.5"
+                        className="px-4 py-2 bg-[#34D399] text-[#061811] hover:bg-emerald-400 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                         Kaydet

@@ -294,6 +294,26 @@ declare module 'lucide-react' {
   export const Percent: LucideIcon
   export const UserX: LucideIcon
   export const Briefcase: LucideIcon
+  export const Volume2: LucideIcon
+  export const Bug: LucideIcon
+  export const Edit2: LucideIcon
+  export const ToggleLeft: LucideIcon
+  export const ToggleRight: LucideIcon
+  export const Wand2: LucideIcon
+  export const LogIn: LucideIcon
+  export const Bot: LucideIcon
+  export const ChevronsUpDown: LucideIcon
+  export const CheckCheck: LucideIcon
+  export const BellOff: LucideIcon
+  export const BookOpen: LucideIcon
+  export const FolderKanban: LucideIcon
+  export const FolderGit2: LucideIcon
+  export const PenTool: LucideIcon
+  export const ChevronLeftIcon: LucideIcon
+  export const ChevronRightIcon: LucideIcon
+  export const MoreHorizontalIcon: LucideIcon
+  export const CircleIcon: LucideIcon
+  export const GripVerticalIcon: LucideIcon
 
   export const icons: Record<string, LucideIcon>
 }
@@ -314,4 +334,3 @@ declare module '@google/generative-ai' {
     getGenerativeModel(config: { model: string; [key: string]: any }): any
   }
 }
-

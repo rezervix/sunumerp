@@ -8,9 +8,9 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/context"
 
 const targetConfig: Record<string, { label: string; icon: string; bg: string; text: string }> = {
-    all: { label: "Herkese", icon: "public", bg: "bg-blue-500/10", text: "text-blue-500" },
-    branch: { label: "Subelere", icon: "domain", bg: "bg-green-500/10", text: "text-green-500" },
-    staff: { label: "Personele", icon: "group", bg: "bg-purple-500/10", text: "text-purple-500" },
+    all: { label: "Herkese", icon: "public", bg: "bg-emerald-500/10", text: "text-emerald-400 border border-emerald-500/20" },
+    branch: { label: "Şubelere", icon: "domain", bg: "bg-white/[0.06]", text: "text-zinc-300 border border-white/[0.08]" },
+    staff: { label: "Personele", icon: "group", bg: "bg-amber-500/10", text: "text-amber-300 border border-amber-500/20" },
 }
 
 interface Announcement {
@@ -86,35 +86,35 @@ export default function AnnouncementsPage() {
     const FormContent = () => (
         <div className="space-y-4 py-4 flex-1 overflow-y-auto">
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslik *</label>
+                <label className="text-xs font-medium text-zinc-300">Başlık *</label>
                 <input
                     type="text"
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
-                    placeholder="Duyuru basligi"
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    placeholder="Duyuru başlığı"
+                    className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white placeholder:text-zinc-500 outline-none transition-all"
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Icerik *</label>
+                <label className="text-xs font-medium text-zinc-300">İçerik *</label>
                 <textarea
                     value={form.content}
                     onChange={e => setForm({ ...form, content: e.target.value })}
                     rows={4}
                     placeholder="Duyuru metni..."
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+                    className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white placeholder:text-zinc-500 outline-none transition-all resize-none"
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Hedef Kitle</label>
+                <label className="text-xs font-medium text-zinc-300">Hedef Kitle</label>
                 <select
                     value={form.targetType}
                     onChange={e => setForm({ ...form, targetType: e.target.value as Announcement["targetType"] })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-4 py-2 bg-[#111513] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white outline-none transition-all"
                 >
-                    <option value="all">Herkese</option>
-                    <option value="branch">Subelere</option>
-                    <option value="staff">Personele</option>
+                    <option value="all" className="bg-[#111513]">Herkese</option>
+                    <option value="branch" className="bg-[#111513]">Şubelere</option>
+                    <option value="staff" className="bg-[#111513]">Personele</option>
                 </select>
             </div>
         </div>
@@ -124,15 +124,15 @@ export default function AnnouncementsPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Duyurular</h1>
-                    <p className="text-sm text-gray-500 mt-1">Sistem genelindeki duyurulari yonetin</p>
+                    <h1 className="text-3xl font-light text-white tracking-tight">Duyurular</h1>
+                    <p className="text-xs text-zinc-400 mt-1">Sistem genelindeki duyuruları yönetin ve takip edin</p>
                 </div>
                 {isSuperAdmin && (
                     <button
                         onClick={() => setIsCreateOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-sm"
+                        className="inline-flex items-center justify-center gap-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] px-4 py-2 rounded-full text-xs font-medium transition-colors shadow-sm cursor-pointer"
                     >
-                        <span className="material-symbols-outlined text-[18px]">add</span>
+                        <span className="material-symbols-outlined text-[16px]">add</span>
                         Yeni Duyuru
                     </button>
                 )}
@@ -140,56 +140,57 @@ export default function AnnouncementsPage() {
 
             <div className="grid gap-4">
                 {items.length === 0 && (
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-12 text-center flex flex-col items-center justify-center text-gray-500">
-                        <span className="material-symbols-outlined text-4xl mb-4 sm:text-5xl text-gray-300">campaign</span>
-                        <p className="text-sm font-medium">Henuz duyuru yok</p>
+                    <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-xl p-12 text-center flex flex-col items-center justify-center text-zinc-500">
+                        <span className="material-symbols-outlined text-4xl mb-4 sm:text-5xl text-zinc-600">campaign</span>
+                        <p className="text-sm font-medium text-zinc-300">Henüz duyuru bulunmuyor</p>
+                        <p className="text-xs text-zinc-500 mt-1">Yeni bir duyuru oluşturarak tüm ekiple paylaşabilirsiniz.</p>
                     </div>
                 )}
                 {items.map(item => {
                     const cfg = targetConfig[item.targetType]
                     const Icon = cfg.icon
                     return (
-                        <div key={item.id} className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm p-6 group">
+                        <div key={item.id} className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-xl p-6 group transition-all">
                             <div className="flex items-start justify-between gap-4 mb-4">
                                 <div className="flex items-start gap-4 flex-1">
                                     <div className={`p-3 rounded-2xl ${cfg.bg}`}>
                                         <span className={`material-symbols-outlined ${cfg.text}`}>{Icon}</span>
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{item.title}</h3>
-                                        <div className="flex items-center flex-wrap gap-2 mt-2 text-sm text-gray-500">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
-                                                <span className="material-symbols-outlined text-[14px]">campaign</span>
+                                        <h3 className="text-base font-medium text-white leading-tight">{item.title}</h3>
+                                        <div className="flex items-center flex-wrap gap-2 mt-2 text-xs text-zinc-400">
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium ${cfg.bg} ${cfg.text}`}>
+                                                <span className="material-symbols-outlined text-[13px]">campaign</span>
                                                 {cfg.label}
                                             </span>
-                                            <span className="text-gray-300">•</span>
-                                            <span className="font-medium text-gray-700 dark:text-gray-300">{item.createdBy.fullName}</span>
-                                            <span className="text-gray-300">•</span>
-                                            <span>{new Date(item.createdAt).toLocaleDateString("tr-TR")}</span>
+                                            <span className="text-zinc-600">•</span>
+                                            <span className="font-medium text-zinc-300">{item.createdBy.fullName}</span>
+                                            <span className="text-zinc-600">•</span>
+                                            <span className="font-mono text-zinc-500">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</span>
                                         </div>
                                     </div>
                                 </div>
                                 {isSuperAdmin && (
-                                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => openEdit(item)}
-                                            className="p-1.5 text-gray-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center tooltip-trigger"
-                                            title="Duzenle"
+                                            className="p-1.5 text-zinc-400 hover:text-emerald-300 hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                                            title="Düzenle"
                                         >
-                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                            <span className="material-symbols-outlined text-[18px]">edit</span>
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center tooltip-trigger"
+                                            className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-full transition-colors flex items-center justify-center cursor-pointer"
                                             title="Sil"
                                         >
-                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                            <span className="material-symbols-outlined text-[18px]">delete</span>
                                         </button>
                                     </div>
                                 )}
                             </div>
                             <div className="pl-[60px]">
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{item.content}</p>
+                                <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
                             </div>
                         </div>
                     )
@@ -198,33 +199,33 @@ export default function AnnouncementsPage() {
 
             {/* Create Modal */}
             {isCreateOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+                    <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Yeni Duyuru</h3>
-                                <p className="text-sm text-gray-500">Tum kullanicilara duyuru yayinlayin</p>
+                                <h3 className="text-base font-medium text-white">Yeni Duyuru</h3>
+                                <p className="text-xs text-zinc-400 mt-0.5">Tüm kullanıcılara duyuru yayınlayın</p>
                             </div>
-                            <button onClick={() => setIsCreateOpen(false)} className="text-gray-400 hover:text-gray-500">
-                                <span className="material-symbols-outlined">close</span>
+                            <button onClick={() => setIsCreateOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
                         <div className="px-6 flex-1 overflow-y-auto">
                             <FormContent />
                         </div>
-                        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex justify-end gap-3 mt-auto">
+                        <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsCreateOpen(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
                             >
-                                Iptal
+                                İptal
                             </button>
                             <button
                                 onClick={handleCreate}
                                 disabled={loading || !form.title || !form.content}
-                                className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
-                                {loading ? "Yayinlaniyor..." : "Yayinla"}
+                                {loading ? "Yayınlanıyor..." : "Yayınla"}
                             </button>
                         </div>
                     </div>
@@ -233,32 +234,32 @@ export default function AnnouncementsPage() {
 
             {/* Edit Modal */}
             {isEditOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+                    <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Duyuruyu Duzenle</h3>
+                                <h3 className="text-base font-medium text-white">Duyuruyu Düzenle</h3>
                             </div>
-                            <button onClick={() => setIsEditOpen(false)} className="text-gray-400 hover:text-gray-500">
-                                <span className="material-symbols-outlined">close</span>
+                            <button onClick={() => setIsEditOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
+                                <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
                         <div className="px-6 flex-1 overflow-y-auto">
                             <FormContent />
                         </div>
-                        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex justify-end gap-3 mt-auto">
+                        <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsEditOpen(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
                             >
-                                Iptal
+                                İptal
                             </button>
                             <button
                                 onClick={handleEdit}
                                 disabled={loading}
-                                className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
-                                {loading ? "Kaydediliyor..." : "Guncelle"}
+                                {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>
                         </div>
                     </div>

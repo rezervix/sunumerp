@@ -77,65 +77,65 @@ export function TrashPreviewModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6 rounded-2xl shadow-2xl">
-        <DialogHeader className="space-y-2 border-b pb-4">
+      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6 rounded-[24px] bg-[#111513] border border-white/10 shadow-2xl text-white">
+        <DialogHeader className="space-y-2 border-b border-white/[0.08] pb-4">
           <div className="flex items-center justify-between gap-2">
-            <Badge variant="outline" className="text-xs uppercase tracking-wider font-semibold px-2.5 py-0.5 border-primary/30 text-primary">
+            <Badge variant="outline" className="text-xs uppercase tracking-wider font-semibold px-2.5 py-0.5 border-emerald-500/30 text-emerald-400 bg-emerald-500/10">
               {item.entityType}
             </Badge>
 
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-amber-500" />
-              Otomatik Silinmeye: <strong className="text-foreground">{daysLeft} Gün</strong>
+            <span className="text-xs text-zinc-400 flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              Otomatik Silinmeye: <strong className="text-amber-400">{daysLeft} Gün</strong>
             </span>
           </div>
 
-          <DialogTitle className="text-xl font-bold text-foreground truncate">
+          <DialogTitle className="text-lg font-bold text-white truncate">
             {item.title}
           </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground">
+          <DialogDescription className="text-xs text-zinc-400">
             Kaydın Geri Dönüşüm Kutusu Snapshot Detayları ve ilişkili bağımlılık verileri.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto space-y-4 py-4 pr-1">
           {/* Meta bilgileri */}
-          <div className="grid grid-cols-2 gap-3 bg-muted/40 p-3.5 rounded-xl border text-xs">
+          <div className="grid grid-cols-2 gap-3 bg-white/[0.02] p-4 rounded-xl border border-white/10 text-xs">
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-primary shrink-0" />
-              <span className="text-muted-foreground">Silen Kullanıcı:</span>
-              <span className="font-medium text-foreground truncate">{item.deletedByFullName}</span>
+              <User className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span className="text-zinc-500">Silen Kullanıcı:</span>
+              <span className="font-medium text-white truncate">{item.deletedByFullName}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-primary shrink-0" />
-              <span className="text-muted-foreground">Silinme Tarihi:</span>
-              <span className="font-medium text-foreground">{deletedDate}</span>
+              <Calendar className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span className="text-zinc-500">Silinme Tarihi:</span>
+              <span className="font-medium text-zinc-300">{deletedDate}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-500 shrink-0" />
-              <span className="text-muted-foreground">Son Kullanma:</span>
-              <span className="font-medium text-foreground">{expiresDate}</span>
+              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+              <span className="text-zinc-500">Son Kullanma:</span>
+              <span className="font-medium text-zinc-300">{expiresDate}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-primary shrink-0" />
-              <span className="text-muted-foreground">Orijinal ID:</span>
-              <span className="font-mono text-[11px] text-muted-foreground truncate">{item.entityId}</span>
+              <FileText className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span className="text-zinc-500">Orijinal ID:</span>
+              <span className="font-mono text-[11px] text-zinc-400 truncate">{item.entityId}</span>
             </div>
           </div>
 
           {/* Karantinadaki Dosyalar */}
           {parsedFiles.length > 0 && (
             <div className="space-y-1.5">
-              <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <HardDrive className="w-3.5 h-3.5 text-blue-500" />
+              <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
+                <HardDrive className="w-3.5 h-3.5 text-blue-400" />
                 Karantinadaki Dosyalar ({parsedFiles.length})
               </h4>
-              <div className="bg-muted/30 border rounded-lg p-2.5 space-y-1">
+              <div className="bg-white/[0.02] border border-white/10 rounded-xl p-3 space-y-1.5">
                 {parsedFiles.map((filePath, idx) => (
-                  <div key={idx} className="text-xs font-mono text-muted-foreground truncate bg-background p-1.5 rounded border">
+                  <div key={idx} className="text-xs font-mono text-zinc-300 truncate bg-black/40 p-2 rounded-lg border border-white/[0.06]">
                     {filePath}
                   </div>
                 ))}
@@ -145,23 +145,23 @@ export function TrashPreviewModal({
 
           {/* JSON Snapshot Viewer */}
           <div className="space-y-1.5">
-            <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-emerald-500" />
+            <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-emerald-400" />
               Veri Snapshot (JSON Nesnesi)
             </h4>
-            <pre className="bg-slate-950 text-slate-100 dark:bg-slate-900 p-3 rounded-xl text-[11px] font-mono overflow-x-auto max-h-60 border border-slate-800">
+            <pre className="bg-[#080A09] text-zinc-300 p-4 rounded-xl text-[11px] font-mono overflow-x-auto max-h-60 border border-white/10 leading-relaxed scrollbar-thin">
               {JSON.stringify(parsedPayload, null, 2)}
             </pre>
           </div>
         </div>
 
-        <DialogFooter className="pt-4 border-t gap-2 sm:gap-0">
+        <DialogFooter className="pt-4 border-t border-white/[0.08] gap-2 sm:gap-0">
           <Button
             variant="destructive"
             size="sm"
             onClick={() => onPurge(item.id)}
             disabled={loading}
-            className="gap-1.5"
+            className="gap-1.5 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
             Kalıcı Olarak Sil
@@ -172,6 +172,7 @@ export function TrashPreviewModal({
               variant="outline"
               size="sm"
               onClick={() => onOpenChange(false)}
+              className="border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white cursor-pointer"
             >
               Kapat
             </Button>
@@ -179,7 +180,7 @@ export function TrashPreviewModal({
               size="sm"
               onClick={() => onRestore(item.id)}
               disabled={loading}
-              className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold cursor-pointer shadow-[0_0_15px_rgba(52,211,153,0.3)]"
             >
               <RefreshCw className="w-4 h-4" />
               Geri Yükle

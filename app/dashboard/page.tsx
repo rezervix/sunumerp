@@ -533,7 +533,7 @@ export default function DashboardPage() {
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: expenseToIncomeRatio }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                style={{ filter: "drop-shadow(0 0 8px rgba(52, 211, 153, 0.35))" }}
+                style={{ filter: "drop-shadow(0 0 8px rgba(52, 211, 153, 0.35))" } as any}
               />
             </svg>
 
@@ -589,14 +589,14 @@ export default function DashboardPage() {
                           }}
                           className="h-full rounded-[2px]"
                           style={
-                            active
+                            (active
                               ? {
                                 backgroundColor: accentColor,
                                 boxShadow: `0 0 6px ${accentColor}55`,
                               }
                               : {
                                 backgroundColor: "rgba(255, 255, 255, 0.05)",
-                              }
+                              }) as any
                           }
                         />
                       )

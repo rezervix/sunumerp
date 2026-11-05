@@ -77,8 +77,8 @@ export default function SssPage() {
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Sıkça Sorulan Sorular &amp; Modül Rehberleri</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-light text-white tracking-tight">Sıkça Sorulan Sorular &amp; Modül Rehberleri</h1>
+          <p className="text-xs text-zinc-400 mt-1">
             Sistem kullanımı, modül rehberleri ve kullanıcı kılavuzları.
           </p>
         </div>
@@ -87,37 +87,37 @@ export default function SssPage() {
           onClick={() => {
             window.dispatchEvent(new CustomEvent("relaunch-onboarding", { detail: { guideId: "welcome-overview" } }))
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold shadow-xs hover:shadow-md transition-all shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] rounded-full text-xs font-medium shadow-md shadow-emerald-500/20 transition-all shrink-0 cursor-pointer"
         >
-          <HelpCircle size={16} />
-          Platform Rehberini Başlat
+          <HelpCircle size={15} />
+          <span>Platform Rehberini Başlat</span>
         </button>
       </div>
 
       {Object.keys(faqsByCategory).length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <HelpCircle className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-lg font-medium">Henüz soru eklenmemiş</p>
-            <p className="text-sm text-muted-foreground">Şu anda gösterilecek SSS kaydı bulunmamaktadır.</p>
+        <Card className="bg-[#111513]/90 border-white/[0.06] rounded-[20px] shadow-2xl">
+          <CardContent className="flex flex-col items-center justify-center py-12 text-center text-zinc-500">
+            <HelpCircle className="h-12 w-12 text-zinc-600 mb-3" />
+            <p className="text-base font-medium text-zinc-300">Henüz soru eklenmemiş</p>
+            <p className="text-xs text-zinc-500 mt-1">Şu anda gösterilecek SSS kaydı bulunmamaktadır.</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-6">
           {Object.entries(faqsByCategory).map(([category, items]) => (
-            <Card key={category}>
-              <CardHeader>
-                <CardTitle>{category}</CardTitle>
-                <CardDescription>{category} ile ilgili sorular</CardDescription>
+            <Card key={category} className="bg-[#111513]/90 border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+              <CardHeader className="border-b border-white/[0.06] pb-4">
+                <CardTitle className="text-lg font-light text-white tracking-tight">{category}</CardTitle>
+                <CardDescription className="text-xs text-zinc-400">{category} ile ilgili sıkça sorulan sorular</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <Accordion type="single" collapsible className="w-full">
                   {items.map((faq) => (
-                    <AccordionItem key={faq.id} value={faq.id}>
-                      <AccordionTrigger className="text-left font-medium">
+                    <AccordionItem key={faq.id} value={faq.id} className="border-white/[0.06]">
+                      <AccordionTrigger className="text-left font-medium text-sm text-zinc-200 hover:text-emerald-300 transition-colors">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground leading-relaxed">
+                      <AccordionContent className="text-zinc-400 text-xs leading-relaxed">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>

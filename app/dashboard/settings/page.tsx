@@ -55,6 +55,25 @@ interface SettingTab {
   danger?: boolean
 }
 
+function SwitchToggle({ checked, onChange, disabled, danger }: { checked: boolean; onChange: (checked: boolean) => void; disabled?: boolean; danger?: boolean }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+        checked
+          ? danger
+            ? "bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)] justify-end"
+            : "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+          : "bg-zinc-800 justify-start"
+      }`}
+    >
+      <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
+    </button>
+  )
+}
+
 export default function SettingsPage() {
   const { session, loading: authLoading, currentBranch, isSuperAdmin } = useAuth()
   const router = useRouter()
@@ -484,17 +503,17 @@ export default function SettingsPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] pb-24 space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            <h1 className="text-3xl font-light text-white tracking-tight">
               {t.settings.systemSettingsTitle}
             </h1>
-            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               {t.common.enterpriseVersion}
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             {t.settings.systemSettingsSubtitle}
           </p>
         </div>
@@ -502,7 +521,7 @@ export default function SettingsPage() {
         {/* Action Buttons Header */}
         <div className="flex items-center gap-3">
           {isDirty && (
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20 animate-pulse">
+            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-amber-300 bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20 animate-pulse">
               <Info className="w-3.5 h-3.5" />
               {t.common.unsavedChanges}
             </span>
@@ -510,7 +529,7 @@ export default function SettingsPage() {
           <button
             onClick={handleCancelChanges}
             disabled={!isDirty || saving}
-            className="px-3.5 py-2 text-xs font-semibold rounded-xl border border-border text-foreground hover:bg-muted disabled:opacity-40 transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] disabled:opacity-40 transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             {t.common.cancel}
@@ -518,7 +537,7 @@ export default function SettingsPage() {
           <button
             onClick={handleSaveAll}
             disabled={!isDirty || saving}
-            className="px-4 py-2 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-40 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full bg-[#34D399] hover:bg-emerald-400 text-[#061811] disabled:opacity-40 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             {t.common.saveChanges}
@@ -533,18 +552,18 @@ export default function SettingsPage() {
         <div className="lg:col-span-4 xl:col-span-3 space-y-3 sticky top-4">
           {/* Tab Search Filter */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-500" />
             <input
               type="text"
               placeholder={t.common.searchInSettings}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-card border border-border rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-muted-foreground/60"
+              className="w-full pl-9 pr-3 py-2 bg-[#111513] border border-white/[0.06] rounded-full text-xs text-white focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-zinc-500"
             />
           </div>
 
           {/* Navigation Tab Buttons */}
-          <nav role="tablist" aria-label="Ayarlar Kategorileri" className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0 scrollbar-none">
+          <nav role="tablist" aria-label="Ayarlar Kategorileri" className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0 scrollbar-none bg-[#111513]/90 p-2 rounded-[20px] border border-white/[0.06]">
             {filteredTabs.map(tab => {
               const Icon = tab.icon
               const isActive = activeTab === tab.id
@@ -556,22 +575,22 @@ export default function SettingsPage() {
                   aria-controls={`panel-${tab.id}`}
                   id={`tab-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-xs font-semibold transition-all shrink-0 lg:shrink cursor-pointer border ${
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${
                     isActive
                       ? tab.danger
-                        ? "bg-destructive/10 border-destructive/30 text-destructive shadow-xs"
-                        : "bg-primary/10 border-primary/30 text-primary shadow-xs"
+                        ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-xs"
+                        : "bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-xs"
                       : tab.danger
-                      ? "border-transparent text-destructive/80 hover:bg-destructive/10"
-                      : "border-transparent text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "border-transparent text-rose-400/80 hover:bg-rose-500/10"
+                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-white"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? (tab.danger ? "text-destructive" : "text-primary") : "text-muted-foreground"}`} />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? (tab.danger ? "text-rose-400" : "text-emerald-400") : "text-zinc-500"}`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <span className="truncate">{tab.label}</span>
                       {tab.badge && (
-                        <span className="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.2 rounded bg-primary/20 text-primary shrink-0">
+                        <span className="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 shrink-0">
                           {tab.badge}
                         </span>
                       )}
@@ -692,11 +711,9 @@ export default function SettingsPage() {
                         <p className="text-xs font-semibold text-foreground">{t.settings.companySection.multiBranchTitle}</p>
                         <p className="text-[11px] text-muted-foreground">{t.settings.companySection.multiBranchDesc}</p>
                       </div>
-                      <input
-                        type="checkbox"
+                      <SwitchToggle
                         checked={config.company?.multiBranchEnabled ?? true}
-                        onChange={e => updateConfigState("company", e.target.checked, "multiBranchEnabled")}
-                        className="w-4 h-4 accent-primary rounded cursor-pointer"
+                        onChange={val => updateConfigState("company", val, "multiBranchEnabled")}
                       />
                     </div>
                   </div>
@@ -895,21 +912,17 @@ export default function SettingsPage() {
                     <div className="space-y-3 pt-3 border-t border-border">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-foreground">Rakam ve Sembol Zorunluluğu</span>
-                        <input
-                          type="checkbox"
+                        <SwitchToggle
                           checked={config.security?.requireNumbers ?? true}
-                          onChange={e => updateConfigState("security", e.target.checked, "requireNumbers")}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
+                          onChange={val => updateConfigState("security", val, "requireNumbers")}
                         />
                       </div>
 
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-foreground">İki Faktörlü Doğrulama (2FA Zorunluluğu)</span>
-                        <input
-                          type="checkbox"
+                        <SwitchToggle
                           checked={config.security?.twoFactorAuthEnabled ?? false}
-                          onChange={e => updateConfigState("security", e.target.checked, "twoFactorAuthEnabled")}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
+                          onChange={val => updateConfigState("security", val, "twoFactorAuthEnabled")}
                         />
                       </div>
                     </div>
@@ -1157,11 +1170,9 @@ export default function SettingsPage() {
                                 <p className="text-[11px] text-muted-foreground mt-0.5">{item.desc}</p>
                               </div>
                             </div>
-                            <input
-                              type="checkbox"
+                            <SwitchToggle
                               checked={isChecked}
-                              onChange={e => updateConfigState("notifications", e.target.checked, item.key)}
-                              className="w-4 h-4 accent-primary rounded cursor-pointer"
+                              onChange={val => updateConfigState("notifications", val, item.key)}
                             />
                           </div>
                         )
@@ -1431,11 +1442,9 @@ export default function SettingsPage() {
                         <p className="text-xs font-semibold text-foreground">İK İzin Talepleri Yönetici Onayı Zorunlu</p>
                         <p className="text-[11px] text-muted-foreground">Personel izin talepleri şube yöneticisinin onayına sunulur.</p>
                       </div>
-                      <input
-                        type="checkbox"
+                      <SwitchToggle
                         checked={config.workflows?.hrLeaveApprovalRequired ?? true}
-                        onChange={e => updateConfigState("workflows", e.target.checked, "hrLeaveApprovalRequired")}
-                        className="w-4 h-4 accent-primary rounded cursor-pointer"
+                        onChange={val => updateConfigState("workflows", val, "hrLeaveApprovalRequired")}
                       />
                     </div>
                   </div>
@@ -1594,13 +1603,11 @@ export default function SettingsPage() {
                       <div className="pt-3 border-t border-border flex items-center justify-between">
                         <div>
                           <p className="text-xs font-semibold text-foreground">Duyuru Bannerını Tüm Kullanıcılara Göster</p>
-                          <p className="text-[11px] text-muted-foreground">Üst barda sarı vurgulu bilgilendirme şeridi açılır.</p>
+                          <p className="text-[11px] text-muted-foreground">Üst barda bilgilendirme şeridi açılır.</p>
                         </div>
-                        <input
-                          type="checkbox"
+                        <SwitchToggle
                           checked={config.systemMaintenance?.showAnnouncementBanner ?? true}
-                          onChange={e => updateConfigState("systemMaintenance", e.target.checked, "showAnnouncementBanner")}
-                          className="w-4 h-4 accent-primary rounded cursor-pointer"
+                          onChange={val => updateConfigState("systemMaintenance", val, "showAnnouncementBanner")}
                         />
                       </div>
 
@@ -1609,11 +1616,10 @@ export default function SettingsPage() {
                           <p className="text-xs font-semibold text-foreground text-destructive">Sistem Bakım Modunu Aktif Et</p>
                           <p className="text-[11px] text-muted-foreground">Admin dışındaki tüm kullanıcıların erişimi kısıtlanır.</p>
                         </div>
-                        <input
-                          type="checkbox"
+                        <SwitchToggle
+                          danger
                           checked={config.systemMaintenance?.maintenanceMode ?? false}
-                          onChange={e => updateConfigState("systemMaintenance", e.target.checked, "maintenanceMode")}
-                          className="w-4 h-4 accent-destructive rounded cursor-pointer"
+                          onChange={val => updateConfigState("systemMaintenance", val, "maintenanceMode")}
                         />
                       </div>
                     </div>

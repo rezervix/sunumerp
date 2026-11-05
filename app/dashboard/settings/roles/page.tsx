@@ -189,57 +189,57 @@ export default function RolesPage() {
           <span className="material-symbols-outlined animate-spin text-gray-400 text-4xl">progress_activity</span>
         </div>
       ) : roles.length === 0 ? (
-        <div className="text-center p-12 bg-white dark:bg-[#1f2428] rounded-xl border border-gray-200 dark:border-gray-800">
-          <p className="text-gray-500">Henüz özel rol oluşturulmamış.</p>
+        <div className="text-center p-12 bg-[#111513]/90 rounded-[20px] border border-white/[0.06]">
+          <p className="text-zinc-500 text-sm">Henüz özel rol oluşturulmamış.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {roles.map(role => (
-            <div key={role.id} className="bg-white dark:bg-[#1f2428] p-5 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col h-full">
+            <div key={role.id} className="bg-[#111513]/90 p-5 rounded-[20px] shadow-2xl border border-white/[0.06] flex flex-col h-full">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{role.name}</h3>
-                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">{role.description || "Açıklama yok"}</p>
+                  <h3 className="font-medium text-white text-base">{role.name}</h3>
+                  <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{role.description || "Açıklama yok"}</p>
                 </div>
-                <div className="flex gap-1 shrink-0 bg-gray-50 dark:bg-white/5 p-1 rounded-lg">
+                <div className="flex gap-1 shrink-0 bg-white/[0.04] p-1 rounded-full border border-white/[0.06]">
                   <button
                     onClick={() => handleOpenModal(role)}
-                    className="p-1.5 text-gray-400 hover:text-primary transition-colors rounded-md"
+                    className="p-1.5 text-zinc-400 hover:text-emerald-300 transition-colors rounded-full cursor-pointer"
                     title="Düzenle"
                   >
-                    <span className="material-symbols-outlined text-[18px]">edit</span>
+                    <span className="material-symbols-outlined text-[16px]">edit</span>
                   </button>
                   {role.name !== "Super Admin" && (
                     <button
                       onClick={() => handleDelete(role.id)}
                       disabled={deletingId === role.id}
-                      className="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded-md disabled:opacity-50"
+                      className="p-1.5 text-zinc-400 hover:text-rose-400 transition-colors rounded-full disabled:opacity-50 cursor-pointer"
                       title="Sil"
                     >
                       {deletingId === role.id
-                        ? <span className="material-symbols-outlined text-[18px] animate-spin">progress_activity</span>
-                        : <span className="material-symbols-outlined text-[18px]">delete</span>
+                        ? <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
+                        : <span className="material-symbols-outlined text-[16px]">delete</span>
                       }
                     </button>
                   )}
                 </div>
               </div>
 
-              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Erişim İzinleri Özeti</p>
+              <div className="mt-auto pt-4 border-t border-white/[0.06]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-2">Erişim İzinleri Özeti</p>
                 <div className="flex flex-wrap gap-1.5">
                   {Object.keys(role.permissions || {}).slice(0, 4).map(res => (
-                    <span key={res} className="px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 text-[11px] rounded-md font-medium">
+                    <span key={res} className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] rounded-full font-medium">
                       {AVAILABLE_RESOURCES.find(r => r.key === res)?.label || res}
                     </span>
                   ))}
                   {Object.keys(role.permissions || {}).length > 4 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-500 text-[11px] rounded-md font-medium">
+                    <span className="px-2 py-0.5 bg-white/[0.06] text-zinc-400 text-[10px] rounded-full font-medium">
                       +{Object.keys(role.permissions || {}).length - 4} daha
                     </span>
                   )}
                   {Object.keys(role.permissions || {}).length === 0 && (
-                    <span className="text-xs text-gray-400 italic">Hiçbir yetki yok</span>
+                    <span className="text-xs text-zinc-500 italic">Hiçbir yetki yok</span>
                   )}
                 </div>
               </div>
@@ -250,36 +250,36 @@ export default function RolesPage() {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#1a1e22] w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#111513] border border-white/[0.08] text-white w-full max-w-2xl rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+              <h2 className="text-base font-medium text-white">
                 {editingRole ? "Rolü Düzenle" : "Yeni Rol Ekle"}
               </h2>
-              <button onClick={handleCloseModal} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={handleCloseModal} className="text-zinc-400 hover:text-white cursor-pointer">
+                <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
             
-            <div className="p-6 overflow-y-auto flex-1">
+            <div className="p-6 overflow-y-auto flex-1 space-y-6">
               <form id="roleForm" onSubmit={handleSave} className="space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Rol Adı *</label>
+                    <label className="block text-xs font-medium text-zinc-300 mb-1">Rol Adı *</label>
                     <input
                       required
                       type="text"
-                      className="w-full px-3 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none dark:text-white"
+                      className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm outline-none text-white transition-all"
                       value={formData.name}
                       onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       disabled={editingRole?.name === "Super Admin"}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Açıklama</label>
+                    <label className="block text-xs font-medium text-zinc-300 mb-1">Açıklama</label>
                     <textarea
                       rows={2}
-                      className="w-full px-3 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none resize-none dark:text-white"
+                      className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm outline-none resize-none text-white transition-all"
                       value={formData.description}
                       onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     />
@@ -287,28 +287,36 @@ export default function RolesPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-3 pb-2 border-b border-gray-100 dark:border-gray-800">
+                  <h3 className="text-xs font-medium uppercase tracking-[0.12em] text-zinc-400 mb-3 pb-2 border-b border-white/[0.06]">
                     Modül İzinleri
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {AVAILABLE_RESOURCES.map(resource => (
-                      <div key={resource.key} className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <div className="font-semibold text-sm text-gray-800 dark:text-gray-200 mb-3">{resource.label}</div>
-                        <div className="flex flex-wrap gap-4">
-                          {resource.actions.map(action => (
-                            <label key={`${resource.key}-${action}`} className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                className="rounded border-gray-300 text-primary focus:ring-primary"
-                                checked={(formData.permissions[resource.key] || []).includes(action)}
-                                onChange={() => handleTogglePermission(resource.key, action)}
-                                disabled={editingRole?.name === "Super Admin"}
-                              />
-                              <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                                {action === "read" ? "Okuma" : action === "write" ? "Yazma" : action === "delete" ? "Silme" : action === "update" ? "Güncelleme" : action}
-                              </span>
-                            </label>
-                          ))}
+                      <div key={resource.key} className="bg-[#080A09]/60 p-4 rounded-xl border border-white/[0.06]">
+                        <div className="font-medium text-xs text-white mb-3">{resource.label}</div>
+                        <div className="flex flex-wrap gap-5">
+                          {resource.actions.map(action => {
+                            const isChecked = (formData.permissions[resource.key] || []).includes(action)
+                            return (
+                              <div key={`${resource.key}-${action}`} className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  disabled={editingRole?.name === "Super Admin"}
+                                  onClick={() => handleTogglePermission(resource.key, action)}
+                                  className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 ${
+                                    isChecked
+                                      ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
+                                      : "bg-zinc-800 justify-start"
+                                  }`}
+                                >
+                                  <span className="size-4 rounded-full bg-white shadow-xs" />
+                                </button>
+                                <span className="text-xs text-zinc-300 capitalize">
+                                  {action === "read" ? "Okuma" : action === "write" ? "Yazma" : action === "delete" ? "Silme" : action === "update" ? "Güncelleme" : action}
+                                </span>
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     ))}
@@ -317,9 +325,14 @@ export default function RolesPage() {
               </form>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-[#1a1e22] flex justify-end gap-3">
-              <Button type="button" variant="outline" onClick={handleCloseModal}>İptal</Button>
-              <Button type="submit" form="roleForm" disabled={saving || editingRole?.name === "Super Admin"}>
+            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5">
+              <Button type="button" variant="outline" className="rounded-full h-9 text-xs" onClick={handleCloseModal}>İptal</Button>
+              <Button
+                type="submit"
+                form="roleForm"
+                className="bg-[#34D399] text-[#061811] hover:bg-emerald-400 font-medium rounded-full h-9 text-xs"
+                disabled={saving || editingRole?.name === "Super Admin"}
+              >
                 {saving ? "Kaydediliyor..." : "Kaydet"}
               </Button>
             </div>
