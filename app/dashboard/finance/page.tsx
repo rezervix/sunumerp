@@ -43,5 +43,9 @@ export default async function FinancePage() {
         redirect("/dashboard");
     }
 
-    return <FinanceClient />;
+    return (
+        <div className="relative z-10 w-full">
+            <FinanceClient />
+        </div>
+    );
 }

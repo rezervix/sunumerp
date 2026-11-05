@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { useState, useEffect, useRef } from "react"
+import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
 import { ContextualHelp } from "@/components/shared/contextual-help"
@@ -10,23 +11,23 @@ import { mockDatabase } from "@/lib/data/mockDatabase"
 
 const statusColors = {
   pending: {
-    bg: "bg-yellow-100 dark:bg-yellow-900/25 text-yellow-700 dark:text-yellow-300",
+    bg: "bg-amber-500/15 text-amber-300 border border-amber-500/30",
     icon: "schedule"
   },
   approved: {
-    bg: "bg-blue-100 dark:bg-blue-900/25 text-blue-700 dark:text-blue-300",
+    bg: "bg-sky-500/15 text-sky-300 border border-sky-500/30",
     icon: "check_circle"
   },
   "in-progress": {
-    bg: "bg-purple-100 dark:bg-purple-900/25 text-purple-700 dark:text-purple-300",
+    bg: "bg-purple-500/15 text-purple-300 border border-purple-500/30",
     icon: "loop"
   },
   delivered: {
-    bg: "bg-green-100 dark:bg-green-900/25 text-green-700 dark:text-green-300",
+    bg: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30",
     icon: "task_alt"
   },
   rejected: {
-    bg: "bg-red-100 dark:bg-red-900/25 text-red-700 dark:text-red-300",
+    bg: "bg-rose-500/15 text-rose-300 border border-rose-500/30",
     icon: "cancel"
   },
 }
@@ -40,10 +41,10 @@ const statusLabels: Record<string, string> = {
 }
 
 const priorityColors = {
-  low: { bg: "bg-slate-100 dark:bg-slate-900/25 text-slate-700 dark:text-slate-300", label: "Dusuk" },
-  normal: { bg: "bg-blue-100 dark:bg-blue-900/25 text-blue-700 dark:text-blue-300", label: "Normal" },
-  high: { bg: "bg-orange-100 dark:bg-orange-900/25 text-orange-700 dark:text-orange-300", label: "Yuksek" },
-  urgent: { bg: "bg-red-100 dark:bg-red-900/25 text-red-700 dark:text-red-300", label: "Acil" },
+  low: { bg: "bg-slate-500/15 text-slate-300 border border-slate-500/30", label: "Dusuk" },
+  normal: { bg: "bg-sky-500/15 text-sky-300 border border-sky-500/30", label: "Normal" },
+  high: { bg: "bg-amber-500/15 text-amber-300 border border-amber-500/30", label: "Yuksek" },
+  urgent: { bg: "bg-rose-500/15 text-rose-300 border border-rose-500/30", label: "Acil" },
 }
 
 interface BranchOrder {
@@ -344,11 +345,11 @@ export default function OrdersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight flex items-center gap-1">
+          <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight flex items-center gap-2">
             Sipariş Yönetimi
             <ContextualHelp />
           </h1>
-          <p className="text-muted-foreground mt-2">Şube içi siparişlerinizi takip edin ve yönetin</p>
+          <p className="text-white/60 mt-1.5 text-sm">Şube içi siparişlerinizi takip edin ve yönetin</p>
         </div>
         <button
           onClick={() => {
@@ -359,7 +360,7 @@ export default function OrdersPage() {
             })
             setIsCreateDialogOpen(true)
           }}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:shadow-lg transition-all"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           <span>Yeni Sipariş</span>
@@ -368,31 +369,66 @@ export default function OrdersPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-        <div className="stat-card bg-card dark:bg-card rounded-xl p-5 lg:p-6 border border-border shadow-soft hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Toplam Sipariş</p>
-          <p className="text-3xl lg:text-4xl font-bold text-foreground">{stats.total}</p>
-        </div>
-        <div className="stat-card bg-card dark:bg-card rounded-xl p-5 lg:p-6 border border-border shadow-soft hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Bekleyen</p>
-          <p className="text-3xl lg:text-4xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pending}</p>
-        </div>
-        <div className="stat-card bg-card dark:bg-card rounded-xl p-5 lg:p-6 border border-border shadow-soft hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">İşlemde</p>
-          <p className="text-3xl lg:text-4xl font-bold text-purple-600 dark:text-purple-400">{stats.inProgress}</p>
-        </div>
-        <div className="stat-card bg-card dark:bg-card rounded-xl p-5 lg:p-6 border border-border shadow-soft hover:shadow-md transition-shadow">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Teslim Edildi</p>
-          <p className="text-3xl lg:text-4xl font-bold text-green-600 dark:text-green-400">{stats.delivered}</p>
-        </div>
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm text-white/60 font-medium">Toplam Sipariş</p>
+            <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+              <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+            </div>
+          </div>
+          <p className="text-2xl lg:text-3xl font-bold text-white mt-1">{stats.total}</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm text-white/60 font-medium">Bekleyen</p>
+            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <span className="material-symbols-outlined text-[18px]">schedule</span>
+            </div>
+          </div>
+          <p className="text-2xl lg:text-3xl font-bold text-amber-400 mt-1">{stats.pending}</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm text-white/60 font-medium">İşlemde</p>
+            <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+              <span className="material-symbols-outlined text-[18px]">loop</span>
+            </div>
+          </div>
+          <p className="text-2xl lg:text-3xl font-bold text-purple-400 mt-1">{stats.inProgress}</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm text-white/60 font-medium">Teslim Edildi</p>
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <span className="material-symbols-outlined text-[18px]">task_alt</span>
+            </div>
+          </div>
+          <p className="text-2xl lg:text-3xl font-bold text-emerald-400 mt-1">{stats.delivered}</p>
+        </motion.div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-card dark:bg-card rounded-xl border border-border shadow-soft overflow-hidden">
-        <div className="p-5 lg:p-6 border-b border-border bg-card/50 dark:bg-card/50">
+      <div className="glass-table-container overflow-hidden">
+        <div className="p-5 lg:p-6 border-b border-white/10 bg-white/[0.02]">
           <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
 
             <div className="relative w-full lg:max-w-xs">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
                 <span className="material-symbols-outlined text-[20px]">search</span>
               </div>
               <input
@@ -400,7 +436,7 @@ export default function OrdersPage() {
                 placeholder="Sipariş, müşteri veya ürün ara..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-11 pr-4 py-2.5 text-sm border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all"
+                className="glass-input block w-full pl-11 pr-4 py-2.5 text-sm outline-none transition-all"
               />
             </div>
 
@@ -408,16 +444,16 @@ export default function OrdersPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="flex-1 lg:flex-none px-4 py-2.5 text-sm border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all"
+                className="glass-input flex-1 lg:flex-none px-4 py-2.5 text-sm outline-none transition-all"
               >
-                <option value="all">Tüm Durumlar</option>
-                <option value="pending">Bekleyen</option>
-                <option value="approved">Onaylandı</option>
-                <option value="in-progress">İşlemde</option>
-                <option value="delivered">Teslim Edildi</option>
-                <option value="rejected">Reddedildi</option>
+                <option value="all" className="bg-slate-900 text-white">Tüm Durumlar</option>
+                <option value="pending" className="bg-slate-900 text-white">Bekleyen</option>
+                <option value="approved" className="bg-slate-900 text-white">Onaylandı</option>
+                <option value="in-progress" className="bg-slate-900 text-white">İşlemde</option>
+                <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
+                <option value="rejected" className="bg-slate-900 text-white">Reddedildi</option>
               </select>
-              <button className="px-4 py-2.5 flex items-center justify-center gap-2 bg-background border border-border rounded-lg text-sm font-medium text-foreground hover:bg-muted transition-colors shrink-0">
+              <button className="px-4 py-2.5 flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors shrink-0">
                 <span className="material-symbols-outlined text-[18px]">filter_list</span>
                 <span className="hidden sm:inline">{tText("common.filter", "Filtrele")}</span>
               </button>
@@ -428,7 +464,7 @@ export default function OrdersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-muted/40 dark:bg-muted/20 border-b border-border text-xs uppercase tracking-wide text-muted-foreground font-semibold">
+              <tr className="bg-white/[0.03] border-b border-white/10 text-xs uppercase tracking-wider text-white/50 font-semibold">
                 <th className="px-5 lg:px-6 py-4">Sipariş No</th>
                 <th className="px-5 lg:px-6 py-4">Başlık / Müşteri</th>
                 <th className="px-5 lg:px-6 py-4">Tür</th>
@@ -439,13 +475,13 @@ export default function OrdersPage() {
                 <th className="px-5 lg:px-6 py-4 text-right">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border text-sm">
+            <tbody className="text-sm">
               {filteredOrders.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-5 lg:px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-muted-foreground/40">inbox</span>
-                      <p className="text-muted-foreground font-medium">Gösterilecek sipariş bulunamadı</p>
+                      <span className="material-symbols-outlined text-4xl text-white/25">inbox</span>
+                      <p className="text-white/50 font-medium">Gösterilecek sipariş bulunamadı</p>
                     </div>
                   </td>
                 </tr>
@@ -455,54 +491,54 @@ export default function OrdersPage() {
                   const priorityConfig = priorityColors[order.priority]
 
                   return (
-                    <tr key={order.id} className="hover:bg-muted/30 dark:hover:bg-muted/20 transition-colors group">
-                      <td className="px-5 lg:px-6 py-4 font-mono text-foreground font-semibold">
+                    <tr key={order.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors group">
+                      <td className="px-5 lg:px-6 py-4 font-mono text-white font-semibold">
                         {order.orderNumber}
                       </td>
                       <td className="px-5 lg:px-6 py-4">
-                        <div className="font-medium text-foreground">{order.title}</div>
+                        <div className="font-medium text-white">{order.title}</div>
                         {(order.customer || order.customerName) && (
-                          <div className="text-primary text-xs mt-1 flex items-center gap-1 font-semibold">
+                          <div className="text-sky-400 text-xs mt-1 flex items-center gap-1 font-semibold">
                             <span className="material-symbols-outlined text-[12px]">person</span> 
                             {order.customer?.name || order.customerName} {order.customer?.company || order.companyName ? `(${order.customer?.company || order.companyName})` : ""}
                           </div>
                         )}
                         {order.description && (
-                          <div className="text-muted-foreground text-xs mt-1 line-clamp-1">{order.description}</div>
+                          <div className="text-white/50 text-xs mt-1 line-clamp-1">{order.description}</div>
                         )}
                       </td>
-                      <td className="px-5 lg:px-6 py-4 text-muted-foreground">
+                      <td className="px-5 lg:px-6 py-4 text-white/70">
                         {order.orderType}
                       </td>
                       <td className="px-5 lg:px-6 py-4">
-                        <div className="font-semibold text-foreground">
+                        <div className="font-semibold text-white">
                           {order.totalAmount ? `${order.totalAmount.toLocaleString("tr-TR")} ₺` : "-"}
                         </div>
-                        <div className={`text-xs mt-1 font-medium ${order.paymentStatus === 'paid' ? 'text-green-600' : 'text-red-500'}`}>
+                        <div className={`text-xs mt-1 font-medium ${order.paymentStatus === 'paid' ? 'text-emerald-400' : order.paymentStatus === 'partial' ? 'text-amber-400' : 'text-rose-400'}`}>
                           {order.paymentStatus === 'paid' ? 'Ödendi' : order.paymentStatus === 'partial' ? 'Kısmi Ödeme' : 'Ödenmedi'}
                         </div>
                       </td>
                       <td className="px-5 lg:px-6 py-4">
-                        <span className={`inline-flex items-center px-2.5 py-1.5 rounded-md text-xs font-semibold ${priorityConfig.bg}`}>
+                        <span className={`inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium ${priorityConfig.bg}`}>
                           {priorityConfig.label}
                         </span>
                       </td>
                       <td className="px-5 lg:px-6 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold ${statusConfig.bg}`}>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-medium ${statusConfig.bg}`}>
                           <span className="material-symbols-outlined text-[14px]">
                             {statusConfig.icon}
                           </span>
                           {statusLabels[order.status]}
                         </span>
                       </td>
-                      <td className="px-5 lg:px-6 py-4 text-muted-foreground text-sm">
+                      <td className="px-5 lg:px-6 py-4 text-white/60 text-sm">
                         {new Date(order.orderDate).toLocaleDateString("tr-TR")}
                       </td>
                       <td className="px-5 lg:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                           <button
                             onClick={() => window.open(`/dashboard/orders/${order.id}/print`, "_blank")}
-                            className="p-2 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/25 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-white/60 hover:text-sky-300 hover:bg-sky-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Yazdır"
                           >
                             <span className="material-symbols-outlined text-[20px]">print</span>
@@ -528,7 +564,7 @@ export default function OrdersPage() {
                               })
                               setIsCreateDialogOpen(true)
                             }}
-                            className="p-2 text-muted-foreground hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/25 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-white/60 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Düzenle"
                           >
                             <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -539,7 +575,7 @@ export default function OrdersPage() {
                               setStatusUpdate({ status: order.status, notes: "" })
                               setIsStatusDialogOpen(true)
                             }}
-                            className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-white/60 hover:text-indigo-300 hover:bg-indigo-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Durum Güncelle"
                           >
                             <span className="material-symbols-outlined text-[20px]">edit_note</span>
@@ -557,7 +593,7 @@ export default function OrdersPage() {
                                 }
                               }
                             }}
-                            className="p-2 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/25 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-white/60 hover:text-rose-300 hover:bg-rose-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Sil"
                           >
                             <span className="material-symbols-outlined text-[20px]">delete</span>
@@ -574,97 +610,97 @@ export default function OrdersPage() {
       </div>
 
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-card dark:bg-card rounded-2xl w-full max-w-3xl border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 overflow-y-auto">
+          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
 
-            <div className="flex items-center justify-between p-6 border-b border-border bg-card/50 dark:bg-card/50 sticky top-0 z-10">
-              <h2 className="text-xl font-bold text-foreground">{editOrderId ? "Siparişi Düzenle" : "Yeni Sipariş Oluştur"}</h2>
+            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02] sticky top-0 z-10">
+              <h2 className="text-xl font-bold text-white">{editOrderId ? "Siparişi Düzenle" : "Yeni Sipariş Oluştur"}</h2>
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="orderNumber" className="block text-sm font-semibold text-foreground">Sipariş Numarası</label>
+                  <label htmlFor="orderNumber" className="block text-sm font-semibold text-white/80">Sipariş Numarası</label>
                   <input
                     id="orderNumber"
                     type="text"
                     value={formData.orderNumber}
                     onChange={(e) => setFormData({ ...formData, orderNumber: e.target.value })}
                     placeholder="Otomatik Oluşturulacak"
-                    className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm"
+                    className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                   />
-                  <p className="text-[11px] text-muted-foreground">Boş bırakılırsa sistem otomatik atar.</p>
+                  <p className="text-[11px] text-white/40">Boş bırakılırsa sistem otomatik atar.</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="orderDate" className="block text-sm font-semibold text-foreground">Sipariş Tarihi *</label>
+                  <label htmlFor="orderDate" className="block text-sm font-semibold text-white/80">Sipariş Tarihi *</label>
                   <input
                     id="orderDate"
                     type="date"
                     value={formData.orderDate}
                     onChange={(e) => setFormData({ ...formData, orderDate: e.target.value })}
-                    className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm"
+                    className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="title" className="block text-sm font-semibold text-foreground">Sipariş Başlığı *</label>
+                <label htmlFor="title" className="block text-sm font-semibold text-white/80">Sipariş Başlığı *</label>
                 <input
                   id="title"
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="500 Adet Kartvizit"
-                  className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm"
+                  className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="orderType" className="block text-sm font-semibold text-foreground">Sipariş Türü *</label>
+                  <label htmlFor="orderType" className="block text-sm font-semibold text-white/80">Sipariş Türü *</label>
                   <div className="relative">
                     <select
                       id="orderType"
                       value={formData.orderType}
                       onChange={(e) => setFormData({ ...formData, orderType: e.target.value })}
-                      className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm appearance-none pr-10"
+                      className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="" disabled>Tür seçin</option>
-                      <option value="Baskı Malzemeleri">Baskı Malzemeleri</option>
-                      <option value="Tasarım Hizmeti">Tasarım Hizmeti</option>
-                      <option value="Ofis Malzemeleri">Ofis Malzemeleri</option>
-                      <option value="Dijital Hizmet">Dijital Hizmet</option>
-                      <option value="Diğer">Diğer</option>
+                      <option value="" disabled className="bg-slate-900 text-white/60">Tür seçin</option>
+                      <option value="Baskı Malzemeleri" className="bg-slate-900 text-white">Baskı Malzemeleri</option>
+                      <option value="Tasarım Hizmeti" className="bg-slate-900 text-white">Tasarım Hizmeti</option>
+                      <option value="Ofis Malzemeleri" className="bg-slate-900 text-white">Ofis Malzemeleri</option>
+                      <option value="Dijital Hizmet" className="bg-slate-900 text-white">Dijital Hizmet</option>
+                      <option value="Diğer" className="bg-slate-900 text-white">Diğer</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-muted-foreground">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="customerId" className="block text-sm font-semibold text-foreground">Kayıtlı Müşteri Seç</label>
+                  <label htmlFor="customerId" className="block text-sm font-semibold text-white/80">Kayıtlı Müşteri Seç</label>
                   <div className="relative">
                     <select
                       id="customerId"
                       value={formData.customerId || ""}
                       onChange={(e) => setFormData({ ...formData, customerId: e.target.value })}
-                      className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm appearance-none pr-10"
+                      className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="">Bağımsız Sipariş (Aşağıdan Doldurun)</option>
+                      <option value="" className="bg-slate-900 text-white">Bağımsız Sipariş (Aşağıdan Doldurun)</option>
                       {customers.map(c => (
-                        <option key={c.id} value={c.id}>{c.name} {c.company ? `(${c.company})` : ""}</option>
+                        <option key={c.id} value={c.id} className="bg-slate-900 text-white">{c.name} {c.company ? `(${c.company})` : ""}</option>
                       ))}
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-muted-foreground">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
@@ -672,37 +708,37 @@ export default function OrdersPage() {
               </div>
 
               {!formData.customerId && (
-                <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-4">
-                  <h3 className="text-sm font-semibold text-foreground">Hızlı Müşteri Bilgileri</h3>
+                <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] space-y-4">
+                  <h3 className="text-sm font-semibold text-white">Hızlı Müşteri Bilgileri</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-muted-foreground">Ad Soyad</label>
+                      <label className="block text-xs font-semibold text-white/60">Ad Soyad</label>
                       <input
                         type="text"
                         value={formData.customerName}
                         onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                         placeholder="Örn: Ahmet Yılmaz"
-                        className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm"
+                        className="glass-input block w-full px-3 py-2 text-sm outline-none"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-muted-foreground">Firma Adı</label>
+                      <label className="block text-xs font-semibold text-white/60">Firma Adı</label>
                       <input
                         type="text"
                         value={formData.companyName}
                         onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                         placeholder="Örn: ABC A.Ş."
-                        className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm"
+                        className="glass-input block w-full px-3 py-2 text-sm outline-none"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-muted-foreground">Telefon</label>
+                      <label className="block text-xs font-semibold text-white/60">Telefon</label>
                       <input
                         type="text"
                         value={formData.customerPhone}
                         onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                         placeholder="+90 555 123 4567"
-                        className="block w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm"
+                        className="glass-input block w-full px-3 py-2 text-sm outline-none"
                       />
                     </div>
                   </div>
@@ -711,7 +747,7 @@ export default function OrdersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="totalAmount" className="block text-sm font-semibold text-foreground">Fiyat (₺)</label>
+                  <label htmlFor="totalAmount" className="block text-sm font-semibold text-white/80">Fiyat (₺)</label>
                   <input
                     id="totalAmount"
                     type="number"
@@ -719,65 +755,65 @@ export default function OrdersPage() {
                     onChange={(e) => setFormData({ ...formData, totalAmount: Number.parseFloat(e.target.value) || undefined })}
                     placeholder="0.00"
                     step="0.01"
-                    className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm"
+                    className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="paymentStatus" className="block text-sm font-semibold text-foreground">Ödeme Durumu</label>
+                  <label htmlFor="paymentStatus" className="block text-sm font-semibold text-white/80">Ödeme Durumu</label>
                   <div className="relative">
                     <select
                       id="paymentStatus"
                       value={formData.paymentStatus}
                       onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
-                      className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm appearance-none pr-10"
+                      className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="unpaid">Ödenmedi</option>
-                      <option value="partial">Kısmi Ödeme</option>
-                      <option value="paid">Ödendi</option>
+                      <option value="unpaid" className="bg-slate-900 text-white">Ödenmedi</option>
+                      <option value="partial" className="bg-slate-900 text-white">Kısmi Ödeme</option>
+                      <option value="paid" className="bg-slate-900 text-white">Ödendi</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-muted-foreground">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="quantity" className="block text-sm font-semibold text-foreground">Miktar</label>
+                  <label htmlFor="quantity" className="block text-sm font-semibold text-white/80">Miktar</label>
                   <input
                     id="quantity"
                     type="number"
                     value={formData.quantity || ""}
                     onChange={(e) => setFormData({ ...formData, quantity: Number.parseInt(e.target.value) || undefined })}
                     placeholder="100"
-                    className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm"
+                    className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="description" className="block text-sm font-semibold text-foreground">Müşteri Notu</label>
+                <label htmlFor="description" className="block text-sm font-semibold text-white/80">Müşteri Notu</label>
                 <textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Müşteri talepleri veya sipariş detayları..."
                   rows={3}
-                  className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm resize-none"
+                  className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm resize-none"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-foreground">Dosyalar</label>
+                <label className="block text-sm font-semibold text-white/80">Dosyalar</label>
                 <div 
-                  className="border-2 border-dashed border-border hover:border-primary/50 transition-colors rounded-xl p-8 flex flex-col items-center justify-center bg-muted/10 cursor-pointer"
+                  className="border-2 border-dashed border-white/15 hover:border-indigo-400/50 transition-colors rounded-xl p-8 flex flex-col items-center justify-center bg-white/[0.02] cursor-pointer"
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleFileUpload}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <span className="material-symbols-outlined text-4xl text-muted-foreground mb-3">cloud_upload</span>
-                  <p className="text-sm font-medium text-foreground">Dosyaları sürükleyip bırakın</p>
-                  <p className="text-xs text-muted-foreground mt-1">veya seçmek için tıklayın</p>
+                  <span className="material-symbols-outlined text-4xl text-white/40 mb-3">cloud_upload</span>
+                  <p className="text-sm font-medium text-white">Dosyaları sürükleyip bırakın</p>
+                  <p className="text-xs text-white/50 mt-1">veya seçmek için tıklayın</p>
                   <input 
                     type="file" 
                     ref={fileInputRef} 
@@ -786,7 +822,7 @@ export default function OrdersPage() {
                     onChange={handleFileUpload} 
                   />
                   {isUploading && (
-                    <div className="mt-4 flex items-center gap-2 text-sm text-primary font-medium">
+                    <div className="mt-4 flex items-center gap-2 text-sm text-indigo-400 font-medium">
                       <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
                       Yükleniyor...
                     </div>
@@ -796,12 +832,12 @@ export default function OrdersPage() {
                 {formData.files.length > 0 && (
                   <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {formData.files.map((f, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-muted/20 border border-border rounded-lg">
+                      <div key={idx} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl">
                         <div className="flex items-center gap-3 overflow-hidden">
-                          <span className="material-symbols-outlined text-primary/70 shrink-0">draft</span>
+                          <span className="material-symbols-outlined text-indigo-400 shrink-0">draft</span>
                           <div className="overflow-hidden">
-                            <p className="text-sm font-medium text-foreground truncate">{f.name}</p>
-                            <p className="text-[10px] text-muted-foreground">{(f.size / 1024).toFixed(1)} KB</p>
+                            <p className="text-sm font-medium text-white truncate">{f.name}</p>
+                            <p className="text-[10px] text-white/50">{(f.size / 1024).toFixed(1)} KB</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1 shrink-0 ml-2">
@@ -809,7 +845,7 @@ export default function OrdersPage() {
                             href={f.url} 
                             target="_blank" 
                             rel="noreferrer"
-                            className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md"
+                            className="p-1.5 text-white/60 hover:text-sky-400 transition-colors rounded-md"
                             title="Görüntüle"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -818,7 +854,7 @@ export default function OrdersPage() {
                           <a 
                             href={f.url} 
                             download
-                            className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md"
+                            className="p-1.5 text-white/60 hover:text-emerald-400 transition-colors rounded-md"
                             title="İndir"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -827,7 +863,7 @@ export default function OrdersPage() {
                           <button 
                             type="button"
                             onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
-                            className="p-1.5 text-muted-foreground hover:text-red-500 transition-colors rounded-md"
+                            className="p-1.5 text-white/60 hover:text-rose-400 transition-colors rounded-md"
                             title="Kaldır"
                           >
                             <span className="material-symbols-outlined text-[16px]">delete</span>
@@ -840,15 +876,15 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-border bg-muted/30 dark:bg-muted/10 flex justify-end gap-3">
+            <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-5 py-2.5 text-sm font-semibold text-foreground bg-background border border-border rounded-lg hover:bg-muted transition-colors"
+                className="px-5 py-2.5 text-sm font-semibold text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
               >{tText("common.cancel", "İptal")}</button>
               <button
                 onClick={handleSubmit}
                 disabled={loading || !formData.title || !formData.orderType}
-                className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50 flex items-center gap-2"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : editOrderId ? "Değişiklikleri Kaydet" : "Siparişi Oluştur"}
@@ -860,17 +896,17 @@ export default function OrdersPage() {
 
       {/* Status Update Dialog */}
       {isStatusDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-card dark:bg-card rounded-2xl w-full max-w-md border border-border shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
-            <div className="p-6 border-b border-border bg-card/50 dark:bg-card/50 flex items-start justify-between">
+            <div className="p-6 border-b border-white/10 bg-white/[0.02] flex items-start justify-between">
               <div>
-                <h2 className="text-xl font-bold text-foreground">Durum Güncelle</h2>
-                <p className="text-sm text-muted-foreground mt-2">{selectedOrder?.orderNumber} - {selectedOrder?.title}</p>
+                <h2 className="text-xl font-bold text-white">Durum Güncelle</h2>
+                <p className="text-sm text-white/60 mt-1.5">{selectedOrder?.orderNumber} - {selectedOrder?.title}</p>
               </div>
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors shrink-0"
+                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors shrink-0"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -878,49 +914,49 @@ export default function OrdersPage() {
 
             <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <label htmlFor="update_status" className="block text-sm font-semibold text-foreground">Yeni Durum</label>
+                <label htmlFor="update_status" className="block text-sm font-semibold text-white/80">Yeni Durum</label>
                 <div className="relative">
                   <select
                     id="update_status"
                     value={statusUpdate.status}
                     onChange={(e) => setStatusUpdate({ ...statusUpdate, status: e.target.value as BranchOrder["status"] })}
-                    className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm appearance-none pr-10"
+                    className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                   >
-                    <option value="" disabled>Durum seçin</option>
-                    <option value="pending">Bekliyor</option>
-                    <option value="approved">Onaylandı</option>
-                    <option value="in-progress">İşlemde</option>
-                    <option value="delivered">Teslim Edildi</option>
-                    <option value="rejected">Reddedildi</option>
+                    <option value="" disabled className="bg-slate-900 text-white/60">Durum seçin</option>
+                    <option value="pending" className="bg-slate-900 text-white">Bekliyor</option>
+                    <option value="approved" className="bg-slate-900 text-white">Onaylandı</option>
+                    <option value="in-progress" className="bg-slate-900 text-white">İşlemde</option>
+                    <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
+                    <option value="rejected" className="bg-slate-900 text-white">Reddedildi</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-muted-foreground">
+                  <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                     <span className="material-symbols-outlined text-[20px]">expand_more</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="update_notes" className="block text-sm font-semibold text-foreground">Not (İsteğe bağlı)</label>
+                <label htmlFor="update_notes" className="block text-sm font-semibold text-white/80">Not (İsteğe bağlı)</label>
                 <textarea
                   id="update_notes"
                   value={statusUpdate.notes}
                   onChange={(e) => setStatusUpdate({ ...statusUpdate, notes: e.target.value })}
                   placeholder="Durum değişikliği hakkında not ekleyin..."
                   rows={3}
-                  className="block w-full px-4 py-2.5 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground/70 outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all text-sm resize-none"
+                  className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm resize-none"
                 />
               </div>
             </div>
 
-            <div className="p-6 border-t border-border bg-muted/30 dark:bg-muted/10 flex justify-end gap-3">
+            <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="px-5 py-2.5 text-sm font-semibold text-foreground bg-background border border-border rounded-lg hover:bg-muted transition-colors"
+                className="px-5 py-2.5 text-sm font-semibold text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
               >{tText("common.cancel", "İptal")}</button>
               <button
                 onClick={handleStatusUpdate}
                 disabled={loading || !statusUpdate.status}
-                className="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50 flex items-center gap-2"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Güncelleniyor..." : "Güncelle"}

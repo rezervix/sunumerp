@@ -5,21 +5,22 @@ import { useLanguage } from "@/lib/context/LanguageContext"
 
 
 import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
 
 const statusConfig = {
-    in_transit: { label: "Kargoda", bg: "bg-blue-500/10", text: "text-blue-500", icon: "local_shipping" },
-    delivered: { label: "Teslim Edildi", bg: "bg-green-500/10", text: "text-green-500", icon: "check_circle" },
-    returned: { label: "İade", bg: "bg-orange-500/10", text: "text-orange-500", icon: "package" },
-    lost: { label: "Kayıp", bg: "bg-red-500/10", text: "text-red-500", icon: "cancel_presentation" },
+    in_transit: { label: "Kargoda", bg: "bg-sky-500/15 border border-sky-500/30", text: "text-sky-300", icon: "local_shipping" },
+    delivered: { label: "Teslim Edildi", bg: "bg-emerald-500/15 border border-emerald-500/30", text: "text-emerald-300", icon: "check_circle" },
+    returned: { label: "İade", bg: "bg-amber-500/15 border border-amber-500/30", text: "text-amber-300", icon: "package" },
+    lost: { label: "Kayıp", bg: "bg-rose-500/15 border border-rose-500/30", text: "text-rose-300", icon: "cancel_presentation" },
 }
 
 const fileStatusConfig = {
-    sent: { label: "Gönderildi", bg: "bg-blue-500/10", text: "text-blue-500", icon: "send" },
-    received: { label: "Teslim Alındı", bg: "bg-green-500/10", text: "text-green-500", icon: "inbox" },
-    acknowledged: { label: "Onaylandı", bg: "bg-purple-500/10", text: "text-purple-500", icon: "verified" },
-    completed: { label: "Tamamlandı", bg: "bg-gray-500/10", text: "text-gray-500", icon: "task_alt" },
+    sent: { label: "Gönderildi", bg: "bg-sky-500/15 border border-sky-500/30", text: "text-sky-300", icon: "send" },
+    received: { label: "Teslim Alındı", bg: "bg-emerald-500/15 border border-emerald-500/30", text: "text-emerald-300", icon: "inbox" },
+    acknowledged: { label: "Onaylandı", bg: "bg-purple-500/15 border border-purple-500/30", text: "text-purple-300", icon: "verified" },
+    completed: { label: "Tamamlandı", bg: "bg-slate-500/15 border border-slate-500/30", text: "text-slate-300", icon: "task_alt" },
 }
 
 type CargoStatus = keyof typeof statusConfig
@@ -246,21 +247,21 @@ export default function CargoPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Kargo ve Kurye</h1>
-                    <p className="text-sm text-gray-500">Kargo gönderileri ve fiziksel dosya/evrak teslimatları</p>
+                    <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Kargo ve Kurye</h1>
+                    <p className="text-sm text-white/60">Kargo gönderileri ve fiziksel dosya/evrak teslimatları</p>
                 </div>
             </div>
 
-            <div className="flex border-b border-gray-200 dark:border-gray-800">
+            <div className="inline-flex flex-wrap gap-1 bg-black/30 backdrop-blur-md p-1 rounded-xl border border-white/10">
                 <button
                     onClick={() => setActiveTab("cargo")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === "cargo" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700"}`}
+                    className={`px-4 py-2 text-sm font-medium transition-all ${activeTab === "cargo" ? "bg-white/15 text-white shadow-sm rounded-lg" : "text-white/60 hover:text-white rounded-lg"}`}
                 >
                     Genel Kargo Takibi
                 </button>
                 <button
                     onClick={() => setActiveTab("files")}
-                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === "files" ? "border-primary text-primary" : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700"}`}
+                    className={`px-4 py-2 text-sm font-medium transition-all ${activeTab === "files" ? "bg-white/15 text-white shadow-sm rounded-lg" : "text-white/60 hover:text-white rounded-lg"}`}
                 >
                     Dosya / Evrak Teslimi (FileDelivery)
                 </button>
@@ -269,56 +270,82 @@ export default function CargoPage() {
             {activeTab === "cargo" && (
                 <>
                     <div className="grid gap-4 md:grid-cols-3">
-                        <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
-                            <h3 className="text-sm font-medium text-gray-500 mb-2">Toplam Gönderi</h3>
-                            <div className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</div>
-                        </div>
-                        <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
-                            <h3 className="text-sm font-medium text-gray-500 mb-2">Kargoda</h3>
-                            <div className="text-3xl font-bold text-blue-500">{stats.inTransit}</div>
-                        </div>
-                        <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 border border-gray-100 dark:border-gray-800 shadow-sm">
-                            <h3 className="text-sm font-medium text-gray-500 mb-2">Teslim Edildi</h3>
-                            <div className="text-3xl font-bold text-green-500">{stats.delivered}</div>
-                        </div>
+                        <motion.div
+                            whileHover={{ y: -4 }}
+                            className="glass-card rounded-2xl p-6"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-medium text-white/60">Toplam Gönderi</h3>
+                                <div className="w-9 h-9 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <span className="material-symbols-outlined text-[18px]">inventory_2</span>
+                                </div>
+                            </div>
+                            <div className="text-3xl font-bold text-white mt-1">{stats.total}</div>
+                        </motion.div>
+
+                        <motion.div
+                            whileHover={{ y: -4 }}
+                            className="glass-card rounded-2xl p-6"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-medium text-white/60">Kargoda</h3>
+                                <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                                    <span className="material-symbols-outlined text-[18px]">local_shipping</span>
+                                </div>
+                            </div>
+                            <div className="text-3xl font-bold text-sky-400 mt-1">{stats.inTransit}</div>
+                        </motion.div>
+
+                        <motion.div
+                            whileHover={{ y: -4 }}
+                            className="glass-card rounded-2xl p-6"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-medium text-white/60">Teslim Edildi</h3>
+                                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                                </div>
+                            </div>
+                            <div className="text-3xl font-bold text-emerald-400 mt-1">{stats.delivered}</div>
+                        </motion.div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col overflow-hidden">
-                        <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="glass-table-container flex flex-col overflow-hidden">
+                        <div className="p-5 border-b border-white/10 bg-white/[0.02] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Kargo Listesi</h2>
-                                <p className="text-sm text-gray-500 mt-1">Tüm kargo gönderileriniz</p>
+                                <h2 className="text-lg font-bold text-white">Kargo Listesi</h2>
+                                <p className="text-sm text-white/60 mt-1">Tüm kargo gönderileriniz</p>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <div className="relative">
                                     <select
                                         value={statusFilter}
                                         onChange={(e) => setStatusFilter(e.target.value)}
-                                        className="w-full sm:w-40 pl-4 pr-10 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                        className="glass-input w-full sm:w-40 pl-4 pr-10 py-2 text-sm appearance-none focus:outline-none transition-all"
                                     >
-                                        <option value="all">Tümü</option>
-                                        <option value="in_transit">Kargoda</option>
-                                        <option value="delivered">Teslim Edildi</option>
-                                        <option value="returned">İade</option>
-                                        <option value="lost">Kayıp</option>
+                                        <option value="all" className="bg-slate-900 text-white">Tümü</option>
+                                        <option value="in_transit" className="bg-slate-900 text-white">Kargoda</option>
+                                        <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
+                                        <option value="returned" className="bg-slate-900 text-white">İade</option>
+                                        <option value="lost" className="bg-slate-900 text-white">Kayıp</option>
                                     </select>
-                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-gray-400">
+                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                                         <span className="material-symbols-outlined text-[20px]">expand_more</span>
                                     </div>
                                 </div>
                                 <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+                                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">search</span>
                                     <input
                                         type="text"
                                         placeholder="Firma veya takip no..."
                                         value={search}
                                         onChange={e => setSearch(e.target.value)}
-                                        className="w-full sm:w-48 pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                        className="glass-input w-full sm:w-48 pl-10 pr-4 py-2 text-sm focus:outline-none transition-all"
                                     />
                                 </div>
                                 <button
                                     onClick={() => setIsCreateOpen(true)}
-                                    className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-sm"
+                                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">add</span>
                                     Yeni Kargo
@@ -329,23 +356,23 @@ export default function CargoPage() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-gray-50/50 dark:bg-[#1e1e1e]/50 border-b border-gray-200 dark:border-gray-800">
-                                        <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Kargo Firması</th>
-                                        <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Takip Numarası</th>
-                                        {isSuperAdmin && <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Şube</th>}
-                                        <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Durum</th>
-                                        <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Notlar</th>
-                                        <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tarih</th>
-                                        <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">İşlem</th>
+                                    <tr className="bg-white/[0.03] border-b border-white/10">
+                                        <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Kargo Firması</th>
+                                        <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Takip Numarası</th>
+                                        {isSuperAdmin && <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Şube</th>}
+                                        <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Durum</th>
+                                        <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Notlar</th>
+                                        <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Tarih</th>
+                                        <th className="px-6 py-4 text-right text-xs font-semibold text-white/50 uppercase tracking-wider">İşlem</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100 dark:border-gray-800">
+                                <tbody>
                                     {filtered.length === 0 ? (
                                         <tr>
                                             <td colSpan={isSuperAdmin ? 7 : 6} className="px-6 py-12 text-center">
-                                                <div className="flex flex-col items-center justify-center text-gray-500">
-                                                    <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-gray-300">package</span>
-                                                    <p className="text-sm font-medium">Kargo kaydı bulunamadı</p>
+                                                <div className="flex flex-col items-center justify-center text-white/40">
+                                                    <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-white/25">package</span>
+                                                    <p className="text-sm font-medium text-white/50">Kargo kaydı bulunamadı</p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -353,27 +380,27 @@ export default function CargoPage() {
                                         filtered.map(item => {
                                             const cfg = statusConfig[item.status]
                                             return (
-                                                <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors group">
+                                                <tr key={item.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors group">
                                                     <td className="px-6 py-4">
-                                                        <div className="font-semibold text-gray-900 dark:text-white leading-tight">{item.carrierName}</div>
+                                                        <div className="font-semibold text-white leading-tight">{item.carrierName}</div>
                                                     </td>
                                                     <td className="px-6 py-4">
-                                                        <div className="font-mono text-sm text-gray-600 dark:text-gray-300">{item.trackingNumber}</div>
+                                                        <div className="font-mono text-sm text-white/80">{item.trackingNumber}</div>
                                                     </td>
-                                                    {isSuperAdmin && <td className="px-6 py-4"><span className="text-sm text-gray-600 dark:text-gray-400">{item.branch?.name || "-"}</span></td>}
+                                                    {isSuperAdmin && <td className="px-6 py-4"><span className="text-sm text-white/70">{item.branch?.name || "-"}</span></td>}
                                                     <td className="px-6 py-4">
-                                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
+                                                        <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium ${cfg.bg} ${cfg.text}`}>
                                                             <span className="material-symbols-outlined text-[14px]">{cfg.icon}</span>
                                                             {cfg.label}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 max-w-[150px] truncate">{item.notes || "-"}</td>
-                                                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</td>
+                                                    <td className="px-6 py-4 text-sm text-white/60 max-w-[150px] truncate">{item.notes || "-"}</td>
+                                                    <td className="px-6 py-4 text-sm text-white/60">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</td>
                                                     <td className="px-6 py-4 text-right">
                                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                                                             <button
                                                                 onClick={() => openEdit(item)}
-                                                                className="p-1.5 text-gray-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center"
+                                                                className="p-1.5 text-white/50 hover:text-sky-300 hover:bg-sky-500/15 rounded-lg transition-colors flex items-center justify-center"
                                                                 title="Düzenle"
                                                             >
                                                                 <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -381,7 +408,7 @@ export default function CargoPage() {
                                                             <button
                                                                 onClick={() => handleDelete(item.id)}
                                                                 disabled={deleting === item.id}
-                                                                className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                className="p-1.5 text-white/50 hover:text-rose-300 hover:bg-rose-500/15 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                                                 title="Sil"
                                                             >
                                                                 {deleting === item.id
@@ -403,26 +430,26 @@ export default function CargoPage() {
             )}
 
             {activeTab === "files" && (
-                <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col overflow-hidden">
-                    <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="glass-table-container flex flex-col overflow-hidden">
+                    <div className="p-5 border-b border-white/10 bg-white/[0.02] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Evrak / Dosya Gönderimleri</h2>
-                            <p className="text-sm text-gray-500 mt-1">Şubeler arası veya müşterilere gönderilen evrak takibi</p>
+                            <h2 className="text-lg font-bold text-white">Evrak / Dosya Gönderimleri</h2>
+                            <p className="text-sm text-white/60 mt-1">Şubeler arası veya müşterilere gönderilen evrak takibi</p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3">
                             <div className="relative">
-                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-[20px]">search</span>
                                 <input
                                     type="text"
                                     placeholder="Başlık veya takip no..."
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
-                                    className="w-full sm:w-48 pl-10 pr-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                    className="glass-input w-full sm:w-48 pl-10 pr-4 py-2 text-sm focus:outline-none transition-all"
                                 />
                             </div>
                             <button
                                 onClick={() => setIsFileCreateOpen(true)}
-                                className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-sm"
+                                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
                             >
                                 <span className="material-symbols-outlined text-[18px]">add</span>
                                 Yeni Gönderim
@@ -433,23 +460,23 @@ export default function CargoPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-50/50 dark:bg-[#1e1e1e]/50 border-b border-gray-200 dark:border-gray-800">
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Başlık & İçerik</th>
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Takip / Kurye No</th>
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Gönderen</th>
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Alıcı Şube</th>
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Durum</th>
-                                    <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tarih</th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">İşlem</th>
+                                <tr className="bg-white/[0.03] border-b border-white/10">
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Başlık & İçerik</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Takip / Kurye No</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Gönderen</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Alıcı Şube</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Durum</th>
+                                    <th className="px-6 py-4 text-xs font-semibold text-white/50 uppercase tracking-wider">Tarih</th>
+                                    <th className="px-6 py-4 text-right text-xs font-semibold text-white/50 uppercase tracking-wider">İşlem</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100 dark:border-gray-800">
+                            <tbody>
                                 {filteredFiles.length === 0 ? (
                                     <tr>
                                         <td colSpan={7} className="px-6 py-12 text-center">
-                                            <div className="flex flex-col items-center justify-center text-gray-500">
-                                                <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-gray-300">description</span>
-                                                <p className="text-sm font-medium">Evrak gönderimi bulunamadı</p>
+                                            <div className="flex flex-col items-center justify-center text-white/40">
+                                                <span className="material-symbols-outlined text-4xl mb-2 sm:text-5xl text-white/25">description</span>
+                                                <p className="text-sm font-medium text-white/50">Evrak gönderimi bulunamadı</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -457,29 +484,29 @@ export default function CargoPage() {
                                     filteredFiles.map(item => {
                                         const cfg = fileStatusConfig[item.status]
                                         return (
-                                            <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors group">
+                                            <tr key={item.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors group">
                                                 <td className="px-6 py-4">
-                                                    <div className="font-semibold text-gray-900 dark:text-white leading-tight">{item.title}</div>
-                                                    <div className="text-xs text-gray-500 mt-1 max-w-[200px] truncate">{item.description || "Açıklama yok"}</div>
+                                                    <div className="font-semibold text-white leading-tight">{item.title}</div>
+                                                    <div className="text-xs text-white/50 mt-1 max-w-[200px] truncate">{item.description || "Açıklama yok"}</div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="font-mono text-sm text-gray-600 dark:text-gray-300">{item.trackingNumber}</div>
-                                                    <div className="text-xs text-orange-500 mt-1 font-medium">{item.priority === "urgent" ? "Acil" : "Normal"}</div>
+                                                    <div className="font-mono text-sm text-white/80">{item.trackingNumber}</div>
+                                                    <div className={`text-xs mt-1 font-medium ${item.priority === "urgent" ? "text-rose-400" : "text-amber-400"}`}>{item.priority === "urgent" ? "Acil" : "Normal"}</div>
                                                 </td>
-                                                <td className="px-6 py-4"><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.fromBranch?.name || "-"}</span></td>
-                                                <td className="px-6 py-4"><span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.toBranch?.name || "Müşteri / Diğer"}</span></td>
+                                                <td className="px-6 py-4"><span className="text-sm font-medium text-white/80">{item.fromBranch?.name || "-"}</span></td>
+                                                <td className="px-6 py-4"><span className="text-sm font-medium text-white/80">{item.toBranch?.name || "Müşteri / Diğer"}</span></td>
                                                 <td className="px-6 py-4">
-                                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${cfg.bg} ${cfg.text}`}>
+                                                    <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium ${cfg.bg} ${cfg.text}`}>
                                                         <span className="material-symbols-outlined text-[14px]">{cfg.icon}</span>
                                                         {cfg.label}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</td>
+                                                <td className="px-6 py-4 text-sm text-white/60">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</td>
                                                 <td className="px-6 py-4 text-right">
                                                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                                                         <button
                                                             onClick={() => openFileEdit(item)}
-                                                            className="p-1.5 text-gray-400 hover:text-primary hover:bg-blue-50 rounded-lg transition-colors flex items-center justify-center"
+                                                            className="p-1.5 text-white/50 hover:text-sky-300 hover:bg-sky-500/15 rounded-lg transition-colors flex items-center justify-center"
                                                             title="Düzenle"
                                                         >
                                                             <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -487,7 +514,7 @@ export default function CargoPage() {
                                                         <button
                                                             onClick={() => handleFileDelete(item.id)}
                                                             disabled={deleting === item.id}
-                                                            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                                            className="p-1.5 text-white/50 hover:text-rose-300 hover:bg-rose-500/15 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                                             title="Sil"
                                                         >
                                                             {deleting === item.id
@@ -509,51 +536,51 @@ export default function CargoPage() {
 
             {/* Cargo Create Dialog */}
             {isCreateOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsCreateOpen(false); }}>
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-800 overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsCreateOpen(false); }}>
+                    <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yeni Kargo Ekle</h2>
-                                <p className="text-sm text-gray-500 mt-1">Kargo takip bilgilerini girin</p>
+                                <h2 className="text-xl font-bold text-white">Yeni Kargo Ekle</h2>
+                                <p className="text-sm text-white/60 mt-1">Kargo takip bilgilerini girin</p>
                             </div>
                             <button
                                 onClick={() => setIsCreateOpen(false)}
-                                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
                         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kargo Firması *</label>
-                                <input value={form.carrierName} onChange={e => setForm({ ...form, carrierName: e.target.value })} placeholder="Yurtiçi Kargo" className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Kargo Firması *</label>
+                                <input value={form.carrierName} onChange={e => setForm({ ...form, carrierName: e.target.value })} placeholder="Yurtiçi Kargo" className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Takip Numarası *</label>
-                                <input value={form.trackingNumber} onChange={e => setForm({ ...form, trackingNumber: e.target.value })} placeholder="TR123456789" className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Takip Numarası *</label>
+                                <input value={form.trackingNumber} onChange={e => setForm({ ...form, trackingNumber: e.target.value })} placeholder="TR123456789" className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
+                                <label className="block text-sm font-medium text-white/80">Durum</label>
                                 <div className="relative">
-                                    <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as CargoStatus })} className="w-full pl-4 pr-10 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                        <option value="in_transit">Kargoda</option>
-                                        <option value="delivered">Teslim Edildi</option>
-                                        <option value="returned">İade</option>
-                                        <option value="lost">Kayıp</option>
+                                    <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as CargoStatus })} className="glass-input w-full pl-4 pr-10 py-2.5 text-sm appearance-none focus:outline-none transition-all">
+                                        <option value="in_transit" className="bg-slate-900 text-white">Kargoda</option>
+                                        <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
+                                        <option value="returned" className="bg-slate-900 text-white">İade</option>
+                                        <option value="lost" className="bg-slate-900 text-white">Kayıp</option>
                                     </select>
-                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-gray-500">
+                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                                         <span className="material-symbols-outlined text-[20px]">expand_more</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Notlar</label>
-                                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
+                                <label className="block text-sm font-medium text-white/80">Notlar</label>
+                                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
-                            <button onClick={() => setIsCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleCreate} disabled={loading || !form.carrierName || !form.trackingNumber} className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-blue-600 transition-colors shadow-soft disabled:opacity-50">
+                        <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+                            <button onClick={() => setIsCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
+                            <button onClick={handleCreate} disabled={loading || !form.carrierName || !form.trackingNumber} className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Kaydet"}
                             </button>
                         </div>
@@ -563,51 +590,51 @@ export default function CargoPage() {
 
             {/* Cargo Edit Dialog */}
             {isEditOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsEditOpen(false); }}>
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-800 overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsEditOpen(false); }}>
+                    <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Kargo Düzenle</h2>
-                                <p className="text-sm text-gray-500 mt-1">{selected?.trackingNumber}</p>
+                                <h2 className="text-xl font-bold text-white">Kargo Düzenle</h2>
+                                <p className="text-sm text-white/60 mt-1">{selected?.trackingNumber}</p>
                             </div>
                             <button
                                 onClick={() => setIsEditOpen(false)}
-                                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
                         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kargo Firması</label>
-                                <input value={form.carrierName} onChange={e => setForm({ ...form, carrierName: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Kargo Firması</label>
+                                <input value={form.carrierName} onChange={e => setForm({ ...form, carrierName: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Takip Numarası</label>
-                                <input value={form.trackingNumber} onChange={e => setForm({ ...form, trackingNumber: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Takip Numarası</label>
+                                <input value={form.trackingNumber} onChange={e => setForm({ ...form, trackingNumber: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
+                                <label className="block text-sm font-medium text-white/80">Durum</label>
                                 <div className="relative">
-                                    <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as CargoStatus })} className="w-full pl-4 pr-10 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                        <option value="in_transit">Kargoda</option>
-                                        <option value="delivered">Teslim Edildi</option>
-                                        <option value="returned">İade</option>
-                                        <option value="lost">Kayıp</option>
+                                    <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as CargoStatus })} className="glass-input w-full pl-4 pr-10 py-2.5 text-sm appearance-none focus:outline-none transition-all">
+                                        <option value="in_transit" className="bg-slate-900 text-white">Kargoda</option>
+                                        <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
+                                        <option value="returned" className="bg-slate-900 text-white">İade</option>
+                                        <option value="lost" className="bg-slate-900 text-white">Kayıp</option>
                                     </select>
-                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-gray-500">
+                                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
                                         <span className="material-symbols-outlined text-[20px]">expand_more</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Notlar</label>
-                                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
+                                <label className="block text-sm font-medium text-white/80">Notlar</label>
+                                <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} rows={2} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
-                            <button onClick={() => setIsEditOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleEdit} disabled={loading} className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-blue-600 transition-colors shadow-soft disabled:opacity-50">
+                        <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+                            <button onClick={() => setIsEditOpen(false)} className="px-4 py-2 text-sm font-medium text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
+                            <button onClick={handleEdit} disabled={loading} className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>
                         </div>
@@ -617,53 +644,53 @@ export default function CargoPage() {
 
             {/* File Delivery Create Dialog */}
             {isFileCreateOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsFileCreateOpen(false); }}>
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-800 overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsFileCreateOpen(false); }}>
+                    <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Yeni Evrak Gönderimi</h2>
-                                <p className="text-sm text-gray-500 mt-1">Kurye / kargo ile dosya gönderimi</p>
+                                <h2 className="text-xl font-bold text-white">Yeni Evrak Gönderimi</h2>
+                                <p className="text-sm text-white/60 mt-1">Kurye / kargo ile dosya gönderimi</p>
                             </div>
                             <button
                                 onClick={() => setIsFileCreateOpen(false)}
-                                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
                         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Evrak Başlığı *</label>
-                                <input value={fileForm.title} onChange={e => setFileForm({ ...fileForm, title: e.target.value })} placeholder="Örn: Sözleşme Aslı" className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Evrak Başlığı *</label>
+                                <input value={fileForm.title} onChange={e => setFileForm({ ...fileForm, title: e.target.value })} placeholder="Örn: Sözleşme Aslı" className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kurye / Takip No *</label>
-                                <input value={fileForm.trackingNumber} onChange={e => setFileForm({ ...fileForm, trackingNumber: e.target.value })} placeholder="Gönderim referans numarası" className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Kurye / Takip No *</label>
+                                <input value={fileForm.trackingNumber} onChange={e => setFileForm({ ...fileForm, trackingNumber: e.target.value })} placeholder="Gönderim referans numarası" className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Alıcı Şube (Opsiyonel)</label>
-                                <select value={fileForm.toBranchId} onChange={e => setFileForm({ ...fileForm, toBranchId: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                    <option value="">Şube Dışı (Müşteri vb.)</option>
+                                <label className="block text-sm font-medium text-white/80">Alıcı Şube (Opsiyonel)</label>
+                                <select value={fileForm.toBranchId} onChange={e => setFileForm({ ...fileForm, toBranchId: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all">
+                                    <option value="" className="bg-slate-900 text-white">Şube Dışı (Müşteri vb.)</option>
                                     {branches.map(b => (
-                                        <option key={b.id} value={b.id}>{b.name}</option>
+                                        <option key={b.id} value={b.id} className="bg-slate-900 text-white">{b.name}</option>
                                     ))}
                                 </select>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Öncelik</label>
-                                <select value={fileForm.priority} onChange={e => setFileForm({ ...fileForm, priority: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                    <option value="normal">Normal</option>
-                                    <option value="urgent">Acil</option>
+                                <label className="block text-sm font-medium text-white/80">Öncelik</label>
+                                <select value={fileForm.priority} onChange={e => setFileForm({ ...fileForm, priority: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all">
+                                    <option value="normal" className="bg-slate-900 text-white">Normal</option>
+                                    <option value="urgent" className="bg-slate-900 text-white">Acil</option>
                                 </select>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Açıklama</label>
-                                <textarea value={fileForm.description} onChange={e => setFileForm({ ...fileForm, description: e.target.value })} rows={2} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
+                                <label className="block text-sm font-medium text-white/80">Açıklama</label>
+                                <textarea value={fileForm.description} onChange={e => setFileForm({ ...fileForm, description: e.target.value })} rows={2} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
-                            <button onClick={() => setIsFileCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleFileCreate} disabled={loading || !fileForm.title || !fileForm.trackingNumber} className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-blue-600 transition-colors shadow-soft disabled:opacity-50">
+                        <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+                            <button onClick={() => setIsFileCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
+                            <button onClick={handleFileCreate} disabled={loading || !fileForm.title || !fileForm.trackingNumber} className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Gönder"}
                             </button>
                         </div>
@@ -673,46 +700,46 @@ export default function CargoPage() {
 
             {/* File Delivery Edit Dialog */}
             {isFileEditOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsFileEditOpen(false); }}>
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-800 overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 hover:cursor-pointer" onClick={(e) => { if (e.target === e.currentTarget) setIsFileEditOpen(false); }}>
+                    <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden hover:cursor-default" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02]">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Evrak Gönderimini Düzenle</h2>
-                                <p className="text-sm text-gray-500 mt-1">{selectedFile?.trackingNumber}</p>
+                                <h2 className="text-xl font-bold text-white">Evrak Gönderimini Düzenle</h2>
+                                <p className="text-sm text-white/60 mt-1">{selectedFile?.trackingNumber}</p>
                             </div>
                             <button
                                 onClick={() => setIsFileEditOpen(false)}
-                                className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                             >
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
                         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Evrak Başlığı</label>
-                                <input value={fileForm.title} onChange={e => setFileForm({ ...fileForm, title: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Evrak Başlığı</label>
+                                <input value={fileForm.title} onChange={e => setFileForm({ ...fileForm, title: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
-                                <select value={fileForm.status} onChange={e => setFileForm({ ...fileForm, status: e.target.value as FileStatus })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
-                                    <option value="sent">Gönderildi</option>
-                                    <option value="received">Teslim Alındı</option>
-                                    <option value="acknowledged">Onaylandı</option>
-                                    <option value="completed">Tamamlandı</option>
+                                <label className="block text-sm font-medium text-white/80">Durum</label>
+                                <select value={fileForm.status} onChange={e => setFileForm({ ...fileForm, status: e.target.value as FileStatus })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all">
+                                    <option value="sent" className="bg-slate-900 text-white">Gönderildi</option>
+                                    <option value="received" className="bg-slate-900 text-white">Teslim Alındı</option>
+                                    <option value="acknowledged" className="bg-slate-900 text-white">Onaylandı</option>
+                                    <option value="completed" className="bg-slate-900 text-white">Tamamlandı</option>
                                 </select>
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kurye / Takip No</label>
-                                <input value={fileForm.trackingNumber} onChange={e => setFileForm({ ...fileForm, trackingNumber: e.target.value })} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" />
+                                <label className="block text-sm font-medium text-white/80">Kurye / Takip No</label>
+                                <input value={fileForm.trackingNumber} onChange={e => setFileForm({ ...fileForm, trackingNumber: e.target.value })} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Açıklama</label>
-                                <textarea value={fileForm.description} onChange={e => setFileForm({ ...fileForm, description: e.target.value })} rows={2} className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"></textarea>
+                                <label className="block text-sm font-medium text-white/80">Açıklama</label>
+                                <textarea value={fileForm.description} onChange={e => setFileForm({ ...fileForm, description: e.target.value })} rows={2} className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all resize-none"></textarea>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-white/10 flex justify-end gap-3">
-                            <button onClick={() => setIsFileEditOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleFileEdit} disabled={loading} className="px-4 py-2 text-sm font-medium text-white bg-primary border border-transparent rounded-xl hover:bg-blue-600 transition-colors shadow-soft disabled:opacity-50">
+                        <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+                            <button onClick={() => setIsFileEditOpen(false)} className="px-4 py-2 text-sm font-medium text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
+                            <button onClick={handleFileEdit} disabled={loading} className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>
                         </div>

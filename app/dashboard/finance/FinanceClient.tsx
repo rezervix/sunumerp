@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import { FilePicker } from "@/components/shared/file-picker"
@@ -31,7 +32,7 @@ const EXPENSE_CATEGORIES = [
 const INCOME_CATEGORIES = ["Hizmet Satışı", "Proje Geliri", "Danışmanlık", "Diğer"]
 const OTHER_CATEGORIES = ["Genel Borç", "Kredi", "Beklenen Tahsilat", "Beklenen Gider", "Diğer"]
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d", "#f87171", "#fbbf24", "#34d399", "#60a5fa"]
+const COLORS = ["#34d399", "#38bdf8", "#fbbf24", "#fb7185", "#a78bfa", "#2dd4bf", "#f472b6", "#818cf8", "#60a5fa", "#4ade80"]
 
 export default function FinanceClient() {
   const [records, setRecords] = useState<FinanceRecord[]>(() => mockDatabase.getFinances() as any)
@@ -228,11 +229,11 @@ export default function FinanceClient() {
 
   const getTypeStyles = (type: string) => {
     switch(type) {
-      case "INCOME": return "bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-500"
-      case "EXPENSE": return "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-500"
-      case "DEBT": return "bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-500"
-      case "EXPECTED_PAYMENT": return "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-500"
-      default: return "bg-gray-50 text-gray-700"
+      case "INCOME": return "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+      case "EXPENSE": return "bg-rose-500/15 text-rose-300 border border-rose-500/30"
+      case "DEBT": return "bg-purple-500/15 text-purple-300 border border-purple-500/30"
+      case "EXPECTED_PAYMENT": return "bg-sky-500/15 text-sky-300 border border-sky-500/30"
+      default: return "bg-slate-500/15 text-slate-300 border border-slate-500/30"
     }
   }
 
@@ -240,8 +241,8 @@ export default function FinanceClient() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Kurumsal Finans</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-3xl font-bold text-white mb-1.5 tracking-tight">Kurumsal Finans</h1>
+          <p className="text-sm text-white/60">
             {currentBranch ? `${currentBranch.name} Şubesi - Finansal Yönetim Paneli` : "Finansal Yönetim Paneli"}
           </p>
         </div>
@@ -249,15 +250,15 @@ export default function FinanceClient() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as any)}
-            className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+            className="glass-input px-4 py-2.5 text-sm focus:outline-none transition-all"
           >
-            <option value="THIS_MONTH">Bu Ay</option>
-            <option value="LAST_6_MONTHS">Son 6 Ay</option>
-            <option value="FULL_YEAR">Tüm Yıl</option>
+            <option value="THIS_MONTH" className="bg-slate-900 text-white">Bu Ay</option>
+            <option value="LAST_6_MONTHS" className="bg-slate-900 text-white">Son 6 Ay</option>
+            <option value="FULL_YEAR" className="bg-slate-900 text-white">Tüm Yıl</option>
           </select>
           <button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 shadow-sm transition-all"
+            className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             Yeni İşlem
@@ -265,83 +266,119 @@ export default function FinanceClient() {
         </div>
       </div>
 
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm col-span-2 lg:col-span-1">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl col-span-2 lg:col-span-1"
+        >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-500">Toplam Gelir</h3>
-            <span className="material-symbols-outlined text-green-500">trending_up</span>
+            <h3 className="text-sm font-medium text-white/60">Toplam Gelir</h3>
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <span className="material-symbols-outlined text-[18px]">trending_up</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">â‚º{totalIncome.toLocaleString("tr-TR")}</div>
-        </div>
+          <div className="text-2xl font-bold text-emerald-400 mt-1">₺{totalIncome.toLocaleString("tr-TR")}</div>
+        </motion.div>
 
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm col-span-2 lg:col-span-1">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl col-span-2 lg:col-span-1"
+        >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-500">Toplam Gider</h3>
-            <span className="material-symbols-outlined text-red-500">trending_down</span>
+            <h3 className="text-sm font-medium text-white/60">Toplam Gider</h3>
+            <div className="w-9 h-9 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400">
+              <span className="material-symbols-outlined text-[18px]">trending_down</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">â‚º{totalExpense.toLocaleString("tr-TR")}</div>
-        </div>
+          <div className="text-2xl font-bold text-rose-400 mt-1">₺{totalExpense.toLocaleString("tr-TR")}</div>
+        </motion.div>
 
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm col-span-2 lg:col-span-1">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl col-span-2 lg:col-span-1"
+        >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-500">Net Durum</h3>
-            <span className="material-symbols-outlined text-blue-500">account_balance</span>
+            <h3 className="text-sm font-medium text-white/60">Net Durum</h3>
+            <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+              <span className="material-symbols-outlined text-[18px]">account_balance</span>
+            </div>
           </div>
-          <div className={`text-2xl font-bold ${netBalance >= 0 ? "text-green-600" : "text-red-600"}`}>
-            â‚º{netBalance.toLocaleString("tr-TR")}
+          <div className={`text-2xl font-bold mt-1 ${netBalance >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+            ₺{netBalance.toLocaleString("tr-TR")}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm col-span-1">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl col-span-1"
+        >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-500">Toplam Borç</h3>
-            <span className="material-symbols-outlined text-purple-500">payments</span>
+            <h3 className="text-sm font-medium text-white/60">Toplam Borç</h3>
+            <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
+              <span className="material-symbols-outlined text-[18px]">payments</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">â‚º{totalDebt.toLocaleString("tr-TR")}</div>
-        </div>
+          <div className="text-2xl font-bold text-white mt-1">₺{totalDebt.toLocaleString("tr-TR")}</div>
+        </motion.div>
 
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm col-span-1">
+        <motion.div
+          whileHover={{ y: -4 }}
+          className="glass-card p-6 rounded-2xl col-span-1"
+        >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-gray-500">Beklenen Tahsilat</h3>
-            <span className="material-symbols-outlined text-amber-500">schedule</span>
+            <h3 className="text-sm font-medium text-white/60">Beklenen Tahsilat</h3>
+            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <span className="material-symbols-outlined text-[18px]">schedule</span>
+            </div>
           </div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">â‚º{totalExpected.toLocaleString("tr-TR")}</div>
-        </div>
+          <div className="text-2xl font-bold text-amber-400 mt-1">₺{totalExpected.toLocaleString("tr-TR")}</div>
+        </motion.div>
       </div>
 
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+        <div className="glass-card rounded-2xl p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Aylık Trendler</h3>
+            <h3 className="text-lg font-bold text-white">Aylık Trendler</h3>
+            <span className="text-xs px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">
+              Gelir & Gider Akışı
+            </span>
           </div>
           <div className="h-[300px]">
              {monthlyChartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyChartData}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} dx={-10} tickFormatter={(v) => `â‚º${v/1000}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'rgba(255,255,255,0.6)', fontSize: 12}} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'rgba(255,255,255,0.6)', fontSize: 12}} dx={-10} tickFormatter={(v) => `₺${v/1000}k`} />
                   <Tooltip 
-                    formatter={(value) => `â‚º${Number(value).toLocaleString("tr-TR")}`}
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(value) => `₺${Number(value).toLocaleString("tr-TR")}`}
+                    contentStyle={{
+                      backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      color: '#fff',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                    }}
                   />
-                  <Legend />
-                  <Line type="monotone" dataKey="Income" name="Gelir" stroke="#10b981" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
-                  <Line type="monotone" dataKey="Expense" name="Gider" stroke="#ef4444" strokeWidth={3} dot={{r: 4}} activeDot={{r: 6}} />
+                  <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }} />
+                  <Line type="monotone" dataKey="Income" name="Gelir" stroke="#34d399" strokeWidth={3} dot={{r: 4, fill: '#34d399'}} activeDot={{r: 6, fill: '#34d399'}} />
+                  <Line type="monotone" dataKey="Expense" name="Gider" stroke="#fb7185" strokeWidth={3} dot={{r: 4, fill: '#fb7185'}} activeDot={{r: 6, fill: '#fb7185'}} />
                 </LineChart>
               </ResponsiveContainer>
              ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">Trend verisi bulunamadı.</div>
+                <div className="flex items-center justify-center h-full text-white/40">Trend verisi bulunamadı.</div>
              )}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm relative">
+        <div className="glass-card rounded-2xl p-6 relative">
           <div className="flex justify-between items-start mb-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Harcama Dağılımı</h3>
+            <h3 className="text-lg font-bold text-white">Harcama Dağılımı</h3>
             <div className="text-right">
-              <span className="text-xs text-gray-500 block">En Sık Harcama</span>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white px-2 py-1 bg-gray-100 dark:bg-white/5 rounded-md mt-1 inline-block">{mostFrequentCategory}</span>
+              <span className="text-xs text-white/50 block">En Sık Harcama</span>
+              <span className="text-xs font-semibold text-amber-300 px-3 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full mt-1 inline-block">{mostFrequentCategory}</span>
             </div>
           </div>
           <div className="h-[300px]">
@@ -356,32 +393,41 @@ export default function FinanceClient() {
                     outerRadius={100}
                     paddingAngle={5}
                     dataKey="value"
+                    stroke="rgba(15, 23, 42, 0.6)"
+                    strokeWidth={2}
                   >
                     {expenseChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                     formatter={(value) => `â‚º${Number(value).toLocaleString("tr-TR")}`}
-                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                     formatter={(value) => `₺${Number(value).toLocaleString("tr-TR")}`}
+                     contentStyle={{
+                       backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                       borderRadius: '12px',
+                       border: '1px solid rgba(255,255,255,0.15)',
+                       color: '#fff',
+                       boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                     }}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-gray-500">Harcama verisi bulunamadı.</div>
+              <div className="flex items-center justify-center h-full text-white/40">Harcama verisi bulunamadı.</div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-        <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white">Tüm İşlemler</h3>
+      {/* Transactions Table */}
+      <div className="glass-table-container overflow-hidden flex flex-col">
+        <div className="p-6 border-b border-white/10 bg-white/[0.02]">
+          <h3 className="text-lg font-bold text-white">Tüm İşlemler</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50/50 dark:bg-white/5 text-gray-500 dark:text-gray-400 font-medium border-b border-gray-100 dark:border-gray-800">
+            <thead className="bg-white/[0.03] text-white/50 font-semibold border-b border-white/10 text-xs uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Tarih</th>
                 <th className="px-6 py-4">Açıklama</th>
@@ -391,51 +437,51 @@ export default function FinanceClient() {
                 <th className="px-6 py-4 text-right">Tutar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody>
               {records.map((record) => (
-                <tr key={record.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors group">
-                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                <tr key={record.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors group">
+                  <td className="px-6 py-4 font-medium text-white">
                     {new Date(record.date).toLocaleDateString("tr-TR")}
                   </td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
+                  <td className="px-6 py-4 text-white/80">
                     <div className="flex items-center gap-2">
                       {record.description}
                       {record.receiptUrl && (
-                        <a href={record.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1 text-primary hover:bg-primary/10 rounded transition-colors" title="Makbuzu Gör">
+                        <a href={record.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1 text-sky-400 hover:bg-sky-500/15 rounded-lg transition-colors" title="Makbuzu Gör">
                           <span className="material-symbols-outlined text-[16px]">receipt_long</span>
                         </a>
                       )}
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-2 py-1 rounded-md bg-gray-100 dark:bg-white/5 text-xs text-gray-600 dark:text-gray-400">
+                    <span className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-white/70">
                       {record.category}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getTypeStyles(record.type)}`}>
+                    <span className={`inline-flex px-3 py-0.5 rounded-full text-xs font-medium ${getTypeStyles(record.type)}`}>
                       {getTypeLabel(record.type)}
                     </span>
                   </td>
                   <td className="px-6 py-4">
                     {record.status === "pending" && (
-                      <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">Bekliyor</span>
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-medium bg-amber-500/15 text-amber-300 border border-amber-500/30">Bekliyor</span>
                     )}
                     {record.status === "approved" && (
-                      <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500">Onaylandı</span>
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Onaylandı</span>
                     )}
                     {record.status === "rejected" && (
-                      <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-500">Reddedildi</span>
+                      <span className="inline-flex px-3 py-0.5 rounded-full text-xs font-medium bg-rose-500/15 text-rose-300 border border-rose-500/30">Reddedildi</span>
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-3">
                       <span className={`font-bold ${
-                        record.type === "INCOME" ? "text-green-600 dark:text-green-500" : 
-                        record.type === "EXPENSE" ? "text-red-600 dark:text-red-500" :
-                        record.type === "DEBT" ? "text-purple-600 dark:text-purple-500" : "text-blue-600 dark:text-blue-500"
+                        record.type === "INCOME" ? "text-emerald-400" : 
+                        record.type === "EXPENSE" ? "text-rose-400" :
+                        record.type === "DEBT" ? "text-purple-400" : "text-sky-400"
                       }`}>
-                        {record.type === "INCOME" || record.type === "EXPECTED_PAYMENT" ? "+" : "-"}â‚º{record.amount.toLocaleString("tr-TR")}
+                        {record.type === "INCOME" || record.type === "EXPECTED_PAYMENT" ? "+" : "-"}₺{record.amount.toLocaleString("tr-TR")}
                       </span>
 
                       {/* Onaylama/Reddetme Butonları (Sadece Super Admin ve Bekliyor durumunda) */}
@@ -444,7 +490,7 @@ export default function FinanceClient() {
                           <button
                             onClick={() => handleStatusChange(record.id, "approved")}
                             disabled={loading}
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-green-600 hover:bg-green-50 dark:hover:bg-green-500/10 transition-colors"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-emerald-400 hover:bg-emerald-500/15 transition-colors"
                             title="Onayla"
                           >
                             <span className="material-symbols-outlined text-[18px]">check_circle</span>
@@ -452,7 +498,7 @@ export default function FinanceClient() {
                           <button
                             onClick={() => handleStatusChange(record.id, "rejected")}
                             disabled={loading}
-                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-rose-400 hover:bg-rose-500/15 transition-colors"
                             title="Reddet"
                           >
                             <span className="material-symbols-outlined text-[18px]">cancel</span>
@@ -462,7 +508,7 @@ export default function FinanceClient() {
 
                       <button
                         onClick={() => handleDelete(record.id)}
-                        className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100 max-lg:opacity-100"
+                        className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-white/40 hover:text-rose-400 hover:bg-rose-500/15 transition-colors opacity-0 group-hover:opacity-100 max-lg:opacity-100"
                         title="Sil"
                       >
                         <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -473,7 +519,7 @@ export default function FinanceClient() {
               ))}
               {records.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">İşlem bulunamadı.</td>
+                  <td colSpan={6} className="px-6 py-8 text-center text-white/50">İşlem bulunamadı.</td>
                 </tr>
               )}
             </tbody>
@@ -482,66 +528,66 @@ export default function FinanceClient() {
       </div>
 
       {isDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Yeni Girdi / İşlem</h3>
-              <button onClick={() => setIsDialogOpen(false)} className="text-gray-400 hover:text-gray-500">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-white/10 bg-white/[0.02] flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white">Yeni Girdi / İşlem</h3>
+              <button onClick={() => setIsDialogOpen(false)} className="p-1.5 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto space-y-4 flex-1">
+            <div className="p-6 overflow-y-auto space-y-4 flex-1 custom-scrollbar">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tarih *</label>
+                <label className="text-sm font-medium text-white/80">Tarih *</label>
                 <input
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">İşlem Türü *</label>
+                <label className="text-sm font-medium text-white/80">İşlem Türü *</label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all"
                 >
-                  <option value="INCOME">Gelir</option>
-                  <option value="EXPENSE">Gider</option>
-                  <option value="DEBT">Borç</option>
-                  <option value="EXPECTED_PAYMENT">Beklenen Ödeme</option>
+                  <option value="INCOME" className="bg-slate-900 text-white">Gelir</option>
+                  <option value="EXPENSE" className="bg-slate-900 text-white">Gider</option>
+                  <option value="DEBT" className="bg-slate-900 text-white">Borç</option>
+                  <option value="EXPECTED_PAYMENT" className="bg-slate-900 text-white">Beklenen Ödeme</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Kategori *</label>
+                <label className="text-sm font-medium text-white/80">Kategori *</label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all"
                 >
-                  {formData.type === "INCOME" && INCOME_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                  {formData.type === "EXPENSE" && EXPENSE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                  {(formData.type === "DEBT" || formData.type === "EXPECTED_PAYMENT") && OTHER_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  {formData.type === "INCOME" && INCOME_CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>)}
+                  {formData.type === "EXPENSE" && EXPENSE_CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>)}
+                  {(formData.type === "DEBT" || formData.type === "EXPECTED_PAYMENT") && OTHER_CATEGORIES.map(c => <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>)}
                 </select>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Açıklama *</label>
+                <label className="text-sm font-medium text-white/80">Açıklama *</label>
                 <input
                   type="text"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Kısa açıklama"
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all"
                 />
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tutar (â‚º) *</label>
+                <label className="text-sm font-medium text-white/80">Tutar (₺) *</label>
                 <input
                   type="number"
                   min="0"
@@ -549,7 +595,7 @@ export default function FinanceClient() {
                   value={formData.amount || ""}
                   onChange={(e) => setFormData({ ...formData, amount: Number.parseFloat(e.target.value) || 0 })}
                   placeholder="0.00"
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none transition-all"
                 />
               </div>
 
@@ -562,17 +608,17 @@ export default function FinanceClient() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsDialogOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white rounded-xl transition-colors"
               >
                 İptal
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.description || formData.amount <= 0}
-                className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-5 py-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Kaydediliyor..." : "Kaydet"}
               </button>

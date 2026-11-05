@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/context/LanguageContext"
 
 
 import { useState, useEffect, useCallback } from "react"
+import { motion } from "framer-motion"
 import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
@@ -147,13 +148,13 @@ function CostRow({ dot, label, value, plus = true }: { dot: string; label: strin
   return (
     <div className="flex justify-between items-center relative pl-6">
       <div
-        className="absolute left-0 top-1/2 -translate-y-1/2 size-4 rounded-full border-2 border-white dark:border-[#1f2428] flex items-center justify-center z-10"
+        className="absolute left-0 top-1/2 -translate-y-1/2 size-4 rounded-full border-2 border-slate-900 flex items-center justify-center z-10"
         style={{ backgroundColor: `${dot}22` }}
       >
         <div className="size-1.5 rounded-full" style={{ backgroundColor: dot }} />
       </div>
-      <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
-      <span className="text-sm font-medium text-gray-900 dark:text-white">
+      <span className="text-sm text-white/60">{label}</span>
+      <span className="text-sm font-medium text-white">
         {plus ? "+" : ""}{fmt(value)} ₺
       </span>
     </div>
@@ -277,8 +278,8 @@ export default function HesaplamaAraciPage() {
       {/* ── Sayfa Başlığı ── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Hesaplama Aracı</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Hesaplama Aracı</h1>
+          <p className="text-sm text-white/60 mt-1.5">
             Dinamik kâr marjı kurallarına göre anlık optimum satış fiyatı hesaplama motoru.
           </p>
         </div>
@@ -288,72 +289,72 @@ export default function HesaplamaAraciPage() {
 
         {/* ── Sol Panel: Parametreler ── */}
         <div className="xl:col-span-5 relative z-10">
-          <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 space-y-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[20px]">tune</span>
+          <div className="glass-panel rounded-2xl p-6 space-y-6">
+            <h2 className="text-base font-semibold text-white flex items-center gap-2">
+              <span className="material-symbols-outlined text-sky-400 text-[20px]">tune</span>
               Hesaplama Parametreleri
             </h2>
 
             {/* ── Bölüm 1: Temel Maliyetler ── */}
             <div>
-              <p className="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Temel Maliyetler</p>
+              <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider mb-3">Temel Maliyetler</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Ürün Maliyeti (₺) *</label>
+                  <label className="text-xs font-semibold text-white/80">Ürün Maliyeti (₺) *</label>
                   <input
                     type="number" step="0.01" min="0" required
                     value={productCost}
                     onChange={e => setProductCost(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                    className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                     placeholder="0.00"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Kargo Maliyeti (₺)</label>
+                  <label className="text-xs font-semibold text-white/80">Kargo Maliyeti (₺)</label>
                   <input
                     type="number" step="0.01" min="0"
                     value={shippingCost}
                     onChange={e => setShippingCost(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                    className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Pazaryeri Komisyonu (%)</label>
+                  <label className="text-xs font-semibold text-white/80">Pazaryeri Komisyonu (%)</label>
                   <input
                     type="number" step="0.1" min="0" max="100"
                     value={commissionRate}
                     onChange={e => setCommissionRate(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                    className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">KDV Oranı (%)</label>
+                  <label className="text-xs font-semibold text-white/80">KDV Oranı (%)</label>
                   <input
                     type="number" step="0.1" min="0" max="100"
                     value={vatRate}
                     onChange={e => setVatRate(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                    className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                   />
                 </div>
               </div>
             </div>
 
             {/* ── Bölüm 2: Varyant ── */}
-            <div className="p-4 bg-gray-50 dark:bg-white/10 rounded-xl border border-gray-200 dark:border-gray-700 space-y-3">
+            <div className="p-4 bg-white/[0.03] rounded-xl border border-white/10 space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-gray-400">category</span>
+                <label className="text-xs font-semibold text-white/80 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-white/50">category</span>
                   Varyant Fiyat Farkı
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <span className="text-[11px] font-medium text-gray-500">Maliyetten Düş (−)</span>
+                  <span className="text-[11px] font-medium text-white/60">Maliyetten Düş (−)</span>
                   <input
                     type="checkbox"
                     checked={subtractVariant}
                     onChange={e => setSubtractVariant(e.target.checked)}
-                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                    className="rounded border-white/20 accent-indigo-500"
                   />
                 </label>
               </div>
@@ -361,30 +362,30 @@ export default function HesaplamaAraciPage() {
                 type="number" step="0.01" min="0"
                 value={variantPrice}
                 onChange={e => setVariantPrice(e.target.value)}
-                className="w-full px-3 py-2 bg-white dark:bg-[#1f2428] border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                 placeholder="0.00"
               />
             </div>
 
             {/* ── Bölüm 3: Saha Satış Komisyonu (YENİ) ── */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/40 space-y-3">
+            <div className="p-4 bg-sky-500/10 rounded-xl border border-sky-500/25 space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-blue-700 dark:text-blue-300 flex items-center gap-1.5">
+                <label className="text-xs font-bold text-sky-300 flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px]">person_pin_circle</span>
                   Saha Satış Komisyonu
                 </label>
                 {/* Toggle: Sabit TL / Yüzde % */}
-                <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900/30 rounded-lg p-0.5">
+                <div className="flex items-center gap-1 bg-black/30 backdrop-blur-md border border-white/10 rounded-xl p-1">
                   {(["amount", "percent"] as const).map(t => (
                     <button
                       key={t}
                       type="button"
                       onClick={() => setFieldSalesCommType(t)}
                       className={[
-                        "px-2.5 py-1 text-[11px] font-semibold rounded-md transition-all",
+                        "px-2.5 py-1 text-[11px] font-semibold transition-all",
                         fieldSalesCommType === t
-                          ? "bg-white dark:bg-[#1f2428] text-blue-700 dark:text-blue-300 shadow-sm"
-                          : "text-blue-500 dark:text-blue-400 hover:text-blue-700",
+                          ? "bg-white/15 text-white shadow-sm rounded-lg"
+                          : "text-white/60 hover:text-white rounded-lg",
                       ].join(" ")}
                     >
                       {t === "amount" ? "Sabit ₺" : "Oran %"}
@@ -397,18 +398,18 @@ export default function HesaplamaAraciPage() {
                   type="number" step="0.01" min="0"
                   value={fieldSalesCommValue}
                   onChange={e => setFieldSalesCommValue(e.target.value)}
-                  className="w-full pl-3 pr-10 py-2 bg-white dark:bg-[#1f2428] border border-blue-200 dark:border-blue-800 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all dark:text-white"
+                  className="glass-input w-full pl-3 pr-10 py-2 text-sm outline-none transition-all"
                   placeholder={fieldSalesCommType === "amount" ? "Sabit tutar (₺)" : "Yüzde oran (%)"}
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-400">
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-sky-400">
                   {fieldSalesCommType === "amount" ? "₺" : "%"}
                 </span>
               </div>
             </div>
 
             {/* ── Bölüm 4: Reklam Gideri (YENİ) ── */}
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/10 rounded-xl border border-purple-100 dark:border-purple-900/40 space-y-3">
-              <label className="text-xs font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1.5">
+            <div className="p-4 bg-purple-500/10 rounded-xl border border-purple-500/25 space-y-3">
+              <label className="text-xs font-bold text-purple-300 flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px]">ads_click</span>
                 Reklam Gideri (Google Ads / Meta)
               </label>
@@ -417,19 +418,19 @@ export default function HesaplamaAraciPage() {
                   type="number" step="0.01" min="0"
                   value={adCostPerMessage}
                   onChange={e => setAdCostPerMessage(e.target.value)}
-                  className="w-full pl-3 pr-14 py-2 bg-white dark:bg-[#1f2428] border border-purple-200 dark:border-purple-800 rounded-lg text-sm focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all dark:text-white"
+                  className="glass-input w-full pl-3 pr-14 py-2 text-sm outline-none transition-all"
                   placeholder="Mesaj başına ücret..."
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-purple-400 whitespace-nowrap">₺/mesaj</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-purple-300 whitespace-nowrap">₺/mesaj</span>
               </div>
-              <p className="text-[11px] text-purple-600/70 dark:text-purple-400/70">
+              <p className="text-[11px] text-purple-300/70">
                 Bu tutar, ürün maliyetine otomatik olarak eklenir.
               </p>
             </div>
 
             {/* ── Bölüm 5: Vade Farksız Taksit (YENİ) ── */}
-            <div className="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-amber-100 dark:border-amber-900/40 space-y-3">
-              <label className="text-xs font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
+            <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-500/25 space-y-3">
+              <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px]">credit_card</span>
                 Vade Farksız Taksit Komisyonu
               </label>
@@ -440,10 +441,10 @@ export default function HesaplamaAraciPage() {
                     type="button"
                     onClick={() => setInstallmentCount(opt.value)}
                     className={[
-                      "px-3 py-2.5 rounded-lg text-xs font-semibold text-left transition-all border",
+                      "px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition-all border",
                       installmentCount === opt.value
-                        ? "bg-amber-500 text-white border-amber-500 shadow-md shadow-amber-500/20"
-                        : "bg-white dark:bg-[#1f2428] text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 hover:border-amber-400",
+                        ? "bg-amber-500/25 text-amber-200 border-amber-400/50 shadow-md shadow-amber-500/10"
+                        : "bg-black/20 text-white/70 border-white/10 hover:border-amber-400/40 hover:text-white",
                     ].join(" ")}
                   >
                     {opt.label}
@@ -451,42 +452,42 @@ export default function HesaplamaAraciPage() {
                 ))}
               </div>
               {installmentCount > 0 && (
-                <p className="text-[11px] text-amber-600/80 dark:text-amber-400/80">
+                <p className="text-[11px] text-amber-300/80">
                   {installmentCount} taksit için <strong>%{INSTALLMENT_RATES[installmentCount]}</strong> komisyon maliyete eklendi.
                 </p>
               )}
             </div>
 
             {/* ── Bölüm 6: Yuvarlama ve Manuel Mod ── */}
-            <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-gray-800">
+            <div className="space-y-4 pt-2 border-t border-white/10">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Fiyat Yuvarlama Stratejisi</label>
+                <label className="text-xs font-semibold text-white/80">Fiyat Yuvarlama Stratejisi</label>
                 <select
                   value={roundingStrategy}
                   onChange={e => setRoundingStrategy(e.target.value as RoundingStrategy)}
-                  className="w-full px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+                  className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                 >
-                  <option value="none">Yuvarlama Yapma (Ör: 1445.50)</option>
-                  <option value="hundred">En Yakın Yüzlüğe Yuvarla (Ör: 1400 / 1500)</option>
-                  <option value="90">Sonu 90 İle Bitsin (Ör: 1490)</option>
-                  <option value="99">Sonu 99 İle Bitsin (Ör: 1499)</option>
-                  <option value="premium">Premium Görünüm (Ör: 1440)</option>
+                  <option value="none" className="bg-slate-900 text-white">Yuvarlama Yapma (Ör: 1445.50)</option>
+                  <option value="hundred" className="bg-slate-900 text-white">En Yakın Yüzlüğe Yuvarla (Ör: 1400 / 1500)</option>
+                  <option value="90" className="bg-slate-900 text-white">Sonu 90 İle Bitsin (Ör: 1490)</option>
+                  <option value="99" className="bg-slate-900 text-white">Sonu 99 İle Bitsin (Ör: 1499)</option>
+                  <option value="premium" className="bg-slate-900 text-white">Premium Görünüm (Ör: 1440)</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center justify-between">
+                <label className="text-xs font-semibold text-white/80 flex items-center justify-between">
                   <span>Senaryo Simülasyonu: Manuel Kâr (%)</span>
-                  <span className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 px-1.5 py-0.5 rounded">Opsiyonel</span>
+                  <span className="text-[10px] text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">Opsiyonel</span>
                 </label>
                 <input
                   type="number" step="0.1" min="0"
                   value={manualProfitRate}
                   onChange={e => setManualProfitRate(e.target.value)}
-                  className="w-full px-3 py-2 bg-amber-50/50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 rounded-lg text-sm focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all dark:text-white placeholder:text-gray-400"
+                  className="glass-input w-full px-3 py-2 text-sm outline-none transition-all"
                   placeholder="Otomatik kuralları ezmek için oran girin..."
                 />
-                <p className="text-[11px] text-gray-500">
+                <p className="text-[11px] text-white/50">
                   Sistem normalde 0–500 ₺ arası %170, 500–1000 ₺ arası %150 vb. kuralları otomatik uygular.
                 </p>
               </div>
@@ -494,14 +495,14 @@ export default function HesaplamaAraciPage() {
 
             {/* ── Aksiyonlar ── */}
             <div className="flex gap-3 pt-2 relative z-20">
-              <Button type="button" variant="outline" className="flex-1" onClick={handleReset}>
+              <Button type="button" variant="outline" className="flex-1 bg-white/5 border-white/10 text-white hover:bg-white/10" onClick={handleReset}>
                 Sıfırla
               </Button>
 
               {result && saveToHistory && (
                 <Button
                   type="button"
-                  className="flex-1 bg-primary hover:bg-blue-600 text-white shadow-md shadow-primary/20 relative z-20"
+                  className="flex-1 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white shadow-lg shadow-indigo-500/20 border border-white/15 relative z-20"
                   onClick={handleSaveHistory}
                   disabled={savingHistory}
                 >
@@ -515,9 +516,9 @@ export default function HesaplamaAraciPage() {
                 type="checkbox"
                 checked={saveToHistory}
                 onChange={e => setSaveToHistory(e.target.checked)}
-                className="rounded border-gray-300 text-primary focus:ring-primary"
+                className="rounded border-white/20 accent-indigo-500"
               />
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+              <span className="text-xs font-medium text-white/70">
                 Hesaplamayı veritabanına kaydet (Geçmiş)
               </span>
             </label>
@@ -527,30 +528,30 @@ export default function HesaplamaAraciPage() {
         {/* ── Sağ Panel: Sonuçlar ── */}
         <div className="xl:col-span-7 space-y-6">
           {result ? (
-            <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <div className="glass-panel rounded-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
 
               {/* Sonuç Header */}
-              <div className="bg-primary/5 dark:bg-primary/10 border-b border-primary/10 dark:border-primary/20 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="bg-gradient-to-r from-emerald-500/15 via-slate-900/60 to-indigo-500/15 border-b border-white/15 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-primary/80 dark:text-primary mb-1 text-center sm:text-left">
+                  <p className="text-sm font-semibold text-emerald-300 mb-1 text-center sm:text-left">
                     Önerilen Satış Fiyatı
                     {installmentCount > 0 && (
-                      <span className="ml-2 text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full font-medium">
+                      <span className="ml-2 text-xs bg-amber-500/15 text-amber-300 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-medium">
                         {installmentCount} taksit dahil
                       </span>
                     )}
                   </p>
                   <div className="flex items-end gap-2 justify-center sm:justify-start">
-                    <span className="text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+                    <span className="text-4xl font-black tracking-tight text-white">
                       {fmt(result.roundedPrice)}
                     </span>
-                    <span className="text-xl font-bold text-gray-500 mb-1">₺</span>
+                    <span className="text-xl font-bold text-emerald-400 mb-1">₺</span>
                   </div>
                 </div>
 
                 {/* Anlık güncelleme göstergesi */}
-                <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-full shrink-0">
-                  <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-3 py-1.5 rounded-full shrink-0">
+                  <div className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Anlık Hesaplanıyor
                 </div>
               </div>
@@ -559,73 +560,73 @@ export default function HesaplamaAraciPage() {
 
                 {/* Sol: Maliyet Dağılımı */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-2">Maliyet Dağılımı</h3>
+                  <h3 className="text-sm font-bold text-white border-b border-white/10 pb-2">Maliyet Dağılımı</h3>
                   <div className="space-y-3 relative">
-                    <div className="absolute left-2 top-3 bottom-3 w-px bg-gray-200 dark:bg-gray-700" />
-                    <CostRow dot="#3b82f6" label="Ara Maliyet (Ürün + Kargo)" value={result.baseCost} plus={false} />
-                    <CostRow dot="#f97316" label={`KDV (%${vatRate})`} value={result.vatAmount} />
-                    <CostRow dot="#8b5cf6" label={`Pazaryeri Komisyonu (%${commissionRate})`} value={result.commissionAmount} />
-                    <CostRow dot="#0ea5e9" label={`Saha Komisyonu (${fieldSalesCommType === "amount" ? "₺" + fieldSalesCommValue : "%" + fieldSalesCommValue})`} value={result.fieldSalesCommAmount} />
-                    <CostRow dot="#ec4899" label="Reklam Gideri" value={result.adCostAmount} />
-                    <CostRow dot="#f59e0b" label={`Taksit Komisyonu (%${INSTALLMENT_RATES[installmentCount] ?? 0})`} value={result.installmentFeeAmount} />
+                    <div className="absolute left-2 top-3 bottom-3 w-px bg-white/15" />
+                    <CostRow dot="#38bdf8" label="Ara Maliyet (Ürün + Kargo)" value={result.baseCost} plus={false} />
+                    <CostRow dot="#fb923c" label={`KDV (%${vatRate})`} value={result.vatAmount} />
+                    <CostRow dot="#a78bfa" label={`Pazaryeri Komisyonu (%${commissionRate})`} value={result.commissionAmount} />
+                    <CostRow dot="#22d3ee" label={`Saha Komisyonu (${fieldSalesCommType === "amount" ? "₺" + fieldSalesCommValue : "%" + fieldSalesCommValue})`} value={result.fieldSalesCommAmount} />
+                    <CostRow dot="#f472b6" label="Reklam Gideri" value={result.adCostAmount} />
+                    <CostRow dot="#fbbf24" label={`Taksit Komisyonu (%${INSTALLMENT_RATES[installmentCount] ?? 0})`} value={result.installmentFeeAmount} />
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 border-dashed flex justify-between items-center pl-6">
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">Toplam Fiili Maliyet</span>
-                    <span className="text-base font-black text-primary">{fmt(result.totalCost)} ₺</span>
+                  <div className="mt-4 pt-3 border-t border-white/15 border-dashed flex justify-between items-center pl-6">
+                    <span className="text-sm font-bold text-white">Toplam Fiili Maliyet</span>
+                    <span className="text-base font-black text-sky-400">{fmt(result.totalCost)} ₺</span>
                   </div>
                 </div>
 
                 {/* Sağ: Kâr Analizi */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-2">Kâr Analizi</h3>
+                  <h3 className="text-sm font-bold text-white border-b border-white/10 pb-2">Kâr Analizi</h3>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-gray-50 dark:bg-white/10 p-3 rounded-xl border border-gray-100 dark:border-gray-800">
-                      <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-1">Uygulanan Marj</p>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">%{result.appliedProfitRate}</p>
-                      {!manualProfitRate && <p className="text-[10px] text-gray-400 mt-0.5">Otomatik kural</p>}
-                    </div>
-                    <div className="bg-gray-50 dark:bg-white/10 p-3 rounded-xl border border-gray-100 dark:border-gray-800">
-                      <p className="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-1">Kâr Tutarı</p>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">+{fmt(result.profitAmount)} ₺</p>
-                    </div>
+                    <motion.div whileHover={{ y: -3 }} className="glass-card p-4 rounded-2xl">
+                      <p className="text-[11px] font-medium text-white/60 uppercase tracking-wider mb-1">Uygulanan Marj</p>
+                      <p className="text-3xl font-bold text-emerald-400">%{result.appliedProfitRate}</p>
+                      {!manualProfitRate && <p className="text-[10px] text-white/40 mt-1">Otomatik kural</p>}
+                    </motion.div>
+                    <motion.div whileHover={{ y: -3 }} className="glass-card p-4 rounded-2xl">
+                      <p className="text-[11px] font-medium text-white/60 uppercase tracking-wider mb-1">Kâr Tutarı</p>
+                      <p className="text-3xl font-bold text-emerald-400">+{fmt(result.profitAmount)} ₺</p>
+                    </motion.div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mt-3">
-                    <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-3 rounded-xl border border-emerald-100 dark:border-emerald-800/30">
-                      <p className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">Brüt Kâr</p>
-                      <p className="text-lg font-bold text-emerald-700 dark:text-emerald-300">{fmt(result.grossProfit)} ₺</p>
-                      <p className="text-[10px] text-emerald-600/70 mt-0.5">Satış − (Ürün+Kargo)</p>
-                    </div>
-                    <div className="bg-blue-50/50 dark:bg-blue-900/10 p-3 rounded-xl border border-blue-100 dark:border-blue-800/30 relative overflow-hidden">
-                      <div className="absolute right-0 top-0 bottom-0 w-1 bg-blue-500" />
-                      <p className="text-[11px] font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">Net Kâr</p>
-                      <p className="text-lg font-bold text-blue-700 dark:text-blue-300">{fmt(result.netProfit)} ₺</p>
-                      <p className="text-[10px] font-semibold text-blue-600/80 mt-0.5">Marj: %{result.netProfitMargin}</p>
-                    </div>
+                    <motion.div whileHover={{ y: -3 }} className="glass-card p-4 rounded-2xl border-emerald-500/30 bg-emerald-500/10">
+                      <p className="text-[11px] font-medium text-emerald-300 uppercase tracking-wider mb-1">Brüt Kâr</p>
+                      <p className="text-3xl font-bold text-emerald-400">{fmt(result.grossProfit)} ₺</p>
+                      <p className="text-[10px] text-emerald-300/70 mt-1">Satış − (Ürün+Kargo)</p>
+                    </motion.div>
+                    <motion.div whileHover={{ y: -3 }} className="glass-card p-4 rounded-2xl border-sky-500/30 bg-sky-500/10 relative overflow-hidden">
+                      <div className="absolute right-0 top-0 bottom-0 w-1 bg-emerald-400" />
+                      <p className="text-[11px] font-medium text-sky-300 uppercase tracking-wider mb-1">Net Kâr</p>
+                      <p className="text-3xl font-bold text-emerald-400">{fmt(result.netProfit)} ₺</p>
+                      <p className="text-[10px] font-semibold text-emerald-300 mt-1">Marj: %{result.netProfitMargin}</p>
+                    </motion.div>
                   </div>
 
                   {/* Yeni maliyet kalemleri özeti */}
                   {(result.fieldSalesCommAmount > 0 || result.adCostAmount > 0 || result.installmentFeeAmount > 0) && (
-                    <div className="mt-3 p-3 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-gray-800 space-y-1.5">
-                      <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Ek Maliyet Özeti</p>
+                    <div className="mt-3 p-3 bg-white/[0.03] rounded-xl border border-white/10 space-y-1.5">
+                      <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider">Ek Maliyet Özeti</p>
                       {result.fieldSalesCommAmount > 0 && (
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-500">Saha Satış Komisyonu</span>
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">+{fmt(result.fieldSalesCommAmount)} ₺</span>
+                          <span className="text-white/60">Saha Satış Komisyonu</span>
+                          <span className="font-semibold text-white">+{fmt(result.fieldSalesCommAmount)} ₺</span>
                         </div>
                       )}
                       {result.adCostAmount > 0 && (
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-500">Reklam Gideri</span>
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">+{fmt(result.adCostAmount)} ₺</span>
+                          <span className="text-white/60">Reklam Gideri</span>
+                          <span className="font-semibold text-white">+{fmt(result.adCostAmount)} ₺</span>
                         </div>
                       )}
                       {result.installmentFeeAmount > 0 && (
                         <div className="flex justify-between text-xs">
-                          <span className="text-gray-500">Taksit Komisyonu (%{INSTALLMENT_RATES[installmentCount]})</span>
-                          <span className="font-semibold text-gray-700 dark:text-gray-300">+{fmt(result.installmentFeeAmount)} ₺</span>
+                          <span className="text-white/60">Taksit Komisyonu (%{INSTALLMENT_RATES[installmentCount]})</span>
+                          <span className="font-semibold text-white">+{fmt(result.installmentFeeAmount)} ₺</span>
                         </div>
                       )}
                     </div>
@@ -634,19 +635,19 @@ export default function HesaplamaAraciPage() {
               </div>
 
               {/* Ekstra Bilgi */}
-              <div className="bg-gray-50 dark:bg-[#1a1e22] px-6 py-4 border-t border-gray-100 dark:border-gray-800 text-xs text-center sm:text-left text-gray-500">
-                <span className="font-semibold text-gray-700 dark:text-gray-300">Hesaplanan Çıplak Fiyat:</span>{" "}
+              <div className="bg-white/[0.02] px-6 py-4 border-t border-white/10 text-xs text-center sm:text-left text-white/60">
+                <span className="font-semibold text-white">Hesaplanan Çıplak Fiyat:</span>{" "}
                 {fmt(result.calculatedPrice)} ₺
                 {" "}(Seçilen &apos;{roundingStrategy}&apos; stratejisine göre {fmt(result.roundedPrice)} ₺ olarak yuvarlandı)
               </div>
             </div>
           ) : (
-            <div className="h-full bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center p-12 text-center min-h-[320px]">
-              <div className="w-16 h-16 rounded-full bg-gray-50 dark:bg-white/10 flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-gray-400 text-3xl">calculate</span>
+            <div className="h-full glass-panel rounded-2xl flex flex-col items-center justify-center p-12 text-center min-h-[320px]">
+              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-sky-400 text-3xl">calculate</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Sonuç Bekleniyor</h3>
-              <p className="text-sm text-gray-500 max-w-[280px]">
+              <h3 className="text-lg font-bold text-white mb-2">Sonuç Bekleniyor</h3>
+              <p className="text-sm text-white/60 max-w-[280px]">
                 Sol taraftaki parametreleri doldurun — sonuçlar anlık olarak hesaplanacaktır.
               </p>
             </div>
@@ -695,11 +696,6 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
     loadHistory(1)
   }, [loadHistory])
 
-  // Custom event listener for when a new history is saved
-  // To avoid prop drilling, we can just reload on an interval or simply
-  // we could have passed a trigger from the parent. For simplicity, we just
-  // provide a refresh button or reload on restore.
-
   const handleDelete = async (id: string) => {
     if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return
     setDeletingId(id)
@@ -719,47 +715,47 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
   }
 
   return (
-    <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+    <div className="glass-table-container overflow-hidden p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">history</span>
+        <h2 className="text-base font-semibold text-white flex items-center gap-2">
+          <span className="material-symbols-outlined text-sky-400 text-[20px]">history</span>
           Hesaplama Geçmişi
         </h2>
-        <Button variant="ghost" size="sm" onClick={() => loadHistory(1)} title="Yenile">
+        <Button variant="ghost" size="sm" onClick={() => loadHistory(1)} title="Yenile" className="text-white/70 hover:text-white hover:bg-white/10">
           <span className="material-symbols-outlined text-[18px]">refresh</span>
         </Button>
       </div>
 
       {loading && history.length === 0 ? (
         <div className="flex justify-center p-8">
-          <span className="material-symbols-outlined animate-spin text-gray-400 text-3xl">progress_activity</span>
+          <span className="material-symbols-outlined animate-spin text-white/40 text-3xl">progress_activity</span>
         </div>
       ) : history.length === 0 ? (
-        <div className="text-center p-8 text-gray-500">Henüz kaydedilmiş hesaplama yok</div>
+        <div className="text-center p-8 text-white/50">Henüz kaydedilmiş hesaplama yok</div>
       ) : (
         <>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-[#1a1e22] dark:text-gray-400">
+              <thead className="text-xs text-white/50 uppercase bg-white/[0.03] border-b border-white/10">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Tarih</th>
-                  <th className="px-4 py-3 font-medium">Ürün Maliyeti</th>
-                  <th className="px-4 py-3 font-medium">Toplam Maliyet</th>
-                  <th className="px-4 py-3 font-medium">Satış Fiyatı</th>
-                  <th className="px-4 py-3 font-medium text-right">İşlemler</th>
+                  <th className="px-4 py-3 font-semibold tracking-wider">Tarih</th>
+                  <th className="px-4 py-3 font-semibold tracking-wider">Ürün Maliyeti</th>
+                  <th className="px-4 py-3 font-semibold tracking-wider">Toplam Maliyet</th>
+                  <th className="px-4 py-3 font-semibold tracking-wider">Satış Fiyatı</th>
+                  <th className="px-4 py-3 font-semibold tracking-wider text-right">İşlemler</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              <tbody>
                 {history.map((record) => (
-                  <tr key={record.id} className="hover:bg-gray-50/50 dark:hover:bg-white/5 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap">
+                  <tr key={record.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-white/80">
                       {new Date(record.createdAt).toLocaleDateString("tr-TR")} {new Date(record.createdAt).toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'})}
                     </td>
-                    <td className="px-4 py-3">{fmt(record.productCost)} ₺</td>
-                    <td className="px-4 py-3">{fmt(record.totalCost)} ₺</td>
-                    <td className="px-4 py-3 font-semibold text-primary">{fmt(record.finalPrice)} ₺</td>
+                    <td className="px-4 py-3 text-white/80">{fmt(record.productCost)} ₺</td>
+                    <td className="px-4 py-3 text-white/80">{fmt(record.totalCost)} ₺</td>
+                    <td className="px-4 py-3 font-bold text-emerald-400">{fmt(record.finalPrice)} ₺</td>
                     <td className="px-4 py-3 flex gap-2 justify-end">
-                      <Button variant="outline" size="sm" onClick={() => onRestore(record)}>
+                      <Button variant="outline" size="sm" onClick={() => onRestore(record)} className="bg-white/5 border-white/10 text-white hover:bg-white/10">
                         Geri Yükle
                       </Button>
                       <Button
@@ -767,6 +763,7 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
                         size="sm"
                         onClick={() => handleDelete(record.id)}
                         disabled={deletingId === record.id}
+                        className="bg-rose-500/20 border border-rose-500/30 text-rose-300 hover:bg-rose-500/30"
                       >
                         {deletingId === record.id
                           ? <span className="material-symbols-outlined text-[16px] animate-spin">progress_activity</span>
@@ -781,16 +778,17 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
           </div>
           
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+            <div className="flex justify-center gap-2 mt-4 pt-4 border-t border-white/10">
               <Button
                 variant="outline"
                 size="sm"
                 disabled={page <= 1}
                 onClick={() => loadHistory(page - 1)}
+                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
               >
                 Önceki
               </Button>
-              <span className="text-sm text-gray-500 flex items-center px-2 font-medium">
+              <span className="text-sm text-white/60 flex items-center px-2 font-medium">
                 Sayfa {page} / {totalPages}
               </span>
               <Button
@@ -798,6 +796,7 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
                 size="sm"
                 disabled={page >= totalPages}
                 onClick={() => loadHistory(page + 1)}
+                className="bg-white/5 border-white/10 text-white hover:bg-white/10"
               >
                 Sonraki
               </Button>
