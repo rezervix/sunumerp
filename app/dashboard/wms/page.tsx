@@ -8,10 +8,7 @@ import {
   ClipboardCheck,
   Truck,
   RotateCcw,
-  RefreshCw,
-  Sparkles,
-  Smartphone,
-  Plus
+  RefreshCw
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -111,9 +108,9 @@ export default function WmsDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 glass-panel rounded-2xl m-6">
-        <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" />
-        <p className="text-sm font-medium text-white/70">
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] m-6">
+        <RefreshCw className="w-8 h-8 text-[#34D399] animate-spin" />
+        <p className="text-sm font-medium text-zinc-400">
           WMS Depo ve Raf Veritabanı Yükleniyor...
         </p>
       </div>
@@ -121,11 +118,11 @@ export default function WmsDashboardPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+    <div className="space-y-6">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
-      {/* 1. ÜST ÖZET KARTLAR VE HIZLI BUTONLAR */}
+      {/* 1. ÜST ÖZET KARTLAR VE HIZLI BUTONLAR (KUTUSUZ STRIP) */}
       <WmsSummaryCards
         stats={stats}
         onNewTaskClick={() => setIsTaskModalOpen(true)}
@@ -134,12 +131,12 @@ export default function WmsDashboardPage() {
       />
 
       {/* Yenile & Test Verisi Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-white/50 glass-panel px-4 py-2.5 rounded-xl">
+      <div className="flex items-center justify-between text-xs text-zinc-400 bg-[#111513]/90 border border-white/[0.06] px-4 py-2.5 rounded-xl">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-white/70">PostgreSQL / Prisma Bağlantısı Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[#34D399] animate-ping" />
+          <span className="text-zinc-300">Prisma / PostgreSQL Canlı WMS Hattı Aktif</span>
           {refreshing && (
-            <span className="text-indigo-400 font-medium flex items-center gap-1">
+            <span className="text-[#34D399] font-medium flex items-center gap-1">
               <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
             </span>
           )}
@@ -148,7 +145,7 @@ export default function WmsDashboardPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchWmsData()}
-            className="flex items-center gap-1.5 text-white/70 hover:text-indigo-400 transition"
+            className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
@@ -156,7 +153,7 @@ export default function WmsDashboardPage() {
           <span className="text-white/20">•</span>
           <button
             onClick={handleResetSeed}
-            className="flex items-center gap-1.5 text-white/70 hover:text-amber-400 transition"
+            className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Örnek Verileri Sıfırla
@@ -166,26 +163,26 @@ export default function WmsDashboardPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 glass-panel p-1.5 rounded-2xl h-auto">
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
           <TabsTrigger
             value="wizard-flow"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-indigo-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-indigo-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <Layers className="w-4 h-4 text-indigo-400" />
+            <Layers className="w-4 h-4 text-zinc-400" />
             İş Akışları & Sihirbaz
           </TabsTrigger>
 
           <TabsTrigger
             value="bin-map"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-emerald-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-emerald-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <MapPin className="w-4 h-4 text-emerald-400" />
+            <MapPin className="w-4 h-4 text-[#34D399]" />
             Raf & Hücre Haritası
           </TabsTrigger>
 
           <TabsTrigger
             value="counts"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-amber-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-amber-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
             <ClipboardCheck className="w-4 h-4 text-amber-400" />
             Sayım & Mahsuplaşma
@@ -193,9 +190,9 @@ export default function WmsDashboardPage() {
 
           <TabsTrigger
             value="transfers"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-purple-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-purple-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <Truck className="w-4 h-4 text-purple-400" />
+            <Truck className="w-4 h-4 text-zinc-300" />
             Depolar Arası Transfer
           </TabsTrigger>
         </TabsList>

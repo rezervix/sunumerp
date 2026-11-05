@@ -7,7 +7,6 @@ import {
   ArrowDownToLine,
   Search,
   Truck,
-  CheckCircle2,
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -114,19 +113,19 @@ export function CreateWmsTaskModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
-      <div className="backdrop-blur-xl bg-slate-950/85 border border-white/15 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative text-white">
-        <div className="flex items-center justify-between pb-4 border-b border-white/10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+      <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] rounded-2xl w-full max-w-lg p-6 shadow-2xl relative text-white">
+        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
           <div className="flex items-center gap-2">
-            <ClipboardList className="w-5 h-5 text-indigo-400" />
-            <h3 className="text-base font-bold text-white">
+            <ClipboardList className="w-5 h-5 text-[#34D399]" />
+            <h3 className="text-base font-semibold text-white">
               Yeni Depo Görevi (WMS Emri) Tanımla
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-white/50 hover:text-white p-1"
+            className="text-zinc-500 hover:text-white p-1 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -135,43 +134,43 @@ export function CreateWmsTaskModal({
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           {/* Task Type selector tabs */}
           <div>
-            <label className="block text-xs font-semibold text-white/70 mb-1.5">
+            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
               İşlem Türü *
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setTaskType('GOODS_RECEIPT')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition ${
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
                   taskType === 'GOODS_RECEIPT'
-                    ? 'border-indigo-400/50 bg-indigo-500/20 text-white font-bold shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                    : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                    ? 'border-emerald-500/30 bg-[#34D399]/15 text-[#34D399] font-semibold'
+                    : 'border-white/[0.06] bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
-                <ArrowDownToLine className="w-4 h-4 text-emerald-400" />
+                <ArrowDownToLine className="w-4 h-4 text-[#34D399]" />
                 Mal Kabul & Kalite
               </button>
 
               <button
                 type="button"
                 onClick={() => setTaskType('PUTAWAY')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition ${
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
                   taskType === 'PUTAWAY'
-                    ? 'border-indigo-400/50 bg-indigo-500/20 text-white font-bold shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                    : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                    ? 'border-emerald-500/30 bg-[#34D399]/15 text-[#34D399] font-semibold'
+                    : 'border-white/[0.06] bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
-                <Layers className="w-4 h-4 text-indigo-400" />
+                <Layers className="w-4 h-4 text-zinc-300" />
                 Rafa İstifleme (Putaway)
               </button>
 
               <button
                 type="button"
                 onClick={() => setTaskType('WAVE_PICK')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition ${
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
                   taskType === 'WAVE_PICK'
-                    ? 'border-indigo-400/50 bg-indigo-500/20 text-white font-bold shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                    : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                    ? 'border-emerald-500/30 bg-[#34D399]/15 text-[#34D399] font-semibold'
+                    : 'border-white/[0.06] bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
                 <Search className="w-4 h-4 text-amber-400" />
@@ -181,13 +180,13 @@ export function CreateWmsTaskModal({
               <button
                 type="button"
                 onClick={() => setTaskType('TRANSFER_DISPATCH')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition ${
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
                   taskType === 'TRANSFER_DISPATCH'
-                    ? 'border-indigo-400/50 bg-indigo-500/20 text-white font-bold shadow-[0_0_15px_rgba(99,102,241,0.2)]'
-                    : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                    ? 'border-emerald-500/30 bg-[#34D399]/15 text-[#34D399] font-semibold'
+                    : 'border-white/[0.06] bg-white/[0.03] text-zinc-400 hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
-                <Truck className="w-4 h-4 text-purple-400" />
+                <Truck className="w-4 h-4 text-zinc-400" />
                 Sevk / Paketleme
               </button>
             </div>
@@ -196,17 +195,17 @@ export function CreateWmsTaskModal({
           {/* Warehouse & Priority */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Depo *
               </label>
               <select
                 value={warehouseId}
                 onChange={(e) => setWarehouseId(e.target.value)}
                 required
-                className="w-full text-xs glass-input p-2.5 focus:outline-none"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
               >
                 {warehouses.map((wh) => (
-                  <option key={wh.id} value={wh.id} className="bg-slate-900 text-white">
+                  <option key={wh.id} value={wh.id} className="bg-[#111513] text-white">
                     {wh.name} ({wh.code})
                   </option>
                 ))}
@@ -214,18 +213,18 @@ export function CreateWmsTaskModal({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Öncelik
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as any)}
-                className="w-full text-xs glass-input p-2.5 focus:outline-none"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
               >
-                <option value="LOW" className="bg-slate-900 text-white">Düşük</option>
-                <option value="NORMAL" className="bg-slate-900 text-white">Normal</option>
-                <option value="HIGH" className="bg-slate-900 text-white">Yüksek</option>
-                <option value="URGENT" className="bg-slate-900 text-white">Acil / Kritik</option>
+                <option value="LOW" className="bg-[#111513] text-white">Düşük</option>
+                <option value="NORMAL" className="bg-[#111513] text-white">Normal</option>
+                <option value="HIGH" className="bg-[#111513] text-white">Yüksek</option>
+                <option value="URGENT" className="bg-[#111513] text-white">Acil / Kritik</option>
               </select>
             </div>
           </div>
@@ -233,17 +232,17 @@ export function CreateWmsTaskModal({
           {/* Item & Quantity */}
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Ürün Seçimi *
               </label>
               <select
                 value={selectedItemId}
                 onChange={(e) => setSelectedItemId(e.target.value)}
                 required
-                className="w-full text-xs glass-input p-2.5 focus:outline-none"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
               >
                 {items.map((it) => (
-                  <option key={it.id} value={it.id} className="bg-slate-900 text-white">
+                  <option key={it.id} value={it.id} className="bg-[#111513] text-white">
                     {it.name} ({it.sku})
                   </option>
                 ))}
@@ -251,7 +250,7 @@ export function CreateWmsTaskModal({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Miktar *
               </label>
               <input
@@ -261,7 +260,7 @@ export function CreateWmsTaskModal({
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 required
-                className="w-full text-xs glass-input p-2.5 focus:outline-none font-bold"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none font-bold"
               />
             </div>
           </div>
@@ -269,17 +268,17 @@ export function CreateWmsTaskModal({
           {/* Target Bin & Operator */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Hedef Raf / Hücre (Opsiyonel)
               </label>
               <select
                 value={targetBinId}
                 onChange={(e) => setTargetBinId(e.target.value)}
-                className="w-full text-xs glass-input p-2.5 focus:outline-none"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
               >
-                <option value="" className="bg-slate-900 text-white">Otomatik / Atanmamış</option>
+                <option value="" className="bg-[#111513] text-white">Otomatik / Atanmamış</option>
                 {relevantBins.map((bin) => (
-                  <option key={bin.id} value={bin.id} className="bg-slate-900 text-white">
+                  <option key={bin.id} value={bin.id} className="bg-[#111513] text-white">
                     {bin.binCode} ({bin.zone?.name || 'Genel'})
                   </option>
                 ))}
@@ -287,45 +286,45 @@ export function CreateWmsTaskModal({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70 mb-1.5">
+              <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                 Atanan Personel / Operatör
               </label>
               <input
                 type="text"
                 value={assignedTo}
                 onChange={(e) => setAssignedTo(e.target.value)}
-                className="w-full text-xs glass-input p-2.5 focus:outline-none"
+                className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-semibold text-white/70 mb-1.5">
+            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
               Görev Notu / Talimatı
             </label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Örn: Isı kontrolü yapılarak A-01-01 soğuk hava hücresine yerleştirilsin"
-              className="w-full text-xs glass-input p-2.5 focus:outline-none"
+              placeholder="Örn: Isı kontrolü yapılarak A-01-01 hücresine yerleştirilsin"
+              className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
             />
           </div>
 
           {/* Modal Actions */}
-          <div className="pt-3 border-t border-white/10 flex justify-end gap-2">
+          <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-white/15 bg-white/5 text-white/80 text-xs font-semibold rounded-xl hover:bg-white/10 transition"
+              className="px-4 py-2 border border-white/[0.08] bg-white/[0.04] text-zinc-300 hover:text-white text-xs font-medium rounded-full hover:bg-white/[0.08] transition cursor-pointer"
             >
               Vazgeç
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+              className="px-5 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full transition shadow-lg shadow-emerald-500/20 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? 'Oluşturuluyor...' : 'Görevi Başlat'}
             </button>

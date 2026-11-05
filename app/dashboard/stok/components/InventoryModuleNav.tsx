@@ -3,6 +3,7 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
 import {
   Boxes,
   Warehouse,
@@ -49,7 +50,7 @@ export function InventoryModuleNav() {
   const pathname = usePathname()
 
   return (
-    <div className="glass-panel rounded-2xl p-1.5 overflow-x-auto">
+    <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-1.5 overflow-x-auto shadow-2xl">
       <div className="flex items-center gap-1.5 min-w-max">
         {MODULE_TABS.map(tab => {
           const Icon = tab.icon
@@ -61,14 +62,21 @@ export function InventoryModuleNav() {
             <Link
               key={tab.id}
               href={tab.href}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border ${
-                isActive
-                  ? "bg-gradient-to-r from-emerald-500/25 via-emerald-500/10 to-indigo-500/10 text-white border-emerald-400/30 shadow-sm"
-                  : "text-white/65 border-transparent hover:bg-white/10 hover:text-white"
+              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
+                isActive ? "text-white font-semibold" : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
-              <Icon className={`h-3.5 w-3.5 ${isActive ? "text-emerald-400" : "text-white/50"}`} />
-              <span>{tab.label}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="inventoryModuleNavActive"
+                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.12] rounded-xl shadow-sm"
+                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-2">
+                <Icon className={`h-3.5 w-3.5 ${isActive ? "text-[#34D399]" : "text-zinc-500"}`} />
+                <span>{tab.label}</span>
+              </span>
             </Link>
           )
         })}
@@ -76,4 +84,3 @@ export function InventoryModuleNav() {
     </div>
   )
 }
-

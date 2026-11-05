@@ -13,9 +13,7 @@ import {
   Terminal,
   RefreshCw
 } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Select,
@@ -185,15 +183,15 @@ export default function EcosystemApiMigrationAndSaasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/60 p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
       {/* Üst Başlık */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-[#111513]/90 border border-white/[0.06] p-5 sm:p-6 rounded-[20px]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
               Açık API, ERP Veri Geçiş Sihirbazı & Sistem Ayarları
             </h1>
             <Button
@@ -201,66 +199,81 @@ export default function EcosystemApiMigrationAndSaasPage() {
               size="sm"
               onClick={fetchEcosystem}
               disabled={loading}
-              className="h-8 w-8 p-0 text-slate-400 hover:text-slate-700"
+              className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
             </Button>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
             Dış sistemler için REST API & Webhook uç noktaları, eklenti mağazası, eski ERP veri aktarım sihirbazı ve sistem kotaları
           </p>
         </div>
       </div>
 
       {/* Sekmeler */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="flex flex-wrap h-auto gap-1 bg-white border border-slate-200 p-1">
-          <TabsTrigger value="api-webhooks" className="gap-1.5 text-xs sm:text-sm">
-            <Webhook className="h-4 w-4" />
-            1. Açık REST API & Webhook Altyapısı
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-[20px] h-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5">
+          <TabsTrigger
+            value="api-webhooks"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            <Webhook className="h-4 w-4 text-emerald-400" />
+            1. Açık REST API & Webhook
           </TabsTrigger>
-          <TabsTrigger value="plugin-marketplace" className="gap-1.5 text-xs sm:text-sm">
-            <Puzzle className="h-4 w-4" />
-            2. Eklenti Mağazası (Marketplace)
+          <TabsTrigger
+            value="plugin-marketplace"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            <Puzzle className="h-4 w-4 text-emerald-400" />
+            2. Eklenti Mağazası
           </TabsTrigger>
-          <TabsTrigger value="migration-training" className="gap-1.5 text-xs sm:text-sm">
-            <DatabaseZap className="h-4 w-4" />
-            3. ERP Veri Geçiş Sihirbazı & Akademi
+          <TabsTrigger
+            value="migration-training"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            <DatabaseZap className="h-4 w-4 text-emerald-400" />
+            3. ERP Veri Geçiş Sihirbazı
           </TabsTrigger>
-          <TabsTrigger value="saas-licensing" className="gap-1.5 text-xs sm:text-sm">
-            <ShieldCheck className="h-4 w-4" />
+          <TabsTrigger
+            value="saas-licensing"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white"
+          >
+            <ShieldCheck className="h-4 w-4 text-emerald-400" />
             4. Kapasite & Kota Yönetimi
           </TabsTrigger>
         </TabsList>
 
         {/* 1. SEKME: AÇIK REST API VE WEBHOOK ALTYAPISI */}
-        <TabsContent value="api-webhooks" className="space-y-6">
+        <TabsContent value="api-webhooks" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            <Card className="border-slate-200 lg:col-span-6">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <KeyRound className="h-4 w-4 text-indigo-600" />
+            <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 lg:col-span-6 space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                  <KeyRound className="h-4 w-4 text-emerald-400" />
                   Dış Sistemler & Barkod Terminalleri İçin REST API Anahtarları
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1">
                   B2B portal, 3PL kargo ve el terminalleri için yetkilendirme anahtarları.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                </p>
+              </div>
+
+              <div className="space-y-3">
                 {(ecoData.apiKeys || []).map((ak: any) => (
-                  <div key={ak.id} className="rounded-lg border border-slate-200 p-3.5 space-y-2">
+                  <div key={ak.id} className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-3.5 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-slate-900">{ak.name}</span>
-                      <Badge className="bg-emerald-100 text-emerald-800">{ak.iotOrSystemType}</Badge>
+                      <span className="font-medium text-sm text-white">{ak.name}</span>
+                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                        {ak.iotOrSystemType}
+                      </span>
                     </div>
-                    <div className="font-mono text-xs bg-slate-100 px-2.5 py-1 rounded text-slate-700">
+                    <div className="font-mono text-xs bg-black/40 px-2.5 py-1.5 rounded-lg text-zinc-400 border border-white/[0.04]">
                       {ak.maskedKey}
                     </div>
                   </div>
                 ))}
 
                 {/* Canlı /api/v1/inventory Test Konsolu */}
-                <div className="rounded-xl bg-slate-950 text-white p-4 space-y-3">
+                <div className="rounded-xl bg-black/40 border border-white/[0.06] text-white p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
                       <Terminal className="h-4 w-4" />
@@ -270,108 +283,113 @@ export default function EcosystemApiMigrationAndSaasPage() {
                       size="sm"
                       onClick={handleTestRestApi}
                       disabled={isTestingApi}
-                      className="h-7 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs gap-1"
+                      className="h-8 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold text-xs gap-1.5 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.2)]"
                     >
                       <Play className="h-3 w-3" />
                       Canlı API Test Et
                     </Button>
                   </div>
                   {apiTestResponse && (
-                    <pre className="text-[11px] font-mono text-slate-300 overflow-x-auto max-h-48 bg-slate-900 p-2.5 rounded">
+                    <pre className="text-[11px] font-mono text-emerald-300/90 overflow-x-auto max-h-48 bg-black/60 p-3 rounded-lg border border-white/[0.04]">
                       {apiTestResponse}
                     </pre>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-slate-200 lg:col-span-6">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Webhook className="h-4 w-4 text-emerald-600" />
+            <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 lg:col-span-6 space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                  <Webhook className="h-4 w-4 text-emerald-400" />
                   Gerçek Zamanlı Webhook Abonelikleri
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1">
                   Stok değişimi, düşük stok uyarısı ve sevkiyat olaylarını dış sistemlere anlık ileten uç noktalar.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                </p>
+              </div>
+
+              <div className="space-y-3">
                 {(ecoData.webhooks || []).map((whk: any) => (
-                  <div key={whk.id} className="rounded-lg border border-slate-200 p-3.5 space-y-2">
+                  <div key={whk.id} className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-3.5 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-sm text-slate-900">{whk.name}</span>
-                      <Badge className="bg-emerald-600 text-white">HTTP {whk.lastStatusCode} OK</Badge>
+                      <span className="font-medium text-sm text-white">{whk.name}</span>
+                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                        HTTP {whk.lastStatusCode} OK
+                      </span>
                     </div>
-                    <div className="font-mono text-xs text-indigo-700 break-all">{whk.targetUrl}</div>
+                    <div className="font-mono text-xs text-zinc-400 break-all">{whk.targetUrl}</div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </TabsContent>
 
         {/* 2. SEKME: EKLENTİ MAĞAZASI */}
-        <TabsContent value="plugin-marketplace" className="space-y-6">
+        <TabsContent value="plugin-marketplace" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {(ecoData.plugins || []).map((plg: any) => (
-              <Card key={plg.id} className="border-slate-200 flex flex-col justify-between">
-                <CardHeader className="pb-2">
+              <div key={plg.id} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">{plg.category}</Badge>
-                    <span className="text-xs font-semibold text-amber-600">★ {plg.rating}</span>
+                    <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2.5 py-0.5 text-xs font-medium font-mono">
+                      {plg.category}
+                    </span>
+                    <span className="text-xs font-medium text-amber-400">★ {plg.rating}</span>
                   </div>
-                  <CardTitle className="text-base mt-1.5">{plg.name}</CardTitle>
-                  <CardDescription className="text-xs">
-                    Geliştirici: <strong>{plg.vendor}</strong> • v{plg.version}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3 text-xs">
-                  <p className="text-slate-600 leading-relaxed">{plg.description}</p>
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="font-semibold text-slate-900">{plg.pricingTier}</span>
-                    <Button
-                      size="sm"
-                      variant={plg.isInstalled ? "outline" : "default"}
-                      onClick={() => handleTogglePlugin(plg.id)}
-                      className={
-                        plg.isInstalled
-                          ? "border-emerald-300 text-emerald-700 h-8 text-xs"
-                          : "bg-indigo-600 hover:bg-indigo-700 text-white h-8 text-xs"
-                      }
-                    >
-                      {plg.isInstalled ? "Kurulu (Devre Dışı Bırak)" : "Kur & Aktifleştir"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  <h3 className="text-base font-semibold text-white mt-1.5">{plg.name}</h3>
+                  <p className="text-xs text-zinc-400">
+                    Geliştirici: <strong className="text-white font-medium">{plg.vendor}</strong> • v{plg.version}
+                  </p>
+                  <p className="text-xs text-zinc-400 leading-relaxed pt-1">{plg.description}</p>
+                </div>
+
+                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                  <span className="font-medium text-white text-xs">{plg.pricingTier}</span>
+                  <Button
+                    size="sm"
+                    variant={plg.isInstalled ? "outline" : "default"}
+                    onClick={() => handleTogglePlugin(plg.id)}
+                    className={
+                      plg.isInstalled
+                        ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-full h-8 text-xs font-medium"
+                        : "bg-emerald-400 hover:bg-emerald-300 text-black font-semibold rounded-full h-8 text-xs shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+                    }
+                  >
+                    {plg.isInstalled ? "Kurulu (Devre Dışı Bırak)" : "Kur & Aktifleştir"}
+                  </Button>
+                </div>
+              </div>
             ))}
           </div>
         </TabsContent>
 
         {/* 3. SEKME: ERP VERİ GEÇİŞ SİHİRBAZI & EĞİTİM */}
-        <TabsContent value="migration-training" className="space-y-6">
+        <TabsContent value="migration-training" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            <Card className="border-slate-200 lg:col-span-7">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <DatabaseZap className="h-4 w-4 text-indigo-600" />
+            <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 lg:col-span-7 space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                  <DatabaseZap className="h-4 w-4 text-emerald-400" />
                   Otomatik ERP Veri Geçiş (Migration) Sihirbazı
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1">
                   Logo Tiger/Wings, Nebim V3, SAP Business One, Odoo ve Zoho Inventory tablolarını içe aktarın.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </p>
+              </div>
+
+              <div className="space-y-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex-1">
                     <Select
                       value={selectedSourceErp}
                       onValueChange={v => setSelectedSourceErp(v as any)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/[0.03] border-white/10 rounded-xl text-white focus:outline-none">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-[#111513] border-white/10 text-white">
                         {ERP_MIGRATION_PRESETS.map(p => (
                           <SelectItem key={p.sourceSystem} value={p.sourceSystem}>
                             {p.displayName}
@@ -382,7 +400,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
                   </div>
                   <Button
                     onClick={handleRunMigration}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white gap-1.5 text-xs"
+                    className="bg-emerald-400 hover:bg-emerald-300 text-black font-semibold rounded-full gap-1.5 text-xs shadow-[0_0_15px_rgba(52,211,153,0.2)]"
                   >
                     <Play className="h-3.5 w-3.5" />
                     Veri Doğrula & Aktar
@@ -393,42 +411,42 @@ export default function EcosystemApiMigrationAndSaasPage() {
                   {(ecoData.migrationJobs || []).map((job: any) => (
                     <div
                       key={job.id}
-                      className="rounded-lg border border-emerald-200 bg-emerald-50/30 p-3 text-xs space-y-1"
+                      className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-3 text-xs space-y-1"
                     >
                       <div className="flex items-center justify-between">
-                        <strong className="text-slate-900">{job.jobName}</strong>
-                        <Badge className="bg-emerald-600 text-white">
+                        <strong className="text-white font-medium">{job.jobName}</strong>
+                        <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-xs font-medium">
                           {job.migratedRecords} Kayıt Aktarıldı
-                        </Badge>
+                        </span>
                       </div>
-                      <div className="text-slate-600">{job.validationNotes?.[0]}</div>
+                      <div className="text-zinc-400">{job.validationNotes?.[0]}</div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-slate-200 lg:col-span-5">
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <GraduationCap className="h-5 w-5 text-emerald-600" />
+            <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-6 lg:col-span-5 space-y-4">
+              <div>
+                <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                  <GraduationCap className="h-5 w-5 text-emerald-400" />
                   Operatör Eğitim Senaryoları
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+                </h3>
+              </div>
+              <div className="space-y-3">
                 {TRAINING_SCENARIOS.map(sc => {
                   const isDone = completedSimulations.includes(sc.id)
                   return (
                     <div
                       key={sc.id}
                       onClick={() => setActiveSimId(sc.id)}
-                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2 ${
+                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2.5 transition-all ${
                         activeSimId === sc.id
-                          ? "border-2 border-emerald-600 bg-emerald-50/20"
-                          : "border-slate-200 bg-white"
+                          ? "border-emerald-500/40 ring-1 ring-emerald-500/20 bg-[#0d100e]"
+                          : "border-white/[0.06] bg-[#0d100e]/50 hover:bg-[#0d100e]"
                       }`}
                     >
-                      <div className="font-semibold text-sm text-slate-900">{sc.title}</div>
+                      <div className="font-medium text-sm text-white">{sc.title}</div>
                       <Button
                         size="sm"
                         onClick={e => {
@@ -436,39 +454,45 @@ export default function EcosystemApiMigrationAndSaasPage() {
                           if (!isDone) setCompletedSimulations(prev => [...prev, sc.id])
                           toast.success(`${sc.title} tamamlandı!`)
                         }}
-                        className="w-full h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+                        className={`w-full h-8 text-xs rounded-full font-semibold transition ${
+                          isDone
+                            ? "bg-white/10 text-emerald-400 border border-emerald-500/30"
+                            : "bg-emerald-400 hover:bg-emerald-300 text-black shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+                        }`}
                       >
                         {isDone ? "✓ Tamamlandı" : "Senaryoyu Çalıştır"}
                       </Button>
                     </div>
                   )
                 })}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </TabsContent>
 
         {/* 4. SEKME: KOTA & PAKETLER */}
-        <TabsContent value="saas-licensing" className="space-y-6">
+        <TabsContent value="saas-licensing" className="space-y-6 focus-visible:outline-none">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {SAAS_TIERS.map(tier => {
               const isCurrent = ecoData.saasUsage?.activeTierId === tier.id
               return (
-                <Card
+                <div
                   key={tier.id}
-                  className={isCurrent ? "border-2 border-indigo-600" : "border-slate-200"}
+                  className={`bg-[#111513]/90 border rounded-[20px] p-6 space-y-4 transition-all ${
+                    isCurrent ? "border-emerald-500/50 ring-1 ring-emerald-500/30 shadow-[0_0_20px_rgba(52,211,153,0.15)]" : "border-white/[0.06]"
+                  }`}
                 >
-                  <CardHeader>
-                    <CardTitle className="text-base">{tier.name}</CardTitle>
-                    <CardDescription className="text-xs">
+                  <div className="space-y-1">
+                    <h3 className="text-base font-semibold text-white">{tier.name}</h3>
+                    <p className="text-xs text-zinc-400">
                       ₺{tier.monthlyPriceTry.toLocaleString("tr-TR")} / Ay
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3 text-xs">
-                    <div className="space-y-1">
+                    </p>
+                  </div>
+                  <div className="space-y-3 text-xs">
+                    <div className="space-y-1.5">
                       {tier.includedModules.map((m, i) => (
-                        <div key={i} className="flex items-center gap-1.5 text-slate-700">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                        <div key={i} className="flex items-center gap-1.5 text-zinc-300">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                           <span>{m}</span>
                         </div>
                       ))}
@@ -476,12 +500,16 @@ export default function EcosystemApiMigrationAndSaasPage() {
                     <Button
                       size="sm"
                       onClick={() => handleSelectSaasTier(tier.id)}
-                      className="w-full h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white"
+                      className={`w-full h-8 text-xs rounded-full font-semibold transition ${
+                        isCurrent
+                          ? "bg-white/10 text-emerald-400 border border-emerald-500/30"
+                          : "bg-emerald-400 hover:bg-emerald-300 text-black shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+                      }`}
                     >
                       {isCurrent ? "Aktif Paket" : "Bu Pakete Geç"}
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )
             })}
           </div>

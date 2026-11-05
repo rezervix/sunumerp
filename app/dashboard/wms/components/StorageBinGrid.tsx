@@ -4,15 +4,8 @@ import React, { useState } from "react"
 import { motion } from "framer-motion"
 import {
   MapPin,
-  Box,
-  Layers,
-  Thermometer,
-  Weight,
-  Maximize2,
   Lock,
-  Search,
-  CheckCircle2,
-  AlertTriangle
+  Search
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
@@ -111,22 +104,22 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
   return (
     <div className="space-y-5">
       {/* FİLTRE VE ARAMA ÇUBUĞU */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between glass-panel p-4 rounded-2xl">
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] p-4 rounded-[20px]">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
           <Input
             placeholder="Hücre kodu (A-01-01), bölge ara..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="pl-10 text-xs glass-input h-10"
+            className="pl-10 text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl focus:border-[#34D399] h-9.5"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Doluluk Renk Rehberi */}
-          <div className="hidden lg:flex items-center gap-3 text-[11px] text-white/60 mr-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">
+          <div className="hidden lg:flex items-center gap-3 text-[11px] text-zinc-400 mr-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" /> Normal (&lt;%60)
+              <span className="w-2 h-2 rounded-full bg-[#34D399]" /> Normal (&lt;%60)
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber-400" /> Yoğun (%60-%79)
@@ -138,10 +131,10 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
 
           {/* Depo Filtresi */}
           <Select value={selectedWarehouseId} onValueChange={setSelectedWarehouseId}>
-            <SelectTrigger className="w-36 sm:w-44 text-xs glass-input h-10">
+            <SelectTrigger className="w-36 sm:w-44 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
               <SelectValue placeholder="Tüm Depolar" />
             </SelectTrigger>
-            <SelectContent className="bg-slate-950/95 border-white/15 text-white backdrop-blur-xl">
+            <SelectContent className="bg-[#111513] border-white/[0.08] text-white backdrop-blur-xl">
               <SelectItem value="ALL" className="text-xs">Tüm Depolar</SelectItem>
               {warehouses.map(wh => (
                 <SelectItem key={wh.id} value={wh.id} className="text-xs">
@@ -153,10 +146,10 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
 
           {/* Bölge Türü Filtresi */}
           <Select value={selectedZoneType} onValueChange={setSelectedZoneType}>
-            <SelectTrigger className="w-40 text-xs glass-input h-10">
+            <SelectTrigger className="w-40 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
               <SelectValue placeholder="Tüm Bölgeler" />
             </SelectTrigger>
-            <SelectContent className="bg-slate-950/95 border-white/15 text-white backdrop-blur-xl">
+            <SelectContent className="bg-[#111513] border-white/[0.08] text-white backdrop-blur-xl">
               <SelectItem value="ALL" className="text-xs">Tüm Bölgeler</SelectItem>
               <SelectItem value="COLD_STORAGE" className="text-xs">Soğuk Hava (+4°C)</SelectItem>
               <SelectItem value="FAST_PICK" className="text-xs">Hızlı Toplama</SelectItem>
@@ -167,9 +160,9 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
         </div>
       </div>
 
-      {/* RAF HÜCRELERİ MATRİSİ (21st.dev BENTO-GRID GÖRÜNÜMÜ) */}
+      {/* RAF HÜCRELERİ MATRİSİ (BENTO-GRID GÖRÜNÜMÜ & DİKEY DOLDURULAN ANİMASYONLU BAR) */}
       {filteredBins.length === 0 ? (
-        <div className="glass-card rounded-2xl p-10 text-center text-xs text-white/50">
+        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-10 text-center text-xs text-zinc-500">
           Aramanıza uygun raf hücresi bulunamadı.
         </div>
       ) : (
@@ -179,42 +172,32 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
             const balances = bin.stockBalances || []
             const totalItemsCount = balances.reduce((sum, b) => sum + Number(b.onHandQty || 0), 0)
 
-            // Doluluk oranına göre renklenen yarı saydam cam kutu sınıfları (yeşil / kehribar / kırmızı)
-            const bentoCardClass =
+            const badgeClass =
               occupancy >= 80
-                ? "bg-rose-500/10 hover:bg-rose-500/15 border-rose-500/30 shadow-[0_0_24px_rgba(244,63,94,0.12)]"
+                ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
                 : occupancy >= 60
-                  ? "bg-amber-500/10 hover:bg-amber-500/15 border-amber-500/30 shadow-[0_0_24px_rgba(245,158,11,0.12)]"
+                  ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
                   : occupancy > 0
-                    ? "bg-emerald-500/10 hover:bg-emerald-500/15 border-emerald-500/30 shadow-[0_0_24px_rgba(16,185,129,0.12)]"
-                    : "bg-white/5 hover:bg-white/10 border-white/10"
+                    ? "bg-emerald-500/10 text-[#34D399] border-emerald-500/20"
+                    : "bg-white/[0.04] text-zinc-500 border-white/[0.06]"
 
-            const pillBadgeClass =
-              occupancy >= 80
-                ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
-                : occupancy >= 60
-                  ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-                  : occupancy > 0
-                    ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
-                    : "bg-white/10 text-white/60 border-white/15"
-
-            const barColorClass =
+            const fillBgClass =
               occupancy >= 80
                 ? "bg-rose-400"
                 : occupancy >= 60
                   ? "bg-amber-400"
-                  : "bg-emerald-400"
+                  : "bg-[#34D399]"
 
             return (
               <motion.div
                 key={bin.id}
-                whileHover={{ y: -4, scale: 1.01 }}
+                whileHover={{ y: -4 }}
                 onClick={() => openBinDrawer(bin)}
-                className={`cursor-pointer backdrop-blur-md border rounded-2xl p-4 space-y-3 transition-all group relative overflow-hidden ${bentoCardClass}`}
+                className="cursor-pointer backdrop-blur-xl bg-[#111513]/90 border border-white/[0.06] hover:border-white/[0.12] rounded-[20px] p-4.5 space-y-3 transition-colors group relative overflow-hidden shadow-xl"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-bold text-sm text-white group-hover:text-indigo-300 transition-colors">
+                    <span className="font-mono font-semibold text-sm text-white group-hover:text-[#34D399] transition-colors">
                       {bin.code}
                     </span>
                     {bin.isBlocked && (
@@ -225,31 +208,33 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
                   </div>
 
                   <span
-                    className={`rounded-full px-3 py-0.5 text-xs font-bold border ${pillBadgeClass}`}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${badgeClass}`}
                   >
                     %{occupancy}
                   </span>
                 </div>
 
-                <div className="text-xs text-white/70">
+                <div className="text-xs text-zinc-300">
                   <div className="truncate font-medium">{bin.binPosition || "Standart Raf"}</div>
-                  <div className="text-[11px] text-white/45 font-mono truncate mt-0.5">
+                  <div className="text-[11px] text-zinc-500 font-mono truncate mt-0.5">
                     {bin.zone?.name || "Depo Bölgesi"}
                   </div>
                 </div>
 
-                {/* Doluluk Çubuğu */}
-                <div className="w-full bg-black/30 rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${barColorClass}`}
-                    style={{ width: `${Math.min(100, occupancy)}%` }}
+                {/* Dikey Dolum Simülasyonu & Yatay LED Doluluk Çubuğu */}
+                <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min(100, occupancy)}%` }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className={`h-full rounded-full ${fillBgClass}`}
                   />
                 </div>
 
                 {/* Hücredeki Ürün / Stok */}
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                  <span className="text-white/50">Toplam Stok:</span>
-                  <span className="font-bold text-white font-mono">
+                <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs">
+                  <span className="text-zinc-500">Toplam Stok:</span>
+                  <span className="font-medium text-white font-mono">
                     {totalItemsCount > 0 ? `${totalItemsCount} Adet` : "Boş Hücre"}
                   </span>
                 </div>
@@ -263,55 +248,60 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <SheetContent
           side="right"
-          className="w-full sm:max-w-md backdrop-blur-xl bg-slate-950/85 border-l border-white/15 text-white p-6 overflow-y-auto shadow-2xl"
+          className="w-full sm:max-w-md backdrop-blur-xl bg-[#111513] border-l border-white/[0.06] text-white p-6 overflow-y-auto shadow-2xl"
         >
           {selectedBin && (
-            <div className="space-y-5">
+            <motion.div
+              initial={{ x: 60, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring", damping: 25, stiffness: 260 }}
+              className="space-y-5"
+            >
               <SheetHeader>
                 <div className="flex items-center gap-2.5">
-                  <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full px-3 py-0.5 text-xs font-mono font-bold">
+                  <span className="bg-emerald-500/10 text-[#34D399] border border-emerald-500/20 rounded-full px-3 py-0.5 text-xs font-mono font-semibold">
                     {selectedBin.code}
                   </span>
-                  <SheetTitle className="text-lg font-bold text-white">
+                  <SheetTitle className="text-lg font-semibold text-white">
                     {selectedBin.binPosition || "Hücre Detayları"}
                   </SheetTitle>
                 </div>
-                <SheetDescription className="text-xs text-white/60">
+                <SheetDescription className="text-xs text-zinc-400">
                   {selectedBin.warehouse?.name} • {selectedBin.zone?.name}
                 </SheetDescription>
               </SheetHeader>
 
               {/* Hücre Özellikleri */}
-              <div className="grid grid-cols-2 gap-3 text-xs glass-card p-4 rounded-2xl">
+              <div className="grid grid-cols-2 gap-3 text-xs bg-white/[0.03] border border-white/[0.06] p-4 rounded-2xl">
                 <div>
-                  <span className="text-white/45 block text-[11px]">Hücre Tipi</span>
-                  <span className="font-semibold text-white mt-0.5 block">{selectedBin.binType}</span>
+                  <span className="text-zinc-500 block text-[11px]">Hücre Tipi</span>
+                  <span className="font-medium text-white mt-0.5 block">{selectedBin.binType}</span>
                 </div>
                 <div>
-                  <span className="text-white/45 block text-[11px]">Hız Sınıfı (ABC)</span>
-                  <span className="font-semibold text-emerald-300 font-mono mt-0.5 block">Sınıf {selectedBin.abcVelocity}</span>
+                  <span className="text-zinc-500 block text-[11px]">Hız Sınıfı (ABC)</span>
+                  <span className="font-medium text-[#34D399] font-mono mt-0.5 block">Sınıf {selectedBin.abcVelocity}</span>
                 </div>
                 <div>
-                  <span className="text-white/45 block text-[11px]">Ağırlık Kapasitesi</span>
-                  <span className="font-semibold text-white mt-0.5 block">{selectedBin.maxWeightKg} kg</span>
+                  <span className="text-zinc-500 block text-[11px]">Ağırlık Kapasitesi</span>
+                  <span className="font-medium text-white mt-0.5 block">{selectedBin.maxWeightKg} kg</span>
                 </div>
                 <div>
-                  <span className="text-white/45 block text-[11px]">Hacim Kapasitesi</span>
-                  <span className="font-semibold text-white mt-0.5 block">{selectedBin.maxVolumeM3} m³</span>
+                  <span className="text-zinc-500 block text-[11px]">Hacim Kapasitesi</span>
+                  <span className="font-medium text-white mt-0.5 block">{selectedBin.maxVolumeM3} m³</span>
                 </div>
               </div>
 
               {/* Hücredeki Mevcut Ürünler */}
               <div className="space-y-2.5">
-                <div className="text-xs font-bold text-white flex items-center justify-between">
+                <div className="text-xs font-semibold text-white flex items-center justify-between">
                   <span>Hücredeki Ürünler</span>
-                  <span className="text-[11px] text-white/50 font-normal">
+                  <span className="text-[11px] text-zinc-500 font-normal">
                     {selectedBin.stockBalances?.length || 0} Çeşit
                   </span>
                 </div>
 
                 {(!selectedBin.stockBalances || selectedBin.stockBalances.length === 0) ? (
-                  <div className="p-5 glass-card rounded-2xl text-center text-xs text-white/45">
+                  <div className="p-5 bg-white/[0.02] border border-dashed border-white/[0.08] rounded-2xl text-center text-xs text-zinc-500">
                     Bu hücrede şu an kayıtlı stok bulunmuyor.
                   </div>
                 ) : (
@@ -319,15 +309,15 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
                     {selectedBin.stockBalances.map(sb => (
                       <div
                         key={sb.id}
-                        className="p-3.5 glass-card rounded-2xl space-y-1.5"
+                        className="p-3.5 bg-white/[0.03] border border-white/[0.06] rounded-2xl space-y-1.5"
                       >
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-white">{sb.item?.name || "Ürün"}</span>
-                          <span className="font-bold text-emerald-400 font-mono">
+                          <span className="font-medium text-white">{sb.item?.name || "Ürün"}</span>
+                          <span className="font-semibold text-[#34D399] font-mono">
                             {sb.onHandQty} {sb.item?.baseUnit || "Adet"}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between text-[11px] text-white/50 font-mono">
+                        <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
                           <span>SKU: {sb.item?.sku}</span>
                           <span>Kullanılabilir: {sb.availableQty}</span>
                         </div>
@@ -336,7 +326,7 @@ export function StorageBinGrid({ bins, warehouses }: StorageBinGridProps) {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           )}
         </SheetContent>
       </Sheet>

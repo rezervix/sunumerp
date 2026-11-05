@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import {
   Sparkles,
@@ -88,9 +88,9 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-r from-emerald-500/10 via-slate-900/60 to-indigo-500/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 shadow-xl flex items-center gap-3">
-        <Loader2 className="h-5 w-5 animate-spin text-emerald-400 shrink-0" />
-        <span className="text-xs text-white/75 font-medium">
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-4.5 shadow-2xl flex items-center gap-3">
+        <Loader2 className="h-4 w-4 animate-spin text-emerald-400 shrink-0" />
+        <span className="text-xs text-zinc-400 font-medium">
           Yapay Zekâ veritabanı stok hareketlerini, devir hızını ve SKT risklerini analiz ediyor...
         </span>
       </div>
@@ -100,47 +100,56 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
   if (!banner) return null
 
   return (
-    <div className="bg-gradient-to-r from-emerald-500/10 via-slate-900/60 to-indigo-500/10 backdrop-blur-xl border border-white/15 rounded-2xl p-4 sm:p-5 shadow-xl">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div className="flex items-start gap-3.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/30 to-indigo-500/30 border border-emerald-400/30 text-emerald-300 shadow-sm">
+    <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl relative overflow-hidden">
+      {/* Ambient glow accent in top-right */}
+      <div className="absolute -top-16 -right-16 w-56 h-56 bg-emerald-500/[0.04] rounded-full blur-3xl pointer-events-none" />
+
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative z-10">
+        <div className="flex items-start gap-4">
+          {/* Breathing / Pulsing Emerald Orb Icon */}
+          <motion.div
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[#34D399] shadow-[0_0_20px_rgba(52,211,153,0.15)]"
+          >
             <Sparkles className="h-5 w-5" />
-          </div>
+          </motion.div>
+
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                Akıllı Yönetici Özeti ve Öneri
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#34D399]">
+                AI Yönetici Özeti
               </span>
-              <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-400/30 rounded-full px-3 py-0.5 text-[11px] font-medium">
-                Canlı Veritabanı Analizi • Devir Hızı: {banner.avgTurnoverRate}x
+              <span className="bg-white/[0.05] text-zinc-400 border border-white/[0.08] rounded-full px-2.5 py-0.5 text-[11px] font-mono">
+                Devir Hızı: {banner.avgTurnoverRate}x
               </span>
               {banner.criticalSkuCount > 0 && (
-                <span className="bg-rose-500/15 text-rose-300 border border-rose-500/30 rounded-full px-3 py-0.5 text-[11px] font-semibold">
+                <span className="bg-rose-500/10 text-rose-300 border border-rose-500/20 rounded-full px-2.5 py-0.5 text-[11px] font-medium">
                   {banner.criticalSkuCount} Kritik Stok
                 </span>
               )}
               {banner.expiringLotCount > 0 && (
-                <span className="bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full px-3 py-0.5 text-[11px] font-semibold">
+                <span className="bg-amber-500/10 text-amber-300 border border-amber-500/20 rounded-full px-2.5 py-0.5 text-[11px] font-medium">
                   {banner.expiringLotCount} Yaklaşan SKT
                 </span>
               )}
             </div>
 
             {/* 2 Cümlelik Sade Yönetici Özeti */}
-            <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal">
               {banner.sentence1}{" "}
-              <span className="text-emerald-300 font-semibold">{banner.sentence2}</span>
+              <span className="text-white font-medium">{banner.sentence2}</span>
             </p>
           </div>
         </div>
 
         {/* Tek Tıkla Aksiyon Al Butonları */}
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           {createdPrNo ? (
             <Link href="/dashboard/satinalma">
               <Button
                 size="sm"
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-xs h-9 gap-1.5 shadow-sm rounded-xl cursor-pointer"
+                className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-4 gap-1.5 rounded-full shadow-lg shadow-emerald-500/20 cursor-pointer"
               >
                 <CheckCircle2 className="h-4 w-4" />
                 Talep Açıldı ({createdPrNo}) → Satın Almaya Git
@@ -151,7 +160,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
               size="sm"
               onClick={handleOneClickAction}
               disabled={creatingPr}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 text-xs h-9 gap-1.5 shadow-sm font-semibold rounded-xl cursor-pointer"
+              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-4 gap-1.5 rounded-full shadow-lg shadow-emerald-500/20 cursor-pointer"
             >
               {creatingPr ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -160,7 +169,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
               )}
               Tek Tıkla Aksiyon Al
               {banner.criticalTopItem
-                ? ` (+${banner.criticalTopItem.recommendedOrderQty} ${banner.criticalTopItem.unit} Sipariş Aç)`
+                ? ` (+${banner.criticalTopItem.recommendedOrderQty} ${banner.criticalTopItem.unit} Sipariş)`
                 : ""}
             </Button>
           )}
@@ -170,7 +179,7 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
               size="sm"
               variant="outline"
               onClick={() => onQuickStockEntry(banner.criticalTopItem?.id)}
-              className="glass-input hover:bg-white/10 text-white border-white/15 text-xs h-9 gap-1.5 cursor-pointer"
+              className="bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border-white/[0.08] text-xs h-9 px-3.5 rounded-full cursor-pointer"
             >
               <ShoppingCart className="h-3.5 w-3.5 text-emerald-400" />
               Hızlı Stok Gir
@@ -181,9 +190,9 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
             <Button
               size="sm"
               variant="ghost"
-              className="text-white/75 hover:text-emerald-300 hover:bg-white/10 text-xs h-9 gap-1 rounded-xl cursor-pointer"
+              className="text-zinc-400 hover:text-white hover:bg-white/[0.05] text-xs h-9 px-3 rounded-full cursor-pointer"
             >
-              AI Analiz & Sor <ArrowRight className="h-3.5 w-3.5" />
+              AI Analiz <ArrowRight className="h-3.5 w-3.5 ml-1" />
             </Button>
           </Link>
         </div>
@@ -191,4 +200,3 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
     </div>
   )
 }
-

@@ -92,7 +92,7 @@ export default function StockDashboardPage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* ══════════════════════════════════════════════════════════
           0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON
          ══════════════════════════════════════════════════════════ */}
@@ -110,10 +110,10 @@ export default function StockDashboardPage() {
       {/* ══════════════════════════════════════════════════════════
           2. ÜST BAR: BAŞLIK + 3 NET ÇALIŞAN AKSİYON BUTONU
          ══════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-light tracking-tight text-white">
               Stok Kartları & Envanter Yönetimi
             </h1>
             <Button
@@ -121,13 +121,13 @@ export default function StockDashboardPage() {
               size="sm"
               onClick={() => fetchInventory(true)}
               disabled={loading || refreshing}
-              className="h-8 w-8 p-0 text-white/50 hover:text-white hover:bg-white/10 rounded-xl cursor-pointer"
+              className="h-8 w-8 p-0 text-zinc-500 hover:text-white hover:bg-white/[0.06] rounded-full cursor-pointer"
               title="Verileri Yenile"
             >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin text-emerald-400" : ""}`} />
+              <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin text-[#34D399]" : ""}`} />
             </Button>
           </div>
-          <p className="text-xs text-white/60 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             Gerçek zamanlı depo bakiyeleri, FIFO maliyet katmanları ve parti izlenebilirliği
           </p>
         </div>
@@ -138,10 +138,10 @@ export default function StockDashboardPage() {
           <Button
             onClick={() => setIsCreateOpen(true)}
             size="sm"
-            className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-xs h-9 gap-1.5 shadow-sm rounded-xl cursor-pointer"
+            className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-4 gap-1.5 rounded-full shadow-lg shadow-emerald-500/20 cursor-pointer"
           >
             <PackagePlus className="h-4 w-4" />
-            + Yeni Ürün Tanımla
+            Yeni Ürün Tanımla
           </Button>
 
           {/* BUTON 2: HIZLI STOK GİRİŞİ (ALIŞ/İRSALİYE) */}
@@ -149,10 +149,10 @@ export default function StockDashboardPage() {
             onClick={() => handleOpenQuickMove("IN")}
             size="sm"
             variant="outline"
-            className="bg-emerald-500/15 border-emerald-400/30 text-emerald-300 hover:bg-emerald-500/25 hover:text-emerald-200 font-medium text-xs h-9 gap-1.5 rounded-xl cursor-pointer"
+            className="bg-white/[0.04] border-white/[0.08] text-zinc-300 hover:bg-white/[0.08] hover:text-white text-xs h-9 px-3.5 gap-1.5 rounded-full cursor-pointer"
           >
-            <ArrowDownLeft className="h-4 w-4" />
-            Hızlı Stok Girişi (Alış/İrsaliye)
+            <ArrowDownLeft className="h-4 w-4 text-[#34D399]" />
+            Hızlı Stok Girişi
           </Button>
 
           {/* BUTON 3: HIZLI STOK ÇIKIŞI (SATIŞ/SARF) */}
@@ -160,16 +160,16 @@ export default function StockDashboardPage() {
             onClick={() => handleOpenQuickMove("OUT")}
             size="sm"
             variant="outline"
-            className="bg-sky-500/15 border-sky-400/30 text-sky-300 hover:bg-sky-500/25 hover:text-sky-200 font-medium text-xs h-9 gap-1.5 rounded-xl cursor-pointer"
+            className="bg-white/[0.04] border-white/[0.08] text-zinc-300 hover:bg-white/[0.08] hover:text-white text-xs h-9 px-3.5 gap-1.5 rounded-full cursor-pointer"
           >
-            <ArrowUpRight className="h-4 w-4" />
-            Hızlı Stok Çıkışı (Satış/Sarf)
+            <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+            Hızlı Stok Çıkışı
           </Button>
         </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          3. 4 NET ÖZET KART
+          3. 4 NET ÖZET KART (KUTUSUZ / BORDERLESS KPI STRIP)
          ══════════════════════════════════════════════════════════ */}
       <StockSummaryCards stats={stats} loading={loading} />
 

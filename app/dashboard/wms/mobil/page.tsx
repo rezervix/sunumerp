@@ -7,7 +7,6 @@ import {
   Wifi,
   WifiOff,
   Barcode,
-  QrCode,
   RefreshCw,
   CheckCircle2,
   ArrowLeft,
@@ -17,13 +16,8 @@ import {
   ClipboardCheck,
   SlidersHorizontal,
   ScanLine,
-  Camera,
-  AlertCircle,
-  Package,
-  Layers,
-  Check
+  AlertCircle
 } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -117,14 +111,12 @@ export default function MobileFieldScannerPwaPage() {
     let lastKeyTime = Date.now()
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Başka bir aktif input varsa sadece barcode input'u dinle
       const activeEl = document.activeElement
       if (activeEl && activeEl.tagName === "INPUT" && activeEl.id !== "mobile-barcode-input") {
         return
       }
 
       const now = Date.now()
-      // Barkod okuyucular tuşları < 50ms aralıkla ardışık basar
       if (now - lastKeyTime > 120) {
         charBuffer = ""
       }
@@ -168,7 +160,6 @@ export default function MobileFieldScannerPwaPage() {
         }
       }
 
-      // Çevrimdışıysa veya API bulunamadıysa yedek bilgi oluştur
       if (!matchedItem) {
         matchedItem = {
           id: `local-item-${code}`,
@@ -189,7 +180,6 @@ export default function MobileFieldScannerPwaPage() {
         BLIND_COUNT_ENTRY: "Hücre Sayımı (Kör Sayım)"
       }
 
-      // Kuyruğa / Veritabanına Yaz
       await enqueueOfflineWmsOperation(
         {
           deviceId,
@@ -265,12 +255,12 @@ export default function MobileFieldScannerPwaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-3 sm:p-5 flex flex-col justify-between max-w-md mx-auto select-none">
+    <div className="min-h-screen bg-[#080A09] text-white p-3 sm:p-5 flex flex-col justify-between max-w-md mx-auto select-none font-sans">
       {/* 1. ÜST BAR: GERİ DÖNÜŞ, ÇEVRİMDIŞI MODU VE AYARLAR */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Link href="/dashboard/wms">
-            <Button variant="ghost" size="sm" className="h-8 px-2 text-slate-300 hover:text-white hover:bg-slate-900 text-xs gap-1.5">
+            <Button variant="ghost" size="sm" className="h-8 px-2.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] text-xs gap-1.5 rounded-full cursor-pointer">
               <ArrowLeft className="h-4 w-4" />
               <span>WMS Panel</span>
             </Button>
@@ -281,7 +271,7 @@ export default function MobileFieldScannerPwaPage() {
               variant="ghost"
               size="sm"
               onClick={() => setIsSettingsOpen(true)}
-              className="h-8 px-2 text-slate-300 hover:text-white hover:bg-slate-900 text-xs gap-1"
+              className="h-8 px-2.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] text-xs gap-1 rounded-full cursor-pointer"
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               <span>Ayarlar</span>
@@ -301,10 +291,10 @@ export default function MobileFieldScannerPwaPage() {
                   toast.success("Çevrimiçi Moda Dönüldü")
                 }
               }}
-              className={`h-8 px-2.5 rounded-full text-xs font-semibold ${
+              className={`h-8 px-3 rounded-full text-xs font-semibold cursor-pointer ${
                 isOfflineMode
-                  ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
-                  : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                  ? "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                  : "bg-emerald-500/10 text-[#34D399] border border-emerald-500/20"
               }`}
             >
               {isOfflineMode ? <WifiOff className="mr-1 h-3.5 w-3.5" /> : <Wifi className="mr-1 h-3.5 w-3.5" />}
@@ -315,7 +305,7 @@ export default function MobileFieldScannerPwaPage() {
 
         {/* Çevrimdışı Bekleyen İşlem Uyarısı */}
         {pendingOfflineCount > 0 && (
-          <div className="bg-amber-950/40 border border-amber-500/50 rounded-xl p-2.5 flex items-center justify-between text-xs text-amber-200">
+          <div className="bg-amber-500/[0.08] border border-amber-500/25 rounded-2xl p-3 flex items-center justify-between text-xs text-amber-200">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
               <span><strong>{pendingOfflineCount}</strong> çevrimdışı işlem senkron bekliyor.</span>
@@ -324,7 +314,7 @@ export default function MobileFieldScannerPwaPage() {
               size="sm"
               onClick={handleBatchSync}
               disabled={isSyncing}
-              className="h-7 px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs"
+              className="h-7 px-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-full cursor-pointer"
             >
               <RefreshCw className={`mr-1 h-3 w-3 ${isSyncing ? "animate-spin" : ""}`} />
               Eşitle
@@ -332,69 +322,69 @@ export default function MobileFieldScannerPwaPage() {
           </div>
         )}
 
-        {/* 2. DÖRT DEV OPERASYON BUTONU */}
+        {/* 2. DÖRT DEV OPERASYON BUTONU (YÜKSEK KONTRASTLI OBSIDYEN & ZÜMRÜT) */}
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5 px-0.5">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 block mb-1.5 px-0.5">
             İşlem Modu Seçiniz:
           </span>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               onClick={() => setSelectedAction("GOODS_RECEIPT")}
-              className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between h-20 ${
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
                 selectedAction === "GOODS_RECEIPT"
-                  ? "bg-emerald-600 border-emerald-400 ring-2 ring-emerald-400 shadow-lg text-white"
-                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                  ? "bg-[#34D399] text-[#061811] border-[#34D399] shadow-lg shadow-emerald-500/20 font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
-              <Truck className="h-5 w-5" />
+              <Truck className={`h-5 w-5 ${selectedAction === "GOODS_RECEIPT" ? "text-[#061811]" : "text-[#34D399]"}`} />
               <div>
-                <div className="font-bold text-xs">1. Mal Kabul</div>
-                <div className="text-[10px] opacity-80">Rampa Girişi</div>
+                <div className="font-semibold text-xs">1. Mal Kabul</div>
+                <div className={`text-[10px] ${selectedAction === "GOODS_RECEIPT" ? "text-emerald-950" : "text-zinc-500"}`}>Rampa Girişi</div>
               </div>
             </button>
 
             <button
               onClick={() => setSelectedAction("PUTAWAY_CONFIRM")}
-              className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between h-20 ${
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
                 selectedAction === "PUTAWAY_CONFIRM"
-                  ? "bg-blue-600 border-blue-400 ring-2 ring-blue-400 shadow-lg text-white"
-                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                  ? "bg-[#34D399] text-[#061811] border-[#34D399] shadow-lg shadow-emerald-500/20 font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
-              <MapPin className="h-5 w-5" />
+              <MapPin className={`h-5 w-5 ${selectedAction === "PUTAWAY_CONFIRM" ? "text-[#061811]" : "text-[#34D399]"}`} />
               <div>
-                <div className="font-bold text-xs">2. Rafa Yerleştir</div>
-                <div className="text-[10px] opacity-80">Hücreye İstif</div>
+                <div className="font-semibold text-xs">2. Rafa Yerleştir</div>
+                <div className={`text-[10px] ${selectedAction === "PUTAWAY_CONFIRM" ? "text-emerald-950" : "text-zinc-500"}`}>Hücreye İstif</div>
               </div>
             </button>
 
             <button
               onClick={() => setSelectedAction("PICK_CONFIRM")}
-              className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between h-20 ${
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
                 selectedAction === "PICK_CONFIRM"
-                  ? "bg-purple-600 border-purple-400 ring-2 ring-purple-400 shadow-lg text-white"
-                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                  ? "bg-[#34D399] text-[#061811] border-[#34D399] shadow-lg shadow-emerald-500/20 font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
-              <PackageCheck className="h-5 w-5" />
+              <PackageCheck className={`h-5 w-5 ${selectedAction === "PICK_CONFIRM" ? "text-[#061811]" : "text-[#34D399]"}`} />
               <div>
-                <div className="font-bold text-xs">3. Sipariş Topla</div>
-                <div className="text-[10px] opacity-80">Raftan Çıkış</div>
+                <div className="font-semibold text-xs">3. Sipariş Topla</div>
+                <div className={`text-[10px] ${selectedAction === "PICK_CONFIRM" ? "text-emerald-950" : "text-zinc-500"}`}>Raftan Çıkış</div>
               </div>
             </button>
 
             <button
               onClick={() => setSelectedAction("BLIND_COUNT_ENTRY")}
-              className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between h-20 ${
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
                 selectedAction === "BLIND_COUNT_ENTRY"
-                  ? "bg-amber-600 border-amber-400 ring-2 ring-amber-400 shadow-lg text-white"
-                  : "bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850"
+                  ? "bg-[#34D399] text-[#061811] border-[#34D399] shadow-lg shadow-emerald-500/20 font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
               }`}
             >
-              <ClipboardCheck className="h-5 w-5" />
+              <ClipboardCheck className={`h-5 w-5 ${selectedAction === "BLIND_COUNT_ENTRY" ? "text-[#061811]" : "text-[#34D399]"}`} />
               <div>
-                <div className="font-bold text-xs">4. Hücre Sayımı</div>
-                <div className="text-[10px] opacity-80">Kör Sayım</div>
+                <div className="font-semibold text-xs">4. Hücre Sayımı</div>
+                <div className={`text-[10px] ${selectedAction === "BLIND_COUNT_ENTRY" ? "text-emerald-950" : "text-zinc-500"}`}>Kör Sayım</div>
               </div>
             </button>
           </div>
@@ -403,7 +393,7 @@ export default function MobileFieldScannerPwaPage() {
         {/* 3. GERÇEK BARKOD / SKU GİRİŞ & DONANIM TARAMA VİZÖRÜ */}
         <div className="space-y-2">
           <div className="relative">
-            <Barcode className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Barcode className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
             <Input
               id="mobile-barcode-input"
               ref={barcodeInputRef}
@@ -417,13 +407,13 @@ export default function MobileFieldScannerPwaPage() {
                 }
               }}
               placeholder="Barkod okutun veya yazın (8690001001)..."
-              className="pl-11 pr-24 h-13 text-sm bg-slate-900 border-slate-800 text-white placeholder:text-slate-500 rounded-xl focus-visible:ring-indigo-500 font-mono"
+              className="pl-11 pr-24 h-12 text-sm bg-[#111513] border-white/[0.08] text-white placeholder:text-zinc-600 rounded-2xl focus-visible:ring-[#34D399] font-mono"
             />
             <Button
               size="sm"
               disabled={isLoadingLookup}
               onClick={() => handleLookupAndExecute(barcodeInput)}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3.5 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs rounded-xl cursor-pointer"
             >
               {isLoadingLookup ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : "İşle"}
             </Button>
@@ -431,50 +421,50 @@ export default function MobileFieldScannerPwaPage() {
 
           {/* Hızlı Parametre Çubuğu (Hedef Raf & Miktar) */}
           <div className="flex items-center gap-2 text-xs">
-            <div className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-              <span className="text-slate-400 text-[11px]">Hedef Raf:</span>
-              <span className="font-mono font-bold text-indigo-400">{targetBinCode}</span>
+            <div className="flex-1 bg-[#111513] border border-white/[0.06] rounded-xl px-3 py-2 flex items-center justify-between">
+              <span className="text-zinc-500 text-[11px]">Hedef Raf:</span>
+              <span className="font-mono font-semibold text-[#34D399]">{targetBinCode}</span>
             </div>
-            <div className="w-28 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-              <span className="text-slate-400 text-[11px]">Miktar:</span>
+            <div className="w-28 bg-[#111513] border border-white/[0.06] rounded-xl px-3 py-2 flex items-center justify-between">
+              <span className="text-zinc-500 text-[11px]">Miktar:</span>
               <input
                 type="number"
                 min="1"
                 value={quantity}
                 onChange={e => setQuantity(e.target.value)}
-                className="w-10 bg-transparent text-right font-bold text-white focus:outline-none"
+                className="w-10 bg-transparent text-right font-semibold text-white focus:outline-none"
               />
             </div>
           </div>
         </div>
 
-        {/* 4. DONANIM BARKOD TABANCASI BİLGİLENDİRMESİ & KAMERA BUTONU */}
-        <div className="rounded-xl border border-dashed border-indigo-500/30 bg-slate-900/40 p-4 text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 text-indigo-400">
-            <ScanLine className="h-6 w-6 animate-pulse" />
+        {/* 4. DONANIM BARKOD TABANCASI BİLGİLENDİRMESİ */}
+        <div className="rounded-2xl border border-dashed border-emerald-500/20 bg-[#111513]/60 p-4 text-center space-y-2">
+          <div className="flex items-center justify-center gap-2 text-[#34D399]">
+            <ScanLine className="h-5 w-5 animate-pulse" />
             <span className="text-xs font-semibold">USB / Lazer Barkod Okuyucu Aktif</span>
           </div>
-          <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+          <p className="text-[11px] text-zinc-400 max-w-xs mx-auto">
             El terminali veya Bluetooth barkod tabancasını okutunuz. Otomatik algılanır ve anında veritabanına işlenir.
           </p>
 
           {/* Hızlı Demo Barkod Butonları */}
-          <div className="pt-2 flex flex-wrap gap-1.5 justify-center">
+          <div className="pt-1.5 flex flex-wrap gap-1.5 justify-center">
             <button
               onClick={() => handleLookupAndExecute("8690001001")}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700"
+              className="text-[10px] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 px-2.5 py-1 rounded-lg font-mono border border-white/[0.06] cursor-pointer"
             >
-              Kırmızı Gül (8690001001)
+              Gül (8690001001)
             </button>
             <button
               onClick={() => handleLookupAndExecute("8690001002")}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700"
+              className="text-[10px] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 px-2.5 py-1 rounded-lg font-mono border border-white/[0.06] cursor-pointer"
             >
               Lilyum (8690001002)
             </button>
             <button
               onClick={() => handleLookupAndExecute("8690001003")}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded font-mono border border-slate-700"
+              className="text-[10px] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 px-2.5 py-1 rounded-lg font-mono border border-white/[0.06] cursor-pointer"
             >
               Vazo (8690001003)
             </button>
@@ -483,25 +473,25 @@ export default function MobileFieldScannerPwaPage() {
 
         {/* 5. SON TARANAN ÜRÜN CANLI BİLGİ KARTI */}
         {scannedProduct && (
-          <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-3.5 space-y-2">
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.06] p-4 space-y-2">
             <div className="flex items-start justify-between">
               <div>
-                <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+                <div className="flex items-center gap-1.5 text-[#34D399] text-xs font-semibold">
                   <CheckCircle2 className="h-4 w-4" />
                   <span>{scannedProduct.actionLabel} Tamamlandı</span>
                 </div>
-                <div className="font-bold text-sm text-white mt-0.5">{scannedProduct.name}</div>
-                <div className="text-[11px] text-slate-400 font-mono">SKU: {scannedProduct.sku}</div>
+                <div className="font-semibold text-sm text-white mt-1">{scannedProduct.name}</div>
+                <div className="text-[11px] text-zinc-400 font-mono">SKU: {scannedProduct.sku}</div>
               </div>
-              <Badge variant="outline" className="border-emerald-500/50 bg-emerald-500/20 text-emerald-300 font-bold">
+              <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-[#34D399] font-bold">
                 {scannedProduct.processedQty} {scannedProduct.unit}
               </Badge>
             </div>
 
             {scannedProduct.bins.length > 0 && (
-              <div className="pt-1.5 border-t border-emerald-900/40 text-[11px] text-slate-300 flex items-center justify-between">
+              <div className="pt-2 border-t border-emerald-500/15 text-[11px] text-zinc-300 flex items-center justify-between">
                 <span>Mevcut Raf Dağılımı:</span>
-                <span className="font-mono text-emerald-400 font-semibold">
+                <span className="font-mono text-[#34D399] font-medium">
                   {scannedProduct.bins.map(b => `${b.binCode} (${b.onHandQty})`).join(", ")}
                 </span>
               </div>
@@ -511,18 +501,18 @@ export default function MobileFieldScannerPwaPage() {
       </div>
 
       {/* 6. ALT BİLGİ: KUYRUK SAYACI VE HIZLI SENKRON */}
-      <div className="pt-3 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-400">
+      <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-500">
         <div>
-          Cihaz: <span className="text-slate-200 font-mono">{deviceId}</span>
+          Cihaz: <span className="text-zinc-300 font-mono">{deviceId}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span>Kuyruk: <strong>{queue.length}</strong></span>
+          <span>Kuyruk: <strong className="text-white">{queue.length}</strong></span>
           <Button
             size="sm"
             variant="outline"
             onClick={handleBatchSync}
             disabled={isSyncing}
-            className="h-7 px-2.5 text-[10px] bg-slate-900 border-slate-800 text-slate-200"
+            className="h-7 px-3 text-[10px] bg-white/[0.04] border-white/[0.08] text-zinc-300 hover:text-white rounded-full cursor-pointer"
           >
             <RefreshCw className={`mr-1 h-3 w-3 ${isSyncing ? "animate-spin" : ""}`} />
             Senkronize Et
@@ -532,54 +522,54 @@ export default function MobileFieldScannerPwaPage() {
 
       {/* AYARLAR ÇEKMECESİ (SHEET) */}
       <Sheet open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <SheetContent side="bottom" className="bg-slate-900 text-white border-slate-800 rounded-t-2xl max-w-md mx-auto">
+        <SheetContent side="bottom" className="bg-[#111513] text-white border-t border-white/[0.08] rounded-t-3xl max-w-md mx-auto p-6 shadow-2xl">
           <SheetHeader>
-            <SheetTitle className="text-white text-base">Terminal Parametreleri</SheetTitle>
-            <SheetDescription className="text-slate-400 text-xs">
+            <SheetTitle className="text-white text-base font-semibold">Terminal Parametreleri</SheetTitle>
+            <SheetDescription className="text-zinc-400 text-xs">
               Saha cihazı ve varsayılan işlem hedeflerini yapılandırın.
             </SheetDescription>
           </SheetHeader>
 
-          <div className="space-y-3 py-4 text-xs">
+          <div className="space-y-3.5 py-4 text-xs">
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Varsayılan Hedef Raf (Bin Code)</Label>
+              <Label className="text-zinc-300 text-xs">Varsayılan Hedef Raf (Bin Code)</Label>
               <Input
                 value={targetBinCode}
                 onChange={e => setTargetBinCode(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white font-mono"
+                className="bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-xl h-9.5"
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Cihaz Kimliği (Device ID)</Label>
+              <Label className="text-zinc-300 text-xs">Cihaz Kimliği (Device ID)</Label>
               <Input
                 value={deviceId}
                 onChange={e => setDeviceId(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white font-mono"
+                className="bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-xl h-9.5"
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Operatör Adı</Label>
+              <Label className="text-zinc-300 text-xs">Operatör Adı</Label>
               <Input
                 value={operatorName}
                 onChange={e => setOperatorName(e.target.value)}
-                className="bg-slate-800 border-slate-700 text-white"
+                className="bg-white/[0.04] border-white/[0.08] text-white rounded-xl h-9.5"
               />
             </div>
 
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Parti / Lot Numarası (Opsiyonel)</Label>
+              <Label className="text-zinc-300 text-xs">Parti / Lot Numarası (Opsiyonel)</Label>
               <Input
                 value={lotNumber}
                 onChange={e => setLotNumber(e.target.value)}
                 placeholder="Örn: LOT-2026-11"
-                className="bg-slate-800 border-slate-700 text-white font-mono"
+                className="bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-xl h-9.5"
               />
             </div>
 
             <Button
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold mt-2"
+              className="w-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full mt-2 h-9 cursor-pointer"
               onClick={() => {
                 setIsSettingsOpen(false)
                 toast.success("Terminal ayarları kaydedildi.")

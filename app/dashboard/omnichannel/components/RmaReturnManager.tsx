@@ -3,13 +3,8 @@
 import React, { useState } from 'react';
 import {
   RotateCcw,
-  Boxes,
   CheckCircle2,
-  AlertTriangle,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
-  Building
+  AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -75,25 +70,25 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
     switch (result) {
       case 'PENDING_INSPECTION':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
             <AlertTriangle className="w-3 h-3 text-amber-400" /> Muayene Bekliyor
           </span>
         );
       case 'RESTOCK_TO_BIN':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Sağlam (Rafa Alındı)
           </span>
         );
       case 'QUARANTINE_REPAIR':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20">
             <AlertTriangle className="w-3 h-3 text-rose-400" /> Hasarlı (Karantinada)
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-3 py-0.5 text-xs font-semibold bg-white/10 text-white/70 border border-white/15">
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/5 text-zinc-400 border border-white/10">
             {result}
           </span>
         );
@@ -102,58 +97,58 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="glass-panel p-5 rounded-2xl">
-        <h3 className="text-base font-bold text-white flex items-center gap-2">
-          <RotateCcw className="w-5 h-5 text-amber-400" />
+      <div className="bg-[#111513]/90 border border-white/[0.06] p-5 rounded-[20px]">
+        <h3 className="text-base font-semibold text-white flex items-center gap-2">
+          <RotateCcw className="w-4 h-4 text-emerald-400" />
           Müşteri İade & Kalite Kontrol Muayenesi (RMA)
         </h3>
-        <p className="text-xs text-white/60 mt-0.5">
+        <p className="text-xs text-zinc-400 mt-0.5">
           Pazaryeri ve e-ticaret iadelerinin kalite kontrolü, sağlam ürünlerin tekrar raf stok bakiyelerine eklenmesi
         </p>
       </div>
 
-      <div className="glass-table-container overflow-hidden">
+      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
         {rmaReturns.length === 0 ? (
-          <div className="text-center py-10 text-white/45 text-xs">
+          <div className="text-center py-10 text-zinc-500 text-xs">
             Kayıtlı iade (RMA) talebi bulunmuyor.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="bg-white/[0.03] border-b border-white/10 text-white/50 uppercase text-[11px]">
-                  <th className="py-3.5 px-4 font-semibold">RMA / Sipariş No</th>
-                  <th className="py-3.5 px-3 font-semibold">Müşteri & Kanal</th>
-                  <th className="py-3.5 px-3 font-semibold">İade Ürün / Neden</th>
-                  <th className="py-3.5 px-3 font-semibold text-center">Kalite Durumu</th>
-                  <th className="py-3.5 px-4 font-semibold text-right">Karar / Aksiyon</th>
+                <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] tracking-wider">
+                  <th className="py-3.5 px-4 font-medium">RMA / Sipariş No</th>
+                  <th className="py-3.5 px-3 font-medium">Müşteri & Kanal</th>
+                  <th className="py-3.5 px-3 font-medium">İade Ürün / Neden</th>
+                  <th className="py-3.5 px-3 font-medium text-center">Kalite Durumu</th>
+                  <th className="py-3.5 px-4 font-medium text-right">Karar / Aksiyon</th>
                 </tr>
               </thead>
               <tbody>
                 {rmaReturns.map((rma) => (
                   <tr
                     key={rma.id}
-                    className="border-b border-white/5 hover:bg-white/[0.04] transition-colors"
+                    className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
                   >
                     <td className="py-4 px-4">
-                      <div className="font-bold text-white text-sm">
+                      <div className="font-medium text-white text-sm">
                         {rma.rmaNumber}
                       </div>
-                      <div className="text-[11px] text-white/45 font-mono mt-0.5">
+                      <div className="text-[11px] text-zinc-500 font-mono mt-0.5">
                         Sipariş: {rma.orderNumber}
                       </div>
                     </td>
 
                     <td className="py-4 px-3">
-                      <div className="font-semibold text-white">
+                      <div className="font-medium text-white">
                         {rma.customerName}
                       </div>
                       <div className="flex items-center gap-1.5 mt-1">
-                        <span className="bg-sky-500/15 text-sky-300 border border-sky-500/30 rounded-full px-2.5 py-0.5 text-[10px] font-mono">
+                        <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2.5 py-0.5 text-[10px] font-mono">
                           {rma.channelCode}
                         </span>
                         {rma.returnTrackingNo && (
-                          <span className="text-[11px] text-white/50 font-mono">
+                          <span className="text-[11px] text-zinc-500 font-mono">
                             {rma.returnTrackingNo}
                           </span>
                         )}
@@ -162,11 +157,11 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
 
                     <td className="py-4 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white">{rma.itemName}</span>
-                        <span className="font-mono text-white/45">({rma.sku})</span>
-                        <strong className="text-amber-400">x {rma.returnQty} Adet</strong>
+                        <span className="font-medium text-white">{rma.itemName}</span>
+                        <span className="font-mono text-zinc-500">({rma.sku})</span>
+                        <strong className="text-emerald-400 font-medium">x {rma.returnQty} Adet</strong>
                       </div>
-                      <div className="text-[11px] text-white/50 italic mt-0.5">
+                      <div className="text-[11px] text-zinc-500 italic mt-0.5">
                         {rma.returnReason}
                       </div>
                     </td>
@@ -181,7 +176,7 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
                           <button
                             onClick={() => handleDisposition(rma.id, 'RESTOCK_TO_BIN')}
                             disabled={submittingId === rma.id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-400 text-black hover:bg-emerald-300 rounded-full text-xs font-semibold shadow-[0_0_15px_rgba(52,211,153,0.2)] transition active:scale-95 disabled:opacity-50"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             Sağlam Kabul (Rafa Al)
@@ -190,16 +185,16 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
                           <button
                             onClick={() => handleDisposition(rma.id, 'QUARANTINE_REPAIR')}
                             disabled={submittingId === rma.id}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-rose-500/20 transition active:scale-95 disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 rounded-full text-xs font-semibold transition active:scale-95 disabled:opacity-50"
                           >
                             <AlertTriangle className="w-3.5 h-3.5" />
                             Kusurlu (Karantina)
                           </button>
                         </div>
                       ) : (
-                        <div className="text-xs text-white/60">
+                        <div className="text-xs text-zinc-400">
                           <div>Hücre: <strong className="text-white font-mono">{rma.targetBinCode || 'A-01-01'}</strong></div>
-                          <div className="text-emerald-400 font-semibold mt-0.5">İade: ₺{rma.refundAmount}</div>
+                          <div className="text-emerald-400 font-medium mt-0.5">İade: ₺{rma.refundAmount}</div>
                         </div>
                       )}
                     </td>

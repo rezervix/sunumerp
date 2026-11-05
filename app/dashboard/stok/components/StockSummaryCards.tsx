@@ -3,6 +3,7 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { DollarSign, AlertTriangle, Clock, Warehouse } from "lucide-react"
+import { AnimatedNumber } from "@/components/ui/motion-primitives"
 
 interface StockSummaryCardsProps {
   stats: {
@@ -16,110 +17,81 @@ interface StockSummaryCardsProps {
 }
 
 export function StockSummaryCards({ stats, loading }: StockSummaryCardsProps) {
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
-      maximumFractionDigits: 0
-    }).format(val || 0)
-  }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
       {/* 1. TOPLAM STOK DEĞERİ */}
-      <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className="glass-card p-6 rounded-2xl flex items-center justify-between"
-      >
-        <div className="space-y-1">
-          <p className="text-sm text-white/60">
-            Toplam Stok Değeri
-          </p>
-          <div className="text-2xl font-bold text-white mt-1 tracking-tight">
-            {loading ? "..." : formatCurrency(stats.totalStockValue)}
+      <div className="space-y-1">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+          <DollarSign className="h-3.5 w-3.5 text-[#34D399]" />
+          <span>Toplam Stok Değeri</span>
+        </div>
+        <div className="flex items-baseline gap-2 pt-1">
+          <div className="text-3xl sm:text-4xl font-light text-white tracking-tight">
+            {loading ? "..." : <AnimatedNumber value={stats.totalStockValue || 0} prefix="₺" />}
           </div>
-          <p className="text-[11px] text-emerald-400 font-medium">Mevcut aktif envanter maliyeti</p>
+          <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium">
+            Canlı
+          </span>
         </div>
-        <div className="h-11 w-11 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-400/25">
-          <DollarSign className="h-5 w-5" />
-        </div>
-      </motion.div>
+        <p className="text-[11px] text-zinc-500">Mevcut aktif envanter maliyeti</p>
+      </div>
 
       {/* 2. KRİTİK STOĞA DÜŞENLER */}
-      <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className={`glass-card p-6 rounded-2xl flex items-center justify-between ${
-          stats.criticalStockCount > 0 ? "border-rose-500/30 bg-rose-500/[0.06]" : ""
-        }`}
-      >
-        <div className="space-y-1">
-          <p className="text-sm text-white/60">
-            Kritik Stoğa Düşenler
-          </p>
-          <div className="flex items-center gap-2">
-            <span className={`text-2xl font-bold mt-1 tracking-tight ${
-              stats.criticalStockCount > 0 ? "text-rose-400" : "text-white"
-            }`}>
-              {loading ? "..." : `${stats.criticalStockCount} Ürün`}
-            </span>
+      <div className="space-y-1">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+          <AlertTriangle className={`h-3.5 w-3.5 ${stats.criticalStockCount > 0 ? "text-rose-400" : "text-zinc-500"}`} />
+          <span>Kritik Stok Uyarısı</span>
+        </div>
+        <div className="flex items-baseline gap-2 pt-1">
+          <div className={`text-3xl sm:text-4xl font-light tracking-tight ${
+            stats.criticalStockCount > 0 ? "text-rose-400" : "text-white"
+          }`}>
+            {loading ? "..." : <AnimatedNumber value={stats.criticalStockCount || 0} suffix=" Ürün" />}
           </div>
-          <p className={`text-[11px] font-medium ${stats.criticalStockCount > 0 ? "text-rose-400/90" : "text-white/50"}`}>
-            Min. stok seviyesinin altında
-          </p>
+          {stats.criticalStockCount > 0 && (
+            <span className="bg-rose-500/10 text-rose-300 text-xs px-2 py-0.5 rounded-full font-medium">
+              ROP Altı
+            </span>
+          )}
         </div>
-        <div className={`h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 border ${
-          stats.criticalStockCount > 0
-            ? "bg-rose-500/15 text-rose-400 border-rose-500/30"
-            : "bg-white/5 text-white/60 border-white/10"
-        }`}>
-          <AlertTriangle className="h-5 w-5" />
-        </div>
-      </motion.div>
+        <p className="text-[11px] text-zinc-500">Min. stok seviyesinin altında</p>
+      </div>
 
       {/* 3. SKT YAKLAŞANLAR */}
-      <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className={`glass-card p-6 rounded-2xl flex items-center justify-between ${
-          stats.expiringCount > 0 ? "border-amber-500/30 bg-amber-500/[0.06]" : ""
-        }`}
-      >
-        <div className="space-y-1">
-          <p className="text-sm text-white/60">
-            SKT Yaklaşanlar
-          </p>
-          <div className="text-2xl font-bold mt-1 tracking-tight text-amber-400">
-            {loading ? "..." : `${stats.expiringCount} Parti / Lot`}
+      <div className="space-y-1">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+          <Clock className={`h-3.5 w-3.5 ${stats.expiringCount > 0 ? "text-amber-400" : "text-zinc-500"}`} />
+          <span>SKT Yaklaşanlar</span>
+        </div>
+        <div className="flex items-baseline gap-2 pt-1">
+          <div className="text-3xl sm:text-4xl font-light text-white tracking-tight">
+            {loading ? "..." : <AnimatedNumber value={stats.expiringCount || 0} suffix=" Lot" />}
           </div>
-          <p className="text-[11px] text-amber-400/80 font-medium">15 gün içinde tazelik/son kullanma</p>
+          {stats.expiringCount > 0 && (
+            <span className="bg-amber-500/10 text-amber-300 text-xs px-2 py-0.5 rounded-full font-medium">
+              15 Gün
+            </span>
+          )}
         </div>
-        <div className="h-11 w-11 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 border border-amber-400/25">
-          <Clock className="h-5 w-5" />
-        </div>
-      </motion.div>
+        <p className="text-[11px] text-zinc-500">Tazelik ve parti son kullanma riski</p>
+      </div>
 
       {/* 4. AKTİF DEPO / ÇEŞİT */}
-      <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-        className="glass-card p-6 rounded-2xl flex items-center justify-between"
-      >
-        <div className="space-y-1">
-          <p className="text-sm text-white/60">
-            Aktif Depo / Çeşit
-          </p>
-          <div className="text-2xl font-bold text-white mt-1 tracking-tight">
-            {loading ? "..." : `${stats.activeWarehouseCount} Depo / ${stats.totalItemCount} Çeşit`}
+      <div className="space-y-1">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+          <Warehouse className="h-3.5 w-3.5 text-[#34D399]" />
+          <span>Aktif Envanter Çeşit</span>
+        </div>
+        <div className="flex items-baseline gap-2 pt-1">
+          <div className="text-3xl sm:text-4xl font-light text-white tracking-tight">
+            {loading ? "..." : <AnimatedNumber value={stats.totalItemCount || 0} suffix=" Kalem" />}
           </div>
-          <p className="text-[11px] text-sky-400 font-medium">Çoklu lokasyon & raf takibi</p>
+          <span className="bg-white/[0.06] text-zinc-400 text-xs px-2 py-0.5 rounded-full font-mono">
+            {stats.activeWarehouseCount} Depo
+          </span>
         </div>
-        <div className="h-11 w-11 rounded-2xl bg-sky-500/15 text-sky-400 flex items-center justify-center shrink-0 border border-sky-400/25">
-          <Warehouse className="h-5 w-5" />
-        </div>
-      </motion.div>
+        <p className="text-[11px] text-zinc-500">Çoklu lokasyon ve raf takibi</p>
+      </div>
     </div>
   )
 }
-

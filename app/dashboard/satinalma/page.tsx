@@ -6,8 +6,7 @@ import {
   FileCheck2,
   Handshake,
   RefreshCw,
-  RotateCcw,
-  Sparkles
+  RotateCcw
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -102,9 +101,9 @@ export default function SmartProcurementAndConsignmentPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 glass-panel rounded-2xl m-6">
-        <RefreshCw className="w-8 h-8 text-indigo-400 animate-spin" />
-        <p className="text-sm font-medium text-white/70">
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] m-6">
+        <RefreshCw className="w-8 h-8 text-[#34D399] animate-spin" />
+        <p className="text-sm font-medium text-zinc-400">
           Akıllı Satın Alma ve ROP Motoru Yükleniyor...
         </p>
       </div>
@@ -112,11 +111,11 @@ export default function SmartProcurementAndConsignmentPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+    <div className="space-y-6">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
-      {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR */}
+      {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR (KUTUSUZ BORDERLESS STRIP) */}
       <ProcurementSummaryCards
         stats={stats}
         onNewRequisitionClick={() => setIsModalOpen(true)}
@@ -124,12 +123,12 @@ export default function SmartProcurementAndConsignmentPage() {
       />
 
       {/* Durum & Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-white/50 glass-panel px-4 py-2.5 rounded-xl">
+      <div className="flex items-center justify-between text-xs text-zinc-400 bg-[#111513]/90 border border-white/[0.06] px-4 py-2.5 rounded-xl">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-white/70">Prisma / PostgreSQL Bağlantısı Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[#34D399] animate-ping" />
+          <span className="text-zinc-300">Prisma / PostgreSQL Otomatik ROP Motoru Aktif</span>
           {refreshing && (
-            <span className="text-indigo-400 font-medium flex items-center gap-1">
+            <span className="text-[#34D399] font-medium flex items-center gap-1">
               <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
             </span>
           )}
@@ -138,7 +137,7 @@ export default function SmartProcurementAndConsignmentPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchProcurementData()}
-            className="flex items-center gap-1.5 text-white/70 hover:text-indigo-400 transition"
+            className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
@@ -146,7 +145,7 @@ export default function SmartProcurementAndConsignmentPage() {
           <span className="text-white/20">•</span>
           <button
             onClick={handleResetSeed}
-            className="flex items-center gap-1.5 text-white/70 hover:text-amber-400 transition"
+            className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Örnek Verileri Sıfırla
@@ -156,10 +155,10 @@ export default function SmartProcurementAndConsignmentPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-1 sm:grid-cols-3 glass-panel p-1.5 rounded-2xl h-auto">
+        <TabsList className="grid grid-cols-1 sm:grid-cols-3 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
           <TabsTrigger
             value="critical-rop"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-amber-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-amber-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
             <AlertTriangle className="w-4 h-4 text-amber-400" />
             Kritik Stok & ROP Listesi ({criticalItems.length})
@@ -167,17 +166,17 @@ export default function SmartProcurementAndConsignmentPage() {
 
           <TabsTrigger
             value="requisitions"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-indigo-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-indigo-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <FileCheck2 className="w-4 h-4 text-indigo-400" />
-            Satın Alma Talepleri (PR / PO) ({purchaseRequisitions.length})
+            <FileCheck2 className="w-4 h-4 text-[#34D399]" />
+            Satın Alma Talepleri (PO) ({purchaseRequisitions.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="consignment"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold text-white/60 hover:text-white transition data-[state=active]:bg-sky-500/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-sky-500/30 data-[state=active]:shadow-lg"
+            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <Handshake className="w-4 h-4 text-sky-400" />
+            <Handshake className="w-4 h-4 text-zinc-300" />
             Konsinye (Emanet) Stoklar ({consignmentStocks.length})
           </TabsTrigger>
         </TabsList>
