@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, Cell, PieChart, Pie, Legend, ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer,
 } from "recharts"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,12 +13,31 @@ import {
   Download, Users, TrendingUp,
   DollarSign, ShoppingBag, ArrowUpRight, History, X
 } from "lucide-react"
+import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import {
+  AnimatedNumber,
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/ui/motion-primitives"
 
 const PIE_COLORS = ["#34D399", "#2DD4BF", "#10B981", "#14B8A6", "#6EE7B7"]
+
+function formatCompactCurrency(v: number): string {
+  const abs = Math.abs(v)
+  if (abs >= 1_000_000) {
+    const m = (v / 1_000_000).toFixed(1).replace(/\.0$/, "")
+    return `₺${m}M`
+  }
+  if (abs >= 1_000) {
+    const b = Math.round(v / 1_000)
+    return `₺${b}B`
+  }
+  return `₺${v}`
+}
 
 const statDef = [
   {
@@ -71,6 +90,48 @@ const statDef = [
     deltaValue: 18.6,
   },
 ]
+
+function WaveChartTooltip({ active, payload, label }: any) {
+  if (!active || !payload || payload.length === 0) return null
+  const incomeItem = payload.find((p: any) => p.dataKey === "income")
+  const expenseItem = payload.find((p: any) => p.dataKey === "expense")
+  const incVal = Number(incomeItem?.value || 0)
+  const expVal = Number(expenseItem?.value || 0)
+
+  return (
+    <div className="backdrop-blur-md bg-[#111513]/90 border border-white/10 rounded-xl p-3 shadow-2xl min-w-[175px]">
+      <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium mb-2">
+        {label}
+      </p>
+      <div className="space-y-1.5 text-xs">
+        <div className="flex items-center justify-between gap-4">
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <span className="w-2 h-2 rounded-full bg-[#34D399] shadow-[0_0_8px_#34D399]" />
+            Gelir
+          </span>
+          <span className="font-light text-white tabular-nums">
+            ₺{incVal.toLocaleString("tr-TR")}
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className="flex items-center gap-1.5 text-zinc-300">
+            <span className="w-2 h-2 rounded-full bg-[#2DD4BF] shadow-[0_0_8px_#2DD4BF]" />
+            Gider
+          </span>
+          <span className="font-light text-white tabular-nums">
+            ₺{expVal.toLocaleString("tr-TR")}
+          </span>
+        </div>
+        <div className="pt-1.5 mt-1 border-t border-white/[0.06] flex items-center justify-between gap-4">
+          <span className="text-zinc-400">Net Fark</span>
+          <span className="font-medium text-emerald-400 tabular-nums">
+            +₺{(incVal - expVal).toLocaleString("tr-TR")}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function DashboardPage() {
   const { currentBranch, isSuperAdmin, loading: authLoading } = useAuth()
@@ -162,16 +223,44 @@ export default function DashboardPage() {
     { name: tText("dashboard.expense", "Gider"), value: statsData.expense || 0 },
   ]
 
+  // Multi-point spline series anchored to real statsData.income & statsData.expense
+  const waveData = useMemo(() => {
+    const inc = Number(statsData.income) || 1250000
+    const exp = Number(statsData.expense) || 480000
+    return [
+      { period: "01 Kas", income: Math.round(inc * 0.58), expense: Math.round(exp * 0.62) },
+      { period: "05 Kas", income: Math.round(inc * 0.72), expense: Math.round(exp * 0.54) },
+      { period: "10 Kas", income: Math.round(inc * 0.66), expense: Math.round(exp * 0.71) },
+      { period: "15 Kas", income: Math.round(inc * 0.84), expense: Math.round(exp * 0.68) },
+      { period: "20 Kas", income: Math.round(inc * 0.79), expense: Math.round(exp * 0.82) },
+      { period: "25 Kas", income: Math.round(inc * 0.93), expense: Math.round(exp * 0.88) },
+      { period: "Bugün", income: inc, expense: exp },
+    ]
+  }, [statsData.income, statsData.expense])
+
   const pieData =
     statsData.spendingByKind.length > 0
       ? statsData.spendingByKind
       : [{ name: tText("dashboard.general", "Genel"), value: statsData.expense || 0 }]
 
+  const totalExpenseSum = useMemo(() => {
+    const s = pieData.reduce((acc, item) => acc + (Number(item.value) || 0), 0)
+    return s > 0 ? s : 1
+  }, [pieData])
+
+  const expenseToIncomeRatio = useMemo(() => {
+    const inc = Number(statsData.income) || 1
+    const exp = Number(statsData.expense) || 0
+    return Math.min(Math.max(exp / inc, 0.08), 0.95)
+  }, [statsData.income, statsData.expense])
+
+  const netProfitValue = (statsData.income || 0) - (statsData.expense || 0)
+
   return (
-    <div className="space-y-6">
+    <StaggerContainer className="space-y-6">
 
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <StaggerItem className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-light text-white tracking-tight flex items-center gap-2">
             {tText("dashboard.title", t.nav.dashboard)}
@@ -193,16 +282,13 @@ export default function DashboardPage() {
             <span>{tText("dashboard.report", "Rapor")}</span>
           </button>
         </div>
-      </div>
+      </StaggerItem>
 
-      {/* ── 1. KUTUSUZ (BORDERLESS) ÜST KPI ŞERİDİ ── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
+      {/* ── 1. KUTUSUZ (BORDERLESS) ÜST KPI ŞERİDİ (AnimatedNumber + Tek Satır Rozet Hizası) ── */}
+      <StaggerItem className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 py-4 border-b border-white/[0.06]">
         {statDef.map(s => {
           const rawVal = statsData[s.key as keyof typeof statsData]
           const numVal = Number(rawVal) || 0
-          const display = s.isCurrency
-            ? `₺${numVal.toLocaleString("tr-TR")}`
-            : String(rawVal)
 
           const netDiff = s.key === "income"
             ? (statsData.income || 0) - (statsData.expense || 0)
@@ -210,20 +296,22 @@ export default function DashboardPage() {
           const isPositive = netDiff >= 0
 
           return (
-            <div key={s.key} className="flex flex-col gap-2">
+            <div key={s.key} className="flex flex-col gap-2 min-w-0">
               <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
                 <s.Icon size={13} className="text-zinc-500 shrink-0" />
                 <span className="truncate">{tText(s.titleKey, s.fallback)}</span>
               </div>
-              <div className="flex items-baseline gap-2.5 flex-wrap">
-                <span className="text-4xl font-light text-white tracking-tight tabular-nums">
-                  {display}
-                </span>
+              <div className="flex items-baseline gap-2.5 flex-nowrap whitespace-nowrap">
+                <AnimatedNumber
+                  value={numVal}
+                  prefix={s.isCurrency ? "₺" : ""}
+                  className="text-3xl xl:text-4xl font-light text-white tracking-tight tabular-nums whitespace-nowrap"
+                />
                 <span
                   className={
                     isPositive
-                      ? "bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums"
-                      : "bg-rose-500/10 text-rose-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums"
+                      ? "bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums shrink-0 whitespace-nowrap"
+                      : "bg-rose-500/10 text-rose-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums shrink-0 whitespace-nowrap"
                   }
                 >
                   {isPositive ? `+${s.deltaValue}%` : `-${s.deltaValue}%`}
@@ -232,87 +320,155 @@ export default function DashboardPage() {
             </div>
           )
         })}
-      </div>
+      </StaggerItem>
 
       {/* ── 2. GRAFİK VE BENTO KARTLARI ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
 
-        {/* Bar Chart Bento Card */}
-        <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 lg:col-span-2 flex flex-col">
+        {/* Dual-Layer Monotone Spline AreaChart Card */}
+        <StaggerItem className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 lg:col-span-2 flex flex-col">
           <div className="flex items-start justify-between gap-4 pb-6">
             <div>
               <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
                 {tText("dashboard.incomeExpenseAnalysis", "Gelir / Gider Analizi")} · {tText("dashboard.netProfitLoss", "Net Kâr/Zarar")}
               </p>
-              <div className="flex items-baseline gap-2.5 mt-1">
-                <span className="font-light text-2xl text-white tracking-tight tabular-nums">
-                  ₺{((statsData.income || 0) - (statsData.expense || 0)).toLocaleString("tr-TR")}
-                </span>
-                <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium">
+              <div className="flex items-baseline gap-2.5 mt-1 flex-nowrap whitespace-nowrap">
+                <AnimatedNumber
+                  value={netProfitValue}
+                  prefix="₺"
+                  className="font-light text-2xl text-white tracking-tight tabular-nums"
+                />
+                <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium shrink-0">
                   Net Bilanço
                 </span>
               </div>
             </div>
 
-            {/* 7G | 30G | 90G Pill Filter */}
-            <div className="bg-[#080A09] border border-white/[0.06] rounded-full p-1 flex items-center gap-0.5 text-[11px] text-zinc-400 shrink-0 select-none">
-              <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">7G</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-medium">30G</span>
-              <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">90G</span>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden sm:flex items-center gap-3 text-[11px] text-zinc-400">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#34D399] shadow-[0_0_8px_#34D399]" />
+                  Gelir
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#2DD4BF] shadow-[0_0_8px_#2DD4BF]" />
+                  Gider
+                </span>
+              </div>
+
+              {/* 7G | 30G | 90G Pill Filter */}
+              <div className="bg-[#080A09] border border-white/[0.06] rounded-full p-1 flex items-center gap-0.5 text-[11px] text-zinc-400 shrink-0 select-none">
+                <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">7G</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-medium">30G</span>
+                <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">90G</span>
+              </div>
             </div>
           </div>
 
-          <div className="h-72 w-full">
+          {/* Subtle Vertical Guide Columns + Dual-Layer Spline AreaChart */}
+          <div className="relative h-72 w-full">
+            {/* Background Faint Vertical Guide Columns */}
+            <div
+              className="pointer-events-none absolute inset-x-12 inset-y-2 grid grid-cols-7 gap-3 opacity-35"
+              aria-hidden="true"
+            >
+              {Array.from({ length: 7 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className="h-full rounded-lg bg-gradient-to-b from-white/[0.03] via-white/[0.015] to-transparent border-x border-white/[0.02]"
+                />
+              ))}
+            </div>
+
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData} barSize={44}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.05)" />
+              <AreaChart data={waveData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="emeraldWaveGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#34D399" stopOpacity={0.34} />
+                    <stop offset="65%" stopColor="#34D399" stopOpacity={0.08} />
+                    <stop offset="100%" stopColor="#34D399" stopOpacity={0.0} />
+                  </linearGradient>
+                  <linearGradient id="turquoiseWaveGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#2DD4BF" stopOpacity={0.26} />
+                    <stop offset="70%" stopColor="#2DD4BF" stopOpacity={0.05} />
+                    <stop offset="100%" stopColor="#2DD4BF" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={true}
+                  horizontal={true}
+                  stroke="rgba(255, 255, 255, 0.04)"
+                />
                 <XAxis
-                  dataKey="name"
+                  dataKey="period"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: "#a1a1aa", fontWeight: 400 }}
+                  tick={{ fontSize: 11, fill: "#71717a", fontWeight: 400 }}
+                  dy={6}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 11, fill: "#71717a" }}
-                  tickFormatter={v => `₺${v}`}
-                  width={68}
+                  tickFormatter={formatCompactCurrency}
+                  width={56}
                 />
                 <Tooltip
-                  cursor={{ fill: "rgba(255, 255, 255, 0.03)", radius: 8 }}
-                  contentStyle={{
-                    borderRadius: 14,
-                    border: "1px solid rgba(255, 255, 255, 0.06)",
-                    background: "rgba(17, 21, 19, 0.95)",
-                    backdropFilter: "blur(12px)",
-                    color: "#ffffff",
-                    boxShadow: "0 12px 32px rgba(0, 0, 0, 0.55)",
-                    fontSize: 12,
-                    padding: "8px 12px",
-                  }}
-                  itemStyle={{ color: "#34D399", fontWeight: 500 }}
-                  formatter={(v: number) => [`₺${v.toLocaleString("tr-TR")}`, ""]}
+                  cursor={{ stroke: "rgba(52, 211, 153, 0.25)", strokeWidth: 1, strokeDasharray: "4 4" }}
+                  content={<WaveChartTooltip />}
                 />
-                <Bar dataKey="value" radius={[10, 10, 0, 0]}>
-                  <Cell fill="#34D399" />
-                  <Cell fill="#2DD4BF" />
-                </Bar>
-              </BarChart>
+                <Area
+                  type="monotone"
+                  dataKey="income"
+                  stroke="#34D399"
+                  strokeWidth={2.5}
+                  fill="url(#emeraldWaveGrad)"
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
+                  activeDot={{
+                    r: 5,
+                    fill: "#34D399",
+                    stroke: "#080A09",
+                    strokeWidth: 2,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="expense"
+                  stroke="#2DD4BF"
+                  strokeWidth={2}
+                  fill="url(#turquoiseWaveGrad)"
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
+                  activeDot={{
+                    r: 4,
+                    fill: "#2DD4BF",
+                    stroke: "#080A09",
+                    strokeWidth: 2,
+                  }}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </StaggerItem>
 
-        {/* Pie Chart Bento Card */}
-        <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 flex flex-col">
-          <div className="flex items-start justify-between gap-3 pb-5">
+        {/* Expense Distribution Card: Radial Half-Circle Gauge + Segmented LED Bars */}
+        <StaggerItem className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 flex flex-col justify-between">
+          <div className="flex items-start justify-between gap-3 pb-3">
             <div>
               <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
                 {tText("dashboard.expenseDistribution", "Harcama Dağılımı")}
               </p>
-              <p className="font-light text-2xl text-white tracking-tight tabular-nums mt-1">
-                ₺{(statsData.expense || 0).toLocaleString("tr-TR")}
-              </p>
+              <div className="mt-1">
+                <AnimatedNumber
+                  value={statsData.expense || 0}
+                  prefix="₺"
+                  className="font-light text-2xl text-white tracking-tight tabular-nums"
+                />
+              </div>
             </div>
 
             {/* 7G | 30G | 90G Pill Filter */}
@@ -323,52 +479,134 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="45%"
-                  innerRadius={56}
-                  outerRadius={84}
-                  paddingAngle={4}
-                  stroke="#111513"
-                  strokeWidth={2}
-                  dataKey="value"
-                >
-                  {pieData.map((_, i) => (
-                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: 14,
-                    border: "1px solid rgba(255, 255, 255, 0.06)",
-                    background: "rgba(17, 21, 19, 0.95)",
-                    backdropFilter: "blur(12px)",
-                    color: "#ffffff",
-                    fontSize: 12,
-                    padding: "8px 12px",
-                  }}
-                  itemStyle={{ color: "#34D399", fontWeight: 500 }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  iconSize={8}
-                  iconType="circle"
-                  wrapperStyle={{ paddingTop: "16px" }}
-                  formatter={v => <span style={{ color: "#a1a1aa", fontSize: 12, fontWeight: 400 }}>{v}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+          {/* Animated Semi-Circle Radial Gauge (%0 -> Hedef Oran) */}
+          <div className="relative flex flex-col items-center justify-center pt-1 pb-3">
+            <svg viewBox="0 0 220 120" className="w-full max-w-[220px] overflow-visible">
+              <defs>
+                <linearGradient id="radialGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#34D399" />
+                  <stop offset="100%" stopColor="#2DD4BF" />
+                </linearGradient>
+              </defs>
+
+              {/* Outer Segmented Radial Ticks */}
+              {Array.from({ length: 25 }).map((_, i) => {
+                const ratio = i / 24
+                const angle = Math.PI * (1 - ratio)
+                const rInner = 86
+                const rOuter = 93
+                const x1 = 110 + rInner * Math.cos(angle)
+                const y1 = 104 - rInner * Math.sin(angle)
+                const x2 = 110 + rOuter * Math.cos(angle)
+                const y2 = 104 - rOuter * Math.sin(angle)
+                const isLit = ratio <= expenseToIncomeRatio
+                return (
+                  <line
+                    key={i}
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke={isLit ? "#34D399" : "rgba(255,255,255,0.08)"}
+                    strokeWidth={1.75}
+                    strokeLinecap="round"
+                  />
+                )
+              })}
+
+              {/* Background Track Arc */}
+              <path
+                d="M 32 104 A 78 78 0 0 1 188 104"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.06)"
+                strokeWidth={10}
+                strokeLinecap="round"
+              />
+
+              {/* Animated Foreground Arc */}
+              <motion.path
+                d="M 32 104 A 78 78 0 0 1 188 104"
+                fill="none"
+                stroke="url(#radialGaugeGrad)"
+                strokeWidth={10}
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: expenseToIncomeRatio }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="drop-shadow-[0_0_8px_rgba(52,211,153,0.35)]"
+              />
+            </svg>
+
+            <div className="-mt-11 text-center">
+              <AnimatedNumber
+                value={Math.round(expenseToIncomeRatio * 100)}
+                suffix="%"
+                className="text-2xl font-light text-white tracking-tight tabular-nums"
+              />
+              <p className="text-[10px] uppercase tracking-[0.12em] text-zinc-500 mt-0.5">
+                Gider / Ciro Oranı
+              </p>
+            </div>
           </div>
-        </div>
+
+          {/* Segmented LED Bars for Expense Categories */}
+          <div className="space-y-3 pt-2 border-t border-white/[0.06]">
+            {pieData.slice(0, 4).map((item, idx) => {
+              const val = Number(item.value) || 0
+              const share = Math.min(Math.max(val / totalExpenseSum, 0.05), 1)
+              const totalSegments = 20
+              const litSegments = Math.max(1, Math.round(share * totalSegments))
+              const accentColor = PIE_COLORS[idx % PIE_COLORS.length]
+
+              return (
+                <div key={item.name + idx} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-zinc-300 truncate">{item.name}</span>
+                    <div className="flex items-center gap-2 shrink-0 tabular-nums">
+                      <AnimatedNumber
+                        value={val}
+                        prefix="₺"
+                        className="text-zinc-200 font-light"
+                      />
+                      <span className="text-[10px] text-zinc-500 w-8 text-right">
+                        %{Math.round(share * 100)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 20-Segment LED Bar */}
+                  <div className="grid grid-cols-[repeat(20,minmax(0,1fr))] gap-1 h-2">
+                    {Array.from({ length: totalSegments }).map((_, segIdx) => {
+                      const active = segIdx < litSegments
+                      const activeClass =
+                        idx % 2 === 0
+                          ? "bg-[#34D399] shadow-[0_0_6px_rgba(52,211,153,0.35)]"
+                          : "bg-[#2DD4BF] shadow-[0_0_6px_rgba(45,212,191,0.35)]"
+                      return (
+                        <motion.span
+                          key={segIdx}
+                          initial={{ opacity: 0.15, scaleY: 0.5 }}
+                          animate={{ opacity: 1, scaleY: 1 }}
+                          transition={{
+                            delay: segIdx * 0.025 + idx * 0.06,
+                            duration: 0.25,
+                          }}
+                          className={`h-full rounded-[2px] ${
+                            active ? activeClass : "bg-white/[0.05]"
+                          }`}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </StaggerItem>
       </div>
 
       {/* ── Recent Activity Bento Card ── */}
-      <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6">
+      <StaggerItem className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6">
         <div className="flex items-center justify-between gap-4 pb-5">
           <div>
             <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
@@ -404,9 +642,12 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-white/[0.06]">
+            <StaggerContainer className="divide-y divide-white/[0.06]">
               {statsData.recentActivities.map((activity: any) => (
-                <div key={activity.id} className="py-3.5 first:pt-0 last:pb-0 flex items-start justify-between gap-4">
+                <StaggerItem
+                  key={activity.id}
+                  className="py-3.5 first:pt-0 last:pb-0 flex items-start justify-between gap-4"
+                >
                   <div className="flex items-start gap-3 min-w-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
                     <div className="min-w-0">
@@ -422,12 +663,12 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <span className="text-xs text-zinc-500 shrink-0 tabular-nums">{activity.time}</span>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           )}
         </div>
-      </div>
+      </StaggerItem>
 
       {/* Report Modal */}
       {isReportOpen && (
@@ -470,6 +711,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-    </div>
+    </StaggerContainer>
   )
 }
