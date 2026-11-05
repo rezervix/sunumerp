@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import {
-  Plus, Search, Eye, Trash2, Calendar, CreditCard, Terminal,
-  Building, ShoppingCart, CheckCircle2, AlertCircle, Clock,
-  Upload, Send, FolderOpen, Check,
-  FileText, ArrowRight, X
+  Plus, Search, Eye, Trash2, Calendar, Wallet, Laptop,
+  Building, ShoppingCart, CheckCircle2, XCircle, Clock,
+  Paperclip, Send, FolderClosed, ThumbsUp,
+  ThumbsDown, FileText, ArrowRight, X
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,8 +18,8 @@ import { mockDatabase } from "@/lib/data/mockDatabase"
 
 // Kategori Tanımları
 const CATEGORIES = [
-  { id: "finans", label: "Finans / Avans", icon: CreditCard, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
-  { id: "it", label: "IT / Donanım", icon: Terminal, color: "text-emerald-300 bg-emerald-400/10 border-emerald-500/20" },
+  { id: "finans", label: "Finans / Avans", icon: Wallet, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
+  { id: "it", label: "IT / Donanım", icon: Laptop, color: "text-emerald-300 bg-emerald-400/10 border-emerald-500/20" },
   { id: "ik", label: "İzinler / İK", icon: Calendar, color: "text-amber-300 bg-amber-500/10 border-amber-500/20" },
   { id: "ofis", label: "Ofis / Lojistik", icon: Building, color: "text-zinc-300 bg-white/[0.06] border-white/[0.08]" },
   { id: "satinalma", label: "Satın Alma", icon: ShoppingCart, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
@@ -165,7 +165,7 @@ export default function PersonelTalepleriPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [formStep, setFormStep] = useState<1 | 2>(1)
   const [selectedFormCategory, setSelectedFormCategory] = useState<string | null>(null)
-  
+
   // Form Alanları State
   const [formTitle, setFormTitle] = useState("")
   const [formDesc, setFormDesc] = useState("")
@@ -220,7 +220,7 @@ export default function PersonelTalepleriPage() {
       req.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       req.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       req.description.toLowerCase().includes(searchQuery.toLowerCase())
-    
+
     const matchesCategory =
       selectedCategoryFilter === "all" || req.category === selectedCategoryFilter
 
@@ -321,12 +321,12 @@ export default function PersonelTalepleriPage() {
       prev.map(r =>
         r.id === detailItem.id
           ? {
-              ...r,
-              status: "approved",
-              managerComment: approveComment,
-              decisionDate: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
+            ...r,
+            status: "approved",
+            managerComment: approveComment,
+            decisionDate: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }
           : r
       )
     )
@@ -341,12 +341,12 @@ export default function PersonelTalepleriPage() {
       prev.map(r =>
         r.id === detailItem.id
           ? {
-              ...r,
-              status: "rejected",
-              managerComment: rejectComment,
-              decisionDate: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            }
+            ...r,
+            status: "rejected",
+            managerComment: rejectComment,
+            decisionDate: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          }
           : r
       )
     )
@@ -368,7 +368,7 @@ export default function PersonelTalepleriPage() {
 
   return (
     <div className="space-y-6">
-      
+
       {/* ── Sayfa Başlığı & Arama / Aksiyon Barı ── */}
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -504,7 +504,7 @@ export default function PersonelTalepleriPage() {
               {currentRequests.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-16 text-center text-zinc-500">
-                    <FolderOpen size={32} className="mx-auto text-zinc-600 mb-3" />
+                    <FolderClosed size={32} className="mx-auto text-zinc-600 mb-3" />
                     <p className="font-medium text-zinc-300">Talep Bulunamadı</p>
                     <p className="text-xs text-zinc-500 mt-1">Arama kriterlerinize veya filtrenize uygun talep bulunmamaktadır.</p>
                   </td>
@@ -652,7 +652,7 @@ export default function PersonelTalepleriPage() {
 
             {/* İçerik */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              
+
               {/* Adım Barı */}
               <div className="flex items-center justify-between text-xs text-zinc-500 pb-3 border-b border-white/[0.06]">
                 <span className={cn("font-medium", formStep === 1 && "text-emerald-400")}>1. Kategori Seçimi</span>
@@ -891,7 +891,7 @@ export default function PersonelTalepleriPage() {
                         dragActive ? "border-emerald-500/40 bg-emerald-500/5" : "hover:bg-white/[0.02]"
                       )}
                     >
-                      <Upload className="mx-auto text-zinc-500 mb-2" size={18} />
+                      <Paperclip className="mx-auto text-zinc-500 mb-2" size={18} />
                       <p className="text-xs font-medium text-zinc-300">Dosyaları buraya sürükleyin veya göz atın</p>
                       <p className="text-[11px] text-zinc-500 mt-0.5">Maksimum dosya boyutu: 25MB</p>
                     </div>
@@ -968,7 +968,7 @@ export default function PersonelTalepleriPage() {
 
             {/* İçerik */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              
+
               {/* Temel Bilgi Kartı */}
               <div className="bg-[#080A09]/60 border border-white/[0.06] p-4 rounded-[20px] space-y-3">
                 <div className="flex items-center gap-3">
@@ -1061,7 +1061,7 @@ export default function PersonelTalepleriPage() {
                   <div className="flex flex-col gap-1.5">
                     {detailItem.uploadedFiles.map((file, idx) => (
                       <div key={idx} className="flex items-center gap-2 p-2.5 bg-[#080A09]/60 border border-white/[0.06] rounded-xl text-xs">
-                        <FileText size={13} className="text-zinc-500" />
+                        <Paperclip size={13} className="text-zinc-500" />
                         <span className="font-medium text-zinc-200 flex-1 truncate">{file}</span>
                         <button type="button" className="text-[11px] text-emerald-400 hover:underline px-2">
                           İndir
@@ -1076,7 +1076,7 @@ export default function PersonelTalepleriPage() {
               <div className="space-y-4">
                 <h3 className="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Talep Onay Geçmişi & Akışı</h3>
                 <div className="relative pl-6 border-l border-white/[0.08] space-y-6">
-                  
+
                   {/* Adım 1: Çalışan (Başlatıldı) */}
                   <div className="relative">
                     <div className="absolute -left-[29px] top-1 size-3 rounded-full bg-emerald-400 ring-4 ring-[#111513]" />
@@ -1164,21 +1164,21 @@ export default function PersonelTalepleriPage() {
                     <span>Yönetici Karar Arayüzü</span>
                     <span className="text-[11px] text-emerald-400 normal-case tracking-normal">Lütfen karar verin</span>
                   </div>
-                  
+
                   <div className="flex gap-2.5">
                     <Button
                       variant="outline"
                       className="flex-1 gap-2 border-rose-500/25 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 rounded-full h-9"
                       onClick={() => setRejectOpen(true)}
                     >
-                      <X size={14} />
+                      <ThumbsDown size={14} />
                       Reddet
                     </Button>
                     <Button
                       className="flex-1 gap-2 bg-[#34D399] text-[#061811] font-medium rounded-full h-9"
                       onClick={() => setApproveOpen(true)}
                     >
-                      <Check size={14} />
+                      <ThumbsUp size={14} />
                       Onayla
                     </Button>
                   </div>
@@ -1209,7 +1209,7 @@ export default function PersonelTalepleriPage() {
         <DialogContent className="max-w-md glass-panel border-white/[0.06] text-white">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-rose-400 font-medium">
-              <AlertCircle size={18} />
+              <XCircle size={18} />
               Talebi Reddet
             </DialogTitle>
           </DialogHeader>
