@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth/context"
 import { Plus, FolderOpen, Calendar, Clock, CheckCircle2, AlertTriangle, X, Edit, Trash } from "lucide-react"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
 import { FilePicker } from "@/components/shared/file-picker"
+import { GlassFolder, type FolderFile } from "@/components/ui/glass-folder-cards"
 
 interface Project {
   id: string
@@ -20,6 +21,10 @@ interface Project {
   endDate: string | null
   customerNotes: string | null
   createdAt: string
+  client?: string
+  customerName?: string
+  budget?: number | string
+  deadline?: string
 }
 
 export default function ProjectsPage() {
@@ -142,6 +147,21 @@ export default function ProjectsPage() {
     setIsEditDialogOpen(true)
   }
 
+  const handleDelete = async (projectId: string) => {
+    if (confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
+      try {
+        const res = await fetch(`/api/projects?id=${projectId}`, { method: "DELETE" })
+        if (res.ok) {
+          loadProjects()
+          toast.success("Proje silindi")
+        }
+      } catch (error) {
+        console.error("Error deleting project:", error)
+        toast.error("Proje silinemedi")
+      }
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
@@ -238,108 +258,127 @@ export default function ProjectsPage() {
       </div>
 
       {/* Proje Kartları Izgarası */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {projects.length === 0 ? (
-          <div className="col-span-full bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center shadow-xl">
-            <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
-              <FolderOpen className="w-6 h-6 text-zinc-400" />
-            </div>
-            <h3 className="text-base font-semibold text-white mb-1">Henüz kayıtlı proje bulunmuyor</h3>
-            <p className="text-xs text-zinc-500">Yeni bir proje ekleyerek operasyonel iş takibine başlayabilirsiniz.</p>
+      {projects.length === 0 ? (
+        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center shadow-xl">
+          <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+            <FolderOpen className="w-6 h-6 text-zinc-400" />
           </div>
-        ) : (
-          projects.map((project) => (
-            <motion.div
-              key={project.id}
-              whileHover={{ y: -3 }}
-              className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] shadow-xl hover:border-emerald-500/25 transition-all flex flex-col justify-between overflow-hidden"
-            >
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="space-y-1.5 pr-2">
-                    <h3 className="text-lg font-semibold text-white line-clamp-1" title={project.name}>
-                      {project.name}
-                    </h3>
-                    <p className="text-xs text-zinc-400 line-clamp-2" title={project.description || ""}>
-                      {project.description || "Açıklama belirtilmemiş."}
-                    </p>
-                    {project.customerNotes && (
-                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
-                        <p className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider mb-0.5">Müşteri Notu</p>
-                        <p className="text-xs text-zinc-300 italic">{project.customerNotes}</p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="shrink-0">
-                    {getStatusBadge(project.status)}
-                  </div>
-                </div>
+          <h3 className="text-base font-semibold text-white mb-1">Henüz kayıtlı proje bulunmuyor</h3>
+          <p className="text-xs text-zinc-500">Yeni bir proje ekleyerek operasyonel iş takibine başlayabilirsiniz.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-14 justify-items-center py-6">
+          {projects.map((project, index) => {
+            const artTheme = (["verdant", "ember", "aurora", "dusk", "glacier"] as const)[index % 5]
+            const statusLabel =
+              project.status === "completed"
+                ? "Tamamlandı"
+                : project.status === "active"
+                ? "Devam Ediyor"
+                : project.status === "on_hold"
+                ? "Beklemede"
+                : project.status || "Aktif"
 
-                <div className="space-y-4 pt-2">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium text-zinc-400">Proje İlerlemesi</span>
-                      <span className="text-xs font-semibold text-emerald-400 font-mono">%{project.progress || 0}</span>
-                    </div>
-                    {/* Standart 1: Akıcı dolan Zümrüt Bar */}
-                    <div className="w-full bg-white/[0.05] rounded-full h-2 overflow-hidden border border-white/[0.04]">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${project.progress || 0}%` }}
-                        transition={{ duration: 0.9, ease: "easeOut" }}
-                        className="bg-emerald-400 h-2 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.35)]"
-                      />
-                    </div>
-                  </div>
+            const folderFiles: FolderFile[] = [
+              {
+                name: "İlerleme: %" + (project.progress ?? 0),
+                meta: String(statusLabel),
+                art: "verdant",
+              },
+              {
+                name: String(project.client || project.customerName || "Kurumsal Proje"),
+                meta: project.budget
+                  ? "₺" + Number(project.budget).toLocaleString("tr-TR")
+                  : "Proje Kartı",
+                art: "aurora",
+              },
+              {
+                name: "Teslim & Takvim",
+                meta: String(
+                  project.endDate
+                    ? new Date(project.endDate).toLocaleDateString("tr-TR")
+                    : project.deadline || (project.createdAt ? new Date(project.createdAt).toLocaleDateString("tr-TR") : "Devam Ediyor")
+                ),
+                art: "dusk",
+              },
+              {
+                name: String(project.description || "Proje Detaylarını Aç"),
+                meta: "Detay & Görevler",
+              },
+            ]
 
-                  <div className="flex flex-wrap items-center gap-y-2 gap-x-4 pt-4 border-t border-white/[0.06]">
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-                      <span className="text-zinc-500">Başlangıç:</span>
-                      <span className="text-zinc-300 font-mono">{project.startDate ? new Date(project.startDate).toLocaleDateString("tr-TR") : "-"}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-500" />
-                      <span className="text-zinc-500">Bitiş:</span>
-                      <span className="text-zinc-300 font-mono">{project.endDate ? new Date(project.endDate).toLocaleDateString("tr-TR") : "-"}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-4 border-t border-white/[0.06] bg-[#0d100e] flex gap-3 mt-auto">
-                <button
-                  onClick={() => openEditDialog(project)}
-                  className="flex-1 py-2 text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white rounded-full transition-all flex items-center justify-center gap-1.5"
-                >
-                  <Edit className="w-3.5 h-3.5 text-zinc-400" />
-                  Düzenle
-                </button>
-                <button
-                  onClick={async () => {
-                    if (confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
-                      try {
-                        const res = await fetch(`/api/projects?id=${project.id}`, { method: "DELETE" })
-                        if (res.ok) {
-                          loadProjects()
-                          toast.success("Proje silindi")
+            return (
+              <div key={project.id} className="flex flex-col items-center gap-3">
+                <GlassFolder
+                  tone="dark"
+                  art={artTheme}
+                  seed={index * 7 + 3}
+                  appearDelay={index * 90}
+                  labelPlacement="bottom-left"
+                  width={340}
+                  label={project.name || "İsimsiz Proje"}
+                  meta={`%${project.progress || 0} Tamamlandı · ${statusLabel}`}
+                  files={folderFiles}
+                  onFileSelect={() => openEditDialog(project)}
+                  action="more"
+                  menu={[
+                    {
+                      label: "Projeyi Düzenle",
+                      onSelect: () => openEditDialog(project),
+                    },
+                    {
+                      label: project.status === "completed" ? "Aktif Olarak İşaretle" : "Tamamlandı Olarak İşaretle",
+                      onSelect: async () => {
+                        try {
+                          const nextStatus = project.status === "completed" ? "active" : "completed"
+                          const nextProgress = nextStatus === "completed" ? 100 : project.progress
+                          const res = await fetch("/api/projects", {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              id: project.id,
+                              name: project.name,
+                              description: project.description,
+                              status: nextStatus,
+                              progress: nextProgress,
+                              startDate: project.startDate,
+                              endDate: project.endDate,
+                              customerNotes: project.customerNotes,
+                            }),
+                          })
+                          if (res.ok) {
+                            loadProjects()
+                            toast.success("Proje durumu güncellendi")
+                          }
+                        } catch (err) {
+                          console.error("Durum güncellenemedi:", err)
+                          toast.error("Durum güncellenemedi")
                         }
-                      } catch (error) {
-                        console.error("Error deleting project:", error)
-                        toast.error("Proje silinemedi")
-                      }
-                    }
-                  }}
-                  className="px-4 py-2 text-xs font-medium bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 rounded-full transition-all flex items-center gap-1.5"
-                >
-                  <Trash className="w-3.5 h-3.5" />
-                  Sil
-                </button>
+                      },
+                    },
+                    {
+                      label: "Projeyi Sil",
+                      danger: true,
+                      onSelect: () => handleDelete(project.id),
+                    },
+                  ]}
+                />
+
+                {/* İlerleme Çubuğu ve Durum Rozeti (Klasör Altı Mikro Bilgi) */}
+                <div className="h-1.5 w-[300px] rounded-full bg-white/[0.06] overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(52,211,153,0.4)]"
+                    style={{ width: `${Math.min(100, Math.max(0, project.progress || 0))}%` }}
+                  />
+                </div>
+                <div>
+                  {getStatusBadge(project.status)}
+                </div>
               </div>
-            </motion.div>
-          ))
-        )}
-      </div>
+            )
+          })}
+        </div>
+      )}
 
       {/* Yeni Proje Ekleme Modalı */}
       {isCreateDialogOpen && (
