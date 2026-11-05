@@ -1,10 +1,45 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
+import {
+  Calendar as CalendarIcon,
+  Send,
+  BarChart3,
+  Share2,
+  Users,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Sparkles,
+  Plus,
+  RefreshCw,
+  Edit,
+  Eye,
+  TrendingUp,
+  Tag,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Layers,
+  Smile,
+  ShieldCheck,
+  Radio,
+} from "lucide-react"
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts"
+import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Types ────────────────────────────────────────────────────────────
 
 type TabId = "takvim" | "gonderiler" | "analitik" | "platformlar" | "ekip"
 
@@ -45,37 +80,44 @@ interface TeamMember {
   postsThisMonth: number
 }
 
-// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Constants ────────────────────────────────────────────────────────
 
 const PLATFORMS: Platform[] = [
-  { id: "instagram",  name: "Instagram",  icon: "photo_camera",      color: "#E1306C", connected: false },
-  { id: "twitter",    name: "Twitter/X",  icon: "alternate_email",   color: "#000000", connected: false },
-  { id: "facebook",   name: "Facebook",   icon: "thumb_up",          color: "#1877F2", connected: false },
-  { id: "linkedin",   name: "LinkedIn",   icon: "business_center",   color: "#0A66C2", connected: false },
-  { id: "tiktok",     name: "TikTok",     icon: "music_note",        color: "#010101", connected: false },
-  { id: "youtube",    name: "YouTube",    icon: "smart_display",     color: "#FF0000", connected: false },
-  { id: "threads",    name: "Threads",    icon: "hub",               color: "#000000", connected: false },
-  { id: "pinterest",  name: "Pinterest",  icon: "push_pin",          color: "#E60023", connected: false },
-  { id: "discord",    name: "Discord",    icon: "headset_mic",       color: "#5865F2", connected: false },
-  { id: "bluesky",    name: "Bluesky",    icon: "cloud",             color: "#0085FF", connected: false },
-  { id: "reddit",     name: "Reddit",     icon: "forum",             color: "#FF4500", connected: false },
-  { id: "mastodon",   name: "Mastodon",   icon: "share",             color: "#6364FF", connected: false },
-  { id: "slack",      name: "Slack",      icon: "message",           color: "#4A154B", connected: false },
+  { id: "instagram",  name: "Instagram",  icon: "instagram", color: "#E1306C", connected: false },
+  { id: "twitter",    name: "Twitter/X",  icon: "x",         color: "#71717A", connected: false },
+  { id: "facebook",   name: "Facebook",   icon: "facebook",  color: "#1877F2", connected: false },
+  { id: "linkedin",   name: "LinkedIn",   icon: "linkedin",  color: "#0A66C2", connected: false },
+  { id: "tiktok",     name: "TikTok",     icon: "tiktok",    color: "#2DD4BF", connected: false },
+  { id: "youtube",    name: "YouTube",    icon: "youtube",   color: "#EF4444", connected: false },
+  { id: "threads",    name: "Threads",    icon: "threads",   color: "#A1A1AA", connected: false },
+  { id: "pinterest",  name: "Pinterest",  icon: "pinterest", color: "#E60023", connected: false },
+  { id: "discord",    name: "Discord",    icon: "discord",   color: "#5865F2", connected: false },
+  { id: "bluesky",    name: "Bluesky",    icon: "cloud",     color: "#0085FF", connected: false },
 ]
 
 const MOCK_POSTS: ScheduledPost[] = [
-  { id: "1", content: "ğŸš€ Yeni özelliğimizi keşfedin!", platforms: ["instagram", "twitter"], scheduledAt: new Date(Date.now() + 2 * 3600000).toISOString(), status: "scheduled" },
-  { id: "2", content: "Müşterilerimizle gurur duyuyoruz ğŸ’™", platforms: ["linkedin", "facebook"], scheduledAt: new Date(Date.now() + 5 * 3600000).toISOString(), status: "scheduled" },
-  { id: "3", content: "Haftalık içerik ipuçları #sosyalmedya", platforms: ["instagram"], scheduledAt: new Date(Date.now() - 3600000).toISOString(), status: "published" },
+  { id: "1", content: "🚀 Yeni özelliğimizi keşfedin! Yapay zeka destekli içerik motoru şimdi aktif.", platforms: ["instagram", "twitter"], scheduledAt: new Date(Date.now() + 2 * 3600000).toISOString(), status: "scheduled" },
+  { id: "2", content: "Müşterilerimizle gurur duyuyoruz. Q3 başarı hikayeleri yayında 📈", platforms: ["linkedin", "facebook"], scheduledAt: new Date(Date.now() + 5 * 3600000).toISOString(), status: "scheduled" },
+  { id: "3", content: "Haftalık içerik ipuçları ve reel trendleri #sosyalmedya", platforms: ["instagram"], scheduledAt: new Date(Date.now() - 3600000).toISOString(), status: "published" },
 ]
 
 const MOCK_ANALYTICS: AnalyticsData[] = [
   { platform: "Instagram",  followers: 12400, engagement: 4.8, reach: 45000, posts: 28, color: "#E1306C" },
-  { platform: "Twitter/X",  followers:  8200, engagement: 2.3, reach: 31000, posts: 54, color: "#000000" },
+  { platform: "Twitter/X",  followers:  8200, engagement: 2.3, reach: 31000, posts: 54, color: "#71717A" },
   { platform: "LinkedIn",   followers:  5600, engagement: 5.1, reach: 18000, posts: 12, color: "#0A66C2" },
   { platform: "Facebook",   followers: 15300, engagement: 1.9, reach: 52000, posts: 20, color: "#1877F2" },
-  { platform: "TikTok",     followers:  3100, engagement: 8.7, reach: 98000, posts:  8, color: "#010101" },
-  { platform: "YouTube",    followers:  1800, engagement: 6.2, reach: 22000, posts:  4, color: "#FF0000" },
+  { platform: "TikTok",     followers:  3100, engagement: 8.7, reach: 98000, posts:  8, color: "#2DD4BF" },
+  { platform: "YouTube",    followers:  1800, engagement: 6.2, reach: 22000, posts:  4, color: "#EF4444" },
+]
+
+const MOCK_WEEKLY_TRENDS = [
+  { day: "Pzt", erisim: 24000, etkilesim: 1850 },
+  { day: "Sal", erisim: 31000, etkilesim: 2420 },
+  { day: "Çar", erisim: 42000, etkilesim: 3600 },
+  { day: "Per", erisim: 38000, etkilesim: 2950 },
+  { day: "Cum", erisim: 51000, etkilesim: 4100 },
+  { day: "Cmt", erisim: 62000, etkilesim: 5300 },
+  { day: "Paz", erisim: 48000, etkilesim: 3800 },
 ]
 
 const MOCK_TEAM: TeamMember[] = [
@@ -84,23 +126,18 @@ const MOCK_TEAM: TeamMember[] = [
   { id: "3", fullName: "Emre Demir",      email: "emre@example.com",     role: "Grafik Tasarımcı",  platforms: ["pinterest", "instagram"], postsThisMonth: 16 },
 ]
 
-// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Helpers ──────────────────────────────────────────────────────────
 
-function getStatusStyles(status: ScheduledPost["status"]) {
+function getStatusBadge(status: ScheduledPost["status"]) {
   switch (status) {
-    case "scheduled":  return "bg-blue-50  dark:bg-blue-500/10  text-blue-700  dark:text-blue-400"
-    case "published":  return "bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400"
-    case "failed":     return "bg-red-50   dark:bg-red-500/10   text-red-700   dark:text-red-400"
-    case "draft":      return "bg-gray-50  dark:bg-gray-500/10  text-gray-700  dark:text-gray-400"
-  }
-}
-
-function getStatusLabel(status: ScheduledPost["status"]) {
-  switch (status) {
-    case "scheduled": return "Planlandı"
-    case "published": return "Yayınlandı"
-    case "failed":    return "Başarısız"
-    case "draft":     return "Taslak"
+    case "scheduled":
+      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">Planlandı</span>
+    case "published":
+      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Yayınlandı</span>
+    case "failed":
+      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Başarısız</span>
+    case "draft":
+      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">Taslak</span>
   }
 }
 
@@ -108,41 +145,22 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleString("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })
 }
 
-// â”€â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Sub-components ───────────────────────────────────────────────────
 
-function PageHeader({ title, subtitle, action }: { title: string; subtitle: string; action?: React.ReactNode }) {
+function PlatformIcon({ platformId, className = "size-4" }: { platformId: string; className?: string }) {
+  const pl = PLATFORMS.find(x => x.id === platformId)
+  if (!pl) return <Share2 className={className} />
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{title}</h1>
-        <p className="text-sm text-gray-500">{subtitle}</p>
-      </div>
-      {action && <div className="flex items-center gap-3">{action}</div>}
-    </div>
+    <span
+      className={`inline-flex items-center justify-center font-bold text-[10px] uppercase rounded px-1 py-0.2 select-none ${className}`}
+      style={{ color: pl.color }}
+    >
+      {pl.name.slice(0, 2)}
+    </span>
   )
 }
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm ${className}`}>
-      {children}
-    </div>
-  )
-}
-
-function StatCard({ icon, label, value, iconColor }: { icon: string; label: string; value: string | number; iconColor: string }) {
-  return (
-    <Card className="p-5">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-500">{label}</h3>
-        <span className={`material-symbols-outlined ${iconColor}`}>{icon}</span>
-      </div>
-      <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
-    </Card>
-  )
-}
-
-// â”€â”€â”€ TabCalendar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── TabCalendar ──────────────────────────────────────────────────────
 
 function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
   const today = new Date()
@@ -164,40 +182,40 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
     })
 
   return (
-    <div className="space-y-4">
-      {/* Calendar nav */}
-      <Card className="p-6">
+    <div className="space-y-6">
+      {/* Calendar nav & grid card */}
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-xl border border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px] text-gray-500">chevron_left</span>
+            <ChevronLeft className="size-4" />
           </button>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white capitalize">{monthName}</h3>
+          <h3 className="text-lg font-light tracking-wide text-white capitalize">{monthName}</h3>
           <button
             onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-xl border border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px] text-gray-500">chevron_right</span>
+            <ChevronRight className="size-4" />
           </button>
         </div>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[600px]">
+          <div className="min-w-[640px]">
             {/* Day headers */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
+            <div className="grid grid-cols-7 gap-2 mb-2">
               {["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d => (
-                <div key={d} className="text-center text-xs font-semibold text-gray-400 py-2">{d}</div>
+                <div key={d} className="text-center text-[11px] font-medium tracking-wider uppercase text-zinc-500 py-1">{d}</div>
               ))}
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-7 gap-1">
-              {/* Empty offset cells */}
-              {Array.from({ length: offset }).map((_, i) => <div key={`e${i}`} />)}
+            <div className="grid grid-cols-7 gap-2">
+              {Array.from({ length: offset }).map((_, i) => (
+                <div key={`empty-${i}`} className="min-h-[84px] rounded-xl bg-white/[0.01] border border-white/[0.02] opacity-40" />
+              ))}
 
-              {/* Day cells */}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const day      = i + 1
                 const isToday  = day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
@@ -206,23 +224,28 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
                 return (
                   <div
                     key={day}
-                    className={`min-h-[70px] p-1.5 rounded-xl border transition-colors cursor-pointer hover:border-primary/30 ${
+                    className={`min-h-[84px] p-2 rounded-xl border transition-all cursor-pointer ${
                       isToday
-                        ? "border-primary bg-blue-50/50 dark:bg-blue-500/5"
-                        : "border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                        ? "border-emerald-500/40 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.12)]"
+                        : "border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12]"
                     }`}
                   >
-                    <span className={`text-xs font-semibold block mb-1 ${isToday ? "text-primary" : "text-gray-600 dark:text-gray-400"}`}>
-                      {day}
-                    </span>
-                    <div className="space-y-0.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className={`text-xs font-semibold ${isToday ? "text-emerald-400" : "text-zinc-400"}`}>
+                        {day}
+                      </span>
+                      {dayPosts.length > 0 && (
+                        <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
+                      )}
+                    </div>
+                    <div className="space-y-1">
                       {dayPosts.slice(0, 2).map(p => (
-                        <div key={p.id} className="text-[10px] bg-primary/10 text-primary dark:text-blue-400 rounded px-1 py-0.5 truncate">
-                          {p.content.substring(0, 20)}…
+                        <div key={p.id} className="text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/20 rounded px-1.5 py-0.5 truncate">
+                          {p.content}
                         </div>
                       ))}
                       {dayPosts.length > 2 && (
-                        <div className="text-[10px] text-gray-400">+{dayPosts.length - 2} daha</div>
+                        <div className="text-[10px] text-zinc-500">+{dayPosts.length - 2} daha</div>
                       )}
                     </div>
                   </div>
@@ -231,45 +254,42 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      {/* Upcoming posts */}
-      <Card>
-        <div className="p-5 border-b border-gray-100 dark:border-gray-800">
-          <h3 className="font-bold text-gray-900 dark:text-white">Yaklaşan Gönderiler</h3>
+      {/* Upcoming posts card */}
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Clock className="size-4 text-emerald-400" />
+            <h3 className="font-medium text-white text-sm">Yaklaşan Planlanmış Gönderiler</h3>
+          </div>
+          <span className="text-xs text-zinc-400">{posts.filter(p => p.status === "scheduled").length} gönderi</span>
         </div>
-        <div className="divide-y divide-gray-100 dark:divide-gray-800">
+        <div className="divide-y divide-white/[0.04]">
           {posts.filter(p => p.status === "scheduled").map(p => (
-            <div key={p.id} className="px-5 py-4 flex items-center gap-4">
-              <div className="flex -space-x-1">
-                {p.platforms.map(pid => {
-                  const pl = PLATFORMS.find(x => x.id === pid)
-                  return pl ? (
-                    <span key={pid} title={pl.name} className="material-symbols-outlined text-[16px]" style={{ color: pl.color }}>
-                      {pl.icon}
-                    </span>
-                  ) : null
-                })}
+            <div key={p.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors">
+              <div className="flex -space-x-1 shrink-0">
+                {p.platforms.map(pid => (
+                  <PlatformIcon key={pid} platformId={pid} />
+                ))}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{p.content}</p>
+                <p className="text-sm text-zinc-200 truncate">{p.content}</p>
               </div>
-              <span className="text-xs text-gray-400 whitespace-nowrap">{formatDate(p.scheduledAt)}</span>
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusStyles(p.status)}`}>
-                {getStatusLabel(p.status)}
-              </span>
+              <span className="text-xs text-zinc-400 font-mono whitespace-nowrap">{formatDate(p.scheduledAt)}</span>
+              {getStatusBadge(p.status)}
             </div>
           ))}
           {posts.filter(p => p.status === "scheduled").length === 0 && (
-            <div className="px-5 py-8 text-center text-gray-400 text-sm">Planlanmış gönderi yok.</div>
+            <div className="px-5 py-8 text-center text-zinc-500 text-sm">Planlanmış gönderi bulunmuyor.</div>
           )}
         </div>
-      </Card>
+      </div>
     </div>
   )
 }
 
-// â”€â”€â”€ TabGonderiler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── TabGonderiler ────────────────────────────────────────────────────
 
 function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
   const [content, setContent]               = useState("")
@@ -302,7 +322,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
         const { text } = await res.json()
         setContent(text)
         setCharCount(text.length)
-        toast.success("İçerik oluşturuldu!")
+        toast.success("AI ile sosyal medya içeriği hazırlandı!")
       } else {
         toast.error("İçerik oluşturulamadı.")
       }
@@ -314,9 +334,9 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
   }
 
   const handleSchedule = async () => {
-    if (!content.trim())              { toast.error("İçerik boş olamaz."); return }
+    if (!content.trim())               { toast.error("İçerik boş olamaz."); return }
     if (selectedPlatforms.length === 0){ toast.error("En az bir platform seçin."); return }
-    if (!scheduleDate)                { toast.error("Tarih seçin."); return }
+    if (!scheduleDate)                 { toast.error("Tarih seçin."); return }
 
     try {
       const res = await fetch("/api/social-media/posts", {
@@ -330,7 +350,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
         }),
       })
       if (res.ok) {
-        toast.success("Gönderi planlandı!")
+        toast.success("Gönderi başarıyla planlandı!")
         setContent(""); setSelected([]); setScheduleDate(""); setScheduleTime(""); setAiPrompt("")
         setCharCount(0)
       } else {
@@ -343,31 +363,32 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Inner tab switcher */}
-      <div className="flex gap-1 bg-gray-100 dark:bg-gray-800/50 p-1 rounded-xl w-fit">
+    <div className="space-y-6">
+      {/* Sub tab switcher */}
+      <div className="flex gap-1 bg-[#111513] border border-white/[0.06] p-1 rounded-xl w-fit">
         {(["compose", "list"] as const).map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-              tab === t ? "bg-white dark:bg-[#1e1e1e] text-primary shadow-sm" : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              tab === t ? "bg-white/[0.08] text-white shadow-sm" : "text-zinc-400 hover:text-white"
             }`}
           >
-            {t === "compose" ? "Oluştur" : "Tüm Gönderiler"}
+            {t === "compose" ? "Yeni Gönderi Oluştur" : "Tüm Gönderiler"}
           </button>
         ))}
       </div>
 
       {tab === "compose" ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Compose */}
+          {/* Left 2 Cols: Compose */}
           <div className="lg:col-span-2 space-y-4">
-            {/* AI Assistant */}
-            <Card className="p-5">
+            {/* AI Assistant Box */}
+            <div className="bg-[#111513]/90 backdrop-blur-xl border border-emerald-500/25 rounded-[20px] p-5 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 mb-3">
-                <span className="material-symbols-outlined text-primary text-[20px]">auto_awesome</span>
-                <h3 className="font-bold text-gray-900 dark:text-white text-sm">Gemini AI ile İçerik Oluştur</h3>
+                <Sparkles className="size-4 text-emerald-400" />
+                <h3 className="font-medium text-white text-sm">Gemini AI ile İçerik Oluştur</h3>
               </div>
               <div className="flex gap-2">
                 <input
@@ -375,207 +396,218 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                   value={aiPrompt}
                   onChange={e => setAiPrompt(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && generateWithAI()}
-                  placeholder="Konu veya açıklama girin (ör: yeni ürün lansmanı)"
-                  className="flex-1 px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  placeholder="Konu veya açıklama girin (örn: Sonbahar koleksiyonu lansmanı)..."
+                  className="flex-1 px-4 py-2.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-all"
                 />
                 <button
                   onClick={generateWithAI}
                   disabled={aiLoading}
-                  className="px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+                  className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
                 >
                   {aiLoading ? (
-                    <span className="material-symbols-outlined text-[18px] animate-spin">sync</span>
+                    <RefreshCw className="size-4 animate-spin" />
                   ) : (
-                    <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
+                    <Sparkles className="size-4" />
                   )}
-                  {aiLoading ? "Oluşturuluyor…" : "Oluştur"}
+                  {aiLoading ? "Yazılıyor..." : "Oluştur"}
                 </button>
               </div>
-            </Card>
+            </div>
 
-            {/* Content editor */}
-            <Card className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-gray-900 dark:text-white">İçerik</h3>
-                <span className={`text-xs ${charCount > 280 ? "text-red-500" : "text-gray-400"}`}>{charCount} karakter</span>
+            {/* Content Editor */}
+            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium text-white text-sm">Gönderi Metni</h3>
+                <span className={`text-xs font-mono ${charCount > 280 ? "text-rose-400" : "text-zinc-500"}`}>
+                  {charCount} karakter
+                </span>
               </div>
               <textarea
                 value={content}
                 onChange={e => handleContentChange(e.target.value)}
-                rows={8}
+                rows={7}
                 placeholder="Gönderi içeriğinizi buraya yazın veya AI ile oluşturun…"
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none leading-relaxed"
+                className="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-all resize-none leading-relaxed"
               />
-              {/* Quick action buttons */}
-              <div className="flex gap-2 mt-3">
+              <div className="flex items-center gap-3 pt-1">
                 <button
-                  onClick={() => selectedPlatforms.includes("twitter") && charCount > 280
-                    ? toast.error("Twitter için 280 karakter sınırı aşıldı!")
-                    : toast.info("Hashtag önerisi yakında eklenecek.")
-                  }
-                  className="text-xs text-gray-500 hover:text-primary flex items-center gap-1 transition-colors"
+                  type="button"
+                  onClick={() => toast.info("Hashtag önerisi yakında eklenecek.")}
+                  className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[14px]">tag</span>
-                  Hashtag Ekle
+                  <Tag className="size-3.5" />
+                  Hashtag Öner
                 </button>
                 <button
-                  onClick={() => toast.info("Emoji seçici yakında eklenecek.")}
-                  className="text-xs text-gray-500 hover:text-primary flex items-center gap-1 transition-colors"
+                  type="button"
+                  onClick={() => toast.info("Emoji paneli yakında eklenecek.")}
+                  className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[14px]">sentiment_satisfied</span>
-                  Emoji
+                  <Smile className="size-3.5" />
+                  Emoji Ekle
                 </button>
               </div>
-            </Card>
+            </div>
 
-            {/* Schedule */}
-            <Card className="p-5">
-              <h3 className="font-bold text-gray-900 dark:text-white mb-3">Planlama</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500">Tarih</label>
+            {/* Schedule & Actions */}
+            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-4">
+              <h3 className="font-medium text-white text-sm flex items-center gap-2">
+                <Clock className="size-4 text-emerald-400" />
+                Zamanlama Ayarı
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs text-zinc-400">Yayın Tarihi</label>
                   <input
                     type="date"
                     value={scheduleDate}
                     onChange={e => setScheduleDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-medium text-gray-500">Saat</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs text-zinc-400">Saat</label>
                   <input
                     type="time"
                     value={scheduleTime}
                     onChange={e => setScheduleTime(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full px-3 py-2 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
               </div>
-              <div className="flex gap-3 mt-4">
+              <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => { setScheduleDate(""); setScheduleTime(""); handleSchedule(); }}
-                  className="flex-1 px-4 py-2.5 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-white/[0.08] hover:bg-white/[0.04] text-zinc-300 rounded-xl text-sm font-medium transition-colors"
                 >
-                  <span className="flex items-center justify-center gap-1.5">
-                    <span className="material-symbols-outlined text-[16px]">save</span>
-                    Taslak Kaydet
-                  </span>
+                  Taslak Olarak Kaydet
                 </button>
                 <button
                   onClick={handleSchedule}
-                  className="flex-1 px-4 py-2.5 bg-primary hover:bg-blue-600 text-white rounded-xl text-sm font-medium transition-colors shadow-sm"
+                  className="flex-1 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center justify-center gap-2"
                 >
-                  <span className="flex items-center justify-center gap-1.5">
-                    <span className="material-symbols-outlined text-[16px]">schedule_send</span>
-                    {scheduleDate ? "Planla" : "Şimdi Yayınla"}
-                  </span>
+                  <Send className="size-4" />
+                  {scheduleDate ? "Planla ve Sıraya Al" : "Hemen Paylaş"}
                 </button>
               </div>
-            </Card>
+            </div>
           </div>
 
-          {/* Right: Platform selector + Preview */}
+          {/* Right Col: Platform Picker & Live Preview */}
           <div className="space-y-4">
-            <Card className="p-5">
-              <h3 className="font-bold text-gray-900 dark:text-white mb-4">Platform Seç</h3>
+            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl">
+              <h3 className="font-medium text-white text-sm mb-4">Paylaşılacak Platformlar</h3>
               <div className="space-y-2">
-                {PLATFORMS.map(p => (
-                  <label key={p.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={selectedPlatforms.includes(p.id)}
-                      onChange={() => togglePlatform(p.id)}
-                      className="rounded text-primary"
-                    />
-                    <span className="material-symbols-outlined text-[18px]" style={{ color: p.color }}>{p.icon}</span>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">{p.name}</span>
-                  </label>
-                ))}
+                {PLATFORMS.map(p => {
+                  const isChecked = selectedPlatforms.includes(p.id)
+                  return (
+                    <label
+                      key={p.id}
+                      className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer border transition-all ${
+                        isChecked
+                          ? "bg-emerald-500/10 border-emerald-500/30 text-white"
+                          : "bg-white/[0.02] border-white/[0.05] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => togglePlatform(p.id)}
+                          className="rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-0"
+                        />
+                        <span className="text-sm font-medium">{p.name}</span>
+                      </div>
+                      <span className="size-2 rounded-full" style={{ backgroundColor: p.color }} />
+                    </label>
+                  )
+                })}
               </div>
-            </Card>
+            </div>
 
-            {/* Live preview */}
+            {/* Live Preview Card */}
             {content && (
-              <Card className="p-5">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm">Önizleme</h3>
-                <div className="bg-gray-50 dark:bg-white/5 rounded-xl p-4">
+              <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-3">
+                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                  <h3 className="font-medium text-white text-xs uppercase tracking-wider">Canlı Önizleme</h3>
+                  <Eye className="size-3.5 text-zinc-500" />
+                </div>
+                <div className="bg-black/40 rounded-xl p-4 border border-white/[0.04]">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="size-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
-                      SM
+                    <div className="size-8 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
+                      SE
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-gray-800 dark:text-white">@sizin_hesabiiniz</p>
-                      <p className="text-[10px] text-gray-400">{scheduleDate ? formatDate(`${scheduleDate}T${scheduleTime || "00:00"}`) : "Şimdi"}</p>
+                      <p className="text-xs font-semibold text-white">@sunum_erp</p>
+                      <p className="text-[10px] text-zinc-500 font-mono">
+                        {scheduleDate ? formatDate(`${scheduleDate}T${scheduleTime || "00:00"}`) : "Şimdi"}
+                      </p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{content}</p>
+                  <p className="text-sm text-zinc-200 whitespace-pre-wrap leading-relaxed">{content}</p>
                 </div>
-              </Card>
+              </div>
             )}
           </div>
         </div>
       ) : (
-        /* Post list */
-        <Card>
-          <div className="p-5 border-b border-gray-100 dark:border-gray-800">
-            <h3 className="font-bold text-gray-900 dark:text-white">Tüm Gönderiler</h3>
+        /* Post List Table */
+        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+          <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+            <h3 className="font-medium text-white text-sm">Tüm Sosyal Medya Gönderileri</h3>
+            <span className="text-xs text-zinc-400">{posts.length} kayıt</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="bg-gray-50/50 dark:bg-white/5 text-gray-500 text-xs font-medium border-b border-gray-100 dark:border-gray-800">
+              <thead className="bg-white/[0.02] text-zinc-400 text-xs font-medium border-b border-white/[0.06]">
                 <tr>
                   <th className="px-5 py-3">İçerik</th>
                   <th className="px-5 py-3">Platformlar</th>
                   <th className="px-5 py-3">Tarih</th>
                   <th className="px-5 py-3">Durum</th>
-                  <th className="px-5 py-3"></th>
+                  <th className="px-5 py-3 text-right">İşlem</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              <tbody className="divide-y divide-white/[0.04]">
                 {posts.map(p => (
-                  <tr key={p.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group">
-                    <td className="px-5 py-4 max-w-xs">
-                      <p className="truncate text-gray-700 dark:text-gray-300">{p.content}</p>
+                  <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-5 py-4 max-w-sm">
+                      <p className="truncate text-zinc-200">{p.content}</p>
                     </td>
                     <td className="px-5 py-4">
-                      <div className="flex gap-1">
-                        {p.platforms.map(pid => {
-                          const pl = PLATFORMS.find(x => x.id === pid)
-                          return pl ? (
-                            <span key={pid} title={pl.name} className="material-symbols-outlined text-[16px]" style={{ color: pl.color }}>{pl.icon}</span>
-                          ) : null
-                        })}
+                      <div className="flex gap-1.5">
+                        {p.platforms.map(pid => (
+                          <PlatformIcon key={pid} platformId={pid} />
+                        ))}
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-gray-500 whitespace-nowrap">{formatDate(p.scheduledAt)}</td>
-                    <td className="px-5 py-4">
-                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getStatusStyles(p.status)}`}>
-                        {getStatusLabel(p.status)}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-4 text-zinc-400 font-mono text-xs whitespace-nowrap">{formatDate(p.scheduledAt)}</td>
+                    <td className="px-5 py-4">{getStatusBadge(p.status)}</td>
+                    <td className="px-5 py-4 text-right">
                       <button
-                        onClick={() => toast.info("Düzenleme yakında eklenecek.")}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 transition-all"
+                        onClick={() => toast.info("Düzenleme paneli hazırlanıyor.")}
+                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all"
                       >
-                        <span className="material-symbols-outlined text-[16px]">edit</span>
+                        <Edit className="size-3.5" />
                       </button>
                     </td>
                   </tr>
                 ))}
                 {posts.length === 0 && (
-                  <tr><td colSpan={5} className="px-5 py-8 text-center text-gray-400">Gönderi bulunamadı.</td></tr>
+                  <tr>
+                    <td colSpan={5} className="px-5 py-8 text-center text-zinc-500">Kayıtlı gönderi bulunamadı.</td>
+                  </tr>
                 )}
               </tbody>
             </table>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   )
 }
 
-// â”€â”€â”€ TabAnalitik â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── TabAnalitik ──────────────────────────────────────────────────────
 
 function TabAnalitik() {
   const totalFollowers  = MOCK_ANALYTICS.reduce((s, a) => s + a.followers, 0)
@@ -585,50 +617,111 @@ function TabAnalitik() {
 
   return (
     <div className="space-y-6">
-      {/* KPI row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon="group"          label="Toplam Takipçi"    value={totalFollowers.toLocaleString("tr-TR")} iconColor="text-blue-500" />
-        <StatCard icon="visibility"     label="Toplam Erişim"     value={totalReach.toLocaleString("tr-TR")}     iconColor="text-green-500" />
-        <StatCard icon="thumb_up"       label="Ort. Etkileşim"   value={`%${avgEngagement}`}                     iconColor="text-amber-500" />
-        <StatCard icon="article"        label="Toplam Gönderi"   value={totalPosts}                              iconColor="text-purple-500" />
+      {/* Spline Chart: Haftalık Trend */}
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-medium text-white text-base">Haftalık Erişim ve Etkileşim Eğilimi</h3>
+            <p className="text-xs text-zinc-400 mt-0.5">Parlayan Zümrüt spline analitiği</p>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+              Erişim
+            </span>
+            <span className="flex items-center gap-1.5 text-sky-400">
+              <span className="size-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38BDF8]" />
+              Etkileşim
+            </span>
+          </div>
+        </div>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={MOCK_WEEKLY_TRENDS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="emeraldGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.35}/>
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="skyGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.25}/>
+                  <stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+              <XAxis dataKey="day" stroke="#71717A" tick={{ fill: "#71717A", fontSize: 11 }} />
+              <YAxis stroke="#71717A" tick={{ fill: "#71717A", fontSize: 11 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#111513",
+                  borderColor: "rgba(255,255,255,0.1)",
+                  borderRadius: "12px",
+                  color: "#fff",
+                  boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="erisim"
+                stroke="#34D399"
+                strokeWidth={2.5}
+                fillOpacity={1}
+                fill="url(#emeraldGlow)"
+              />
+              <Area
+                type="monotone"
+                dataKey="etkilesim"
+                stroke="#38BDF8"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#skyGlow)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
-      {/* Per-platform table */}
-      <Card>
-        <div className="p-5 border-b border-gray-100 dark:border-gray-800">
-          <h3 className="font-bold text-gray-900 dark:text-white">Platform Bazlı Analitik</h3>
+      {/* Per-Platform Table */}
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="p-5 border-b border-white/[0.06]">
+          <h3 className="font-medium text-white text-sm">Platform Bazlı Dağılım ve Başarı Skoru</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-gray-50/50 dark:bg-white/5 text-gray-500 text-xs font-medium border-b border-gray-100 dark:border-gray-800">
+            <thead className="bg-white/[0.02] text-zinc-400 text-xs font-medium border-b border-white/[0.06]">
               <tr>
                 <th className="px-5 py-3">Platform</th>
                 <th className="px-5 py-3 text-right">Takipçi</th>
                 <th className="px-5 py-3 text-right">Erişim</th>
-                <th className="px-5 py-3 text-right">Etkileşim</th>
+                <th className="px-5 py-3 text-right">Etkileşim Oranı</th>
                 <th className="px-5 py-3 text-right">Gönderi</th>
-                <th className="px-5 py-3">Etkileşim Oranı</th>
+                <th className="px-5 py-3">Doluluk</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody className="divide-y divide-white/[0.04]">
               {MOCK_ANALYTICS.map(a => (
-                <tr key={a.platform} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                  <td className="px-5 py-4">
+                <tr key={a.platform} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
                       <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: a.color }} />
-                      <span className="font-medium text-gray-800 dark:text-white">{a.platform}</span>
+                      <span className="font-medium text-white">{a.platform}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-right text-gray-600 dark:text-gray-300">{a.followers.toLocaleString("tr-TR")}</td>
-                  <td className="px-5 py-4 text-right text-gray-600 dark:text-gray-300">{a.reach.toLocaleString("tr-TR")}</td>
-                  <td className="px-5 py-4 text-right text-gray-600 dark:text-gray-300">{a.engagement.toLocaleString("tr-TR")}</td>
-                  <td className="px-5 py-4 text-right text-gray-600 dark:text-gray-300">{a.posts}</td>
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-3.5 text-right font-mono text-zinc-300">{a.followers.toLocaleString("tr-TR")}</td>
+                  <td className="px-5 py-3.5 text-right font-mono text-zinc-300">{a.reach.toLocaleString("tr-TR")}</td>
+                  <td className="px-5 py-3.5 text-right font-mono text-emerald-400">%{a.engagement}</td>
+                  <td className="px-5 py-3.5 text-right font-mono text-zinc-400">{a.posts}</td>
+                  <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(a.engagement * 10, 100)}%` }} />
+                      <div className="w-24 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-emerald-400"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(a.engagement * 10, 100)}%` }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                        />
                       </div>
-                      <span className="text-xs text-gray-500 w-8 text-right">%{a.engagement}</span>
+                      <span className="text-[11px] text-zinc-400 font-mono">%{a.engagement}</span>
                     </div>
                   </td>
                 </tr>
@@ -636,43 +729,12 @@ function TabAnalitik() {
             </tbody>
           </table>
         </div>
-      </Card>
-
-      {/* Follower distribution bars */}
-      <Card className="p-6">
-        <h3 className="font-bold text-gray-900 dark:text-white mb-5">Takipçi Dağılımı</h3>
-        <div className="space-y-3">
-          {MOCK_ANALYTICS.sort((a, b) => b.followers - a.followers).map(a => (
-            <div key={a.platform} className="flex items-center gap-3">
-              <span className="text-sm text-gray-600 dark:text-gray-400 w-24 shrink-0">{a.platform}</span>
-              <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${(a.followers / totalFollowers) * 100}%`, backgroundColor: a.color }}
-                />
-              </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16 text-right">
-                {a.followers.toLocaleString("tr-TR")}
-              </span>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-2xl p-4 flex items-start gap-3">
-        <span className="material-symbols-outlined text-blue-500 mt-0.5">info</span>
-        <div>
-          <p className="text-sm font-medium text-blue-700 dark:text-blue-400">Gerçek Zamanlı Analitik</p>
-          <p className="text-xs text-blue-600/80 dark:text-blue-400/70 mt-0.5">
-            Gerçek veriler için Postiz backend bağlı olmalı ve sosyal medya hesaplarınız Platformlar sekmesinden bağlanmış olmalıdır.
-          </p>
-        </div>
       </div>
     </div>
   )
 }
 
-// â”€â”€â”€ TabPlatformlar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── TabPlatformlar ───────────────────────────────────────────────────
 
 function TabPlatformlar() {
   const [platforms, setPlatforms] = useState<Platform[]>(PLATFORMS)
@@ -686,9 +748,9 @@ function TabPlatformlar() {
         const { authUrl } = await res.json()
         if (authUrl) {
           window.open(authUrl, "_blank", "width=600,height=700")
-          toast.success(`${platforms.find(p => p.id === id)?.name} bağlantısı başlatıldı. Yetkilendirme penceresini tamamlayın.`)
+          toast.success(`${platforms.find(p => p.id === id)?.name} bağlantısı başlatıldı.`)
         } else {
-          setPlatforms(prev => prev.map(p => p.id === id ? { ...p, connected: true, handle: "@hesap_adı" } : p))
+          setPlatforms(prev => prev.map(p => p.id === id ? { ...p, connected: true, handle: "@hesap_adi" } : p))
           toast.success(`${platforms.find(p => p.id === id)?.name} bağlandı!`)
         }
       } else {
@@ -724,164 +786,147 @@ function TabPlatformlar() {
     <div className="space-y-6">
       {connected.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Bağlı Platformlar ({connected.length})</h3>
+          <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+            Bağlı Platformlar ({connected.length})
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {connected.map(p => (
-              <Card key={p.id} className="p-5">
+              <div key={p.id} className="bg-[#111513]/90 backdrop-blur-xl border border-emerald-500/30 rounded-[20px] p-5 shadow-2xl">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="size-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${p.color}15` }}>
-                      <span className="material-symbols-outlined text-[20px]" style={{ color: p.color }}>{p.icon}</span>
+                    <div className="size-10 rounded-xl flex items-center justify-center bg-white/[0.05]">
+                      <span className="font-bold text-xs uppercase" style={{ color: p.color }}>{p.name.slice(0, 2)}</span>
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm">{p.name}</p>
-                      {p.handle && <p className="text-xs text-gray-500">{p.handle}</p>}
+                      <p className="font-medium text-white text-sm">{p.name}</p>
+                      {p.handle && <p className="text-xs text-zinc-400">{p.handle}</p>}
                     </div>
                   </div>
-                  <span className="size-2 rounded-full bg-green-500 mt-1.5" />
+                  <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
                 </div>
-                {p.followers && (
-                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px] text-gray-400">group</span>
-                    <span className="text-xs text-gray-500">{p.followers.toLocaleString("tr-TR")} takipçi</span>
-                  </div>
-                )}
                 <button
                   onClick={() => handleDisconnect(p.id)}
-                  className="mt-3 w-full text-xs text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 py-1.5 rounded-lg transition-colors"
+                  className="mt-4 w-full text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 py-1.5 rounded-lg border border-rose-500/20 transition-colors"
                 >
                   Bağlantıyı Kes
                 </button>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
       )}
 
       <div>
-        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
-          {connected.length > 0 ? "Bağlanabilir Platformlar" : "Tüm Platformlar"} ({disconnected.length})
+        <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+          {connected.length > 0 ? "Kullanılabilir Platformlar" : "Tüm Platformlar"} ({disconnected.length})
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {disconnected.map(p => (
-            <Card key={p.id} className="p-5 hover:border-primary/30 transition-colors">
+            <div key={p.id} className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] hover:border-white/[0.12] rounded-[20px] p-5 shadow-2xl transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="size-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${p.color}15` }}>
-                  <span className="material-symbols-outlined text-[20px]" style={{ color: p.color }}>{p.icon}</span>
+                <div className="size-10 rounded-xl flex items-center justify-center bg-white/[0.03]">
+                  <span className="font-bold text-xs uppercase" style={{ color: p.color }}>{p.name.slice(0, 2)}</span>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm">{p.name}</p>
-                  <p className="text-xs text-gray-400">Bağlı değil</p>
+                  <p className="font-medium text-white text-sm">{p.name}</p>
+                  <p className="text-xs text-zinc-500">Bağlı değil</p>
                 </div>
               </div>
               <button
                 onClick={() => handleConnect(p.id)}
                 disabled={connecting === p.id}
-                className="w-full py-2 text-sm font-medium text-primary border border-primary/30 hover:bg-primary/5 rounded-xl transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5"
+                className="w-full py-2 text-xs font-medium text-zinc-200 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
               >
                 {connecting === p.id ? (
-                  <><span className="material-symbols-outlined text-[16px] animate-spin">sync</span> Bağlanıyor…</>
+                  <><RefreshCw className="size-3.5 animate-spin" /> Bağlanıyor…</>
                 ) : (
-                  <><span className="material-symbols-outlined text-[16px]">add_link</span> Bağlan</>
+                  <><Plus className="size-3.5" /> Bağlantı Kur</>
                 )}
               </button>
-            </Card>
+            </div>
           ))}
-        </div>
-      </div>
-
-      <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-4 flex items-start gap-3">
-        <span className="material-symbols-outlined text-amber-500 mt-0.5">warning</span>
-        <div>
-          <p className="text-sm font-medium text-amber-700 dark:text-amber-400">Postiz Backend Gerekli</p>
-          <p className="text-xs text-amber-600/80 dark:text-amber-400/70 mt-0.5">
-            Platformları bağlamak için Postiz sunucunuzun çalışır olması ve <code className="bg-amber-100 dark:bg-amber-500/20 px-1 rounded">POSTIZ_BACKEND_URL</code> ortam değişkeninin ayarlanmış olması gerekir.
-          </p>
         </div>
       </div>
     </div>
   )
 }
 
-// â”€â”€â”€ TabEkip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── TabEkip ──────────────────────────────────────────────────────────
 
 function TabEkip() {
+  const maxPosts = Math.max(...MOCK_TEAM.map(x => x.postsThisMonth), 1)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-bold text-gray-900 dark:text-white">Ekip Üyeleri</h3>
-          <p className="text-xs text-gray-500 mt-0.5">{MOCK_TEAM.length} aktif üye</p>
+          <h3 className="font-medium text-white text-base">Ekip ve Sorumlular</h3>
+          <p className="text-xs text-zinc-400 mt-0.5">{MOCK_TEAM.length} aktif içerik üreticisi</p>
         </div>
         <button
-          onClick={() => toast.info("Davet özelliği yakında eklenecek.")}
-          className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+          onClick={() => toast.info("Ekip üyesi davet paneli yakında aktif edilecek.")}
+          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]"
         >
-          <span className="material-symbols-outlined text-[16px]">person_add</span>
+          <Plus className="size-3.5" />
           Üye Davet Et
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {MOCK_TEAM.map(member => (
-          <Card key={member.id} className="p-5">
-            <div className="flex items-start gap-4">
-              <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
+          <div key={member.id} className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl">
+            <div className="flex items-start gap-3.5">
+              <div className="size-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-sm shrink-0">
                 {member.fullName.substring(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{member.fullName}</p>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 whitespace-nowrap shrink-0">
+                  <p className="font-medium text-white text-sm truncate">{member.fullName}</p>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
                     {member.role}
                   </span>
                 </div>
-                {member.email && <p className="text-xs text-gray-500 mt-0.5">{member.email}</p>}
+                {member.email && <p className="text-xs text-zinc-400 mt-0.5">{member.email}</p>}
 
                 <div className="flex items-center gap-3 mt-3">
                   <div className="flex gap-1">
-                    {member.platforms.map(pid => {
-                      const pl = PLATFORMS.find(p => p.id === pid)
-                      return pl ? (
-                        <span key={pid} title={pl.name} className="material-symbols-outlined text-[14px]" style={{ color: pl.color }}>{pl.icon}</span>
-                      ) : null
-                    })}
+                    {member.platforms.map(pid => (
+                      <PlatformIcon key={pid} platformId={pid} />
+                    ))}
                   </div>
-                  <span className="text-xs text-gray-400">•</span>
-                  <span className="text-xs text-gray-500">{member.postsThisMonth} gönderi (bu ay)</span>
+                  <span className="text-xs text-zinc-500 font-mono">• {member.postsThisMonth} gönderi (bu ay)</span>
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
 
-      {/* Activity summary */}
-      <Card className="p-6">
-        <h3 className="font-bold text-gray-900 dark:text-white mb-4">Ekip Aktivitesi (Bu Ay)</h3>
+      {/* Activity Bar Chart */}
+      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl space-y-4">
+        <h3 className="font-medium text-white text-sm">Ekip Üretim Performansı (Bu Ay)</h3>
         <div className="space-y-3">
           {MOCK_TEAM.sort((a, b) => b.postsThisMonth - a.postsThisMonth).map(m => (
             <div key={m.id} className="flex items-center gap-3">
-              <div className="size-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold shrink-0">
-                {m.fullName.substring(0, 2).toUpperCase()}
-              </div>
-              <span className="text-sm text-gray-600 dark:text-gray-400 w-36 truncate">{m.fullName}</span>
-              <div className="flex-1 h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-700"
-                  style={{ width: `${(m.postsThisMonth / Math.max(...MOCK_TEAM.map(x => x.postsThisMonth))) * 100}%` }}
+              <span className="text-xs text-zinc-300 w-36 truncate">{m.fullName}</span>
+              <div className="flex-1 h-2 bg-white/[0.04] rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(m.postsThisMonth / maxPosts) * 100}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                 />
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">{m.postsThisMonth} pst</span>
+              <span className="text-xs font-mono text-zinc-400 w-16 text-right">{m.postsThisMonth} post</span>
             </div>
           ))}
         </div>
-      </Card>
+      </div>
     </div>
   )
 }
 
-// â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main Component ───────────────────────────────────────────────────
 
 export default function SosyalMedyaClient() {
   const { currentBranch }           = useAuth()
@@ -917,12 +962,12 @@ export default function SosyalMedyaClient() {
     loadPosts()
   }, [backendStatus])
 
-  const tabs: { id: TabId; label: string; icon: string }[] = [
-    { id: "takvim",    label: "Takvim",    icon: "calendar_month" },
-    { id: "gonderiler",label: "Gönderiler",icon: "send"           },
-    { id: "analitik",  label: "Analitik",  icon: "bar_chart"      },
-    { id: "platformlar",label:"Platformlar",icon: "share"         },
-    { id: "ekip",      label: "Ekip",      icon: "group"          },
+  const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
+    { id: "takvim",    label: "Takvim",    icon: <CalendarIcon className="size-4" /> },
+    { id: "gonderiler",label: "Gönderiler",icon: <Send className="size-4" />         },
+    { id: "analitik",  label: "Analitik",  icon: <BarChart3 className="size-4" />     },
+    { id: "platformlar",label:"Platformlar",icon: <Share2 className="size-4" />       },
+    { id: "ekip",      label: "Ekip",      icon: <Users className="size-4" />        },
   ]
 
   const totalScheduled  = posts.filter(p => p.status === "scheduled").length
@@ -930,71 +975,141 @@ export default function SosyalMedyaClient() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <PageHeader
-        title="Sosyal Medya"
-        subtitle={currentBranch ? `${currentBranch.name} Â· Çok Platformlu İçerik Yönetimi` : "Çok Platformlu Sosyal Medya Yönetimi"}
-        action={
-          <>
-            {/* Backend status badge */}
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border ${
-              backendStatus === "online"
-                ? "bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/20"
-                : backendStatus === "offline"
-                ? "bg-red-50   dark:bg-red-500/10   text-red-700   dark:text-red-400   border-red-200   dark:border-red-500/20"
-                : "bg-gray-50  dark:bg-gray-500/10  text-gray-500                        border-gray-200"
-            }`}>
-              <span className={`size-1.5 rounded-full ${
-                backendStatus === "online" ? "bg-green-500" : backendStatus === "offline" ? "bg-red-500" : "bg-gray-400 animate-pulse"
-              }`} />
-              {backendStatus === "online" ? "Postiz Bağlı" : backendStatus === "offline" ? "Postiz Bağlı Değil" : "Kontrol ediliyor…"}
-            </div>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+        <div>
+          <h1 className="text-2xl font-light tracking-wide text-white">Sosyal Medya Yönetimi</h1>
+          <p className="text-xs text-zinc-400 mt-1">
+            {currentBranch ? `${currentBranch.name} · Çok Kanallı Sosyal Medya Ekosistemi` : "Tüm platformlar tek ekranda senkronize"}
+          </p>
+        </div>
 
-            <button
-              onClick={() => setActiveTab("gonderiler")}
-              className="bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 shadow-sm transition-all"
-            >
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              Yeni Gönderi
-            </button>
-          </>
-        }
-      />
-
-      {/* Quick stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon="schedule_send" label="Planlanmış"   value={totalScheduled}                          iconColor="text-blue-500"   />
-        <StatCard icon="check_circle"  label="Yayınlandı"   value={totalPublished}                          iconColor="text-green-500"  />
-        <StatCard icon="share"         label="Platform"      value={PLATFORMS.length}                        iconColor="text-purple-500" />
-        <StatCard icon="group"         label="Ekip Üyesi"   value={MOCK_TEAM.length}                        iconColor="text-amber-500"  />
-      </div>
-
-      {/* Tab bar */}
-      <div className="flex gap-1 overflow-x-auto scrollbar-none">
-        {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTab(t.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all border ${
-              activeTab === t.id
-                ? "bg-white dark:bg-[#1e1e1e] border-gray-200 dark:border-gray-700 text-primary shadow-sm"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-white/60 dark:hover:bg-gray-800/50"
-            }`}
-          >
-            <span className={`material-symbols-outlined text-[18px] ${activeTab === t.id ? "text-primary" : "text-gray-400"}`}>
-              {t.icon}
+        <div className="flex items-center gap-3">
+          {/* Backend Status */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border border-white/[0.08] bg-white/[0.02]">
+            <span className={`size-2 rounded-full ${
+              backendStatus === "online" ? "bg-emerald-400 shadow-[0_0_8px_#34D399]" : backendStatus === "offline" ? "bg-rose-500" : "bg-amber-400 animate-pulse"
+            }`} />
+            <span className="text-zinc-300">
+              {backendStatus === "online" ? "Postiz Bağlı" : backendStatus === "offline" ? "Postiz Çevrimdışı" : "Kontrol ediliyor"}
             </span>
-            {t.label}
+          </div>
+
+          <button
+            onClick={() => setActiveTab("gonderiler")}
+            className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
+          >
+            <Plus className="size-4" />
+            Yeni Gönderi
           </button>
-        ))}
+        </div>
       </div>
 
-      {/* Tab content */}
-      {activeTab === "takvim"     && <TabCalendar posts={posts} />}
-      {activeTab === "gonderiler" && <TabGonderiler posts={posts} />}
-      {activeTab === "analitik"   && <TabAnalitik />}
-      {activeTab === "platformlar"&& <TabPlatformlar />}
-      {activeTab === "ekip"       && <TabEkip />}
+      {/* Kutusuz (Borderless) Üst KPI Şeridi */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-white/[0.06]">
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
+            <Clock className="size-3.5 text-zinc-400" />
+            <span>Planlanmış</span>
+          </div>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-3xl font-light text-white">
+              <AnimatedNumber value={totalScheduled} />
+            </span>
+            <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+              Bekleyen
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
+            <CheckCircle2 className="size-3.5 text-zinc-400" />
+            <span>Yayınlandı</span>
+          </div>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-3xl font-light text-white">
+              <AnimatedNumber value={totalPublished} />
+            </span>
+            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              Canlıda
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
+            <Share2 className="size-3.5 text-zinc-400" />
+            <span>Aktif Platform</span>
+          </div>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-3xl font-light text-white">
+              <AnimatedNumber value={PLATFORMS.length} />
+            </span>
+            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+              Kanal
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
+            <Users className="size-3.5 text-zinc-400" />
+            <span>Ekip Üyesi</span>
+          </div>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className="text-3xl font-light text-white">
+              <AnimatedNumber value={MOCK_TEAM.length} />
+            </span>
+            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              Aktif
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Sliding Pill Tab Switcher */}
+      <div className="flex gap-1 border-b border-white/[0.06] pb-2 overflow-x-auto scrollbar-none">
+        {tabs.map(t => {
+          const isActive = activeTab === t.id
+          return (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
+                isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+              }`}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="socialMediaActiveTab"
+                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.08] rounded-xl"
+                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{t.icon}</span>
+              <span className="relative z-10">{t.label}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Active Tab Content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.18 }}
+        >
+          {activeTab === "takvim"     && <TabCalendar posts={posts} />}
+          {activeTab === "gonderiler" && <TabGonderiler posts={posts} />}
+          {activeTab === "analitik"   && <TabAnalitik />}
+          {activeTab === "platformlar"&& <TabPlatformlar />}
+          {activeTab === "ekip"       && <TabEkip />}
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }

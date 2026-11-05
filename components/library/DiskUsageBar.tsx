@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { HardDrive, Files, Folder, TrendingUp } from "lucide-react"
+import { motion } from "framer-motion"
+import { HardDrive, FileText, Folder, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Stats {
@@ -89,7 +90,7 @@ export function DiskUsageBar({ branchId, refreshTrigger }: DiskUsageBarProps) {
         <div className="bg-muted/50 rounded-lg p-2.5">
           <p className="text-label text-muted-foreground mb-1">Dosyalar</p>
           <div className="flex items-center gap-1.5">
-            <Files size={13} className="text-primary" />
+            <FileText size={13} className="text-emerald-400" />
             <span className="text-sm font-semibold">{stats.fileCount.toLocaleString("tr")}</span>
           </div>
         </div>
@@ -112,15 +113,17 @@ export function DiskUsageBar({ branchId, refreshTrigger }: DiskUsageBarProps) {
       {/* Tür dağılımı */}
       {stats.typeBreakdown.length > 0 && totalSegments > 0 && (
         <div>
-          {/* Renk çubuğu */}
-          <div className="flex h-2 rounded-full overflow-hidden gap-0.5 mb-2">
+          {/* Renk çubuğu - Animasyonlu Dolum */}
+          <div className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-2.5 bg-white/[0.04] p-0.5 border border-white/[0.06]">
             {stats.typeBreakdown
               .filter((t) => t.sizeBytes > 0)
               .map((t) => (
-                <div
+                <motion.div
                   key={t.type}
-                  className={cn("rounded-full transition-all", TYPE_COLORS[t.type] ?? "bg-muted")}
-                  style={{ width: `${(t.sizeBytes / totalSegments) * 100}%` }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(t.sizeBytes / totalSegments) * 100}%` }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
+                  className={cn("h-full rounded-full", TYPE_COLORS[t.type] ?? "bg-zinc-600")}
                   title={`${TYPE_LABELS[t.type] ?? t.type}: ${formatBytes(t.sizeBytes)}`}
                 />
               ))}

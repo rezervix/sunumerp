@@ -35,31 +35,34 @@ export default function TasksPage() {
   }, [])
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col p-6 space-y-6">
+    <div className="h-[calc(100vh-4rem)] flex flex-col p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto w-full">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <CheckSquare className="h-6 w-6 text-primary" />
-            {tText("tasks.title", t.nav.tasks)}
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white flex items-center gap-2.5">
+            <CheckSquare className="h-6 w-6 text-emerald-400" />
+            {tText("tasks.title", t.nav?.tasks || "Görevler")}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
             {tText("tasks.subtitle", "Ekibinizin görevlerini atayın, takip edin ve tamamlayın.")}
           </p>
         </div>
         {isManager && (
           <div className="flex items-center gap-2">
-            <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
+            <button
+              onClick={() => setIsCreateOpen(true)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold text-xs sm:text-sm rounded-full shadow-[0_0_15px_rgba(52,211,153,0.2)] transition active:scale-95"
+            >
               <Plus className="h-4 w-4" />
               {tText("tasks.addTask", "Yeni Görev")}
-            </Button>
+            </button>
           </div>
         )}
       </div>
 
       <div className="flex-1 min-h-0">
         {loading ? (
-          <div className="h-full flex items-center justify-center">
-            <p className="text-muted-foreground animate-pulse">{tText("common.loading", "Görevler yükleniyor...")}</p>
+          <div className="h-full flex items-center justify-center bg-[#111513]/40 border border-white/[0.06] rounded-[20px]">
+            <p className="text-zinc-500 text-xs animate-pulse">{tText("common.loading", "Görevler yükleniyor...")}</p>
           </div>
         ) : (
           <TaskBoard tasks={tasks} onTaskUpdated={fetchTasks} isManager={isManager} />

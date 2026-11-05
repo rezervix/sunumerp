@@ -476,35 +476,35 @@ export default function PersonelDenetimPage() {
   }
 
   return (
-    <div className="h-full flex flex-col p-6 space-y-6 overflow-y-auto bg-slate-50/50 dark:bg-slate-900/10">
+    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 space-y-6 overflow-y-auto max-w-[1600px] mx-auto w-full">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center gap-2">
-            <Users className="h-8 w-8 text-blue-600" />
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white flex items-center gap-2.5">
+            <Users className="h-7 w-7 text-emerald-400" />
             Ekip Yük Durumu ve Denetim
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
             Şeffaflık, dengeli iş yükü yönetimi ve dönemsel personel performans takibi.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Button
             onClick={() => router.push("/dashboard/personel-denetim/gun-sonu")}
-            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+            className="gap-2 bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 rounded-full font-medium text-xs h-9"
             size="sm"
           >
-            <ClipboardCheck className="h-4 w-4" />
+            <ClipboardCheck className="h-3.5 w-3.5 text-emerald-400" />
             Gün Sonu Raporu
           </Button>
           {isManager && (
             <Button
               onClick={() => router.push("/dashboard/personel-denetim/musteri-talepleri")}
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+              className="gap-2 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold rounded-full text-xs h-9 shadow-[0_0_15px_rgba(52,211,153,0.2)]"
               size="sm"
             >
-              <MessageCircle className="h-4 w-4" />
+              <MessageCircle className="h-3.5 w-3.5" />
               Müşteri Talepleri
             </Button>
           )}
@@ -518,31 +518,31 @@ export default function PersonelDenetimPage() {
               if (isHr) fetchHrDashboard()
               toast.success("Veriler güncellendi.")
             }}
-            className="gap-2"
+            className="gap-1.5 border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className="h-3.5 w-3.5" />
             Yenile
           </Button>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex-1 flex flex-col items-center justify-center space-y-2 py-20">
-          <Clock className="h-10 w-10 text-primary animate-spin" />
-          <p className="text-slate-500 font-medium">Veriler yükleniyor...</p>
+        <div className="flex-1 flex flex-col items-center justify-center space-y-2 py-20 bg-[#111513]/40 border border-white/[0.06] rounded-[20px]">
+          <Clock className="h-8 w-8 text-emerald-400 animate-spin" />
+          <p className="text-zinc-500 text-xs font-medium">Veriler yükleniyor...</p>
         </div>
       ) : (
         <Tabs defaultValue="my-task" value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 max-w-2xl bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-            <TabsTrigger value="my-task" className="rounded-lg font-medium transition-all">Aktif Görevim</TabsTrigger>
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 max-w-2xl bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-[20px] h-auto">
+            <TabsTrigger value="my-task" className="rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white">Aktif Görevim</TabsTrigger>
             {isManager && (
-              <TabsTrigger value="team-live" className="rounded-lg font-medium transition-all">Canlı Ekip Panosu</TabsTrigger>
+              <TabsTrigger value="team-live" className="rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white">Canlı Ekip Panosu</TabsTrigger>
             )}
             {isManager && (
-              <TabsTrigger value="mgmt" className="rounded-lg font-medium transition-all">Yönetim Paneli</TabsTrigger>
+              <TabsTrigger value="mgmt" className="rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white">Yönetim Paneli</TabsTrigger>
             )}
             {isHr && (
-              <TabsTrigger value="hr" className="rounded-lg font-medium transition-all">İK / Performans</TabsTrigger>
+              <TabsTrigger value="hr" className="rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white">İK / Performans</TabsTrigger>
             )}
           </TabsList>
 
@@ -553,13 +553,13 @@ export default function PersonelDenetimPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
               {/* Sol Taraf: Aktif Görev Paneli */}
-              <Card className="lg:col-span-2 border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs hover:shadow-md transition-shadow">
-                <CardHeader className="bg-gradient-to-r from-slate-100/50 to-blue-50/20 dark:from-slate-800/20 dark:to-slate-800/10 border-b">
-                  <CardTitle className="text-xl flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-blue-600 animate-pulse" />
+              <Card className="lg:col-span-2 border-white/[0.06] bg-[#111513]/90 rounded-[20px] overflow-hidden shadow-xl text-white">
+                <CardHeader className="bg-[#0d100e] border-b border-white/[0.06]">
+                  <CardTitle className="text-base font-semibold flex items-center gap-2 text-white">
+                    <Clock className="h-4 w-4 text-emerald-400 animate-pulse" />
                     Şu An Çalıştığım Görev
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs text-zinc-400">
                     Gerçek zamanlı iş bildirim ve zaman takip aracı.
                   </CardDescription>
                 </CardHeader>
@@ -567,67 +567,96 @@ export default function PersonelDenetimPage() {
                   {activeTask ? (
                     <div className="space-y-6">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                        <div>
-                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                            activeTask.priority === "URGENT" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" :
-                            activeTask.priority === "HIGH" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" :
-                            activeTask.priority === "MEDIUM" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" :
-                            "bg-slate-100 text-slate-800 dark:bg-slate-900/30 dark:text-slate-300"
+                        <div className="space-y-2">
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${
+                            activeTask.priority === "URGENT" ? "bg-rose-500/10 text-rose-300 border-rose-500/20" :
+                            activeTask.priority === "HIGH" ? "bg-amber-500/10 text-amber-300 border-amber-500/20" :
+                            activeTask.priority === "MEDIUM" ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
+                            "bg-white/5 text-zinc-400 border border-white/10"
                           }`}>
                             {activeTask.priority === "URGENT" ? "Acil" : 
                              activeTask.priority === "HIGH" ? "Yüksek" : 
                              activeTask.priority === "MEDIUM" ? "Orta" : "Düşük"} Öncelik
                           </span>
-                          <h3 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white leading-tight">
+                          <h3 className="text-xl font-semibold text-white leading-tight">
                             {activeTask.title}
                           </h3>
-                          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-xl">
+                          <p className="text-zinc-400 text-xs max-w-xl leading-relaxed">
                             {activeTask.description || "Açıklama girilmemiş."}
                           </p>
-                          <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-slate-500">
-                            <span>Atayan: <strong className="text-slate-700 dark:text-slate-300">{activeTask.assigner?.fullName}</strong></span>
+                          <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+                            <span>Atayan: <strong className="text-zinc-300 font-medium">{activeTask.assigner?.fullName}</strong></span>
                             {activeTask.dueDate && (
-                              <span>Bitiş Tarihi: <strong className="text-red-500">{new Date(activeTask.dueDate).toLocaleDateString("tr-TR")}</strong></span>
+                              <span>Bitiş Tarihi: <strong className="text-rose-400 font-mono">{new Date(activeTask.dueDate).toLocaleDateString("tr-TR")}</strong></span>
                             )}
                           </div>
                         </div>
                         
-                        {/* Timer Göstergesi */}
-                        <div className="flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-800 border p-4 rounded-2xl min-w-[140px] shadow-inner">
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Aktif Süre</span>
-                          <span className="text-2xl font-mono font-bold text-blue-600 dark:text-blue-400 mt-1">
-                            {formatTime(timerSeconds)}
-                          </span>
+                        {/* Timer Göstergesi - Zümrüt Radyal Gauge */}
+                        <div className="relative flex flex-col items-center justify-center p-4 rounded-[20px] bg-[#0d100e] border border-white/[0.06] shadow-inner min-w-[160px] shrink-0">
+                          <div className="relative w-28 h-28 flex items-center justify-center">
+                            <svg className="absolute inset-0 w-full h-full -rotate-90">
+                              <circle
+                                cx="56"
+                                cy="56"
+                                r="48"
+                                className="stroke-white/[0.05]"
+                                strokeWidth="4"
+                                fill="transparent"
+                              />
+                              <circle
+                                cx="56"
+                                cy="56"
+                                r="48"
+                                className="stroke-emerald-400"
+                                strokeWidth="4"
+                                fill="transparent"
+                                strokeDasharray={301.6}
+                                strokeDashoffset={301.6 - (301.6 * ((timerSeconds % 60) / 60))}
+                                strokeLinecap="round"
+                                style={{
+                                  filter: "drop-shadow(0 0 6px rgba(52, 211, 153, 0.6))",
+                                  transition: "stroke-dashoffset 1s linear"
+                                }}
+                              />
+                            </svg>
+                            <div className="flex flex-col items-center z-10 text-center">
+                              <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">Aktif Süre</span>
+                              <span className="text-xl font-mono font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.3)] mt-0.5">
+                                {formatTime(timerSeconds)}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
                       {/* Kontroller */}
-                      <div className="flex flex-wrap items-center gap-3 pt-4 border-t">
+                      <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/[0.06]">
                         <Button 
                           variant="outline"
                           onClick={handlePauseTask}
-                          className="gap-2 border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 text-amber-700 dark:text-amber-400"
+                          className="gap-2 border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs"
                         >
-                          <Pause className="h-4 w-4" />
+                          <Pause className="h-3.5 w-3.5" />
                           Çalışmayı Duraklat
                         </Button>
                         <Button 
                           onClick={() => setIsCompleteDialogOpen(true)}
-                          className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+                          className="gap-2 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold rounded-full text-xs shadow-[0_0_15px_rgba(52,211,153,0.2)]"
                         >
-                          <CheckCircle2 className="h-4 w-4" />
+                          <CheckCircle2 className="h-3.5 w-3.5" />
                           Görevi Tamamla
                         </Button>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-10 space-y-4">
-                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                        <AlertTriangle className="h-6 w-6 text-slate-400" />
+                    <div className="text-center py-10 space-y-3">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 border border-white/10">
+                        <AlertTriangle className="h-5 w-5 text-zinc-500" />
                       </div>
                       <div>
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white">Şu An Boştasınız</h4>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm mx-auto mt-1">
+                        <h4 className="text-base font-semibold text-white">Şu An Boştasınız</h4>
+                        <p className="text-zinc-500 text-xs max-w-sm mx-auto mt-1">
                           Aktif olarak çalıştığınız herhangi bir görev bulunmuyor. Lütfen yan taraftaki listeden bir göreve başlayın.
                         </p>
                       </div>
@@ -637,7 +666,7 @@ export default function PersonelDenetimPage() {
               </Card>
 
               {/* Sağ Taraf: Görev Listesi ve Başlatıcı */}
-              <Card className="border-slate-200 dark:border-slate-800 shadow-xs hover:shadow-md transition-shadow">
+              <Card className="border-white/[0.06] bg-[#111513]/90 rounded-[20px] shadow-xl text-white">
                 <CardHeader>
                   <CardTitle className="text-lg">Atanmış Görevlerim</CardTitle>
                   <CardDescription>Üzerinizde bulunan bekleyen görevler.</CardDescription>
@@ -983,32 +1012,48 @@ export default function PersonelDenetimPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Trend Chart (LineChart) */}
-                <Card className="lg:col-span-2 border-slate-200 dark:border-slate-800">
+                <Card className="lg:col-span-2 border-white/[0.06] bg-[#111513]/90 rounded-[20px] shadow-xl text-white">
                   <CardHeader>
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-blue-600" />
+                    <CardTitle className="text-base font-semibold flex items-center gap-2 text-white">
+                      <TrendingUp className="h-4 w-4 text-emerald-400" />
                       Departman Bazlı Tamamlanan Görev Trendleri
                     </CardTitle>
-                    <CardDescription>Zaman içerisindeki günlük tamamlanan görev dağılımı.</CardDescription>
+                    <CardDescription className="text-xs text-zinc-400">Zaman içerisindeki günlük tamamlanan görev dağılımı.</CardDescription>
                   </CardHeader>
                   <CardContent className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <ChartTooltip />
-                        <Legend />
-                        {trendData.length > 0 && Object.keys(trendData[0]).filter(k => k !== "date").map((dept, idx) => (
-                          <Line 
-                            key={dept}
-                            type="monotone" 
-                            dataKey={dept} 
-                            stroke={["#2563eb", "#16a34a", "#ea580c", "#9333ea", "#06b6d4"][idx % 5]} 
-                            activeDot={{ r: 8 }} 
-                            strokeWidth={2}
-                          />
-                        ))}
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis dataKey="date" stroke="#71717a" fontSize={11} />
+                        <YAxis stroke="#71717a" fontSize={11} />
+                        <ChartTooltip 
+                          contentStyle={{
+                            backgroundColor: "#111513",
+                            borderColor: "rgba(255,255,255,0.1)",
+                            borderRadius: "12px",
+                            color: "#fff",
+                            fontSize: "12px"
+                          }}
+                        />
+                        <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "8px" }} />
+                        {trendData.length > 0 && Object.keys(trendData[0]).filter(k => k !== "date").map((dept, idx) => {
+                          const neonColors = ["#34D399", "#10B981", "#6EE7B7", "#059669", "#A7F3D0"]
+                          const color = neonColors[idx % neonColors.length]
+                          return (
+                            <Line 
+                              key={dept}
+                              type="monotone" 
+                              dataKey={dept} 
+                              stroke={color} 
+                              activeDot={{ r: 6, fill: color, stroke: "#111513", strokeWidth: 2 }} 
+                              strokeWidth={2.5}
+                              dot={{ r: 3, fill: color }}
+                              style={{
+                                filter: `drop-shadow(0 0 6px ${color}80)`
+                              }}
+                            />
+                          )
+                        })}
                       </LineChart>
                     </ResponsiveContainer>
                   </CardContent>

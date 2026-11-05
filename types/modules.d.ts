@@ -225,8 +225,83 @@ declare module 'lucide-react' {
   export const Key: LucideIcon
   export const Server: LucideIcon
   export const Flame: LucideIcon
+  export const Award: LucideIcon
+  export const File: LucideIcon
+  export const Folder: LucideIcon
+  export const UploadCloud: LucideIcon
+  export const Star: LucideIcon
+  export const List: LucideIcon
+  export const Edit3: LucideIcon
+  export const Grid3X3: LucideIcon
+  export const Grid: LucideIcon
+  export const XCircle: LucideIcon
+  export const CheckCircle: LucideIcon
+  export const Square: LucideIcon
+  export const BarChart2: LucideIcon
+  export const Home: LucideIcon
+  export const Activity: LucideIcon
+  export const Tag: LucideIcon
+  export const Share2: LucideIcon
+  export const Video: LucideIcon
+  export const PlayCircle: LucideIcon
+  export const HardDrive: LucideIcon
+  export const Grid2X2: LucideIcon
+  export const Music: LucideIcon
+  export const Archive: LucideIcon
+  export const SortAsc: LucideIcon
+  export const SortDesc: LucideIcon
+  export const Move: LucideIcon
+  export const Image: LucideIcon
+  export const Instagram: LucideIcon
+  export const Youtube: LucideIcon
+  export const Facebook: LucideIcon
+  export const Linkedin: LucideIcon
+  export const Columns3: LucideIcon
+  export const Film: LucideIcon
+  export const LayoutGrid: LucideIcon
+  export const FileArchive: LucideIcon
+  export const MessageSquare: LucideIcon
+  export const SkipForward: LucideIcon
+  export const Wrench: LucideIcon
+  export const Inbox: LucideIcon
+  export const Paperclip: LucideIcon
+  export const Pause: LucideIcon
+  export const UserMinus: LucideIcon
+  export const ArrowRightLeft: LucideIcon
+  export const Wallet: LucideIcon
+  export const Laptop: LucideIcon
+  export const FolderClosed: LucideIcon
+  export const ThumbsUp: LucideIcon
+  export const ThumbsDown: LucideIcon
+  export const Palette: LucideIcon
+  export const Hash: LucideIcon
+  export const GitPullRequest: LucideIcon
+  export const CheckIcon: LucideIcon
+  export const ChevronDownIcon: LucideIcon
+  export const ChevronUpIcon: LucideIcon
+  export const XIcon: LucideIcon
+  export const PanelLeftIcon: LucideIcon
+  export const Loader2Icon: LucideIcon
+  export const Smile: LucideIcon
+  export const GitCompare: LucideIcon
+  export const Sliders: LucideIcon
+  export const ZoomIn: LucideIcon
+  export const ZoomOut: LucideIcon
+  export const RotateCw: LucideIcon
+  export const Minimize2: LucideIcon
+  export const FolderPlus: LucideIcon
 
   export const icons: Record<string, LucideIcon>
+}
+
+declare module 'jspdf' {
+  const jsPDF: any
+  export default jsPDF
+  export { jsPDF }
+}
+
+declare module 'tailwind-merge' {
+  export function twMerge(...classLists: any[]): string
 }
 
 declare module '@google/generative-ai' {

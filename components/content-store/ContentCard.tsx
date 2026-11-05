@@ -141,8 +141,8 @@ export function ContentCard({
   return (
     <>
       <div
-        className={`group relative flex flex-col rounded-xl border bg-card text-card-foreground shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md overflow-hidden ${
-          isSelected ? "border-primary ring-2 ring-primary/20" : "border-border"
+        className={`group relative flex flex-col rounded-[20px] border bg-[#111513]/90 text-card-foreground shadow-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden ${
+          isSelected ? "border-emerald-500/60 ring-2 ring-emerald-500/20" : "border-white/[0.06] hover:border-white/[0.15]"
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {

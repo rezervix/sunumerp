@@ -2,11 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/context/LanguageContext"
-
-
 import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
+import { Plus, FolderOpen, Calendar, Clock, CheckCircle2, AlertTriangle, X, Edit, Trash } from "lucide-react"
+import { AnimatedNumber } from "@/components/ui/motion-primitives"
+import { FilePicker } from "@/components/shared/file-picker"
 
 interface Project {
   id: string
@@ -19,8 +21,6 @@ interface Project {
   customerNotes: string | null
   createdAt: string
 }
-
-import { FilePicker } from "@/components/shared/file-picker"
 
 export default function ProjectsPage() {
   const { t, tText } = useLanguage()
@@ -89,9 +89,11 @@ export default function ProjectsPage() {
         loadProjects()
         setIsCreateDialogOpen(false)
         setFormData({ name: "", description: "", status: "active", progress: 0, startDate: "", endDate: "", customerNotes: "" })
+        toast.success("Proje başarıyla oluşturuldu")
       }
     } catch (error) {
       console.error("Failed to create project:", error)
+      toast.error("Proje oluşturulamadı")
     } finally {
       setLoading(false)
     }
@@ -116,9 +118,11 @@ export default function ProjectsPage() {
         setIsEditDialogOpen(false)
         setSelectedProject(null)
         setFormData({ name: "", description: "", status: "active", progress: 0, startDate: "", endDate: "", customerNotes: "" })
+        toast.success("Proje güncellendi")
       }
     } catch (error) {
       console.error("Failed to update project:", error)
+      toast.error("Proje güncellenemedi")
     } finally {
       setLoading(false)
     }
@@ -138,29 +142,44 @@ export default function ProjectsPage() {
     setIsEditDialogOpen(true)
   }
 
-  const getStatusBadgeStyles = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case "completed": return "bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-500"
-      case "active": return "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-500"
-      default: return "bg-yellow-50 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-500"
+      case "completed":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Tamamlandı
+          </span>
+        )
+      case "active":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <Clock className="w-3 h-3 text-emerald-400" /> Devam Ediyor
+          </span>
+        )
+      default:
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
+            <AlertTriangle className="w-3 h-3 text-amber-400" /> Beklemede
+          </span>
+        )
     }
   }
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "completed": return "Tamamlandi"
-      case "active": return "Devam Ediyor"
-      default: return "Beklemede"
-    }
-  }
+  const totalProjects = projects.length
+  const activeProjects = projects.filter(p => p.status === "active").length
+  const completedProjects = projects.filter(p => p.status === "completed").length
+  const avgProgress = totalProjects > 0
+    ? Math.round(projects.reduce((acc, p) => acc + (p.progress || 0), 0) / totalProjects)
+    : 0
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
+      {/* Üst Başlık & Yeni Proje Aksiyonu */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Projeler</h1>
-          <p className="text-sm text-gray-500">
-            {currentBranch ? `${currentBranch.name} - Proje yonetimi` : "Proje yonetimi"}
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">Projeler</h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+            {currentBranch ? `${currentBranch.name} • Proje ve operasyonel teslimat takibi` : "Proje yönetimi ve iş takibi"}
           </p>
         </div>
         <button
@@ -168,181 +187,247 @@ export default function ProjectsPage() {
             setFormData({ name: "", description: "", status: "active", progress: 0, startDate: "", endDate: "", customerNotes: "" })
             setIsCreateDialogOpen(true)
           }}
-          className="bg-primary hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold text-xs sm:text-sm rounded-full shadow-[0_0_20px_rgba(52,211,153,0.25)] transition active:scale-95"
         >
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          Yeni Proje
+          <Plus className="w-4 h-4" />
+          Yeni Proje Ekle
         </button>
       </div>
 
+      {/* Kutusuz (Borderless) Üst KPI Şeridi */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
+            <FolderOpen className="w-3.5 h-3.5 text-emerald-400" />
+            Toplam Proje
+          </div>
+          <div className="text-4xl font-light text-white tracking-tight mt-1">
+            <AnimatedNumber value={totalProjects} />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
+            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            Aktif Devam Eden
+          </div>
+          <div className="text-4xl font-light text-white tracking-tight mt-1">
+            <AnimatedNumber value={activeProjects} />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            Tamamlanan
+          </div>
+          <div className="text-4xl font-light text-white tracking-tight mt-1">
+            <AnimatedNumber value={completedProjects} />
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            Ortalama İlerleme
+          </div>
+          <div className="text-4xl font-light text-white tracking-tight mt-1">
+            <AnimatedNumber value={avgProgress} suffix="%" />
+          </div>
+        </div>
+      </div>
+
+      {/* Proje Kartları Izgarası */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {projects.length === 0 ? (
-          <div className="col-span-full bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl p-12 text-center shadow-sm">
-            <div className="w-16 h-16 bg-gray-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="material-symbols-outlined text-[32px] text-gray-400">inventory_2</span>
+          <div className="col-span-full bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center shadow-xl">
+            <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+              <FolderOpen className="w-6 h-6 text-zinc-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Henuz proje bulunmuyor</h3>
-            <p className="text-sm text-gray-500">Yeni bir proje ekleyerek baslayabilirsiniz.</p>
+            <h3 className="text-base font-semibold text-white mb-1">Henüz kayıtlı proje bulunmuyor</h3>
+            <p className="text-xs text-zinc-500">Yeni bir proje ekleyerek operasyonel iş takibine başlayabilirsiniz.</p>
           </div>
         ) : (
           projects.map((project) => (
-            <div key={project.id} className="bg-white dark:bg-[#1e1e1e] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm hover:shadow-md hover:border-primary/30 transition-all flex flex-col">
+            <motion.div
+              key={project.id}
+              whileHover={{ y: -3 }}
+              className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] shadow-xl hover:border-emerald-500/25 transition-all flex flex-col justify-between overflow-hidden"
+            >
               <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="space-y-1 pr-4">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white line-clamp-1" title={project.name}>{project.name}</h3>
-                    <p className="text-sm text-gray-500 line-clamp-2" title={project.description || ""}>{project.description || "Aciklama yok"}</p>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="space-y-1.5 pr-2">
+                    <h3 className="text-lg font-semibold text-white line-clamp-1" title={project.name}>
+                      {project.name}
+                    </h3>
+                    <p className="text-xs text-zinc-400 line-clamp-2" title={project.description || ""}>
+                      {project.description || "Açıklama belirtilmemiş."}
+                    </p>
                     {project.customerNotes && (
-                      <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-lg">
-                        <p className="text-[11px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wider mb-0.5">Musteri Notu</p>
-                        <p className="text-xs text-amber-800 dark:text-amber-400/90 italic">{project.customerNotes}</p>
+                      <div className="mt-3 p-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
+                        <p className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider mb-0.5">Müşteri Notu</p>
+                        <p className="text-xs text-zinc-300 italic">{project.customerNotes}</p>
                       </div>
                     )}
                   </div>
-                  <span className={`shrink-0 inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getStatusBadgeStyles(project.status)}`}>
-                    {getStatusLabel(project.status)}
-                  </span>
+                  <div className="shrink-0">
+                    {getStatusBadge(project.status)}
+                  </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-4 pt-2">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Ilerleme</span>
-                      <span className="text-sm font-bold text-gray-900 dark:text-white">{project.progress || 0}%</span>
+                      <span className="text-xs font-medium text-zinc-400">Proje İlerlemesi</span>
+                      <span className="text-xs font-semibold text-emerald-400 font-mono">%{project.progress || 0}</span>
                     </div>
-                    <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="bg-primary h-2 rounded-full transition-all duration-1000 ease-out"
-                        style={{ width: `${project.progress || 0}%` }}
-                      ></div>
+                    {/* Standart 1: Akıcı dolan Zümrüt Bar */}
+                    <div className="w-full bg-white/[0.05] rounded-full h-2 overflow-hidden border border-white/[0.04]">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${project.progress || 0}%` }}
+                        transition={{ duration: 0.9, ease: "easeOut" }}
+                        className="bg-emerald-400 h-2 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.35)]"
+                      />
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-y-2 gap-x-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <div className="flex items-center gap-2 text-[12px] text-gray-500">
-                      <span className="material-symbols-outlined text-[16px]">event_repeat</span>
-                      <span className="font-medium">Baslangic:</span>
-                      {project.startDate ? new Date(project.startDate).toLocaleDateString("tr-TR") : "-"}
+                  <div className="flex flex-wrap items-center gap-y-2 gap-x-4 pt-4 border-t border-white/[0.06]">
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-500" />
+                      <span className="text-zinc-500">Başlangıç:</span>
+                      <span className="text-zinc-300 font-mono">{project.startDate ? new Date(project.startDate).toLocaleDateString("tr-TR") : "-"}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[12px] text-gray-500">
-                      <span className="material-symbols-outlined text-[16px]">calendar_today</span>
-                      <span className="font-medium">Bitis:</span>
-                      {project.endDate ? new Date(project.endDate).toLocaleDateString("tr-TR") : "-"}
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-500" />
+                      <span className="text-zinc-500">Bitiş:</span>
+                      <span className="text-zinc-300 font-mono">{project.endDate ? new Date(project.endDate).toLocaleDateString("tr-TR") : "-"}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex gap-3 mt-auto rounded-b-2xl">
+              <div className="p-4 border-t border-white/[0.06] bg-[#0d100e] flex gap-3 mt-auto">
                 <button
                   onClick={() => openEditDialog(project)}
-                  className="flex-1 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary text-gray-700 dark:text-gray-300 rounded-xl transition-all shadow-sm"
+                  className="flex-1 py-2 text-xs font-medium bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white rounded-full transition-all flex items-center justify-center gap-1.5"
                 >
-                  Duzenle
+                  <Edit className="w-3.5 h-3.5 text-zinc-400" />
+                  Düzenle
                 </button>
                 <button
                   onClick={async () => {
-                    if (confirm("Bu projeyi silmek istediginize emin misiniz?")) {
+                    if (confirm("Bu projeyi silmek istediğinize emin misiniz?")) {
                       try {
                         const res = await fetch(`/api/projects?id=${project.id}`, { method: "DELETE" })
                         if (res.ok) {
                           loadProjects()
+                          toast.success("Proje silindi")
                         }
                       } catch (error) {
                         console.error("Error deleting project:", error)
+                        toast.error("Proje silinemedi")
                       }
                     }
                   }}
-                  className="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 border border-red-200 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl transition-all shadow-sm"
-                >{tText("common.delete", "Sil")}</button>
+                  className="px-4 py-2 text-xs font-medium bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 rounded-full transition-all flex items-center gap-1.5"
+                >
+                  <Trash className="w-3.5 h-3.5" />
+                  Sil
+                </button>
               </div>
-            </div>
+            </motion.div>
           ))
         )}
       </div>
 
-      {/* Create Dialog */}
+      {/* Yeni Proje Ekleme Modalı */}
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between font-bold">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-white">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Yeni Proje Ekle</h3>
-                <p className="text-sm text-gray-500 font-normal">{currentBranch?.name} subesi icin yeni proje olusturun</p>
+                <h3 className="text-base font-semibold text-white">Yeni Proje Ekle</h3>
+                <p className="text-xs text-zinc-400">{currentBranch?.name} şubesi için yeni proje kaydı oluşturun</p>
               </div>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="text-gray-400 hover:text-gray-500">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={() => setIsCreateDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Proje Adi *</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Proje Adı *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Web Sitesi Tasarimi"
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  placeholder="Örn: Kurumsal ERP Dönüşümü"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Aciklama</label>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Açıklama</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Proje detaylari..."
+                  placeholder="Proje hedefleri ve kapsamı..."
                   rows={2}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Musteri Notlari</label>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Müşteri Notları</label>
                 <textarea
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
-                  placeholder="Musteriye ozel talepler, ozel notlar..."
+                  placeholder="Müşteriye özel talepler, revizyon notları..."
                   rows={2}
-                  className="w-full px-4 py-2 bg-amber-50/30 dark:bg-amber-900/5 border border-amber-100 dark:border-amber-900/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
                 />
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Durum</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   >
                     <option value="active">Devam Ediyor</option>
                     <option value="on_hold">Beklemede</option>
-                    <option value="completed">Tamamlandi</option>
+                    <option value="completed">Tamamlandı</option>
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslangic Tarihi</label>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Başlangıç Tarihi</label>
                   <input
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bitis Tarihi</label>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Bitiş Tarihi</label>
                   <input
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
-                <div className="space-y-2 flex flex-col justify-end">
+
+                <div className="space-y-1.5 flex flex-col justify-end">
                   <FilePicker
-                    label="Proje Dosyalari"
+                    label="Proje Dosyaları"
                     maxFiles={3}
                     onFilesSelected={(urls) => {
-                      // Optionally handle uploaded URLs here or update description
                       if (urls.length > 0) {
                         setFormData(prev => ({
                           ...prev,
@@ -355,17 +440,17 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
               >
-                Iptal
+                Vazgeç
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Ekleniyor..." : "Proje Ekle"}
               </button>
@@ -374,94 +459,104 @@ export default function ProjectsPage() {
         </div>
       )}
 
-      {/* Edit Dialog */}
+      {/* Proje Düzenleme Modalı */}
       {isEditDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-white">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Proje Duzenle</h3>
-                <p className="text-sm text-gray-500">Proje detaylarini guncelleyin</p>
+                <h3 className="text-base font-semibold text-white">Proje Düzenle</h3>
+                <p className="text-xs text-zinc-400">Proje detaylarını ve tamamlanma oranını güncelleyin</p>
               </div>
-              <button onClick={() => setIsEditDialogOpen(false)} className="text-gray-400 hover:text-gray-500">
-                <span className="material-symbols-outlined">close</span>
+              <button onClick={() => setIsEditDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Proje Adi *</label>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Proje Adı *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Aciklama</label>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Açıklama</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={2}
-                  className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50 resize-none"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Musteri Notlari</label>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-400">Müşteri Notları</label>
                 <textarea
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
                   rows={2}
-                  className="w-full px-4 py-2 bg-amber-50/30 dark:bg-amber-900/5 border border-amber-100 dark:border-amber-900/10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50 resize-none"
                 />
               </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Durum</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   >
                     <option value="active">Devam Ediyor</option>
                     <option value="on_hold">Beklemede</option>
-                    <option value="completed">Tamamlandi</option>
+                    <option value="completed">Tamamlandı</option>
                   </select>
                 </div>
-                <div className="space-y-2 text-primary font-bold">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Ilerleme: %{formData.progress}</label>
+
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-medium text-zinc-400">İlerleme</label>
+                    <span className="text-xs font-mono font-medium text-emerald-400">%{formData.progress}</span>
+                  </div>
                   <input
                     type="range"
                     min="0"
                     max="100"
                     value={formData.progress}
                     onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
-                    className="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer accent-primary"
+                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-400 mt-2"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslangic Tarihi</label>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Başlangıç Tarihi</label>
                   <input
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bitis Tarihi</label>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-400">Bitiş Tarihi</label>
                   <input
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
                   />
                 </div>
               </div>
+
               <div className="pt-2">
                 <FilePicker
-                  label="Dosya Guncelle/Ekle"
+                  label="Dosya Güncelle/Ekle"
                   maxFiles={3}
                   onFilesSelected={(urls) => {
                     if (urls.length > 0) {
@@ -475,19 +570,19 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/5 flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsEditDialogOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
               >
-                Iptal
+                Vazgeç
               </button>
               <button
                 onClick={handleEdit}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Guncelleniyor..." : "Guncelle"}
+                {loading ? "Güncelleniyor..." : "Güncelle"}
               </button>
             </div>
           </div>

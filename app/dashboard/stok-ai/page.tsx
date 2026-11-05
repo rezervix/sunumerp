@@ -407,17 +407,11 @@ export default function InventoryAiAndAnalyticsPage() {
             )}
           </div>
         </TabsContent>
-                )}
-    </div>
-  )
-}
-          </div >
-        </TabsContent >
 
-{/* ══════════════════════════════════════════════════════════
+        {/* ══════════════════════════════════════════════════════════
             TAB 2: FORESIGHT-AI TALEP TAHMİNİ, DEVİR HIZI VE ÖLÜ STOK
            ══════════════════════════════════════════════════════════ */}
-  < TabsContent value = "foresight-forecasting" className = "space-y-6 focus-visible:outline-none" >
+        <TabsContent value="foresight-forecasting" className="space-y-6 focus-visible:outline-none">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {forecasts.map(fc => {
         const isSelected = activeForecast?.id === fc.id

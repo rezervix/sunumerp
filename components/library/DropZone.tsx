@@ -238,14 +238,16 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
       />
 
       {isDragging && (
-        <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
-          <div className="absolute inset-0 bg-primary/10 backdrop-blur-sm border-4 border-dashed border-primary rounded-2xl m-4 transition-all" />
-          <div className="relative flex flex-col items-center gap-3 bg-card rounded-2xl p-10 shadow-2xl border border-primary/30">
-            <div className="size-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <Upload size={28} className="text-primary" />
+        <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-[#080A09]/80 backdrop-blur-md transition-all" />
+          <div className="relative flex flex-col items-center gap-4 bg-[#111513] rounded-[24px] p-12 shadow-[0_0_50px_rgba(16,185,129,0.15)] border-2 border-dashed border-emerald-500/50 bg-emerald-500/5">
+            <div className="size-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.25)] animate-pulse">
+              <Upload size={32} />
             </div>
-            <p className="text-heading text-foreground">Dosyaları buraya bırakın</p>
-            <p className="text-caption">Birden fazla dosya destekleniyor</p>
+            <div className="text-center space-y-1">
+              <p className="text-base font-medium text-white">Dosyaları buraya bırakın</p>
+              <p className="text-xs text-zinc-400">Çoklu dosya yükleme ve chunked aktarım destekleniyor</p>
+            </div>
           </div>
         </div>
       )}
@@ -256,7 +258,7 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
           <select
             value={selectedCalendarId}
             onChange={(e) => setSelectedCalendarId(e.target.value)}
-            className="rounded-lg border border-border bg-background px-3 py-1.5 text-xs outline-none focus:border-primary max-w-[200px] truncate text-foreground"
+            className="rounded-xl border border-white/[0.08] bg-[#111513] px-3 py-1.5 text-xs outline-none focus:border-emerald-500/50 max-w-[200px] truncate text-zinc-200"
           >
             <option value="">İçerik Takvimi İlişkisi (Yok)</option>
             {contentCalendars.map((item) => (
@@ -275,32 +277,31 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
         />
         <Button
           id="library-upload-btn"
-          variant="default"
           size="sm"
           onClick={() => fileInputRef.current?.click()}
-          className="gap-2"
+          className="gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
         >
-          <Upload size={15} />
+          <Upload size={14} />
           Dosya Yükle
         </Button>
       </div>
 
       {/* Upload panel */}
       {isOpen && uploads.length > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed bottom-6 right-6 z-50 w-96 bg-[#111513]/95 backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
             <div className="flex items-center gap-2">
               {allDone && !hasErrors ? (
-                <CheckCircle size={16} className="text-green-500" />
+                <CheckCircle size={16} className="text-emerald-400" />
               ) : hasErrors ? (
-                <AlertCircle size={16} className="text-destructive" />
+                <AlertCircle size={16} className="text-rose-400" />
               ) : (
-                <Loader2 size={16} className="text-primary animate-spin" />
+                <Loader2 size={16} className="text-emerald-400 animate-spin" />
               )}
-              <span className="text-sm font-semibold">
+              <span className="text-xs font-semibold text-white">
                 {allDone
-                  ? hasErrors ? "Bazı dosyalar yüklenemedi" : "Yükleme tamamlandı"
+                  ? hasErrors ? "Bazı dosyalar yüklenemedi" : "Tüm yüklemeler tamamlandı"
                   : `${uploads.filter((u) => u.status === "done").length}/${uploads.length} yüklendi`}
               </span>
             </div>
@@ -308,14 +309,14 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
               {allDone && (
                 <button
                   onClick={clearDone}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded"
+                  className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded"
                 >
                   Temizle
                 </button>
               )}
               <button
                 onClick={() => setIsOpen(false)}
-                className="size-6 rounded-md flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
+                className="size-6 rounded-md flex items-center justify-center hover:bg-white/[0.08] transition-colors text-zinc-400"
               >
                 <X size={14} />
               </button>

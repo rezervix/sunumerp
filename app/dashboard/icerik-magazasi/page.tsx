@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { motion } from "framer-motion"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import {
   Sparkles, SlidersHorizontal, Plus, Search, X, AlertCircle,
@@ -218,37 +219,48 @@ export default function IcerikMagazasiPage() {
   return (
     <div className="flex flex-col gap-5 p-4 md:p-6 max-w-[1600px] mx-auto">
       {/* Başlık */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
+      <div className="flex items-center justify-between gap-4 flex-wrap pb-1">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-2xl bg-primary/10 flex items-center justify-center"><Sparkles size={20} className="text-primary" /></div>
+          <div className="size-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <Sparkles size={20} />
+          </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">İçerik Mağazası</h1>
-            <p className="text-xs text-muted-foreground">Dijital varlıklar, görseller ve videolar</p>
+            <h1 className="text-xl font-light tracking-wide text-white">İçerik Mağazası</h1>
+            <p className="text-xs text-zinc-400">Dijital kreatif varlıklar, görseller ve video arşivi</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Arama */}
           <div className="relative hidden sm:block">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={tText("common.search", "Ara...")} className="h-9 pl-9 pr-8 w-52 text-sm rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20" />
-            {search && <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X size={12} /></button>}
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder={tText("common.search", "Ara...")}
+              className="h-9 pl-9 pr-8 w-52 text-xs rounded-xl border border-white/[0.08] bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/50"
+            />
+            {search && (
+              <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+                <X size={12} />
+              </button>
+            )}
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9">
+          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9 border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white hover:bg-white/[0.06]">
             <SlidersHorizontal size={14} />
             Filtrele
-            {activeFilterCount > 0 && <span className="ml-1 size-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
+            {activeFilterCount > 0 && <span className="ml-1 size-5 rounded-full bg-emerald-500 text-black text-[10px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
           </Button>
 
           {/* Toplu İşlem modu */}
           {canBulkActions && (
-            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className="flex items-center gap-1.5 text-xs rounded-xl h-9">
-              {bulkMode ? <><CheckSquare size={14} /> Toplu: Kapalı</> : <><Square size={14} /> Toplu İşlem</>}
+            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className={`flex items-center gap-1.5 text-xs rounded-xl h-9 ${bulkMode ? "bg-emerald-500 text-black font-semibold" : "border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white"}`}>
+              {bulkMode ? <><CheckSquare size={14} /> Toplu: Açık</> : <><Square size={14} /> Toplu İşlem</>}
             </Button>
           )}
 
           {canUpload && (
-            <Button onClick={() => setUploadOpen(true)} size="sm" className="flex items-center gap-1.5 text-xs rounded-xl h-9">
+            <Button onClick={() => setUploadOpen(true)} size="sm" className="flex items-center gap-1.5 text-xs rounded-xl h-9 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all">
               <Plus size={14} /> İçerik Yükle
             </Button>
           )}
@@ -256,20 +268,34 @@ export default function IcerikMagazasiPage() {
       </div>
 
       {/* Sekmeler */}
-      <div className="flex items-center gap-1 border-b border-border overflow-x-auto whitespace-nowrap hide-scrollbar">
-        {tabs.filter(t => t.show).map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => { setActiveTab(tab.id); clearSelection() }}
-            className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors relative -mb-px shrink-0 ${activeTab === tab.id ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-          >
-            {tab.icon}
-            {tab.label}
-            {tab.id === "pending" && pendingCount > 0 && (
-              <span className="ml-0.5 size-5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center">{pendingCount > 99 ? "99+" : pendingCount}</span>
-            )}
-          </button>
-        ))}
+      <div className="flex items-center gap-1 border-b border-white/[0.06] overflow-x-auto whitespace-nowrap hide-scrollbar pb-1">
+        {tabs.filter(t => t.show).map(tab => {
+          const isActive = activeTab === tab.id
+          return (
+            <button
+              key={tab.id}
+              onClick={() => { setActiveTab(tab.id); clearSelection() }}
+              className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors shrink-0 rounded-xl ${
+                isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+              }`}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="contentStoreActiveTab"
+                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.08] rounded-xl"
+                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{tab.icon}</span>
+              <span className="relative z-10">{tab.label}</span>
+              {tab.id === "pending" && pendingCount > 0 && (
+                <span className="relative z-10 ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold">
+                  {pendingCount > 99 ? "99+" : pendingCount}
+                </span>
+              )}
+            </button>
+          )
+        })}
       </div>
 
       {/* Toplu İşlem Çubuğu */}
