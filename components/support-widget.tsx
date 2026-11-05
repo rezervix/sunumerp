@@ -106,7 +106,7 @@ export function SupportWidget() {
     const canvas = canvasRef.current
     if (!canvas) return { x: 0, y: 0 }
     const rect = canvas.getBoundingClientRect()
-    
+
     // Check if touch or mouse event
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY
@@ -150,7 +150,7 @@ export function SupportWidget() {
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
     ctx.stroke()
-    
+
     lastPos.current = pos
   }
 
@@ -246,10 +246,10 @@ export function SupportWidget() {
       <button
         id="support-widget-fab"
         onClick={handleOpenWidget}
-        className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 focus:outline-none cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-[#111513]/95 border border-white/[0.08] text-zinc-400 hover:text-emerald-300 hover:border-emerald-500/30 shadow-lg transition-all duration-200 focus:outline-none cursor-pointer backdrop-blur-xl"
         title="Destek Talebi / Hata Bildir"
       >
-        <LifeBuoy size={24} className="animate-spin-slow" />
+        <LifeBuoy size={16} />
       </button>
 
       {/* Support Request Modal */}

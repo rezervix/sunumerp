@@ -4,8 +4,6 @@ import type React from "react"
 import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { BranchSelector } from "@/components/branch-selector"
 import type { Branch } from "@/lib/auth/types"
 import { useAuth } from "@/lib/auth/context"
@@ -22,16 +20,15 @@ import {
   FolderOpen, TrendingUp, Truck, FileText, CheckSquare,
   StickyNote, Calculator, CreditCard, Megaphone, Building2,
   Shield, MessageCircle, Bell, Settings, LogOut, Menu,
-  PanelLeftClose, PanelLeftOpen, ChevronRight, ChevronDown, CalendarDays, Library, ClipboardCheck,
+  PanelLeftClose, PanelLeftOpen, ChevronDown, CalendarDays, Library, ClipboardCheck,
   Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
-  Boxes, Warehouse, Smartphone, ShoppingCart, Sparkles, Puzzle, Search, X,
+  Boxes, Warehouse, ShoppingCart, Sparkles, Search, X,
   ShieldAlert, AlertTriangle, AlertCircle, ExternalLink
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
 import { BRAND_CONFIG } from "@/lib/config/brand"
-import { ContextualHelp } from "@/components/shared/contextual-help"
 import { OnboardingModal } from "@/components/shared/onboarding-modal"
 import { VendorBandrol } from "@/components/vendor-bandrol"
 import { SunumLogo } from "@/components/sunum-logo"
@@ -93,19 +90,14 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
         type="button"
         onClick={handleClick}
         className={[
-          "sidebar-item group relative w-full text-left rounded-xl transition-all duration-200",
-          "text-rose-400/90 hover:bg-rose-500/15 hover:text-rose-300 border border-transparent hover:border-rose-500/25",
-          collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "px-3 py-2",
+          "w-full text-left text-sm text-zinc-400 hover:text-rose-400 py-2 px-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer",
+          collapsed ? "justify-center px-0 mx-auto w-9 h-9" : "",
         ].join(" ")}
-        style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" } : {}}
       >
-        <div className="relative flex items-center justify-center">
-          <Icon
-            size={18}
-            className="shrink-0 transition-transform duration-200 text-rose-400 group-hover:scale-110"
-          />
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Icon size={16} className="shrink-0 text-rose-400/80" />
+          {!collapsed && <span className="truncate">{item.name}</span>}
         </div>
-        {!collapsed && <span className="truncate text-xs font-medium">{item.name}</span>}
       </button>
     )
 
@@ -113,7 +105,7 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
       return (
         <Tooltip>
           <TooltipTrigger asChild>{btnContent}</TooltipTrigger>
-          <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/15">
+          <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/[0.06]">
             {item.name}
           </TooltipContent>
         </Tooltip>
@@ -128,37 +120,31 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
       href={item.href}
       onClick={handleClick}
       className={[
-        "sidebar-item group relative rounded-xl transition-all duration-200",
-        isActive
-          ? "bg-gradient-to-r from-primary/25 via-primary/10 to-transparent text-white font-semibold border border-primary/30 shadow-sm shadow-primary/10"
-          : "text-white/70 hover:text-white hover:bg-white/8 border border-transparent",
-        collapsed ? "justify-center px-0 mx-auto w-10 h-10" : "px-3 py-2",
+        "text-sm text-zinc-400 hover:text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-between group",
+        isActive ? "bg-white/[0.06] text-white font-medium" : "",
+        collapsed ? "justify-center px-0 mx-auto w-9 h-9" : "w-full",
       ].join(" ")}
-      style={collapsed ? { padding: 0, width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" } : {}}
     >
-      {isActive && !collapsed && (
-        <span
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 rounded-r-full bg-primary shadow-[0_0_8px_var(--color-primary)]"
-          aria-hidden
-        />
-      )}
-      <div className="relative flex items-center justify-center">
-        <Icon
-          size={18}
-          className={[
-            "shrink-0 transition-all duration-200",
-            isActive ? "text-primary scale-105" : "text-white/60 group-hover:text-white group-hover:scale-105",
-          ].join(" ")}
-        />
-        {collapsed && count > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white leading-none shadow-xs border border-slate-900">
-            {count}
-          </span>
-        )}
+      <div className="flex items-center gap-2.5 min-w-0">
+        {isActive && !collapsed ? (
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" aria-hidden />
+        ) : null}
+        <div className="relative flex items-center justify-center shrink-0">
+          <Icon
+            size={16}
+            className={[
+              "shrink-0 transition-colors",
+              isActive ? "text-white" : "text-zinc-400 group-hover:text-white",
+            ].join(" ")}
+          />
+          {collapsed && count > 0 && (
+            <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          )}
+        </div>
+        {!collapsed && <span className="truncate">{item.name}</span>}
       </div>
-      {!collapsed && <span className="truncate text-xs">{item.name}</span>}
       {!collapsed && count > 0 && (
-        <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500/90 px-1.5 text-[10px] font-bold text-white leading-none shadow-xs border border-white/15">
+        <span className="ml-2 flex h-4 min-w-[18px] items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 px-1.5 text-[10px] font-medium leading-none shrink-0">
           {count}
         </span>
       )}
@@ -169,7 +155,7 @@ function NavItem({ item, isActive, collapsed, onClick, onLogout }: NavItemProps)
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/15">
+        <TooltipContent side="right" sideOffset={10} className="glass-panel text-white border-white/[0.06]">
           {item.name}
         </TooltipContent>
       </Tooltip>
@@ -208,24 +194,25 @@ function LanguageSwitcher({ collapsed }: { collapsed: boolean }) {
           <TooltipTrigger asChild>
             <button
               onClick={() => setOpen(o => !o)}
-              className="sidebar-item hover:bg-white/10 text-white/70 hover:text-white justify-center px-0 mx-auto rounded-xl border border-transparent hover:border-white/10 transition-all"
-              style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
+              className="text-zinc-400 hover:text-white hover:bg-white/[0.04] justify-center mx-auto rounded-lg transition-colors flex items-center w-9 h-9 cursor-pointer"
             >
-              <Globe size={18} className="text-white/70" />
+              <Globe size={16} />
             </button>
           </TooltipTrigger>
-          <TooltipContent side="right" className="glass-panel text-white border-white/15">
+          <TooltipContent side="right" className="glass-panel text-white border-white/[0.06]">
             {currentLabel.flag} {currentLabel.label}
           </TooltipContent>
         </Tooltip>
       ) : (
         <button
           onClick={() => setOpen(o => !o)}
-          className="sidebar-item w-full text-left rounded-xl px-3 py-2 text-xs text-white/75 hover:text-white hover:bg-white/8 border border-transparent hover:border-white/10 transition-all"
+          className="w-full text-left text-sm text-zinc-400 hover:text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer"
         >
-          <Globe size={16} className="text-white/60 shrink-0" />
-          <span className="flex-1 truncate">{currentLabel.flag} {currentLabel.label}</span>
-          <ChevronDown size={13} className={`text-white/40 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Globe size={15} className="text-zinc-400 shrink-0" />
+            <span className="truncate text-xs">{currentLabel.flag} {currentLabel.label}</span>
+          </div>
+          <ChevronDown size={13} className={`text-zinc-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
         </button>
       )}
 
@@ -237,11 +224,11 @@ function LanguageSwitcher({ collapsed }: { collapsed: boolean }) {
               <button
                 key={code}
                 onClick={() => { setLocale(code); setOpen(false) }}
-                className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer ${locale === code ? "text-primary font-semibold bg-primary/10" : "text-white/80"}`}
+                className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-white/[0.04] transition-colors cursor-pointer ${locale === code ? "text-white font-medium bg-white/[0.06]" : "text-zinc-400"}`}
               >
                 <span>{flag}</span>
                 <span>{label}</span>
-                {locale === code && <span className="ml-auto text-xs text-primary">✓</span>}
+                {locale === code && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
               </button>
             ))}
           </div>
@@ -252,7 +239,7 @@ function LanguageSwitcher({ collapsed }: { collapsed: boolean }) {
 }
 
 function SidebarContent({
-  collapsed, pathname, isSuperAdmin, session,
+  collapsed, pathname, isSuperAdmin,
   onNavClick, onLogout, onToggle,
   userBranches, currentBranch, onBranchChange, hasPermission,
   onTamper
@@ -261,9 +248,7 @@ function SidebarContent({
   const { t } = useLanguage()
   const { isPlatformDeveloper } = useAuth()
   const { unreadCounts } = useNotificationStore()
-  const [logoUrl, setLogoUrl] = useState<string>("/images/logo.png")
   const [subPlan, setSubPlan] = useState<string | null>(null)
-  const [companyTitle, setCompanyTitle] = useState<string>(BRAND_CONFIG.name || "Ajans Yönetim Paneli")
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -280,14 +265,8 @@ function SidebarContent({
         if (res.ok) {
           const config = await res.json()
           setSubPlan(config.subscription?.plan || null)
-          if (config.company?.title && config.company.title.trim() !== "") {
-            setCompanyTitle(config.company.title)
-          } else {
-            setCompanyTitle(BRAND_CONFIG.name || "Ajans Yönetim Paneli")
-          }
           const activeLogo = config.bgRemovedLogoUrl || config.logoUrl
           if (activeLogo) {
-            setLogoUrl(activeLogo)
             localStorage.setItem("theme-logo", activeLogo)
           }
         }
@@ -524,16 +503,16 @@ function SidebarContent({
       {/* Logo / Brand */}
       <div
         className={[
-          "flex items-center justify-between shrink-0 border-b border-white/10",
-          collapsed ? "h-16 justify-center px-0" : "h-16 px-4",
+          "flex items-center justify-between shrink-0 border-b border-white/[0.06]",
+          collapsed ? "h-14 justify-center px-0" : "h-14 px-4",
         ].join(" ")}
       >
-        <SunumLogo className={collapsed ? "size-9 mx-auto" : "size-8"} showText={!collapsed} />
+        <SunumLogo className={collapsed ? "size-8 mx-auto" : "size-7"} showText={!collapsed} />
         {!collapsed && onToggle && (
           <button
             type="button"
             onClick={onToggle}
-            className="hidden lg:flex size-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 items-center justify-center text-white/60 hover:text-white transition-all cursor-pointer shrink-0"
+            className="hidden lg:flex size-7 rounded-lg hover:bg-white/[0.04] items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer shrink-0"
             title={t.nav.collapse}
           >
             <PanelLeftClose size={14} />
@@ -541,9 +520,9 @@ function SidebarContent({
         )}
       </div>
 
-      {/* Branch selector */}
+      {/* Single Frameless Branch Selector (Only in Sidebar) */}
       {!collapsed && filteredUserBranches.length > 0 && (
-        <div className="px-3 pt-3 pb-1 shrink-0">
+        <div className="px-2 pt-2 pb-1 shrink-0 border-b border-white/[0.04]">
           <BranchSelector
             branches={filteredUserBranches}
             currentBranch={currentBranch}
@@ -552,105 +531,73 @@ function SidebarContent({
         </div>
       )}
 
-      {/* ── Search Bar (Between Branch Selector and Navigation) ── */}
+      {/* ── Minimal Menu Filter Trigger ── */}
       {!collapsed ? (
-        <div className="px-3 pt-2.5 pb-1.5 shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              setIsSearchOpen(prev => {
-                const next = !prev
-                if (next) {
-                  setTimeout(() => searchInputRef.current?.focus(), 60)
-                } else {
+        <div className="px-2 pt-1.5 pb-1 shrink-0">
+          {!isSearchOpen ? (
+            <button
+              type="button"
+              onClick={() => {
+                setIsSearchOpen(true)
+                setTimeout(() => searchInputRef.current?.focus(), 60)
+              }}
+              className="w-full text-sm text-zinc-400 hover:text-white py-1.5 px-3 rounded-lg transition-colors flex items-center justify-between cursor-pointer select-none"
+            >
+              <div className="flex items-center gap-2.5">
+                <Search size={14} className="text-zinc-500 shrink-0" />
+                <span className="text-xs text-zinc-500">Menüde filtrele...</span>
+              </div>
+              <span className="text-[10px] font-mono text-zinc-600">⌘K</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 bg-[#080A09]/80 border border-white/[0.06] rounded-lg px-3 py-1.5">
+              <Search size={13} className="text-emerald-400 shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Escape") {
+                    setSearchQuery("")
+                    setIsSearchOpen(false)
+                  }
+                }}
+                placeholder="Menü adı yazın..."
+                className="w-full bg-transparent text-xs text-white placeholder:text-zinc-500 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => {
                   setSearchQuery("")
-                }
-                return next
-              })
-            }}
-            aria-expanded={isSearchOpen}
-            className={[
-              "w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium transition-all duration-200 cursor-pointer select-none glass-input",
-              isSearchOpen
-                ? "border-primary/50 ring-2 ring-primary/15 text-white"
-                : "hover:border-white/25 text-white/70 hover:text-white",
-            ].join(" ")}
-          >
-            <Search
-              size={14}
-              className={[
-                "shrink-0 transition-colors",
-                isSearchOpen ? "text-primary" : "text-white/50",
-              ].join(" ")}
-            />
-            <span className="flex-1 text-left truncate">Menüde ara...</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/50">
-              {isSearchOpen ? "ESC" : "⌘K"}
-            </span>
-          </button>
-
-          {/* Açılır Arama Alanı (Dropdown / Expandable Input) */}
-          <AnimatePresence>
-            {isSearchOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.18, ease: "easeOut" }}
-                className="overflow-hidden"
+                  setIsSearchOpen(false)
+                }}
+                className="text-zinc-500 hover:text-white cursor-pointer"
+                title="Kapat"
               >
-                <div className="mt-2 relative flex items-center glass-input border-primary/50 ring-2 ring-primary/15 px-3 py-2 shadow-sm">
-                  <Search size={13} className="text-primary shrink-0 mr-2" />
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === "Escape") {
-                        setSearchQuery("")
-                        setIsSearchOpen(false)
-                      }
-                    }}
-                    placeholder="Menü adı yazın..."
-                    className="w-full bg-transparent text-xs text-white placeholder:text-white/40 outline-none"
-                  />
-                  {searchQuery ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("")
-                        searchInputRef.current?.focus()
-                      }}
-                      className="text-white/50 hover:text-white p-0.5 rounded cursor-pointer"
-                      title="Temizle"
-                    >
-                      <X size={13} />
-                    </button>
-                  ) : null}
-                </div>
+                <X size={13} />
+              </button>
+            </div>
+          )}
 
-                {searchQuery && (
-                  <div className="flex items-center justify-between mt-1.5 px-1 text-[11px] text-white/55">
-                    <span>{totalMatchingCount} menü bulundu</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("")
-                        setIsSearchOpen(false)
-                      }}
-                      className="hover:text-white text-[10px] underline cursor-pointer"
-                    >
-                      Temizle (ESC)
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {searchQuery && (
+            <div className="flex items-center justify-between mt-1 px-2 text-[11px] text-zinc-500">
+              <span>{totalMatchingCount} sonuç</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("")
+                  setIsSearchOpen(false)
+                }}
+                className="hover:text-white text-[10px] cursor-pointer"
+              >
+                Temizle
+              </button>
+            </div>
+          )}
         </div>
       ) : (
-        <div className="px-2 pt-2.5 pb-1 shrink-0 flex justify-center">
+        <div className="px-2 pt-2 pb-1 shrink-0 flex justify-center">
           <Tooltip>
             <TooltipTrigger asChild>
               <button
@@ -660,23 +607,22 @@ function SidebarContent({
                   setIsSearchOpen(true)
                   setTimeout(() => searchInputRef.current?.focus(), 150)
                 }}
-                className="glass-input hover:bg-white/10 hover:border-white/25 flex items-center justify-center transition-all cursor-pointer"
-                style={{ width: 40, height: 40 }}
+                className="text-zinc-400 hover:text-white hover:bg-white/[0.04] rounded-lg w-9 h-9 flex items-center justify-center transition-colors cursor-pointer"
               >
-                <Search size={17} className="text-white/70" />
+                <Search size={16} />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="right" className="glass-panel text-white border-white/15">Menüde ara...</TooltipContent>
+            <TooltipContent side="right" className="glass-panel text-white border-white/[0.06]">Menüde ara...</TooltipContent>
           </Tooltip>
         </div>
       )}
 
-      {/* Navigation */}
+      {/* ── Frameless Navigation (Çerçevesiz Sidebar) ── */}
       {collapsed ? (
-        <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+        <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-0.5">
           {availableCategories.map((cat, idx) => (
-            <div key={cat.id} className="space-y-1">
-              {idx > 0 && <div className="h-px bg-white/10 my-2 mx-1.5" />}
+            <div key={cat.id} className="space-y-0.5">
+              {idx > 0 && <div className="h-px bg-white/[0.04] my-1.5 mx-2" />}
               {cat.items.map(item => (
                 <NavItem
                   key={item.href + item.name}
@@ -691,7 +637,7 @@ function SidebarContent({
           ))}
         </nav>
       ) : (
-        <nav className="flex-1 overflow-y-auto py-2 px-2.5 space-y-1.5">
+        <nav className="flex-1 overflow-y-auto py-1.5 px-2 space-y-0.5">
           {displayedCategories.map(cat => {
             const isOpen = isCategoryOpen(cat.id)
             const categoryUnreadCount = cat.items.reduce(
@@ -702,33 +648,33 @@ function SidebarContent({
             const isAnyItemActive = cat.items.some(item => isItemActive(item))
 
             return (
-              <div key={cat.id} className="rounded-xl transition-colors">
+              <div key={cat.id}>
                 <button
                   type="button"
                   onClick={() => toggleCategory(cat.id)}
                   className={[
-                    "w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 select-none group cursor-pointer border",
-                    isOpen
-                      ? "text-white bg-white/8 border-white/15 shadow-xs"
-                      : isAnyItemActive
-                        ? "text-primary bg-primary/10 border-primary/25 font-semibold"
-                        : "text-white/70 border-transparent hover:text-white hover:bg-white/5",
+                    "w-full text-sm text-zinc-400 hover:text-white py-2 px-3 rounded-lg transition-colors flex items-center justify-between select-none group cursor-pointer",
+                    isAnyItemActive && !isOpen
+                      ? "bg-white/[0.06] text-white font-medium"
+                      : isOpen
+                        ? "text-white font-medium"
+                        : "",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <span
+                    {isAnyItemActive && !isOpen && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" aria-hidden />
+                    )}
+                    <CategoryIcon
+                      size={16}
                       className={[
-                        "size-7 rounded-lg flex items-center justify-center shrink-0 transition-all border",
-                        isOpen || isAnyItemActive
-                          ? "bg-primary/20 border-primary/30 text-primary shadow-xs"
-                          : "bg-white/5 border-white/10 text-white/60 group-hover:text-white group-hover:border-white/20",
+                        "shrink-0 transition-colors",
+                        isOpen || isAnyItemActive ? "text-white" : "text-zinc-400 group-hover:text-white",
                       ].join(" ")}
-                    >
-                      <CategoryIcon size={15} />
-                    </span>
-                    <span className="truncate tracking-wide text-left">{cat.title}</span>
+                    />
+                    <span className="truncate text-left">{cat.title}</span>
                     {!isOpen && categoryUnreadCount > 0 && (
-                      <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-xs">
+                      <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 px-1 text-[9px] font-medium">
                         {categoryUnreadCount}
                       </span>
                     )}
@@ -736,15 +682,15 @@ function SidebarContent({
 
                   <div className="flex items-center gap-1.5 shrink-0 ml-1">
                     {isSearching && (
-                      <span className="text-[10px] text-primary font-medium px-1.5 py-0.5 rounded-full bg-primary/15 border border-primary/25">
+                      <span className="text-[10px] text-emerald-400 font-medium px-1.5 py-0.5 rounded-full bg-emerald-500/10">
                         {cat.items.length}
                       </span>
                     )}
                     <ChevronDown
                       size={14}
                       className={[
-                        "shrink-0 transition-transform duration-200 text-white/50 group-hover:text-white",
-                        isOpen ? "rotate-0 text-primary" : "-rotate-90",
+                        "shrink-0 transition-transform duration-200 text-zinc-500 group-hover:text-white",
+                        isOpen ? "rotate-0 text-zinc-300" : "-rotate-90",
                       ].join(" ")}
                     />
                   </div>
@@ -756,10 +702,10 @@ function SidebarContent({
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.18, ease: "easeInOut" }}
+                      transition={{ duration: 0.16, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div className="pl-3 pr-1 py-1.5 space-y-1 border-l border-white/15 ml-4 my-0.5">
+                      <div className="pl-4 pr-0 py-0.5 space-y-0.5">
                         {cat.items.map(item => (
                           <NavItem
                             key={item.href + item.name}
@@ -779,19 +725,16 @@ function SidebarContent({
           })}
 
           {isSearching && displayedCategories.length === 0 && (
-            <div className="py-8 px-4 text-center glass-card my-2">
-              <Search size={22} className="mx-auto text-white/30 mb-2" />
-              <p className="text-xs font-semibold text-white">Sonuç bulunamadı</p>
-              <p className="text-[11px] text-white/50 mt-0.5">
-                &ldquo;{searchQuery}&rdquo; ile eşleşen bir menü bulunamadı
-              </p>
+            <div className="py-6 px-4 text-center my-2">
+              <Search size={18} className="mx-auto text-zinc-500 mb-1.5" />
+              <p className="text-xs font-medium text-white">Sonuç bulunamadı</p>
               <button
                 type="button"
                 onClick={() => {
                   setSearchQuery("")
                   searchInputRef.current?.focus()
                 }}
-                className="mt-2 text-xs font-medium text-primary hover:underline cursor-pointer"
+                className="mt-1.5 text-xs text-emerald-400 hover:underline cursor-pointer"
               >
                 Aramayı Temizle
               </button>
@@ -800,77 +743,9 @@ function SidebarContent({
         </nav>
       )}
 
-      {/* Footer */}
-      <div className="shrink-0 border-t border-white/10 p-2.5 space-y-1.5 bg-black/10">
-        {/* Language Switcher */}
+      {/* ── Minimal Frameless Sidebar Footer (Duplicate Profile Box Removed) ── */}
+      <div className="shrink-0 border-t border-white/[0.06] p-2 space-y-0.5">
         <LanguageSwitcher collapsed={collapsed} />
-
-        {collapsed ? (
-          <>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/dashboard/settings"
-                  onClick={onNavClick}
-                  className="sidebar-item hover:bg-white/10 text-white/70 hover:text-white justify-center px-0 mx-auto rounded-xl border border-transparent hover:border-white/10 transition-all"
-                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
-                >
-                  <Settings size={18} />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="glass-panel text-white border-white/15">{t.nav.settings}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="sidebar-item hover:bg-rose-500/15 text-rose-400/90 hover:text-rose-300 justify-center mx-auto rounded-xl border border-transparent hover:border-rose-500/25 transition-all cursor-pointer"
-                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
-                >
-                  <LogOut size={18} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="glass-panel text-white border-white/15">{t.nav.logout}</TooltipContent>
-            </Tooltip>
-          </>
-        ) : (
-          <>
-            {session && (
-              <div className="flex items-center gap-1.5 mt-1 p-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                <Link
-                  href="/dashboard/settings"
-                  onClick={onNavClick}
-                  className="flex items-center gap-2.5 flex-1 min-w-0 px-1.5 py-1 rounded-lg hover:bg-white/5 transition-colors group"
-                >
-                  {session.user.avatarUrl ? (
-                    <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-xl object-cover shrink-0 border border-white/20" />
-                  ) : (
-                    <div className="size-8 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 text-primary border border-primary/30 flex items-center justify-center text-xs font-bold shrink-0">
-                      {session.user.fullName?.substring(0, 2).toUpperCase() || "US"}
-                    </div>
-                  )}
-                  <div className="flex flex-col leading-none overflow-hidden min-w-0">
-                    <span className="text-xs font-semibold text-white truncate group-hover:text-primary transition-colors">
-                      {session.user.fullName}
-                    </span>
-                    <span className="text-[11px] truncate text-white/55 mt-0.5">
-                      {isSuperAdmin ? "Süper Yönetici" : ((currentBranch as any)?.role?.name || (session.user as any).position || "Kullanıcı")}
-                    </span>
-                  </div>
-                </Link>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  title={t.nav.logout}
-                  className="size-8 rounded-lg flex items-center justify-center text-rose-400/80 hover:text-rose-300 hover:bg-rose-500/15 border border-transparent hover:border-rose-500/25 transition-all shrink-0 cursor-pointer"
-                >
-                  <LogOut size={15} />
-                </button>
-              </div>
-            )}
-          </>
-        )}
         <VendorBandrol collapsed={collapsed} onTamper={onTamper} />
       </div>
     </div>
@@ -888,6 +763,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [collapsed, setCollapsed] = useState(false)
   const [logoUrl, setLogoUrl] = useState<string>("/images/logo.png")
   const [headerCompanyTitle, setHeaderCompanyTitle] = useState<string>(BRAND_CONFIG.name || "Ajans Yönetim Paneli")
+  const [dateTimeText, setDateTimeText] = useState<string>("")
+
+  // Live Date/Time for Minimal Header
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date()
+      const formatted = now.toLocaleDateString("tr-TR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }) + " • " + now.toLocaleTimeString("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      setDateTimeText(formatted)
+    }
+    updateClock()
+    const timer = setInterval(updateClock, 30000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     async function loadConfig() {
@@ -959,8 +854,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [loading, session])
 
-
-
   useEffect(() => {
     const stored = localStorage.getItem("sidebar-collapsed")
     if (stored === "true") setCollapsed(true)
@@ -978,13 +871,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#060913] via-[#0b1222] to-[#0f172a]">
-        <div className="flex flex-col items-center gap-4 glass-panel p-8 rounded-3xl">
+      <div className="min-h-screen flex items-center justify-center bg-[#080A09]">
+        <div className="flex flex-col items-center gap-4 glass-panel p-8 rounded-[20px]">
           <SunumLogo className="size-12 shadow-lg" />
           <div className="flex gap-1.5">
-            <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
-            <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
-            <span className="size-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
+            <span className="size-2 rounded-full bg-[#34D399] animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="size-2 rounded-full bg-[#34D399] animate-bounce" style={{ animationDelay: "150ms" }} />
+            <span className="size-2 rounded-full bg-[#34D399] animate-bounce" style={{ animationDelay: "300ms" }} />
           </div>
         </div>
       </div>
@@ -997,29 +890,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isTampered && !isSecurityDisabledLocally) {
     return (
-      <div className="fixed inset-0 z-[99999] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-6 select-none animate-fade-in">
-        <div className="w-full max-w-md glass-panel rounded-3xl p-8 text-center space-y-6 shadow-2xl relative overflow-hidden text-white">
+      <div className="fixed inset-0 z-[99999] bg-[#080A09]/95 backdrop-blur-xl flex items-center justify-center p-6 select-none animate-fade-in">
+        <div className="w-full max-w-md glass-panel rounded-[20px] p-8 text-center space-y-6 shadow-2xl relative overflow-hidden text-white">
           <div className="absolute top-0 left-0 w-full h-1.5 bg-destructive" />
           
-          <div className="size-16 rounded-2xl bg-destructive/15 border border-destructive/30 flex items-center justify-center mx-auto text-destructive">
+          <div className="size-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto text-rose-400">
             <ShieldAlert size={36} />
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-xl font-bold tracking-tight text-destructive flex items-center justify-center gap-2">
+            <h1 className="text-xl font-light tracking-tight text-rose-400 flex items-center justify-center gap-2">
               <AlertTriangle size={20} /> LİSANS İHLALİ ALGILANDI
             </h1>
-            <p className="text-xs text-white/60 font-mono">Çiçekana ERP Lisans Koruma Sistemi</p>
+            <p className="text-xs text-zinc-400 font-mono">Çiçekana ERP Lisans Koruma Sistemi</p>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl text-xs text-left leading-relaxed text-white/70 font-sans space-y-3">
-            <p className="text-destructive font-bold uppercase tracking-wider flex items-center gap-1.5">
+          <div className="glass-card p-5 rounded-[20px] text-xs text-left leading-relaxed text-zinc-300 font-sans space-y-3">
+            <p className="text-rose-400 font-medium uppercase tracking-wider flex items-center gap-1.5">
               <AlertCircle size={14} /> Hata Kodu: 0x800F_BRANDING_BYPASS
             </p>
-            <p className="text-sm font-semibold text-white mt-1">
+            <p className="text-sm font-medium text-white mt-1">
               System License Modification Detected. Please contact Çiçekana Teknoloji.
             </p>
-            <p className="text-white/60 text-[11px] leading-normal">
+            <p className="text-zinc-400 text-[11px] leading-normal">
               Yazılımın lisans bandrolünü gizleme, silme veya üzerinde izinsiz değişiklik yapma girişimi tespit edildi. Sistem bütünlüğü korunması amacıyla paneline erişim askıya alınmıştır.
             </p>
           </div>
@@ -1029,7 +922,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href="https://cicekanatech.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/15 text-xs font-bold transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#34D399] text-[#061811] text-xs font-medium transition-all"
             >
               Çiçekana Teknoloji &amp; Medya
               <ExternalLink size={14} />
@@ -1058,31 +951,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <NotificationProvider>
       <TooltipProvider delayDuration={200}>
-        <div className="relative flex h-screen overflow-hidden bg-gradient-to-br from-[#060913] via-[#0b1222] to-[#0f172a] text-white p-2.5 lg:p-3.5 gap-2.5 lg:gap-3.5">
+        <div className="relative flex h-screen overflow-hidden bg-[#080A09] text-white p-2.5 lg:p-3.5 gap-2.5 lg:gap-3.5">
 
-          {/* ── Ambient Background Glow Layers ── */}
+          {/* ── Top-Right Subtle Emerald Ambient Glow (#10B981/5) ── */}
           <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-            <div className="absolute -top-36 -left-36 h-96 w-96 rounded-full bg-indigo-500/15 blur-[130px]" />
-            <div className="absolute top-1/4 right-1/5 h-[28rem] w-[28rem] rounded-full bg-sky-500/10 blur-[150px]" />
-            <div className="absolute -bottom-36 left-1/3 h-96 w-96 rounded-full bg-amber-500/10 blur-[140px]" />
+            <div className="absolute -top-24 -right-24 h-[520px] w-[520px] rounded-full bg-[#10B981]/5 blur-[140px]" />
           </div>
 
           {/* ── Desktop Floating Glass Sidebar ── */}
           <aside
             className={[
-              "relative z-20 hidden lg:flex flex-col shrink-0 glass-panel rounded-2xl",
+              "relative z-20 hidden lg:flex flex-col shrink-0 glass-panel rounded-[20px]",
               "transition-[width] duration-300 ease-in-out",
-              collapsed ? "w-[76px]" : "w-[264px]",
+              collapsed ? "w-[68px]" : "w-[252px]",
             ].join(" ")}
           >
-            <div className="flex flex-col h-full overflow-hidden rounded-2xl">
+            <div className="flex flex-col h-full overflow-hidden rounded-[20px]">
               <SidebarContent {...sidebarProps} />
             </div>
 
             {/* Collapse toggle */}
             <button
               onClick={toggleCollapsed}
-              className="absolute bottom-28 -right-3 z-30 hidden lg:flex size-6 rounded-full glass-panel items-center justify-center text-white/70 hover:text-primary hover:scale-110 transition-all cursor-pointer"
+              className="absolute bottom-24 -right-3 z-30 hidden lg:flex size-6 rounded-full glass-panel items-center justify-center text-zinc-400 hover:text-white transition-all cursor-pointer"
               title={collapsed ? t.nav.expand : t.nav.collapse}
             >
               {collapsed
@@ -1096,7 +987,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetContent
               side="left"
-              className="w-[272px] p-0 glass-panel border-r border-white/15 text-white"
+              className="w-[264px] p-0 glass-panel border-r border-white/[0.06] text-white"
             >
               <SidebarContent
                 {...sidebarProps}
@@ -1107,113 +998,84 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Sheet>
 
           {/* ── Main Column ── */}
-          <div className="relative z-10 flex flex-col flex-1 min-w-0 overflow-hidden gap-2.5 lg:gap-3">
+          <div className="relative z-10 flex flex-col flex-1 min-w-0 overflow-hidden gap-2">
 
-            {/* ── Floating Glass Header ── */}
-            <header className="h-16 shrink-0 glass-panel rounded-2xl flex items-center justify-between px-4 lg:px-5 z-20">
+            {/* ── Ultra-Thin Single-Line Demo Info Strip ── */}
+            <div className="bg-emerald-950/30 border-b border-emerald-500/10 text-xs text-zinc-400 py-1.5 px-4 rounded-xl flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2 truncate">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                <span className="text-zinc-300 font-medium">Sunum ERP Canlı Demo:</span>
+                <span className="truncate hidden sm:inline">
+                  Tüm grafikler ve tablolar zenginleştirilmiş örnek verilerle aktiftir; form işlemleri güvenle simüle edilmektedir.
+                </span>
+              </div>
+              <span className="text-[11px] text-emerald-400/90 shrink-0 ml-3">Simülasyon</span>
+            </div>
+
+            {/* ── Minimal Header (Left: Rounded Search Bar, Right: Notification, Date/Time, Small Round Avatar) ── */}
+            <header className="h-13 shrink-0 glass-panel rounded-[20px] flex items-center justify-between px-4 z-20">
               <div className="flex items-center gap-3">
                 {/* Mobile menu trigger */}
                 <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="lg:hidden size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80">
-                      <Menu size={18} />
+                    <Button variant="ghost" size="icon" className="lg:hidden size-8 rounded-full text-zinc-300">
+                      <Menu size={17} />
                     </Button>
                   </SheetTrigger>
                 </Sheet>
 
                 {/* Mobile brand */}
                 <div className="flex items-center gap-2 lg:hidden">
-                  <SunumLogo className="size-7" showText={true} />
+                  <SunumLogo className="size-6" showText={true} />
                 </div>
 
-                {/* Desktop: search (.glass-input) */}
-                <div className="hidden lg:flex items-center gap-2.5 glass-input px-3.5 py-2 w-64 xl:w-88 group focus-within:ring-2 focus-within:ring-white/15 transition-all">
-                  <Search size={16} className="text-white/50 group-focus-within:text-primary transition-colors shrink-0" />
+                {/* Desktop: Slim Rounded Search Bar */}
+                <div className="hidden lg:flex items-center gap-2.5 bg-[#111513] border border-white/[0.06] rounded-full px-4 py-1.5 text-sm w-72 xl:w-88 focus-within:border-emerald-500/30 transition-colors">
+                  <Search size={14} className="text-zinc-500 shrink-0" />
                   <input
-                    className="flex-1 bg-transparent text-sm outline-none text-white placeholder:text-white/40"
+                    className="flex-1 bg-transparent text-sm outline-none text-white placeholder:text-zinc-500"
                     placeholder={t.header.search}
                     type="text"
                   />
                 </div>
-
-                {/* Live Demo Header Badge */}
-                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/15 backdrop-blur-md border border-blue-400/25 text-blue-300 text-xs font-semibold select-none">
-                  <span className="size-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_8px_#60a5fa]" />
-                  <span>Canlı Demo</span>
-                </div>
               </div>
 
-              <div className="flex items-center gap-1.5 lg:gap-2">
-                {/* Branch selector — desktop only */}
-                {(isPlatformDeveloper ? userBranches : userBranches.filter(b => b.id !== "local-debug-branch")).length > 0 && (
-                  <div className="hidden xl:block">
-                    <BranchSelector
-                      branches={isPlatformDeveloper ? userBranches : userBranches.filter(b => b.id !== "local-debug-branch")}
-                      currentBranch={currentBranch}
-                      onBranchChange={handleBranchChange}
-                    />
-                  </div>
+              {/* Right: Notification Icon, Date/Time, Small Round Avatar */}
+              <div className="flex items-center gap-3">
+                <NotificationCenter />
+
+                {dateTimeText && (
+                  <span className="hidden sm:inline-block text-xs text-zinc-400 font-light tracking-tight tabular-nums select-none">
+                    {dateTimeText}
+                  </span>
                 )}
 
-                <ThemeToggle />
-                <NotificationCenter />
-                <div className="size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-all">
-                  <ContextualHelp size={18} className="text-white/70 hover:text-white" />
-                </div>
-
-                {/* User profile & session controls */}
-                <div className="hidden lg:flex items-center gap-1.5 pl-2 ml-1 border-l border-white/10">
-                  <Link
-                    href="/dashboard/settings"
-                    className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
-                  >
-                    <div className="text-right hidden xl:block">
-                      <p className="text-xs font-semibold text-white leading-tight group-hover:text-primary transition-colors">{session.user.fullName}</p>
-                      <p className="text-[11px] text-white/55">{isSuperAdmin ? t.nav.superAdmin : ((session.user as any).position || t.nav.user)}</p>
-                    </div>
-                    {session.user.avatarUrl ? (
-                      <img src={session.user.avatarUrl} alt="Avatar" className="size-8 rounded-xl object-cover border border-white/20" />
-                    ) : (
-                      <div className="size-8 rounded-xl bg-gradient-to-br from-primary/30 to-primary/10 text-primary flex items-center justify-center text-xs font-bold border border-primary/30">
-                        {session.user.fullName.substring(0, 2).toUpperCase()}
-                      </div>
-                    )}
-                  </Link>
-
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={logout}
-                        aria-label={t.nav.logout}
-                        className="size-9 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 hover:text-rose-300 flex items-center justify-center transition-all cursor-pointer"
-                      >
-                        <LogOut size={16} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="glass-panel text-white border-white/15">
-                      {t.nav.logout}
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href="/dashboard/settings"
+                      className="shrink-0 rounded-full focus:outline-none"
+                      aria-label={session.user.fullName}
+                    >
+                      {session.user.avatarUrl ? (
+                        <img
+                          src={session.user.avatarUrl}
+                          alt={session.user.fullName}
+                          className="size-8 rounded-full object-cover border border-white/[0.08] hover:border-emerald-500/40 transition-colors"
+                        />
+                      ) : (
+                        <div className="size-8 rounded-full bg-emerald-400/15 text-emerald-300 border border-emerald-500/25 flex items-center justify-center text-xs font-medium hover:bg-emerald-400/25 transition-colors">
+                          {session.user.fullName.substring(0, 2).toUpperCase()}
+                        </div>
+                      )}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="glass-panel text-white border-white/[0.06] text-xs">
+                    {session.user.fullName}
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </header>
-
-            {/* ── Demo Bilgilendirme Çubuğu ── */}
-            <div className="glass-card rounded-xl bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-blue-500/15 border-blue-400/20 px-4 py-2 flex items-center justify-between text-xs text-blue-100 shrink-0">
-              <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
-                <span className="font-semibold text-white">Sunum ERP Canlı Demo:</span>
-                <span className="text-white/70 hidden md:inline">
-                  Tüm grafikler ve tablolar zenginleştirilmiş örnek verilerle aktiftir. Form işlemleri demo ortamında güvenle simüle edilmektedir.
-                </span>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/25 text-[11px] font-semibold text-blue-200">
-                  Salt Okunur / Simülasyon
-                </span>
-              </div>
-            </div>
 
             {/* ── Page Content ── */}
             <main className="flex-1 overflow-y-auto px-1 py-1 lg:px-2 lg:py-2 bg-transparent">
@@ -1225,7 +1087,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         </div>
 
-        {/* Floating AI Chat */}
+        {/* Floating AI Chat (Minimal Emerald Orb Capsule) */}
         <KuscuChat />
 
         {/* Technical Support Floating Widget */}

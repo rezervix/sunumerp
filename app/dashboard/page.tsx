@@ -7,20 +7,18 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Cell, PieChart, Pie, Legend, ResponsiveContainer,
 } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  Download, Plus, Users, FolderOpen, TrendingUp, TrendingDown,
-  CreditCard, DollarSign, ShoppingBag, ArrowUpRight, History, X
+  Download, Users, TrendingUp,
+  DollarSign, ShoppingBag, ArrowUpRight, History, X
 } from "lucide-react"
-import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 
-const PIE_COLORS = ["#10b981", "#f59e0b", "#38bdf8", "#a855f7", "#fb7185"]
+const PIE_COLORS = ["#34D399", "#2DD4BF", "#10B981", "#14B8A6", "#6EE7B7"]
 
 const statDef = [
   {
@@ -28,10 +26,10 @@ const statDef = [
     titleKey: "dashboard.totalCustomers",
     fallback: "Toplam Müşteri",
     Icon: Users,
-    colorLight: "rgba(56, 189, 248, 0.15)",
-    colorDark: "#0c4a6e",
-    iconColor: "#38bdf8",
-    iconColorDark: "#38bdf8",
+    colorLight: "rgba(52, 211, 153, 0.12)",
+    colorDark: "#064e3b",
+    iconColor: "#34D399",
+    iconColorDark: "#34D399",
     badgeText: "Aktif Portföy",
     deltaValue: 12.4,
   },
@@ -40,10 +38,10 @@ const statDef = [
     titleKey: "dashboard.activeProjects",
     fallback: "Aktif Projeler",
     Icon: ShoppingBag,
-    colorLight: "rgba(16, 185, 129, 0.15)",
+    colorLight: "rgba(45, 212, 191, 0.12)",
     colorDark: "#064e3b",
-    iconColor: "#34d399",
-    iconColorDark: "#34d399",
+    iconColor: "#2DD4BF",
+    iconColorDark: "#2DD4BF",
     badgeText: "Canlı Operasyon",
     deltaValue: 8.2,
   },
@@ -52,10 +50,10 @@ const statDef = [
     titleKey: "dashboard.leads",
     fallback: "Potansiyeller",
     Icon: TrendingUp,
-    colorLight: "rgba(245, 158, 11, 0.15)",
-    colorDark: "#78350f",
-    iconColor: "#fbbf24",
-    iconColorDark: "#fbbf24",
+    colorLight: "rgba(52, 211, 153, 0.12)",
+    colorDark: "#064e3b",
+    iconColor: "#34D399",
+    iconColorDark: "#34D399",
     badgeText: "Fırsat Havuzu",
     deltaValue: 15.8,
   },
@@ -64,10 +62,10 @@ const statDef = [
     titleKey: "dashboard.monthlyIncome",
     fallback: "Aylık Gelir",
     Icon: DollarSign,
-    colorLight: "rgba(16, 185, 129, 0.15)",
+    colorLight: "rgba(52, 211, 153, 0.12)",
     colorDark: "#064e3b",
-    iconColor: "#10b981",
-    iconColorDark: "#34d399",
+    iconColor: "#34D399",
+    iconColorDark: "#34D399",
     isCurrency: true,
     badgeText: "Aylık Ciro",
     deltaValue: 18.6,
@@ -173,33 +171,32 @@ export default function DashboardPage() {
     <div className="space-y-6">
 
       {/* ── Page Header ── */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-3xl font-light text-white tracking-tight flex items-center gap-2">
             {tText("dashboard.title", t.nav.dashboard)}
             <ContextualHelp />
           </h1>
-          <p className="text-white/60 mt-1.5 text-sm">
+          <p className="text-zinc-400 mt-1 text-xs">
             {currentBranch
               ? `${currentBranch.name} · ${tText("dashboard.subtitle", "İşletme verilerinize genel bakış")}`
               : tText("dashboard.subtitle", "İşletme verilerinize genel bakış")}
           </p>
         </div>
         <div className="flex gap-3 shrink-0 w-full sm:w-auto">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 flex-1 sm:flex-none glass-input hover:bg-white/10 text-white border-white/15 h-9 px-4 cursor-pointer"
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-2 flex-1 sm:flex-none bg-[#111513] hover:bg-white/[0.06] text-zinc-200 border border-white/[0.06] rounded-full h-9 px-4 text-xs font-medium transition-colors cursor-pointer"
             onClick={() => setIsReportOpen(true)}
           >
-            <Download size={16} className="text-emerald-400" />
+            <Download size={14} className="text-emerald-400" />
             <span>{tText("dashboard.report", "Rapor")}</span>
-          </Button>
+          </button>
         </div>
       </div>
 
-      {/* ── KPI Cards (StatCards) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+      {/* ── 1. KUTUSUZ (BORDERLESS) ÜST KPI ŞERİDİ ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
         {statDef.map(s => {
           const rawVal = statsData[s.key as keyof typeof statsData]
           const numVal = Number(rawVal) || 0
@@ -213,139 +210,119 @@ export default function DashboardPage() {
           const isPositive = netDiff >= 0
 
           return (
-            <motion.div
-              key={s.key}
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300, damping: 22 }}
-              className="glass-card p-6 rounded-2xl relative overflow-hidden group"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-white/60 truncate">
-                    {tText(s.titleKey, s.fallback)}
-                  </p>
-                  <p className="text-2xl font-bold text-white mt-1 tracking-tight">
-                    {display}
-                  </p>
-                </div>
-                <div
-                  className="size-11 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 transition-transform duration-300 group-hover:scale-110"
-                  style={{ backgroundColor: s.colorLight }}
-                >
-                  <s.Icon size={22} style={{ color: s.iconColor }} />
-                </div>
+            <div key={s.key} className="flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
+                <s.Icon size={13} className="text-zinc-500 shrink-0" />
+                <span className="truncate">{tText(s.titleKey, s.fallback)}</span>
               </div>
-
-              <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+              <div className="flex items-baseline gap-2.5 flex-wrap">
+                <span className="text-4xl font-light text-white tracking-tight tabular-nums">
+                  {display}
+                </span>
                 <span
-                  className={`inline-flex items-center gap-1 font-semibold ${
-                    isPositive ? "text-emerald-400" : "text-rose-400"
-                  }`}
+                  className={
+                    isPositive
+                      ? "bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums"
+                      : "bg-rose-500/10 text-rose-400 text-xs px-2 py-0.5 rounded-full font-medium tabular-nums"
+                  }
                 >
-                  {isPositive ? (
-                    <ArrowUpRight size={14} className="shrink-0" />
-                  ) : (
-                    <TrendingDown size={14} className="shrink-0" />
-                  )}
-                  {s.key === "income"
-                    ? `${isPositive ? "+" : ""}₺${netDiff.toLocaleString("tr-TR")} Net`
-                    : `+${s.deltaValue}%`}
-                </span>
-                <span className="text-white/45 text-[11px] font-medium">
-                  {s.badgeText}
+                  {isPositive ? `+${s.deltaValue}%` : `-${s.deltaValue}%`}
                 </span>
               </div>
-
-              <div
-                className="absolute bottom-0 left-0 right-0 h-0.5 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
-                style={{ background: `linear-gradient(90deg, ${s.iconColor}40, ${s.iconColor})` }}
-              />
-            </motion.div>
+            </div>
           )
         })}
       </div>
 
-      {/* ── Charts + Activity ── */}
+      {/* ── 2. GRAFİK VE BENTO KARTLARI ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
 
-        {/* Bar Chart */}
-        <div className="glass-card p-6 rounded-2xl lg:col-span-2 flex flex-col">
-          <div className="flex items-center justify-between gap-4 pb-5">
+        {/* Bar Chart Bento Card */}
+        <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 lg:col-span-2 flex flex-col">
+          <div className="flex items-start justify-between gap-4 pb-6">
             <div>
-              <h2 className="text-lg font-semibold text-white">
-                {tText("dashboard.incomeExpenseAnalysis", "Gelir / Gider Analizi")}
-              </h2>
-              <p className="text-xs text-white/50 mt-0.5">
-                {tText("dashboard.netProfitLoss", "Net Kâr/Zarar")}:{" "}
-                <span
-                  className={
-                    (statsData.income || 0) - (statsData.expense || 0) >= 0
-                      ? "text-emerald-400 font-semibold"
-                      : "text-rose-400 font-semibold"
-                  }
-                >
+              <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
+                {tText("dashboard.incomeExpenseAnalysis", "Gelir / Gider Analizi")} · {tText("dashboard.netProfitLoss", "Net Kâr/Zarar")}
+              </p>
+              <div className="flex items-baseline gap-2.5 mt-1">
+                <span className="font-light text-2xl text-white tracking-tight tabular-nums">
                   ₺{((statsData.income || 0) - (statsData.expense || 0)).toLocaleString("tr-TR")}
                 </span>
-              </p>
+                <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full font-medium">
+                  Net Bilanço
+                </span>
+              </div>
             </div>
-            <Badge
-              variant="secondary"
-              className="text-xs px-3 py-1 bg-sky-500/15 text-sky-300 border border-sky-400/25"
-            >
-              {tText("dashboard.thisMonth", "Bu ay")}
-            </Badge>
+
+            {/* 7G | 30G | 90G Pill Filter */}
+            <div className="bg-[#080A09] border border-white/[0.06] rounded-full p-1 flex items-center gap-0.5 text-[11px] text-zinc-400 shrink-0 select-none">
+              <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">7G</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white font-medium">30G</span>
+              <span className="px-2.5 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">90G</span>
+            </div>
           </div>
+
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} barSize={44}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.08)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.05)" />
                 <XAxis
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 13, fill: "rgba(255, 255, 255, 0.7)", fontWeight: 500 }}
+                  tick={{ fontSize: 12, fill: "#a1a1aa", fontWeight: 400 }}
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 12, fill: "rgba(255, 255, 255, 0.55)" }}
+                  tick={{ fontSize: 11, fill: "#71717a" }}
                   tickFormatter={v => `₺${v}`}
                   width={68}
                 />
                 <Tooltip
-                  cursor={{ fill: "rgba(255, 255, 255, 0.05)", radius: 8 }}
+                  cursor={{ fill: "rgba(255, 255, 255, 0.03)", radius: 8 }}
                   contentStyle={{
                     borderRadius: 14,
-                    border: "1px solid rgba(255, 255, 255, 0.15)",
-                    background: "rgba(15, 23, 42, 0.9)",
+                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    background: "rgba(17, 21, 19, 0.95)",
                     backdropFilter: "blur(12px)",
                     color: "#ffffff",
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.45)",
-                    fontSize: 13,
-                    padding: "10px 14px",
+                    boxShadow: "0 12px 32px rgba(0, 0, 0, 0.55)",
+                    fontSize: 12,
+                    padding: "8px 12px",
                   }}
-                  itemStyle={{ color: "#ffffff", fontWeight: 600 }}
+                  itemStyle={{ color: "#34D399", fontWeight: 500 }}
                   formatter={(v: number) => [`₺${v.toLocaleString("tr-TR")}`, ""]}
                 />
                 <Bar dataKey="value" radius={[10, 10, 0, 0]}>
-                  <Cell fill="#10b981" />
-                  <Cell fill="#f59e0b" />
+                  <Cell fill="#34D399" />
+                  <Cell fill="#2DD4BF" />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Pie Chart */}
-        <div className="glass-card p-6 rounded-2xl flex flex-col">
-          <div className="pb-5">
-            <h2 className="text-lg font-semibold text-white">
-              {tText("dashboard.expenseDistribution", "Harcama Dağılımı")}
-            </h2>
-            <p className="text-xs text-white/50 mt-0.5">
-              Kategori bazlı gider kırılımı
-            </p>
+        {/* Pie Chart Bento Card */}
+        <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 flex flex-col">
+          <div className="flex items-start justify-between gap-3 pb-5">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
+                {tText("dashboard.expenseDistribution", "Harcama Dağılımı")}
+              </p>
+              <p className="font-light text-2xl text-white tracking-tight tabular-nums mt-1">
+                ₺{(statsData.expense || 0).toLocaleString("tr-TR")}
+              </p>
+            </div>
+
+            {/* 7G | 30G | 90G Pill Filter */}
+            <div className="bg-[#080A09] border border-white/[0.06] rounded-full p-1 flex items-center gap-0.5 text-[11px] text-zinc-400 shrink-0 select-none">
+              <span className="px-2 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">7G</span>
+              <span className="px-2 py-0.5 rounded-full bg-white/10 text-white font-medium">30G</span>
+              <span className="px-2 py-0.5 rounded-full hover:text-white transition-colors cursor-pointer">90G</span>
+            </div>
           </div>
+
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -353,10 +330,10 @@ export default function DashboardPage() {
                   data={pieData}
                   cx="50%"
                   cy="45%"
-                  innerRadius={55}
-                  outerRadius={85}
+                  innerRadius={56}
+                  outerRadius={84}
                   paddingAngle={4}
-                  stroke="rgba(15, 23, 42, 0.6)"
+                  stroke="#111513"
                   strokeWidth={2}
                   dataKey="value"
                 >
@@ -367,14 +344,14 @@ export default function DashboardPage() {
                 <Tooltip
                   contentStyle={{
                     borderRadius: 14,
-                    border: "1px solid rgba(255, 255, 255, 0.15)",
-                    background: "rgba(15, 23, 42, 0.9)",
+                    border: "1px solid rgba(255, 255, 255, 0.06)",
+                    background: "rgba(17, 21, 19, 0.95)",
                     backdropFilter: "blur(12px)",
                     color: "#ffffff",
-                    fontSize: 13,
-                    padding: "10px 14px",
+                    fontSize: 12,
+                    padding: "8px 12px",
                   }}
-                  itemStyle={{ color: "#ffffff", fontWeight: 600 }}
+                  itemStyle={{ color: "#34D399", fontWeight: 500 }}
                 />
                 <Legend
                   verticalAlign="bottom"
@@ -382,7 +359,7 @@ export default function DashboardPage() {
                   iconSize={8}
                   iconType="circle"
                   wrapperStyle={{ paddingTop: "16px" }}
-                  formatter={v => <span style={{ color: "rgba(255, 255, 255, 0.75)", fontSize: 12, fontWeight: 500 }}>{v}</span>}
+                  formatter={v => <span style={{ color: "#a1a1aa", fontSize: 12, fontWeight: 400 }}>{v}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -390,68 +367,61 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Recent Activity ── */}
-      <div className="glass-card p-6 rounded-2xl">
+      {/* ── Recent Activity Bento Card ── */}
+      <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6">
         <div className="flex items-center justify-between gap-4 pb-5">
-          <div className="flex items-center gap-3">
-            <div className="size-10 rounded-xl bg-sky-500/15 border border-sky-400/25 flex items-center justify-center">
-              <History size={18} className="text-sky-400" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-white">
-                {tText("dashboard.recentActivities", "Son Aktiviteler")}
-              </h2>
-              <p className="text-xs text-white/50">Sistem ve şube üzerindeki son işlemler</p>
-            </div>
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
+              Operasyon Günlüğü
+            </p>
+            <h2 className="text-lg font-light text-white tracking-tight mt-0.5">
+              {tText("dashboard.recentActivities", "Son Aktiviteler")}
+            </h2>
           </div>
-          <Button
+          <button
+            type="button"
             onClick={() => router.push("/dashboard/todos")}
-            variant="ghost"
-            size="sm"
-            className="text-emerald-400 hover:text-emerald-300 text-xs h-8 px-3 font-medium bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/20 rounded-xl cursor-pointer"
+            className="inline-flex items-center gap-1 bg-emerald-400/15 text-emerald-300 border border-emerald-500/25 hover:bg-emerald-400/25 text-xs h-8 px-3.5 rounded-full font-medium transition-colors cursor-pointer"
           >
             {tText("common.viewAll", "Tümü")}
-            <ArrowUpRight size={14} className="ml-1" />
-          </Button>
+            <ArrowUpRight size={13} />
+          </button>
         </div>
 
         <div>
           {statsData.recentActivities.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-4">
-              <div className="size-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                <History size={28} className="text-white/40" />
+            <div className="flex flex-col items-center justify-center py-12 gap-3">
+              <div className="size-12 rounded-full bg-white/[0.04] flex items-center justify-center">
+                <History size={22} className="text-zinc-500" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-medium text-white/70">
+                <p className="text-sm font-medium text-zinc-300">
                   {tText("dashboard.noActivities", "Henüz aktivite yok")}
                 </p>
-                <p className="text-xs text-white/45 mt-1">
+                <p className="text-xs text-zinc-500 mt-1">
                   {tText("dashboard.activitiesHint", "Etkinlikler burada görüntülenecektir")}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
-              {statsData.recentActivities.map((activity: any, i: number) => (
-                <div key={activity.id} className="activity-item relative flex gap-4 pb-4 last:pb-0">
-                  {i < statsData.recentActivities.length - 1 && (
-                    <div className="activity-line absolute left-[13px] top-9 bottom-0 w-px bg-white/10" />
-                  )}
-                  <div className="activity-dot size-7 rounded-full bg-emerald-500/15 border border-emerald-400/30 mt-1 shrink-0 z-10 flex items-center justify-center">
-                    <div className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-                  </div>
-                  <div className="flex-1 min-w-0 pt-0.5 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/5 transition-colors">
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <Badge
-                        variant="secondary"
-                        className="text-[10px] h-5 px-2 font-semibold uppercase tracking-wide bg-amber-500/15 text-amber-300 border border-amber-400/25"
-                      >
-                        {activity.type}
-                      </Badge>
-                      <span className="text-[11px] text-white/50 shrink-0 font-medium">{activity.time}</span>
+            <div className="divide-y divide-white/[0.06]">
+              {statsData.recentActivities.map((activity: any) => (
+                <div key={activity.id} className="py-3.5 first:pt-0 last:pb-0 flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-3 min-w-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] h-5 px-2 font-medium uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border-0 rounded-full"
+                        >
+                          {activity.type}
+                        </Badge>
+                        <p className="text-sm text-zinc-200 truncate">{activity.description}</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-white/80 leading-relaxed">{activity.description}</p>
                   </div>
+                  <span className="text-xs text-zinc-500 shrink-0 tabular-nums">{activity.time}</span>
                 </div>
               ))}
             </div>
@@ -461,36 +431,36 @@ export default function DashboardPage() {
 
       {/* Report Modal */}
       {isReportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="glass-panel rounded-2xl w-full max-w-md overflow-hidden text-white">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-md overflow-hidden text-white shadow-2xl">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-base font-medium text-white">
                   {tText("dashboard.reportModalTitle", "Rapor İndir")}
                 </h3>
-                <p className="text-sm text-white/60">
+                <p className="text-xs text-zinc-400 mt-0.5">
                   {tText("dashboard.reportModalSubtitle", "Özet rapor indirin")}
                 </p>
               </div>
-              <button onClick={() => setIsReportOpen(false)} className="text-white/50 hover:text-white cursor-pointer">
-                <X size={20} />
+              <button onClick={() => setIsReportOpen(false)} className="text-zinc-500 hover:text-white cursor-pointer">
+                <X size={18} />
               </button>
             </div>
             <div className="p-6">
-              <p className="text-sm text-white/80 leading-relaxed">
+              <p className="text-sm text-zinc-300 leading-relaxed">
                 {tText("dashboard.reportModalDesc", "Şubenize ait performans, müşteri ve finansal özet verileri Excel uyumlu CSV formatında indirilecektir.")}
               </p>
             </div>
-            <div className="px-6 py-4 border-t border-white/10 bg-black/20 flex justify-end gap-3">
+            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5">
               <Button
                 variant="outline"
-                className="glass-input hover:bg-white/10 text-white border-white/15 cursor-pointer"
+                className="rounded-full cursor-pointer"
                 onClick={() => setIsReportOpen(false)}
               >
                 {tText("common.close", "Kapat")}
               </Button>
               <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold cursor-pointer"
+                className="bg-[#34D399] text-[#061811] font-medium rounded-full cursor-pointer"
                 onClick={handleDownloadReport}
               >
                 {tText("common.download", "İndir")}

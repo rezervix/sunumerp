@@ -3,48 +3,48 @@
 
 @custom-variant dark (&:is(.dark, .dark *));
 
-/* ── Ambient Dark & Glassmorphism Tokens ─────────── */
+/* ── Obsidian Carbon & Emerald Mint Tokens ─────────── */
 :root,
 .dark {
-  --background: #090D16;
-  --foreground: #F8FAFC;
-  --card: rgba(15, 23, 42, 0.65);
-  --card-foreground: #F8FAFC;
-  --popover: #0F172A;
-  --popover-foreground: #F8FAFC;
-  --primary: #E8B44F;
-  --primary-foreground: #0F172A;
-  --secondary: rgba(30, 41, 59, 0.7);
-  --secondary-foreground: #E2E8F0;
-  --muted: rgba(30, 41, 59, 0.6);
-  --muted-foreground: #94A3B8;
-  --accent: rgba(255, 255, 255, 0.08);
-  --accent-foreground: #F8FAFC;
+  --background: #080A09;
+  --foreground: #F4F4F5;
+  --card: rgba(17, 21, 19, 0.9);
+  --card-foreground: #F4F4F5;
+  --popover: #111513;
+  --popover-foreground: #F4F4F5;
+  --primary: #34D399;
+  --primary-foreground: #061811;
+  --secondary: rgba(255, 255, 255, 0.04);
+  --secondary-foreground: #E4E4E7;
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: #A1A1AA;
+  --accent: rgba(52, 211, 153, 0.15);
+  --accent-foreground: #6EE7B7;
   --destructive: #F43F5E;
   --destructive-foreground: #FFFFFF;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #E8B44F;
-  --radius: 0.75rem;
+  --border: rgba(255, 255, 255, 0.06);
+  --input: rgba(255, 255, 255, 0.06);
+  --ring: #34D399;
+  --radius: 1.25rem;
 
   /* Sidebar */
-  --sidebar: rgba(15, 23, 42, 0.6);
-  --sidebar-foreground: #F8FAFC;
-  --sidebar-border: rgba(255, 255, 255, 0.12);
-  --sidebar-muted: #94A3B8;
-  --sidebar-accent: rgba(255, 255, 255, 0.08);
-  --sidebar-accent-foreground: #E8B44F;
-  --sidebar-primary: #E8B44F;
+  --sidebar: rgba(17, 21, 19, 0.9);
+  --sidebar-foreground: #F4F4F5;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-muted: #A1A1AA;
+  --sidebar-accent: rgba(52, 211, 153, 0.15);
+  --sidebar-accent-foreground: #6EE7B7;
+  --sidebar-primary: #34D399;
 
   /* Header */
-  --header: rgba(15, 23, 42, 0.6);
-  --header-border: rgba(255, 255, 255, 0.12);
+  --header: rgba(17, 21, 19, 0.9);
+  --header-border: rgba(255, 255, 255, 0.06);
 
   /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.55);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.65);
 
   --shadow-soft: var(--shadow-sm);
 }
@@ -86,11 +86,11 @@
   --color-header: var(--header);
   --color-header-border: var(--header-border);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-2xl: var(--radius);
 
   --shadow-soft: var(--shadow-sm);
 }
@@ -103,12 +103,9 @@
   }
 
   body {
-    background-color: #060913;
+    background-color: #080A09;
     background-image:
-      radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.11) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.13) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(232, 180, 79, 0.08) 0px, transparent 55%),
-      linear-gradient(135deg, #060913 0%, #0b1222 50%, #0f172a 100%);
+      radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 55%);
     background-attachment: fixed;
     color: var(--foreground);
     height: 100vh;
@@ -119,28 +116,57 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Tipografi Devrimi: Ana başlıklar ve büyük KPI rakamları ince, zarif ve tabular-nums */
+  h1,
+  .glass-card .text-2xl,
+  .glass-card .text-3xl,
+  .glass-card .text-4xl,
+  .glass-panel .text-3xl,
+  .glass-panel .text-4xl {
+    font-weight: 300 !important;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 /* ── Typography Utilities ────────────────────────── */
 @utility text-display {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: 300;
   letter-spacing: -0.025em;
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
 @utility text-heading {
   font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-weight: 300;
+  letter-spacing: -0.02em;
   line-height: 1.3;
+  font-variant-numeric: tabular-nums;
 }
 
 @utility text-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: #a1a1aa;
+}
+
+@utility metric-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a1a1aa;
+}
+
+@utility kpi-value {
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
 }
 
 @utility text-caption {
@@ -152,21 +178,22 @@
 @utility sidebar-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: var(--radius);
+  border-radius: 0.5rem;
   transition: background-color 150ms, color 150ms;
-  color: var(--sidebar-muted);
+  color: #a1a1aa;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
 }
 
 @utility sidebar-item-active {
-  background-color: var(--sidebar-accent);
-  color: var(--sidebar-accent-foreground);
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-weight: 500;
 }
 
 /* ── Scrollbar ───────────────────────────────────── */
@@ -180,40 +207,59 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--muted-foreground);
-  opacity: 0.4;
+  background: rgba(52, 211, 153, 0.3);
 }
 
 /* ── Sparkline utilities ─────────────────────────── */
 .sparkline {
   fill: none;
-  stroke: #22c55e;
+  stroke: #34d399;
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-.sparkline-down { stroke: #ef4444; }
-.sparkline-neutral { stroke: #64748b; }
+.sparkline-down { stroke: #f43f5e; }
+.sparkline-neutral { stroke: #71717a; }
 
-/* ── Glassmorphism Utilities ─────────────────────── */
+/* ── Obsidian Carbon Glassmorphism Utilities ─────── */
 .glass-panel {
-  @apply bg-slate-900/60 backdrop-blur-xl border border-white/15 shadow-xl;
+  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl;
 }
 
 .glass-card {
-  @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg transition-all;
+  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl transition-all;
 }
 
 .glass-input {
-  @apply bg-black/20 backdrop-blur-sm border border-white/10 focus:border-white/30 text-white placeholder:text-white/40 rounded-xl;
+  @apply bg-[#080A09]/80 backdrop-blur-sm border border-white/[0.06] focus:border-emerald-500/30 text-white placeholder:text-zinc-500 rounded-xl;
 }
 
 .glass-table-container {
-  @apply bg-slate-950/80 backdrop-blur-lg border border-white/10 rounded-2xl;
+  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl;
 }
 
+/* ── Single Accent & Badge Utilities ─────────────── */
+.btn-primary-emerald {
+  @apply bg-[#34D399] text-[#061811] font-medium rounded-full hover:bg-[#34D399]/90 transition-all;
+}
+
+.accent-emerald-pill {
+  @apply bg-emerald-400/15 text-emerald-300 border border-emerald-500/25;
+}
+
+.badge-positive {
+  @apply bg-emerald-500/10 text-emerald-400;
+}
+
+.badge-pending {
+  @apply bg-amber-500/10 text-amber-300;
+}
+
+.badge-critical {
+  @apply bg-rose-500/10 text-rose-400;
+}

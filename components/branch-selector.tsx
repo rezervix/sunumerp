@@ -1,7 +1,6 @@
 "use client"
 
 import { Check, ChevronsUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useState } from "react"
@@ -19,29 +18,27 @@ export function BranchSelector({ branches, currentBranch, onBranchChange }: Bran
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+        <button
+          type="button"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between glass-input hover:bg-white/10 text-white border-white/10 h-9 px-3 text-xs font-medium"
+          className="w-full flex items-center justify-between bg-transparent hover:bg-white/[0.04] text-zinc-300 hover:text-white py-2 px-3 rounded-lg text-xs font-normal transition-colors cursor-pointer"
         >
-          <div className="flex items-center gap-2 truncate">
-            {currentBranch && (
-              <div
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-2 ring-white/20"
-                style={{ backgroundColor: currentBranch.themeColor }}
-              />
-            )}
+          <div className="flex items-center gap-2.5 truncate">
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0 bg-emerald-400"
+              style={currentBranch?.themeColor ? { backgroundColor: currentBranch.themeColor } : undefined}
+            />
             <span className="truncate">{currentBranch ? currentBranch.name : "Şube seçin..."}</span>
           </div>
-          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-60" />
-        </Button>
+          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 text-zinc-500" />
+        </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[260px] p-0 glass-panel rounded-xl overflow-hidden border-white/15" align="start">
-        <Command>
-          <CommandInput placeholder="Şube ara..." />
+      <PopoverContent className="w-[248px] p-0 glass-panel rounded-[20px] overflow-hidden border-white/[0.06] text-white" align="start">
+        <Command className="bg-transparent text-white">
+          <CommandInput placeholder="Şube ara..." className="text-xs text-white placeholder:text-zinc-500" />
           <CommandList>
-            <CommandEmpty>Şube bulunamadı.</CommandEmpty>
+            <CommandEmpty className="py-3 text-center text-xs text-zinc-500">Şube bulunamadı.</CommandEmpty>
             <CommandGroup>
               {branches.map((branch) => (
                 <CommandItem
@@ -51,12 +48,13 @@ export function BranchSelector({ branches, currentBranch, onBranchChange }: Bran
                     onBranchChange(branch)
                     setOpen(false)
                   }}
+                  className="text-xs text-zinc-300 aria-selected:bg-white/[0.06] aria-selected:text-white cursor-pointer"
                 >
-                  <Check className={`mr-2 h-4 w-4 ${currentBranch?.id === branch.id ? "opacity-100" : "opacity-0"}`} />
-                  <div className="w-2.5 h-2.5 rounded-full mr-2" style={{ backgroundColor: branch.themeColor }} />
+                  <Check className={`mr-2 h-3.5 w-3.5 text-emerald-400 ${currentBranch?.id === branch.id ? "opacity-100" : "opacity-0"}`} />
+                  <div className="w-2 h-2 rounded-full mr-2 shrink-0" style={{ backgroundColor: branch.themeColor || "#34D399" }} />
                   <div className="flex flex-col">
-                    <span className="font-medium">{branch.name}</span>
-                    <span className="text-xs text-muted-foreground">{branch.code}</span>
+                    <span className="font-medium text-white">{branch.name}</span>
+                    <span className="text-[11px] text-zinc-500">{branch.code}</span>
                   </div>
                 </CommandItem>
               ))}
