@@ -184,7 +184,7 @@ export default function DashboardPage() {
       csvRows.push(`${tText("dashboard.monthlyExpense", "Aylık Toplam Gider")},${statsData.expense} ₺`)
       csvRows.push(`${tText("dashboard.netProfitLoss", "Net Kâr/Zarar")},${statsData.income - statsData.expense} ₺`)
       csvRows.push("")
-      
+
       if (statsData.spendingByKind.length > 0) {
         csvRows.push(tText("dashboard.expenseDistribution", "Kategoriye Göre Harcamalar"))
         csvRows.push(`${tText("common.category", "Kategori")},${tText("common.amount", "Tutar (₺)")}`)
@@ -210,7 +210,7 @@ export default function DashboardPage() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      
+
       toast.success(tText("common.success", "Rapor başarıyla indirildi."))
       setIsReportOpen(false)
     } catch {
@@ -533,7 +533,7 @@ export default function DashboardPage() {
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: expenseToIncomeRatio }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                className="drop-shadow-[0_0_8px_rgba(52,211,153,0.35)]"
+                style={{ filter: "drop-shadow(0 0 8px rgba(52, 211, 153, 0.35))" }}
               />
             </svg>
 
@@ -578,10 +578,6 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-[repeat(20,minmax(0,1fr))] gap-1 h-2">
                     {Array.from({ length: totalSegments }).map((_, segIdx) => {
                       const active = segIdx < litSegments
-                      const activeClass =
-                        idx % 2 === 0
-                          ? "bg-[#34D399] shadow-[0_0_6px_rgba(52,211,153,0.35)]"
-                          : "bg-[#2DD4BF] shadow-[0_0_6px_rgba(45,212,191,0.35)]"
                       return (
                         <motion.span
                           key={segIdx}
@@ -591,9 +587,17 @@ export default function DashboardPage() {
                             delay: segIdx * 0.025 + idx * 0.06,
                             duration: 0.25,
                           }}
-                          className={`h-full rounded-[2px] ${
-                            active ? activeClass : "bg-white/[0.05]"
-                          }`}
+                          className="h-full rounded-[2px]"
+                          style={
+                            active
+                              ? {
+                                backgroundColor: accentColor,
+                                boxShadow: `0 0 6px ${accentColor}55`,
+                              }
+                              : {
+                                backgroundColor: "rgba(255, 255, 255, 0.05)",
+                              }
+                          }
                         />
                       )
                     })}
