@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import {
   Plus, Search, Eye, Trash2, Calendar, Wallet, Laptop,
@@ -15,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { cn } from "@/lib/utils"
 import { isDemoModeActive, getMockData } from "@/lib/data-controller"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
 
 // Kategori Tanımları
 const CATEGORIES = [
@@ -357,10 +359,10 @@ export default function PersonelTalepleriPage() {
 
   // Bento Özet Kartları
   const carouselItems = [
-    { title: "Onay Bekleyen Taleplerim", val: `${pendingRequestsCount} Adet`, desc: "Yönetici onayı bekleyen işlemleriniz", badge: "Bekleyen", badgeClass: "bg-amber-500/10 text-amber-300" },
-    { title: "Bu Ayki Harcamalar", val: `₺${monthlyExpensesSum.toLocaleString("tr-TR")}`, desc: "Avans & Masraf onaylanan bütçe", badge: "Finans", badgeClass: "bg-emerald-500/10 text-emerald-400" },
-    { title: "Toplam Açık Taleplerim", val: `${totalOpenRequests} Adet`, desc: "Aktif süreçleri devam eden talepler", badge: "Aktif", badgeClass: "bg-emerald-500/10 text-emerald-400" },
-    { title: "Toplam Talep Kaydı", val: `${requests.length} Adet`, desc: "Sistemdeki tüm dönem talepleri", badge: "Arşiv", badgeClass: "bg-white/[0.06] text-zinc-300" },
+    { title: "Onay Bekleyen Taleplerim", val: pendingRequestsCount, suffix: " Adet", desc: "Yönetici onayı bekleyen işlemleriniz", badge: "Bekleyen", badgeClass: "bg-amber-500/10 text-amber-300 border border-amber-500/20" },
+    { title: "Bu Ayki Harcamalar", val: monthlyExpensesSum, prefix: "₺", desc: "Avans & Masraf onaylanan bütçe", badge: "Finans", badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+    { title: "Toplam Açık Taleplerim", val: totalOpenRequests, suffix: " Adet", desc: "Aktif süreçleri devam eden talepler", badge: "Aktif", badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+    { title: "Toplam Talep Kaydı", val: requests.length, suffix: " Adet", desc: "Sistemdeki tüm dönem talepleri", badge: "Arşiv", badgeClass: "bg-white/[0.06] text-zinc-300 border border-white/[0.08]" },
   ]
 
   const nextCarousel = () => setCarouselIndex((prev) => (prev + 1) % carouselItems.length)
@@ -413,7 +415,7 @@ export default function PersonelTalepleriPage() {
             </div>
             <div className="mt-3">
               <p className="text-3xl font-light text-white tracking-tight tabular-nums">
-                {item.val}
+                <AnimatedNumber value={item.val} prefix={item.prefix || ""} suffix={item.suffix || ""} />
               </p>
               <p className="text-xs text-zinc-500 mt-1 truncate">
                 {item.desc}
@@ -431,30 +433,47 @@ export default function PersonelTalepleriPage() {
             type="button"
             onClick={() => setSelectedCategoryFilter("all")}
             className={cn(
-              "px-3.5 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
+              "relative px-3.5 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               selectedCategoryFilter === "all"
-                ? "bg-white/10 text-white font-medium"
+                ? "text-white font-medium"
                 : "text-zinc-400 hover:text-white"
             )}
           >
-            Tümü
+            {selectedCategoryFilter === "all" && (
+              <motion.div
+                layoutId="categoryActivePill"
+                className="absolute inset-0 bg-white/10 rounded-full"
+                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">Tümü</span>
           </button>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setSelectedCategoryFilter(cat.id)}
-              className={cn(
-                "px-3.5 py-1.5 text-xs rounded-full transition-colors flex items-center gap-1.5 cursor-pointer",
-                selectedCategoryFilter === cat.id
-                  ? "bg-white/10 text-white font-medium"
-                  : "text-zinc-400 hover:text-white"
-              )}
-            >
-              <cat.icon size={13} />
-              <span>{cat.label.split(" / ")[0]}</span>
-            </button>
-          ))}
+          {CATEGORIES.map((cat) => {
+            const isSelected = selectedCategoryFilter === cat.id
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategoryFilter(cat.id)}
+                className={cn(
+                  "relative px-3.5 py-1.5 text-xs rounded-full transition-colors flex items-center gap-1.5 cursor-pointer",
+                  isSelected
+                    ? "text-white font-medium"
+                    : "text-zinc-400 hover:text-white"
+                )}
+              >
+                {isSelected && (
+                  <motion.div
+                    layoutId="categoryActivePill"
+                    className="absolute inset-0 bg-white/10 rounded-full"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10"><cat.icon size={13} /></span>
+                <span className="relative z-10">{cat.label.split(" / ")[0]}</span>
+              </button>
+            )
+          })}
         </div>
 
         {/* Taleplerim / Onay Bekleyenler Hap Sekmeleri */}
@@ -463,25 +482,39 @@ export default function PersonelTalepleriPage() {
             type="button"
             onClick={() => setActiveTab("my")}
             className={cn(
-              "px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
+              "relative px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               activeTab === "my"
-                ? "bg-white/10 text-white font-medium"
+                ? "text-white font-medium"
                 : "text-zinc-400 hover:text-white"
             )}
           >
-            Taleplerim
+            {activeTab === "my" && (
+              <motion.div
+                layoutId="requestTabActivePill"
+                className="absolute inset-0 bg-white/10 rounded-full"
+                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">Taleplerim</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("approved-by-me")}
             className={cn(
-              "px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
+              "relative px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               activeTab === "approved-by-me"
-                ? "bg-white/10 text-white font-medium"
+                ? "text-white font-medium"
                 : "text-zinc-400 hover:text-white"
             )}
           >
-            Onay Bekleyenler ({pendingRequestsCount})
+            {activeTab === "approved-by-me" && (
+              <motion.div
+                layoutId="requestTabActivePill"
+                className="absolute inset-0 bg-white/10 rounded-full"
+                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              />
+            )}
+            <span className="relative z-10">Onay Bekleyenler ({pendingRequestsCount})</span>
           </button>
         </div>
       </div>
@@ -510,12 +543,15 @@ export default function PersonelTalepleriPage() {
                   </td>
                 </tr>
               ) : (
-                currentRequests.map((req) => {
+                currentRequests.map((req, idx) => {
                   const cat = CATEGORIES.find(c => c.id === req.category)
                   const CatIcon = cat?.icon ?? FileText
                   return (
-                    <tr
+                    <motion.tr
                       key={req.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.25, delay: idx * 0.04 }}
                       onClick={() => setDetailItem(req)}
                       className="hover:bg-white/[0.03] transition-colors cursor-pointer group"
                     >
@@ -581,7 +617,7 @@ export default function PersonelTalepleriPage() {
                           )}
                         </div>
                       </td>
-                    </tr>
+                    </motion.tr>
                   )
                 })
               )}

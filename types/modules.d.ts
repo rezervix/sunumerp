@@ -290,6 +290,10 @@ declare module 'lucide-react' {
   export const RotateCw: LucideIcon
   export const Minimize2: LucideIcon
   export const FolderPlus: LucideIcon
+  export const Receipt: LucideIcon
+  export const Percent: LucideIcon
+  export const UserX: LucideIcon
+  export const Briefcase: LucideIcon
 
   export const icons: Record<string, LucideIcon>
 }
