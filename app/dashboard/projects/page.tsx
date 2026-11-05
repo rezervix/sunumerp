@@ -8,6 +8,7 @@ import { Plus, FolderOpen, Clock, CheckCircle2, AlertTriangle, X } from "lucide-
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
 import { FilePicker } from "@/components/shared/file-picker"
 import { GlassFolder, type FolderFile } from "@/components/ui/glass-folder-cards"
+import { DEMO_PROJECTS } from "@/lib/data/demo-projects"
 
 interface Project {
   id: string
@@ -162,15 +163,29 @@ export default function ProjectsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
+      case "Tamamlandı":
         return (
           <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Tamamlandı
           </span>
         )
       case "active":
+      case "Devam Ediyor":
         return (
           <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <Clock className="w-3 h-3 text-emerald-400" /> Devam Ediyor
+          </span>
+        )
+      case "Test Aşamasında":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+            <Clock className="w-3 h-3 text-cyan-400" /> Test Aşamasında
+          </span>
+        )
+      case "Planlanıyor":
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
+            <Clock className="w-3 h-3 text-purple-400" /> Planlanıyor
           </span>
         )
       default:
@@ -182,11 +197,18 @@ export default function ProjectsPage() {
     }
   }
 
-  const totalProjects = projects.length
-  const activeProjects = projects.filter(p => p.status === "active").length
-  const completedProjects = projects.filter(p => p.status === "completed").length
+  // Akıllı Fallback Kontrolü: Gerçek proje yoksa sunum için DEMO_PROJECTS verilerini kullan
+  const displayProjects: Project[] = (projects && projects.length > 0)
+    ? projects
+    : (DEMO_PROJECTS as unknown as Project[])
+
+  const isUsingDemo = !projects || projects.length === 0
+
+  const totalProjects = displayProjects.length
+  const activeProjects = displayProjects.filter(p => p.status === "active" || p.status === "Devam Ediyor" || p.status === "Test Aşamasında").length
+  const completedProjects = displayProjects.filter(p => p.status === "completed" || p.status === "Tamamlandı").length
   const avgProgress = totalProjects > 0
-    ? Math.round(projects.reduce((acc, p) => acc + (p.progress || 0), 0) / totalProjects)
+    ? Math.round(displayProjects.reduce((acc, p) => acc + (p.progress || 0), 0) / totalProjects)
     : 0
 
   return (
@@ -255,7 +277,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Proje Kartları Izgarası */}
-      {projects.length === 0 ? (
+      {displayProjects.length === 0 ? (
         <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center shadow-xl">
           <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
             <FolderOpen className="w-6 h-6 text-zinc-400" />
@@ -265,7 +287,7 @@ export default function ProjectsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-14 justify-items-center py-6">
-          {projects.map((project, index) => {
+          {displayProjects.map((project, index) => {
             const artTheme = (["verdant", "ember", "aurora", "dusk", "glacier"] as const)[index % 5]
             const statusLabel =
               project.status === "completed"
@@ -324,8 +346,12 @@ export default function ProjectsPage() {
                       onSelect: () => openEditDialog(project),
                     },
                     {
-                      label: project.status === "completed" ? "Aktif Olarak İşaretle" : "Tamamlandı Olarak İşaretle",
+                      label: (project.status === "completed" || project.status === "Tamamlandı") ? "Aktif Olarak İşaretle" : "Tamamlandı Olarak İşaretle",
                       onSelect: async () => {
+                        if (isUsingDemo) {
+                          toast.info("Demo projeler sunum amaçlıdır. Yeni bir proje ekleyerek veri tabanına kaydedebilirsiniz.")
+                          return
+                        }
                         try {
                           const nextStatus = project.status === "completed" ? "active" : "completed"
                           const nextProgress = nextStatus === "completed" ? 100 : project.progress
@@ -356,7 +382,13 @@ export default function ProjectsPage() {
                     {
                       label: "Projeyi Sil",
                       danger: true,
-                      onSelect: () => handleDelete(project.id),
+                      onSelect: () => {
+                        if (isUsingDemo) {
+                          toast.info("Demo proje silinemez. Yeni proje ekleyerek kendi verilerinizi yönetebilirsiniz.")
+                          return
+                        }
+                        handleDelete(project.id)
+                      },
                     },
                   ]}
                 />
