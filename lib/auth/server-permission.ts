@@ -103,8 +103,13 @@ export async function checkPermission(
       }
 
       const normalizedPermissions = normalizePermissionsObject(permissions)
-      const resourcePerms = normalizedPermissions[resource]
-      return Array.isArray(resourcePerms) && resourcePerms.includes(action)
+      const normalizedResource = normalizePermissionResource(resource)
+      const resourcePerms = normalizedPermissions[normalizedResource]
+      return Array.isArray(resourcePerms) && (
+        resourcePerms.includes(action) ||
+        (action === "view" && resourcePerms.includes("read")) ||
+        (action === "read" && resourcePerms.includes("view"))
+      )
     }
 
     // Branch-independent permission check: allow if any branch grants this permission.
@@ -128,8 +133,14 @@ export async function checkPermission(
       }
 
       const normalizedPermissions = normalizePermissionsObject(permissions)
-      const resourcePerms = normalizedPermissions[resource]
-      if (Array.isArray(resourcePerms) && resourcePerms.includes(action)) {
+      const normalizedResource = normalizePermissionResource(resource)
+      const resourcePerms = normalizedPermissions[normalizedResource]
+      if (
+        Array.isArray(resourcePerms) &&
+        (resourcePerms.includes(action) ||
+          (action === "view" && resourcePerms.includes("read")) ||
+          (action === "read" && resourcePerms.includes("view")))
+      ) {
         return true
       }
     }

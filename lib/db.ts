@@ -481,11 +481,12 @@ class ModelSimulate {
         const ubrs = (db.userBranchRole || []).filter((ubr: any) => ubr.userId === item.id)
         enriched.branches = ubrs.map((ubr: any) => {
           const br = (db.branch || []).find((b: any) => b.id === ubr.branchId)
-          const roleName = ubr.roleId === "mock-role-id" ? "Super Admin" : "Personel"
+          const matchedRole = (db.role || []).find((r: any) => r.id === ubr.roleId)
+          const roleName = matchedRole?.name ?? (ubr.roleId === "mock-role-id" ? "Super Admin" : "Personel")
           return {
             ...ubr,
             branch: br ?? { id: ubr.branchId, name: "Şube", themeColor: "#3B82F6" },
-            role: { id: ubr.roleId, name: roleName }
+            role: matchedRole ?? { id: ubr.roleId, name: roleName, permissions: "{}" }
           }
         })
       }
