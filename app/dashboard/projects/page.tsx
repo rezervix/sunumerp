@@ -1,12 +1,10 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useLanguage } from "@/lib/context/LanguageContext"
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
-import { Plus, FolderOpen, Calendar, Clock, CheckCircle2, AlertTriangle, X, Edit, Trash } from "lucide-react"
+import { Plus, FolderOpen, Clock, CheckCircle2, AlertTriangle, X } from "lucide-react"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
 import { FilePicker } from "@/components/shared/file-picker"
 import { GlassFolder, type FolderFile } from "@/components/ui/glass-folder-cards"
@@ -28,7 +26,6 @@ interface Project {
 }
 
 export default function ProjectsPage() {
-  const { t, tText } = useLanguage()
   const { hasPermission, isSuperAdmin, loading: authLoading, currentBranch } = useAuth()
   const router = useRouter()
 
