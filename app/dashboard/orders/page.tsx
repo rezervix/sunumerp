@@ -8,18 +8,19 @@ import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
 
 const statusColors = {
   pending: {
-    bg: "bg-amber-500/15 text-amber-300 border border-amber-500/30",
+    bg: "bg-zinc-500/15 text-zinc-300 border border-white/[0.08]",
     icon: "schedule"
   },
   approved: {
-    bg: "bg-sky-500/15 text-sky-300 border border-sky-500/30",
+    bg: "bg-teal-500/15 text-teal-300 border border-teal-500/25",
     icon: "check_circle"
   },
   "in-progress": {
-    bg: "bg-purple-500/15 text-purple-300 border border-purple-500/30",
+    bg: "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20",
     icon: "loop"
   },
   delivered: {
@@ -41,9 +42,9 @@ const statusLabels: Record<string, string> = {
 }
 
 const priorityColors = {
-  low: { bg: "bg-slate-500/15 text-slate-300 border border-slate-500/30", label: "Dusuk" },
-  normal: { bg: "bg-sky-500/15 text-sky-300 border border-sky-500/30", label: "Normal" },
-  high: { bg: "bg-amber-500/15 text-amber-300 border border-amber-500/30", label: "Yuksek" },
+  low: { bg: "bg-zinc-500/15 text-zinc-400 border border-white/[0.06]", label: "Dusuk" },
+  normal: { bg: "bg-zinc-500/15 text-zinc-300 border border-white/[0.08]", label: "Normal" },
+  high: { bg: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/25", label: "Yuksek" },
   urgent: { bg: "bg-rose-500/15 text-rose-300 border border-rose-500/30", label: "Acil" },
 }
 
@@ -340,16 +341,16 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <StaggerContainer className="space-y-6">
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+      <StaggerItem className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight flex items-center gap-2">
             Sipariş Yönetimi
             <ContextualHelp />
           </h1>
-          <p className="text-white/60 mt-1.5 text-sm">Şube içi siparişlerinizi takip edin ve yönetin</p>
+          <p className="text-zinc-400 mt-1 text-sm">Şube içi siparişlerinizi takip edin ve yönetin</p>
         </div>
         <button
           onClick={() => {
@@ -360,75 +361,83 @@ export default function OrdersPage() {
             })
             setIsCreateDialogOpen(true)
           }}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           <span>Yeni Sipariş</span>
         </button>
-      </div>
+      </StaggerItem>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-        <motion.div
-          whileHover={{ y: -4 }}
-          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-white/60 font-medium">Toplam Sipariş</p>
-            <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
-              <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-            </div>
+      {/* Borderless KPI Strip */}
+      <StaggerItem className="grid grid-cols-2 md:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">shopping_bag</span>
+            <span>TOPLAM SİPARİŞ</span>
           </div>
-          <p className="text-2xl lg:text-3xl font-bold text-white mt-1">{stats.total}</p>
-        </motion.div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-4xl font-light text-white tracking-tight">
+              <AnimatedNumber value={stats.total} />
+            </span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Aktif
+            </span>
+          </div>
+        </div>
 
-        <motion.div
-          whileHover={{ y: -4 }}
-          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-white/60 font-medium">Bekleyen</p>
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <span className="material-symbols-outlined text-[18px]">schedule</span>
-            </div>
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">schedule</span>
+            <span>BEKLEYEN</span>
           </div>
-          <p className="text-2xl lg:text-3xl font-bold text-amber-400 mt-1">{stats.pending}</p>
-        </motion.div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-4xl font-light text-white tracking-tight">
+              <AnimatedNumber value={stats.pending} />
+            </span>
+            <span className="bg-white/[0.06] text-zinc-300 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Onay Bekliyor
+            </span>
+          </div>
+        </div>
 
-        <motion.div
-          whileHover={{ y: -4 }}
-          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-white/60 font-medium">İşlemde</p>
-            <div className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400">
-              <span className="material-symbols-outlined text-[18px]">loop</span>
-            </div>
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">loop</span>
+            <span>İŞLEMDE</span>
           </div>
-          <p className="text-2xl lg:text-3xl font-bold text-purple-400 mt-1">{stats.inProgress}</p>
-        </motion.div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-4xl font-light text-white tracking-tight">
+              <AnimatedNumber value={stats.inProgress} />
+            </span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Üretimde
+            </span>
+          </div>
+        </div>
 
-        <motion.div
-          whileHover={{ y: -4 }}
-          className="glass-card p-6 rounded-2xl relative overflow-hidden group"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm text-white/60 font-medium">Teslim Edildi</p>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <span className="material-symbols-outlined text-[18px]">task_alt</span>
-            </div>
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-emerald-400">task_alt</span>
+            <span>TESLİM EDİLDİ</span>
           </div>
-          <p className="text-2xl lg:text-3xl font-bold text-emerald-400 mt-1">{stats.delivered}</p>
-        </motion.div>
-      </div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-4xl font-light text-white tracking-tight">
+              <AnimatedNumber value={stats.delivered} />
+            </span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Tamamlandı
+            </span>
+          </div>
+        </div>
+      </StaggerItem>
 
       {/* Orders Table */}
-      <div className="glass-table-container overflow-hidden">
-        <div className="p-5 lg:p-6 border-b border-white/10 bg-white/[0.02]">
+      <StaggerItem className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="p-5 lg:p-6 border-b border-white/[0.06] bg-white/[0.01]">
           <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
 
             <div className="relative w-full lg:max-w-xs">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/40">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
                 <span className="material-symbols-outlined text-[20px]">search</span>
               </div>
               <input
@@ -446,14 +455,14 @@ export default function OrdersPage() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="glass-input flex-1 lg:flex-none px-4 py-2.5 text-sm outline-none transition-all"
               >
-                <option value="all" className="bg-slate-900 text-white">Tüm Durumlar</option>
-                <option value="pending" className="bg-slate-900 text-white">Bekleyen</option>
-                <option value="approved" className="bg-slate-900 text-white">Onaylandı</option>
-                <option value="in-progress" className="bg-slate-900 text-white">İşlemde</option>
-                <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
-                <option value="rejected" className="bg-slate-900 text-white">Reddedildi</option>
+                <option value="all" className="bg-[#111513] text-white">Tüm Durumlar</option>
+                <option value="pending" className="bg-[#111513] text-white">Bekleyen</option>
+                <option value="approved" className="bg-[#111513] text-white">Onaylandı</option>
+                <option value="in-progress" className="bg-[#111513] text-white">İşlemde</option>
+                <option value="delivered" className="bg-[#111513] text-white">Teslim Edildi</option>
+                <option value="rejected" className="bg-[#111513] text-white">Reddedildi</option>
               </select>
-              <button className="px-4 py-2.5 flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors shrink-0">
+              <button className="px-4 py-2.5 flex items-center justify-center gap-2 bg-white/[0.04] border border-white/[0.06] rounded-full text-sm font-medium text-zinc-300 hover:bg-white/[0.08] hover:text-white transition-colors shrink-0">
                 <span className="material-symbols-outlined text-[18px]">filter_list</span>
                 <span className="hidden sm:inline">{tText("common.filter", "Filtrele")}</span>
               </button>
@@ -464,7 +473,7 @@ export default function OrdersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-white/[0.03] border-b border-white/10 text-xs uppercase tracking-wider text-white/50 font-semibold">
+              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase tracking-wider text-zinc-400 font-semibold">
                 <th className="px-5 lg:px-6 py-4">Sipariş No</th>
                 <th className="px-5 lg:px-6 py-4">Başlık / Müşteri</th>
                 <th className="px-5 lg:px-6 py-4">Tür</th>
@@ -480,8 +489,8 @@ export default function OrdersPage() {
                 <tr>
                   <td colSpan={8} className="px-5 lg:px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-2">
-                      <span className="material-symbols-outlined text-4xl text-white/25">inbox</span>
-                      <p className="text-white/50 font-medium">Gösterilecek sipariş bulunamadı</p>
+                      <span className="material-symbols-outlined text-4xl text-zinc-600">inbox</span>
+                      <p className="text-zinc-400 font-medium">Gösterilecek sipariş bulunamadı</p>
                     </div>
                   </td>
                 </tr>
@@ -491,30 +500,30 @@ export default function OrdersPage() {
                   const priorityConfig = priorityColors[order.priority]
 
                   return (
-                    <tr key={order.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors group">
-                      <td className="px-5 lg:px-6 py-4 font-mono text-white font-semibold">
+                    <tr key={order.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.03] transition-all group">
+                      <td className="px-5 lg:px-6 py-4 font-mono text-white font-medium">
                         {order.orderNumber}
                       </td>
                       <td className="px-5 lg:px-6 py-4">
                         <div className="font-medium text-white">{order.title}</div>
                         {(order.customer || order.customerName) && (
-                          <div className="text-sky-400 text-xs mt-1 flex items-center gap-1 font-semibold">
+                          <div className="text-emerald-400 text-xs mt-1 flex items-center gap-1 font-medium">
                             <span className="material-symbols-outlined text-[12px]">person</span> 
                             {order.customer?.name || order.customerName} {order.customer?.company || order.companyName ? `(${order.customer?.company || order.companyName})` : ""}
                           </div>
                         )}
                         {order.description && (
-                          <div className="text-white/50 text-xs mt-1 line-clamp-1">{order.description}</div>
+                          <div className="text-zinc-500 text-xs mt-1 line-clamp-1">{order.description}</div>
                         )}
                       </td>
-                      <td className="px-5 lg:px-6 py-4 text-white/70">
+                      <td className="px-5 lg:px-6 py-4 text-zinc-300">
                         {order.orderType}
                       </td>
                       <td className="px-5 lg:px-6 py-4">
                         <div className="font-semibold text-white">
                           {order.totalAmount ? `${order.totalAmount.toLocaleString("tr-TR")} ₺` : "-"}
                         </div>
-                        <div className={`text-xs mt-1 font-medium ${order.paymentStatus === 'paid' ? 'text-emerald-400' : order.paymentStatus === 'partial' ? 'text-amber-400' : 'text-rose-400'}`}>
+                        <div className={`text-xs mt-1 font-medium ${order.paymentStatus === 'paid' ? 'text-emerald-400' : order.paymentStatus === 'partial' ? 'text-zinc-300' : 'text-rose-400'}`}>
                           {order.paymentStatus === 'paid' ? 'Ödendi' : order.paymentStatus === 'partial' ? 'Kısmi Ödeme' : 'Ödenmedi'}
                         </div>
                       </td>
@@ -531,14 +540,14 @@ export default function OrdersPage() {
                           {statusLabels[order.status]}
                         </span>
                       </td>
-                      <td className="px-5 lg:px-6 py-4 text-white/60 text-sm">
+                      <td className="px-5 lg:px-6 py-4 text-zinc-400 text-sm">
                         {new Date(order.orderDate).toLocaleDateString("tr-TR")}
                       </td>
                       <td className="px-5 lg:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                           <button
                             onClick={() => window.open(`/dashboard/orders/${order.id}/print`, "_blank")}
-                            className="p-2 text-white/60 hover:text-sky-300 hover:bg-sky-500/15 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors flex items-center justify-center"
                             title="Yazdır"
                           >
                             <span className="material-symbols-outlined text-[20px]">print</span>
@@ -564,7 +573,7 @@ export default function OrdersPage() {
                               })
                               setIsCreateDialogOpen(true)
                             }}
-                            className="p-2 text-white/60 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-zinc-400 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Düzenle"
                           >
                             <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -575,7 +584,7 @@ export default function OrdersPage() {
                               setStatusUpdate({ status: order.status, notes: "" })
                               setIsStatusDialogOpen(true)
                             }}
-                            className="p-2 text-white/60 hover:text-indigo-300 hover:bg-indigo-500/15 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-zinc-400 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Durum Güncelle"
                           >
                             <span className="material-symbols-outlined text-[20px]">edit_note</span>
@@ -593,7 +602,7 @@ export default function OrdersPage() {
                                 }
                               }
                             }}
-                            className="p-2 text-white/60 hover:text-rose-300 hover:bg-rose-500/15 rounded-lg transition-colors flex items-center justify-center"
+                            className="p-2 text-zinc-400 hover:text-rose-300 hover:bg-rose-500/15 rounded-lg transition-colors flex items-center justify-center"
                             title="Sil"
                           >
                             <span className="material-symbols-outlined text-[20px]">delete</span>
@@ -607,17 +616,17 @@ export default function OrdersPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </StaggerItem>
 
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 overflow-y-auto">
+          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-8">
 
-            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/[0.02] sticky top-0 z-10">
-              <h2 className="text-xl font-bold text-white">{editOrderId ? "Siparişi Düzenle" : "Yeni Sipariş Oluştur"}</h2>
+            <div className="flex items-center justify-between p-6 border-b border-white/[0.06] bg-white/[0.01] sticky top-0 z-10">
+              <h2 className="text-xl font-semibold text-white">{editOrderId ? "Siparişi Düzenle" : "Yeni Sipariş Oluştur"}</h2>
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -627,7 +636,7 @@ export default function OrdersPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="orderNumber" className="block text-sm font-semibold text-white/80">Sipariş Numarası</label>
+                  <label htmlFor="orderNumber" className="block text-sm font-medium text-zinc-300">Sipariş Numarası</label>
                   <input
                     id="orderNumber"
                     type="text"
@@ -636,11 +645,11 @@ export default function OrdersPage() {
                     placeholder="Otomatik Oluşturulacak"
                     className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm"
                   />
-                  <p className="text-[11px] text-white/40">Boş bırakılırsa sistem otomatik atar.</p>
+                  <p className="text-[11px] text-zinc-500">Boş bırakılırsa sistem otomatik atar.</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="orderDate" className="block text-sm font-semibold text-white/80">Sipariş Tarihi *</label>
+                  <label htmlFor="orderDate" className="block text-sm font-medium text-zinc-300">Sipariş Tarihi *</label>
                   <input
                     id="orderDate"
                     type="date"
@@ -652,7 +661,7 @@ export default function OrdersPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="title" className="block text-sm font-semibold text-white/80">Sipariş Başlığı *</label>
+                <label htmlFor="title" className="block text-sm font-medium text-zinc-300">Sipariş Başlığı *</label>
                 <input
                   id="title"
                   type="text"
@@ -665,7 +674,7 @@ export default function OrdersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="orderType" className="block text-sm font-semibold text-white/80">Sipariş Türü *</label>
+                  <label htmlFor="orderType" className="block text-sm font-medium text-zinc-300">Sipariş Türü *</label>
                   <div className="relative">
                     <select
                       id="orderType"
@@ -673,21 +682,21 @@ export default function OrdersPage() {
                       onChange={(e) => setFormData({ ...formData, orderType: e.target.value })}
                       className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="" disabled className="bg-slate-900 text-white/60">Tür seçin</option>
-                      <option value="Baskı Malzemeleri" className="bg-slate-900 text-white">Baskı Malzemeleri</option>
-                      <option value="Tasarım Hizmeti" className="bg-slate-900 text-white">Tasarım Hizmeti</option>
-                      <option value="Ofis Malzemeleri" className="bg-slate-900 text-white">Ofis Malzemeleri</option>
-                      <option value="Dijital Hizmet" className="bg-slate-900 text-white">Dijital Hizmet</option>
-                      <option value="Diğer" className="bg-slate-900 text-white">Diğer</option>
+                      <option value="" disabled className="bg-[#111513] text-zinc-400">Tür seçin</option>
+                      <option value="Baskı Malzemeleri" className="bg-[#111513] text-white">Baskı Malzemeleri</option>
+                      <option value="Tasarım Hizmeti" className="bg-[#111513] text-white">Tasarım Hizmeti</option>
+                      <option value="Ofis Malzemeleri" className="bg-[#111513] text-white">Ofis Malzemeleri</option>
+                      <option value="Dijital Hizmet" className="bg-[#111513] text-white">Dijital Hizmet</option>
+                      <option value="Diğer" className="bg-[#111513] text-white">Diğer</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-zinc-500">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="customerId" className="block text-sm font-semibold text-white/80">Kayıtlı Müşteri Seç</label>
+                  <label htmlFor="customerId" className="block text-sm font-medium text-zinc-300">Kayıtlı Müşteri Seç</label>
                   <div className="relative">
                     <select
                       id="customerId"
@@ -695,12 +704,12 @@ export default function OrdersPage() {
                       onChange={(e) => setFormData({ ...formData, customerId: e.target.value })}
                       className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="" className="bg-slate-900 text-white">Bağımsız Sipariş (Aşağıdan Doldurun)</option>
+                      <option value="" className="bg-[#111513] text-white">Bağımsız Sipariş (Aşağıdan Doldurun)</option>
                       {customers.map(c => (
-                        <option key={c.id} value={c.id} className="bg-slate-900 text-white">{c.name} {c.company ? `(${c.company})` : ""}</option>
+                        <option key={c.id} value={c.id} className="bg-[#111513] text-white">{c.name} {c.company ? `(${c.company})` : ""}</option>
                       ))}
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-zinc-500">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
@@ -708,11 +717,11 @@ export default function OrdersPage() {
               </div>
 
               {!formData.customerId && (
-                <div className="p-4 rounded-xl border border-white/10 bg-white/[0.03] space-y-4">
+                <div className="p-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] space-y-4">
                   <h3 className="text-sm font-semibold text-white">Hızlı Müşteri Bilgileri</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-white/60">Ad Soyad</label>
+                      <label className="block text-xs font-medium text-zinc-400">Ad Soyad</label>
                       <input
                         type="text"
                         value={formData.customerName}
@@ -722,7 +731,7 @@ export default function OrdersPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-white/60">Firma Adı</label>
+                      <label className="block text-xs font-medium text-zinc-400">Firma Adı</label>
                       <input
                         type="text"
                         value={formData.companyName}
@@ -732,7 +741,7 @@ export default function OrdersPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-xs font-semibold text-white/60">Telefon</label>
+                      <label className="block text-xs font-medium text-zinc-400">Telefon</label>
                       <input
                         type="text"
                         value={formData.customerPhone}
@@ -747,7 +756,7 @@ export default function OrdersPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <label htmlFor="totalAmount" className="block text-sm font-semibold text-white/80">Fiyat (₺)</label>
+                  <label htmlFor="totalAmount" className="block text-sm font-medium text-zinc-300">Fiyat (₺)</label>
                   <input
                     id="totalAmount"
                     type="number"
@@ -760,7 +769,7 @@ export default function OrdersPage() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label htmlFor="paymentStatus" className="block text-sm font-semibold text-white/80">Ödeme Durumu</label>
+                  <label htmlFor="paymentStatus" className="block text-sm font-medium text-zinc-300">Ödeme Durumu</label>
                   <div className="relative">
                     <select
                       id="paymentStatus"
@@ -768,18 +777,18 @@ export default function OrdersPage() {
                       onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}
                       className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                     >
-                      <option value="unpaid" className="bg-slate-900 text-white">Ödenmedi</option>
-                      <option value="partial" className="bg-slate-900 text-white">Kısmi Ödeme</option>
-                      <option value="paid" className="bg-slate-900 text-white">Ödendi</option>
+                      <option value="unpaid" className="bg-[#111513] text-white">Ödenmedi</option>
+                      <option value="partial" className="bg-[#111513] text-white">Kısmi Ödeme</option>
+                      <option value="paid" className="bg-[#111513] text-white">Ödendi</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
+                    <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-zinc-500">
                       <span className="material-symbols-outlined text-[20px]">expand_more</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="quantity" className="block text-sm font-semibold text-white/80">Miktar</label>
+                  <label htmlFor="quantity" className="block text-sm font-medium text-zinc-300">Miktar</label>
                   <input
                     id="quantity"
                     type="number"
@@ -792,7 +801,7 @@ export default function OrdersPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="description" className="block text-sm font-semibold text-white/80">Müşteri Notu</label>
+                <label htmlFor="description" className="block text-sm font-medium text-zinc-300">Müşteri Notu</label>
                 <textarea
                   id="description"
                   value={formData.description}
@@ -804,16 +813,16 @@ export default function OrdersPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-white/80">Dosyalar</label>
+                <label className="block text-sm font-medium text-zinc-300">Dosyalar</label>
                 <div 
-                  className="border-2 border-dashed border-white/15 hover:border-indigo-400/50 transition-colors rounded-xl p-8 flex flex-col items-center justify-center bg-white/[0.02] cursor-pointer"
+                  className="border-2 border-dashed border-white/[0.1] hover:border-emerald-400/50 transition-colors rounded-2xl p-8 flex flex-col items-center justify-center bg-white/[0.02] cursor-pointer"
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={handleFileUpload}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <span className="material-symbols-outlined text-4xl text-white/40 mb-3">cloud_upload</span>
+                  <span className="material-symbols-outlined text-4xl text-zinc-500 mb-3">cloud_upload</span>
                   <p className="text-sm font-medium text-white">Dosyaları sürükleyip bırakın</p>
-                  <p className="text-xs text-white/50 mt-1">veya seçmek için tıklayın</p>
+                  <p className="text-xs text-zinc-500 mt-1">veya seçmek için tıklayın</p>
                   <input 
                     type="file" 
                     ref={fileInputRef} 
@@ -822,7 +831,7 @@ export default function OrdersPage() {
                     onChange={handleFileUpload} 
                   />
                   {isUploading && (
-                    <div className="mt-4 flex items-center gap-2 text-sm text-indigo-400 font-medium">
+                    <div className="mt-4 flex items-center gap-2 text-sm text-emerald-400 font-medium">
                       <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
                       Yükleniyor...
                     </div>
@@ -832,12 +841,12 @@ export default function OrdersPage() {
                 {formData.files.length > 0 && (
                   <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {formData.files.map((f, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-xl">
+                      <div key={idx} className="flex items-center justify-between p-3 bg-white/[0.04] border border-white/[0.06] rounded-xl">
                         <div className="flex items-center gap-3 overflow-hidden">
-                          <span className="material-symbols-outlined text-indigo-400 shrink-0">draft</span>
+                          <span className="material-symbols-outlined text-emerald-400 shrink-0">draft</span>
                           <div className="overflow-hidden">
                             <p className="text-sm font-medium text-white truncate">{f.name}</p>
-                            <p className="text-[10px] text-white/50">{(f.size / 1024).toFixed(1)} KB</p>
+                            <p className="text-[10px] text-zinc-500">{(f.size / 1024).toFixed(1)} KB</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-1 shrink-0 ml-2">
@@ -845,7 +854,7 @@ export default function OrdersPage() {
                             href={f.url} 
                             target="_blank" 
                             rel="noreferrer"
-                            className="p-1.5 text-white/60 hover:text-sky-400 transition-colors rounded-md"
+                            className="p-1.5 text-zinc-400 hover:text-white transition-colors rounded-md"
                             title="Görüntüle"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -854,7 +863,7 @@ export default function OrdersPage() {
                           <a 
                             href={f.url} 
                             download
-                            className="p-1.5 text-white/60 hover:text-emerald-400 transition-colors rounded-md"
+                            className="p-1.5 text-zinc-400 hover:text-emerald-400 transition-colors rounded-md"
                             title="İndir"
                             onClick={(e) => e.stopPropagation()}
                           >
@@ -863,7 +872,7 @@ export default function OrdersPage() {
                           <button 
                             type="button"
                             onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
-                            className="p-1.5 text-white/60 hover:text-rose-400 transition-colors rounded-md"
+                            className="p-1.5 text-zinc-400 hover:text-rose-400 transition-colors rounded-md"
                             title="Kaldır"
                           >
                             <span className="material-symbols-outlined text-[16px]">delete</span>
@@ -876,15 +885,15 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+            <div className="p-6 border-t border-white/[0.06] bg-white/[0.01] flex justify-end gap-3">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-5 py-2.5 text-sm font-semibold text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-zinc-300 bg-white/[0.04] border border-white/[0.06] rounded-full hover:bg-white/[0.08] hover:text-white transition-colors"
               >{tText("common.cancel", "İptal")}</button>
               <button
                 onClick={handleSubmit}
                 disabled={loading || !formData.title || !formData.orderType}
-                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-medium text-[#061811] bg-[#34D399] hover:bg-[#10B981] rounded-full transition-all disabled:opacity-50 flex items-center gap-2"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : editOrderId ? "Değişiklikleri Kaydet" : "Siparişi Oluştur"}
@@ -896,17 +905,17 @@ export default function OrdersPage() {
 
       {/* Status Update Dialog */}
       {isStatusDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
-            <div className="p-6 border-b border-white/10 bg-white/[0.02] flex items-start justify-between">
+            <div className="p-6 border-b border-white/[0.06] bg-white/[0.01] flex items-start justify-between">
               <div>
-                <h2 className="text-xl font-bold text-white">Durum Güncelle</h2>
-                <p className="text-sm text-white/60 mt-1.5">{selectedOrder?.orderNumber} - {selectedOrder?.title}</p>
+                <h2 className="text-xl font-semibold text-white">Durum Güncelle</h2>
+                <p className="text-sm text-zinc-400 mt-1.5">{selectedOrder?.orderNumber} - {selectedOrder?.title}</p>
               </div>
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors shrink-0"
+                className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors shrink-0"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -914,7 +923,7 @@ export default function OrdersPage() {
 
             <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <label htmlFor="update_status" className="block text-sm font-semibold text-white/80">Yeni Durum</label>
+                <label htmlFor="update_status" className="block text-sm font-medium text-zinc-300">Yeni Durum</label>
                 <div className="relative">
                   <select
                     id="update_status"
@@ -922,21 +931,21 @@ export default function OrdersPage() {
                     onChange={(e) => setStatusUpdate({ ...statusUpdate, status: e.target.value as BranchOrder["status"] })}
                     className="glass-input block w-full px-4 py-2.5 outline-none transition-all text-sm appearance-none pr-10"
                   >
-                    <option value="" disabled className="bg-slate-900 text-white/60">Durum seçin</option>
-                    <option value="pending" className="bg-slate-900 text-white">Bekliyor</option>
-                    <option value="approved" className="bg-slate-900 text-white">Onaylandı</option>
-                    <option value="in-progress" className="bg-slate-900 text-white">İşlemde</option>
-                    <option value="delivered" className="bg-slate-900 text-white">Teslim Edildi</option>
-                    <option value="rejected" className="bg-slate-900 text-white">Reddedildi</option>
+                    <option value="" disabled className="bg-[#111513] text-zinc-400">Durum seçin</option>
+                    <option value="pending" className="bg-[#111513] text-white">Bekliyor</option>
+                    <option value="approved" className="bg-[#111513] text-white">Onaylandı</option>
+                    <option value="in-progress" className="bg-[#111513] text-white">İşlemde</option>
+                    <option value="delivered" className="bg-[#111513] text-white">Teslim Edildi</option>
+                    <option value="rejected" className="bg-[#111513] text-white">Reddedildi</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-white/40">
+                  <div className="absolute inset-y-0 right-0 py-2 pr-3 flex items-center pointer-events-none text-zinc-500">
                     <span className="material-symbols-outlined text-[20px]">expand_more</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="update_notes" className="block text-sm font-semibold text-white/80">Not (İsteğe bağlı)</label>
+                <label htmlFor="update_notes" className="block text-sm font-medium text-zinc-300">Not (İsteğe bağlı)</label>
                 <textarea
                   id="update_notes"
                   value={statusUpdate.notes}
@@ -948,15 +957,15 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-white/10 bg-white/[0.02] flex justify-end gap-3">
+            <div className="p-6 border-t border-white/[0.06] bg-white/[0.01] flex justify-end gap-3">
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="px-5 py-2.5 text-sm font-semibold text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-zinc-300 bg-white/[0.04] border border-white/[0.06] rounded-full hover:bg-white/[0.08] hover:text-white transition-colors"
               >{tText("common.cancel", "İptal")}</button>
               <button
                 onClick={handleStatusUpdate}
                 disabled={loading || !statusUpdate.status}
-                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 rounded-xl shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50 flex items-center gap-2"
+                className="px-5 py-2.5 text-sm font-medium text-[#061811] bg-[#34D399] hover:bg-[#10B981] rounded-full transition-all disabled:opacity-50 flex items-center gap-2"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Güncelleniyor..." : "Güncelle"}
@@ -965,6 +974,6 @@ export default function OrdersPage() {
           </div>
         </div>
       )}
-    </div>
+    </StaggerContainer>
   )
 }

@@ -5,11 +5,13 @@ import { useLanguage } from "@/lib/context/LanguageContext"
 
 
 import { useState, useEffect, useRef } from "react"
+import { motion } from "framer-motion"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import { NotesTab, TasksTab, ChatsTab, DocumentsTab, ContactsTab } from "./relation-tabs"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import { AnimatedNumber } from "@/components/ui/motion-primitives"
 
 // Interfaces
 interface Customer {
@@ -292,16 +294,25 @@ export default function CustomersPage() {
     ]
 
     return (
-      <div className="px-5 py-3 border-b border-white/10 shrink-0 bg-white/[0.02] overflow-x-auto custom-scrollbar hide-scrollbar">
-        <div className="inline-flex items-center gap-1 bg-black/30 backdrop-blur-md p-1 rounded-xl border border-white/10 min-w-max">
+      <div className="px-5 py-3 border-b border-white/[0.06] shrink-0 bg-white/[0.01] overflow-x-auto custom-scrollbar hide-scrollbar">
+        <div className="inline-flex items-center gap-1 bg-[#080A09] p-1 rounded-full border border-white/[0.06] min-w-max">
           {tabs.map(t => (
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs lg:text-sm font-medium whitespace-nowrap transition-all ${activeTab === t.id ? "bg-white/15 text-white shadow-sm rounded-lg" : "text-white/60 hover:text-white rounded-lg"}`}
+              className={`relative flex items-center gap-2 px-3.5 py-2 text-xs lg:text-sm font-medium whitespace-nowrap rounded-full transition-colors ${activeTab === t.id ? "text-white" : "text-zinc-400 hover:text-white"}`}
             >
-              <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
-              <span className="hidden sm:inline">{t.label}</span>
+              {activeTab === t.id && (
+                <motion.span
+                  layoutId="activeTab"
+                  className="absolute inset-0 bg-white/10 rounded-full border border-white/[0.08]"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
+                <span className="hidden sm:inline">{t.label}</span>
+              </span>
             </button>
           ))}
         </div>
@@ -310,15 +321,15 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden gap-6">
+    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden gap-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between shrink-0 gap-4">
         <div>
-          <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight flex items-center gap-2">
             Müşteriler
             <ContextualHelp />
           </h1>
-          <p className="text-white/60 mt-1.5 text-sm">
+          <p className="text-zinc-400 mt-1 text-sm">
             Detaylı müşteri, b2b ve firma yönetimi
           </p>
         </div>
@@ -333,7 +344,7 @@ export default function CustomersPage() {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={loading}
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-white/5 border border-white/10 text-white/80 hover:text-white hover:bg-white/10 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:text-white hover:bg-white/[0.08] rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">upload</span>
             <span className="hidden lg:inline">{tText("common.import", "İçe Aktar")}</span>
@@ -341,7 +352,7 @@ export default function CustomersPage() {
           <button
             onClick={handleSyncLeads}
             disabled={syncingLeads}
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-sky-500/20 border border-sky-500/30 text-sky-300 hover:bg-sky-500/30 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
             title="Sıcak ve VIP hariç müşterileri Leads paneline aktar"
           >
             <span className="material-symbols-outlined text-[18px]">sync</span>
@@ -349,7 +360,7 @@ export default function CustomersPage() {
           </button>
           <button
             onClick={() => setIsBlacklistOpen(true)}
-            className="flex-1 sm:flex-none px-4 py-2.5 bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500/25 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-rose-500/10 text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">block</span>
             <span className="hidden lg:inline">Kara Liste</span>
@@ -360,7 +371,7 @@ export default function CustomersPage() {
               setFormData({ status: "active", scoreTemp: "Ilık" })
               setIsCreateDialogOpen(true)
             }}
-            className="flex-1 sm:flex-none px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 border border-white/15 transition-all"
+            className="flex-1 sm:flex-none px-5 py-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">person_add</span>
             <span>Yeni</span>
@@ -368,12 +379,75 @@ export default function CustomersPage() {
         </div>
       </div>
 
+      {/* Borderless KPI Strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-white/[0.06] shrink-0">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">group</span>
+            <span>AKTİF MÜŞTERİ</span>
+          </div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-light text-white tracking-tight">
+              <AnimatedNumber value={filteredCustomers.length} />
+            </span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Portföy
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-emerald-400">local_fire_department</span>
+            <span>SICAK / VIP</span>
+          </div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-light text-white tracking-tight">
+              <AnimatedNumber value={customers.filter(c => c.scoreTemp === "Sıcak" || c.scoreTemp === "VIP").length} />
+            </span>
+            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Öncelikli
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">block</span>
+            <span>KARA LİSTE</span>
+          </div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-light text-white tracking-tight">
+              <AnimatedNumber value={blacklistedCustomers.length} />
+            </span>
+            <span className="bg-rose-500/10 text-rose-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              Engelli
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-zinc-500">database</span>
+            <span>TOPLAM KAYIT</span>
+          </div>
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-light text-white tracking-tight">
+              <AnimatedNumber value={customers.length} />
+            </span>
+            <span className="bg-white/[0.06] text-zinc-300 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+              CRM
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-1 overflow-hidden gap-5">
         {/* Left List */}
-        <div className={`w-full lg:w-[340px] shrink-0 glass-panel rounded-2xl flex flex-col overflow-hidden ${selectedCustomer ? "hidden lg:flex" : "flex"}`}>
-          <div className="p-4 border-b border-white/10 bg-white/[0.02]">
+        <div className={`w-full lg:w-[340px] shrink-0 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl flex flex-col overflow-hidden ${selectedCustomer ? "hidden lg:flex" : "flex"}`}>
+          <div className="p-4 border-b border-white/[0.06] bg-white/[0.01]">
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center material-symbols-outlined text-white/40 text-[20px]">search</span>
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center material-symbols-outlined text-zinc-500 text-[20px]">search</span>
               <input
                 type="text"
                 placeholder={tText("common.search", "Ara...")}
@@ -388,13 +462,13 @@ export default function CustomersPage() {
               <div
                 key={c.id}
                 onClick={() => { setSelectedCustomer(c); setActiveTab("genel") }}
-                className={`p-4 cursor-pointer transition-all border-b border-white/5 border-l-4 ${selectedCustomer?.id === c.id ? "bg-white/10 border-l-indigo-400" : "hover:bg-white/[0.04] border-l-transparent"}`}
+                className={`p-4 cursor-pointer transition-all border-b border-white/[0.04] border-l-2 ${selectedCustomer?.id === c.id ? "bg-white/[0.06] border-l-emerald-400" : "hover:bg-white/[0.03] border-l-transparent hover:border-l-emerald-400/60"}`}
               >
                 <div className="flex justify-between items-start mb-1 gap-2">
-                  <h4 className="font-bold text-white text-sm line-clamp-1">{c.name || "İsimsiz"}</h4>
-                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold shrink-0 ${c.scoreTemp === 'Sıcak' || c.scoreTemp === 'VIP' ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30' : 'bg-slate-500/15 text-slate-300 border border-slate-500/30'}`}>{c.scoreTemp}</span>
+                  <h4 className="font-semibold text-white text-sm line-clamp-1">{c.name || "İsimsiz"}</h4>
+                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium shrink-0 ${c.scoreTemp === 'Sıcak' || c.scoreTemp === 'VIP' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'}`}>{c.scoreTemp}</span>
                 </div>
-                <div className="text-xs text-white/60 flex items-center gap-1.5 mt-2">
+                <div className="text-xs text-zinc-400 flex items-center gap-1.5 mt-2">
                   <span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "Belirtilmemiş"}
                 </div>
               </div>
@@ -404,30 +478,30 @@ export default function CustomersPage() {
 
         {/* Right Detail Panel */}
         {selectedCustomer ? (
-          <div className="flex-1 glass-panel rounded-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-200">
+          <div className="flex-1 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-200">
             {/* Detail Header */}
-            <div className="p-5 lg:p-6 border-b border-white/10 shrink-0 bg-white/[0.02] flex justify-between items-start gap-4">
+            <div className="p-5 lg:p-6 border-b border-white/[0.06] shrink-0 bg-white/[0.01] flex justify-between items-start gap-4">
                <div className="flex gap-4 items-center min-w-0 flex-1">
-                 <button onClick={() => setSelectedCustomer(null)} className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg text-white/70 hover:bg-white/15 transition-colors"><span className="material-symbols-outlined text-[18px]">arrow_back</span></button>
-                 <div className="size-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 border border-white/15 flex items-center justify-center text-white text-lg font-bold shadow-lg shrink-0">
+                 <button onClick={() => setSelectedCustomer(null)} className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/[0.06] rounded-lg text-zinc-300 hover:bg-white/[0.1] transition-colors"><span className="material-symbols-outlined text-[18px]">arrow_back</span></button>
+                 <div className="size-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 text-lg font-semibold shadow-lg shrink-0">
                     {selectedCustomer.name?.substring(0,2).toUpperCase() || "?"}
                  </div>
                  <div className="min-w-0 flex-1">
-                    <h2 className="text-xl lg:text-2xl font-bold text-white tracking-tight truncate">
+                    <h2 className="text-xl lg:text-2xl font-semibold text-white tracking-tight truncate">
                       {selectedCustomer.name || "İsimsiz Müşteri"}
                     </h2>
-                    <div className="text-sm text-white/60 flex items-center gap-3 mt-1.5 flex-wrap">
+                    <div className="text-sm text-zinc-400 flex items-center gap-3 mt-1.5 flex-wrap">
                       {selectedCustomer.company && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0">domain</span><span className="truncate">{selectedCustomer.company}</span></span>}
                       {selectedCustomer.email && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0">mail</span><span className="truncate">{selectedCustomer.email}</span></span>}
                     </div>
                  </div>
                </div>
                <div className="flex gap-2 shrink-0">
-                 <button onClick={() => handleToggleBlacklist(selectedCustomer)} className="p-2 border border-white/15 bg-black/40 text-white/80 rounded-xl hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/30 transition-colors" title="Kara Listeye Ekle"><span className="material-symbols-outlined">block</span></button>
+                 <button onClick={() => handleToggleBlacklist(selectedCustomer)} className="p-2 border border-white/[0.08] bg-white/[0.04] text-zinc-300 rounded-xl hover:bg-rose-500/15 hover:text-rose-300 hover:border-rose-500/30 transition-colors" title="Kara Listeye Ekle"><span className="material-symbols-outlined">block</span></button>
                  <button onClick={() => {
                    setFormData(selectedCustomer)
                    setIsCreateDialogOpen(true)
-                 }} className="p-2 border border-white/10 bg-white/5 rounded-xl text-white/70 hover:text-sky-300 hover:bg-sky-500/15 transition-colors" title="Düzenle"><span className="material-symbols-outlined">edit</span></button>
+                 }} className="p-2 border border-white/[0.08] bg-white/[0.04] rounded-xl text-zinc-300 hover:text-emerald-300 hover:bg-emerald-500/15 transition-colors" title="Düzenle"><span className="material-symbols-outlined">edit</span></button>
                  <button onClick={() => handleDelete(selectedCustomer.id)} className="p-2 border border-rose-500/30 bg-rose-500/15 text-rose-300 rounded-xl hover:bg-rose-500/25 transition-colors" title="Sil"><span className="material-symbols-outlined">delete</span></button>
                </div>
             </div>
@@ -440,29 +514,29 @@ export default function CustomersPage() {
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
                     {/* Contact Information */}
                     <div className="col-span-full md:col-span-2 space-y-5">
-                      <div className="glass-card p-6 rounded-2xl">
-                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-sky-400 text-[20px]">contact_page</span> İletişim Bilgileri</h4>
+                      <div className="bg-[#080A09]/60 border border-white/[0.06] p-6 rounded-[20px]">
+                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-400 text-[20px]">contact_page</span> İletişim Bilgileri</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-4 text-sm">
-                           <div><span className="text-white/50 block mb-1.5 text-xs font-medium uppercase tracking-wide">Telefon</span> <span className="font-medium text-white">{selectedCustomer.phone || "-"}</span></div>
-                           <div><span className="text-white/50 block mb-1.5 text-xs font-medium uppercase tracking-wide">E-posta</span> <span className="font-medium text-white">{selectedCustomer.email || "-"}</span></div>
-                           <div className="col-span-2"><span className="text-white/50 block mb-1.5 text-xs font-medium uppercase tracking-wide">Adres</span> <span className="font-medium text-white">{selectedCustomer.address || "-"}</span></div>
+                           <div><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">Telefon</span> <span className="font-medium text-white">{selectedCustomer.phone || "-"}</span></div>
+                           <div><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">E-posta</span> <span className="font-medium text-white">{selectedCustomer.email || "-"}</span></div>
+                           <div className="col-span-2"><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">Adres</span> <span className="font-medium text-white">{selectedCustomer.address || "-"}</span></div>
                         </div>
                       </div>
                     </div>
                     {/* Customer Score */}
                     <div className="space-y-5">
-                      <div className="glass-card p-6 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-slate-900/40 to-sky-500/10">
-                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-indigo-400 text-[20px]">analytics</span> Müşteri Skoru</h4>
+                      <div className="bg-[#080A09]/60 border border-white/[0.06] p-6 rounded-[20px]">
+                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-400 text-[20px]">analytics</span> Müşteri Skoru</h4>
                         <div className="space-y-4">
                            <div>
-                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-white/60">Sıcaklık Skalası</span> <span className="text-amber-300 font-bold">{selectedCustomer.scoreTemp}</span></div>
+                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-zinc-400">Sıcaklık Skalası</span> <span className="text-emerald-300 font-semibold">{selectedCustomer.scoreTemp}</span></div>
                            </div>
                            <div>
-                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-white/60">Alım İhtimali</span> <span className="text-white">%{selectedCustomer.purchaseProb || 0}</span></div>
-                             <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden"><div className="bg-gradient-to-r from-indigo-500 to-emerald-400 h-2 rounded-full transition-all duration-500" style={{width: `${selectedCustomer.purchaseProb || 0}%`}}></div></div>
+                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-zinc-400">Alım İhtimali</span> <span className="text-white">%{selectedCustomer.purchaseProb || 0}</span></div>
+                             <div className="w-full bg-white/[0.08] rounded-full h-2 overflow-hidden"><div className="bg-[#34D399] h-2 rounded-full transition-all duration-500" style={{width: `${selectedCustomer.purchaseProb || 0}%`}}></div></div>
                            </div>
-                           <div className="pt-3 border-t border-white/10">
-                             <div className="text-xs font-semibold text-white/60">Segment: <span className="text-white font-bold">{selectedCustomer.segment || "-"}</span></div>
+                           <div className="pt-3 border-t border-white/[0.06]">
+                             <div className="text-xs font-medium text-zinc-400">Segment: <span className="text-white font-semibold">{selectedCustomer.segment || "-"}</span></div>
                            </div>
                         </div>
                       </div>
@@ -479,36 +553,36 @@ export default function CustomersPage() {
                {activeTab === "satis" && (
                  <div className="space-y-5">
                     <div className="flex justify-between items-center">
-                      <h4 className="text-sm font-bold text-white">Sipariş Geçmişi</h4>
-                      <button onClick={() => router.push(`/dashboard/orders?customerId=${selectedCustomer.id}`)} className="text-xs font-bold text-sky-400 hover:text-sky-300 hover:underline flex items-center gap-1">
+                      <h4 className="text-sm font-semibold text-white">Sipariş Geçmişi</h4>
+                      <button onClick={() => router.push(`/dashboard/orders?customerId=${selectedCustomer.id}`)} className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1">
                         Tüm Siparişleri Gör <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                       </button>
                     </div>
-                    <div className="glass-table-container overflow-hidden">
+                    <div className="bg-[#080A09]/60 border border-white/[0.06] rounded-[20px] overflow-hidden">
                       <table className="w-full text-left text-sm">
-                        <thead className="bg-white/[0.03] border-b border-white/10">
+                        <thead className="bg-white/[0.02] border-b border-white/[0.06]">
                           <tr>
-                            <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-white/50">No</th>
-                            <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-white/50">Başlık</th>
-                            <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-white/50">Tutar</th>
-                            <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-white/50">Durum</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">No</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Başlık</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Tutar</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Durum</th>
                           </tr>
                         </thead>
                         <tbody>
                           {selectedCustomer.orders?.map((o) => (
-                            <tr key={o.id} className="border-b border-white/5 hover:bg-white/[0.04] transition-colors">
-                              <td className="px-4 py-3 font-mono font-medium text-xs text-white/80">{o.orderNumber || "#"+o.id.substring(0,6)}</td>
-                              <td className="px-4 py-3 font-semibold text-white">{o.title}</td>
-                              <td className="px-4 py-3 font-bold text-emerald-400">{o.totalAmount ? o.totalAmount.toLocaleString('tr-TR')+' ₺' : '-'}</td>
+                            <tr key={o.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.03] transition-all">
+                              <td className="px-4 py-3 font-mono font-medium text-xs text-zinc-300">{o.orderNumber || "#"+o.id.substring(0,6)}</td>
+                              <td className="px-4 py-3 font-medium text-white">{o.title}</td>
+                              <td className="px-4 py-3 font-semibold text-emerald-400">{o.totalAmount ? o.totalAmount.toLocaleString('tr-TR')+' ₺' : '-'}</td>
                               <td className="px-4 py-3">
-                                <span className={`px-3 py-0.5 rounded-full text-xs font-medium uppercase ${o.status === 'delivered' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-sky-500/15 text-sky-300 border border-sky-500/30'}`}>
+                                <span className={`px-3 py-0.5 rounded-full text-xs font-medium uppercase ${o.status === 'delivered' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'}`}>
                                   {o.status}
                                 </span>
                               </td>
                             </tr>
                           ))}
                           {(!selectedCustomer.orders || selectedCustomer.orders.length === 0) && (
-                            <tr><td colSpan={4} className="px-4 py-8 text-center text-white/50 italic">Henüz sipariş kaydı yok.</td></tr>
+                            <tr><td colSpan={4} className="px-4 py-8 text-center text-zinc-500 italic">Henüz sipariş kaydı yok.</td></tr>
                           )}
                         </tbody>
                       </table>
@@ -519,12 +593,12 @@ export default function CustomersPage() {
             </div>
           </div>
         ) : (
-          <div className="hidden lg:flex flex-1 items-center justify-center glass-panel rounded-2xl border-dashed">
+          <div className="hidden lg:flex flex-1 items-center justify-center bg-[#111513]/90 backdrop-blur-xl border border-dashed border-white/[0.08] rounded-[20px]">
              <div className="text-center p-8">
-                <div className="size-16 rounded-2xl bg-white/5 border border-white/10 mx-auto mb-4 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white/40 text-4xl">person_search</span>
+                <div className="size-16 rounded-2xl bg-white/[0.04] border border-white/[0.06] mx-auto mb-4 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-zinc-500 text-4xl">person_search</span>
                 </div>
-                <p className="text-white/60 font-medium">Detayları görmek için soldan bir müşteri seçin.</p>
+                <p className="text-zinc-400 font-medium">Detayları görmek için soldan bir müşteri seçin.</p>
              </div>
           </div>
         )}
@@ -532,55 +606,55 @@ export default function CustomersPage() {
 
        {/* Create/Edit Dialog */}
        {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <div className="backdrop-blur-xl bg-slate-900/90 border border-white/15 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
-              <h3 className="text-lg font-bold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
+              <h3 className="text-lg font-semibold text-white">
                 {formData.id ? "Müşteri Düzenle" : "Yeni Müşteri Ekle"}
               </h3>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsCreateDialogOpen(false)} className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                  {/* No fields are strictly mandatory */}
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Müşteri / Firma Adı *</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Müşteri / Firma Adı *</label>
                     <input type="text" value={formData.name || ""} onChange={e => setFormData({...formData, name: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" placeholder="İsimsiz bırakılabilir" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Şirket Ünvanı</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Şirket Ünvanı</label>
                     <input type="text" value={formData.company || ""} onChange={e => setFormData({...formData, company: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Telefon</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Telefon</label>
                     <input type="text" value={formData.phone || ""} onChange={e => setFormData({...formData, phone: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">E-posta</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">E-posta</label>
                     <input type="email" value={formData.email || ""} onChange={e => setFormData({...formData, email: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
                  </div>
                  <div className="space-y-2 col-span-full">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Adres</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Adres</label>
                     <input type="text" value={formData.address || ""} onChange={e => setFormData({...formData, address: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Müşteri Sıcaklık Segmenti</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Müşteri Sıcaklık Segmenti</label>
                     <select value={formData.scoreTemp || "Ilık"} onChange={e => setFormData({...formData, scoreTemp: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none">
-                       <option value="Soğuk" className="bg-slate-900 text-white">Soğuk</option>
-                       <option value="Ilık" className="bg-slate-900 text-white">Ilık</option>
-                       <option value="Sıcak" className="bg-slate-900 text-white">Sıcak</option>
-                       <option value="VIP" className="bg-slate-900 text-white">VIP</option>
+                       <option value="Soğuk" className="bg-[#111513] text-white">Soğuk</option>
+                       <option value="Ilık" className="bg-[#111513] text-white">Ilık</option>
+                       <option value="Sıcak" className="bg-[#111513] text-white">Sıcak</option>
+                       <option value="VIP" className="bg-[#111513] text-white">VIP</option>
                     </select>
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-white/70 uppercase tracking-wide">Satış Olasılığı (%)</label>
+                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Satış Olasılığı (%)</label>
                     <input type="number" min="0" max="100" value={formData.purchaseProb || ""} onChange={e => setFormData({...formData, purchaseProb: Number(e.target.value)})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
                  </div>
                </div>
             </div>
-            <div className="px-6 py-4 bg-white/[0.02] border-t border-white/10 flex justify-end gap-3">
-               <button onClick={() => setIsCreateDialogOpen(false)} className="px-5 py-2.5 text-sm font-semibold text-white/80 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
-               <button onClick={handleSaveCustomer} disabled={loading} className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/20 border border-white/15 transition-all disabled:opacity-50">
+            <div className="px-6 py-4 bg-white/[0.01] border-t border-white/[0.06] flex justify-end gap-3">
+               <button onClick={() => setIsCreateDialogOpen(false)} className="px-5 py-2 text-sm font-medium text-zinc-300 bg-white/[0.04] border border-white/[0.06] rounded-full hover:bg-white/[0.08] hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
+               <button onClick={handleSaveCustomer} disabled={loading} className="px-6 py-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all disabled:opacity-50">
                  {loading ? "Bekleyin..." : "Kaydet"}
                </button>
             </div>
@@ -591,39 +665,39 @@ export default function CustomersPage() {
        {/* Blacklist Dialog */}
        {isBlacklistOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="backdrop-blur-xl bg-slate-900/90 text-white rounded-2xl w-full max-w-4xl overflow-hidden border border-white/15 shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+          <div className="backdrop-blur-xl bg-[#111513] text-white rounded-[20px] w-full max-w-4xl overflow-hidden border border-white/[0.06] shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400">
                   <span className="material-symbols-outlined text-2xl">warning</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white tracking-wider">KARA LİSTE</h3>
-                  <p className="text-white/50 text-xs">İşletmeye sorun çıkarmış müşteriler</p>
+                  <h3 className="text-xl font-semibold text-white tracking-wider">KARA LİSTE</h3>
+                  <p className="text-zinc-400 text-xs">İşletmeye sorun çıkarmış müşteriler</p>
                 </div>
               </div>
-              <button onClick={() => setIsBlacklistOpen(false)} className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsBlacklistOpen(false)} className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
             <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
               {blacklistedCustomers.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {blacklistedCustomers.map(c => (
-                    <div key={c.id} className="glass-card p-5 rounded-2xl flex flex-col relative group">
+                    <div key={c.id} className="bg-[#080A09]/60 border border-white/[0.06] p-5 rounded-[20px] flex flex-col relative group">
                       <div className="flex items-start justify-between mb-3 gap-2">
-                        <h4 className="font-bold text-white line-clamp-1">{c.name}</h4>
-                        <span className="bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[10px] px-2.5 py-0.5 rounded-full font-bold shrink-0">KARA LİSTE</span>
+                        <h4 className="font-semibold text-white line-clamp-1">{c.name}</h4>
+                        <span className="bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[10px] px-2.5 py-0.5 rounded-full font-semibold shrink-0">KARA LİSTE</span>
                       </div>
-                      <p className="text-xs text-white/60 flex items-center gap-1.5 mb-2"><span className="material-symbols-outlined text-[14px]">phone</span> {c.phone || "-"}</p>
-                      <p className="text-xs text-white/60 flex items-center gap-1.5 mb-4"><span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "-"}</p>
+                      <p className="text-xs text-zinc-400 flex items-center gap-1.5 mb-2"><span className="material-symbols-outlined text-[14px]">phone</span> {c.phone || "-"}</p>
+                      <p className="text-xs text-zinc-400 flex items-center gap-1.5 mb-4"><span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "-"}</p>
                       
-                      <div className="mt-auto pt-3 border-t border-white/10 flex justify-end">
-                        <button onClick={() => handleToggleBlacklist(c)} className="text-xs px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/15 text-white rounded-lg transition-colors">Listeden Çıkar</button>
+                      <div className="mt-auto pt-3 border-t border-white/[0.06] flex justify-end">
+                        <button onClick={() => handleToggleBlacklist(c)} className="text-xs px-3 py-1.5 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white rounded-full transition-colors">Listeden Çıkar</button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-16 text-white/40">
+                <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
                   <span className="material-symbols-outlined text-6xl mb-4 opacity-50">gpp_good</span>
                   <p className="text-lg">Kara listede kimse yok.</p>
                 </div>
