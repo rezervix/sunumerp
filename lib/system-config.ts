@@ -1,5 +1,11 @@
 import fs from "fs"
 import path from "path"
+import {
+  DEFAULT_PRODUCTION_FEATURE_FLAGS,
+  resolveProductionFeatureFlags,
+  type ProductionFeatureFlagsConfig,
+  type ProductionFeatureFlagsMap,
+} from "./config/production-feature-flags"
 
 export interface SubscriptionConfig {
   plan: "free" | "pro" | "enterprise"
@@ -122,6 +128,7 @@ export interface SystemConfig {
   documentNumbering?: DocumentNumberingConfig
   workflows?: WorkflowsConfig
   moduleSettings?: ModuleSettingsConfig
+  featureFlags?: ProductionFeatureFlagsConfig
   systemMaintenance?: SystemMaintenanceConfig
 }
 
@@ -192,6 +199,9 @@ const DEFAULT_CONFIG: SystemConfig = {
     status: "inactive", // inactive by default until paywall selection
     expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() // 1 year placeholder
   },
+  featureFlags: {
+    ...DEFAULT_PRODUCTION_FEATURE_FLAGS,
+  },
   tamperDetected: false,
   securityDisabled: false
 }
@@ -222,6 +232,10 @@ export function getSystemConfig(): SystemConfig {
       company: { ...DEFAULT_CONFIG.company, ...(parsed.company || {}) },
       subscription: { ...DEFAULT_CONFIG.subscription, ...(parsed.subscription || {}) },
       themeColors: { ...DEFAULT_CONFIG.themeColors, ...(parsed.themeColors || {}) },
+      featureFlags: {
+        ...DEFAULT_PRODUCTION_FEATURE_FLAGS,
+        ...(parsed.featureFlags || {}),
+      },
       securityDisabled: disabled
     }
     return merged
@@ -240,6 +254,9 @@ export function saveSystemConfig(config: Partial<SystemConfig>): SystemConfig {
       company: config.company ? { ...current.company, ...config.company } : current.company,
       subscription: config.subscription ? { ...current.subscription, ...config.subscription } : current.subscription,
       themeColors: config.themeColors ? { ...current.themeColors, ...config.themeColors } : current.themeColors,
+      featureFlags: config.featureFlags
+        ? { ...DEFAULT_PRODUCTION_FEATURE_FLAGS, ...(current.featureFlags || {}), ...config.featureFlags }
+        : current.featureFlags || { ...DEFAULT_PRODUCTION_FEATURE_FLAGS },
       securityDisabled: isSecurityDisabled()
     }
     const dir = path.dirname(CONFIG_PATH)
@@ -271,5 +288,16 @@ export function resetSystemConfig(): SystemConfig {
     console.error("[SystemConfig] Error resetting config file:", err)
     throw err
   }
+}
+
+/**
+ * Sunucu tarafında aktif üretim özellik bayraklarını (firma/şube ve ortam değişkeni dahil) çözümler.
+ */
+export function getServerProductionFeatureFlags(
+  branchOrCompanyId?: string | null
+): ProductionFeatureFlagsMap {
+  const sysConfig = getSystemConfig()
+  const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
+  return resolveProductionFeatureFlags(sysConfig.featureFlags, effectiveScopeId)
 }
 

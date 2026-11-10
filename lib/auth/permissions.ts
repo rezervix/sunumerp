@@ -65,6 +65,69 @@ export const RESOURCE_ALIASES: Record<string, string> = {
   "ajans-kutuphanesi": "ajans-kutuphanesi",
   "icerik-magazasi": "icerik-magazasi",
   "personel-denetim": "personel-denetim",
+  // ── Üretim Modülleri İzin Anahtarları ──────────────────────────
+  uretim: "uretim",
+  production: "uretim",
+  uretim_bom_rota: "uretim_bom_rota",
+  "uretim-bom-rota": "uretim_bom_rota",
+  bom_rota: "uretim_bom_rota",
+  uretim_mrp_mps: "uretim_mrp_mps",
+  "uretim-mrp-mps": "uretim_mrp_mps",
+  mrp_mps: "uretim_mrp_mps",
+  uretim_is_emri: "uretim_is_emri",
+  "uretim-is-emri": "uretim_is_emri",
+  "is-emirleri": "uretim_is_emri",
+  is_emri: "uretim_is_emri",
+  uretim_kapasite: "uretim_kapasite",
+  "uretim-kapasite": "uretim_kapasite",
+  kapasite: "uretim_kapasite",
+  uretim_kalite: "uretim_kalite",
+  "uretim-kalite": "uretim_kalite",
+  kalite: "uretim_kalite",
+  uretim_bakim: "uretim_bakim",
+  "uretim-bakim": "uretim_bakim",
+  bakim: "uretim_bakim",
+}
+
+export const PRODUCTION_PERMISSION_ACTIONS = [
+  "read",
+  "create",
+  "update",
+  "delete",
+  "approve",
+] as const
+
+export type ProductionPermissionAction = (typeof PRODUCTION_PERMISSION_ACTIONS)[number]
+
+export const PRODUCTION_PERMISSION_ACTION_LABELS: Record<ProductionPermissionAction, string> = {
+  read: "Görüntüle",
+  create: "Oluştur",
+  update: "Düzenle",
+  delete: "Sil",
+  approve: "Onayla",
+}
+
+const PRODUCTION_ACTION_ALIASES: Record<string, ProductionPermissionAction> = {
+  read: "read",
+  view: "read",
+  goruntule: "read",
+  "görüntüle": "read",
+  create: "create",
+  write: "create",
+  olustur: "create",
+  "oluştur": "create",
+  update: "update",
+  edit: "update",
+  duzenle: "update",
+  "düzenle": "update",
+  delete: "delete",
+  sil: "delete",
+  approve: "approve",
+  onayla: "approve",
+}
+
+export function normalizeProductionPermissionAction(action: string): string {
+  return PRODUCTION_ACTION_ALIASES[action.toLowerCase()] ?? action
 }
 
 export function normalizePermissionResource(resource: string): string {
@@ -103,6 +166,11 @@ export function hasPermission(
 
   const permissions = normalizePermissionsObject(branchRole.role.permissions)[normalizedResource]
   if (!permissions) return false
+
+  if (normalizedResource === "uretim" || normalizedResource.startsWith("uretim_")) {
+    const normalizedAction = normalizeProductionPermissionAction(action)
+    return permissions.some((p) => normalizeProductionPermissionAction(p) === normalizedAction)
+  }
 
   return permissions.includes(action)
 }
@@ -198,6 +266,13 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     satinalma: ["create", "read", "update", "delete"],
     omnichannel: ["create", "read", "update", "delete"],
     "stok-ai": ["create", "read", "update", "delete"],
+    uretim: ["read", "create", "update", "delete", "approve"],
+    uretim_bom_rota: ["read", "create", "update", "delete", "approve"],
+    uretim_mrp_mps: ["read", "create", "update", "delete", "approve"],
+    uretim_is_emri: ["read", "create", "update", "delete", "approve"],
+    uretim_kapasite: ["read", "create", "update", "delete", "approve"],
+    uretim_kalite: ["read", "create", "update", "delete", "approve"],
+    uretim_bakim: ["read", "create", "update", "delete", "approve"],
     trash: ["read", "restore", "purge"],
   },
   "Branch Admin": {
@@ -227,6 +302,13 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     satinalma: ["read", "create"],
     omnichannel: ["read", "create"],
     "stok-ai": ["read"],
+    uretim: ["read", "create", "update", "approve"],
+    uretim_bom_rota: ["read", "create", "update", "approve"],
+    uretim_mrp_mps: ["read", "create", "update", "approve"],
+    uretim_is_emri: ["read", "create", "update", "approve"],
+    uretim_kapasite: ["read", "create", "update", "approve"],
+    uretim_kalite: ["read", "create", "update", "approve"],
+    uretim_bakim: ["read", "create", "update", "approve"],
     trash: ["read"],
   },
   Employee: {
@@ -253,6 +335,13 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     chat: ["read", "create"],
     stok: ["read"],
     wms: ["read"],
+    uretim: ["read"],
+    uretim_bom_rota: ["read"],
+    uretim_mrp_mps: ["read"],
+    uretim_is_emri: ["read"],
+    uretim_kapasite: ["read"],
+    uretim_kalite: ["read"],
+    uretim_bakim: ["read"],
     trash: ["read"],
   },
   "Field Staff": {

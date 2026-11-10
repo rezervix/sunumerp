@@ -23,8 +23,14 @@ import {
   PanelLeftClose, PanelLeftOpen, ChevronDown, CalendarDays, Library, ClipboardCheck,
   Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
   Boxes, Warehouse, ShoppingCart, Sparkles, Search, X,
-  ShieldAlert, AlertTriangle, AlertCircle, ExternalLink
+  ShieldAlert, AlertTriangle, AlertCircle, ExternalLink,
+  Factory, GitBranch, Cpu, Hammer, Gauge, ShieldCheck, Wrench
 } from "lucide-react"
+import {
+  resolveProductionFeatureFlags,
+  isAnyProductionFeatureEnabled,
+  type ProductionFeatureFlagsConfig,
+} from "@/lib/config/production-feature-flags"
 import { motion, AnimatePresence } from "framer-motion"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
@@ -249,6 +255,7 @@ function SidebarContent({
   const { isPlatformDeveloper } = useAuth()
   const { unreadCounts } = useNotificationStore()
   const [subPlan, setSubPlan] = useState<string | null>(null)
+  const [featureFlagsConfig, setFeatureFlagsConfig] = useState<ProductionFeatureFlagsConfig | null>(null)
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -265,6 +272,7 @@ function SidebarContent({
         if (res.ok) {
           const config = await res.json()
           setSubPlan(config.subscription?.plan || null)
+          setFeatureFlagsConfig(config.featureFlags || null)
           const activeLogo = config.bgRemovedLogoUrl || config.logoUrl
           if (activeLogo) {
             localStorage.setItem("theme-logo", activeLogo)
@@ -300,6 +308,15 @@ function SidebarContent({
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [collapsed, isSearchOpen, onToggle])
+
+  const prodFlags = useMemo(
+    () => resolveProductionFeatureFlags(featureFlagsConfig, currentBranch?.id),
+    [featureFlagsConfig, currentBranch?.id]
+  )
+  const showUretimCategory = useMemo(
+    () => isAnyProductionFeatureEnabled(featureFlagsConfig, currentBranch?.id),
+    [featureFlagsConfig, currentBranch?.id]
+  )
 
   const rawCategories: NavCategoryDef[] = useMemo(() => [
     {
@@ -337,6 +354,35 @@ function SidebarContent({
         { name: "5. AI Analiz & Ayarlar", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
       ],
     },
+    ...(showUretimCategory
+      ? [
+          {
+            id: "uretim",
+            title: "Üretim",
+            icon: Factory,
+            items: [
+              ...(prodFlags.uretim_bom_rota
+                ? [{ name: "1. Ürün Ağacı (BOM) & Rotalar", href: "/dashboard/uretim/bom-rota", icon: GitBranch, resource: "uretim_bom_rota" }]
+                : []),
+              ...(prodFlags.uretim_mrp_mps
+                ? [{ name: "2. MRP & Ana Üretim Planlama", href: "/dashboard/uretim/mrp-mps", icon: Cpu, resource: "uretim_mrp_mps" }]
+                : []),
+              ...(prodFlags.uretim_is_emri
+                ? [{ name: "3. Üretim Emirleri & Atölye", href: "/dashboard/uretim/is-emirleri", icon: Hammer, resource: "uretim_is_emri" }]
+                : []),
+              ...(prodFlags.uretim_kapasite
+                ? [{ name: "4. İş Merkezleri & Kapasite", href: "/dashboard/uretim/kapasite", icon: Gauge, resource: "uretim_kapasite" }]
+                : []),
+              ...(prodFlags.uretim_kalite
+                ? [{ name: "5. Kalite Kontrol & Fire", href: "/dashboard/uretim/kalite", icon: ShieldCheck, resource: "uretim_kalite" }]
+                : []),
+              ...(prodFlags.uretim_bakim
+                ? [{ name: "6. Ekipman & Bakım Yönetimi", href: "/dashboard/uretim/bakim", icon: Wrench, resource: "uretim_bakim" }]
+                : []),
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
     {
       id: "proje",
       title: t.nav.projects || "Proje & Görevler",
@@ -403,7 +449,7 @@ function SidebarContent({
         { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
       ],
     },
-  ], [t])
+  ], [t, showUretimCategory, prodFlags])
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
     if (item.devOnly) {

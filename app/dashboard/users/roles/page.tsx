@@ -20,7 +20,15 @@ interface ModuleData {
   sortOrder: number
 }
 
-const ACTIONS = ["read", "create", "update", "delete"]
+const BASE_ACTIONS = ["read", "create", "update", "delete"]
+const PRODUCTION_ACTIONS = ["read", "create", "update", "delete", "approve"]
+const ACTION_LABELS: Record<string, string> = {
+  read: "read",
+  create: "create",
+  update: "update",
+  delete: "delete",
+  approve: "approve (onayla)",
+}
 
 export default function RolesPage() {
   const { isSuperAdmin, loading: authLoading } = useAuth()
@@ -289,38 +297,47 @@ export default function RolesPage() {
                   <div className="border border-border rounded-2xl overflow-hidden shadow-sm bg-card overflow-x-auto">
                     <div className="min-w-[500px]">
                       {/* Header */}
-                      <div className="bg-muted/40 px-4 py-3 grid grid-cols-5 gap-2 border-b border-border">
-                        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Modül</span>
-                        {ACTIONS.map(a => (
-                          <span key={a} className="text-xs font-bold text-center text-muted-foreground uppercase tracking-wider">{a}</span>
-                        ))}
-                      </div>
-                      {/* Body */}
-                      <div className="divide-y divide-border max-h-[300px] overflow-y-auto custom-scrollbar">
-                        {modules.map(m => (
-                          <div key={m.key} className="px-4 py-3 grid grid-cols-5 gap-2 items-center hover:bg-white/[0.02] transition-colors">
-                            <span className="text-xs font-medium text-white truncate">{m.label}</span>
-                            {ACTIONS.map(action => {
-                              const has = (permissions[m.key] || []).includes(action)
-                              return (
-                                <div key={action} className="flex justify-center">
-                                  <button 
-                                    type="button"
-                                    onClick={() => togglePermission(m.key, action)}
-                                    className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                                      has
-                                        ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
-                                        : "bg-zinc-800 justify-start"
-                                    }`}
-                                  >
-                                    <span className="size-4 rounded-full bg-white shadow-xs" />
-                                  </button>
+                      {(() => {
+                        const hasProductionModules = modules.some(m => m.key.startsWith("uretim_"))
+                        const activeActions = hasProductionModules ? PRODUCTION_ACTIONS : BASE_ACTIONS
+                        const gridColsClass = hasProductionModules ? "grid-cols-6" : "grid-cols-5"
+                        return (
+                          <>
+                            <div className={`bg-muted/40 px-4 py-3 grid ${gridColsClass} gap-2 border-b border-border`}>
+                              <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Modül</span>
+                              {activeActions.map(a => (
+                                <span key={a} className="text-xs font-bold text-center text-muted-foreground uppercase tracking-wider">{ACTION_LABELS[a] || a}</span>
+                              ))}
+                            </div>
+                            {/* Body */}
+                            <div className="divide-y divide-border max-h-[300px] overflow-y-auto custom-scrollbar">
+                              {modules.map(m => (
+                                <div key={m.key} className={`px-4 py-3 grid ${gridColsClass} gap-2 items-center hover:bg-white/[0.02] transition-colors`}>
+                                  <span className="text-xs font-medium text-white truncate">{m.label}</span>
+                                  {activeActions.map(action => {
+                                    const has = (permissions[m.key] || []).includes(action)
+                                    return (
+                                      <div key={action} className="flex justify-center">
+                                        <button 
+                                          type="button"
+                                          onClick={() => togglePermission(m.key, action)}
+                                          className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
+                                            has
+                                              ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
+                                              : "bg-zinc-800 justify-start"
+                                          }`}
+                                        >
+                                          <span className="size-4 rounded-full bg-white shadow-xs" />
+                                        </button>
+                                      </div>
+                                    )
+                                  })}
                                 </div>
-                              )
-                            })}
-                          </div>
-                        ))}
-                      </div>
+                              ))}
+                            </div>
+                          </>
+                        )
+                      })()}
                     </div>
                   </div>
                 )}
