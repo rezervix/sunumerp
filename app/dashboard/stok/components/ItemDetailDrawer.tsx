@@ -21,8 +21,12 @@ import {
   ArrowUpRight,
   History,
   Loader2,
-  Calendar
+  Calendar,
+  Factory
 } from "lucide-react"
+import { useAuth } from "@/lib/auth/context"
+import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
+import { ItemProductionProfileTab } from "./ItemProductionProfileTab"
 
 interface ItemDetailDrawerProps {
   itemId: string | null
@@ -37,10 +41,26 @@ export function ItemDetailDrawer({
   onClose,
   onQuickMove
 }: ItemDetailDrawerProps) {
+  const { currentBranch } = useAuth()
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [convertQty, setConvertQty] = useState("10")
   const [convertedResult, setConvertedResult] = useState<string | null>(null)
+  const [showProductionTab, setShowProductionTab] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) return
+    fetch("/api/system-config")
+      .then(res => (res.ok ? res.json() : null))
+      .then(cfg => {
+        if (cfg) {
+          setShowProductionTab(
+            isAnyProductionFeatureEnabled(cfg.featureFlags, currentBranch?.id)
+          )
+        }
+      })
+      .catch(() => setShowProductionTab(false))
+  }, [isOpen, currentBranch?.id])
 
   useEffect(() => {
     if (itemId && isOpen) {
@@ -175,7 +195,11 @@ export function ItemDetailDrawer({
             {/* 2. ÇEKMECE SEKMELERİ */}
             <div className="flex-1 p-6">
               <Tabs defaultValue="locations" className="w-full">
-                <TabsList className="grid grid-cols-4 w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-4">
+                <TabsList
+                  className={`grid ${
+                    showProductionTab ? "grid-cols-5" : "grid-cols-4"
+                  } w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-4`}
+                >
                   <TabsTrigger value="locations" className="text-xs py-1.5 gap-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">
                     <Warehouse className="h-3.5 w-3.5" />
                     Depo / Raf
@@ -192,6 +216,15 @@ export function ItemDetailDrawer({
                     <Clock className="h-3.5 w-3.5" />
                     Lot / SKT
                   </TabsTrigger>
+                  {showProductionTab && (
+                    <TabsTrigger
+                      value="production"
+                      className="text-xs py-1.5 gap-1 text-emerald-400 data-[state=active]:text-white data-[state=active]:bg-emerald-500/20 rounded-lg"
+                    >
+                      <Factory className="h-3.5 w-3.5" />
+                      Üretim
+                    </TabsTrigger>
+                  )}
                 </TabsList>
 
                 {/* SEKME 1: DEPO VE RAF DAĞILIMI */}
@@ -439,6 +472,16 @@ export function ItemDetailDrawer({
                     </div>
                   )}
                 </TabsContent>
+
+                {showProductionTab && (
+                  <TabsContent value="production" className="space-y-3">
+                    <ItemProductionProfileTab
+                      itemId={item.id}
+                      itemName={item.name}
+                      baseUnit={item.baseUnit}
+                    />
+                  </TabsContent>
+                )}
               </Tabs>
             </div>
           </motion.div>

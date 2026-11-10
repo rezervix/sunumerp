@@ -30,6 +30,10 @@ import {
   type ProductionFeatureFlagKey,
 } from "@/lib/config/production-feature-flags"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
+import {
+  ProductionMasterDataWorkspace,
+  type MasterDataTabKey,
+} from "./ProductionMasterDataWorkspace"
 
 const MODULE_ICONS: Record<ProductionFeatureFlagKey, React.ElementType> = {
   uretim_bom_rota: GitBranch,
@@ -327,6 +331,21 @@ export function ProductionModuleReadinessView({
             </Link>
           </div>
         </div>
+      )}
+
+      {/* Özellik Bayrağı Açık Olduğunda Üretim Ana Verileri Çalışma Alanı */}
+      {snapshot?.anyFlagEnabled && (
+        <ProductionMasterDataWorkspace
+          defaultTab={
+            (activeSlug === "bakim" || activeSlug === "uretim_bakim"
+              ? "machines"
+              : activeSlug === "bom-rota" || activeSlug === "uretim_bom_rota"
+              ? "item-profiles"
+              : activeSlug === "mrp-mps" || activeSlug === "uretim_mrp_mps"
+              ? "parameters"
+              : "work-centers") as MasterDataTabKey
+          }
+        />
       )}
 
       {/* Üretim Modülleri Özellik Bayrağı ve RBAC İzin Matrisi Tablosu */}

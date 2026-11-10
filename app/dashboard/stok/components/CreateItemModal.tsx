@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,16 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Plus, Trash2, Sparkles, Loader2, AlertCircle, PackagePlus } from "lucide-react"
+import { useAuth } from "@/lib/auth/context"
+import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
+import {
+  LOT_SIZING_RULE_LABELS,
+  PRODUCTION_ITEM_TYPE_LABELS,
+  PRODUCTION_METHOD_LABELS,
+  type LotSizingRule,
+  type ProductionItemType,
+  type ProductionMethod
+} from "@/lib/services/productionMasterDataEngine"
 
 interface CreateItemModalProps {
   isOpen: boolean
@@ -85,6 +95,30 @@ export function CreateItemModal({
   >([])
   const [laborCost, setLaborCost] = useState("0")
   const [overheadCost, setOverheadCost] = useState("0")
+
+  const { currentBranch } = useAuth()
+  const [showProductionTab, setShowProductionTab] = useState(false)
+  const [productionItemType, setProductionItemType] = useState<ProductionItemType>("MAMUL")
+  const [productionMethod, setProductionMethod] = useState<ProductionMethod>("MAKE_TO_STOCK")
+  const [leadTimeDays, setLeadTimeDays] = useState("3")
+  const [productionLeadTimeHours, setProductionLeadTimeHours] = useState("4")
+  const [safetyStockQty, setSafetyStockQty] = useState("5")
+  const [lotSizingRule, setLotSizingRule] = useState<LotSizingRule>("L4L")
+  const [standardLotSize, setStandardLotSize] = useState("1")
+
+  useEffect(() => {
+    if (!isOpen) return
+    fetch("/api/system-config")
+      .then(res => (res.ok ? res.json() : null))
+      .then(cfg => {
+        if (cfg) {
+          setShowProductionTab(
+            isAnyProductionFeatureEnabled(cfg.featureFlags, currentBranch?.id)
+          )
+        }
+      })
+      .catch(() => setShowProductionTab(false))
+  }, [isOpen, currentBranch?.id])
 
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -188,6 +222,27 @@ export function CreateItemModal({
       const data = await res.json()
       if (!data.success) {
         throw new Error(data.error || "Ürün kaydedilemedi.")
+      }
+
+      if (showProductionTab && data.item?.id) {
+        await fetch("/api/production/master-data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "upsert_item_profile",
+            payload: {
+              itemId: data.item.id,
+              productionItemType,
+              productionMethod,
+              leadTimeDays: Number(leadTimeDays || 3),
+              productionLeadTimeHours: Number(productionLeadTimeHours || 4),
+              minStockLevel: Number(minStockLevel || 10),
+              safetyStockQty: Number(safetyStockQty || 5),
+              lotSizingRule,
+              standardLotSize: Number(standardLotSize || 1)
+            }
+          })
+        }).catch(() => null)
       }
 
       onSuccess()
@@ -394,12 +449,21 @@ export function CreateItemModal({
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-4 pt-1">
                 <Tabs defaultValue="variants" className="w-full">
-                  <TabsList className="grid grid-cols-5 w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-3">
+                  <TabsList
+                    className={`grid ${
+                      showProductionTab ? "grid-cols-6" : "grid-cols-5"
+                    } w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-3`}
+                  >
                     <TabsTrigger value="variants" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Varyantlar</TabsTrigger>
                     <TabsTrigger value="lots" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Lot / SKT</TabsTrigger>
                     <TabsTrigger value="units" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Çoklu Birim</TabsTrigger>
                     <TabsTrigger value="costing" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Değerleme</TabsTrigger>
                     <TabsTrigger value="bom" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">BOM Reçete</TabsTrigger>
+                    {showProductionTab && (
+                      <TabsTrigger value="production" className="text-[11px] py-1 text-emerald-400 data-[state=active]:text-white data-[state=active]:bg-emerald-500/20 rounded-lg">
+                        Üretim Kartı
+                      </TabsTrigger>
+                    )}
                   </TabsList>
 
                   {/* SEKME 1: VARYANTLAR (Renk / Beden) */}
@@ -741,6 +805,123 @@ export function CreateItemModal({
                       </div>
                     )}
                   </TabsContent>
+
+                  {showProductionTab && (
+                    <TabsContent value="production" className="space-y-3 pt-1">
+                      <p className="text-xs text-zinc-400">
+                        1-1 bağlı üretim profili (`UretimItemProfile`) alanları:
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <Label className="text-xs font-medium text-zinc-300">Üretim Ürün Tipi</Label>
+                          <Select
+                            value={productionItemType}
+                            onValueChange={v => setProductionItemType(v as ProductionItemType)}
+                          >
+                            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                              {(Object.entries(PRODUCTION_ITEM_TYPE_LABELS) as [ProductionItemType, string][]).map(
+                                ([code, label]) => (
+                                  <SelectItem key={code} value={code} className="text-xs">
+                                    {label}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-1">
+                          <Label className="text-xs font-medium text-zinc-300">Üretim Yöntemi</Label>
+                          <Select
+                            value={productionMethod}
+                            onValueChange={v => setProductionMethod(v as ProductionMethod)}
+                          >
+                            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                              {(Object.entries(PRODUCTION_METHOD_LABELS) as [ProductionMethod, string][]).map(
+                                ([code, label]) => (
+                                  <SelectItem key={code} value={code} className="text-xs">
+                                    {label}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <div className="space-y-1">
+                          <Label className="text-[11px] font-medium text-zinc-300">Tedarik Süresi (Gün)</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            value={leadTimeDays}
+                            onChange={e => setLeadTimeDays(e.target.value)}
+                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[11px] font-medium text-zinc-300">Üretim Süresi (Saat)</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            value={productionLeadTimeHours}
+                            onChange={e => setProductionLeadTimeHours(e.target.value)}
+                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[11px] font-medium text-zinc-300">Güvenlik Stoğu</Label>
+                          <Input
+                            type="number"
+                            min="0"
+                            value={safetyStockQty}
+                            onChange={e => setSafetyStockQty(e.target.value)}
+                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[11px] font-medium text-zinc-300">Lot Büyüklüğü</Label>
+                          <Input
+                            type="number"
+                            min="0.01"
+                            step="any"
+                            value={standardLotSize}
+                            onChange={e => setStandardLotSize(e.target.value)}
+                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label className="text-[11px] font-medium text-zinc-300">Lot Kuralı</Label>
+                        <Select
+                          value={lotSizingRule}
+                          onValueChange={v => setLotSizingRule(v as LotSizingRule)}
+                        >
+                          <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                            {(Object.entries(LOT_SIZING_RULE_LABELS) as [LotSizingRule, string][]).map(
+                              ([code, label]) => (
+                                <SelectItem key={code} value={code} className="text-xs">
+                                  {label}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </TabsContent>
+                  )}
                 </Tabs>
               </AccordionContent>
             </AccordionItem>

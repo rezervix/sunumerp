@@ -6,6 +6,8 @@ import {
   calculateBomRollupFromDb,
   seedRealisticInventoryData
 } from "@/lib/services/inventoryServerDb"
+import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
+import { getSystemConfig } from "@/lib/system-config"
 
 export async function GET(request: Request) {
   try {
@@ -24,6 +26,9 @@ export async function GET(request: Request) {
       if (!itemId) {
         return NextResponse.json({ success: false, error: "itemId parametresi eksik" }, { status: 400 })
       }
+
+      const sysCfg = getSystemConfig()
+      const prodFlagActive = isAnyProductionFeatureEnabled(sysCfg.featureFlags)
 
       const item = await (prisma as any).inventoryItem.findUnique({
         where: { id: itemId },
@@ -56,7 +61,8 @@ export async function GET(request: Request) {
                 include: { componentItem: true }
               }
             }
-          }
+          },
+          ...(prodFlagActive ? { uretimProfile: true } : {})
         }
       })
 
