@@ -147,6 +147,15 @@ interface JsonDbData {
   purchaseRequisitionLine: any[]
   orderShipmentLine: any[]
   licensePlateContent: any[]
+  // ── Üretim Modülleri: Ana Veriler ve 1-1 Stok Üretim Profili ──
+  uretimWorkCalendar?: any[]
+  uretimShift?: any[]
+  uretimCalendarHoliday?: any[]
+  uretimWorkCenter?: any[]
+  uretimCalendarException?: any[]
+  uretimMachineAsset?: any[]
+  uretimParameters?: any[]
+  uretimItemProfile?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -322,15 +331,22 @@ class ModelSimulate {
   private getCollection(): any[] {
     const db = readJsonDb()
     if (!db[this.modelName]) {
+      if (String(this.modelName).startsWith("uretim")) {
+        return []
+      }
       db[this.modelName] = []
       writeJsonDb(db)
     }
-    return db[this.modelName]
+    return db[this.modelName] as any[]
   }
 
   private saveCollection(collection: any[]) {
     const db = readJsonDb()
-    db[this.modelName] = collection
+    if (String(this.modelName).startsWith("uretim") && collection.length === 0 && !(this.modelName in initialData)) {
+      delete db[this.modelName]
+    } else {
+      db[this.modelName] = collection
+    }
     writeJsonDb(db)
   }
 
@@ -731,6 +747,25 @@ class ModelSimulate {
       }
       if (include.lotSerials) enriched.lotSerials = (db.lotSerialRecord || []).filter((l: any) => l.itemId === item.id)
       if (include.costLayers) enriched.costLayers = (db.costLayer || []).filter((c: any) => c.itemId === item.id)
+      if (include.bomHeaders) {
+        enriched.bomHeaders = (db.bomHeader || []).filter((b: any) => b.finishedItemId === item.id).map((b: any) => ({
+          ...b,
+          components: (db.bomComponent || []).filter((c: any) => c.bomId === b.id).map((c: any) => ({
+            ...c,
+            componentItem: (db.inventoryItem || []).find((it: any) => it.id === c.componentItemId) ?? null
+          }))
+        }))
+      }
+      if (include.uretimProfile) {
+        const prof = (db.uretimItemProfile || []).find((p: any) => p.itemId === item.id) ?? null
+        enriched.uretimProfile = prof
+          ? {
+              ...prof,
+              defaultBom: prof.defaultBomId ? ((db.bomHeader || []).find((b: any) => b.id === prof.defaultBomId) ?? null) : null,
+              defaultWorkCenter: prof.defaultWorkCenterId ? ((db.uretimWorkCenter || []).find((wc: any) => wc.id === prof.defaultWorkCenterId) ?? null) : null
+            }
+          : null
+      }
     }
 
     if (this.modelName === "warehouse" && include) {
@@ -820,6 +855,45 @@ class ModelSimulate {
     if (this.modelName === "orderShipmentLine" && include) {
       if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
       if (include.order) enriched.order = (db.omnichannelOrder || []).find((o: any) => o.id === item.orderId) ?? null
+    }
+
+    if (this.modelName === "uretimWorkCalendar" && include) {
+      if (include.shifts) enriched.shifts = (db.uretimShift || []).filter((s: any) => s.calendarId === item.id)
+      if (include.holidays) enriched.holidays = (db.uretimCalendarHoliday || []).filter((h: any) => h.calendarId === item.id)
+      if (include.exceptions) {
+        enriched.exceptions = (db.uretimCalendarException || []).filter((e: any) => e.calendarId === item.id).map((e: any) => ({
+          ...e,
+          workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === e.workCenterId) ?? null
+        }))
+      }
+      if (include.workCenters) enriched.workCenters = (db.uretimWorkCenter || []).filter((wc: any) => wc.calendarId === item.id)
+    }
+
+    if (this.modelName === "uretimShift" && include) {
+      if (include.calendar) enriched.calendar = (db.uretimWorkCalendar || []).find((c: any) => c.id === item.calendarId) ?? null
+      if (include.workCenters) enriched.workCenters = (db.uretimWorkCenter || []).filter((wc: any) => wc.defaultShiftId === item.id)
+    }
+
+    if (this.modelName === "uretimWorkCenter" && include) {
+      if (include.calendar) enriched.calendar = (db.uretimWorkCalendar || []).find((c: any) => c.id === item.calendarId) ?? null
+      if (include.defaultShift) enriched.defaultShift = (db.uretimShift || []).find((s: any) => s.id === item.defaultShiftId) ?? null
+      if (include.machines) enriched.machines = (db.uretimMachineAsset || []).filter((m: any) => m.workCenterId === item.id)
+      if (include.calendarExceptions) enriched.calendarExceptions = (db.uretimCalendarException || []).filter((e: any) => e.workCenterId === item.id)
+    }
+
+    if (this.modelName === "uretimCalendarException" && include) {
+      if (include.calendar) enriched.calendar = (db.uretimWorkCalendar || []).find((c: any) => c.id === item.calendarId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+    }
+
+    if (this.modelName === "uretimMachineAsset" && include) {
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+    }
+
+    if (this.modelName === "uretimItemProfile" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((it: any) => it.id === item.itemId) ?? null
+      if (include.defaultBom) enriched.defaultBom = (db.bomHeader || []).find((b: any) => b.id === item.defaultBomId) ?? null
+      if (include.defaultWorkCenter) enriched.defaultWorkCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.defaultWorkCenterId) ?? null
     }
 
     return enriched
@@ -1188,7 +1262,16 @@ export const prisma = new Proxy(rawPrisma, {
       "transferOrderLine",
       "purchaseRequisitionLine",
       "orderShipmentLine",
-      "licensePlateContent"
+      "licensePlateContent",
+      // ── Üretim Modülleri: Ana Veriler ve 1-1 Stok Üretim Profili ──
+      "uretimWorkCalendar",
+      "uretimShift",
+      "uretimCalendarHoliday",
+      "uretimWorkCenter",
+      "uretimCalendarException",
+      "uretimMachineAsset",
+      "uretimParameters",
+      "uretimItemProfile"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

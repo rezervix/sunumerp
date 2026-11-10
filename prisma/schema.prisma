@@ -1845,6 +1845,7 @@ model InventoryItem {
   purchaseRequisitionLines PurchaseRequisitionLine[]
   orderShipmentLines       OrderShipmentLine[]
   licensePlateContents     LicensePlateContent[]
+  uretimProfile            UretimItemProfile?
 
   @@index([category])
   @@index([parentItemId])
@@ -1982,8 +1983,9 @@ model BomHeader {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
-  finishedItem         InventoryItem  @relation("FinishedItemBoms", fields: [finishedItemId], references: [id], onDelete: Cascade)
+  finishedItem         InventoryItem       @relation("FinishedItemBoms", fields: [finishedItemId], references: [id], onDelete: Cascade)
   components           BomComponent[]
+  uretimItemProfiles   UretimItemProfile[] @relation("DefaultBomForItemProfile")
 
   @@index([finishedItemId])
 }
@@ -2709,3 +2711,196 @@ model ErpMigrationJob {
   startedAt         DateTime  @default(now())
   completedAt       DateTime?
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// ÜRETİM MODÜLLERİ — ANA VERİLER VE STOK KARTI 1-1 ÜRETİM PROFİLİ (ADDITIVE)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model UretimWorkCalendar {
+  id              String   @id @default(uuid())
+  branchId        String?
+  code            String   @unique
+  name            String
+  workingDaysJson String   @default("[\"MON\",\"TUE\",\"WED\",\"THU\",\"FRI\",\"SAT\"]")
+  isDefault       Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  shifts          UretimShift[]
+  holidays        UretimCalendarHoliday[]
+  exceptions      UretimCalendarException[]
+  workCenters     UretimWorkCenter[]
+
+  @@index([branchId])
+  @@index([isActive])
+}
+
+model UretimShift {
+  id                 String             @id @default(uuid())
+  calendarId         String
+  code               String             @unique
+  name               String
+  startTime          String             @default("08:00")
+  endTime            String             @default("17:00")
+  breakMinutes       Int                @default(60)
+  netWorkingMinutes  Int                @default(480)
+  capacityMultiplier Float              @default(1.0)
+  isActive           Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  calendar           UretimWorkCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  workCenters        UretimWorkCenter[]
+
+  @@index([calendarId])
+  @@index([isActive])
+}
+
+model UretimCalendarHoliday {
+  id                String             @id @default(uuid())
+  calendarId        String
+  holidayDate       String
+  name              String
+  isHalfDay         Boolean            @default(false)
+  isRecurringYearly Boolean            @default(false)
+  notes             String?
+  createdAt         DateTime           @default(now())
+
+  calendar          UretimWorkCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+
+  @@index([calendarId, holidayDate])
+}
+
+model UretimWorkCenter {
+  id                   String                    @id @default(uuid())
+  branchId             String?
+  warehouseId          String?
+  code                 String                    @unique
+  name                 String
+  type                 String                    @default("MACHINE") // MACHINE, MANUAL, OUTSOURCE
+  hourlyCost           Float                     @default(0)
+  capacityPerHour      Float                     @default(1)
+  efficiencyPercent    Float                     @default(100)
+  calendarId           String?
+  defaultShiftId       String?
+  alternativeGroupCode String?
+  isActive             Boolean                   @default(true)
+  notes                String?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+
+  calendar             UretimWorkCalendar?       @relation(fields: [calendarId], references: [id], onDelete: SetNull)
+  defaultShift         UretimShift?              @relation(fields: [defaultShiftId], references: [id], onDelete: SetNull)
+  machines             UretimMachineAsset[]
+  calendarExceptions   UretimCalendarException[]
+  itemProfiles         UretimItemProfile[]
+
+  @@index([branchId])
+  @@index([type])
+  @@index([alternativeGroupCode])
+  @@index([isActive])
+}
+
+model UretimCalendarException {
+  id              String             @id @default(uuid())
+  calendarId      String
+  workCenterId    String
+  exceptionDate   String
+  exceptionType   String             @default("CLOSED") // OVERTIME, CLOSED, REDUCED_CAPACITY, SHIFT_OVERRIDE
+  availableHours  Float              @default(0)
+  capacityPercent Float              @default(0)
+  reason          String?
+  createdAt       DateTime           @default(now())
+
+  calendar        UretimWorkCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  workCenter      UretimWorkCenter   @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+
+  @@index([calendarId, exceptionDate])
+  @@index([workCenterId, exceptionDate])
+}
+
+model UretimMachineAsset {
+  id               String            @id @default(uuid())
+  branchId         String?
+  code             String            @unique
+  name             String
+  serialNumber     String            @unique
+  brand            String?
+  model            String?
+  warrantyEndDate  String?
+  warrantyProvider String?
+  location         String?
+  workCenterId     String?
+  status           String            @default("ACTIVE") // ACTIVE, MAINTENANCE, FAULT, STANDBY, DECOMMISSIONED
+  operatingHours   Float             @default(0)
+  productionCount  Float             @default(0)
+  isActive         Boolean           @default(true)
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  workCenter       UretimWorkCenter? @relation(fields: [workCenterId], references: [id], onDelete: SetNull)
+
+  @@index([workCenterId])
+  @@index([status])
+  @@index([branchId])
+}
+
+model UretimParameters {
+  id                              String   @id @default(uuid())
+  branchId                        String?  @unique
+  planningHorizonDays             Int      @default(30)
+  planningBucket                  String   @default("DAILY") // DAILY, WEEKLY, MONTHLY
+  defaultLotSizingRule            String   @default("L4L")   // L4L, FOQ, EOQ, POQ
+  defaultMinLotSize               Float    @default(1)
+  defaultLotMultiple              Float    @default(1)
+  defaultSafetyStockRule          String   @default("FIXED") // FIXED, DAYS_OF_SUPPLY, PERCENTAGE
+  defaultSafetyStockValue         Float    @default(10)
+  defaultSafetyStockDays          Int      @default(3)
+  requireWorkOrderApproval        Boolean  @default(true)
+  requireQualityCheckOnComplete   Boolean  @default(false)
+  autoBackflushOnComplete         Boolean  @default(true)
+  autoReserveOnRelease            Boolean  @default(true)
+  allowOverProductionPercent      Float    @default(5)
+  allowNegativeStockInProduction  Boolean  @default(false)
+  defaultManufacturingWarehouseId String?
+  statusFlowJson                  String   @default("[\"DRAFT\",\"PLANNED\",\"RELEASED\",\"IN_PROGRESS\",\"QA_PENDING\",\"COMPLETED\"]")
+  updatedBy                       String?
+  createdAt                       DateTime @default(now())
+  updatedAt                       DateTime @updatedAt
+}
+
+model UretimItemProfile {
+  id                      String            @id @default(uuid())
+  itemId                  String            @unique
+  productionItemType      String            @default("MAMUL") // HAMMADDE, YARI_MAMUL, MAMUL, SARF_MALZEME, TICARI_MAL
+  productionMethod        String            @default("MAKE_TO_STOCK") // MAKE_TO_STOCK, MAKE_TO_ORDER, ASSEMBLE_TO_ORDER, SUBCONTRACT, PURCHASE_ONLY
+  leadTimeDays            Int               @default(3)
+  productionLeadTimeHours Float             @default(4)
+  minStockLevel           Float             @default(10)
+  safetyStockQty          Float             @default(5)
+  lotSizingRule           String            @default("L4L") // L4L, FOQ, EOQ, POQ
+  standardLotSize         Float             @default(1)
+  minOrderQty             Float             @default(1)
+  orderMultiple           Float             @default(1)
+  defaultBomId            String?
+  defaultWorkCenterId     String?
+  scrapTolerancePercent   Float             @default(2)
+  backflushEnabled        Boolean           @default(true)
+  qualityCheckRequired    Boolean           @default(false)
+  notes                   String?
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+
+  item                    InventoryItem     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  defaultBom              BomHeader?        @relation("DefaultBomForItemProfile", fields: [defaultBomId], references: [id], onDelete: SetNull)
+  defaultWorkCenter       UretimWorkCenter? @relation(fields: [defaultWorkCenterId], references: [id], onDelete: SetNull)
+
+  @@index([productionItemType])
+  @@index([productionMethod])
+  @@index([defaultBomId])
+  @@index([defaultWorkCenterId])
+}
+
