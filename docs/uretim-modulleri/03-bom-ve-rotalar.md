@@ -140,3 +140,4 @@ Olası bir geri alma durumunda:
    git branch -D feature/uretim-bom-rota
    ```
 3. Veritabanı ve sistem konfigürasyonu tamamen önceki kararlı durumuna döner, hiçbir mevcut modül etkilenmez.
+
