@@ -165,6 +165,12 @@ interface JsonDbData {
   uretimOperation?: any[]
   uretimOperationAlternativeWorkCenter?: any[]
   uretimOperationMaterial?: any[]
+  // ── Üretim Modülleri: Faz 4 MRP & MPS ──
+  uretimMpsPlan?: any[]
+  uretimMpsPlanItem?: any[]
+  uretimMrpRun?: any[]
+  uretimMrpPlannedOrder?: any[]
+  uretimMrpActionMessage?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -775,6 +781,13 @@ class ModelSimulate {
             }
           : null
       }
+      if (include.uretimBomHeaders) enriched.uretimBomHeaders = (db.uretimBomHeader || []).filter((b: any) => b.finishedItemId === item.id)
+      if (include.uretimBomComponents) enriched.uretimBomComponents = (db.uretimBomItem || []).filter((c: any) => c.componentItemId === item.id)
+      if (include.uretimBomSubstitutes) enriched.uretimBomSubstitutes = (db.uretimBomSubstitute || []).filter((s: any) => s.substituteItemId === item.id)
+      if (include.uretimRoutings) enriched.uretimRoutings = (db.uretimRoutingHeader || []).filter((r: any) => r.finishedItemId === item.id)
+      if (include.uretimMpsPlanItems) enriched.uretimMpsPlanItems = (db.uretimMpsPlanItem || []).filter((pi: any) => pi.itemId === item.id)
+      if (include.uretimMrpPlannedOrders) enriched.uretimMrpPlannedOrders = (db.uretimMrpPlannedOrder || []).filter((po: any) => po.itemId === item.id)
+      if (include.uretimMrpActionMessages) enriched.uretimMrpActionMessages = (db.uretimMrpActionMessage || []).filter((m: any) => m.itemId === item.id)
     }
 
     if (this.modelName === "warehouse" && include) {
@@ -957,6 +970,44 @@ class ModelSimulate {
           workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === alt.workCenterId) ?? null
         }))
       }
+    }
+
+    if (this.modelName === "uretimMpsPlan" && include) {
+      if (include.items) {
+        enriched.items = (db.uretimMpsPlanItem || []).filter((it: any) => it.mpsPlanId === item.id).map((pi: any) => ({
+          ...pi,
+          item: (db.inventoryItem || []).find((inv: any) => inv.id === pi.itemId) ?? null
+        }))
+      }
+      if (include.mrpRuns) enriched.mrpRuns = (db.uretimMrpRun || []).filter((r: any) => r.mpsPlanId === item.id)
+    }
+
+    if (this.modelName === "uretimMpsPlanItem" && include) {
+      if (include.mpsPlan) enriched.mpsPlan = (db.uretimMpsPlan || []).find((p: any) => p.id === item.mpsPlanId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
+    }
+
+    if (this.modelName === "uretimMrpRun" && include) {
+      if (include.mpsPlan) enriched.mpsPlan = (db.uretimMpsPlan || []).find((p: any) => p.id === item.mpsPlanId) ?? null
+      if (include.plannedOrders) {
+        enriched.plannedOrders = (db.uretimMrpPlannedOrder || []).filter((po: any) => po.mrpRunId === item.id).map((po: any) => ({
+          ...po,
+          item: (db.inventoryItem || []).find((inv: any) => inv.id === po.itemId) ?? null
+        }))
+      }
+      if (include.actionMessages) enriched.actionMessages = (db.uretimMrpActionMessage || []).filter((m: any) => m.mrpRunId === item.id)
+    }
+
+    if (this.modelName === "uretimMrpPlannedOrder" && include) {
+      if (include.mrpRun) enriched.mrpRun = (db.uretimMrpRun || []).find((r: any) => r.id === item.mrpRunId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
+      if (include.actionMessages) enriched.actionMessages = (db.uretimMrpActionMessage || []).filter((m: any) => m.plannedOrderId === item.id)
+    }
+
+    if (this.modelName === "uretimMrpActionMessage" && include) {
+      if (include.mrpRun) enriched.mrpRun = (db.uretimMrpRun || []).find((r: any) => r.id === item.mrpRunId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
+      if (include.plannedOrder) enriched.plannedOrder = (db.uretimMrpPlannedOrder || []).find((po: any) => po.id === item.plannedOrderId) ?? null
     }
 
     return enriched
@@ -1343,7 +1394,13 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimRoutingHeader",
       "uretimOperation",
       "uretimOperationAlternativeWorkCenter",
-      "uretimOperationMaterial"
+      "uretimOperationMaterial",
+      // ── Üretim Modülleri: Faz 4 MRP & MPS ──
+      "uretimMpsPlan",
+      "uretimMpsPlanItem",
+      "uretimMrpRun",
+      "uretimMrpPlannedOrder",
+      "uretimMrpActionMessage"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

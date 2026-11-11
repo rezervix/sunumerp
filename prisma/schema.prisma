@@ -1850,6 +1850,9 @@ model InventoryItem {
   uretimBomComponents      UretimBomItem[]          @relation("UretimBomComponentItem")
   uretimBomSubstitutes     UretimBomSubstitute[]    @relation("UretimBomSubstituteItem")
   uretimRoutings           UretimRoutingHeader[]    @relation("UretimRoutingFinishedItem")
+  uretimMpsPlanItems       UretimMpsPlanItem[]      @relation("UretimMpsPlanItemItem")
+  uretimMrpPlannedOrders   UretimMrpPlannedOrder[]  @relation("UretimMrpPlannedOrderItem")
+  uretimMrpActionMessages  UretimMrpActionMessage[] @relation("UretimMrpActionMessageItem")
 
   @@index([category])
   @@index([parentItemId])
@@ -3102,4 +3105,148 @@ model UretimOperationMaterial {
   @@index([operationId])
   @@index([bomItemId])
 }
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 4: MRP (MALZEME İHTİYAÇ PLANLAMASI) & MPS (ANA ÜRETİM ÇİZELGESİ)
+// ─────────────────────────────────────────────────────────────
+
+model UretimMpsPlan {
+  id               String              @id @default(uuid())
+  branchId         String?
+  code             String              @unique
+  name             String
+  revision         String              @default("1.0")
+  status           String              @default("DRAFT") // DRAFT, APPROVED, OBSOLETE
+  bucketType       String              @default("WEEKLY") // DAILY, WEEKLY, MONTHLY
+  horizonDays      Int                 @default(90)
+  frozenDays       Int                 @default(14)
+  isWhatIfScenario Boolean             @default(false)
+  scenarioName     String?
+  basePlanId       String?
+  notes            String?
+  approvedBy       String?
+  approvedAt       DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  items            UretimMpsPlanItem[]
+  mrpRuns          UretimMrpRun[]
+
+  @@index([branchId])
+  @@index([status])
+  @@index([basePlanId])
+}
+
+model UretimMpsPlanItem {
+  id                   String        @id @default(uuid())
+  mpsPlanId            String
+  itemId               String
+  periodIndex          Int           @default(0)
+  periodStartDate      DateTime
+  periodEndDate        DateTime
+  forecastQty          Float         @default(0)
+  salesOrderQty        Float         @default(0)
+  grossRequirement     Float         @default(0)
+  scheduledReceipts    Float         @default(0)
+  plannedProductionQty Float         @default(0)
+  projectedOnHand      Float         @default(0)
+  atpQty               Float         @default(0)
+  notes                String?
+
+  mpsPlan              UretimMpsPlan @relation(fields: [mpsPlanId], references: [id], onDelete: Cascade)
+  item                 InventoryItem @relation("UretimMpsPlanItemItem", fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([mpsPlanId])
+  @@index([itemId])
+  @@index([periodIndex])
+}
+
+model UretimMrpRun {
+  id                   String                  @id @default(uuid())
+  branchId             String?
+  mpsPlanId            String?
+  runCode              String                  @unique
+  runType              String                  @default("FULL_REGENERATION") // FULL_REGENERATION, NET_CHANGE
+  status               String                  @default("RUNNING") // RUNNING, COMPLETED, FAILED
+  startedAt            DateTime                @default(now())
+  completedAt          DateTime?
+  totalItemsPlanned    Int                     @default(0)
+  totalOrdersGenerated Int                     @default(0)
+  totalActionMessages  Int                     @default(0)
+  executionTimeMs      Int                     @default(0)
+  errorMessage         String?
+  triggeredBy          String                  @default("SYSTEM")
+  parametersJson       String?
+  createdAt            DateTime                @default(now())
+
+  mpsPlan              UretimMpsPlan?          @relation(fields: [mpsPlanId], references: [id], onDelete: SetNull)
+  plannedOrders        UretimMrpPlannedOrder[]
+  actionMessages       UretimMrpActionMessage[]
+
+  @@index([branchId])
+  @@index([mpsPlanId])
+  @@index([status])
+}
+
+model UretimMrpPlannedOrder {
+  id                 String                   @id @default(uuid())
+  mrpRunId           String
+  itemId             String
+  orderType          String // PURCHASE, PRODUCTION, TRANSFER
+  orderNumber        String
+  orderStatus        String                   @default("PLANNED") // PLANNED, APPROVED, CONVERTED, REJECTED
+  sourceDocumentType String                   @default("MPS") // MPS, SALES_ORDER, SAFETY_STOCK, BOM_DEPENDENT
+  sourceDocumentId   String?
+  quantity           Float
+  unit               String                   @default("Adet")
+  releaseDate        DateTime
+  dueDate            DateTime
+  supplierId         String?
+  bomId              String?
+  routingId          String?
+  convertedDocType   String? // PURCHASE_REQUISITION, WORK_ORDER
+  convertedDocId     String?
+  peggingJson        String?
+  notes              String?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+
+  mrpRun             UretimMrpRun             @relation(fields: [mrpRunId], references: [id], onDelete: Cascade)
+  item               InventoryItem            @relation("UretimMrpPlannedOrderItem", fields: [itemId], references: [id], onDelete: Cascade)
+  actionMessages     UretimMrpActionMessage[]
+
+  @@index([mrpRunId])
+  @@index([itemId])
+  @@index([orderType])
+  @@index([orderStatus])
+  @@index([releaseDate])
+  @@index([dueDate])
+}
+
+model UretimMrpActionMessage {
+  id              String                 @id @default(uuid())
+  mrpRunId        String
+  itemId          String
+  plannedOrderId  String?
+  actionType      String // EXPEDITE, DEFER, CANCEL, PAST_DUE, INSUFFICIENT_LEAD_TIME, SAFETY_STOCK_VIOLATION
+  severity        String                 @default("WARNING") // INFO, WARNING, CRITICAL
+  suggestedDate   DateTime?
+  suggestedQty    Float?
+  message         String
+  isResolved      Boolean                @default(false)
+  resolvedAt      DateTime?
+  resolvedBy      String?
+  createdAt       DateTime               @default(now())
+
+  mrpRun          UretimMrpRun           @relation(fields: [mrpRunId], references: [id], onDelete: Cascade)
+  item            InventoryItem          @relation("UretimMrpActionMessageItem", fields: [itemId], references: [id], onDelete: Cascade)
+  plannedOrder    UretimMrpPlannedOrder? @relation(fields: [plannedOrderId], references: [id], onDelete: SetNull)
+
+  @@index([mrpRunId])
+  @@index([itemId])
+  @@index([actionType])
+  @@index([severity])
+  @@index([isResolved])
+}
+
 
