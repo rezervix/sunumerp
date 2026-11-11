@@ -1846,6 +1846,10 @@ model InventoryItem {
   orderShipmentLines       OrderShipmentLine[]
   licensePlateContents     LicensePlateContent[]
   uretimProfile            UretimItemProfile?
+  uretimBomHeaders         UretimBomHeader[]        @relation("UretimBomFinishedItem")
+  uretimBomComponents      UretimBomItem[]          @relation("UretimBomComponentItem")
+  uretimBomSubstitutes     UretimBomSubstitute[]    @relation("UretimBomSubstituteItem")
+  uretimRoutings           UretimRoutingHeader[]    @relation("UretimRoutingFinishedItem")
 
   @@index([category])
   @@index([parentItemId])
@@ -2796,6 +2800,8 @@ model UretimWorkCenter {
   machines             UretimMachineAsset[]
   calendarExceptions   UretimCalendarException[]
   itemProfiles         UretimItemProfile[]
+  operations           UretimOperation[]
+  alternativeOperations UretimOperationAlternativeWorkCenter[]
 
   @@index([branchId])
   @@index([type])
@@ -2902,5 +2908,198 @@ model UretimItemProfile {
   @@index([productionMethod])
   @@index([defaultBomId])
   @@index([defaultWorkCenterId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 3: ÜRÜN REÇETELERİ (BOM) & ROTALAR (ROUTING) MODELLERİ
+// ─────────────────────────────────────────────────────────────
+
+model UretimBomHeader {
+  id                    String                @id @default(uuid())
+  branchId              String?
+  finishedItemId        String
+  code                  String                @unique
+  name                  String
+  revision              String                @default("01")
+  status                String                @default("DRAFT") // DRAFT, APPROVED, OBSOLETE
+  effectiveStartDate    String?               // YYYY-MM-DD
+  effectiveEndDate      String?               // YYYY-MM-DD
+  baseQuantity          Float                 @default(1)
+  baseUnit              String                @default("Adet")
+  isPhantom             Boolean               @default(false)
+  variantCode           String?
+  yieldPercent          Float                 @default(100.0)
+  totalMaterialCost     Float                 @default(0)
+  totalLaborCost        Float                 @default(0)
+  totalOverheadCost     Float                 @default(0)
+  totalTheoreticalCost  Float                 @default(0)
+  approvedAt            DateTime?
+  approvedBy            String?
+  notes                 String?
+  isActive              Boolean               @default(true)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  finishedItem          InventoryItem         @relation("UretimBomFinishedItem", fields: [finishedItemId], references: [id], onDelete: Cascade)
+  components            UretimBomItem[]
+  routings              UretimRoutingHeader[]
+  revisionLogs          UretimBomRevisionLog[]
+
+  @@index([finishedItemId])
+  @@index([status])
+  @@index([branchId])
+  @@index([isActive])
+}
+
+model UretimBomItem {
+  id                    String                @id @default(uuid())
+  bomId                 String
+  componentItemId       String
+  lineNumber            Int                   @default(10)
+  quantity              Float
+  unit                  String                @default("Adet")
+  unitConversionFactor  Float                 @default(1.0)
+  scrapPercent          Float                 @default(0)
+  isPhantom             Boolean               @default(false)
+  isVariantSpecific     Boolean               @default(false)
+  variantKey            String?
+  operationSequence     Int?
+  notes                 String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  bom                   UretimBomHeader       @relation(fields: [bomId], references: [id], onDelete: Cascade)
+  componentItem         InventoryItem         @relation("UretimBomComponentItem", fields: [componentItemId], references: [id], onDelete: Cascade)
+  substitutes           UretimBomSubstitute[]
+  operationAllocations  UretimOperationMaterial[]
+
+  @@index([bomId])
+  @@index([componentItemId])
+  @@index([operationSequence])
+}
+
+model UretimBomSubstitute {
+  id                    String                @id @default(uuid())
+  bomItemId             String
+  substituteItemId      String
+  priority              Int                   @default(1)
+  substitutionRatio     Float                 @default(1.0)
+  isMandatoryApproval   Boolean               @default(false)
+  notes                 String?
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  bomItem               UretimBomItem         @relation(fields: [bomItemId], references: [id], onDelete: Cascade)
+  substituteItem        InventoryItem         @relation("UretimBomSubstituteItem", fields: [substituteItemId], references: [id], onDelete: Cascade)
+
+  @@index([bomItemId])
+  @@index([substituteItemId])
+}
+
+model UretimBomRevisionLog {
+  id                    String                @id @default(uuid())
+  bomId                 String
+  fromRevision          String
+  toRevision            String
+  action                String                @default("UPDATE") // CREATE, APPROVE, REVISE, OBSOLETE, COPY
+  changeSummary         String
+  diffSnapshotJson      String?
+  changedBy             String
+  changedAt             DateTime              @default(now())
+
+  bom                   UretimBomHeader       @relation(fields: [bomId], references: [id], onDelete: Cascade)
+
+  @@index([bomId])
+  @@index([changedAt])
+}
+
+model UretimRoutingHeader {
+  id                    String                @id @default(uuid())
+  branchId              String?
+  bomId                 String?
+  finishedItemId        String
+  code                  String                @unique
+  name                  String
+  revision              String                @default("01")
+  status                String                @default("DRAFT") // DRAFT, APPROVED, OBSOLETE
+  totalSetupTimeMinutes Float                 @default(0)
+  totalRunTimeMinutes   Float                 @default(0)
+  totalHourlyCost       Float                 @default(0)
+  totalRoutingCost      Float                 @default(0)
+  approvedAt            DateTime?
+  approvedBy            String?
+  notes                 String?
+  isActive              Boolean               @default(true)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  bom                   UretimBomHeader?      @relation(fields: [bomId], references: [id], onDelete: SetNull)
+  finishedItem          InventoryItem         @relation("UretimRoutingFinishedItem", fields: [finishedItemId], references: [id], onDelete: Cascade)
+  operations            UretimOperation[]
+
+  @@index([finishedItemId])
+  @@index([bomId])
+  @@index([status])
+  @@index([branchId])
+}
+
+model UretimOperation {
+  id                         String                                @id @default(uuid())
+  routingId                  String
+  operationNumber            Int                                   @default(10)
+  name                       String
+  description                String?
+  workCenterId               String
+  setupTimeMinutes           Float                                 @default(0)
+  runTimeMinutes             Float                                 @default(0)
+  waitOrTransportTimeMinutes Float                                 @default(0)
+  workerCount                Int                                   @default(1)
+  isSubcontracted            Boolean                               @default(false)
+  subcontractorName          String?
+  subcontractUnitCost        Float                                 @default(0)
+  isQualityControlPoint      Boolean                               @default(false)
+  qualityInspectionType      String?
+  calculatedHourlyCost       Float                                 @default(0)
+  totalOperationCost         Float                                 @default(0)
+  createdAt                  DateTime                              @default(now())
+  updatedAt                  DateTime                              @updatedAt
+
+  routing                    UretimRoutingHeader                   @relation(fields: [routingId], references: [id], onDelete: Cascade)
+  workCenter                 UretimWorkCenter                      @relation(fields: [workCenterId], references: [id], onDelete: Restrict)
+  alternativeWorkCenters     UretimOperationAlternativeWorkCenter[]
+  materialAllocations        UretimOperationMaterial[]
+
+  @@index([routingId])
+  @@index([workCenterId])
+  @@index([operationNumber])
+}
+
+model UretimOperationAlternativeWorkCenter {
+  id                    String            @id @default(uuid())
+  operationId           String
+  workCenterId          String
+  priority              Int               @default(1)
+  efficiencyFactor      Float             @default(1.0)
+  notes                 String?
+
+  operation             UretimOperation   @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  workCenter            UretimWorkCenter  @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+
+  @@index([operationId])
+  @@index([workCenterId])
+}
+
+model UretimOperationMaterial {
+  id                    String            @id @default(uuid())
+  operationId           String
+  bomItemId             String
+  consumptionTiming     String            @default("START") // START, END, CONTINUOUS
+  notes                 String?
+
+  operation             UretimOperation   @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  bomItem               UretimBomItem     @relation(fields: [bomItemId], references: [id], onDelete: Cascade)
+
+  @@index([operationId])
+  @@index([bomItemId])
 }
 

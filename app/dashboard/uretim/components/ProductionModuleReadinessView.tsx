@@ -34,6 +34,7 @@ import {
   ProductionMasterDataWorkspace,
   type MasterDataTabKey,
 } from "./ProductionMasterDataWorkspace"
+import { ProductionBomWorkspace } from "./ProductionBomWorkspace"
 
 const MODULE_ICONS: Record<ProductionFeatureFlagKey, React.ElementType> = {
   uretim_bom_rota: GitBranch,
@@ -333,8 +334,11 @@ export function ProductionModuleReadinessView({
         </div>
       )}
 
-      {/* Özellik Bayrağı Açık Olduğunda Üretim Ana Verileri Çalışma Alanı */}
-      {snapshot?.anyFlagEnabled && (
+      {/* BOM & Rota Özellik Bayrağı Açık Olduğunda Özel BOM & Rota Çalışma Alanı */}
+      {snapshot?.flags?.uretim_bom_rota &&
+      (activeSlug === "bom-rota" || activeSlug === "uretim_bom_rota") ? (
+        <ProductionBomWorkspace />
+      ) : snapshot?.anyFlagEnabled ? (
         <ProductionMasterDataWorkspace
           defaultTab={
             (activeSlug === "bakim" || activeSlug === "uretim_bakim"
@@ -346,7 +350,7 @@ export function ProductionModuleReadinessView({
               : "work-centers") as MasterDataTabKey
           }
         />
-      )}
+      ) : null}
 
       {/* Üretim Modülleri Özellik Bayrağı ve RBAC İzin Matrisi Tablosu */}
       <div className="glass-table-container overflow-hidden">

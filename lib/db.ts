@@ -156,6 +156,15 @@ interface JsonDbData {
   uretimMachineAsset?: any[]
   uretimParameters?: any[]
   uretimItemProfile?: any[]
+  // ── Üretim Modülleri: Faz 3 BOM & Rotalar ──
+  uretimBomHeader?: any[]
+  uretimBomItem?: any[]
+  uretimBomSubstitute?: any[]
+  uretimBomRevisionLog?: any[]
+  uretimRoutingHeader?: any[]
+  uretimOperation?: any[]
+  uretimOperationAlternativeWorkCenter?: any[]
+  uretimOperationMaterial?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -896,6 +905,60 @@ class ModelSimulate {
       if (include.defaultWorkCenter) enriched.defaultWorkCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.defaultWorkCenterId) ?? null
     }
 
+    if (this.modelName === "uretimBomHeader" && include) {
+      if (include.finishedItem) enriched.finishedItem = (db.inventoryItem || []).find((it: any) => it.id === item.finishedItemId) ?? null
+      if (include.components) {
+        enriched.components = (db.uretimBomItem || []).filter((c: any) => c.bomId === item.id).map((c: any) => ({
+          ...c,
+          componentItem: (db.inventoryItem || []).find((it: any) => it.id === c.componentItemId) ?? null,
+          substitutes: (db.uretimBomSubstitute || []).filter((s: any) => s.bomItemId === c.id).map((s: any) => ({
+            ...s,
+            substituteItem: (db.inventoryItem || []).find((it: any) => it.id === s.substituteItemId) ?? null
+          }))
+        }))
+      }
+      if (include.routings) enriched.routings = (db.uretimRoutingHeader || []).filter((r: any) => r.bomId === item.id)
+      if (include.revisionLogs) enriched.revisionLogs = (db.uretimBomRevisionLog || []).filter((l: any) => l.bomId === item.id)
+    }
+
+    if (this.modelName === "uretimBomItem" && include) {
+      if (include.bom) enriched.bom = (db.uretimBomHeader || []).find((b: any) => b.id === item.bomId) ?? null
+      if (include.componentItem) enriched.componentItem = (db.inventoryItem || []).find((it: any) => it.id === item.componentItemId) ?? null
+      if (include.substitutes) {
+        enriched.substitutes = (db.uretimBomSubstitute || []).filter((s: any) => s.bomItemId === item.id).map((s: any) => ({
+          ...s,
+          substituteItem: (db.inventoryItem || []).find((it: any) => it.id === s.substituteItemId) ?? null
+        }))
+      }
+    }
+
+    if (this.modelName === "uretimRoutingHeader" && include) {
+      if (include.finishedItem) enriched.finishedItem = (db.inventoryItem || []).find((it: any) => it.id === item.finishedItemId) ?? null
+      if (include.bom) enriched.bom = (db.uretimBomHeader || []).find((b: any) => b.id === item.bomId) ?? null
+      if (include.operations) {
+        enriched.operations = (db.uretimOperation || []).filter((op: any) => op.routingId === item.id).map((op: any) => ({
+          ...op,
+          workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === op.workCenterId) ?? null,
+          alternativeWorkCenters: (db.uretimOperationAlternativeWorkCenter || []).filter((alt: any) => alt.operationId === op.id).map((alt: any) => ({
+            ...alt,
+            workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === alt.workCenterId) ?? null
+          })),
+          materialAllocations: (db.uretimOperationMaterial || []).filter((m: any) => m.operationId === op.id)
+        }))
+      }
+    }
+
+    if (this.modelName === "uretimOperation" && include) {
+      if (include.routing) enriched.routing = (db.uretimRoutingHeader || []).find((r: any) => r.id === item.routingId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+      if (include.alternativeWorkCenters) {
+        enriched.alternativeWorkCenters = (db.uretimOperationAlternativeWorkCenter || []).filter((alt: any) => alt.operationId === item.id).map((alt: any) => ({
+          ...alt,
+          workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === alt.workCenterId) ?? null
+        }))
+      }
+    }
+
     return enriched
   }
 
@@ -1271,7 +1334,16 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimCalendarException",
       "uretimMachineAsset",
       "uretimParameters",
-      "uretimItemProfile"
+      "uretimItemProfile",
+      // ── Üretim Modülleri: Faz 3 BOM & Rotalar ──
+      "uretimBomHeader",
+      "uretimBomItem",
+      "uretimBomSubstitute",
+      "uretimBomRevisionLog",
+      "uretimRoutingHeader",
+      "uretimOperation",
+      "uretimOperationAlternativeWorkCenter",
+      "uretimOperationMaterial"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
