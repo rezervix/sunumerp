@@ -39,6 +39,14 @@
     "expiresAt": "2026-08-23T13:47:22.103Z",
     "iyzicoSubscriptionId": "sub_mock_ilptj3lh"
   },
+  "featureFlags": {
+    "uretim_bom_rota": false,
+    "uretim_mrp_mps": false,
+    "uretim_is_emri": false,
+    "uretim_kapasite": false,
+    "uretim_kalite": false,
+    "uretim_bakim": false
+  },
   "tamperDetected": false,
   "securityDisabled": true,
   "hasLogo": true,

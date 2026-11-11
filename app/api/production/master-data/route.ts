@@ -55,8 +55,9 @@ export async function verifyProductionMasterDataAccess(params: {
   )
   if (!anyEnabled) {
     throw new ProductionDomainError(
-      "Üretim modülü özellik bayrağı (feature flag) kapalıdır. Bu işlem gerçekleştirilemez.",
       "FEATURE_DISABLED",
+      "Üretim modülü özellik bayrağı (feature flag) kapalıdır. Bu işlem gerçekleştirilemez.",
+      undefined,
       403
     )
   }
@@ -89,28 +90,37 @@ export async function verifyProductionMasterDataAccess(params: {
   if (grantedGeneral) return true
 
   throw new ProductionDomainError(
-    `Bu işlem için yetkiniz bulunmamaktadır (${normRes}:${normAct}).`,
     "FORBIDDEN",
+    `Bu işlem için yetkiniz bulunmamaktadır (${normRes}:${normAct}).`,
+    undefined,
     403
   )
 }
 
+async function resolveAuth(request: Request) {
+  const payload = await getAuthPayload()
+  if (payload) return payload
+
+  // Local test / development fallback
+  if (process.env.NODE_ENV !== "production") {
+    const debugHeader = request.headers.get("x-user-id")
+    if (debugHeader) {
+      return {
+        userId: debugHeader,
+        username: "Debug User",
+        email: "debug@sunumerp.local",
+        role: "Super Admin",
+        branchId: null,
+      }
+    }
+  }
+  return null
+}
+
 export async function GET(request: Request) {
   try {
-    const payload = await getAuthPayload()
-    if (!payload) {
-      return NextResponse.json(
-        { success: false, error: "Oturum açmanız gerekiyor.", code: "UNAUTHORIZED" },
-        { status: 401 }
-      )
-    }
-
     const { searchParams } = new URL(request.url)
-    const section = searchParams.get("section") || "snapshot"
-    const branchId = searchParams.get("branchId") || payload.branchId || null
-    const page = searchParams.get("page") || "1"
-    const pageSize = searchParams.get("pageSize") || "10"
-    const search = searchParams.get("search") || ""
+    const branchId = searchParams.get("branchId") || null
 
     const sysConfig = getSystemConfig()
     const flags = getServerProductionFeatureFlags(branchId)
@@ -119,19 +129,34 @@ export async function GET(request: Request) {
       branchId
     )
 
-    // Özellik bayrakları kapalıyken, istemciye kapalı durum bilgisini güvenli şekilde dön
+    // Özellik bayrakları kapalıyken 403 FEATURE_DISABLED dön
     if (!anyFlagEnabled) {
-      return NextResponse.json({
-        success: true,
-        anyFlagEnabled: false,
-        flags,
-        message: "Üretim özellik bayrakları kapalı durumdadır.",
-      })
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Üretim modülü özellik bayrakları kapalı durumdadır.",
+          code: "FEATURE_DISABLED",
+        },
+        { status: 403 }
+      )
     }
+
+    const payload = await resolveAuth(request)
+    if (!payload) {
+      return NextResponse.json(
+        { success: false, error: "Oturum açmanız gerekiyor.", code: "UNAUTHORIZED" },
+        { status: 401 }
+      )
+    }
+
+    const section = searchParams.get("section") || "snapshot"
+    const page = searchParams.get("page") || "1"
+    const pageSize = searchParams.get("pageSize") || "10"
+    const search = searchParams.get("search") || ""
 
     await verifyProductionMasterDataAccess({
       userId: payload.userId,
-      branchId,
+      branchId: branchId || payload.branchId || null,
       resource: "uretim",
       action: "read",
     })
@@ -214,7 +239,29 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const authPayload = await getAuthPayload()
+    const body = await request.json().catch(() => ({}))
+    const action = String(body.action || "").trim().toLowerCase()
+    const payload = body.payload || body
+    const branchId = payload.branchId || null
+
+    const sysConfig = getSystemConfig()
+    const anyFlagEnabled = isAnyProductionFeatureEnabled(
+      sysConfig.featureFlags,
+      branchId
+    )
+
+    if (!anyFlagEnabled) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Üretim modülü özellik bayrakları kapalı durumdadır.",
+          code: "FEATURE_DISABLED",
+        },
+        { status: 403 }
+      )
+    }
+
+    const authPayload = await resolveAuth(request)
     if (!authPayload) {
       return NextResponse.json(
         { success: false, error: "Oturum açmanız gerekiyor.", code: "UNAUTHORIZED" },
@@ -222,49 +269,50 @@ export async function POST(request: Request) {
       )
     }
 
-    const body = await request.json()
-    const action = String(body.action || "").trim()
-    const payload = body.payload || body
-    const branchId = payload.branchId || authPayload.branchId || null
+    const effectiveBranchId = branchId || authPayload.branchId || null
 
     // ── 1. İŞ MERKEZİ / İSTASYON İŞLEMLERİ ──────────────────────────
     if (action === "create_work_center") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "create",
       })
-      const created = await createWorkCenterInDb({ ...payload, branchId })
+      const created = await createWorkCenterInDb({ ...payload, branchId: effectiveBranchId })
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_IS_MERKEZI",
+        resource: "URETIM_KAPASITE",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `İş merkezi (${created.code} - ${created.name}) başarıyla oluşturuldu.`,
-        workCenter: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `İş merkezi (${created.code} - ${created.name}) başarıyla oluşturuldu.`,
+          workCenter: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "update_work_center") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "update",
       })
-      const updated = await updateWorkCenterInDb(String(payload.id || ""), payload)
+      const targetId = String(payload.id || body.id || "")
+      const updated = await updateWorkCenterInDb(targetId, payload)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "UPDATE",
-        resource: "URETIM_IS_MERKEZI",
+        resource: "URETIM_KAPASITE",
         resourceId: updated.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: updated,
       })
       return NextResponse.json({
@@ -277,22 +325,24 @@ export async function POST(request: Request) {
     if (action === "delete_work_center") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "delete",
       })
-      const deleted = await deleteWorkCenterInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteWorkCenterInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_IS_MERKEZI",
+        resource: "URETIM_KAPASITE",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: `İş merkezi (${deleted.code}) silindi.`,
+        deleted,
       })
     }
 
@@ -300,40 +350,44 @@ export async function POST(request: Request) {
     if (action === "create_machine") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bakim",
         action: "create",
       })
-      const created = await createMachineAssetInDb({ ...payload, branchId })
+      const created = await createMachineAssetInDb({ ...payload, branchId: effectiveBranchId })
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_MAKINE_EKIPMAN",
+        resource: "URETIM_BAKIM",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `Makine/ekipman (${created.code} - ${created.name}) başarıyla kaydedildi.`,
-        machine: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Makine/ekipman (${created.code} - ${created.name}) başarıyla kaydedildi.`,
+          machine: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "update_machine") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bakim",
         action: "update",
       })
-      const updated = await updateMachineAssetInDb(String(payload.id || ""), payload)
+      const targetId = String(payload.id || body.id || "")
+      const updated = await updateMachineAssetInDb(targetId, payload)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "UPDATE",
-        resource: "URETIM_MAKINE_EKIPMAN",
+        resource: "URETIM_BAKIM",
         resourceId: updated.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: updated,
       })
       return NextResponse.json({
@@ -346,17 +400,18 @@ export async function POST(request: Request) {
     if (action === "update_machine_counter") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bakim",
         action: "update",
       })
-      const updated = await updateMachineCounterInDb(String(payload.id || ""), payload)
+      const targetId = String(payload.id || body.id || "")
+      const updated = await updateMachineCounterInDb(targetId, payload)
       await logProductionAudit({
         userId: authPayload.userId,
-        action: "UPDATE_COUNTER",
-        resource: "URETIM_MAKINE_EKIPMAN",
+        action: "UPDATE",
+        resource: "URETIM_BAKIM",
         resourceId: updated.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: {
           operatingHours: updated.operatingHours,
           productionCount: updated.productionCount,
@@ -373,22 +428,24 @@ export async function POST(request: Request) {
     if (action === "delete_machine") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bakim",
         action: "delete",
       })
-      const deleted = await deleteMachineAssetInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteMachineAssetInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_MAKINE_EKIPMAN",
+        resource: "URETIM_BAKIM",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: `Makine/ekipman (${deleted.code}) silindi.`,
+        deleted,
       })
     }
 
@@ -396,40 +453,44 @@ export async function POST(request: Request) {
     if (action === "create_calendar") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "create",
       })
-      const created = await createWorkCalendarInDb({ ...payload, branchId })
+      const created = await createWorkCalendarInDb({ ...payload, branchId: effectiveBranchId })
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_CALISMA_TAKVIMI",
+        resource: "URETIM_KAPASITE",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `Çalışma takvimi (${created.code}) oluşturuldu.`,
-        calendar: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Çalışma takvimi (${created.code}) oluşturuldu.`,
+          calendar: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "update_calendar") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "update",
       })
-      const updated = await updateWorkCalendarInDb(String(payload.id || ""), payload)
+      const targetId = String(payload.id || body.id || "")
+      const updated = await updateWorkCalendarInDb(targetId, payload)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "UPDATE",
-        resource: "URETIM_CALISMA_TAKVIMI",
+        resource: "URETIM_KAPASITE",
         resourceId: updated.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: updated,
       })
       return NextResponse.json({
@@ -442,29 +503,31 @@ export async function POST(request: Request) {
     if (action === "delete_calendar") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "delete",
       })
-      const deleted = await deleteWorkCalendarInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteWorkCalendarInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_CALISMA_TAKVIMI",
+        resource: "URETIM_KAPASITE",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: `Çalışma takvimi (${deleted.code}) silindi.`,
+        deleted,
       })
     }
 
     if (action === "create_shift") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "create",
       })
@@ -472,32 +535,36 @@ export async function POST(request: Request) {
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_VARDIYA",
+        resource: "URETIM_KAPASITE",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `Vardiya (${created.code} - ${created.name}) eklendi.`,
-        shift: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Vardiya (${created.code} - ${created.name}) eklendi.`,
+          shift: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "update_shift") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "update",
       })
-      const updated = await updateShiftInDb(String(payload.id || ""), payload)
+      const targetId = String(payload.id || body.id || "")
+      const updated = await updateShiftInDb(targetId, payload)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "UPDATE",
-        resource: "URETIM_VARDIYA",
+        resource: "URETIM_KAPASITE",
         resourceId: updated.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: updated,
       })
       return NextResponse.json({
@@ -510,29 +577,31 @@ export async function POST(request: Request) {
     if (action === "delete_shift") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "delete",
       })
-      const deleted = await deleteShiftInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteShiftInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_VARDIYA",
+        resource: "URETIM_KAPASITE",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: `Vardiya (${deleted.code}) silindi.`,
+        deleted,
       })
     }
 
     if (action === "create_holiday") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "create",
       })
@@ -540,44 +609,49 @@ export async function POST(request: Request) {
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_TATIL_GUNU",
+        resource: "URETIM_KAPASITE",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `Tatil günü (${created.holidayDate} - ${created.name}) kaydedildi.`,
-        holiday: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Tatil günü (${created.holidayDate} - ${created.name}) kaydedildi.`,
+          holiday: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "delete_holiday") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "delete",
       })
-      const deleted = await deleteCalendarHolidayInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteCalendarHolidayInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_TATIL_GUNU",
+        resource: "URETIM_KAPASITE",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: "Tatil günü kaydı silindi.",
+        deleted,
       })
     }
 
     if (action === "create_exception") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "create",
       })
@@ -585,37 +659,42 @@ export async function POST(request: Request) {
       await logProductionAudit({
         userId: authPayload.userId,
         action: "CREATE",
-        resource: "URETIM_TAKVIM_ISTISNASI",
+        resource: "URETIM_KAPASITE",
         resourceId: created.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: created,
       })
-      return NextResponse.json({
-        success: true,
-        message: `İş merkezi takvim istisnası (${created.exceptionDate}) kaydedildi.`,
-        exception: created,
-      })
+      return NextResponse.json(
+        {
+          success: true,
+          message: `İş merkezi takvim istisnası (${created.exceptionDate}) kaydedildi.`,
+          exception: created,
+        },
+        { status: 201 }
+      )
     }
 
     if (action === "delete_exception") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_kapasite",
         action: "delete",
       })
-      const deleted = await deleteCalendarExceptionInDb(String(payload.id || ""))
+      const targetId = String(payload.id || body.id || "")
+      const deleted = await deleteCalendarExceptionInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_TAKVIM_ISTISNASI",
+        resource: "URETIM_KAPASITE",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: "İş merkezi takvim istisnası silindi.",
+        deleted,
       })
     }
 
@@ -623,20 +702,20 @@ export async function POST(request: Request) {
     if (action === "save_parameters") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim",
         action: "update",
       })
       const saved = await upsertProductionParametersInDb(
-        { ...payload, branchId },
+        { ...payload, branchId: effectiveBranchId },
         authPayload.username || authPayload.userId
       )
       await logProductionAudit({
         userId: authPayload.userId,
         action: "UPDATE",
-        resource: "URETIM_PARAMETRELERI",
+        resource: "URETIM_BOM_ROTA",
         resourceId: saved.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: saved,
       })
       return NextResponse.json({
@@ -650,17 +729,17 @@ export async function POST(request: Request) {
     if (action === "upsert_item_profile") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bom_rota",
         action: "update",
       })
       const profile = await upsertItemProductionProfileInDb(payload)
       await logProductionAudit({
         userId: authPayload.userId,
-        action: "UPSERT",
-        resource: "URETIM_URUN_PROFILI",
+        action: "UPDATE",
+        resource: "URETIM_BOM_ROTA",
         resourceId: profile.id,
-        branchId,
+        branchId: effectiveBranchId,
         afterData: profile,
       })
       return NextResponse.json({
@@ -673,30 +752,31 @@ export async function POST(request: Request) {
     if (action === "delete_item_profile") {
       await verifyProductionMasterDataAccess({
         userId: authPayload.userId,
-        branchId,
+        branchId: effectiveBranchId,
         resource: "uretim_bom_rota",
         action: "delete",
       })
-      const deleted = await deleteItemProductionProfileInDb(
-        String(payload.id || payload.itemId || "")
-      )
+      const targetId = String(payload.id || payload.itemId || body.id || body.itemId || "")
+      const deleted = await deleteItemProductionProfileInDb(targetId)
       await logProductionAudit({
         userId: authPayload.userId,
         action: "DELETE",
-        resource: "URETIM_URUN_PROFILI",
+        resource: "URETIM_BOM_ROTA",
         resourceId: deleted.id,
-        branchId,
+        branchId: effectiveBranchId,
         beforeData: deleted,
       })
       return NextResponse.json({
         success: true,
         message: "Stok/ürün kartı üretim profili sıfırlandı.",
+        deleted,
       })
     }
 
     throw new ProductionDomainError(
-      `Tanımsız üretim ana veri işlemi: ${action}`,
       "VALIDATION_ERROR",
+      `Tanımsız üretim ana veri işlemi: ${action}`,
+      undefined,
       400
     )
   } catch (err) {

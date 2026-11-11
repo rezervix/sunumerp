@@ -60,6 +60,8 @@ const DEFAULT_ERROR_STATUS: Record<ProductionErrorCode, number> = {
 
 /**
  * Üretim modülleri için standart alan (domain) hata sınıfı.
+ * Hem (code, message, details?, statusOverride?) hem de
+ * (message, code?, detailsOrStatus?, statusOverride?) imzalarını destekler.
  */
 export class ProductionDomainError extends Error {
   public readonly code: ProductionErrorCode
@@ -67,16 +69,60 @@ export class ProductionDomainError extends Error {
   public readonly details?: Record<string, unknown>
 
   constructor(
-    code: ProductionErrorCode,
-    message: string,
-    details?: Record<string, unknown>,
-    statusOverride?: number
+    first: ProductionErrorCode | string,
+    second?: string | ProductionErrorCode,
+    third?: Record<string, unknown> | number,
+    fourth?: number
   ) {
-    super(message)
+    const KNOWN_CODES = new Set<string>([
+      "FEATURE_DISABLED",
+      "UNAUTHORIZED",
+      "FORBIDDEN",
+      "VALIDATION_ERROR",
+      "NOT_FOUND",
+      "CONFLICT",
+      "INVALID_STATE_TRANSITION",
+      "INSUFFICIENT_STOCK",
+      "CAPACITY_EXCEEDED",
+      "INTERNAL_ERROR",
+    ])
+
+    let resolvedCode: ProductionErrorCode = "INTERNAL_ERROR"
+    let resolvedMessage = ""
+    let resolvedDetails: Record<string, unknown> | undefined = undefined
+    let resolvedStatus: number | undefined = undefined
+
+    if (KNOWN_CODES.has(first)) {
+      // (code, message, details?, statusOverride?)
+      resolvedCode = first as ProductionErrorCode
+      resolvedMessage = typeof second === "string" ? second : first
+      if (typeof third === "number") {
+        resolvedStatus = third
+      } else if (typeof third === "object" && third !== null) {
+        resolvedDetails = third as Record<string, unknown>
+        if (typeof fourth === "number") resolvedStatus = fourth
+      }
+    } else {
+      // (message, code?, detailsOrStatus?, statusOverride?)
+      resolvedMessage = first
+      if (second && KNOWN_CODES.has(second)) {
+        resolvedCode = second as ProductionErrorCode
+      } else {
+        resolvedCode = "VALIDATION_ERROR"
+      }
+      if (typeof third === "number") {
+        resolvedStatus = third
+      } else if (typeof third === "object" && third !== null) {
+        resolvedDetails = third as Record<string, unknown>
+        if (typeof fourth === "number") resolvedStatus = fourth
+      }
+    }
+
+    super(resolvedMessage)
     this.name = "ProductionDomainError"
-    this.code = code
-    this.status = statusOverride ?? DEFAULT_ERROR_STATUS[code] ?? 400
-    this.details = details
+    this.code = resolvedCode
+    this.status = resolvedStatus ?? DEFAULT_ERROR_STATUS[resolvedCode] ?? 400
+    this.details = resolvedDetails
   }
 }
 
@@ -109,6 +155,8 @@ export interface LogProductionAuditInput {
   documentNo?: string
   previousState?: unknown
   newState?: unknown
+  beforeData?: unknown
+  afterData?: unknown
   metadata?: Record<string, unknown>
 }
 
@@ -127,8 +175,8 @@ export async function logProductionAudit(input: LogProductionAuditInput) {
       moduleKey: input.moduleKey || null,
       branchId: input.branchId || null,
       documentNo: input.documentNo || null,
-      previousState: input.previousState ?? null,
-      newState: input.newState ?? null,
+      previousState: input.previousState ?? input.beforeData ?? null,
+      newState: input.newState ?? input.afterData ?? null,
       ...(input.metadata || {}),
       loggedAt: new Date().toISOString(),
     },

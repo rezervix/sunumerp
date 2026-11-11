@@ -130,6 +130,8 @@ export function normalizeProductionPermissionAction(action: string): string {
   return PRODUCTION_ACTION_ALIASES[action.toLowerCase()] ?? action
 }
 
+export const normalizePermissionAction = normalizeProductionPermissionAction
+
 export function normalizePermissionResource(resource: string): string {
   return RESOURCE_ALIASES[resource] ?? resource
 }
