@@ -1856,6 +1856,9 @@ model InventoryItem {
   uretimWorkOrders         UretimWorkOrder[]        @relation("UretimWorkOrderItem")
   uretimWorkOrderMaterials UretimWorkOrderMaterial[] @relation("UretimWorkOrderMaterialItem")
   uretimCtpSimulations     UretimCtpSimulation[]
+  uretimQualityPlans       UretimQualityPlan[]
+  uretimQualityInspections UretimQualityInspection[]
+  uretimQualityNcrs        UretimQualityNcr[]
 
   @@index([category])
   @@index([parentItemId])
@@ -3311,6 +3314,8 @@ model UretimWorkOrder {
   iotRecords              UretimIotStaging[]
   scheduledTasks          UretimScheduledTask[]
   capacityAlerts          UretimCapacityAlert[]
+  qualityInspections      UretimQualityInspection[]
+  qualityNcrs             UretimQualityNcr[]
 
   @@index([branchId])
   @@index([itemId])
@@ -3345,6 +3350,8 @@ model UretimWorkOrderOperation {
   scheduledEndDate     DateTime?
   isLocked             Boolean                    @default(false)
   sequenceNumber       Int                        @default(0)
+  isQualityControlPoint Boolean                   @default(false)
+  qualityInspectionStatus String?
   createdAt            DateTime                   @default(now())
   updatedAt            DateTime                   @updatedAt
 
@@ -3355,6 +3362,7 @@ model UretimWorkOrderOperation {
   materials            UretimWorkOrderMaterial[]
   scheduledTasks       UretimScheduledTask[]
   capacityAlerts       UretimCapacityAlert[]
+  qualityInspections   UretimQualityInspection[]
 
   @@index([workOrderId])
   @@index([workCenterId])
@@ -3607,6 +3615,197 @@ model UretimOperationTimeVariance {
   @@index([workCenterId])
   @@index([isApplied])
 }
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 7: ÜRETİM KALİTE KONTROL, MUAYENE, NCR & DÖF (CAPA)
+// ─────────────────────────────────────────────────────────────
+
+model UretimQualityCalibration {
+  id                      String                        @id @default(uuid())
+  deviceCode              String                        @unique
+  deviceName              String
+  deviceType              String                        @default("CALIPER")
+  serialNumber            String?
+  brandModel              String?
+  location                String?
+  calibrationPeriodMonths Int                           @default(12)
+  lastCalibrationDate     DateTime
+  nextCalibrationDate     DateTime
+  certificateNumber       String?
+  calibratedBy            String?
+  status                  String                        @default("ACTIVE") // ACTIVE, EXPIRING_SOON, EXPIRED, OUT_OF_SERVICE
+  notes                   String?
+  createdById             String?
+  createdAt               DateTime                      @default(now())
+  updatedAt               DateTime                      @updatedAt
+
+  planItems               UretimQualityPlanItem[]
+  inspectionResults       UretimQualityInspectionResult[]
+
+  @@index([status])
+  @@index([nextCalibrationDate])
+}
+
+model UretimQualityPlan {
+  id                 String                     @id @default(uuid())
+  code               String                     @unique
+  name               String
+  description        String?
+  targetType         String                     @default("ITEM") // ITEM, CATEGORY
+  itemId             String?
+  itemGroup          String?
+  controlPoint       String                     @default("RECEIVING") // RECEIVING, IN_PROCESS, FINAL
+  inspectionLevel    String                     @default("LEVEL_II") // LEVEL_I, LEVEL_II, LEVEL_III
+  samplingType       String                     @default("AQL") // AQL, PERCENTAGE, FIXED, FULL_INSPECTION
+  samplingSize       Float?
+  aqlAcceptanceLimit Float                      @default(1.5)
+  version            Int                        @default(1)
+  isActive           Boolean                    @default(true)
+  revisionNotes      String?
+  createdById        String?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+
+  item               InventoryItem?             @relation(fields: [itemId], references: [id], onDelete: SetNull)
+  items              UretimQualityPlanItem[]
+  inspections        UretimQualityInspection[]
+
+  @@index([itemId])
+  @@index([controlPoint])
+  @@index([isActive])
+}
+
+model UretimQualityPlanItem {
+  id                  String                         @id @default(uuid())
+  planId              String
+  sequence            Int                            @default(10)
+  characteristicName  String
+  characteristicType  String                         @default("VARIABLE") // VARIABLE, ATTRIBUTE
+  nominalValue        Float?
+  minTolerance        Float?
+  maxTolerance        Float?
+  unit                String?
+  inspectionMethod    String?
+  calibrationDeviceId String?
+  isCritical          Boolean                        @default(false)
+  notes               String?
+  createdAt           DateTime                       @default(now())
+
+  plan                UretimQualityPlan              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  calibrationDevice   UretimQualityCalibration?      @relation(fields: [calibrationDeviceId], references: [id], onDelete: SetNull)
+  results             UretimQualityInspectionResult[]
+
+  @@index([planId])
+  @@index([calibrationDeviceId])
+}
+
+model UretimQualityInspection {
+  id                    String                         @id @default(uuid())
+  inspectionNumber      String                         @unique
+  planId                String?
+  inspectionType        String                         @default("RECEIVING") // RECEIVING, IN_PROCESS, FINAL
+  itemId                String
+  workOrderId           String?
+  workOrderOperationId  String?
+  supplierId            String?
+  supplierName          String?
+  purchaseOrderId       String?
+  goodsReceiptId        String?
+  lotNumber             String?
+  serialNumber          String?
+  batchQuantity         Float                          @default(0)
+  sampleQuantity        Float                          @default(0)
+  status                String                         @default("PENDING") // PENDING, IN_PROGRESS, PASSED, CONDITIONAL_PASSED, REJECTED, CANCELLED
+  totalDefects          Int                            @default(0)
+  isStockBlocked        Boolean                        @default(false)
+  quarantineWarehouseId String?
+  inspectorUserId       String?
+  approvedByUserId      String?
+  inspectionDate        DateTime                       @default(now())
+  decisionNotes         String?
+  certificatePdfUrl     String?
+  createdAt             DateTime                       @default(now())
+  updatedAt             DateTime                       @updatedAt
+
+  plan                  UretimQualityPlan?             @relation(fields: [planId], references: [id], onDelete: SetNull)
+  item                  InventoryItem                  @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  workOrder             UretimWorkOrder?               @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+  workOrderOperation    UretimWorkOrderOperation?      @relation(fields: [workOrderOperationId], references: [id], onDelete: SetNull)
+  results               UretimQualityInspectionResult[]
+  ncrs                  UretimQualityNcr[]
+
+  @@index([itemId])
+  @@index([workOrderId])
+  @@index([status])
+  @@index([lotNumber])
+}
+
+model UretimQualityInspectionResult {
+  id                  String                    @id @default(uuid())
+  inspectionId        String
+  planItemId          String?
+  sampleIndex         Int                       @default(1)
+  characteristicName  String
+  characteristicType  String                    @default("VARIABLE") // VARIABLE, ATTRIBUTE
+  nominalValue        Float?
+  minValue            Float?
+  maxValue            Float?
+  measuredValue       Float?
+  isAttributePassed   Boolean?
+  isConforming        Boolean                   @default(true)
+  deviation           Float?
+  calibrationDeviceId String?
+  defectType          String?
+  notes               String?
+  createdAt           DateTime                  @default(now())
+
+  inspection          UretimQualityInspection   @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  planItem            UretimQualityPlanItem?    @relation(fields: [planItemId], references: [id], onDelete: SetNull)
+  calibrationDevice   UretimQualityCalibration? @relation(fields: [calibrationDeviceId], references: [id], onDelete: SetNull)
+
+  @@index([inspectionId])
+  @@index([planItemId])
+  @@index([calibrationDeviceId])
+}
+
+model UretimQualityNcr {
+  id                   String                   @id @default(uuid())
+  ncrNumber            String                   @unique
+  inspectionId         String?
+  workOrderId          String?
+  itemId               String?
+  lotNumber            String?
+  source               String                   @default("INSPECTION") // INSPECTION, CUSTOMER_COMPLAINT, INTERNAL_AUDIT, PRODUCTION_LINE
+  severity             String                   @default("MAJOR") // MINOR, MAJOR, CRITICAL
+  defectCategory       String                   @default("DIMENSION") // DIMENSION, SURFACE, MATERIAL, MACHINING, ASSEMBLY, PACKAGING, OTHER
+  title                String
+  description          String
+  affectedQuantity     Float                    @default(0)
+  rootCauseMethod      String?                  // FIVE_WHY, FISHBONE, IS_IS_NOT, OTHER
+  rootCauseDescription String?
+  correctiveAction     String?
+  preventiveAction     String?
+  assignedToUserId     String?
+  targetDate           DateTime?
+  closedAt             DateTime?
+  closedByUserId       String?
+  effectivenessResult  String?                  // PENDING, EFFECTIVE, INEFFECTIVE
+  effectivenessNotes   String?
+  status               String                   @default("OPEN") // OPEN, INVESTIGATION, ACTION_PENDING, EFFECTIVENESS_CHECK, CLOSED, CANCELLED
+  costImpact           Float                    @default(0)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+
+  inspection           UretimQualityInspection? @relation(fields: [inspectionId], references: [id], onDelete: SetNull)
+  workOrder            UretimWorkOrder?         @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+  item                 InventoryItem?           @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([inspectionId])
+  @@index([workOrderId])
+  @@index([status])
+  @@index([lotNumber])
+}
+
 
 
 

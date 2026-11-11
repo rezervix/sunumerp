@@ -38,6 +38,7 @@ import { ProductionBomWorkspace } from "./ProductionBomWorkspace"
 import { ProductionMrpWorkspace } from "./ProductionMrpWorkspace"
 import { ProductionWorkOrderWorkspace } from "./ProductionWorkOrderWorkspace"
 import { ProductionCapacityWorkspace } from "./ProductionCapacityWorkspace"
+import { ProductionQualityWorkspace } from "./ProductionQualityWorkspace"
 
 const MODULE_ICONS: Record<ProductionFeatureFlagKey, React.ElementType> = {
   uretim_bom_rota: GitBranch,
@@ -350,6 +351,9 @@ export function ProductionModuleReadinessView({
       ) : snapshot?.flags?.uretim_kapasite &&
         (activeSlug === "kapasite" || activeSlug === "uretim_kapasite") ? (
         <ProductionCapacityWorkspace />
+      ) : snapshot?.flags?.uretim_kalite &&
+        (activeSlug === "kalite" || activeSlug === "uretim_kalite") ? (
+        <ProductionQualityWorkspace />
       ) : snapshot?.anyFlagEnabled ? (
         <ProductionMasterDataWorkspace
           defaultTab={

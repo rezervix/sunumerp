@@ -43,6 +43,7 @@ export type ProductionErrorCode =
   | "INVALID_STATE_TRANSITION"
   | "INSUFFICIENT_STOCK"
   | "CAPACITY_EXCEEDED"
+  | "CALIBRATION_EXPIRED"
   | "INTERNAL_ERROR"
 
 const DEFAULT_ERROR_STATUS: Record<ProductionErrorCode, number> = {
@@ -55,6 +56,7 @@ const DEFAULT_ERROR_STATUS: Record<ProductionErrorCode, number> = {
   INVALID_STATE_TRANSITION: 409,
   INSUFFICIENT_STOCK: 422,
   CAPACITY_EXCEEDED: 422,
+  CALIBRATION_EXPIRED: 422,
   INTERNAL_ERROR: 500,
 }
 
@@ -84,6 +86,7 @@ export class ProductionDomainError extends Error {
       "INVALID_STATE_TRANSITION",
       "INSUFFICIENT_STOCK",
       "CAPACITY_EXCEEDED",
+      "CALIBRATION_EXPIRED",
       "INTERNAL_ERROR",
     ])
 
@@ -182,6 +185,8 @@ export async function logProductionAudit(input: LogProductionAuditInput) {
     },
   })
 }
+
+export const recordProductionAuditLog = logProductionAudit
 
 /**
  * Üretim API rotalarında yakalanan hataları mevcut sistem sözleşmesine uygun

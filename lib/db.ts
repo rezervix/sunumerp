@@ -185,6 +185,13 @@ interface JsonDbData {
   uretimCapacityAlert?: any[]
   uretimCtpSimulation?: any[]
   uretimOperationTimeVariance?: any[]
+  // ── Üretim Modülleri: Faz 7 Kalite Kontrol & Muayene ──
+  uretimQualityCalibration?: any[]
+  uretimQualityPlan?: any[]
+  uretimQualityPlanItem?: any[]
+  uretimQualityInspection?: any[]
+  uretimQualityInspectionResult?: any[]
+  uretimQualityNcr?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -1111,6 +1118,44 @@ class ModelSimulate {
       if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
     }
 
+    if (this.modelName === "uretimQualityPlan" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+      if (include.items) enriched.items = (db.uretimQualityPlanItem || []).filter((i: any) => i.planId === item.id)
+      if (include.inspections) enriched.inspections = (db.uretimQualityInspection || []).filter((ins: any) => ins.planId === item.id)
+    }
+
+    if (this.modelName === "uretimQualityPlanItem" && include) {
+      if (include.plan) enriched.plan = (db.uretimQualityPlan || []).find((p: any) => p.id === item.planId) ?? null
+      if (include.calibrationDevice) enriched.calibrationDevice = (db.uretimQualityCalibration || []).find((c: any) => c.id === item.calibrationDeviceId) ?? null
+      if (include.results) enriched.results = (db.uretimQualityInspectionResult || []).filter((r: any) => r.planItemId === item.id)
+    }
+
+    if (this.modelName === "uretimQualityCalibration" && include) {
+      if (include.planItems) enriched.planItems = (db.uretimQualityPlanItem || []).filter((i: any) => i.calibrationDeviceId === item.id)
+      if (include.inspectionResults) enriched.inspectionResults = (db.uretimQualityInspectionResult || []).filter((r: any) => r.calibrationDeviceId === item.id)
+    }
+
+    if (this.modelName === "uretimQualityInspection" && include) {
+      if (include.plan) enriched.plan = (db.uretimQualityPlan || []).find((p: any) => p.id === item.planId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.workOrderOperation) enriched.workOrderOperation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.workOrderOperationId) ?? null
+      if (include.results) enriched.results = (db.uretimQualityInspectionResult || []).filter((r: any) => r.inspectionId === item.id)
+      if (include.ncrs) enriched.ncrs = (db.uretimQualityNcr || []).filter((n: any) => n.inspectionId === item.id)
+    }
+
+    if (this.modelName === "uretimQualityInspectionResult" && include) {
+      if (include.inspection) enriched.inspection = (db.uretimQualityInspection || []).find((i: any) => i.id === item.inspectionId) ?? null
+      if (include.planItem) enriched.planItem = (db.uretimQualityPlanItem || []).find((pi: any) => pi.id === item.planItemId) ?? null
+      if (include.calibrationDevice) enriched.calibrationDevice = (db.uretimQualityCalibration || []).find((c: any) => c.id === item.calibrationDeviceId) ?? null
+    }
+
+    if (this.modelName === "uretimQualityNcr" && include) {
+      if (include.inspection) enriched.inspection = (db.uretimQualityInspection || []).find((i: any) => i.id === item.inspectionId) ?? null
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+    }
+
     return enriched
   }
 
@@ -1515,7 +1560,14 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimScheduledTask",
       "uretimCapacityAlert",
       "uretimCtpSimulation",
-      "uretimOperationTimeVariance"
+      "uretimOperationTimeVariance",
+      // ── Üretim Modülleri: Faz 7 Kalite Kontrol & Muayene ──
+      "uretimQualityCalibration",
+      "uretimQualityPlan",
+      "uretimQualityPlanItem",
+      "uretimQualityInspection",
+      "uretimQualityInspectionResult",
+      "uretimQualityNcr"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
@@ -1645,3 +1697,6 @@ export const prisma = new Proxy(rawPrisma, {
     return originalValue
   }
 })
+
+export const db = prisma
+
