@@ -1221,3 +1221,4 @@ export function benchmarkMrpEngine(itemCount = 5000, bomEdgeCount = 20000): Benc
     passed: totalTime < 10000 && result.plannedOrders.length > 0,
   }
 }
+

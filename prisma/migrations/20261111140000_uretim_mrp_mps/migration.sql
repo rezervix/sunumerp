@@ -132,3 +132,4 @@ CREATE INDEX IF NOT EXISTS "UretimMrpActionMessage_itemId_idx" ON "UretimMrpActi
 CREATE INDEX IF NOT EXISTS "UretimMrpActionMessage_actionType_idx" ON "UretimMrpActionMessage"("actionType");
 CREATE INDEX IF NOT EXISTS "UretimMrpActionMessage_severity_idx" ON "UretimMrpActionMessage"("severity");
 CREATE INDEX IF NOT EXISTS "UretimMrpActionMessage_isResolved_idx" ON "UretimMrpActionMessage"("isResolved");
+

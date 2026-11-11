@@ -6,3 +6,4 @@ import { ProductionModuleReadinessView } from "../components/ProductionModuleRea
 export default function UretimMrpMpsPage() {
   return <ProductionModuleReadinessView activeSlug="mrp-mps" />
 }
+
