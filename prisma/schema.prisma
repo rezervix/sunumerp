@@ -1859,6 +1859,8 @@ model InventoryItem {
   uretimQualityPlans       UretimQualityPlan[]
   uretimQualityInspections UretimQualityInspection[]
   uretimQualityNcrs        UretimQualityNcr[]
+  uretimMachineSpareParts  UretimMachineSparePart[]
+  uretimMaintenanceWorkOrderSpareParts UretimMaintenanceWorkOrderSparePart[]
 
   @@index([category])
   @@index([parentItemId])
@@ -2816,6 +2818,7 @@ model UretimWorkCenter {
   scheduledTasks       UretimScheduledTask[]
   capacityAlerts       UretimCapacityAlert[]
   timeVariances        UretimOperationTimeVariance[]
+  maintenanceWorkOrders UretimMaintenanceWorkOrder[]
 
   @@index([branchId])
   @@index([type])
@@ -2856,16 +2859,28 @@ model UretimMachineAsset {
   status           String            @default("ACTIVE") // ACTIVE, MAINTENANCE, FAULT, STANDBY, DECOMMISSIONED
   operatingHours   Float             @default(0)
   productionCount  Float             @default(0)
+  criticality      String            @default("B") // A (Kritik), B (Önemli), C (Standart)
+  parentAssetId    String?
+  category         String?
+  acquisitionCost  Float             @default(0)
+  documentUrl      String?
   isActive         Boolean           @default(true)
   notes            String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
-  workCenter       UretimWorkCenter? @relation(fields: [workCenterId], references: [id], onDelete: SetNull)
+  workCenter             UretimWorkCenter?                    @relation(fields: [workCenterId], references: [id], onDelete: SetNull)
+  parentAsset            UretimMachineAsset?                  @relation("MachineHierarchy", fields: [parentAssetId], references: [id], onDelete: SetNull)
+  subAssets              UretimMachineAsset[]                 @relation("MachineHierarchy")
+  spareParts             UretimMachineSparePart[]
+  maintenancePlans       UretimMaintenancePlan[]
+  maintenanceWorkOrders  UretimMaintenanceWorkOrder[]
+  conditionReadings      UretimMaintenanceConditionReading[]
 
   @@index([workCenterId])
   @@index([status])
   @@index([branchId])
+  @@index([parentAssetId])
 }
 
 model UretimParameters {
@@ -3805,6 +3820,181 @@ model UretimQualityNcr {
   @@index([status])
   @@index([lotNumber])
 }
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 8: ÜRETİM EKİPMAN & BAKIM YÖNETİMİ (CMMS & PREDICTIVE)
+// ─────────────────────────────────────────────────────────────
+
+model UretimMachineSparePart {
+  id                     String             @id @default(uuid())
+  machineAssetId         String
+  itemId                 String
+  minRecommendedStock    Float              @default(1)
+  replacementPeriodDays  Int?
+  replacementPeriodHours Float?
+  criticality            String             @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  notes                  String?
+  createdAt              DateTime           @default(now())
+
+  machineAsset           UretimMachineAsset @relation(fields: [machineAssetId], references: [id], onDelete: Cascade)
+  item                   InventoryItem      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([machineAssetId])
+  @@index([itemId])
+}
+
+model UretimMaintenancePlan {
+  id                       String                            @id @default(uuid())
+  code                     String                            @unique
+  name                     String
+  machineAssetId           String?
+  category                 String?
+  planType                 String                            @default("CALENDAR") // CALENDAR, METER_HOURS, METER_PRODUCTION, CONDITION
+  frequencyDays            Int?
+  frequencyHours           Float?
+  frequencyCount           Float?
+  conditionParameter       String?
+  conditionThreshold       Float?
+  conditionOperator        String                            @default("GREATER_THAN")
+  estimatedDurationMinutes Float                             @default(60)
+  requiredTechnicians      Int                               @default(1)
+  lastTriggeredDate        DateTime?
+  lastTriggeredHours       Float?
+  lastTriggeredCount       Float?
+  nextScheduledDate        DateTime?
+  isActive                 Boolean                           @default(true)
+  notes                    String?
+  createdById              String?
+  createdAt                DateTime                          @default(now())
+  updatedAt                DateTime                          @updatedAt
+
+  machineAsset             UretimMachineAsset?               @relation(fields: [machineAssetId], references: [id], onDelete: SetNull)
+  checklists               UretimMaintenancePlanChecklist[]
+  workOrders               UretimMaintenanceWorkOrder[]
+
+  @@index([machineAssetId])
+  @@index([planType])
+  @@index([isActive])
+}
+
+model UretimMaintenancePlanChecklist {
+  id           String                @id @default(uuid())
+  planId       String
+  sequence     Int                   @default(10)
+  instruction  String
+  controlType  String                @default("CHECKBOX") // CHECKBOX, VALUE_MEASUREMENT, TEXT
+  nominalValue Float?
+  minValue     Float?
+  maxValue     Float?
+  unit         String?
+  isMandatory  Boolean               @default(true)
+  createdAt    DateTime              @default(now())
+
+  plan         UretimMaintenancePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+}
+
+model UretimMaintenanceWorkOrder {
+  id                   String                                 @id @default(uuid())
+  workOrderNumber      String                                 @unique
+  planId               String?
+  machineAssetId       String
+  workCenterId         String?
+  orderType            String                                 @default("PLANNED") // PLANNED, BREAKDOWN, IMPROVEMENT
+  priority             String                                 @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL_EMERGENCY
+  status               String                                 @default("REQUESTED") // REQUESTED, EVALUATED, SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  title                String
+  description          String?
+  failureReasonCode    String?                                // MEKANIK, ELEKTRIK, YAZILIM, OPERATOR_HATASI, YAGLAMA, ASINMA, DIGER
+  rootCauseAnalysis    String?
+  actionTaken          String?
+  technicianUserId     String?
+  teamNotes            String?
+  downtimeStart        DateTime?
+  downtimeEnd          DateTime?
+  totalDowntimeMinutes Float                                  @default(0)
+  plannedStartDate     DateTime?
+  plannedEndDate       DateTime?
+  actualStartDate      DateTime?
+  actualEndDate        DateTime?
+  laborDurationMinutes Float                                  @default(0)
+  laborHourlyRate      Float                                  @default(0)
+  totalLaborCost       Float                                  @default(0)
+  totalSparePartCost   Float                                  @default(0)
+  totalCost            Float                                  @default(0)
+  requestedByUserId    String?
+  approvedByUserId     String?
+  completedByUserId    String?
+  createdAt            DateTime                               @default(now())
+  updatedAt            DateTime                               @updatedAt
+
+  plan                 UretimMaintenancePlan?                 @relation(fields: [planId], references: [id], onDelete: SetNull)
+  machineAsset         UretimMachineAsset                     @relation(fields: [machineAssetId], references: [id], onDelete: Cascade)
+  workCenter           UretimWorkCenter?                      @relation(fields: [workCenterId], references: [id], onDelete: SetNull)
+  sparePartsUsed       UretimMaintenanceWorkOrderSparePart[]
+  checklistResults     UretimMaintenanceChecklistResult[]
+
+  @@index([machineAssetId])
+  @@index([status])
+  @@index([orderType])
+}
+
+model UretimMaintenanceWorkOrderSparePart {
+  id                     String                     @id @default(uuid())
+  maintenanceWorkOrderId String
+  itemId                 String
+  plannedQuantity        Float                      @default(1)
+  usedQuantity           Float                      @default(0)
+  unitCost               Float                      @default(0)
+  totalCost              Float                      @default(0)
+  isProcurementRequested Boolean                    @default(false)
+  purchaseRequisitionId  String?
+  createdAt              DateTime                   @default(now())
+
+  maintenanceWorkOrder   UretimMaintenanceWorkOrder @relation(fields: [maintenanceWorkOrderId], references: [id], onDelete: Cascade)
+  item                   InventoryItem              @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([maintenanceWorkOrderId])
+  @@index([itemId])
+}
+
+model UretimMaintenanceChecklistResult {
+  id                     String                     @id @default(uuid())
+  maintenanceWorkOrderId String
+  checklistId            String?
+  sequence               Int                        @default(10)
+  instruction            String
+  controlType            String                     @default("CHECKBOX")
+  isChecked              Boolean                    @default(false)
+  measuredValue          Float?
+  isPassed               Boolean                    @default(true)
+  notes                  String?
+  completedAt            DateTime?
+  createdAt              DateTime                   @default(now())
+
+  maintenanceWorkOrder   UretimMaintenanceWorkOrder @relation(fields: [maintenanceWorkOrderId], references: [id], onDelete: Cascade)
+
+  @@index([maintenanceWorkOrderId])
+}
+
+model UretimMaintenanceConditionReading {
+  id               String             @id @default(uuid())
+  machineAssetId   String
+  sensorCode       String?
+  parameterType    String             // TEMPERATURE, VIBRATION, PRESSURE, CURRENT
+  value            Float
+  unit             String?
+  isAlertTriggered Boolean            @default(false)
+  alertSeverity    String?            // WARNING, CRITICAL
+  readingDate      DateTime           @default(now())
+
+  machineAsset     UretimMachineAsset @relation(fields: [machineAssetId], references: [id], onDelete: Cascade)
+
+  @@index([machineAssetId])
+  @@index([readingDate])
+}
+
 
 
 

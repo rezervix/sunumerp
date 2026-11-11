@@ -192,6 +192,14 @@ interface JsonDbData {
   uretimQualityInspection?: any[]
   uretimQualityInspectionResult?: any[]
   uretimQualityNcr?: any[]
+  // ── Üretim Modülleri: Faz 8 Ekipman & Bakım Yönetimi ──
+  uretimMachineSparePart?: any[]
+  uretimMaintenancePlan?: any[]
+  uretimMaintenancePlanChecklist?: any[]
+  uretimMaintenanceWorkOrder?: any[]
+  uretimMaintenanceWorkOrderSparePart?: any[]
+  uretimMaintenanceChecklistResult?: any[]
+  uretimMaintenanceConditionReading?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -933,6 +941,12 @@ class ModelSimulate {
 
     if (this.modelName === "uretimMachineAsset" && include) {
       if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+      if (include.parentAsset) enriched.parentAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.parentAssetId) ?? null
+      if (include.subAssets) enriched.subAssets = (db.uretimMachineAsset || []).filter((ma: any) => ma.parentAssetId === item.id)
+      if (include.spareParts) enriched.spareParts = (db.uretimMachineSparePart || []).filter((sp: any) => sp.machineAssetId === item.id)
+      if (include.maintenancePlans) enriched.maintenancePlans = (db.uretimMaintenancePlan || []).filter((mp: any) => mp.machineAssetId === item.id)
+      if (include.maintenanceWorkOrders) enriched.maintenanceWorkOrders = (db.uretimMaintenanceWorkOrder || []).filter((wo: any) => wo.machineAssetId === item.id)
+      if (include.conditionReadings) enriched.conditionReadings = (db.uretimMaintenanceConditionReading || []).filter((cr: any) => cr.machineAssetId === item.id)
     }
 
     if (this.modelName === "uretimItemProfile" && include) {
@@ -1154,6 +1168,43 @@ class ModelSimulate {
       if (include.inspection) enriched.inspection = (db.uretimQualityInspection || []).find((i: any) => i.id === item.inspectionId) ?? null
       if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
       if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+    }
+
+    // ── Üretim Modülleri: Faz 8 Ekipman & Bakım Yönetimi ──
+    if (this.modelName === "uretimMachineSparePart" && include) {
+      if (include.machineAsset) enriched.machineAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.machineAssetId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+    }
+
+    if (this.modelName === "uretimMaintenancePlan" && include) {
+      if (include.machineAsset) enriched.machineAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.machineAssetId) ?? null
+      if (include.checklists) enriched.checklists = (db.uretimMaintenancePlanChecklist || []).filter((cl: any) => cl.planId === item.id)
+      if (include.workOrders) enriched.workOrders = (db.uretimMaintenanceWorkOrder || []).filter((wo: any) => wo.planId === item.id)
+    }
+
+    if (this.modelName === "uretimMaintenancePlanChecklist" && include) {
+      if (include.plan) enriched.plan = (db.uretimMaintenancePlan || []).find((p: any) => p.id === item.planId) ?? null
+    }
+
+    if (this.modelName === "uretimMaintenanceWorkOrder" && include) {
+      if (include.plan) enriched.plan = (db.uretimMaintenancePlan || []).find((p: any) => p.id === item.planId) ?? null
+      if (include.machineAsset) enriched.machineAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.machineAssetId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+      if (include.sparePartsUsed) enriched.sparePartsUsed = (db.uretimMaintenanceWorkOrderSparePart || []).filter((sp: any) => sp.workOrderId === item.id)
+      if (include.checklistResults) enriched.checklistResults = (db.uretimMaintenanceChecklistResult || []).filter((cr: any) => cr.workOrderId === item.id)
+    }
+
+    if (this.modelName === "uretimMaintenanceWorkOrderSparePart" && include) {
+      if (include.maintenanceWorkOrder) enriched.maintenanceWorkOrder = (db.uretimMaintenanceWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+    }
+
+    if (this.modelName === "uretimMaintenanceChecklistResult" && include) {
+      if (include.maintenanceWorkOrder) enriched.maintenanceWorkOrder = (db.uretimMaintenanceWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+    }
+
+    if (this.modelName === "uretimMaintenanceConditionReading" && include) {
+      if (include.machineAsset) enriched.machineAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.machineAssetId) ?? null
     }
 
     return enriched
@@ -1567,7 +1618,15 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimQualityPlanItem",
       "uretimQualityInspection",
       "uretimQualityInspectionResult",
-      "uretimQualityNcr"
+      "uretimQualityNcr",
+      // ── Üretim Modülleri: Faz 8 Ekipman & Bakım Yönetimi ──
+      "uretimMachineSparePart",
+      "uretimMaintenancePlan",
+      "uretimMaintenancePlanChecklist",
+      "uretimMaintenanceWorkOrder",
+      "uretimMaintenanceWorkOrderSparePart",
+      "uretimMaintenanceChecklistResult",
+      "uretimMaintenanceConditionReading"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
