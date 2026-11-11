@@ -171,6 +171,13 @@ interface JsonDbData {
   uretimMrpRun?: any[]
   uretimMrpPlannedOrder?: any[]
   uretimMrpActionMessage?: any[]
+  // ── Üretim Modülleri: Faz 5 İş Emri & Atölye İcra ──
+  uretimWorkOrder?: any[]
+  uretimWorkOrderOperation?: any[]
+  uretimWorkOrderMaterial?: any[]
+  uretimWorkOrderLabor?: any[]
+  uretimWorkOrderStoppage?: any[]
+  uretimIotStaging?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -788,6 +795,8 @@ class ModelSimulate {
       if (include.uretimMpsPlanItems) enriched.uretimMpsPlanItems = (db.uretimMpsPlanItem || []).filter((pi: any) => pi.itemId === item.id)
       if (include.uretimMrpPlannedOrders) enriched.uretimMrpPlannedOrders = (db.uretimMrpPlannedOrder || []).filter((po: any) => po.itemId === item.id)
       if (include.uretimMrpActionMessages) enriched.uretimMrpActionMessages = (db.uretimMrpActionMessage || []).filter((m: any) => m.itemId === item.id)
+      if (include.uretimWorkOrders) enriched.uretimWorkOrders = (db.uretimWorkOrder || []).filter((wo: any) => wo.itemId === item.id)
+      if (include.uretimWorkOrderMaterials) enriched.uretimWorkOrderMaterials = (db.uretimWorkOrderMaterial || []).filter((wom: any) => wom.itemId === item.id)
     }
 
     if (this.modelName === "warehouse" && include) {
@@ -1008,6 +1017,60 @@ class ModelSimulate {
       if (include.mrpRun) enriched.mrpRun = (db.uretimMrpRun || []).find((r: any) => r.id === item.mrpRunId) ?? null
       if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
       if (include.plannedOrder) enriched.plannedOrder = (db.uretimMrpPlannedOrder || []).find((po: any) => po.id === item.plannedOrderId) ?? null
+    }
+
+    if (this.modelName === "uretimWorkOrder" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
+      if (include.operations) {
+        enriched.operations = (db.uretimWorkOrderOperation || [])
+          .filter((op: any) => op.workOrderId === item.id)
+          .map((op: any) => ({
+            ...op,
+            workCenter: (db.uretimWorkCenter || []).find((wc: any) => wc.id === op.workCenterId) ?? null,
+            stoppages: (db.uretimWorkOrderStoppage || []).filter((s: any) => s.operationId === op.id),
+            laborLogs: (db.uretimWorkOrderLabor || []).filter((l: any) => l.operationId === op.id),
+            materials: (db.uretimWorkOrderMaterial || []).filter((m: any) => m.operationId === op.id)
+          }))
+      }
+      if (include.materials) {
+        enriched.materials = (db.uretimWorkOrderMaterial || [])
+          .filter((m: any) => m.workOrderId === item.id)
+          .map((m: any) => ({
+            ...m,
+            item: (db.inventoryItem || []).find((inv: any) => inv.id === m.itemId) ?? null
+          }))
+      }
+      if (include.stoppages) enriched.stoppages = (db.uretimWorkOrderStoppage || []).filter((s: any) => s.workOrderId === item.id)
+      if (include.laborLogs) enriched.laborLogs = (db.uretimWorkOrderLabor || []).filter((l: any) => l.workOrderId === item.id)
+      if (include.iotRecords) enriched.iotRecords = (db.uretimIotStaging || []).filter((r: any) => r.workOrderId === item.id)
+    }
+
+    if (this.modelName === "uretimWorkOrderOperation" && include) {
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+      if (include.stoppages) enriched.stoppages = (db.uretimWorkOrderStoppage || []).filter((s: any) => s.operationId === item.id)
+      if (include.laborLogs) enriched.laborLogs = (db.uretimWorkOrderLabor || []).filter((l: any) => l.operationId === item.id)
+      if (include.materials) enriched.materials = (db.uretimWorkOrderMaterial || []).filter((m: any) => m.operationId === item.id)
+    }
+
+    if (this.modelName === "uretimWorkOrderMaterial" && include) {
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.operation) enriched.operation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.operationId) ?? null
+      if (include.item) enriched.item = (db.inventoryItem || []).find((inv: any) => inv.id === item.itemId) ?? null
+    }
+
+    if (this.modelName === "uretimWorkOrderLabor" && include) {
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.operation) enriched.operation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.operationId) ?? null
+    }
+
+    if (this.modelName === "uretimWorkOrderStoppage" && include) {
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.operation) enriched.operation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.operationId) ?? null
+    }
+
+    if (this.modelName === "uretimIotStaging" && include) {
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
     }
 
     return enriched
@@ -1400,7 +1463,14 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimMpsPlanItem",
       "uretimMrpRun",
       "uretimMrpPlannedOrder",
-      "uretimMrpActionMessage"
+      "uretimMrpActionMessage",
+      // ── Üretim Modülleri: Faz 5 İş Emri & Atölye İcra ──
+      "uretimWorkOrder",
+      "uretimWorkOrderOperation",
+      "uretimWorkOrderMaterial",
+      "uretimWorkOrderLabor",
+      "uretimWorkOrderStoppage",
+      "uretimIotStaging"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

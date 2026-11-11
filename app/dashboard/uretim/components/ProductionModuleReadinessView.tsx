@@ -36,6 +36,7 @@ import {
 } from "./ProductionMasterDataWorkspace"
 import { ProductionBomWorkspace } from "./ProductionBomWorkspace"
 import { ProductionMrpWorkspace } from "./ProductionMrpWorkspace"
+import { ProductionWorkOrderWorkspace } from "./ProductionWorkOrderWorkspace"
 
 const MODULE_ICONS: Record<ProductionFeatureFlagKey, React.ElementType> = {
   uretim_bom_rota: GitBranch,
@@ -335,13 +336,16 @@ export function ProductionModuleReadinessView({
         </div>
       )}
 
-      {/* BOM & Rota ve MRP/MPS Özellik Bayrağı Açık Olduğunda İlgili Özel Çalışma Alanı */}
+      {/* BOM & Rota, MRP/MPS ve İş Emirleri Özellik Bayrağı Açık Olduğunda İlgili Özel Çalışma Alanı */}
       {snapshot?.flags?.uretim_bom_rota &&
       (activeSlug === "bom-rota" || activeSlug === "uretim_bom_rota") ? (
         <ProductionBomWorkspace />
       ) : snapshot?.flags?.uretim_mrp_mps &&
         (activeSlug === "mrp-mps" || activeSlug === "uretim_mrp_mps") ? (
         <ProductionMrpWorkspace />
+      ) : snapshot?.flags?.uretim_is_emri &&
+        (activeSlug === "is-emirleri" || activeSlug === "uretim_is_emri") ? (
+        <ProductionWorkOrderWorkspace />
       ) : snapshot?.anyFlagEnabled ? (
         <ProductionMasterDataWorkspace
           defaultTab={

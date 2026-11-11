@@ -1853,6 +1853,8 @@ model InventoryItem {
   uretimMpsPlanItems       UretimMpsPlanItem[]      @relation("UretimMpsPlanItemItem")
   uretimMrpPlannedOrders   UretimMrpPlannedOrder[]  @relation("UretimMrpPlannedOrderItem")
   uretimMrpActionMessages  UretimMrpActionMessage[] @relation("UretimMrpActionMessageItem")
+  uretimWorkOrders         UretimWorkOrder[]        @relation("UretimWorkOrderItem")
+  uretimWorkOrderMaterials UretimWorkOrderMaterial[] @relation("UretimWorkOrderMaterialItem")
 
   @@index([category])
   @@index([parentItemId])
@@ -2805,6 +2807,7 @@ model UretimWorkCenter {
   itemProfiles         UretimItemProfile[]
   operations           UretimOperation[]
   alternativeOperations UretimOperationAlternativeWorkCenter[]
+  workOrderOperations  UretimWorkOrderOperation[]
 
   @@index([branchId])
   @@index([type])
@@ -3248,5 +3251,198 @@ model UretimMrpActionMessage {
   @@index([severity])
   @@index([isResolved])
 }
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 5: ÜRETİM/İŞ EMRİ (WORK ORDERS) & ATÖLYE İCRA (SHOP FLOOR)
+// ─────────────────────────────────────────────────────────────
+
+model UretimWorkOrder {
+  id                      String                     @id @default(uuid())
+  branchId                String?
+  workOrderNumber         String                     @unique
+  sourceType              String                     @default("MANUAL") // MANUAL, SALES_ORDER, MRP
+  sourceDocumentId        String?
+  sourceDocumentNumber    String?
+  itemId                  String
+  bomId                   String?
+  routingId               String?
+  bomSnapshotJson         String?
+  routingSnapshotJson     String?
+  plannedQuantity         Float
+  producedQuantity        Float                      @default(0)
+  scrapQuantity           Float                      @default(0)
+  unit                    String                     @default("Adet")
+  status                  String                     @default("PLANNED") // PLANNED, APPROVED, RELEASED, IN_PROGRESS, PAUSED, COMPLETED, CLOSED, CANCELLED
+  priority                String                     @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  warehouseId             String
+  productionWarehouseId   String?
+  plannedStartDate        DateTime
+  plannedDueDate          DateTime
+  actualStartDate         DateTime?
+  actualEndDate           DateTime?
+  closedAt                DateTime?
+  closedBy                String?
+  lotNumber               String?
+  parentWorkOrderId       String?
+  theoreticalMaterialCost Float                      @default(0)
+  theoreticalLaborCost    Float                      @default(0)
+  theoreticalOverheadCost Float                      @default(0)
+  theoreticalTotalCost    Float                      @default(0)
+  actualMaterialCost      Float                      @default(0)
+  actualLaborCost         Float                      @default(0)
+  actualOverheadCost      Float                      @default(0)
+  actualScrapCost         Float                      @default(0)
+  actualTotalCost         Float                      @default(0)
+  costVariance            Float                      @default(0)
+  notes                   String?
+  createdAt               DateTime                   @default(now())
+  updatedAt               DateTime                   @updatedAt
+
+  item                    InventoryItem              @relation("UretimWorkOrderItem", fields: [itemId], references: [id], onDelete: Cascade)
+  operations              UretimWorkOrderOperation[]
+  materials               UretimWorkOrderMaterial[]
+  stoppages               UretimWorkOrderStoppage[]
+  laborLogs               UretimWorkOrderLabor[]
+  iotRecords              UretimIotStaging[]
+
+  @@index([branchId])
+  @@index([itemId])
+  @@index([status])
+  @@index([priority])
+  @@index([sourceType])
+  @@index([sourceDocumentId])
+  @@index([plannedDueDate])
+}
+
+model UretimWorkOrderOperation {
+  id                   String                     @id @default(uuid())
+  workOrderId          String
+  operationNumber      Int                        @default(10)
+  name                 String
+  description          String?
+  workCenterId         String?
+  operatorUserId       String?
+  status               String                     @default("PENDING") // PENDING, RUNNING, PAUSED, COMPLETED, SKIPPED
+  setupTimeMinutes     Float                      @default(0)
+  plannedRunMinutes    Float                      @default(0)
+  actualRunMinutes     Float                      @default(0)
+  actualMachineMinutes Float                      @default(0)
+  plannedQuantity      Float
+  producedQuantity     Float                      @default(0)
+  scrapQuantity        Float                      @default(0)
+  scrapReasonCode      String?
+  notes                String?
+  actualStartDate      DateTime?
+  actualEndDate        DateTime?
+  createdAt            DateTime                   @default(now())
+  updatedAt            DateTime                   @updatedAt
+
+  workOrder            UretimWorkOrder            @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  workCenter           UretimWorkCenter?          @relation(fields: [workCenterId], references: [id], onDelete: SetNull)
+  stoppages            UretimWorkOrderStoppage[]
+  laborLogs            UretimWorkOrderLabor[]
+  materials            UretimWorkOrderMaterial[]
+
+  @@index([workOrderId])
+  @@index([workCenterId])
+  @@index([status])
+  @@index([operatorUserId])
+}
+
+model UretimWorkOrderMaterial {
+  id                String                    @id @default(uuid())
+  workOrderId       String
+  operationId       String?
+  itemId            String
+  plannedQuantity   Float
+  reservedQuantity  Float                     @default(0)
+  consumedQuantity  Float                     @default(0)
+  scrapQuantity     Float                     @default(0)
+  unit              String                    @default("Adet")
+  unitCost          Float                     @default(0)
+  totalCost         Float                     @default(0)
+  consumptionMethod String                    @default("MANUAL") // MANUAL, BACKFLUSH
+  lotNumber         String?
+  isOverConsumed    Boolean                   @default(false)
+  notes             String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  workOrder         UretimWorkOrder           @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  operation         UretimWorkOrderOperation? @relation(fields: [operationId], references: [id], onDelete: SetNull)
+  item              InventoryItem             @relation("UretimWorkOrderMaterialItem", fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@index([operationId])
+  @@index([itemId])
+}
+
+model UretimWorkOrderLabor {
+  id              String                   @id @default(uuid())
+  workOrderId     String
+  operationId     String
+  userId          String
+  userName        String?
+  durationMinutes Float
+  hourlyRate      Float                    @default(0)
+  totalLaborCost  Float                    @default(0)
+  startedAt       DateTime
+  endedAt         DateTime?
+  notes           String?
+  createdAt       DateTime                 @default(now())
+
+  workOrder       UretimWorkOrder          @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  operation       UretimWorkOrderOperation @relation(fields: [operationId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@index([operationId])
+  @@index([userId])
+}
+
+model UretimWorkOrderStoppage {
+  id              String                   @id @default(uuid())
+  workOrderId     String
+  operationId     String
+  workCenterId    String?
+  reasonCode      String // ARIZA, BAKIM, MALZEME_BEKLEME, AYAR_KALIBRASYON, ELEKTRIK_KESINTISI, MOLA, DIGER
+  description     String?
+  startedAt       DateTime
+  endedAt         DateTime?
+  durationMinutes Float                    @default(0)
+  reportedBy      String
+  isResolved      Boolean                  @default(false)
+  createdAt       DateTime                 @default(now())
+
+  workOrder       UretimWorkOrder          @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  operation       UretimWorkOrderOperation @relation(fields: [operationId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@index([operationId])
+  @@index([reasonCode])
+}
+
+model UretimIotStaging {
+  id             String           @id @default(uuid())
+  deviceId       String
+  deviceType     String           @default("PLC") // PLC, SCADA, SCALE, BARCODE_STATION, SENSOR
+  workOrderId    String?
+  operationId    String?
+  metricType     String // PRODUCTION_COUNT, SCRAP_COUNT, CYCLE_TIME, WEIGHT, TEMPERATURE, STOPPAGE
+  metricValue    Float
+  unit           String?
+  rawPayloadJson String?
+  status         String           @default("PENDING") // PENDING, PROCESSED, REJECTED
+  errorMessage   String?
+  receivedAt     DateTime         @default(now())
+  processedAt    DateTime?
+
+  workOrder      UretimWorkOrder? @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+
+  @@index([deviceId])
+  @@index([workOrderId])
+  @@index([status])
+  @@index([receivedAt])
+}
+
 
 
