@@ -128,3 +128,4 @@ Olası bir geri alma durumunda:
    git branch -D feature/uretim-ana-veriler
    ```
 3. Veritabanı ve sistem konfigürasyonu tamamen ilk durumuna döner, hiçbir mevcut modül etkilenmez.
+
