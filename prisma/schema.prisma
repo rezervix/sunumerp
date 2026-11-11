@@ -1855,6 +1855,7 @@ model InventoryItem {
   uretimMrpActionMessages  UretimMrpActionMessage[] @relation("UretimMrpActionMessageItem")
   uretimWorkOrders         UretimWorkOrder[]        @relation("UretimWorkOrderItem")
   uretimWorkOrderMaterials UretimWorkOrderMaterial[] @relation("UretimWorkOrderMaterialItem")
+  uretimCtpSimulations     UretimCtpSimulation[]
 
   @@index([category])
   @@index([parentItemId])
@@ -2808,6 +2809,10 @@ model UretimWorkCenter {
   operations           UretimOperation[]
   alternativeOperations UretimOperationAlternativeWorkCenter[]
   workOrderOperations  UretimWorkOrderOperation[]
+  capacityPlanItems    UretimCapacityPlanItem[]
+  scheduledTasks       UretimScheduledTask[]
+  capacityAlerts       UretimCapacityAlert[]
+  timeVariances        UretimOperationTimeVariance[]
 
   @@index([branchId])
   @@index([type])
@@ -3304,6 +3309,8 @@ model UretimWorkOrder {
   stoppages               UretimWorkOrderStoppage[]
   laborLogs               UretimWorkOrderLabor[]
   iotRecords              UretimIotStaging[]
+  scheduledTasks          UretimScheduledTask[]
+  capacityAlerts          UretimCapacityAlert[]
 
   @@index([branchId])
   @@index([itemId])
@@ -3334,6 +3341,10 @@ model UretimWorkOrderOperation {
   notes                String?
   actualStartDate      DateTime?
   actualEndDate        DateTime?
+  scheduledStartDate   DateTime?
+  scheduledEndDate     DateTime?
+  isLocked             Boolean                    @default(false)
+  sequenceNumber       Int                        @default(0)
   createdAt            DateTime                   @default(now())
   updatedAt            DateTime                   @updatedAt
 
@@ -3342,6 +3353,8 @@ model UretimWorkOrderOperation {
   stoppages            UretimWorkOrderStoppage[]
   laborLogs            UretimWorkOrderLabor[]
   materials            UretimWorkOrderMaterial[]
+  scheduledTasks       UretimScheduledTask[]
+  capacityAlerts       UretimCapacityAlert[]
 
   @@index([workOrderId])
   @@index([workCenterId])
@@ -3443,6 +3456,158 @@ model UretimIotStaging {
   @@index([status])
   @@index([receivedAt])
 }
+
+// ─────────────────────────────────────────────────────────────
+// FAZ 6: KAPASİTE PLANLAMA & ÇİZELGELEME (CRP & ADVANCED SCHEDULING)
+// ─────────────────────────────────────────────────────────────
+
+model UretimCapacityPlan {
+  id                        String                   @id @default(uuid())
+  branchId                  String?
+  code                      String                   @unique
+  name                      String
+  startDate                 DateTime
+  endDate                   DateTime
+  schedulingMode            String                   @default("FINITE") // INFINITE, FINITE
+  schedulingDirection       String                   @default("FORWARD") // FORWARD, BACKWARD
+  priorityRule              String                   @default("EDD") // EDD, FCFS, CR, PRIORITY
+  status                    String                   @default("DRAFT") // DRAFT, ACTIVE, ARCHIVED
+  totalLoadHours            Float                    @default(0)
+  totalCapacityHours        Float                    @default(0)
+  bottleneckWorkCenterId    String?
+  overloadedWorkCentersJson String?
+  notes                     String?
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+
+  items                     UretimCapacityPlanItem[]
+  scheduledTasks            UretimScheduledTask[]
+
+  @@index([branchId])
+  @@index([status])
+}
+
+model UretimCapacityPlanItem {
+  id                     String             @id @default(uuid())
+  planId                 String
+  workCenterId           String
+  periodDate             String
+  availableCapacityHours Float              @default(0)
+  plannedLoadHours       Float              @default(0)
+  mrpLoadHours           Float              @default(0)
+  totalLoadHours         Float              @default(0)
+  loadPercentage         Float              @default(0)
+  isOverloaded           Boolean            @default(false)
+  operationCount         Int                @default(0)
+  createdAt              DateTime           @default(now())
+
+  plan                   UretimCapacityPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  workCenter             UretimWorkCenter   @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([workCenterId])
+  @@index([periodDate])
+}
+
+model UretimScheduledTask {
+  id             String                    @id @default(uuid())
+  planId         String?
+  workOrderId    String
+  operationId    String
+  workCenterId   String
+  setupMinutes   Float                     @default(0)
+  runMinutes     Float                     @default(0)
+  totalMinutes   Float                     @default(0)
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+  sequenceOrder  Int                       @default(0)
+  isLocked       Boolean                   @default(false)
+  isDelayed      Boolean                   @default(false)
+  delayMinutes   Float                     @default(0)
+  status         String                    @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  notes          String?
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+
+  plan           UretimCapacityPlan?       @relation(fields: [planId], references: [id], onDelete: SetNull)
+  workOrder      UretimWorkOrder           @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  operation      UretimWorkOrderOperation  @relation(fields: [operationId], references: [id], onDelete: Cascade)
+  workCenter     UretimWorkCenter          @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([workOrderId])
+  @@index([workCenterId])
+  @@index([operationId])
+  @@index([scheduledStart])
+}
+
+model UretimCapacityAlert {
+  id              String                    @id @default(uuid())
+  branchId        String?
+  workCenterId    String?
+  workOrderId     String?
+  operationId     String?
+  alertType       String // OVERLOAD, BOTTLENECK, DELAY, CAPACITY_EXCEEDED, DEPENDENCY_CONFLICT
+  severity        String                    @default("WARNING") // INFO, WARNING, CRITICAL
+  message         String
+  loadPercentage  Float?
+  periodDate      String?
+  isAcknowledged  Boolean                   @default(false)
+  acknowledgedBy  String?
+  acknowledgedAt  DateTime?
+  createdAt       DateTime                  @default(now())
+
+  workCenter      UretimWorkCenter?         @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+  workOrder       UretimWorkOrder?          @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  operation       UretimWorkOrderOperation? @relation(fields: [operationId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@index([workCenterId])
+  @@index([alertType])
+  @@index([isAcknowledged])
+}
+
+model UretimCtpSimulation {
+  id                          String        @id @default(uuid())
+  branchId                    String?
+  simulationNumber            String        @unique
+  itemId                      String
+  quantity                    Float
+  requestedDueDate            DateTime?
+  calculatedEarliestDueDate   DateTime
+  isFeasible                  Boolean       @default(true)
+  bottleneckWorkCenterId      String?
+  criticalPathDays            Float         @default(0)
+  simulatedScheduleJson       String?
+  createdByUserId             String?
+  createdAt                   DateTime      @default(now())
+
+  item                        InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+}
+
+model UretimOperationTimeVariance {
+  id                       String           @id @default(uuid())
+  operationId              String?
+  workCenterId             String
+  operationName            String
+  plannedStandardMinutes   Float
+  actualAverageMinutes     Float
+  sampleCount              Int              @default(1)
+  variancePercent          Float            @default(0)
+  suggestedStandardMinutes Float
+  isApplied                Boolean          @default(false)
+  appliedAt                DateTime?
+  appliedBy                String?
+  createdAt                DateTime         @default(now())
+
+  workCenter               UretimWorkCenter @relation(fields: [workCenterId], references: [id], onDelete: Cascade)
+
+  @@index([workCenterId])
+  @@index([isApplied])
+}
+
 
 
 

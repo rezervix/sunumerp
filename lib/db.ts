@@ -178,6 +178,13 @@ interface JsonDbData {
   uretimWorkOrderLabor?: any[]
   uretimWorkOrderStoppage?: any[]
   uretimIotStaging?: any[]
+  // ── Üretim Modülleri: Faz 6 Kapasite Planlama & Çizelgeleme ──
+  uretimCapacityPlan?: any[]
+  uretimCapacityPlanItem?: any[]
+  uretimScheduledTask?: any[]
+  uretimCapacityAlert?: any[]
+  uretimCtpSimulation?: any[]
+  uretimOperationTimeVariance?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -1073,6 +1080,37 @@ class ModelSimulate {
       if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
     }
 
+    if (this.modelName === "uretimCapacityPlan" && include) {
+      if (include.items) enriched.items = (db.uretimCapacityPlanItem || []).filter((i: any) => i.planId === item.id)
+      if (include.scheduledTasks) enriched.scheduledTasks = (db.uretimScheduledTask || []).filter((t: any) => t.planId === item.id)
+    }
+
+    if (this.modelName === "uretimCapacityPlanItem" && include) {
+      if (include.plan) enriched.plan = (db.uretimCapacityPlan || []).find((p: any) => p.id === item.planId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+    }
+
+    if (this.modelName === "uretimScheduledTask" && include) {
+      if (include.plan) enriched.plan = (db.uretimCapacityPlan || []).find((p: any) => p.id === item.planId) ?? null
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.operation) enriched.operation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.operationId) ?? null
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+    }
+
+    if (this.modelName === "uretimCapacityAlert" && include) {
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+      if (include.workOrder) enriched.workOrder = (db.uretimWorkOrder || []).find((wo: any) => wo.id === item.workOrderId) ?? null
+      if (include.operation) enriched.operation = (db.uretimWorkOrderOperation || []).find((op: any) => op.id === item.operationId) ?? null
+    }
+
+    if (this.modelName === "uretimCtpSimulation" && include) {
+      if (include.item) enriched.item = (db.inventoryItem || []).find((i: any) => i.id === item.itemId) ?? null
+    }
+
+    if (this.modelName === "uretimOperationTimeVariance" && include) {
+      if (include.workCenter) enriched.workCenter = (db.uretimWorkCenter || []).find((wc: any) => wc.id === item.workCenterId) ?? null
+    }
+
     return enriched
   }
 
@@ -1470,7 +1508,14 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimWorkOrderMaterial",
       "uretimWorkOrderLabor",
       "uretimWorkOrderStoppage",
-      "uretimIotStaging"
+      "uretimIotStaging",
+      // ── Üretim Modülleri: Faz 6 Kapasite Planlama & Çizelgeleme ──
+      "uretimCapacityPlan",
+      "uretimCapacityPlanItem",
+      "uretimScheduledTask",
+      "uretimCapacityAlert",
+      "uretimCtpSimulation",
+      "uretimOperationTimeVariance"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
