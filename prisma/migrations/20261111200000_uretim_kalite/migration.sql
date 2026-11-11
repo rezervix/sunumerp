@@ -202,3 +202,4 @@ CREATE INDEX IF NOT EXISTS "UretimQualityNcr_inspectionId_idx" ON "UretimQuality
 CREATE INDEX IF NOT EXISTS "UretimQualityNcr_workOrderId_idx" ON "UretimQualityNcr"("workOrderId");
 CREATE INDEX IF NOT EXISTS "UretimQualityNcr_status_idx" ON "UretimQualityNcr"("status");
 CREATE INDEX IF NOT EXISTS "UretimQualityNcr_lotNumber_idx" ON "UretimQualityNcr"("lotNumber");
+

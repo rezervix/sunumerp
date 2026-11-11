@@ -12,3 +12,4 @@ DROP TABLE IF EXISTS "UretimQualityCalibration" CASCADE;
 
 ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "isQualityControlPoint";
 ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "qualityInspectionStatus";
+

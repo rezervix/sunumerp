@@ -6,3 +6,4 @@ import { ProductionModuleReadinessView } from "../components/ProductionModuleRea
 export default function UretimKalitePage() {
   return <ProductionModuleReadinessView activeSlug="kalite" />
 }
+
