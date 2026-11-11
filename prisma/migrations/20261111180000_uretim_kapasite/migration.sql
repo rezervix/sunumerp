@@ -158,3 +158,4 @@ CREATE INDEX IF NOT EXISTS "UretimCtpSimulation_itemId_idx" ON "UretimCtpSimulat
 
 CREATE INDEX IF NOT EXISTS "UretimOperationTimeVariance_workCenterId_idx" ON "UretimOperationTimeVariance"("workCenterId");
 CREATE INDEX IF NOT EXISTS "UretimOperationTimeVariance_isApplied_idx" ON "UretimOperationTimeVariance"("isApplied");
+

@@ -6,3 +6,4 @@ import { ProductionModuleReadinessView } from "../components/ProductionModuleRea
 export default function UretimKapasitePage() {
   return <ProductionModuleReadinessView activeSlug="kapasite" />
 }
+

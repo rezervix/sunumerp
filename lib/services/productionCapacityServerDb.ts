@@ -706,3 +706,4 @@ export async function acknowledgeCapacityAlertInDb(alertId: string, userId: stri
   })
   return updated
 }
+

@@ -17,3 +17,4 @@ ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "scheduledStartDate
 ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "scheduledEndDate";
 ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "isLocked";
 ALTER TABLE "UretimWorkOrderOperation" DROP COLUMN IF EXISTS "sequenceNumber";
+
