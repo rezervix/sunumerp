@@ -14110,6 +14110,62 @@
       "content": null,
       "link": "/dashboard/personel-denetim",
       "isRead": false
+    },
+    {
+      "id": "local-1794485793043-jggofcx30sl",
+      "createdAt": "2026-11-12T12:16:33.057Z",
+      "updatedAt": "2026-11-12T12:16:33.057Z",
+      "isActive": true,
+      "userId": "user-art-director",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "\"Ziraat Bankası Temmuz Ayı Tarım Kredisi Kampanyası İnfografikleri\" görevinizin teslim tarihi geçti. Lütfen durumunu güncelleyin.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false
+    },
+    {
+      "id": "local-1794485793154-vk351q28tro",
+      "createdAt": "2026-11-12T12:16:33.154Z",
+      "updatedAt": "2026-11-12T12:16:33.154Z",
+      "isActive": true,
+      "userId": "local-debug-user",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "Atadığınız \"Ziraat Bankası Temmuz Ayı Tarım Kredisi Kampanyası İnfografikleri\" görevinin teslim tarihi geçti.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false
+    },
+    {
+      "id": "local-1794485793388-au2om3byfx9",
+      "createdAt": "2026-11-12T12:16:33.388Z",
+      "updatedAt": "2026-11-12T12:16:33.388Z",
+      "isActive": true,
+      "userId": "user-developer",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "\"Teknosa B2B Bayi Portalı Çoklu Para Birimi Desteği\" görevinizin teslim tarihi geçti. Lütfen durumunu güncelleyin.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false
+    },
+    {
+      "id": "local-1794485793650-gffywecwkmg",
+      "createdAt": "2026-11-12T12:16:33.650Z",
+      "updatedAt": "2026-11-12T12:16:33.650Z",
+      "isActive": true,
+      "userId": "local-debug-user",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "Atadığınız \"Teknosa B2B Bayi Portalı Çoklu Para Birimi Desteği\" görevinin teslim tarihi geçti.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false
     }
   ],
   "auditLog": [
