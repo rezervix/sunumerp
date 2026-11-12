@@ -9,6 +9,7 @@
  */
 
 import * as mockProd from "./mockProductionData"
+import * as mockInv from "./mockInventoryData"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -1340,6 +1341,15 @@ interface DatabaseState {
   candidates: MockHRCandidate[]
   requests: MockHRRequest[]
   finances: MockFinanceRecord[]
+  inventoryItems?: any[]
+  wmsTasks?: any[]
+  purchaseRequisitions?: any[]
+  consignmentStocks?: any[]
+  omnichannelOrders?: any[]
+  rmaReturns?: any[]
+  eDocuments?: any[]
+  countSessions?: any[]
+  transfers?: any[]
 }
 
 class MockDatabaseService {
@@ -1356,6 +1366,34 @@ class MockDatabaseService {
         if (stored) {
           const parsed = JSON.parse(stored)
           if (parsed && Array.isArray(parsed.customers) && parsed.customers.length > 0) {
+            // Ensure inventory arrays are initialized if missing in old stored state
+            if (!parsed.inventoryItems || parsed.inventoryItems.length === 0) {
+              parsed.inventoryItems = [...mockInv.MOCK_INVENTORY_ITEMS]
+            }
+            if (!parsed.wmsTasks || parsed.wmsTasks.length === 0) {
+              parsed.wmsTasks = [...mockInv.MOCK_WMS_TASKS]
+            }
+            if (!parsed.purchaseRequisitions || parsed.purchaseRequisitions.length === 0) {
+              parsed.purchaseRequisitions = [...mockInv.MOCK_PURCHASE_REQUISITIONS]
+            }
+            if (!parsed.consignmentStocks || parsed.consignmentStocks.length === 0) {
+              parsed.consignmentStocks = [...mockInv.MOCK_CONSIGNMENT_STOCKS]
+            }
+            if (!parsed.omnichannelOrders || parsed.omnichannelOrders.length === 0) {
+              parsed.omnichannelOrders = [...mockInv.MOCK_OMNICHANNEL_ORDERS]
+            }
+            if (!parsed.rmaReturns || parsed.rmaReturns.length === 0) {
+              parsed.rmaReturns = [...mockInv.MOCK_RMA_RETURNS]
+            }
+            if (!parsed.eDocuments || parsed.eDocuments.length === 0) {
+              parsed.eDocuments = [...mockInv.MOCK_EDOCUMENTS]
+            }
+            if (!parsed.countSessions || parsed.countSessions.length === 0) {
+              parsed.countSessions = [...mockInv.MOCK_COUNT_SESSIONS]
+            }
+            if (!parsed.transfers || parsed.transfers.length === 0) {
+              parsed.transfers = [...mockInv.MOCK_TRANSFERS]
+            }
             return parsed
           }
         }
@@ -1372,7 +1410,16 @@ class MockDatabaseService {
       stockRequests: [...INITIAL_STOCK_REQUESTS],
       candidates: [...INITIAL_HR_CANDIDATES],
       requests: [...INITIAL_HR_REQUESTS],
-      finances: [...INITIAL_FINANCES]
+      finances: [...INITIAL_FINANCES],
+      inventoryItems: [...mockInv.MOCK_INVENTORY_ITEMS],
+      wmsTasks: [...mockInv.MOCK_WMS_TASKS],
+      purchaseRequisitions: [...mockInv.MOCK_PURCHASE_REQUISITIONS],
+      consignmentStocks: [...mockInv.MOCK_CONSIGNMENT_STOCKS],
+      omnichannelOrders: [...mockInv.MOCK_OMNICHANNEL_ORDERS],
+      rmaReturns: [...mockInv.MOCK_RMA_RETURNS],
+      eDocuments: [...mockInv.MOCK_EDOCUMENTS],
+      countSessions: [...mockInv.MOCK_COUNT_SESSIONS],
+      transfers: [...mockInv.MOCK_TRANSFERS]
     }
   }
 
@@ -1900,6 +1947,469 @@ class MockDatabaseService {
     return { success: true, items: mockProd.MOCK_WORK_CENTERS }
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ── STOK VE DEPO YÖNETİMİ (INVENTORY & WMS SUITE) CANLI DEMO SERVİSLERİ ──
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 1. Stok Kartları & Envanter (/dashboard/stok)
+  public getInventoryItems(): any[] {
+    return this.state.inventoryItems || mockInv.MOCK_INVENTORY_ITEMS
+  }
+
+  public getWarehouses(): any[] {
+    return mockInv.MOCK_WAREHOUSES
+  }
+
+  public getInventoryStats() {
+    const items = this.getInventoryItems()
+    let totalStockValue = 0
+    let criticalStockCount = 0
+    let expiringCount = 0
+    const now = Date.now()
+    const fifteenDaysLater = now + 15 * 86400000
+
+    for (const item of items) {
+      const onHand = Number(item.totalOnHand || 0)
+      const unitCost = Number(item.currentAvgCost || item.fifoUnitCost || item.standardCost || 0)
+      totalStockValue += onHand * unitCost
+
+      if (onHand <= Number(item.minStockLevel || 0)) {
+        criticalStockCount++
+      }
+
+      if (Array.isArray(item.lotSerials)) {
+        for (const lot of item.lotSerials) {
+          if (lot.expiryDate) {
+            const expTime = new Date(lot.expiryDate).getTime()
+            if (expTime > now && expTime <= fifteenDaysLater && lot.remainingQty > 0) {
+              expiringCount++
+            }
+          }
+        }
+      }
+    }
+
+    return {
+      totalStockValue: totalStockValue || mockInv.MOCK_STOCK_STATS.totalStockValue,
+      criticalStockCount: criticalStockCount || mockInv.MOCK_STOCK_STATS.criticalStockCount,
+      expiringCount: expiringCount || mockInv.MOCK_STOCK_STATS.expiringCount,
+      activeWarehouseCount: mockInv.MOCK_WAREHOUSES.length,
+      totalItemCount: items.length
+    }
+  }
+
+  public getInventoryOverview() {
+    const items = this.getInventoryItems()
+    return {
+      success: true,
+      items,
+      warehouses: this.getWarehouses(),
+      stats: this.getInventoryStats()
+    }
+  }
+
+  public getInventoryItemById(id: string) {
+    const items = this.getInventoryItems()
+    const item = items.find((i: any) => i.id === id || i.sku === id) || items[0]
+    return {
+      success: true,
+      item,
+      valuation: {
+        method: item.valuationMethod || "FIFO",
+        quantity: 1,
+        unitCost: item.fifoUnitCost || item.currentAvgCost || 250,
+        totalValuationTry: item.fifoUnitCost || item.currentAvgCost || 250
+      }
+    }
+  }
+
+  public addStockMovement(itemId: string, mode: "IN" | "OUT", quantity: number, warehouseId?: string, notes?: string) {
+    const items = [...this.getInventoryItems()]
+    const idx = items.findIndex((i: any) => i.id === itemId || i.sku === itemId)
+    if (idx >= 0) {
+      const current = items[idx]
+      const delta = mode === "IN" ? Math.abs(quantity) : -Math.abs(quantity)
+      const newOnHand = Math.max(0, Number(current.totalOnHand || 0) + delta)
+      const newAvailable = Math.max(0, newOnHand - Number(current.totalReserved || 0))
+
+      const updatedBalances = Array.isArray(current.stockBalances) ? [...current.stockBalances] : []
+      if (updatedBalances.length > 0) {
+        const balIdx = warehouseId ? updatedBalances.findIndex((b: any) => b.warehouseId === warehouseId) : 0
+        const targetBal = balIdx >= 0 ? balIdx : 0
+        updatedBalances[targetBal] = {
+          ...updatedBalances[targetBal],
+          onHandQty: Math.max(0, Number(updatedBalances[targetBal].onHandQty || 0) + delta),
+          availableQty: Math.max(0, Number(updatedBalances[targetBal].availableQty || 0) + delta)
+        }
+      }
+
+      const newMovement = {
+        id: `sm-sim-${Date.now()}`,
+        movementType: mode === "IN" ? "MANUAL_ADJUSTMENT_IN" : "MANUAL_ADJUSTMENT_OUT",
+        quantity: delta,
+        unitCost: current.currentAvgCost || current.standardCost || 100,
+        documentNo: `BELGE-${Date.now().toString().slice(-6)}`,
+        notes: notes || "Demo Simülasyon Hareketi",
+        createdAt: new Date().toISOString(),
+        warehouse: { name: "Merkez Soğuk Hava Deposu" }
+      }
+
+      items[idx] = {
+        ...current,
+        totalOnHand: newOnHand,
+        totalAvailable: newAvailable,
+        stockBalances: updatedBalances,
+        stockMovements: [newMovement, ...(current.stockMovements || [])]
+      }
+
+      this.state.inventoryItems = items
+      this.persist()
+      return { success: true, item: items[idx] }
+    }
+    return { success: false, error: "Ürün bulunamadı" }
+  }
+
+  // 2. Depo Operasyonları & Sayım WMS (/dashboard/wms)
+  public getWmsTasks(): any[] {
+    return this.state.wmsTasks || mockInv.MOCK_WMS_TASKS
+  }
+
+  public getStorageBins(): any[] {
+    return mockInv.MOCK_STORAGE_BINS
+  }
+
+  public getWarehouseZones(): any[] {
+    return mockInv.MOCK_WAREHOUSE_ZONES
+  }
+
+  public getInventoryCountSessions(): any[] {
+    return this.state.countSessions || mockInv.MOCK_COUNT_SESSIONS
+  }
+
+  public getWarehouseTransfers(): any[] {
+    return this.state.transfers || mockInv.MOCK_TRANSFERS
+  }
+
+  public getWmsOverview() {
+    const tasks = this.getWmsTasks()
+    const bins = this.getStorageBins()
+    const occupied = bins.filter((b: any) => (b.stockBalances || []).length > 0 || b.occupancyPercent > 20).length
+    const avgOccupancy = Math.round(bins.reduce((acc, b) => acc + (b.occupancyPercent || 0), 0) / (bins.length || 1))
+
+    return {
+      success: true,
+      stats: {
+        totalPendingTasks: tasks.filter((t: any) => t.status === "PENDING").length || 4,
+        inProgressTasks: tasks.filter((t: any) => t.status === "IN_PROGRESS").length || 3,
+        totalBins: bins.length || 32,
+        occupiedBins: occupied || 25,
+        averageOccupancy: avgOccupancy || 78,
+        activeTransfers: (this.getWarehouseTransfers()).filter((tr: any) => tr.status === "IN_TRANSIT" || tr.status === "APPROVED").length || 2,
+        openCountSessions: (this.getInventoryCountSessions()).filter((cs: any) => cs.status !== "RECONCILED").length || 1
+      },
+      tasks,
+      bins,
+      zones: this.getWarehouseZones(),
+      countSessions: this.getInventoryCountSessions(),
+      transfers: this.getWarehouseTransfers(),
+      warehouses: this.getWarehouses(),
+      items: this.getInventoryItems()
+    }
+  }
+
+  public advanceWmsTask(taskId: string, nextStage?: string, status?: string) {
+    const tasks = [...this.getWmsTasks()]
+    const idx = tasks.findIndex((t: any) => t.id === taskId || t.taskNumber === taskId)
+    if (idx >= 0) {
+      tasks[idx] = {
+        ...tasks[idx],
+        workflowStage: nextStage || tasks[idx].workflowStage,
+        status: status || (nextStage === "PACKING" ? "COMPLETED" : "IN_PROGRESS")
+      }
+      this.state.wmsTasks = tasks
+      this.persist()
+      return { success: true, task: tasks[idx] }
+    }
+    return { success: false, error: "Görev bulunamadı" }
+  }
+
+  public createTransferOrder(transferData: any) {
+    const transfers = [...this.getWarehouseTransfers()]
+    const newTr = {
+      id: `tr-${Date.now()}`,
+      orderNumber: `TRF-2026-${String(transfers.length + 45).padStart(3, "0")}`,
+      fromWarehouseId: transferData.fromWarehouseId || "wh-merkez-01",
+      toWarehouseId: transferData.toWarehouseId || "wh-kadikoy-02",
+      fromWarehouse: mockInv.MOCK_WAREHOUSES.find(w => w.id === transferData.fromWarehouseId) || mockInv.MOCK_WAREHOUSES[0],
+      toWarehouse: mockInv.MOCK_WAREHOUSES.find(w => w.id === transferData.toWarehouseId) || mockInv.MOCK_WAREHOUSES[1],
+      status: "APPROVED",
+      vehiclePlate: transferData.vehiclePlate || "34 TRF 2026",
+      driverName: transferData.driverName || "Operasyon Şoförü",
+      driverPhone: transferData.driverPhone || "0555 123 45 67",
+      notes: transferData.notes || "Hızlı ikmal transferi",
+      dispatchDate: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      lines: transferData.lines || []
+    }
+    transfers.unshift(newTr)
+    this.state.transfers = transfers
+    this.persist()
+    return { success: true, transfer: newTr }
+  }
+
+  // 3. Akıllı Satın Alma & ROP (/dashboard/satinalma)
+  public getSuppliers(): any[] {
+    return mockInv.MOCK_SUPPLIERS
+  }
+
+  public getCriticalRopItems(): any[] {
+    return mockInv.MOCK_CRITICAL_ROP_ITEMS
+  }
+
+  public getPurchaseRequisitions(): any[] {
+    return this.state.purchaseRequisitions || mockInv.MOCK_PURCHASE_REQUISITIONS
+  }
+
+  public getConsignmentStocks(): any[] {
+    return this.state.consignmentStocks || mockInv.MOCK_CONSIGNMENT_STOCKS
+  }
+
+  public getProcurementOverview() {
+    const prs = this.getPurchaseRequisitions()
+    const consignments = this.getConsignmentStocks()
+    const pendingPrs = prs.filter((p: any) => p.status === "PENDING_APPROVAL")
+    const totalPendingAmt = pendingPrs.reduce((acc, p) => acc + Number(p.totalAmount || 0), 0)
+    const totalConsignVal = consignments.reduce((acc, c) => acc + (Number(c.availableConsignQty || 0) * Number(c.agreedUnitCost || 0)), 0)
+    const unbilledPayable = consignments.reduce((acc, c) => acc + Number(c.unbilledPayableAmt || 0), 0)
+
+    return {
+      success: true,
+      stats: {
+        totalCriticalItems: mockInv.MOCK_PROCUREMENT_STATS.totalCriticalItems,
+        stockoutItems: mockInv.MOCK_PROCUREMENT_STATS.stockoutItems,
+        belowRopItems: mockInv.MOCK_PROCUREMENT_STATS.belowRopItems,
+        pendingPrCount: pendingPrs.length || mockInv.MOCK_PROCUREMENT_STATS.pendingPrCount,
+        pendingPrTotalAmount: totalPendingAmt || mockInv.MOCK_PROCUREMENT_STATS.pendingPrTotalAmount,
+        totalConsignmentValue: totalConsignVal || mockInv.MOCK_PROCUREMENT_STATS.totalConsignmentValue,
+        unbilledConsignmentPayable: unbilledPayable || mockInv.MOCK_PROCUREMENT_STATS.unbilledConsignmentPayable,
+        activeSupplierCount: mockInv.MOCK_SUPPLIERS.length
+      },
+      criticalItems: this.getCriticalRopItems(),
+      allItems: this.getInventoryItems(),
+      suppliers: this.getSuppliers(),
+      purchaseRequisitions: prs,
+      consignmentStocks: consignments
+    }
+  }
+
+  public createPurchaseRequisition(data: any) {
+    const prs = [...this.getPurchaseRequisitions()]
+    const newPr = {
+      id: `pr-${Date.now()}`,
+      reqNumber: `SAT-2026-${String(prs.length + 85).padStart(3, "0")}`,
+      supplierName: data.supplierName || "Royal Flora Holland İthalat",
+      triggerSource: data.triggerSource || "MANUAL_REQUEST",
+      status: "PENDING_APPROVAL",
+      priority: data.priority || "HIGH",
+      totalAmount: (data.quantity || 1) * (data.unitCost || 250),
+      currency: "TRY",
+      notes: data.notes || "Canlı demo satın alma talebi",
+      createdAt: new Date().toISOString(),
+      warehouse: { name: "Merkez Soğuk Hava Deposu" },
+      lines: [
+        {
+          id: `prl-${Date.now()}`,
+          itemId: data.itemId || "item-kut-09",
+          sku: data.sku || "KUT-LKS-09",
+          itemName: data.itemName || "Satın Alma Kalemi",
+          quantity: Number(data.quantity || 10),
+          unit: data.unit || "Adet",
+          estimatedCost: Number(data.unitCost || 250),
+          totalCost: (data.quantity || 1) * (data.unitCost || 250)
+        }
+      ]
+    }
+    prs.unshift(newPr)
+    this.state.purchaseRequisitions = prs
+    this.persist()
+    return { success: true, requisition: newPr }
+  }
+
+  public approvePurchaseRequisition(reqId: string, approvedBy?: string) {
+    const prs = [...this.getPurchaseRequisitions()]
+    const idx = prs.findIndex((p: any) => p.id === reqId || p.reqNumber === reqId)
+    if (idx >= 0) {
+      prs[idx] = {
+        ...prs[idx],
+        status: "APPROVED_PO_SENT",
+        approvedBy: approvedBy || "Yönetici Onayı (Demo)"
+      }
+      this.state.purchaseRequisitions = prs
+      this.persist()
+      return { success: true, requisition: prs[idx] }
+    }
+    return { success: false, error: "Talep bulunamadı" }
+  }
+
+  public settleConsignmentStock(consignId: string, consumeQty: number, notes?: string) {
+    const consignments = [...this.getConsignmentStocks()]
+    const idx = consignments.findIndex((c: any) => c.id === consignId || c.agreementNo === consignId)
+    if (idx >= 0) {
+      const current = consignments[idx]
+      const qty = Number(consumeQty || 0)
+      const newAvail = Math.max(0, Number(current.availableConsignQty || 0) - qty)
+      const newConsumed = Number(current.consumedOrSoldQty || 0) + qty
+      const payableAdd = qty * Number(current.agreedUnitCost || 0)
+
+      consignments[idx] = {
+        ...current,
+        availableConsignQty: newAvail,
+        consumedOrSoldQty: newConsumed,
+        unbilledPayableAmt: Number(current.unbilledPayableAmt || 0) + payableAdd,
+        lastSettlementDate: new Date().toISOString().split("T")[0]
+      }
+      this.state.consignmentStocks = consignments
+      this.persist()
+      return { success: true, consignment: consignments[idx] }
+    }
+    return { success: false, error: "Konsinye kaydı bulunamadı" }
+  }
+
+  // 4. Çok Kanallı Satış & Sevkiyat (/dashboard/omnichannel)
+  public getSalesChannels(): any[] {
+    return mockInv.MOCK_SALES_CHANNELS
+  }
+
+  public getOmnichannelOrders(): any[] {
+    return this.state.omnichannelOrders || mockInv.MOCK_OMNICHANNEL_ORDERS
+  }
+
+  public getRmaReturns(): any[] {
+    return this.state.rmaReturns || mockInv.MOCK_RMA_RETURNS
+  }
+
+  public getLogisticsAdapters(): any[] {
+    return mockInv.MOCK_LOGISTICS_ADAPTERS
+  }
+
+  public getEDocuments(): any[] {
+    return this.state.eDocuments || mockInv.MOCK_EDOCUMENTS
+  }
+
+  public getOmnichannelOverview() {
+    const channels = this.getSalesChannels()
+    const orders = this.getOmnichannelOrders()
+    const rma = this.getRmaReturns()
+    const adapters = this.getLogisticsAdapters()
+    const eDocs = this.getEDocuments()
+
+    return {
+      success: true,
+      stats: mockInv.MOCK_OMNICHANNEL_STATS,
+      channels,
+      orders,
+      rmaReturns: rma,
+      logisticsAdapters: adapters,
+      eDocuments: eDocs
+    }
+  }
+
+  public syncAllChannels() {
+    const updatedChannels = this.getSalesChannels().map(ch => ({
+      ...ch,
+      lastSyncAt: new Date().toISOString()
+    }))
+    this.persist()
+    return { success: true, channels: updatedChannels, syncedCount: updatedChannels.length }
+  }
+
+  public processRmaDisposition(rmaId: string, disposition: string) {
+    const rmaList = [...this.getRmaReturns()]
+    const idx = rmaList.findIndex((r: any) => r.id === rmaId || r.rmaNumber === rmaId)
+    if (idx >= 0) {
+      rmaList[idx] = {
+        ...rmaList[idx],
+        qcInspectionResult: disposition,
+        refundStatus: "COMPLETED"
+      }
+      this.state.rmaReturns = rmaList
+      this.persist()
+      return { success: true, rma: rmaList[idx] }
+    }
+    return { success: false, error: "İade kaydı bulunamadı" }
+  }
+
+  public createEDocument(docData: any) {
+    const eDocs = [...this.getEDocuments()]
+    const newDoc = {
+      id: `edoc-${Date.now()}`,
+      ettnUuid: `c${Date.now()}-8821-4d12-bf91-${Date.now().toString().slice(-12)}`,
+      documentNo: `IRS202600000${String(eDocs.length + 885).padStart(3, "0")}`,
+      documentType: docData.documentType || "E_IRSALIYE",
+      profileId: "TEMELIRSALIYE",
+      relatedOrderNo: docData.relatedOrderNo || "TY-2026-88192",
+      receiverTitle: docData.receiverTitle || "Sayın Müşteri",
+      receiverVknTckn: docData.receiverVknTckn || "11111111111",
+      dispatchDate: new Date().toISOString(),
+      carrierName: docData.carrierName || "Yurtiçi Kargo VIP",
+      totalNetAmount: Number(docData.totalAmount || 1000) * 0.8,
+      totalVatAmount: Number(docData.totalAmount || 1000) * 0.2,
+      totalGrossAmount: Number(docData.totalAmount || 1000),
+      currency: "TRY",
+      gibStatusCode: "200",
+      gibStatusText: "1300 - GİB Başarıyla Alındı ve İmzalandı"
+    }
+    eDocs.unshift(newDoc)
+    this.state.eDocuments = eDocs
+    this.persist()
+    return { success: true, document: newDoc }
+  }
+
+  // 5. Foresight AI & Ekosistem Analitiği (/dashboard/stok-ai)
+  public getDemandForecasts(): any[] {
+    return mockInv.MOCK_DEMAND_FORECASTS
+  }
+
+  public getNarrativeReports(): any[] {
+    return mockInv.MOCK_NARRATIVE_REPORTS
+  }
+
+  public getExecutiveBanner() {
+    return mockInv.MOCK_EXECUTIVE_BANNER
+  }
+
+  public getDefaultAmaResult() {
+    return mockInv.MOCK_DEFAULT_AMA_RESULT
+  }
+
+  public getInventoryAiDashboard(query?: string) {
+    let amaResult = mockInv.MOCK_DEFAULT_AMA_RESULT
+    if (query) {
+      amaResult = {
+        question: query,
+        intentDetected: "AI_SIMULATED_QUERY",
+        executionTimeMs: 28,
+        summaryText: `"${query}" sorgusu analiz edildi. Envanter veritabanında aktif 10 SKU, 4 depo ve 32 raf gözü taranarak optimum tedarik ve sevkiyat planı çıkarılmıştır.`,
+        matchedItems: mockInv.MOCK_DEFAULT_AMA_RESULT.matchedItems,
+        recommendedAction: "Önerilen satın alma veya depo içi yerleştirme aksiyonunu doğrudan onaylayabilirsiniz."
+      }
+    }
+
+    return {
+      success: true,
+      forecasts: this.getDemandForecasts(),
+      executiveBanner: this.getExecutiveBanner(),
+      narrativeReports: this.getNarrativeReports(),
+      defaultAmaResult: amaResult,
+      meta: {
+        analysisTimestamp: new Date().toISOString(),
+        modelUsed: "ForesightAI-Enterprise-v4",
+        scannedSkuCount: 10,
+        scannedWarehouseCount: 4
+      }
+    }
+  }
+
   // ── Reset ──
   public resetToDefault() {
     this.state = {
@@ -1910,7 +2420,16 @@ class MockDatabaseService {
       stockRequests: [...INITIAL_STOCK_REQUESTS],
       candidates: [...INITIAL_HR_CANDIDATES],
       requests: [...INITIAL_HR_REQUESTS],
-      finances: [...INITIAL_FINANCES]
+      finances: [...INITIAL_FINANCES],
+      inventoryItems: [...mockInv.MOCK_INVENTORY_ITEMS],
+      wmsTasks: [...mockInv.MOCK_WMS_TASKS],
+      purchaseRequisitions: [...mockInv.MOCK_PURCHASE_REQUISITIONS],
+      consignmentStocks: [...mockInv.MOCK_CONSIGNMENT_STOCKS],
+      omnichannelOrders: [...mockInv.MOCK_OMNICHANNEL_ORDERS],
+      rmaReturns: [...mockInv.MOCK_RMA_RETURNS],
+      eDocuments: [...mockInv.MOCK_EDOCUMENTS],
+      countSessions: [...mockInv.MOCK_COUNT_SESSIONS],
+      transfers: [...mockInv.MOCK_TRANSFERS]
     }
     this.persist()
   }

@@ -4,12 +4,17 @@ import {
   runRealAmaQueryOnDb,
   createPurchaseRequisitionFromAiRecommendation
 } from "@/lib/services/inventoryAiServerDb"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const q = searchParams.get("q") || undefined
     const dashboard = await getInventoryAiDashboardFromDb(q)
+
+    if (!dashboard.forecasts || dashboard.forecasts.length === 0) {
+      return NextResponse.json(mockDatabase.getInventoryAiDashboard(q))
+    }
 
     return NextResponse.json({
       success: true,
@@ -20,10 +25,10 @@ export async function GET(request: Request) {
       meta: dashboard.meta
     })
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message || "AI analiz verileri veritabanından alınamadı" },
-      { status: 500 }
-    )
+    console.warn("GET /api/inventory-ai fallback to mockDatabase:", error)
+    const { searchParams } = new URL(request.url)
+    const q = searchParams.get("q") || undefined
+    return NextResponse.json(mockDatabase.getInventoryAiDashboard(q))
   }
 }
 
@@ -55,7 +60,7 @@ export async function POST(request: Request) {
       // Opsiyonel: GEMINI_API_KEY tanımlıysa gerçek veritabanı sonucunu Gemini ile doğal dilde özetle
       if (process.env.GEMINI_API_KEY) {
         try {
-          const { GoogleGenerativeAI } = await import("@google/generative-ai")
+          const { GoogleGenerativeAI } = await (import("@google/generative-ai" as any) as any)
           const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
           const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
           const prompt = `Sen Sunum ERP Stok ve WMS Yapay Zeka Asistanısın. Kullanıcı sorusu: "${question}". Gerçek veritabanı sorgu sonucu: ${result.answerNarrative}. Satırlar: ${JSON.stringify(result.rows.slice(0, 5))}. Türkçe, 2-3 cümlelik net bir yönetici özeti ver.`

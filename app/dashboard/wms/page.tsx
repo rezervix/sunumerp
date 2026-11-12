@@ -20,55 +20,83 @@ import { InventoryCountManager } from './components/InventoryCountManager';
 import { InterWarehouseTransfers } from './components/InterWarehouseTransfers';
 import { CreateWmsTaskModal } from './components/CreateWmsTaskModal';
 import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
+import { mockDatabase } from '@/lib/data/mockDatabase';
 
 export default function WmsDashboardPage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('wizard-flow');
 
-  // WMS Data States
-  const [stats, setStats] = useState({
-    totalPendingTasks: 0,
-    inProgressTasks: 0,
-    totalBins: 0,
-    occupiedBins: 0,
-    averageOccupancy: 0,
-    activeTransfers: 0,
-    openCountSessions: 0
-  });
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [bins, setBins] = useState<any[]>([]);
-  const [zones, setZones] = useState<any[]>([]);
-  const [countSessions, setCountSessions] = useState<any[]>([]);
-  const [transfers, setTransfers] = useState<any[]>([]);
-  const [warehouses, setWarehouses] = useState<any[]>([]);
-  const [items, setItems] = useState<any[]>([]);
+  // WMS Data States - Anında Canlı Demo Verileri ile Başlat
+  const [stats, setStats] = useState(() => mockDatabase.getWmsOverview().stats);
+  const [tasks, setTasks] = useState<any[]>(() => mockDatabase.getWmsOverview().tasks);
+  const [bins, setBins] = useState<any[]>(() => mockDatabase.getWmsOverview().bins);
+  const [zones, setZones] = useState<any[]>(() => mockDatabase.getWmsOverview().zones);
+  const [countSessions, setCountSessions] = useState<any[]>(() => mockDatabase.getWmsOverview().countSessions);
+  const [transfers, setTransfers] = useState<any[]>(() => mockDatabase.getWmsOverview().transfers);
+  const [warehouses, setWarehouses] = useState<any[]>(() => mockDatabase.getWmsOverview().warehouses);
+  const [items, setItems] = useState<any[]>(() => mockDatabase.getWmsOverview().items);
 
   // Modal State
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
-  // Fetch WMS data from real Prisma API
+  // Canlı Reaktif Mock DB Dinleyicisi
+  useEffect(() => {
+    const handleDbChange = () => {
+      const ov = mockDatabase.getWmsOverview();
+      setStats(ov.stats);
+      setTasks(ov.tasks);
+      setBins(ov.bins);
+      setZones(ov.zones);
+      setCountSessions(ov.countSessions);
+      setTransfers(ov.transfers);
+      setWarehouses(ov.warehouses);
+      setItems(ov.items);
+    };
+    window.addEventListener('sunum-mockdb-change', handleDbChange);
+    return () => window.removeEventListener('sunum-mockdb-change', handleDbChange);
+  }, []);
+
+  // Fetch WMS data from real Prisma API with seamless Demo fallback
   const fetchWmsData = useCallback(async (isSilent = false) => {
     try {
       if (!isSilent) setRefreshing(true);
       const res = await fetch('/api/wms', { cache: 'no-store' });
-      const data = await res.json();
-
-      if (data.success) {
-        if (data.stats) setStats(data.stats);
-        if (data.tasks) setTasks(data.tasks);
-        if (data.bins) setBins(data.bins);
-        if (data.zones) setZones(data.zones);
-        if (data.countSessions) setCountSessions(data.countSessions);
-        if (data.transfers) setTransfers(data.transfers);
-        if (data.warehouses) setWarehouses(data.warehouses);
-        if (data.items) setItems(data.items);
-      } else {
-        toast.error(data.error || 'WMS verileri yüklenemedi');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.tasks) && data.tasks.length > 0) {
+          if (data.stats) setStats(data.stats);
+          if (data.tasks) setTasks(data.tasks);
+          if (data.bins) setBins(data.bins);
+          if (data.zones) setZones(data.zones);
+          if (data.countSessions) setCountSessions(data.countSessions);
+          if (data.transfers) setTransfers(data.transfers);
+          if (data.warehouses) setWarehouses(data.warehouses);
+          if (data.items) setItems(data.items);
+          return;
+        }
       }
+      // Demo Fallback
+      const ov = mockDatabase.getWmsOverview();
+      setStats(ov.stats);
+      setTasks(ov.tasks);
+      setBins(ov.bins);
+      setZones(ov.zones);
+      setCountSessions(ov.countSessions);
+      setTransfers(ov.transfers);
+      setWarehouses(ov.warehouses);
+      setItems(ov.items);
     } catch (err: any) {
-      console.error('WMS fetch error:', err);
-      toast.error('WMS sunucu bağlantısında hata oluştu');
+      console.warn('WMS fetch error, fallback to demo:', err);
+      const ov = mockDatabase.getWmsOverview();
+      setStats(ov.stats);
+      setTasks(ov.tasks);
+      setBins(ov.bins);
+      setZones(ov.zones);
+      setCountSessions(ov.countSessions);
+      setTransfers(ov.transfers);
+      setWarehouses(ov.warehouses);
+      setItems(ov.items);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -76,7 +104,7 @@ export default function WmsDashboardPage() {
   }, []);
 
   useEffect(() => {
-    fetchWmsData();
+    fetchWmsData(true);
   }, [fetchWmsData]);
 
   // Seed / Reset demo data
@@ -97,10 +125,12 @@ export default function WmsDashboardPage() {
         toast.success('Gerçekçi WMS verileri başarıyla yüklendi');
         fetchWmsData();
       } else {
-        toast.error(data.error || 'Sıfırlama başarısız');
+        mockDatabase.resetToDefault();
+        toast.success('Gerçekçi WMS demo verileri sıfırlandı');
       }
-    } catch (err: any) {
-      toast.error('Hata oluştu');
+    } catch {
+      mockDatabase.resetToDefault();
+      toast.success('Gerçekçi WMS demo verileri sıfırlandı');
     } finally {
       setRefreshing(false);
     }

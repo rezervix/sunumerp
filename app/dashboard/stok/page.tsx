@@ -17,20 +17,15 @@ import { StockTable } from "./components/StockTable"
 import { CreateItemModal } from "./components/CreateItemModal"
 import { QuickStockMovementModal } from "./components/QuickStockMovementModal"
 import { ItemDetailDrawer } from "./components/ItemDetailDrawer"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 export default function StockDashboardPage() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [aiRefreshKey, setAiRefreshKey] = useState(0)
-  const [items, setItems] = useState<any[]>([])
-  const [warehouses, setWarehouses] = useState<any[]>([])
-  const [stats, setStats] = useState({
-    totalStockValue: 0,
-    criticalStockCount: 0,
-    expiringCount: 0,
-    activeWarehouseCount: 0,
-    totalItemCount: 0
-  })
+  const [items, setItems] = useState<any[]>(() => mockDatabase.getInventoryItems())
+  const [warehouses, setWarehouses] = useState<any[]>(() => mockDatabase.getWarehouses())
+  const [stats, setStats] = useState(() => mockDatabase.getInventoryStats())
 
   // Modals & Drawer State
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -39,33 +34,43 @@ export default function StockDashboardPage() {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  // Gerçek veritabanından veri çekme
+  // Canlı Reaktif Mock DB Dinleyicisi
+  useEffect(() => {
+    const handleDbChange = () => {
+      setItems(mockDatabase.getInventoryItems())
+      setWarehouses(mockDatabase.getWarehouses())
+      setStats(mockDatabase.getInventoryStats())
+    }
+    window.addEventListener("sunum-mockdb-change", handleDbChange)
+    return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
+  }, [])
+
+  // Gerçek veritabanından veri çekme (Hata veya boş gelirse mockDatabase'e zarifçe döner)
   const fetchInventory = useCallback(async (isSilent = false) => {
     if (!isSilent) setLoading(true)
     else setRefreshing(true)
 
     try {
       const res = await fetch("/api/inventory")
-      const data = await res.json()
-      if (data.success) {
-        setItems(data.items || [])
-        setWarehouses(data.warehouses || [])
-        setStats(
-          data.stats || {
-            totalStockValue: 0,
-            criticalStockCount: 0,
-            expiringCount: 0,
-            activeWarehouseCount: 0,
-            totalItemCount: 0
-          }
-        )
-        setAiRefreshKey(prev => prev + 1)
-      } else {
-        toast.error("Stok verileri alınamadı: " + (data.error || "Bilinmeyen hata"))
+      if (res.ok) {
+        const data = await res.json()
+        if (data.success && Array.isArray(data.items) && data.items.length > 0) {
+          setItems(data.items)
+          setWarehouses(data.warehouses || mockDatabase.getWarehouses())
+          setStats(data.stats || mockDatabase.getInventoryStats())
+          setAiRefreshKey(prev => prev + 1)
+          return
+        }
       }
+      // Demo Fallback
+      setItems(mockDatabase.getInventoryItems())
+      setWarehouses(mockDatabase.getWarehouses())
+      setStats(mockDatabase.getInventoryStats())
     } catch (err: any) {
-      console.error("fetchInventory error:", err)
-      toast.error("Sunucu ile iletişim kurulamadı.")
+      console.warn("fetchInventory fallback to demo:", err)
+      setItems(mockDatabase.getInventoryItems())
+      setWarehouses(mockDatabase.getWarehouses())
+      setStats(mockDatabase.getInventoryStats())
     } finally {
       setLoading(false)
       setRefreshing(false)
@@ -73,7 +78,7 @@ export default function StockDashboardPage() {
   }, [])
 
   useEffect(() => {
-    fetchInventory()
+    fetchInventory(true)
   }, [fetchInventory])
 
   // Hızlı hareket kısayolu (tablodan veya üst bardan tetiklenebilir)

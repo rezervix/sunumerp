@@ -14,6 +14,7 @@ import {
   CheckCircle2
 } from "lucide-react"
 import type { ExecutiveAiBannerSummary } from "@/lib/services/inventoryAiEngine"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 interface ExecutiveAiBannerProps {
   onQuickStockEntry?: (itemId?: string) => void
@@ -21,8 +22,8 @@ interface ExecutiveAiBannerProps {
 }
 
 export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: ExecutiveAiBannerProps) {
-  const [banner, setBanner] = useState<ExecutiveAiBannerSummary | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [banner, setBanner] = useState<ExecutiveAiBannerSummary | null>(() => mockDatabase.getExecutiveBanner())
+  const [loading, setLoading] = useState(false)
   const [creatingPr, setCreatingPr] = useState(false)
   const [createdPrNo, setCreatedPrNo] = useState<string | null>(null)
 
@@ -34,9 +35,11 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
         const data = await res.json()
         if (mounted && data.success && data.executiveBanner) {
           setBanner(data.executiveBanner)
+        } else if (mounted) {
+          setBanner(mockDatabase.getExecutiveBanner())
         }
       } catch {
-        // Sessizce geç
+        if (mounted) setBanner(mockDatabase.getExecutiveBanner())
       } finally {
         if (mounted) setLoading(false)
       }

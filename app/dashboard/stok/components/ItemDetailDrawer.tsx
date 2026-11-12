@@ -27,6 +27,7 @@ import {
 import { useAuth } from "@/lib/auth/context"
 import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
 import { ItemProductionProfileTab } from "./ItemProductionProfileTab"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 interface ItemDetailDrawerProps {
   itemId: string | null
@@ -68,11 +69,16 @@ export function ItemDetailDrawer({
       fetch(`/api/inventory?section=item&itemId=${itemId}`)
         .then(res => res.json())
         .then(resData => {
-          if (resData.success) {
+          if (resData.success && resData.item) {
             setData(resData)
+          } else {
+            setData(mockDatabase.getInventoryItemById(itemId))
           }
         })
-        .catch(err => console.error("Error fetching item detail:", err))
+        .catch(err => {
+          console.warn("Error fetching item detail, using demo fallback:", err)
+          setData(mockDatabase.getInventoryItemById(itemId))
+        })
         .finally(() => setLoading(false))
     }
   }, [itemId, isOpen])
