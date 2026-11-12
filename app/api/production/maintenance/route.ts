@@ -99,9 +99,32 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const view = searchParams.get("view") || "overview"
+      if (view === "work_orders") return NextResponse.json(mockDatabase.getProductionMaintenanceWorkOrders())
+      if (view === "plans") return NextResponse.json(mockDatabase.getProductionMaintenancePlans())
+      if (view === "machines") return NextResponse.json(mockDatabase.getProductionMaintenanceMachines())
+      if (view === "metrics") {
+        return NextResponse.json({
+          success: true,
+          data: {
+            mtbf: 580,
+            mttr: 1.6,
+            oeeImpactPercent: -1.2,
+            uptimePercent: 98.4,
+          },
+        })
+      }
+      return NextResponse.json(mockDatabase.getProductionMaintenanceOverview())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

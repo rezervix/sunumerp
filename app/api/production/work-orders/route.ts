@@ -97,9 +97,38 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const section = searchParams.get("section")
+      if (section === "dashboard") return NextResponse.json(mockDatabase.getProductionWorkOrderDashboard())
+      if (section === "terminal") return NextResponse.json(mockDatabase.getProductionTerminalData())
+      if (section === "cost_summary" || section === "work_order") {
+        return NextResponse.json({
+          success: true,
+          workOrder: mockDatabase.getProductionWorkOrders().workOrders[0],
+          costSummary: {
+            theoreticalMaterialCost: 23000,
+            theoreticalLaborCost: 4400,
+            theoreticalOverheadCost: 1600,
+            theoreticalTotalCost: 29000,
+            actualMaterialCost: 16100,
+            actualLaborCost: 3200,
+            actualOverheadCost: 1100,
+            actualTotalCost: 20400,
+            costVariance: 8600,
+            scrapCost: 0,
+          },
+        })
+      }
+      return NextResponse.json(mockDatabase.getProductionWorkOrders())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

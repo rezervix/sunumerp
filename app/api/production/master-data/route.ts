@@ -117,8 +117,15 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
+    if (isDemoModeActive()) {
+      return NextResponse.json(mockDatabase.getProductionWorkCenters())
+    }
+
     const { searchParams } = new URL(request.url)
     const branchId = searchParams.get("branchId") || null
 

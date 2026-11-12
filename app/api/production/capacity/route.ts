@@ -90,9 +90,20 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const section = searchParams.get("section") || "overview"
+      if (section === "gantt") return NextResponse.json(mockDatabase.getProductionCapacityGantt())
+      if (section === "variance") return NextResponse.json({ success: true, varianceData: [] })
+      return NextResponse.json(mockDatabase.getProductionCapacityOverview())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

@@ -102,9 +102,24 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const section = searchParams.get("section") || "mps_plans"
+      if (section === "mps_plans") return NextResponse.json(mockDatabase.getProductionMpsPlans())
+      if (section === "mps_grid") return NextResponse.json(mockDatabase.getProductionMpsGrid())
+      if (section === "mrp_runs") return NextResponse.json(mockDatabase.getProductionMrpRuns())
+      if (section === "mrp_run") return NextResponse.json(mockDatabase.getProductionMrpRunDetail())
+      if (section === "planned_orders") return NextResponse.json(mockDatabase.getProductionPlannedOrders())
+      if (section === "action_messages") return NextResponse.json(mockDatabase.getProductionActionMessages())
+      return NextResponse.json(mockDatabase.getProductionMpsPlans())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

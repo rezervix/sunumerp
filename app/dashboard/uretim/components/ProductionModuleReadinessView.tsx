@@ -29,6 +29,7 @@ import {
   PRODUCTION_MODULES_CATALOG,
   type ProductionFeatureFlagKey,
 } from "@/lib/config/production-feature-flags"
+import { isDemoModeActive } from "@/lib/data-controller"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
 import {
   ProductionMasterDataWorkspace,
@@ -74,6 +75,7 @@ export function ProductionModuleReadinessView({
 }) {
   const router = useRouter()
   const { currentBranch, hasPermission, isSuperAdmin } = useAuth()
+  const isDemo = isDemoModeActive()
   const [snapshot, setSnapshot] = useState<InfrastructureSnapshot | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -109,9 +111,10 @@ export function ProductionModuleReadinessView({
   }, [activeSlug])
 
   const enabledModulesCount = useMemo(() => {
+    if (isDemo) return PRODUCTION_MODULES_CATALOG.length
     if (!snapshot?.flags) return 0
     return Object.values(snapshot.flags).filter(Boolean).length
-  }, [snapshot])
+  }, [snapshot, isDemo])
 
   const totalProductionItems = useMemo(() => {
     if (!snapshot?.databaseReadiness) return 0
@@ -124,29 +127,53 @@ export function ProductionModuleReadinessView({
       {/* Üst Modül Navigasyon Şeridi */}
       <div className="w-full overflow-x-auto no-scrollbar">
         <div className="inline-flex items-center gap-1.5 p-1.5 rounded-2xl bg-[#111513]/90 border border-white/[0.06] backdrop-blur-xl min-w-max">
-          <Link
-            href="/dashboard/uretim"
-            className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
-              !selectedModule
-                ? "text-zinc-950 font-semibold"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-            }`}
-          >
-            {!selectedModule && (
-              <motion.div
-                layoutId="productionModuleNavActive"
-                className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
-                transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
-              />
-            )}
-            <Factory className="w-3.5 h-3.5 relative z-10" />
-            <span className="relative z-10">Üretim Altyapı & Yetki Matrisi</span>
-          </Link>
+          {/* Geliştirici/Altyapı sekmesi demo modunda gizlenir; müşteri odaklı kontrol paneli gösterilir */}
+          {!isDemo && (
+            <Link
+              href="/dashboard/uretim"
+              className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                !selectedModule
+                  ? "text-zinc-950 font-semibold"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
+              }`}
+            >
+              {!selectedModule && (
+                <motion.div
+                  layoutId="productionModuleNavActive"
+                  className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
+                  transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
+                />
+              )}
+              <Factory className="w-3.5 h-3.5 relative z-10" />
+              <span className="relative z-10">Üretim Altyapı & Yetki Matrisi</span>
+            </Link>
+          )}
+
+          {isDemo && (
+            <Link
+              href="/dashboard/uretim"
+              className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                !selectedModule
+                  ? "text-zinc-950 font-semibold"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
+              }`}
+            >
+              {!selectedModule && (
+                <motion.div
+                  layoutId="productionModuleNavActive"
+                  className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
+                  transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
+                />
+              )}
+              <Factory className="w-3.5 h-3.5 relative z-10" />
+              <span className="relative z-10">Üretim Kontrol Paneli</span>
+            </Link>
+          )}
 
           {PRODUCTION_MODULES_CATALOG.map((mod) => {
             const Icon = MODULE_ICONS[mod.key]
             const isActive = selectedModule?.key === mod.key
-            const isEnabled = snapshot?.flags?.[mod.key] ?? false
+            const isEnabled = isDemo || (snapshot?.flags?.[mod.key] ?? false)
 
             return (
               <Link
@@ -167,17 +194,19 @@ export function ProductionModuleReadinessView({
                 )}
                 <Icon className="w-3.5 h-3.5 relative z-10" />
                 <span className="relative z-10">{mod.menuLabel}</span>
-                <span
-                  className={`relative z-10 px-1.5 py-0.5 rounded text-[10px] font-mono ${
-                    isActive
-                      ? "bg-zinc-950/20 text-zinc-950"
-                      : isEnabled
-                      ? "bg-emerald-500/15 text-emerald-300"
-                      : "bg-white/[0.05] text-zinc-500"
-                  }`}
-                >
-                  {isEnabled ? "AÇIK" : "KAPALI"}
-                </span>
+                {!isDemo && (
+                  <span
+                    className={`relative z-10 px-1.5 py-0.5 rounded text-[10px] font-mono ${
+                      isActive
+                        ? "bg-zinc-950/20 text-zinc-950"
+                        : isEnabled
+                        ? "bg-emerald-500/15 text-emerald-300"
+                        : "bg-white/[0.05] text-zinc-500"
+                    }`}
+                  >
+                    {isEnabled ? "AÇIK" : "KAPALI"}
+                  </span>
+                )}
               </Link>
             )
           })}
@@ -193,11 +222,17 @@ export function ProductionModuleReadinessView({
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-light tracking-tight text-white">
-                {selectedModule ? selectedModule.label : "Üretim Modülleri Altyapı & Yetki Merkezi"}
+                {selectedModule
+                  ? selectedModule.label
+                  : isDemo
+                  ? "Üretim Yönetimi & Operasyonel Kontrol Merkezi"
+                  : "Üretim Modülleri Altyapı & Yetki Merkezi"}
               </h1>
               <p className="text-xs text-zinc-400 mt-0.5">
                 {selectedModule
                   ? selectedModule.description
+                  : isDemo
+                  ? "Reçeteler (BOM), MRP malzeme planlaması, atölye iş emirleri, kapasite doluluk, kalite güvence ve kestirimci bakım yönetimi."
                   : "Özellik bayrakları (feature flags), granüler RBAC izin kodları, denetim logu ve mevcut BOM/Envanter entegrasyon durumu."}
               </p>
             </div>
@@ -229,17 +264,21 @@ export function ProductionModuleReadinessView({
         <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
-              Etkin Özellik Bayrağı
+              {isDemo ? "Aktif Üretim Modülleri" : "Etkin Özellik Bayrağı"}
             </span>
             <div className="text-2xl md:text-3xl font-light tracking-tight text-white tabular-nums mt-1">
-              <AnimatedNumber value={enabledModulesCount} /> / {PRODUCTION_MODULES_CATALOG.length}
+              {isDemo ? "6 / 6" : <><AnimatedNumber value={enabledModulesCount} /> / {PRODUCTION_MODULES_CATALOG.length}</>}
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
-              Varsayılan tüm bayraklar kapalıdır
+              {isDemo ? "Tüm üretim ve planlama modülleri devrede" : "Varsayılan tüm bayraklar kapalıdır"}
             </p>
           </div>
           <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <Lock className="w-4 h-4 text-emerald-400" />
+            {isDemo ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <Lock className="w-4 h-4 text-emerald-400" />
+            )}
           </div>
         </div>
 
@@ -249,10 +288,12 @@ export function ProductionModuleReadinessView({
               Mevcut Ürün Reçetesi (BOM)
             </span>
             <div className="text-2xl md:text-3xl font-light tracking-tight text-emerald-400 tabular-nums mt-1">
-              <AnimatedNumber value={snapshot?.databaseReadiness?.bomHeaderCount ?? 0} />
+              <AnimatedNumber value={isDemo ? Math.max(3, snapshot?.databaseReadiness?.bomHeaderCount ?? 0) : (snapshot?.databaseReadiness?.bomHeaderCount ?? 0)} />
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
-              {snapshot?.databaseReadiness?.bomComponentCount ?? 0} reçete bileşen satırı
+              {isDemo
+                ? "3 onaylı ürün reçetesi, 7 hammadde bileşeni"
+                : `${snapshot?.databaseReadiness?.bomComponentCount ?? 0} reçete bileşen satırı`}
             </p>
           </div>
           <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
@@ -267,11 +308,11 @@ export function ProductionModuleReadinessView({
             </span>
             <div className="text-2xl md:text-3xl font-light tracking-tight text-cyan-300 tabular-nums mt-1">
               <AnimatedNumber
-                value={snapshot?.databaseReadiness?.manufacturingWarehouseCount ?? 0}
+                value={isDemo ? Math.max(2, snapshot?.databaseReadiness?.manufacturingWarehouseCount ?? 0) : (snapshot?.databaseReadiness?.manufacturingWarehouseCount ?? 0)}
               />
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
-              MANUFACTURING tipi aktif lokasyon
+              {isDemo ? "Aktif atölye ve iklimlendirme lokasyonu" : "MANUFACTURING tipi aktif lokasyon"}
             </p>
           </div>
           <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center shrink-0">
@@ -285,11 +326,12 @@ export function ProductionModuleReadinessView({
               Hammadde / Yarı Mamul / Mamul
             </span>
             <div className="text-2xl md:text-3xl font-light tracking-tight text-white tabular-nums mt-1">
-              <AnimatedNumber value={totalProductionItems} />
+              <AnimatedNumber value={isDemo ? Math.max(36, totalProductionItems) : totalProductionItems} />
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
-              {snapshot?.databaseReadiness?.rawMaterialCount ?? 0} Hammadde ·{" "}
-              {snapshot?.databaseReadiness?.finishedGoodCount ?? 0} Mamul
+              {isDemo
+                ? "18 Hammadde · 12 Mamul · 6 Yarı Mamul"
+                : `${snapshot?.databaseReadiness?.rawMaterialCount ?? 0} Hammadde · ${snapshot?.databaseReadiness?.finishedGoodCount ?? 0} Mamul`}
             </p>
           </div>
           <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center shrink-0">
@@ -298,33 +340,31 @@ export function ProductionModuleReadinessView({
         </div>
       </div>
 
-      {/* Seçili Modül Özellik Bayrağı Durum Kartı */}
+      {/* Seçili Modül Bilgi Kartı */}
       {selectedModule && (
         <div className="glass-panel rounded-2xl p-5 border border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-white/[0.05] border border-white/[0.08] text-emerald-300">
-                {selectedModule.key}
+                {selectedModule.slug.toUpperCase()}
               </span>
               <span
                 className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
-                  snapshot?.flags?.[selectedModule.key]
+                  isDemo || snapshot?.flags?.[selectedModule.key]
                     ? "badge-positive"
                     : "badge-pending"
                 }`}
               >
-                {snapshot?.flags?.[selectedModule.key]
-                  ? "Özellik Bayrağı Açık (Aktif)"
+                {isDemo || snapshot?.flags?.[selectedModule.key]
+                  ? "Modül Aktif · Canlı Demo"
                   : "Özellik Bayrağı Kapalı (Pasif)"}
               </span>
             </div>
             <h2 className="text-base font-medium text-white">
-              {selectedModule.label} — Altyapı, Rota ve Yetki Kaydı Hazır
+              {selectedModule.label}
             </h2>
             <p className="text-xs text-zinc-400">
-              Denetim Kaynağı:{" "}
-              <code className="font-mono text-zinc-200">{selectedModule.auditResource}</code> ·
-              Rota: <code className="font-mono text-zinc-200">{selectedModule.href}</code>
+              {selectedModule.description}
             </p>
           </div>
 
@@ -340,29 +380,29 @@ export function ProductionModuleReadinessView({
         </div>
       )}
 
-      {/* BOM & Rota, MRP/MPS ve İş Emirleri Özellik Bayrağı Açık Olduğunda İlgili Özel Çalışma Alanı */}
-      {snapshot?.flags?.uretim_bom_rota &&
+      {/* BOM & Rota, MRP/MPS ve İş Emirleri İlgili Özel Çalışma Alanı */}
+      {(isDemo || snapshot?.flags?.uretim_bom_rota) &&
       (activeSlug === "bom-rota" || activeSlug === "uretim_bom_rota") ? (
         <ProductionBomWorkspace />
-      ) : snapshot?.flags?.uretim_mrp_mps &&
+      ) : (isDemo || snapshot?.flags?.uretim_mrp_mps) &&
         (activeSlug === "mrp-mps" || activeSlug === "uretim_mrp_mps") ? (
         <ProductionMrpWorkspace />
-      ) : snapshot?.flags?.uretim_is_emri &&
+      ) : (isDemo || snapshot?.flags?.uretim_is_emri) &&
         (activeSlug === "is-emirleri" || activeSlug === "uretim_is_emri") ? (
         <ProductionWorkOrderWorkspace />
-      ) : snapshot?.flags?.uretim_kapasite &&
+      ) : (isDemo || snapshot?.flags?.uretim_kapasite) &&
         (activeSlug === "kapasite" || activeSlug === "uretim_kapasite") ? (
         <ProductionCapacityWorkspace />
-      ) : snapshot?.flags?.uretim_kalite &&
+      ) : (isDemo || snapshot?.flags?.uretim_kalite) &&
         (activeSlug === "kalite" || activeSlug === "uretim_kalite") ? (
         <ProductionQualityWorkspace />
-      ) : snapshot?.flags?.uretim_bakim &&
+      ) : (isDemo || snapshot?.flags?.uretim_bakim) &&
         (activeSlug === "bakim" || activeSlug === "uretim_bakim") ? (
         <ProductionMaintenanceWorkspace />
-      ) : snapshot?.anyFlagEnabled &&
+      ) : (isDemo || snapshot?.anyFlagEnabled) &&
         (activeSlug === "dashboard" || activeSlug === "entegrasyon" || !activeSlug) ? (
         <ProductionConsolidatedWorkspace />
-      ) : snapshot?.anyFlagEnabled ? (
+      ) : (isDemo || snapshot?.anyFlagEnabled) ? (
         <ProductionMasterDataWorkspace
           defaultTab={
             (activeSlug === "bakim" || activeSlug === "uretim_bakim"
@@ -376,7 +416,8 @@ export function ProductionModuleReadinessView({
         />
       ) : null}
 
-      {/* Üretim Modülleri Özellik Bayrağı ve RBAC İzin Matrisi Tablosu */}
+      {/* Üretim Modülleri Özellik Bayrağı ve RBAC İzin Matrisi Tablosu (Yalnızca Yönetici / Geliştirici Görünümünde) */}
+      {!isDemo && (
       <div className="glass-table-container overflow-hidden">
         <div className="px-5 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
@@ -486,7 +527,7 @@ export function ProductionModuleReadinessView({
                               key={action}
                               className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${
                                 allowed
-                                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
                                   : "bg-white/[0.03] text-zinc-500 border-white/[0.06]"
                               }`}
                               title={`${mod.key}:${action}`}
@@ -513,6 +554,7 @@ export function ProductionModuleReadinessView({
           </table>
         </div>
       </div>
+      )}
     </div>
   )
 }

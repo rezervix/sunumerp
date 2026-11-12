@@ -110,9 +110,47 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const view = searchParams.get("view") || "overview"
+      if (view === "inspections") return NextResponse.json(mockDatabase.getProductionQualityInspections())
+      if (view === "plans") return NextResponse.json(mockDatabase.getProductionQualityPlans())
+      if (view === "calibrations") return NextResponse.json(mockDatabase.getProductionQualityCalibrations())
+      if (view === "ncrs") return NextResponse.json(mockDatabase.getProductionQualityNcrs())
+      if (view === "pareto") {
+        return NextResponse.json({
+          success: true,
+          data: {
+            items: [
+              { category: "Sap Eğriliği", count: 18, percentage: 45, cumulativePercentage: 45 },
+              { category: "Yaprak Sararması", count: 12, percentage: 30, cumulativePercentage: 75 },
+              { category: "Gonca Boyutu", count: 6, percentage: 15, cumulativePercentage: 90 },
+              { category: "Diğer", count: 4, percentage: 10, cumulativePercentage: 100 },
+            ],
+          },
+        })
+      }
+      if (view === "supplier_ratings") {
+        return NextResponse.json({
+          success: true,
+          data: {
+            ratings: [
+              { supplierName: "Ekvator Flora Direct Ltd.", acceptanceRate: 98.4, totalLots: 45, grade: "A+" },
+              { supplierName: "Paşabahçe / Seramik Dünyası", acceptanceRate: 99.2, totalLots: 25, grade: "A+" },
+              { supplierName: "Smithers Oasis Türkiye", acceptanceRate: 94.0, totalLots: 20, grade: "A" },
+            ],
+          },
+        })
+      }
+      return NextResponse.json(mockDatabase.getProductionQualityOverview())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

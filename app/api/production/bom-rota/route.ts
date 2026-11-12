@@ -108,9 +108,23 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const section = searchParams.get("section") || "boms"
+      if (section === "routings") return NextResponse.json(mockDatabase.getProductionRoutings())
+      if (section === "bom_detail") {
+        const id = searchParams.get("id") || undefined
+        return NextResponse.json(mockDatabase.getProductionBomDetail(id))
+      }
+      return NextResponse.json(mockDatabase.getProductionBoms())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
 

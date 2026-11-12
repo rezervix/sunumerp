@@ -99,6 +99,137 @@ export function DemoModeInterceptor() {
         if (url.includes("/api/finance") || url.includes("/api/financial")) {
           return jsonResponse(mockDatabase.getFinances())
         }
+
+        // ── Production Modules Interceptions (Public Demo) ──
+        if (url.includes("/api/production/infrastructure")) {
+          return jsonResponse(mockDatabase.getProductionInfrastructure())
+        }
+
+        if (url.includes("/api/production/bom-rota")) {
+          const urlObj = new URL(url, window.location.origin)
+          const section = urlObj.searchParams.get("section") || "boms"
+          if (section === "routings") return jsonResponse(mockDatabase.getProductionRoutings())
+          if (section === "bom_detail") {
+            const id = urlObj.searchParams.get("id") || undefined
+            return jsonResponse(mockDatabase.getProductionBomDetail(id))
+          }
+          return jsonResponse(mockDatabase.getProductionBoms())
+        }
+
+        if (url.includes("/api/production/work-orders")) {
+          const urlObj = new URL(url, window.location.origin)
+          const section = urlObj.searchParams.get("section")
+          if (section === "dashboard") return jsonResponse(mockDatabase.getProductionWorkOrderDashboard())
+          if (section === "terminal") return jsonResponse(mockDatabase.getProductionTerminalData())
+          if (section === "cost_summary" || section === "work_order") {
+            return jsonResponse({
+              success: true,
+              workOrder: mockDatabase.getProductionWorkOrders().workOrders[0],
+              costSummary: {
+                theoreticalMaterialCost: 23000,
+                theoreticalLaborCost: 4400,
+                theoreticalOverheadCost: 1600,
+                theoreticalTotalCost: 29000,
+                actualMaterialCost: 16100,
+                actualLaborCost: 3200,
+                actualOverheadCost: 1100,
+                actualTotalCost: 20400,
+                costVariance: 8600,
+                scrapCost: 0,
+              },
+            })
+          }
+          return jsonResponse(mockDatabase.getProductionWorkOrders())
+        }
+
+        if (url.includes("/api/production/capacity")) {
+          const urlObj = new URL(url, window.location.origin)
+          const section = urlObj.searchParams.get("section") || "overview"
+          if (section === "gantt") return jsonResponse(mockDatabase.getProductionCapacityGantt())
+          if (section === "variance") return jsonResponse({ success: true, varianceData: [] })
+          return jsonResponse(mockDatabase.getProductionCapacityOverview())
+        }
+
+        if (url.includes("/api/production/quality")) {
+          const urlObj = new URL(url, window.location.origin)
+          const view = urlObj.searchParams.get("view") || "overview"
+          if (view === "inspections") return jsonResponse(mockDatabase.getProductionQualityInspections())
+          if (view === "plans") return jsonResponse(mockDatabase.getProductionQualityPlans())
+          if (view === "calibrations") return jsonResponse(mockDatabase.getProductionQualityCalibrations())
+          if (view === "ncrs") return jsonResponse(mockDatabase.getProductionQualityNcrs())
+          if (view === "pareto") {
+            return jsonResponse({
+              success: true,
+              data: {
+                items: [
+                  { category: "Sap Eğriliği", count: 18, percentage: 45, cumulativePercentage: 45 },
+                  { category: "Yaprak Sararması", count: 12, percentage: 30, cumulativePercentage: 75 },
+                  { category: "Gonca Boyutu", count: 6, percentage: 15, cumulativePercentage: 90 },
+                  { category: "Diğer", count: 4, percentage: 10, cumulativePercentage: 100 },
+                ],
+              },
+            })
+          }
+          if (view === "supplier_ratings") {
+            return jsonResponse({
+              success: true,
+              data: {
+                ratings: [
+                  { supplierName: "Ekvator Flora Direct Ltd.", acceptanceRate: 98.4, totalLots: 45, grade: "A+" },
+                  { supplierName: "Paşabahçe / Seramik Dünyası", acceptanceRate: 99.2, totalLots: 25, grade: "A+" },
+                  { supplierName: "Smithers Oasis Türkiye", acceptanceRate: 94.0, totalLots: 20, grade: "A" },
+                ],
+              },
+            })
+          }
+          return jsonResponse(mockDatabase.getProductionQualityOverview())
+        }
+
+        if (url.includes("/api/production/maintenance")) {
+          const urlObj = new URL(url, window.location.origin)
+          const view = urlObj.searchParams.get("view") || "overview"
+          if (view === "work_orders") return jsonResponse(mockDatabase.getProductionMaintenanceWorkOrders())
+          if (view === "plans") return jsonResponse(mockDatabase.getProductionMaintenancePlans())
+          if (view === "machines") return jsonResponse(mockDatabase.getProductionMaintenanceMachines())
+          if (view === "metrics") {
+            return jsonResponse({
+              success: true,
+              data: {
+                mtbf: 580,
+                mttr: 1.6,
+                oeeImpactPercent: -1.2,
+                uptimePercent: 98.4,
+              },
+            })
+          }
+          return jsonResponse(mockDatabase.getProductionMaintenanceOverview())
+        }
+
+        if (url.includes("/api/production/mrp-mps")) {
+          const urlObj = new URL(url, window.location.origin)
+          const section = urlObj.searchParams.get("section") || "mps_plans"
+          if (section === "mps_plans") return jsonResponse(mockDatabase.getProductionMpsPlans())
+          if (section === "mps_grid") return jsonResponse(mockDatabase.getProductionMpsGrid())
+          if (section === "mrp_runs") return jsonResponse(mockDatabase.getProductionMrpRuns())
+          if (section === "mrp_run") return jsonResponse(mockDatabase.getProductionMrpRunDetail())
+          if (section === "planned_orders") return jsonResponse(mockDatabase.getProductionPlannedOrders())
+          if (section === "action_messages") return jsonResponse(mockDatabase.getProductionActionMessages())
+          return jsonResponse(mockDatabase.getProductionMpsPlans())
+        }
+
+        if (url.includes("/api/production/integration")) {
+          const urlObj = new URL(url, window.location.origin)
+          const view = urlObj.searchParams.get("view") || "dashboard"
+          if (view === "dashboard") return jsonResponse(mockDatabase.getProductionIntegrationDashboard())
+          if (view === "notifications") return jsonResponse({ success: true, data: [] })
+          if (view === "audit_trail") return jsonResponse({ success: true, data: { logs: [] } })
+          if (view === "reports") return jsonResponse({ success: true, data: [] })
+          return jsonResponse(mockDatabase.getProductionIntegrationDashboard())
+        }
+
+        if (url.includes("/api/production/master-data")) {
+          return jsonResponse(mockDatabase.getProductionWorkCenters())
+        }
       }
 
       // ── Mutation Interceptions (Simulated Reactive CRUD) ──

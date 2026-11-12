@@ -89,9 +89,22 @@ async function resolveAuth(request: Request) {
   return null
 }
 
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
+
+    if (isDemoModeActive()) {
+      const view = searchParams.get("view") || "dashboard"
+      if (view === "dashboard") return NextResponse.json(mockDatabase.getProductionIntegrationDashboard())
+      if (view === "notifications") return NextResponse.json({ success: true, data: [] })
+      if (view === "audit_trail") return NextResponse.json({ success: true, data: { logs: [] } })
+      if (view === "reports") return NextResponse.json({ success: true, data: [] })
+      return NextResponse.json(mockDatabase.getProductionIntegrationDashboard())
+    }
+
     const branchId = searchParams.get("branchId") || null
     const flags = getServerProductionFeatureFlags(branchId)
     const isAnyEnabled = Object.values(flags).some((v) => v === true)

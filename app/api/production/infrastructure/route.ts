@@ -14,9 +14,15 @@ import {
   logProductionAudit,
 } from "@/lib/services/productionAuditAndError"
 import { getServerProductionFeatureFlags, getSystemConfig } from "@/lib/system-config"
+import { isDemoModeActive } from "@/lib/data-controller"
+import { mockDatabase } from "@/lib/data/mockDatabase"
 
 export async function GET(req: Request) {
   try {
+    if (isDemoModeActive()) {
+      return NextResponse.json(mockDatabase.getProductionInfrastructure())
+    }
+
     const payload = await getAuthPayload()
     if (!payload) {
       return NextResponse.json(

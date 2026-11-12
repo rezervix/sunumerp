@@ -8,6 +8,8 @@
  * simülasyon sunmasını sağlar.
  */
 
+import * as mockProd from "./mockProductionData"
+
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export interface MockKPIStats {
@@ -1778,6 +1780,124 @@ class MockDatabaseService {
     return this.state.finances && this.state.finances.length > 0
       ? [...this.state.finances]
       : [...INITIAL_FINANCES]
+  }
+
+  // ── Production (Üretim Modülleri Canlı Demo) ──
+  public getProductionInfrastructure() {
+    return mockProd.MOCK_INFRASTRUCTURE_SNAPSHOT
+  }
+
+  public getProductionBoms() {
+    return {
+      success: true,
+      items: mockProd.MOCK_BOMS,
+      pagination: { page: 1, pageSize: 50, totalCount: mockProd.MOCK_BOMS.length, totalPages: 1 },
+    }
+  }
+
+  public getProductionRoutings() {
+    return {
+      success: true,
+      items: mockProd.MOCK_ROUTINGS,
+      pagination: { page: 1, pageSize: 50, totalCount: mockProd.MOCK_ROUTINGS.length, totalPages: 1 },
+    }
+  }
+
+  public getProductionBomDetail(id?: string) {
+    const bom = mockProd.MOCK_BOMS.find((b) => b.id === id) || mockProd.MOCK_BOMS[0]
+    return { success: true, bom }
+  }
+
+  public getProductionWorkOrders() {
+    return {
+      success: true,
+      workOrders: mockProd.MOCK_WORK_ORDERS,
+      pagination: { page: 1, pageSize: 50, totalCount: mockProd.MOCK_WORK_ORDERS.length, totalPages: 1 },
+    }
+  }
+
+  public getProductionWorkOrderDashboard() {
+    return { success: true, dashboard: mockProd.MOCK_WORK_ORDER_DASHBOARD }
+  }
+
+  public getProductionTerminalData() {
+    return { success: true, terminalData: mockProd.MOCK_TERMINAL_DATA }
+  }
+
+  public getProductionCapacityOverview() {
+    return { success: true, ...mockProd.MOCK_CAPACITY_OVERVIEW }
+  }
+
+  public getProductionCapacityGantt() {
+    return { success: true, ...mockProd.MOCK_CAPACITY_GANTT }
+  }
+
+  public getProductionQualityOverview() {
+    return { success: true, ...mockProd.MOCK_QUALITY_OVERVIEW }
+  }
+
+  public getProductionQualityInspections() {
+    return { success: true, data: mockProd.MOCK_QUALITY_INSPECTIONS }
+  }
+
+  public getProductionQualityPlans() {
+    return { success: true, data: mockProd.MOCK_QUALITY_PLANS }
+  }
+
+  public getProductionQualityCalibrations() {
+    return { success: true, data: mockProd.MOCK_QUALITY_CALIBRATIONS }
+  }
+
+  public getProductionQualityNcrs() {
+    return { success: true, data: mockProd.MOCK_QUALITY_NCRS }
+  }
+
+  public getProductionMaintenanceOverview() {
+    return { success: true, data: mockProd.MOCK_MAINTENANCE_OVERVIEW }
+  }
+
+  public getProductionMaintenanceWorkOrders() {
+    return { success: true, data: mockProd.MOCK_MAINTENANCE_WORK_ORDERS }
+  }
+
+  public getProductionMaintenancePlans() {
+    return { success: true, data: mockProd.MOCK_MAINTENANCE_PLANS }
+  }
+
+  public getProductionMaintenanceMachines() {
+    return { success: true, data: mockProd.MOCK_MAINTENANCE_MACHINES }
+  }
+
+  public getProductionMpsPlans() {
+    return { success: true, plans: mockProd.MOCK_MPS_PLANS }
+  }
+
+  public getProductionMpsGrid() {
+    return { success: true, grid: mockProd.MOCK_MPS_GRID }
+  }
+
+  public getProductionMrpRuns() {
+    return { success: true, runs: mockProd.MOCK_MRP_RUNS }
+  }
+
+  public getProductionMrpRunDetail() {
+    return { success: true, run: mockProd.MOCK_MRP_RUNS[0] }
+  }
+
+  public getProductionPlannedOrders() {
+    return { success: true, orders: mockProd.MOCK_PLANNED_ORDERS }
+  }
+
+  public getProductionActionMessages() {
+    return { success: true, messages: mockProd.MOCK_ACTION_MESSAGES }
+  }
+
+  public getProductionIntegrationDashboard() {
+    return { success: true, data: mockProd.MOCK_CONSOLIDATED_DASHBOARD }
+  }
+
+  public getProductionWorkCenters() {
+    return { success: true, items: mockProd.MOCK_WORK_CENTERS }
   }
 
   // ── Reset ──

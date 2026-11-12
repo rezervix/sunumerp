@@ -151,6 +151,19 @@ function parseEnvBoolean(raw: string | undefined): boolean | undefined {
   return undefined
 }
 
+function isDemoEnvironment(): boolean {
+  if (typeof process === "undefined" || !process.env) return true
+  const disableDemo = process.env.DISABLE_DEMO_MODE
+  const envDemo = process.env.ENABLE_DEMO_MODE
+  const publicEnvDemo = process.env.NEXT_PUBLIC_ENABLE_DEMO_MODE
+  const publicUseMock = process.env.NEXT_PUBLIC_USE_MOCK_DATA
+
+  if (disableDemo === "true" || envDemo === "false" || publicEnvDemo === "false" || publicUseMock === "false") {
+    return false
+  }
+  return true
+}
+
 function readEnvFlagOverride(flag: ProductionFeatureFlagKey): boolean | undefined {
   if (typeof process === "undefined" || !process.env) return undefined
   const { server, publicKey } = ENV_KEY_MAP[flag]
@@ -160,7 +173,14 @@ function readEnvFlagOverride(flag: ProductionFeatureFlagKey): boolean | undefine
   const globalAll = parseEnvBoolean(
     process.env.FEATURE_URETIM_ALL ?? process.env.NEXT_PUBLIC_FEATURE_URETIM_ALL
   )
-  return globalAll
+  if (globalAll !== undefined) return globalAll
+
+  // Canlı Demo / Public Showcase ortamında tüm modüller varsayılan olarak açık gelir
+  if (isDemoEnvironment()) {
+    return true
+  }
+
+  return undefined
 }
 
 /**
