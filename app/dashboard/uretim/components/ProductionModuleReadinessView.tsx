@@ -40,6 +40,7 @@ import { ProductionWorkOrderWorkspace } from "./ProductionWorkOrderWorkspace"
 import { ProductionCapacityWorkspace } from "./ProductionCapacityWorkspace"
 import { ProductionQualityWorkspace } from "./ProductionQualityWorkspace"
 import { ProductionMaintenanceWorkspace } from "./ProductionMaintenanceWorkspace"
+import { ProductionConsolidatedWorkspace } from "./ProductionConsolidatedWorkspace"
 
 const MODULE_ICONS: Record<ProductionFeatureFlagKey, React.ElementType> = {
   uretim_bom_rota: GitBranch,
@@ -358,6 +359,9 @@ export function ProductionModuleReadinessView({
       ) : snapshot?.flags?.uretim_bakim &&
         (activeSlug === "bakim" || activeSlug === "uretim_bakim") ? (
         <ProductionMaintenanceWorkspace />
+      ) : snapshot?.anyFlagEnabled &&
+        (activeSlug === "dashboard" || activeSlug === "entegrasyon" || !activeSlug) ? (
+        <ProductionConsolidatedWorkspace />
       ) : snapshot?.anyFlagEnabled ? (
         <ProductionMasterDataWorkspace
           defaultTab={

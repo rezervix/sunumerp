@@ -3995,6 +3995,38 @@ model UretimMaintenanceConditionReading {
   @@index([readingDate])
 }
 
+// ── Üretim Modülleri: Faz 9 Entegrasyon, Bildirim & Dashboard ──
+model UretimNotificationRule {
+  id          String   @id @default(uuid())
+  name        String
+  eventType   String   // WORK_ORDER_DELAY, CAPACITY_OVERLOAD, QUALITY_REJECTION, CALIBRATION_EXPIRING, MAINTENANCE_OVERDUE, CRITICAL_STOCK_SHORTAGE
+  severity    String   @default("WARNING") // INFO, WARNING, CRITICAL
+  channel     String   @default("IN_APP")  // IN_APP, EMAIL, SMS, ALL
+  targetRoles String?  // JSON string
+  isActive    Boolean  @default(true)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([eventType])
+  @@index([isActive])
+}
+
+model UretimNotificationPreference {
+  id           String   @id @default(uuid())
+  userId       String
+  eventType    String
+  inAppEnabled Boolean  @default(true)
+  emailEnabled Boolean  @default(false)
+  smsEnabled   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, eventType])
+  @@index([userId])
+}
+
+
 
 
 

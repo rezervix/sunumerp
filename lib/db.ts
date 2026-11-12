@@ -200,6 +200,9 @@ interface JsonDbData {
   uretimMaintenanceWorkOrderSparePart?: any[]
   uretimMaintenanceChecklistResult?: any[]
   uretimMaintenanceConditionReading?: any[]
+  // ── Üretim Modülleri: Faz 9 Entegrasyon, Bildirim & Dashboard ──
+  uretimNotificationRule?: any[]
+  uretimNotificationPreference?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -1626,7 +1629,10 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimMaintenanceWorkOrder",
       "uretimMaintenanceWorkOrderSparePart",
       "uretimMaintenanceChecklistResult",
-      "uretimMaintenanceConditionReading"
+      "uretimMaintenanceConditionReading",
+      // ── Üretim Modülleri: Faz 9 Entegrasyon, Bildirim & Dashboard ──
+      "uretimNotificationRule",
+      "uretimNotificationPreference"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
