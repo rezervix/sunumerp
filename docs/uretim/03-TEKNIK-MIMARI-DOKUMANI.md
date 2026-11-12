@@ -168,3 +168,4 @@ Tüm üretim tabloları `Uretim` ön ekiyle adlandırılmış olup mevcut çekir
 - `UretimIntegrationAuditLog`: `@@index([eventType])`, `@@index([userId, createdAt])`
 
 Bu indeksler sayesinde yüksek hacimli sorgularda full table scan engellenmiş ve API yanıt süreleri optimize edilmiştir.
+

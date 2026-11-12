@@ -152,3 +152,4 @@ Sistem modüler yapıda olup, her bir alt modül bağımsız özellik bayraklar�
 ### 8.2 Raporlar ve Dışa Aktarma
 - Tüm veri listeleri `Excel` ve `PDF` formatında dışa aktarılabilir.
 - Filtreleme seçenekleri ile tarih aralığı, iş merkezi, malzeme grubu ve sipariş bazında özelleştirilmiş analizler alınabilir.
+

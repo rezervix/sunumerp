@@ -131,3 +131,4 @@ MRP teslimat tarihi hesaplamaları ve sonlu kapasite çizelgeleme motoru için d
    - Hafta 4: `uretim_kapasite` ve `uretim_kalite` açılarak tam entegrasyon sağlanır.
 3. **Acil Durum Geri Alma (Instant Kill Switch):**
    - Herhangi bir aksaklık durumunda `saveSystemConfig({ featureFlags: { [flagKey]: false } })` çağrılarak veya arayüzden ilgili anahtar kapatılarak ilgili modül tek saniyede kullanıcı erişiminden gizlenebilir. Bu işlem mevcut hiçbir veriyi silmez.
+
