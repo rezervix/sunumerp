@@ -11,7 +11,7 @@
  * 7. Excel / CSV Dışa Aktarma Formatlayıcısı (UTF-8 BOM)
  */
 
-import { ProductionDomainError } from "./productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
 
 // ─────────────────────────────────────────────────────────────
 // 1. TİPLER VE ENUM'LAR

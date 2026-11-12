@@ -31,7 +31,7 @@ import {
   type LotSizingRule,
   type ProductionItemType,
   type ProductionMethod,
-} from "@/lib/services/productionMasterDataEngine"
+} from "@/lib/production/types"
 
 interface ItemProductionProfileTabProps {
   itemId: string

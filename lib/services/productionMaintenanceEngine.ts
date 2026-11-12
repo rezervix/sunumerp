@@ -14,7 +14,7 @@
  * 10. Bakım Maliyeti Dağılımı ve Bütçe Sapma Analizi
  */
 
-import { ProductionDomainError } from "./productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
 
 // ─────────────────────────────────────────────────────────────
 // 1. TİPLER VE ENUM'LAR

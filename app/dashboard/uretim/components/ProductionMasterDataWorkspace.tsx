@@ -79,7 +79,7 @@ import {
   type SafetyStockRule,
   type WeekdayCode,
   type WorkCenterType,
-} from "@/lib/services/productionMasterDataEngine"
+} from "@/lib/production/types"
 import { ItemProductionProfileTab } from "@/app/dashboard/stok/components/ItemProductionProfileTab"
 
 export type MasterDataTabKey =

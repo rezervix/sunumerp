@@ -40,12 +40,12 @@
     "iyzicoSubscriptionId": "sub_mock_ilptj3lh"
   },
   "featureFlags": {
-    "uretim_bom_rota": false,
-    "uretim_mrp_mps": false,
-    "uretim_is_emri": false,
-    "uretim_kapasite": false,
-    "uretim_kalite": false,
-    "uretim_bakim": false
+    "uretim_bom_rota": true,
+    "uretim_mrp_mps": true,
+    "uretim_is_emri": true,
+    "uretim_kapasite": true,
+    "uretim_kalite": true,
+    "uretim_bakim": true
   },
   "tamperDetected": false,
   "securityDisabled": true,
@@ -55,11 +55,11 @@
     "pushNotificationsEnabled": true
   },
   "productionFeatureFlags": {
-    "uretim_bom_rota": false,
-    "uretim_mrp_mps": false,
-    "uretim_is_emri": false,
-    "uretim_kapasite": false,
-    "uretim_kalite": false,
-    "uretim_bakim": false
+    "uretim_bom_rota": true,
+    "uretim_mrp_mps": true,
+    "uretim_is_emri": true,
+    "uretim_kapasite": true,
+    "uretim_kalite": true,
+    "uretim_bakim": true
   }
 }

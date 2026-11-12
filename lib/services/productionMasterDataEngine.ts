@@ -10,146 +10,40 @@
  * 5. Stok/Ürün Kartı 1-1 Üretim Profili doğrulama ve eşleştirme kuralları
  */
 
-import { ProductionDomainError } from "@/lib/services/productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
+import {
+  WORK_CENTER_TYPES,
+  WORK_CENTER_TYPE_LABELS,
+  type WorkCenterType,
+  MACHINE_STATUSES,
+  MACHINE_STATUS_LABELS,
+  type MachineStatus,
+  CALENDAR_EXCEPTION_TYPES,
+  CALENDAR_EXCEPTION_TYPE_LABELS,
+  type CalendarExceptionType,
+  WEEKDAY_CODES,
+  WEEKDAY_LABELS,
+  type WeekdayCode,
+  PLANNING_BUCKETS,
+  PLANNING_BUCKET_LABELS,
+  type PlanningBucket,
+  LOT_SIZING_RULES,
+  LOT_SIZING_RULE_LABELS,
+  type LotSizingRule,
+  SAFETY_STOCK_RULES,
+  SAFETY_STOCK_RULE_LABELS,
+  type SafetyStockRule,
+  PRODUCTION_ITEM_TYPES,
+  PRODUCTION_ITEM_TYPE_LABELS,
+  type ProductionItemType,
+  PRODUCTION_METHODS,
+  PRODUCTION_METHOD_LABELS,
+  type ProductionMethod,
+  WORK_ORDER_STATUS_FLOW_DEFAULT,
+  WORK_ORDER_STATUS_LABELS,
+} from "@/lib/production/types"
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// 1. SABİTLER VE TÜRKÇE ETİKET SÖZLÜKLERİ
-// ═══════════════════════════════════════════════════════════════════════════════
-
-export const WORK_CENTER_TYPES = ["MACHINE", "MANUAL", "OUTSOURCE"] as const
-export type WorkCenterType = (typeof WORK_CENTER_TYPES)[number]
-
-export const WORK_CENTER_TYPE_LABELS: Record<WorkCenterType, string> = {
-  MACHINE: "Makine / Otomatik İstasyon",
-  MANUAL: "Manuel / El İşçiliği İstasyonu",
-  OUTSOURCE: "Dış Kaynak / Fason İstasyon",
-}
-
-export const MACHINE_STATUSES = [
-  "ACTIVE",
-  "MAINTENANCE",
-  "FAULT",
-  "STANDBY",
-  "DECOMMISSIONED",
-] as const
-export type MachineStatus = (typeof MACHINE_STATUSES)[number]
-
-export const MACHINE_STATUS_LABELS: Record<MachineStatus, string> = {
-  ACTIVE: "Çalışıyor (Aktif)",
-  MAINTENANCE: "Periyodik Bakımda",
-  FAULT: "Arızalı / Duruşta",
-  STANDBY: "Beklemede (Yedek)",
-  DECOMMISSIONED: "Kullanım Dışı",
-}
-
-export const CALENDAR_EXCEPTION_TYPES = [
-  "OVERTIME",
-  "CLOSED",
-  "REDUCED_CAPACITY",
-  "SHIFT_OVERRIDE",
-] as const
-export type CalendarExceptionType = (typeof CALENDAR_EXCEPTION_TYPES)[number]
-
-export const CALENDAR_EXCEPTION_TYPE_LABELS: Record<CalendarExceptionType, string> = {
-  OVERTIME: "Fazla Mesai (+)",
-  CLOSED: "Kapalı / Planlı Duruş",
-  REDUCED_CAPACITY: "Kısıtlı Kapasite",
-  SHIFT_OVERRIDE: "Özel Vardiya",
-}
-
-export const WEEKDAY_CODES = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const
-export type WeekdayCode = (typeof WEEKDAY_CODES)[number]
-
-export const WEEKDAY_LABELS: Record<WeekdayCode, string> = {
-  MON: "Pazartesi",
-  TUE: "Salı",
-  WED: "Çarşamba",
-  THU: "Perşembe",
-  FRI: "Cuma",
-  SAT: "Cumartesi",
-  SUN: "Pazar",
-}
-
-export const PLANNING_BUCKETS = ["DAILY", "WEEKLY", "MONTHLY"] as const
-export type PlanningBucket = (typeof PLANNING_BUCKETS)[number]
-
-export const PLANNING_BUCKET_LABELS: Record<PlanningBucket, string> = {
-  DAILY: "Günlük Dilim",
-  WEEKLY: "Haftalık Dilim",
-  MONTHLY: "Aylık Dilim",
-}
-
-export const LOT_SIZING_RULES = ["L4L", "FOQ", "EOQ", "POQ"] as const
-export type LotSizingRule = (typeof LOT_SIZING_RULES)[number]
-
-export const LOT_SIZING_RULE_LABELS: Record<LotSizingRule, string> = {
-  L4L: "Lot-for-Lot (Birebir İhtiyaç)",
-  FOQ: "Sabit Sipariş Miktarı (FOQ)",
-  EOQ: "Ekonomik Sipariş Miktarı (EOQ)",
-  POQ: "Periyodik Sipariş Miktarı (POQ)",
-}
-
-export const SAFETY_STOCK_RULES = ["FIXED", "DAYS_OF_SUPPLY", "PERCENTAGE"] as const
-export type SafetyStockRule = (typeof SAFETY_STOCK_RULES)[number]
-
-export const SAFETY_STOCK_RULE_LABELS: Record<SafetyStockRule, string> = {
-  FIXED: "Sabit Güvenlik Stoğu",
-  DAYS_OF_SUPPLY: "Günlük Tedarik Karşılığı (Gün)",
-  PERCENTAGE: "Talep Yüzdesi (%)",
-}
-
-export const PRODUCTION_ITEM_TYPES = [
-  "HAMMADDE",
-  "YARI_MAMUL",
-  "MAMUL",
-  "SARF_MALZEME",
-  "TICARI_MAL",
-] as const
-export type ProductionItemType = (typeof PRODUCTION_ITEM_TYPES)[number]
-
-export const PRODUCTION_ITEM_TYPE_LABELS: Record<ProductionItemType, string> = {
-  HAMMADDE: "Hammadde",
-  YARI_MAMUL: "Yarı Mamul",
-  MAMUL: "Mamul (Bitmiş Ürün)",
-  SARF_MALZEME: "Sarf Malzeme",
-  TICARI_MAL: "Ticari Mal",
-}
-
-export const PRODUCTION_METHODS = [
-  "MAKE_TO_STOCK",
-  "MAKE_TO_ORDER",
-  "ASSEMBLE_TO_ORDER",
-  "SUBCONTRACT",
-  "PURCHASE_ONLY",
-] as const
-export type ProductionMethod = (typeof PRODUCTION_METHODS)[number]
-
-export const PRODUCTION_METHOD_LABELS: Record<ProductionMethod, string> = {
-  MAKE_TO_STOCK: "Stok İçin Üretim (MTS)",
-  MAKE_TO_ORDER: "Siparişe Göre Üretim (MTO)",
-  ASSEMBLE_TO_ORDER: "Siparişe Göre Montaj (ATO)",
-  SUBCONTRACT: "Dış Kaynak / Fason Üretim",
-  PURCHASE_ONLY: "Sadece Satınalma (Üretilmez)",
-}
-
-export const WORK_ORDER_STATUS_FLOW_DEFAULT = [
-  "DRAFT",
-  "PLANNED",
-  "RELEASED",
-  "IN_PROGRESS",
-  "QA_PENDING",
-  "COMPLETED",
-] as const
-
-export const WORK_ORDER_STATUS_LABELS: Record<string, string> = {
-  DRAFT: "Taslak",
-  PLANNED: "Planlandı",
-  RELEASED: "Serbest Bırakıldı",
-  IN_PROGRESS: "Üretimde",
-  QA_PENDING: "Kalite Kontrol Bekliyor",
-  COMPLETED: "Tamamlandı",
-  CANCELLED: "İptal Edildi",
-}
+export * from "@/lib/production/types"
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // 2. VARDİYA SÜRE VE İŞ MERKEZİ EFEKTİF KAPASİTE HESAPLAMALARI

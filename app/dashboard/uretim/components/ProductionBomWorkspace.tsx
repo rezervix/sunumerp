@@ -71,7 +71,7 @@ import type {
   ExplodeBomResult,
   WhereUsedResultItem,
   BomRevisionDiffResult,
-} from "@/lib/services/productionBomRotaEngine"
+} from "@/lib/production/types"
 
 export type BomTabKey = "boms" | "routings" | "where_used" | "compare"
 

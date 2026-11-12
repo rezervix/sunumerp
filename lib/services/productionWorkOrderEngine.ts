@@ -6,7 +6,7 @@
  * Doğrudan birim testlerine uygundur.
  */
 
-import { ProductionDomainError } from "./productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
 
 // ─────────────────────────────────────────────────────────────
 // TİPLER VE VERİ MODELLERİ

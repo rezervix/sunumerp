@@ -7,7 +7,7 @@
  */
 
 import { z } from "zod"
-import { ProductionDomainError } from "./productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
 
 // ─────────────────────────────────────────────────────────────
 // TİPLER VE VERİ MODELLERİ

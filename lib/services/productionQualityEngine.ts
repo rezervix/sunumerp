@@ -12,7 +12,7 @@
  * 8. Tedarikçi Kalite Puanlama İstatistiği
  */
 
-import { ProductionDomainError } from "./productionAuditAndError"
+import { ProductionDomainError } from "./productionDomainError"
 
 // ─────────────────────────────────────────────────────────────
 // 1. ISO 2859-1 AQL STANDART NUMUNE TABLOLARI
