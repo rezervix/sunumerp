@@ -207,6 +207,11 @@ interface JsonDbData {
   uretimNotificationPreference?: any[]
   // ── Lojistik & Depo Modülleri (Faz 2–8 additive koleksiyonları) ──
   lojistikTelemetryLog?: any[]
+  lojistikStockReservation?: any[]
+  lojistikCrossDockOrder?: any[]
+  lojistikKitOrder?: any[]
+  lojistikKitOrderComponent?: any[]
+  lojistikRfidTagEvent?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -336,7 +341,13 @@ const initialData: JsonDbData = {
   transferOrderLine: [],
   purchaseRequisitionLine: [],
   orderShipmentLine: [],
-  licensePlateContent: []
+  licensePlateContent: [],
+  lojistikTelemetryLog: [],
+  lojistikStockReservation: [],
+  lojistikCrossDockOrder: [],
+  lojistikKitOrder: [],
+  lojistikKitOrderComponent: [],
+  lojistikRfidTagEvent: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1262,6 +1273,19 @@ class ModelSimulate {
       if (include.machineAsset) enriched.machineAsset = (db.uretimMachineAsset || []).find((ma: any) => ma.id === item.machineAssetId) ?? null
     }
 
+    if (this.modelName === "lojistikKitOrder" && include) {
+      if (include.components) {
+        enriched.components = (db.lojistikKitOrderComponent || [])
+          .filter((c: any) => c.kitOrderId === item.id)
+          .map((c: any) => ({
+            ...c,
+            componentItem: (db.inventoryItem || []).find((i: any) => i.id === c.componentItemId) ?? null,
+          }))
+      }
+      if (include.kitItem) enriched.kitItem = (db.inventoryItem || []).find((i: any) => i.id === item.kitItemId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
     return enriched
   }
 
@@ -1394,18 +1418,65 @@ class ModelSimulate {
     return result
   }
 
+  private persistNestedCreates(parentId: string, rawData: any): Record<string, any> {
+    const relationMap: Record<string, Record<string, { childModel: keyof JsonDbData; fk: string }>> = {
+      wmsTask: { lines: { childModel: "wmsTaskLine", fk: "taskId" } },
+      warehouseTransferOrder: { lines: { childModel: "transferOrderLine", fk: "transferOrderId" } },
+      inventoryCountSession: { lines: { childModel: "inventoryCountLine", fk: "sessionId" } },
+      lojistikKitOrder: { components: { childModel: "lojistikKitOrderComponent", fk: "kitOrderId" } },
+      purchaseRequisition: { lines: { childModel: "purchaseRequisitionLine", fk: "requisitionId" } },
+      licensePlate: { contents: { childModel: "licensePlateContent", fk: "licensePlateId" } },
+      omnichannelOrder: { shipmentLines: { childModel: "orderShipmentLine", fk: "orderId" } },
+    }
+    const modelRelations = relationMap[String(this.modelName)]
+    if (!modelRelations || !rawData) return rawData
+
+    const cleaned: Record<string, any> = {}
+    const nowIso = new Date().toISOString()
+
+    for (const [key, val] of Object.entries(rawData)) {
+      const relSpec = modelRelations[key]
+      if (relSpec && val && typeof val === "object" && "create" in (val as any)) {
+        const rawChildren = Array.isArray((val as any).create)
+          ? (val as any).create
+          : [(val as any).create]
+        if (rawChildren.length > 0) {
+          const childSim = new ModelSimulate(relSpec.childModel)
+          const childCol = childSim.getCollection()
+          for (const childRow of rawChildren) {
+            if (!childRow) continue
+            childCol.push({
+              id: childRow.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              createdAt: nowIso,
+              updatedAt: nowIso,
+              ...childRow,
+              [relSpec.fk]: parentId,
+            })
+          }
+          childSim.saveCollection(childCol)
+        }
+        continue
+      }
+      cleaned[key] = val
+    }
+
+    return cleaned
+  }
+
   async create(args: any = {}) {
     const collection = this.getCollection()
+    const newId = args.data.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    const cleanedData = this.persistNestedCreates(newId, args.data)
     const newItem = {
-      id: args.data.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isActive: args.data?.isActive ?? true,
-      ...args.data,
+      ...cleanedData,
+      id: newId,
     }
     collection.push(newItem)
     this.saveCollection(collection)
-    return newItem
+    return args.include ? this.enrichItem(newItem, args.include) : newItem
   }
 
   async upsert(args: any = {}) {
@@ -1420,17 +1491,19 @@ class ModelSimulate {
         updatedAt: new Date().toISOString()
       }
       this.saveCollection(collection)
-      return collection[idx]
+      return args.include ? this.enrichItem(collection[idx], args.include) : collection[idx]
     } else {
+      const newId = args.create.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`
+      const cleanedCreate = this.persistNestedCreates(newId, args.create)
       const newItem = {
-        id: args.create.id ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        ...args.create,
+        ...cleanedCreate,
+        id: newId,
       }
       collection.push(newItem)
       this.saveCollection(collection)
-      return newItem
+      return args.include ? this.enrichItem(newItem, args.include) : newItem
     }
   }
 
@@ -1446,7 +1519,7 @@ class ModelSimulate {
       updatedAt: new Date().toISOString()
     }
     this.saveCollection(collection)
-    return collection[idx]
+    return args.include ? this.enrichItem(collection[idx], args.include) : collection[idx]
   }
 
   async delete(args: any = {}) {
@@ -1736,7 +1809,14 @@ export const prisma = new Proxy(rawPrisma, {
       "uretimMaintenanceConditionReading",
       // ── Üretim Modülleri: Faz 9 Entegrasyon, Bildirim & Dashboard ──
       "uretimNotificationRule",
-      "uretimNotificationPreference"
+      "uretimNotificationPreference",
+      // ── Lojistik & Depo Modülleri (Faz 2–8 additive modelleri) ──
+      "lojistikTelemetryLog",
+      "lojistikStockReservation",
+      "lojistikCrossDockOrder",
+      "lojistikKitOrder",
+      "lojistikKitOrderComponent",
+      "lojistikRfidTagEvent"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

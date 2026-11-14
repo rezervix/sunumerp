@@ -76,11 +76,18 @@ export async function GET(request: Request) {
       }
 
       const valuationRes = await calculateItemValuationFromDb(itemId, 1, item.valuationMethod || "FIFO")
+      const reservations = await (prisma as any).lojistikStockReservation
+        .findMany({
+          where: { itemId },
+          orderBy: { createdAt: "desc" },
+        })
+        .catch(() => [])
 
       return NextResponse.json({
         success: true,
         item,
-        valuation: valuationRes.success ? valuationRes.valuation : null
+        valuation: valuationRes.success ? valuationRes.valuation : null,
+        reservations,
       })
     }
 
@@ -245,6 +252,14 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { action } = body
 
+    const { requireLogisticsAccess, logLogisticsAudit } = await import("@/lib/logistics/security")
+    const access = await requireLogisticsAccess({
+      flagKey: "lojistik_wms",
+      resource: "inventory",
+      action: action === "create_item" ? "create" : "update",
+    })
+    if (access instanceof NextResponse) return access
+
     // 1. "+ YENİ ÜRÜN TANIMLA"
     if (action === "create_item") {
       const {
@@ -260,9 +275,13 @@ export async function POST(request: Request) {
         baseUnit = "Adet",
         itemType = "FINISHED_GOOD",
         valuationMethod = "FIFO",
+        pickPolicy,
+        rfidEpcPrefix,
+        defaultPutawayZoneType,
         minStockLevel = 10,
         maxStockLevel = 500,
         trackLot = false,
+        trackSerial = false,
         trackExpiry = false,
         shelfLifeDays,
         unitConversions = [],
@@ -318,11 +337,23 @@ export async function POST(request: Request) {
           salesPrice: Number(salesPrice || 0),
           minStockLevel: Number(minStockLevel || 10),
           maxStockLevel: Number(maxStockLevel || 500),
+          pickPolicy: pickPolicy || (Boolean(trackExpiry) ? "FEFO" : "FIFO"),
+          rfidEpcPrefix: rfidEpcPrefix || null,
+          defaultPutawayZoneType: defaultPutawayZoneType || null,
           trackLot: Boolean(trackLot),
+          trackSerial: Boolean(trackSerial),
           trackExpiry: Boolean(trackExpiry),
           shelfLifeDays: shelfLifeDays ? Number(shelfLifeDays) : null,
           isActive: true
         }
+      })
+      await logLogisticsAudit({
+        userId: access.payload.userId,
+        action: "INVENTORY_ITEM_CREATED",
+        resource: "stok",
+        resourceId: createdItem.id,
+        moduleKey: "lojistik_wms",
+        metadata: { sku: createdItem.sku, pickPolicy: createdItem.pickPolicy },
       })
 
       // Başlangıç stoğu varsa StockBalance, CostLayer ve StockMovement oluştur
@@ -383,15 +414,22 @@ export async function POST(request: Request) {
         }).catch(() => null)
       }
 
-      // Çoklu Birim Çevrimleri
+      // Çoklu Birim Çevrimleri (4 Seviye Ambalaj Hiyerarşisi Destekli)
       if (Array.isArray(unitConversions) && unitConversions.length > 0) {
-        for (const conv of unitConversions) {
+        for (let idx = 0; idx < unitConversions.length; idx++) {
+          const conv = unitConversions[idx]
           if (conv.fromUnit && conv.multiplier) {
             await (prisma as any).unitConversion.create({
               data: {
                 itemId: createdItem.id,
                 fromUnit: conv.fromUnit,
-                toUnit: baseUnit,
+                toUnit: conv.toUnit || baseUnit,
+                parentUnit: conv.parentUnit || null,
+                levelOrder: conv.levelOrder ? Number(conv.levelOrder) : idx + 2,
+                tiCount: conv.tiCount ? Number(conv.tiCount) : null,
+                hiCount: conv.hiCount ? Number(conv.hiCount) : null,
+                weightKg: conv.weightKg ? Number(conv.weightKg) : null,
+                volumeM3: conv.volumeM3 ? Number(conv.volumeM3) : null,
                 multiplier: Number(conv.multiplier),
                 barcode: conv.barcode || null,
                 isDefaultSales: Boolean(conv.isDefaultSales),
@@ -697,9 +735,22 @@ export async function POST(request: Request) {
           minStockLevel: updateData.minStockLevel !== undefined ? Number(updateData.minStockLevel) : undefined,
           maxStockLevel: updateData.maxStockLevel !== undefined ? Number(updateData.maxStockLevel) : undefined,
           valuationMethod: updateData.valuationMethod,
+          pickPolicy: updateData.pickPolicy,
+          rfidEpcPrefix: updateData.rfidEpcPrefix,
+          defaultPutawayZoneType: updateData.defaultPutawayZoneType,
           trackLot: updateData.trackLot !== undefined ? Boolean(updateData.trackLot) : undefined,
+          trackSerial: updateData.trackSerial !== undefined ? Boolean(updateData.trackSerial) : undefined,
           trackExpiry: updateData.trackExpiry !== undefined ? Boolean(updateData.trackExpiry) : undefined
         }
+      })
+
+      await logLogisticsAudit({
+        userId: access.payload.userId,
+        action: "INVENTORY_ITEM_UPDATED",
+        resource: "stok",
+        resourceId: id,
+        moduleKey: "lojistik_wms",
+        metadata: { pickPolicy: updated?.pickPolicy },
       })
 
       return NextResponse.json({ success: true, item: updated })

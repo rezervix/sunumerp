@@ -1771,8 +1771,10 @@ model Warehouse {
   usedVolumeM3     Float    @default(0)
   capacityWeightKg Float    @default(50000)
   usedWeightKg     Float    @default(0)
-  temperatureRange String?
-  isDefault        Boolean  @default(false)
+  temperatureRange   String?
+  pickPolicy         String?  // FEFO, FIFO
+  maxCapacityPallets Int?
+  isDefault          Boolean  @default(false)
   isActive         Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -1822,10 +1824,12 @@ model InventoryItem {
   xyzClass          String   @default("X")
   weightKg          Float    @default(0.5)
   volumeM3          Float    @default(0.01)
-  minStockLevel     Float    @default(10)
-  maxStockLevel     Float    @default(500)
-  leadTimeDays      Int      @default(5)
-  isActive          Boolean  @default(true)
+  minStockLevel          Float    @default(10)
+  maxStockLevel          Float    @default(500)
+  leadTimeDays           Int      @default(5)
+  pickPolicy             String?  // FEFO, FIFO
+  defaultPutawayZoneType String?
+  isActive               Boolean  @default(true)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -1900,6 +1904,10 @@ model UnitConversion {
   fromUnit          String
   toUnit            String
   multiplier        Float
+  levelOrder        Int?     // 1: Adet, 2: İç Kutu, 3: Koli, 4: Palet
+  parentUnit        String?
+  tiCount           Int?
+  hiCount           Int?
   barcode           String?
   weightKg          Float?
   volumeM3          Float?
@@ -2065,6 +2073,11 @@ model StockMovement {
   referenceDocNo       String?
   performedBy          String?
   notes                String?
+  idempotencyKey       String?
+  deviceId             String?
+  method               String?
+  reservationId        String?
+  balanceAfterQty      Float?
   createdAt            DateTime @default(now())
 
   item                 InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
@@ -2072,6 +2085,8 @@ model StockMovement {
 
   @@index([itemId, createdAt])
   @@index([warehouseId, createdAt])
+  @@index([idempotencyKey])
+  @@index([referenceDocNo])
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2116,6 +2131,8 @@ model StorageBin {
   isBlocked        Boolean  @default(false)
   blockReason      String?
   rfidGateTag      String?
+  binRole          String?  // NORMAL, COLD_STORAGE, FAST_PICK, QUARANTINE, RETURN_RMA, SHIPPING, CROSS_DOCK
+  isActive         Boolean  @default(true)
   updatedAt        DateTime @updatedAt
 
   warehouse        Warehouse     @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
@@ -2157,9 +2174,12 @@ model WmsTask {
   status           String   @default("PENDING") // PENDING, IN_PROGRESS, QC_HOLD, COMPLETED, CANCELLED
   assignedOperator String?
   lpnCode          String?
-  totalLines       Int      @default(1)
-  completedLines   Int      @default(0)
+  totalLines       Int       @default(1)
+  completedLines   Int       @default(0)
   notes            String?
+  dueAt            DateTime?
+  taskCategory     String?   // STANDARD, WAVE_PICK, BATCH_PICK, CROSS_DOCK, KITTING, CYCLE_COUNT
+  relatedPoNo      String?
   startedAt        DateTime?
   completedAt      DateTime?
   createdAt        DateTime @default(now())
@@ -2187,10 +2207,13 @@ model WmsTaskLine {
   suggestedFromBin String?
   suggestedToBin   String?
   actualBin        String?
-  lpnCode          String?
-  qcResult         String?
-  scanMethod       String?
-  status           String    @default("OPEN")
+  lpnCode            String?
+  qcResult           String?
+  scanMethod         String?
+  suggestedLotNumber String?
+  varianceQty        Float?
+  varianceReason     String?
+  status             String    @default("OPEN")
 
   task             WmsTask   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
@@ -2198,25 +2221,27 @@ model WmsTaskLine {
 }
 
 model WarehouseTransferOrder {
-  id              String    @id @default(uuid())
-  transferNumber  String    @unique
-  fromWarehouseId String
-  toWarehouseId   String
-  status          String    @default("DRAFT") // DRAFT, APPROVED, PICKED, IN_TRANSIT, RECEIVED, DISCREPANCY
-  transferReason  String?
-  lpnCode         String?
-  carrierName     String?
-  vehiclePlate    String?
-  driverName      String?
-  itemsJson       String?
-  requestedBy     String?
-  approvedBy      String?
-  shippedAt       DateTime?
-  receivedAt      DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id               String    @id @default(uuid())
+  transferNumber   String    @unique
+  fromWarehouseId  String
+  toWarehouseId    String
+  status           String    @default("DRAFT") // DRAFT, APPROVED, PICKED, IN_TRANSIT, RECEIVED, DISCREPANCY
+  transferReason   String?
+  lpnCode          String?
+  carrierName      String?
+  vehiclePlate     String?
+  driverName       String?
+  driverPhone      String?
+  discrepancyNotes String?
+  itemsJson        String?
+  requestedBy      String?
+  approvedBy       String?
+  shippedAt        DateTime?
+  receivedAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
-  lines           TransferOrderLine[]
+  lines            TransferOrderLine[]
 
   @@index([fromWarehouseId])
   @@index([toWarehouseId])
@@ -2232,6 +2257,8 @@ model TransferOrderLine {
   requestedQty    Float
   shippedQty      Float                  @default(0)
   receivedQty     Float                  @default(0)
+  inTransitQty    Float                  @default(0)
+  damagedQty      Float                  @default(0)
   unit            String                 @default("Adet")
   lotNumber       String?
   fromBinCode     String?
@@ -2255,6 +2282,8 @@ model LicensePlate {
   parentLpnCode  String?
   status         String   @default("ACTIVE") // ACTIVE, SEALED, IN_TRANSIT, CONSUMED, SHIPPED
   totalWeightKg  Float    @default(0)
+  volumeM3       Float?
+  ssccCheckDigit String?
   contentsJson   String?
   rfidTagEpc     String?
   createdBy      String?
@@ -2297,6 +2326,10 @@ model InventoryCountSession {
   hideSystemQty       Boolean  @default(false)
   status              String   @default("IN_PROGRESS") // PLANNED, IN_PROGRESS, PENDING_APPROVAL, RECONCILED
   assignedCounters    String?
+  scheduledDate       DateTime?
+  tolerancePercent    Float?
+  requiresApproval    Boolean  @default(false)
+  approvedBy          String?
   totalBinsCounted    Int      @default(0)
   accuracyPercent     Float    @default(100)
   totalVarianceValue  Float    @default(0)
@@ -2326,6 +2359,7 @@ model InventoryCountLine {
   varianceQty     Float     @default(0)
   unitCost        Float     @default(0)
   varianceAmount  Float     @default(0)
+  withinTolerance Boolean?
   scanMethod      String    @default("BARCODE")
   countedBy       String?
   countedAt       DateTime?
@@ -2342,11 +2376,15 @@ model WmsOfflineSyncLog {
   deviceId       String
   operatorName   String
   operationType  String
+  idempotencyKey String?
   payloadJson    String
   queuedAt       DateTime
   syncedAt       DateTime @default(now())
   status         String   @default("SYNCED")
+  conflictReason String?
   resolutionNote String?
+
+  @@index([idempotencyKey])
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4027,6 +4065,125 @@ model UretimNotificationPreference {
 
   @@unique([userId, eventType])
   @@index([userId])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LOJİSTİK & WMS DERİNLEŞTİRMESİ (FAZ 2): ADDITIVE LOJISTIK* MODELLERİ
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model LojistikStockReservation {
+  id            String    @id @default(uuid())
+  reservationNo String    @unique
+  sourceType    String    // ORDER, OMNICHANNEL, TRANSFER, SHIPMENT, KIT_ORDER, MANUAL
+  sourceId      String
+  sourceRefNo   String?
+  itemId        String
+  warehouseId   String
+  storageBinId  String?
+  lotNumber     String?
+  serialNumber  String?
+  reservedQty   Float
+  fulfilledQty  Float     @default(0)
+  releasedQty   Float     @default(0)
+  status        String    @default("ACTIVE") // ACTIVE, PARTIAL, FULFILLED, RELEASED, EXPIRED, CANCELLED
+  expiresAt     DateTime?
+  createdBy     String?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([itemId, warehouseId])
+  @@index([sourceType, sourceId])
+  @@index([status])
+}
+
+model LojistikCrossDockOrder {
+  id                    String   @id @default(uuid())
+  crossDockNo           String   @unique
+  warehouseId           String
+  inboundPoNo           String?
+  inboundReceivingBinId String?
+  outboundOrderRef      String
+  outboundRampBinId     String?
+  itemId                String
+  plannedQty            Float
+  receivedQty           Float    @default(0)
+  dispatchedQty         Float    @default(0)
+  unit                  String   @default("Adet")
+  lotNumber             String?
+  lpnCode               String?
+  status                String   @default("PLANNED") // PLANNED, RECEIVING_DOCK, STAGED_AT_RAMP, DISPATCHED, CANCELLED
+  priority              String   @default("NORMAL")
+  assignedTo            String?
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([warehouseId, status])
+}
+
+model LojistikKitOrder {
+  id            String    @id @default(uuid())
+  kitOrderNo    String    @unique
+  operationType String    @default("ASSEMBLE") // ASSEMBLE, DISASSEMBLE
+  warehouseId   String
+  kitItemId     String
+  targetBinId   String?
+  plannedQty    Float
+  completedQty  Float     @default(0)
+  unit          String    @default("Adet")
+  lotNumber     String?
+  status        String    @default("PLANNED") // PLANNED, IN_PROGRESS, COMPLETED, CANCELLED
+  bomId         String?
+  performedBy   String?
+  notes         String?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  components    LojistikKitOrderComponent[]
+
+  @@index([warehouseId, status])
+}
+
+model LojistikKitOrderComponent {
+  id               String  @id @default(uuid())
+  kitOrderId       String
+  componentItemId  String
+  requiredPerKit   Float
+  totalRequiredQty Float
+  actualQty        Float   @default(0)
+  unit             String  @default("Adet")
+  sourceBinId      String?
+  lotNumber        String?
+
+  kitOrder         LojistikKitOrder @relation(fields: [kitOrderId], references: [id], onDelete: Cascade)
+
+  @@index([kitOrderId])
+}
+
+model LojistikRfidTagEvent {
+  id              String   @id @default(uuid())
+  idempotencyKey  String?
+  readerId        String
+  antennaPort     Int?
+  epcCode         String
+  rssi            Float?
+  matchedType     String   @default("UNMATCHED") // ITEM, LPN, BIN, UNMATCHED
+  matchedEntityId String?
+  matchedLabel    String?
+  warehouseId     String?
+  storageBinId    String?
+  lpnId           String?
+  itemId          String?
+  countSessionId  String?
+  rawPayload      String?
+  scannedAt       DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@index([epcCode, scannedAt])
+  @@index([readerId, scannedAt])
+  @@index([idempotencyKey])
 }
 
 

@@ -11,6 +11,10 @@ import {
   advanceTransferOrderStatus,
   processOfflineWmsOperations
 } from "@/lib/services/wmsServerDb"
+import {
+  handleWmsExtendedGet,
+  handleWmsExtendedPost,
+} from "@/lib/logistics/wms/apiHandlers"
 
 export async function GET(request: Request) {
   try {
@@ -21,6 +25,12 @@ export async function GET(request: Request) {
     const taskCount = await (prisma as any).wmsTask.count().catch(() => 0)
     if (taskCount === 0) {
       await seedRealisticWmsData()
+    }
+
+    // Faz 2 genişletilmiş WMS sorguları (hiyerarşi, direktifler, FEFO/FIFO, rezervasyon, LPN/SSCC, etiket, cross-dock, kitting, defter, KPI, RFID)
+    const extendedResponse = await handleWmsExtendedGet(section, searchParams)
+    if (extendedResponse) {
+      return extendedResponse
     }
 
     // A. BARKOD / SKU / ÜRÜN SORGULAMA (Mobil El Terminali ve Barkod Tabancası İçin)
@@ -159,7 +169,22 @@ export async function GET(request: Request) {
       (prisma as any).warehouse.findMany().catch(() => []),
       getWmsOverviewStats(),
       (prisma as any).inventoryItem.findMany({
-        select: { id: true, name: true, sku: true, barcode: true, baseUnit: true },
+        select: {
+          id: true,
+          name: true,
+          sku: true,
+          barcode: true,
+          gtin: true,
+          baseUnit: true,
+          abcClass: true,
+          pickPolicy: true,
+          trackLot: true,
+          trackSerial: true,
+          trackExpiry: true,
+          rfidEpcPrefix: true,
+          standardCost: true,
+          valuationMethod: true,
+        },
         orderBy: { name: "asc" }
       }).catch(() => [])
     ])
@@ -189,6 +214,18 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { action } = body
+
+    const extendedPostResponse = await handleWmsExtendedPost(String(action || ""), body)
+    if (extendedPostResponse) {
+      return extendedPostResponse
+    }
+
+    const access = await (await import("@/lib/logistics/security")).requireLogisticsAccess({
+      flagKey: "lojistik_wms",
+      resource: "inventory",
+      action: "update",
+    })
+    if (access instanceof NextResponse) return access
 
     // 1. GÖREVİ İLERLET (Adım Adım Sihirbaz)
     if (action === "advance_task") {

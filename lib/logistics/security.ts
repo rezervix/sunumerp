@@ -29,7 +29,10 @@ export type LogisticsErrorCode =
   | "FORBIDDEN_SUPPLIER_SCOPE"
   | "VALIDATION_ERROR"
   | "NOT_FOUND"
+  | "CONFLICT"
+  | "UNAUTHORIZED"
   | "INTERNAL_ERROR"
+  | (string & {})
 
 export class LogisticsDomainError extends Error {
   constructor(
