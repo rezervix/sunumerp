@@ -19,6 +19,16 @@ const AVAILABLE_RESOURCES = [
   { key: "hr", label: "İnsan Kaynakları", actions: ["read", "write", "delete", "update"] },
   { key: "cargo", label: "Kargo Takip", actions: ["read", "write", "delete"] },
   { key: "orders", label: "Siparişler", actions: ["read", "write", "delete", "update"] },
+  { key: "stok", label: "Stok & Envanter", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "wms", label: "Depo Operasyonları (WMS)", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "satinalma", label: "Satın Alma & Tedarik", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "omnichannel", label: "Çok Kanallı Satış & Sevkiyat", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "lojistik_wms", label: "Lojistik: Gelişmiş Depo & WMS", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "lojistik_sevkiyat_rota", label: "Lojistik: Sevkiyat & Rota", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "lojistik_tedarikci", label: "Lojistik: Tedarikçi & RFQ", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "lojistik_filo", label: "Lojistik: Filo & Sürücü", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "lojistik_iade", label: "Lojistik: İade & RMA", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "tedarikci_portali", label: "Dış Tedarikçi Portalı", actions: ["read", "create", "update"] },
   { key: "hesaplama", label: "Hesaplama Aracı", actions: ["read"] },
   { key: "announcements", label: "Duyurular", actions: ["read", "write", "delete"] },
 ]
@@ -312,7 +322,19 @@ export default function RolesPage() {
                                   <span className="size-4 rounded-full bg-white shadow-xs" />
                                 </button>
                                 <span className="text-xs text-zinc-300 capitalize">
-                                  {action === "read" ? "Okuma" : action === "write" ? "Yazma" : action === "delete" ? "Silme" : action === "update" ? "Güncelleme" : action}
+                                  {action === "read"
+                                    ? "Görüntüle"
+                                    : action === "write"
+                                      ? "Yazma"
+                                      : action === "create"
+                                        ? "Oluştur"
+                                        : action === "delete"
+                                          ? "Sil"
+                                          : action === "update"
+                                            ? "Düzenle"
+                                            : action === "approve"
+                                              ? "Onayla"
+                                              : action}
                                 </span>
                               </div>
                             )

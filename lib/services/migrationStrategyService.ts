@@ -3,6 +3,8 @@ import path from "path"
 
 export const URETIM_TABLE_PREFIX = "Uretim"
 export const URETIM_JSON_KEY_PREFIX = "uretim"
+export const LOJISTIK_TABLE_PREFIX = "Lojistik"
+export const LOJISTIK_JSON_KEY_PREFIX = "lojistik"
 
 export interface MigrationValidationResult {
   valid: boolean
@@ -32,7 +34,8 @@ const FORBIDDEN_UP_PATTERNS: Array<{ regex: RegExp; reason: string }> = [
 export function validateAdditiveMigrationSql(
   migrationName: string,
   upSql: string,
-  downSql: string
+  downSql: string,
+  requiredTablePrefix: string = URETIM_TABLE_PREFIX
 ): MigrationValidationResult {
   const errors: string[] = []
 
@@ -61,22 +64,22 @@ export function validateAdditiveMigrationSql(
     }
   }
 
-  // 2. CREATE TABLE ifadelerini bul ve "Uretim" önekini doğrula
+  // 2. CREATE TABLE ifadelerini bul ve zorunlu öneki doğrula
   const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?"([^"]+)"/gi
   const addedTables: string[] = []
   let match: RegExpExecArray | null
   while ((match = createTableRegex.exec(cleanUp)) !== null) {
     const tableName = match[1]
     addedTables.push(tableName)
-    if (!tableName.startsWith(URETIM_TABLE_PREFIX)) {
+    if (!tableName.startsWith(requiredTablePrefix)) {
       errors.push(
-        `Yeni tablo '${tableName}' zorunlu '${URETIM_TABLE_PREFIX}' önekine uymuyor (Örn: "${URETIM_TABLE_PREFIX}${tableName}").`
+        `Yeni tablo '${tableName}' zorunlu '${requiredTablePrefix}' önekine uymuyor (Örn: "${requiredTablePrefix}${tableName}").`
       )
     }
   }
 
   // IF NOT EXISTS zorunluluğu kontrolü
-  const unsafeCreateRegex = /CREATE\s+TABLE\s+"([^"]+)"/gi
+  const unsafeCreateRegex = /CREATE\s+TABLE\s+(?!IF\s+NOT\s+EXISTS\b)"([^"]+)"/gi
   if (unsafeCreateRegex.test(cleanUp)) {
     errors.push("CREATE TABLE ifadelerinde 'IF NOT EXISTS' kullanımı zorunludur.")
   }
@@ -114,10 +117,10 @@ export function validateAdditiveMigrationSql(
   }
 }
 
-/**
- * prisma/migrations dizini altındaki tüm *_uretim_* migration klasörlerini tarar ve doğrular.
- */
-export function validateAllUretimMigrations(): MigrationValidationResult[] {
+function validateMigrationsByKeyword(
+  keyword: string,
+  requiredTablePrefix: string
+): MigrationValidationResult[] {
   const migrationsDir = path.join(process.cwd(), "prisma", "migrations")
   if (!fs.existsSync(migrationsDir)) return []
 
@@ -125,7 +128,7 @@ export function validateAllUretimMigrations(): MigrationValidationResult[] {
   const results: MigrationValidationResult[] = []
 
   for (const entry of entries) {
-    if (!entry.isDirectory() || !entry.name.includes("uretim")) continue
+    if (!entry.isDirectory() || !entry.name.includes(keyword)) continue
     const folderPath = path.join(migrationsDir, entry.name)
     const upPath = path.join(folderPath, "migration.sql")
     const downPath = path.join(folderPath, "rollback.sql")
@@ -133,8 +136,40 @@ export function validateAllUretimMigrations(): MigrationValidationResult[] {
     const upSql = fs.existsSync(upPath) ? fs.readFileSync(upPath, "utf8") : ""
     const downSql = fs.existsSync(downPath) ? fs.readFileSync(downPath, "utf8") : ""
 
-    results.push(validateAdditiveMigrationSql(entry.name, upSql, downSql))
+    results.push(
+      validateAdditiveMigrationSql(entry.name, upSql, downSql, requiredTablePrefix)
+    )
   }
 
   return results
+}
+
+/**
+ * Lojistik modülleri için Lojistik* önekli additive SQL migration çiftini doğrular.
+ */
+export function validateLogisticsAdditiveMigrationSql(
+  migrationName: string,
+  upSql: string,
+  downSql: string
+): MigrationValidationResult {
+  return validateAdditiveMigrationSql(
+    migrationName,
+    upSql,
+    downSql,
+    LOJISTIK_TABLE_PREFIX
+  )
+}
+
+/**
+ * prisma/migrations dizini altındaki tüm *_uretim_* migration klasörlerini tarar ve doğrular.
+ */
+export function validateAllUretimMigrations(): MigrationValidationResult[] {
+  return validateMigrationsByKeyword("uretim", URETIM_TABLE_PREFIX)
+}
+
+/**
+ * prisma/migrations dizini altındaki tüm *_lojistik_* migration klasörlerini tarar ve doğrular.
+ */
+export function validateAllLogisticsMigrations(): MigrationValidationResult[] {
+  return validateMigrationsByKeyword("lojistik", LOJISTIK_TABLE_PREFIX)
 }

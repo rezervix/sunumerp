@@ -7,6 +7,7 @@ export interface User {
   fullName: string
   phone?: string
   avatarUrl?: string
+  supplierId?: string | null
   isActive: boolean
   createdAt: string
   updatedAt: string
@@ -77,4 +78,4 @@ export interface AuthSession {
   isPlatformDeveloper?: boolean
 }
 
-export type RoleName = "Super Admin" | "Branch Admin" | "Employee" | "Field Staff" | "Accountant"
+export type RoleName = "Super Admin" | "Branch Admin" | "Employee" | "Field Staff" | "Accountant" | "Tedarikçi"

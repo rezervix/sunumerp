@@ -8,6 +8,7 @@ export const ROLE_HIERARCHY = {
   Employee: 3,
   "Field Staff": 2,
   Accountant: 2,
+  "Tedarikçi": 1,
 }
 
 export const RESOURCE_ALIASES: Record<string, string> = {
@@ -87,6 +88,27 @@ export const RESOURCE_ALIASES: Record<string, string> = {
   uretim_bakim: "uretim_bakim",
   "uretim-bakim": "uretim_bakim",
   bakim: "uretim_bakim",
+  // ── Lojistik & Depo Yönetimi İzin Anahtarları ──────────────────────────
+  lojistik: "lojistik",
+  logistics: "lojistik",
+  lojistik_wms: "lojistik_wms",
+  "lojistik-wms": "lojistik_wms",
+  lojistik_sevkiyat_rota: "lojistik_sevkiyat_rota",
+  "lojistik-sevkiyat-rota": "lojistik_sevkiyat_rota",
+  sevkiyat: "lojistik_sevkiyat_rota",
+  rota: "lojistik_sevkiyat_rota",
+  lojistik_tedarikci: "lojistik_tedarikci",
+  "lojistik-tedarikci": "lojistik_tedarikci",
+  tedarikci: "lojistik_tedarikci",
+  tedarikci_portali: "tedarikci_portali",
+  "tedarikci-portali": "tedarikci_portali",
+  lojistik_filo: "lojistik_filo",
+  "lojistik-filo": "lojistik_filo",
+  filo: "lojistik_filo",
+  lojistik_iade: "lojistik_iade",
+  "lojistik-iade": "lojistik_iade",
+  iade: "lojistik_iade",
+  rma: "lojistik_iade",
 }
 
 export const PRODUCTION_PERMISSION_ACTIONS = [
@@ -125,6 +147,9 @@ const PRODUCTION_ACTION_ALIASES: Record<string, ProductionPermissionAction> = {
   approve: "approve",
   onayla: "approve",
 }
+
+export const LOGISTICS_PERMISSION_ACTIONS = PRODUCTION_PERMISSION_ACTIONS
+export const LOGISTICS_PERMISSION_ACTION_LABELS = PRODUCTION_PERMISSION_ACTION_LABELS
 
 export function normalizeProductionPermissionAction(action: string): string {
   return PRODUCTION_ACTION_ALIASES[action.toLowerCase()] ?? action
@@ -169,7 +194,17 @@ export function hasPermission(
   const permissions = normalizePermissionsObject(branchRole.role.permissions)[normalizedResource]
   if (!permissions) return false
 
-  if (normalizedResource === "uretim" || normalizedResource.startsWith("uretim_")) {
+  if (
+    normalizedResource === "uretim" ||
+    normalizedResource.startsWith("uretim_") ||
+    normalizedResource === "lojistik" ||
+    normalizedResource.startsWith("lojistik_") ||
+    normalizedResource === "tedarikci_portali" ||
+    normalizedResource === "stok" ||
+    normalizedResource === "wms" ||
+    normalizedResource === "satinalma" ||
+    normalizedResource === "omnichannel"
+  ) {
     const normalizedAction = normalizeProductionPermissionAction(action)
     return permissions.some((p) => normalizeProductionPermissionAction(p) === normalizedAction)
   }
@@ -275,6 +310,13 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     uretim_kapasite: ["read", "create", "update", "delete", "approve"],
     uretim_kalite: ["read", "create", "update", "delete", "approve"],
     uretim_bakim: ["read", "create", "update", "delete", "approve"],
+    lojistik: ["read", "create", "update", "delete", "approve"],
+    lojistik_wms: ["read", "create", "update", "delete", "approve"],
+    lojistik_sevkiyat_rota: ["read", "create", "update", "delete", "approve"],
+    lojistik_tedarikci: ["read", "create", "update", "delete", "approve"],
+    lojistik_filo: ["read", "create", "update", "delete", "approve"],
+    lojistik_iade: ["read", "create", "update", "delete", "approve"],
+    tedarikci_portali: ["read", "create", "update", "delete", "approve"],
     trash: ["read", "restore", "purge"],
   },
   "Branch Admin": {
@@ -311,6 +353,13 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     uretim_kapasite: ["read", "create", "update", "approve"],
     uretim_kalite: ["read", "create", "update", "approve"],
     uretim_bakim: ["read", "create", "update", "approve"],
+    lojistik: ["read", "create", "update", "approve"],
+    lojistik_wms: ["read", "create", "update", "approve"],
+    lojistik_sevkiyat_rota: ["read", "create", "update", "approve"],
+    lojistik_tedarikci: ["read", "create", "update", "approve"],
+    lojistik_filo: ["read", "create", "update", "approve"],
+    lojistik_iade: ["read", "create", "update", "approve"],
+    tedarikci_portali: ["read", "create", "update"],
     trash: ["read"],
   },
   Employee: {
@@ -344,6 +393,12 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     uretim_kapasite: ["read"],
     uretim_kalite: ["read"],
     uretim_bakim: ["read"],
+    lojistik: ["read"],
+    lojistik_wms: ["read", "update"],
+    lojistik_sevkiyat_rota: ["read"],
+    lojistik_tedarikci: ["read"],
+    lojistik_filo: ["read"],
+    lojistik_iade: ["read"],
     trash: ["read"],
   },
   "Field Staff": {
@@ -362,6 +417,8 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     todos: ["read", "create", "update"],
     notes: ["read", "create", "update"],
     cargo: ["read"],
+    lojistik_sevkiyat_rota: ["read", "update"],
+    lojistik_filo: ["read"],
     announcements: ["read"],
     chat: ["read", "create"],
   },
@@ -382,5 +439,16 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     chat: ["read", "create"],
     todos: ["read", "create", "update"],
     notes: ["read", "create", "update"],
+    satinalma: ["read"],
+    omnichannel: ["read"],
+    lojistik_tedarikci: ["read"],
+    lojistik_iade: ["read"],
+  },
+  "Tedarikçi": {
+    dashboard: ["read"],
+    lojistik_tedarikci: ["read", "create", "update"],
+    tedarikci_portali: ["read", "create", "update"],
+    satinalma: ["read"],
+    chat: ["read", "create"],
   },
 }

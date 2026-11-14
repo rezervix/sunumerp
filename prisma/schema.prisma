@@ -74,12 +74,15 @@ model User {
   lastLoginAt          DateTime?
   mustChangePassword   Boolean               @default(false)
   createdBy            String?
+  supplierId           String?
   sessions             UserSession[]
   passwordResetLogs    PasswordResetLog[]
   eodReports           EodReport[]
   reportedTickets      SupportTicket[]      @relation("ReportedTickets")
   assignedTickets      SupportTicket[]      @relation("AssignedTickets")
   trashItems           TrashItem[]
+
+  @@index([supplierId])
 }
 
 model Branch {

@@ -7,7 +7,11 @@ import { cookies, headers } from "next/headers"
 import { jwtVerify } from "jose"
 import { NextResponse } from "next/server"
 import { DEBUG_USER_ID } from "@/lib/auth/local-debug"
-import { normalizePermissionResource, normalizePermissionsObject } from "@/lib/auth/permissions"
+import {
+  normalizePermissionAction,
+  normalizePermissionResource,
+  normalizePermissionsObject,
+} from "@/lib/auth/permissions"
 import { verifyIntegrityHeaders } from "./integrity"
 import { getSystemConfig, isSecurityDisabled } from "@/lib/system-config"
 
@@ -135,9 +139,11 @@ export async function checkPermission(
       const normalizedPermissions = normalizePermissionsObject(permissions)
       const normalizedResource = normalizePermissionResource(resource)
       const resourcePerms = normalizedPermissions[normalizedResource]
+      const normalizedAction = normalizePermissionAction(action)
       if (
         Array.isArray(resourcePerms) &&
         (resourcePerms.includes(action) ||
+          resourcePerms.some((p) => normalizePermissionAction(p) === normalizedAction) ||
           (action === "view" && resourcePerms.includes("read")) ||
           (action === "read" && resourcePerms.includes("view")))
       ) {

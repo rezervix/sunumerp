@@ -5,7 +5,11 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 import { handleResponse } from "@/lib/api/api-config"
 import type { Branch, UserBranchRole, AuthSession } from "./types"
-import { normalizePermissionResource, normalizePermissionsObject } from "./permissions"
+import {
+  normalizePermissionAction,
+  normalizePermissionResource,
+  normalizePermissionsObject,
+} from "./permissions"
 
 interface AuthContextType {
   session: AuthSession | null
@@ -130,7 +134,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const normalizedPermissions = normalizePermissionsObject(branchRole.role.permissions)
     const permissions = normalizedPermissions[normalizedResource]
-    return permissions ? permissions.includes(action) : false
+    if (!permissions) return false
+    const normalizedAction = normalizePermissionAction(action)
+    return permissions.some(
+      (p) => p === action || normalizePermissionAction(p) === normalizedAction
+    )
   }
 
   const isSuperAdmin = session?.branches.some((ur) => ur.role?.name === "Super Admin") || false
