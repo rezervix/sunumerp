@@ -22,11 +22,14 @@ import {
   History,
   Loader2,
   Calendar,
-  Factory
+  Factory,
+  QrCode,
+  Lock
 } from "lucide-react"
 import { useAuth } from "@/lib/auth/context"
 import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
 import { ItemProductionProfileTab } from "./ItemProductionProfileTab"
+import { PrintableLabelModal } from "../../wms/components/PrintableLabelModal"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 
 interface ItemDetailDrawerProps {
@@ -48,6 +51,7 @@ export function ItemDetailDrawer({
   const [convertQty, setConvertQty] = useState("10")
   const [convertedResult, setConvertedResult] = useState<string | null>(null)
   const [showProductionTab, setShowProductionTab] = useState(false)
+  const [labelItemOpen, setLabelItemOpen] = useState(false)
 
   useEffect(() => {
     if (!isOpen) return
@@ -85,6 +89,7 @@ export function ItemDetailDrawer({
 
   const item = data?.item
   const valuation = data?.valuation
+  const activeReservations: any[] = Array.isArray(data?.reservations) ? data.reservations : []
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -176,7 +181,7 @@ export function ItemDetailDrawer({
               </div>
 
               {/* Çekmece İçi Hızlı Aksiyon Butonları */}
-              <div className="flex gap-2.5 pt-1">
+              <div className="flex flex-wrap gap-2 pt-1">
                 <Button
                   size="sm"
                   variant="outline"
@@ -195,6 +200,33 @@ export function ItemDetailDrawer({
                   <ArrowUpRight className="h-3.5 w-3.5" />
                   Stok Çıkışı Yap
                 </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setLabelItemOpen(true)}
+                  className="text-xs gap-1.5 bg-white/[0.04] text-[#34D399] border-white/[0.08] hover:bg-white/[0.08] rounded-full cursor-pointer h-9 px-3.5"
+                  title="SKU QR / Barkod Etiketi Yazdır"
+                >
+                  <QrCode className="h-3.5 w-3.5" />
+                  Etiket
+                </Button>
+              </div>
+
+              {/* Çıkış Politikası & RFID Bilgisi */}
+              <div className="flex flex-wrap items-center gap-2 text-[11px]">
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-[#34D399] border border-emerald-500/20 font-mono">
+                  Politika: {item.pickPolicy || (item.trackExpiry ? "FEFO" : "FIFO")}
+                </span>
+                {item.trackSerial && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.05] text-zinc-300 border border-white/[0.08] font-mono">
+                    Seri Takibi Aktif
+                  </span>
+                )}
+                {item.rfidEpcPrefix && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/20 font-mono">
+                    RFID: {item.rfidEpcPrefix}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -268,12 +300,45 @@ export function ItemDetailDrawer({
                             <span className="text-sm font-semibold text-white block">
                               {bal.onHandQty} {item.baseUnit}
                             </span>
-                            <span className="text-[10px] text-[#34D399] block font-medium">
-                              {bal.availableQty} kullanılabilir
-                            </span>
+                            <div className="flex items-center justify-end gap-2 text-[10px]">
+                              {Number(bal.reservedQty || 0) > 0 && (
+                                <span className="text-amber-300 font-mono">
+                                  Rezerve: {bal.reservedQty}
+                                </span>
+                              )}
+                              <span className="text-[#34D399] font-medium">
+                                Kullanılabilir: {bal.availableQty}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+
+                  {/* Açık Stok Rezervasyonları (Fiziksel / Rezerve / Kullanılabilir Ayrımı) */}
+                  {activeReservations.length > 0 && (
+                    <div className="pt-3 space-y-2 border-t border-white/[0.06]">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300">
+                        <Lock className="h-3.5 w-3.5" />
+                        Aktif WMS Rezervasyonları ({activeReservations.length})
+                      </div>
+                      <div className="space-y-1.5">
+                        {activeReservations.map((r: any) => (
+                          <div
+                            key={r.id}
+                            className="p-2.5 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 flex items-center justify-between text-[11px]"
+                          >
+                            <div>
+                              <span className="font-mono font-semibold text-white">{r.reservationNo}</span>
+                              <span className="text-zinc-400 ml-2">{r.sourceDocNo || r.sourceDocType}</span>
+                            </div>
+                            <span className="font-mono font-semibold text-amber-300">
+                              {r.reservedQty} {item.baseUnit}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </TabsContent>
@@ -493,6 +558,13 @@ export function ItemDetailDrawer({
           </motion.div>
         )}
       </SheetContent>
+
+      <PrintableLabelModal
+        open={labelItemOpen}
+        onClose={() => setLabelItemOpen(false)}
+        entityType="ITEM"
+        entityId={item?.id || null}
+      />
     </Sheet>
   )
 }

@@ -9,6 +9,7 @@
 
 export interface OfflineWmsOperation {
   id: string
+  idempotencyKey?: string
   deviceId: string
   operatorName: string
   operationType:
@@ -18,8 +19,15 @@ export interface OfflineWmsOperation {
     | "PICK_CONFIRM"
     | "BLIND_COUNT_ENTRY"
     | "GOODS_RECEIPT"
+    | "WAVE_PICK"
+    | "SSCC_SCAN"
+    | "CYCLE_COUNT_LINE"
   codeScanned: string
   sku: string
+  itemId?: string
+  warehouseId?: string
+  taskId?: string
+  lineId?: string
   itemName: string
   lotNumber?: string
   binCode: string
@@ -28,7 +36,7 @@ export interface OfflineWmsOperation {
   unit: string
   queuedAt: string
   syncedAt?: string
-  syncStatus: "QUEUED_OFFLINE" | "SYNCING" | "SYNCED" | "ERROR"
+  syncStatus: "QUEUED_OFFLINE" | "SYNCING" | "SYNCED" | "CONFLICT" | "DUPLICATE_IGNORED" | "ERROR"
   conflictNote?: string
 }
 
@@ -128,17 +136,95 @@ export async function getOfflineWmsQueue(): Promise<OfflineWmsOperation[]> {
   return items
 }
 
+function toServerBatchItem(op: OfflineWmsOperation) {
+  const mappedType =
+    op.operationType === "PICK_CONFIRM" || op.operationType === "WAVE_PICK"
+      ? "WAVE_PICK"
+      : op.operationType === "GOODS_RECEIPT"
+        ? "RECEIVE"
+        : op.operationType === "BLIND_COUNT_ENTRY" || op.operationType === "CYCLE_COUNT_LINE"
+          ? "CYCLE_COUNT"
+          : "PUTAWAY"
+
+  return {
+    idempotencyKey: op.idempotencyKey || op.id,
+    operationType: mappedType,
+    queuedAt: op.queuedAt,
+    payload: {
+      taskId: op.taskId,
+      lineId: op.lineId,
+      itemId: op.itemId,
+      sku: op.sku,
+      warehouseId: op.warehouseId || "wh-merkez-01",
+      binCode: op.binCode,
+      quantity: op.quantity,
+      countedQty: op.quantity,
+      lotNumber: op.lotNumber,
+      lpnCode: op.lpnCode,
+    },
+  }
+}
+
+export async function removeOfflineOperation(id: string): Promise<OfflineWmsOperation[]> {
+  const current = await getOfflineWmsQueue()
+  const updated = current.filter((item) => item.id !== id)
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(LS_FALLBACK_KEY, JSON.stringify(updated))
+    const db = await openIndexedDb()
+    if (db) {
+      try {
+        const tx = db.transaction(STORE_NAME, "readwrite")
+        tx.objectStore(STORE_NAME).delete(id)
+      } catch {
+        // Fallback saved
+      }
+    }
+  }
+  return updated
+}
+
 export async function enqueueOfflineWmsOperation(
   op: Omit<OfflineWmsOperation, "id" | "queuedAt" | "syncStatus">,
   isOfflineMode: boolean
 ): Promise<OfflineWmsOperation> {
   const nowStr = new Date().toISOString().replace("T", " ").slice(0, 19)
+  const idempotencyKey =
+    op.idempotencyKey || `${op.deviceId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
   const newOp: OfflineWmsOperation = {
     ...op,
+    idempotencyKey,
     id: `off-op-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
     queuedAt: nowStr,
     syncedAt: isOfflineMode ? undefined : nowStr,
     syncStatus: isOfflineMode ? "QUEUED_OFFLINE" : "SYNCED"
+  }
+
+  // Eğer çevrimiçiyse, anında sunucuya gönder ve çakışma/duplicate sonucunu kaydet
+  if (!isOfflineMode) {
+    try {
+      const res = await fetch("/api/wms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "offline_batch_sync",
+          deviceId: newOp.deviceId,
+          operatorName: newOp.operatorName,
+          queueItems: [toServerBatchItem(newOp)]
+        })
+      })
+      const data = await res.json()
+      const firstResult = Array.isArray(data.results) ? data.results[0] : null
+      if (firstResult) {
+        newOp.syncStatus = firstResult.status
+        newOp.conflictNote = firstResult.detail || firstResult.message || firstResult.reason
+      } else if (!data.success) {
+        newOp.syncStatus = "QUEUED_OFFLINE"
+        newOp.conflictNote = data.error || "Sunucuya iletilemedi; kuyruğa alındı."
+      }
+    } catch (e: any) {
+      newOp.syncStatus = "QUEUED_OFFLINE"
+      newOp.conflictNote = "Bağlantı kesildi; yerelde kuyruğa alındı."
+    }
   }
 
   const current = await getOfflineWmsQueue()
@@ -157,38 +243,29 @@ export async function enqueueOfflineWmsOperation(
     }
   }
 
-  // Eğer çevrimiçiyse, anında sunucuya da gönder
-  if (!isOfflineMode) {
-    try {
-      await fetch("/api/wms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "offline_batch_sync",
-          operations: [newOp]
-        })
-      })
-    } catch (e) {
-      console.warn("Anlık senkronizasyon başarısız oldu, yerelde saklandı:", e)
-    }
-  }
-
   return newOp
 }
 
 export async function syncAllOfflineWmsOperations(): Promise<{
   syncedCount: number
+  conflictCount: number
+  duplicateCount: number
   operations: OfflineWmsOperation[]
 }> {
   const current = await getOfflineWmsQueue()
-  const queuedItems = current.filter(item => item.syncStatus === "QUEUED_OFFLINE")
+  const queuedItems = current.filter(
+    (item) => item.syncStatus === "QUEUED_OFFLINE" || item.syncStatus === "ERROR"
+  )
   const nowStr = new Date().toISOString().replace("T", " ").slice(0, 19)
 
   if (queuedItems.length === 0) {
-    return { syncedCount: 0, operations: current }
+    return { syncedCount: 0, conflictCount: 0, duplicateCount: 0, operations: current }
   }
 
   let syncedCount = 0
+  let conflictCount = 0
+  let duplicateCount = 0
+  const resultMap = new Map<string, { status: OfflineWmsOperation["syncStatus"]; message?: string }>()
 
   try {
     const res = await fetch("/api/wms", {
@@ -196,25 +273,40 @@ export async function syncAllOfflineWmsOperations(): Promise<{
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         action: "offline_batch_sync",
-        operations: queuedItems
+        deviceId: queuedItems[0]?.deviceId || "EL-TERMINAL-01",
+        operatorName: queuedItems[0]?.operatorName || "Saha Operatörü",
+        queueItems: queuedItems.map(toServerBatchItem)
       })
     })
 
     const data = await res.json()
-    if (data.success) {
-      syncedCount = data.processedCount || queuedItems.length
+    if (data.success && Array.isArray(data.results)) {
+      syncedCount = Number(data.syncedCount || 0)
+      conflictCount = Number(data.conflictCount || 0)
+      duplicateCount = Number(data.duplicateCount || 0)
+      for (const r of data.results) {
+        resultMap.set(r.idempotencyKey, {
+          status: r.status,
+          message: r.detail || r.message || r.reason,
+        })
+      }
+    } else {
+      throw new Error(data.error || "Toplu senkronizasyon reddedildi")
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Sunucu senkronizasyon hatası:", error)
+    return { syncedCount: 0, conflictCount: 0, duplicateCount: 0, operations: current }
   }
 
   const updated = current.map((item) => {
-    if (item.syncStatus === "QUEUED_OFFLINE") {
+    const key = item.idempotencyKey || item.id
+    const res = resultMap.get(key)
+    if (res) {
       return {
         ...item,
-        syncStatus: "SYNCED" as const,
-        syncedAt: nowStr,
-        conflictNote: "Yerel kuyruktan sunucu veritabanına başarıyla işlendi."
+        syncStatus: res.status,
+        syncedAt: res.status === "SYNCED" ? nowStr : item.syncedAt,
+        conflictNote: res.message || (res.status === "SYNCED" ? "Sunucu veritabanına işlendi." : item.conflictNote),
       }
     }
     return item
@@ -236,5 +328,5 @@ export async function syncAllOfflineWmsOperations(): Promise<{
     }
   }
 
-  return { syncedCount: syncedCount || queuedItems.length, operations: updated }
+  return { syncedCount, conflictCount, duplicateCount, operations: updated }
 }

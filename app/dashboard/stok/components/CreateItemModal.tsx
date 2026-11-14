@@ -71,9 +71,12 @@ export function CreateItemModal({
   const [minStockLevel, setMinStockLevel] = useState("10")
   const [maxStockLevel, setMaxStockLevel] = useState("500")
 
-  // Lot / SKT
+  // Lot / SKT / İzlenebilirlik
   const [trackLot, setTrackLot] = useState(false)
   const [trackExpiry, setTrackExpiry] = useState(false)
+  const [trackSerial, setTrackSerial] = useState(false)
+  const [pickPolicy, setPickPolicy] = useState<"FEFO" | "FIFO">("FEFO")
+  const [rfidEpcPrefix, setRfidEpcPrefix] = useState("")
   const [lotNumber, setLotNumber] = useState("")
   const [expiryDate, setExpiryDate] = useState("")
   const [shelfLifeDays, setShelfLifeDays] = useState("")
@@ -207,6 +210,9 @@ export function CreateItemModal({
             maxStockLevel: Number(maxStockLevel || 500),
             trackLot,
             trackExpiry,
+            trackSerial,
+            pickPolicy,
+            rfidEpcPrefix: rfidEpcPrefix.trim() || undefined,
             shelfLifeDays: shelfLifeDays ? Number(shelfLifeDays) : undefined,
             lotNumber: trackLot ? lotNumber : undefined,
             expiryDate: trackExpiry ? expiryDate : undefined,
@@ -540,7 +546,7 @@ export function CreateItemModal({
 
                   {/* SEKME 2: LOT & SKT TAKİBİ */}
                   <TabsContent value="lots" className="space-y-3 pt-1">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="trackLot"
@@ -548,7 +554,7 @@ export function CreateItemModal({
                           onCheckedChange={checked => setTrackLot(Boolean(checked))}
                         />
                         <Label htmlFor="trackLot" className="text-xs font-medium text-zinc-300 cursor-pointer">
-                          Parti / Lot Numarası Takibi Yap
+                          Parti / Lot Numarası Takibi
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -558,8 +564,41 @@ export function CreateItemModal({
                           onCheckedChange={checked => setTrackExpiry(Boolean(checked))}
                         />
                         <Label htmlFor="trackExpiry" className="text-xs font-medium text-zinc-300 cursor-pointer">
-                          Son Kullanma / Tazelik (FEFO) Takibi
+                          Son Kullanma / FEFO Takibi
                         </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="trackSerial"
+                          checked={trackSerial}
+                          onCheckedChange={checked => setTrackSerial(Boolean(checked))}
+                        />
+                        <Label htmlFor="trackSerial" className="text-xs font-medium text-zinc-300 cursor-pointer">
+                          Seri No (Serial) Takibi
+                        </Label>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
+                      <div className="space-y-1">
+                        <Label className="text-[11px] font-medium text-zinc-300">Çıkış Öncelik Politikası</Label>
+                        <select
+                          value={pickPolicy}
+                          onChange={e => setPickPolicy(e.target.value as "FEFO" | "FIFO")}
+                          className="w-full h-8 text-xs bg-black/40 border border-white/[0.08] text-white rounded-lg px-2"
+                        >
+                          <option value="FEFO" className="bg-[#111513]">FEFO (İlk Biten Önce Çıkar)</option>
+                          <option value="FIFO" className="bg-[#111513]">FIFO (İlk Giren Önce Çıkar)</option>
+                        </select>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-[11px] font-medium text-zinc-300">RFID EPC Ön Eki (Opsiyonel)</Label>
+                        <Input
+                          value={rfidEpcPrefix}
+                          onChange={e => setRfidEpcPrefix(e.target.value)}
+                          placeholder="Örn: E280117000000201GUL"
+                          className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-lg"
+                        />
                       </div>
                     </div>
 

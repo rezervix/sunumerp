@@ -49,6 +49,7 @@ export function QuickStockMovementModal({
   const [unitCost, setUnitCost] = useState<string>("")
   const [docNo, setDocNo] = useState<string>("")
   const [lotNumber, setLotNumber] = useState<string>("")
+  const [serialNumber, setSerialNumber] = useState<string>("")
   const [expiryDate, setExpiryDate] = useState<string>("")
   const [notes, setNotes] = useState<string>("")
   const [loading, setLoading] = useState(false)
@@ -134,6 +135,7 @@ export function QuickStockMovementModal({
             unitCost: Number(unitCost || 0),
             docNo,
             lotNumber: lotNumber || undefined,
+            serialNumber: serialNumber || undefined,
             expiryDate: expiryDate || undefined,
             notes
           }
@@ -334,15 +336,29 @@ export function QuickStockMovementModal({
             )}
           </div>
 
-          {movementType === "IN" && currentItem?.trackExpiry && (
-            <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-zinc-300">Son Kullanma Tarihi (SKT)</Label>
-              <Input
-                type="date"
-                value={expiryDate}
-                onChange={e => setExpiryDate(e.target.value)}
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
-              />
+          {movementType === "IN" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {currentItem?.trackExpiry && (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-zinc-300">Son Kullanma Tarihi (SKT)</Label>
+                  <Input
+                    type="date"
+                    value={expiryDate}
+                    onChange={e => setExpiryDate(e.target.value)}
+                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                  />
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-zinc-300">Seri No (Opsiyonel)</Label>
+                <Input
+                  type="text"
+                  value={serialNumber}
+                  onChange={e => setSerialNumber(e.target.value)}
+                  placeholder="SN-2026-..."
+                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                />
+              </div>
             </div>
           )}
 

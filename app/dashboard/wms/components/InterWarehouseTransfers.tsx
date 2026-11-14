@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 interface TransferLine {
   id: string;
   itemId: string;
+  itemName?: string;
   item?: {
     name: string;
     sku: string;
@@ -25,18 +26,21 @@ interface TransferLine {
   };
   requestedQty: number;
   shippedQty: number;
+  inTransitQty?: number;
   receivedQty: number;
+  discrepancyReason?: string | null;
   unit?: string;
 }
 
 interface TransferOrder {
   id: string;
-  orderNumber: string;
+  orderNumber?: string;
+  transferNumber?: string;
   fromWarehouseId: string;
   toWarehouseId: string;
   fromWarehouse?: { name: string; code: string };
   toWarehouse?: { name: string; code: string };
-  status: 'DRAFT' | 'APPROVED' | 'IN_TRANSIT' | 'RECEIVED' | 'CANCELLED';
+  status: 'DRAFT' | 'APPROVED' | 'IN_TRANSIT' | 'DISCREPANCY' | 'RECEIVED' | 'CANCELLED';
   vehiclePlate?: string | null;
   driverName?: string | null;
   driverPhone?: string | null;
@@ -64,6 +68,7 @@ interface Props {
   transfers: TransferOrder[];
   warehouses: Warehouse[];
   items?: InventoryItemOption[];
+  bins?: any[];
   onRefresh: () => void;
 }
 
@@ -75,6 +80,11 @@ export function InterWarehouseTransfers({
 }: Props) {
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Kısmi / Farklı Teslim Alma Modalı
+  const [discrepancyModalTransfer, setDiscrepancyModalTransfer] = useState<TransferOrder | null>(null);
+  const [discrepancyQtys, setDiscrepancyQtys] = useState<Record<string, string>>({});
+  const [discrepancyReasons, setDiscrepancyReasons] = useState<Record<string, string>>({});
 
   // New transfer form state
   const [fromWhId, setFromWhId] = useState('');
@@ -88,7 +98,8 @@ export function InterWarehouseTransfers({
 
   const handleAdvanceStatus = async (
     transferId: string,
-    newStatus: 'IN_TRANSIT' | 'RECEIVED'
+    newStatus: 'APPROVED' | 'IN_TRANSIT' | 'RECEIVED',
+    receivedLines?: Array<{ lineId: string; receivedQty: number; discrepancyReason?: string }>
   ) => {
     try {
       setSubmitting(true);
@@ -98,7 +109,8 @@ export function InterWarehouseTransfers({
         body: JSON.stringify({
           action: 'advance_transfer',
           transferId,
-          newStatus
+          newStatus,
+          receivedLines,
         })
       });
 
@@ -107,22 +119,39 @@ export function InterWarehouseTransfers({
         throw new Error(data.error || 'Transfer durumu güncellenemedi');
       }
 
-      if (newStatus === 'IN_TRANSIT') {
+      if (newStatus === 'APPROVED') {
+        toast.success('Transfer emri onaylandı. Sevke hazır.');
+      } else if (newStatus === 'IN_TRANSIT') {
         toast.success(
-          'Transfer sevk edildi. Kaynak depodan stok çıkışı yapıldı.'
+          'Transfer sevk edildi. Kaynak depodan düşüldü, yolda stoğuna (In-Transit) alındı.'
         );
+      } else if (data.transfer?.status === 'DISCREPANCY') {
+        toast.warning('Farklı / eksik teslimat kaydedildi. Durum: FARKLI TESLİMAT (DISCREPANCY).');
       } else if (newStatus === 'RECEIVED') {
         toast.success(
-          'Transfer teslim alındı! Hedef depoya stok girişi tamamlandı.'
+          'Transfer tam olarak teslim alındı! Hedef depoya stok girişi tamamlandı.'
         );
       }
 
+      setDiscrepancyModalTransfer(null);
       onRefresh();
     } catch (err: any) {
       toast.error(err.message || 'İşlem başarısız');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const openDiscrepancyModal = (tr: TransferOrder) => {
+    const initialQtys: Record<string, string> = {};
+    const initialReasons: Record<string, string> = {};
+    for (const ln of tr.lines || []) {
+      initialQtys[ln.id] = String(ln.shippedQty || ln.requestedQty || 0);
+      initialReasons[ln.id] = ln.discrepancyReason || '';
+    }
+    setDiscrepancyQtys(initialQtys);
+    setDiscrepancyReasons(initialReasons);
+    setDiscrepancyModalTransfer(tr);
   };
 
   const handleCreateTransfer = async (e: React.FormEvent) => {
@@ -199,6 +228,12 @@ export function InterWarehouseTransfers({
             <Truck className="w-3 h-3 text-amber-400" /> Yolda / Sevkiyatta
           </span>
         );
+      case 'DISCREPANCY':
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+            <AlertCircle className="w-3 h-3 text-rose-400" /> Farklı Teslimat (Discrepancy)
+          </span>
+        );
       case 'RECEIVED':
         return (
           <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-[#34D399] border border-emerald-500/20">
@@ -272,7 +307,7 @@ export function InterWarehouseTransfers({
                   <div>
                     <div className="flex items-center gap-2.5">
                       <span className="text-base font-semibold text-white">
-                        {tr.orderNumber}
+                        {tr.orderNumber || tr.transferNumber}
                       </span>
                       {getStatusBadge(tr.status)}
                     </div>
@@ -317,12 +352,23 @@ export function InterWarehouseTransfers({
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
+                <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
+                  {tr.status === 'DRAFT' && (
+                    <button
+                      disabled={submitting}
+                      onClick={() => handleAdvanceStatus(tr.id, 'APPROVED')}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] text-white text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#34D399]" />
+                      Onayla
+                    </button>
+                  )}
+
                   {tr.status === 'APPROVED' && (
                     <button
                       disabled={submitting}
                       onClick={() => handleAdvanceStatus(tr.id, 'IN_TRANSIT')}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       Sevk Et (Yola Çıkar)
@@ -330,14 +376,31 @@ export function InterWarehouseTransfers({
                   )}
 
                   {tr.status === 'IN_TRANSIT' && (
-                    <button
-                      disabled={submitting}
-                      onClick={() => handleAdvanceStatus(tr.id, 'RECEIVED')}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
-                    >
-                      <PackageCheck className="w-3.5 h-3.5" />
-                      Teslim Al (Depoya Gir)
-                    </button>
+                    <>
+                      <button
+                        disabled={submitting}
+                        onClick={() => openDiscrepancyModal(tr)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      >
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        Farklı / Eksik Teslim Al
+                      </button>
+                      <button
+                        disabled={submitting}
+                        onClick={() => handleAdvanceStatus(tr.id, 'RECEIVED')}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      >
+                        <PackageCheck className="w-3.5 h-3.5" />
+                        Tam Teslim Al
+                      </button>
+                    </>
+                  )}
+
+                  {tr.status === 'DISCREPANCY' && (
+                    <span className="text-xs text-rose-300 font-medium flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      Eksik / Farklı Teslimat Kaydedildi
+                    </span>
                   )}
 
                   {tr.status === 'RECEIVED' && (
@@ -363,6 +426,7 @@ export function InterWarehouseTransfers({
                           <th className="py-2.5 px-3">SKU</th>
                           <th className="py-2.5 px-3 text-right">Talep</th>
                           <th className="py-2.5 px-3 text-right">Sevk</th>
+                          <th className="py-2.5 px-3 text-right">Yolda (In-Transit)</th>
                           <th className="py-2.5 px-4 text-right">Teslim</th>
                         </tr>
                       </thead>
@@ -371,7 +435,10 @@ export function InterWarehouseTransfers({
                           tr.lines.map((line) => (
                             <tr key={line.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors text-zinc-300">
                               <td className="py-2.5 px-4 font-medium text-white">
-                                {line.item?.name || 'Ürün'}
+                                <div>{line.itemName || line.item?.name || 'Ürün'}</div>
+                                {line.discrepancyReason && (
+                                  <div className="text-[10px] text-rose-300 mt-0.5">Fark Nedeni: {line.discrepancyReason}</div>
+                                )}
                               </td>
                               <td className="py-2.5 px-3 font-mono text-zinc-500">
                                 {line.item?.sku || '-'}
@@ -382,9 +449,12 @@ export function InterWarehouseTransfers({
                               <td className="py-2.5 px-3 text-right font-medium text-amber-300">
                                 {line.shippedQty || line.requestedQty} {line.unit || line.item?.unit || 'Adet'}
                               </td>
+                              <td className="py-2.5 px-3 text-right font-mono text-cyan-300">
+                                {Number(line.inTransitQty || 0)} {line.unit || line.item?.unit || 'Adet'}
+                              </td>
                               <td className="py-2.5 px-4 text-right font-semibold text-[#34D399]">
                                 {tr.status === 'RECEIVED'
-                                  ? line.shippedQty || line.requestedQty
+                                  ? line.receivedQty || line.shippedQty || line.requestedQty
                                   : line.receivedQty || 0}{' '}
                                 {line.unit || line.item?.unit || 'Adet'}
                               </td>
@@ -392,7 +462,7 @@ export function InterWarehouseTransfers({
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={5} className="py-3 px-4 text-zinc-500 italic">
+                            <td colSpan={6} className="py-3 px-4 text-zinc-500 italic">
                               Kalem bilgisi bulunamadı.
                             </td>
                           </tr>
@@ -572,6 +642,83 @@ export function InterWarehouseTransfers({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Farklı / Eksik Teslimat Modalı */}
+      {discrepancyModalTransfer && (
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#111513] border border-white/[0.08] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden text-white p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+              <div>
+                <h4 className="text-sm font-semibold text-white">
+                  Kısmi / Farklı Teslim Alma — {discrepancyModalTransfer.orderNumber || discrepancyModalTransfer.transferNumber}
+                </h4>
+                <p className="text-xs text-zinc-400">Fiilen sağlam ulaşan miktarları ve varsa eksik/hasar nedenini girin.</p>
+              </div>
+              <button type="button" onClick={() => setDiscrepancyModalTransfer(null)} className="text-zinc-400 hover:text-white">✕</button>
+            </div>
+
+            <div className="space-y-3 max-h-80 overflow-y-auto text-xs">
+              {(discrepancyModalTransfer.lines || []).map((ln) => (
+                <div key={ln.id} className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-white">{ln.itemName || ln.item?.name || ln.itemId}</span>
+                    <span className="font-mono text-amber-300">Sevk: {ln.shippedQty || ln.requestedQty}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[11px] text-zinc-400 block mb-1">Teslim Alınan Miktar</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={discrepancyQtys[ln.id] ?? '0'}
+                        onChange={(e) => setDiscrepancyQtys({ ...discrepancyQtys, [ln.id]: e.target.value })}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.08] text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-zinc-400 block mb-1">Fark / Hasar Nedeni</label>
+                      <input
+                        type="text"
+                        placeholder="Örn. 2 adet kırık sap"
+                        value={discrepancyReasons[ln.id] ?? ''}
+                        onChange={(e) => setDiscrepancyReasons({ ...discrepancyReasons, [ln.id]: e.target.value })}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.08] text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setDiscrepancyModalTransfer(null)}
+                className="px-4 py-2 rounded-full text-xs border border-white/[0.08] text-zinc-300 hover:text-white"
+              >
+                Vazgeç
+              </button>
+              <button
+                type="button"
+                disabled={submitting}
+                onClick={() =>
+                  handleAdvanceStatus(
+                    discrepancyModalTransfer.id,
+                    'RECEIVED',
+                    (discrepancyModalTransfer.lines || []).map((ln) => ({
+                      lineId: ln.id,
+                      receivedQty: Number(discrepancyQtys[ln.id] || 0),
+                      discrepancyReason: discrepancyReasons[ln.id] || undefined,
+                    }))
+                  )
+                }
+                className="px-4 py-2 rounded-full text-xs bg-rose-500 hover:bg-rose-400 text-white font-semibold cursor-pointer"
+              >
+                {submitting ? 'Kaydediliyor...' : 'Farklı Teslimatı Onayla'}
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -35,6 +35,10 @@ export interface CountSessionRecord {
   id: string
   sessionNumber: string
   warehouseId: string
+  zoneId?: string | null
+  abcFilter?: string | null
+  scheduledDate?: string | null
+  tolerancePercent?: number | null
   countType: string
   hideSystemQty: boolean
   status: string
@@ -67,12 +71,16 @@ export interface CountSessionRecord {
 interface InventoryCountManagerProps {
   sessions: CountSessionRecord[]
   warehouses: Array<{ id: string; name: string }>
+  zones?: Array<{ id: string; warehouseId: string; code: string; name: string }>
+  selectedWarehouseId?: string
   onSessionUpdated: () => void
 }
 
 export function InventoryCountManager({
   sessions,
   warehouses,
+  zones = [],
+  selectedWarehouseId,
   onSessionUpdated
 }: InventoryCountManagerProps) {
   const [selectedSessionId, setSelectedSessionId] = useState<string>(sessions[0]?.id || "")
@@ -83,7 +91,17 @@ export function InventoryCountManager({
 
   // Yeni Sayım Modalı
   const [isNewSessionModalOpen, setIsNewSessionModalOpen] = useState(false)
-  const [newWhId, setNewWhId] = useState(warehouses[0]?.id || "")
+  const [newWhId, setNewWhId] = useState(
+    selectedWarehouseId && selectedWarehouseId !== "ALL"
+      ? selectedWarehouseId
+      : warehouses[0]?.id || ""
+  )
+  const [newZoneId, setNewZoneId] = useState<string>("ALL")
+  const [newAbcFilter, setNewAbcFilter] = useState<string>("ALL")
+  const [newScheduledDate, setNewScheduledDate] = useState<string>(
+    new Date().toISOString().slice(0, 10)
+  )
+  const [newTolerancePercent, setNewTolerancePercent] = useState<string>("5")
   const [newCountType, setNewCountType] = useState("BLIND_COUNT")
   const [newCounters, setNewCounters] = useState("Saha Sayım Ekibi")
   const [isCreatingSession, setIsCreatingSession] = useState(false)
@@ -136,7 +154,7 @@ export function InventoryCountManager({
   }
 
   // Mahsuplaşma Yap (Veritabanında Gerçek Stok ve Maliyet Eşitleme)
-  const handleReconcile = async () => {
+  const handleReconcile = async (forceApprove = false) => {
     if (!activeSession) return
     setIsReconciling(true)
     try {
@@ -144,17 +162,21 @@ export function InventoryCountManager({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: "reconcile_count",
+          action: forceApprove ? "approve_count" : "reconcile_count",
           sessionId: activeSession.id,
-          reconciledBy: "Depo Sorumlusu"
+          reconciledBy: forceApprove ? "Depo Müdürü (Onaylı)" : "Depo Sorumlusu"
         })
       })
 
       const data = await res.json()
       if (data.success) {
-        toast.success(data.message || "Mahsuplaşma Başarıyla Tamamlandı!", {
-          description: `Muhasebe Fişi: ${data.reconciledJournalNo} • Fark Tutarı: ${data.totalVarianceValue} TL`
-        })
+        if (data.status === "PENDING_APPROVAL") {
+          toast.warning(data.message || "Tolerans eşiği aşıldığı için yönetici onayına alındı.")
+        } else {
+          toast.success(data.message || "Mahsuplaşma Başarıyla Tamamlandı!", {
+            description: `Muhasebe Fişi: ${data.reconciledJournalNo} • Fark Tutarı: ${data.totalVarianceValue} TL`
+          })
+        }
         onSessionUpdated()
       } else {
         toast.error("Mahsuplaşma hatası: " + (data.error || "İşlem başarısız"))
@@ -176,6 +198,10 @@ export function InventoryCountManager({
         body: JSON.stringify({
           action: "create_count_session",
           warehouseId: newWhId,
+          zoneId: newZoneId === "ALL" ? undefined : newZoneId,
+          abcFilter: newAbcFilter === "ALL" ? undefined : newAbcFilter,
+          scheduledDate: newScheduledDate || undefined,
+          tolerancePercent: Number(newTolerancePercent || 5),
           countType: newCountType,
           assignedCounters: newCounters
         })
@@ -227,10 +253,22 @@ export function InventoryCountManager({
               className={`rounded-full px-3 py-0.5 text-xs font-semibold border ${
                 activeSession.status === "RECONCILED"
                   ? "bg-emerald-500/10 text-[#34D399] border-emerald-500/20"
-                  : "bg-white/[0.05] text-zinc-300 border-white/[0.08]"
+                  : activeSession.status === "PENDING_APPROVAL"
+                    ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                    : "bg-white/[0.05] text-zinc-300 border-white/[0.08]"
               }`}
             >
-              {activeSession.status === "RECONCILED" ? "Mahsuplaştı" : "Devam Ediyor"}
+              {activeSession.status === "RECONCILED"
+                ? "Mahsuplaştı"
+                : activeSession.status === "PENDING_APPROVAL"
+                  ? "Tolerans Aşımı (Onay Bekliyor)"
+                  : "Devam Ediyor"}
+            </span>
+          )}
+          {activeSession?.tolerancePercent != null && (
+            <span className="text-[11px] font-mono text-zinc-400">
+              Tolerans: %{activeSession.tolerancePercent}
+              {activeSession.abcFilter ? ` • ABC: ${activeSession.abcFilter}` : ""}
             </span>
           )}
         </div>
@@ -259,11 +297,23 @@ export function InventoryCountManager({
             <span>Yeni Sayım</span>
           </Button>
 
-          {activeSession && activeSession.status !== "RECONCILED" && (
+          {activeSession && activeSession.status === "PENDING_APPROVAL" && (
             <Button
               size="sm"
               disabled={isReconciling}
-              onClick={handleReconcile}
+              onClick={() => handleReconcile(true)}
+              className="h-9 px-4 text-xs bg-amber-500 hover:bg-amber-400 text-[#0A0E0C] font-semibold rounded-full gap-1.5 shadow-lg shadow-amber-500/20 cursor-pointer"
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              <span>Yönetici Onayı ile Mahsuplaştır</span>
+            </Button>
+          )}
+
+          {activeSession && activeSession.status !== "RECONCILED" && activeSession.status !== "PENDING_APPROVAL" && (
+            <Button
+              size="sm"
+              disabled={isReconciling}
+              onClick={() => handleReconcile(false)}
               className="h-9 px-4 text-xs bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full gap-1.5 shadow-lg shadow-emerald-500/20 cursor-pointer"
             >
               {isReconciling ? (
@@ -471,6 +521,59 @@ export function InventoryCountManager({
                   </SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-zinc-300">Bölge Kapsamı</Label>
+                <select
+                  value={newZoneId}
+                  onChange={e => setNewZoneId(e.target.value)}
+                  className="w-full h-9.5 text-xs bg-black/40 border border-white/[0.08] text-white rounded-xl px-2.5"
+                >
+                  <option value="ALL" className="bg-[#111513]">Tüm Bölgeler</option>
+                  {zones.filter(z => z.warehouseId === newWhId).map(z => (
+                    <option key={z.id} value={z.id} className="bg-[#111513]">{z.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-zinc-300">ABC Hız Filtresi</Label>
+                <select
+                  value={newAbcFilter}
+                  onChange={e => setNewAbcFilter(e.target.value)}
+                  className="w-full h-9.5 text-xs bg-black/40 border border-white/[0.08] text-white rounded-xl px-2.5"
+                >
+                  <option value="ALL" className="bg-[#111513]">Tüm Sınıflar</option>
+                  <option value="A" className="bg-[#111513]">Sınıf A (Hızlı)</option>
+                  <option value="B" className="bg-[#111513]">Sınıf B (Orta)</option>
+                  <option value="C" className="bg-[#111513]">Sınıf C (Yavaş)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-zinc-300">Planlanan Tarih</Label>
+                <Input
+                  type="date"
+                  value={newScheduledDate}
+                  onChange={e => setNewScheduledDate(e.target.value)}
+                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-zinc-300">Tolerans Eşiği (%)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.5"
+                  value={newTolerancePercent}
+                  onChange={e => setNewTolerancePercent(e.target.value)}
+                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5 font-mono"
+                />
+              </div>
             </div>
 
             <div className="space-y-1.5">
