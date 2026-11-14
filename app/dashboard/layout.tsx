@@ -31,6 +31,12 @@ import {
   isAnyProductionFeatureEnabled,
   type ProductionFeatureFlagsConfig,
 } from "@/lib/config/production-feature-flags"
+import {
+  IMPLEMENTED_LOGISTICS_FLEET_HREFS,
+  isLogisticsFleetMenuVisible,
+  resolveLogisticsFeatureFlags,
+  type LogisticsFeatureFlagsConfig,
+} from "@/lib/config/logistics-feature-flags"
 import { motion, AnimatePresence } from "framer-motion"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
@@ -256,6 +262,8 @@ function SidebarContent({
   const { unreadCounts } = useNotificationStore()
   const [subPlan, setSubPlan] = useState<string | null>(null)
   const [featureFlagsConfig, setFeatureFlagsConfig] = useState<ProductionFeatureFlagsConfig | null>(null)
+  const [logisticsFlagsConfig, setLogisticsFlagsConfig] = useState<LogisticsFeatureFlagsConfig | null>(null)
+  const [logisticsDemoMode, setLogisticsDemoMode] = useState<boolean>(true)
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -273,6 +281,10 @@ function SidebarContent({
           const config = await res.json()
           setSubPlan(config.subscription?.plan || null)
           setFeatureFlagsConfig(config.featureFlags || null)
+          setLogisticsFlagsConfig(config.logisticsFeatureFlags || null)
+          if (typeof config.logisticsDemoMode === "boolean") {
+            setLogisticsDemoMode(config.logisticsDemoMode)
+          }
           const activeLogo = config.bgRemovedLogoUrl || config.logoUrl
           if (activeLogo) {
             localStorage.setItem("theme-logo", activeLogo)
@@ -317,6 +329,25 @@ function SidebarContent({
     () => isAnyProductionFeatureEnabled(featureFlagsConfig, currentBranch?.id),
     [featureFlagsConfig, currentBranch?.id]
   )
+  const logisticsFlags = useMemo(
+    () =>
+      resolveLogisticsFeatureFlags(
+        logisticsFlagsConfig,
+        currentBranch?.id,
+        logisticsDemoMode
+      ),
+    [logisticsFlagsConfig, currentBranch?.id, logisticsDemoMode]
+  )
+  const showLogisticsFleetCategory = useMemo(
+    () =>
+      isLogisticsFleetMenuVisible(
+        logisticsFlagsConfig,
+        currentBranch?.id,
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS,
+        logisticsDemoMode
+      ),
+    [logisticsDemoMode, logisticsFlagsConfig, currentBranch?.id]
+  )
 
   const rawCategories: NavCategoryDef[] = useMemo(() => [
     {
@@ -354,6 +385,29 @@ function SidebarContent({
         { name: "5. AI Analiz & Ayarlar", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
       ],
     },
+    ...(showLogisticsFleetCategory
+      ? [
+          {
+            id: "lojistik-filo",
+            title: "Lojistik & Filo",
+            icon: Truck,
+            items: [
+              ...(logisticsFlags.lojistik_sevkiyat_rota &&
+              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/sevkiyat")
+                ? [{ name: "1. Sevkiyat & Rota Planlama", href: "/dashboard/sevkiyat", icon: Truck, resource: "lojistik_sevkiyat_rota" }]
+                : []),
+              ...(logisticsFlags.lojistik_filo &&
+              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/filo")
+                ? [{ name: "2. Araç & Sürücü Yönetimi", href: "/dashboard/filo", icon: Truck, resource: "lojistik_filo" }]
+                : []),
+              ...(logisticsFlags.lojistik_iade &&
+              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/iade")
+                ? [{ name: "3. İade & Ters Lojistik", href: "/dashboard/iade", icon: ShieldCheck, resource: "lojistik_iade" }]
+                : []),
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
     ...(showUretimCategory
       ? [
           {
@@ -449,7 +503,7 @@ function SidebarContent({
         { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
       ],
     },
-  ], [t, showUretimCategory, prodFlags])
+  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, logisticsFlags])
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
     if (item.devOnly) {

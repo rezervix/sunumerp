@@ -5,6 +5,7 @@ import { createAuditLog } from "@/lib/audit"
 import { cookies } from "next/headers"
 import { jwtVerify } from "jose"
 import { isSuperAdminUser, isPlatformDeveloperUser } from "@/lib/auth/server-permission"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
 
@@ -33,6 +34,7 @@ function maskSensitiveFields(config: ReturnType<typeof getSystemConfig>) {
     // logo URL'lerini meta veriye indir (base64 ham veriyi döndürme)
     hasLogo: Boolean(logoUrl),
     hasBgRemovedLogo: Boolean(bgRemovedLogoUrl),
+    logisticsDemoMode: isDemoEnvironment(),
     // Integration alan adlarını açıkla ama değerlerini maskele
     integrations: integrations ? {
       efaturaProvider: integrations.efaturaProvider || "",

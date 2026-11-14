@@ -6,6 +6,13 @@ import {
   type ProductionFeatureFlagsConfig,
   type ProductionFeatureFlagsMap,
 } from "./config/production-feature-flags"
+import {
+  DEFAULT_LOGISTICS_FEATURE_FLAGS,
+  resolveLogisticsFeatureFlags,
+  type LogisticsFeatureFlagsConfig,
+  type LogisticsFeatureFlagsMap,
+} from "./config/logistics-feature-flags"
+import type { LogisticsProviderBundleConfig } from "./logistics/types"
 
 export interface SubscriptionConfig {
   plan: "free" | "pro" | "enterprise"
@@ -129,6 +136,8 @@ export interface SystemConfig {
   workflows?: WorkflowsConfig
   moduleSettings?: ModuleSettingsConfig
   featureFlags?: ProductionFeatureFlagsConfig
+  logisticsFeatureFlags?: LogisticsFeatureFlagsConfig
+  logisticsProviders?: Partial<LogisticsProviderBundleConfig>
   systemMaintenance?: SystemMaintenanceConfig
 }
 
@@ -202,6 +211,9 @@ const DEFAULT_CONFIG: SystemConfig = {
   featureFlags: {
     ...DEFAULT_PRODUCTION_FEATURE_FLAGS,
   },
+  logisticsFeatureFlags: {
+    ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
+  },
   tamperDetected: false,
   securityDisabled: false
 }
@@ -236,6 +248,10 @@ export function getSystemConfig(): SystemConfig {
         ...DEFAULT_PRODUCTION_FEATURE_FLAGS,
         ...(parsed.featureFlags || {}),
       },
+      logisticsFeatureFlags: {
+        ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
+        ...(parsed.logisticsFeatureFlags || {}),
+      },
       securityDisabled: disabled
     }
     return merged
@@ -257,6 +273,9 @@ export function saveSystemConfig(config: Partial<SystemConfig>): SystemConfig {
       featureFlags: config.featureFlags
         ? { ...DEFAULT_PRODUCTION_FEATURE_FLAGS, ...(current.featureFlags || {}), ...config.featureFlags }
         : current.featureFlags || { ...DEFAULT_PRODUCTION_FEATURE_FLAGS },
+      logisticsFeatureFlags: config.logisticsFeatureFlags
+        ? { ...DEFAULT_LOGISTICS_FEATURE_FLAGS, ...(current.logisticsFeatureFlags || {}), ...config.logisticsFeatureFlags }
+        : current.logisticsFeatureFlags || { ...DEFAULT_LOGISTICS_FEATURE_FLAGS },
       securityDisabled: isSecurityDisabled()
     }
     const dir = path.dirname(CONFIG_PATH)
@@ -299,5 +318,16 @@ export function getServerProductionFeatureFlags(
   const sysConfig = getSystemConfig()
   const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
   return resolveProductionFeatureFlags(sysConfig.featureFlags, effectiveScopeId)
+}
+
+/**
+ * Sunucu tarafında aktif 5 Lojistik modülü özellik bayrağını (firma/şube ve demo ortamı dahil) çözümler.
+ */
+export function getServerLogisticsFeatureFlags(
+  branchOrCompanyId?: string | null
+): LogisticsFeatureFlagsMap {
+  const sysConfig = getSystemConfig()
+  const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
+  return resolveLogisticsFeatureFlags(sysConfig.logisticsFeatureFlags, effectiveScopeId)
 }
 

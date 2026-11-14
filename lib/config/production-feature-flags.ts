@@ -151,7 +151,7 @@ function parseEnvBoolean(raw: string | undefined): boolean | undefined {
   return undefined
 }
 
-function isDemoEnvironment(): boolean {
+export function isDemoEnvironment(): boolean {
   if (typeof process === "undefined" || !process.env) return true
   const disableDemo = process.env.DISABLE_DEMO_MODE
   const envDemo = process.env.ENABLE_DEMO_MODE
