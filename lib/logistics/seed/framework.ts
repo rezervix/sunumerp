@@ -65,6 +65,7 @@ export interface LogisticsSeedModule {
   readonly moduleKey: string
   readonly phase: number
   readonly seededIdsByCollection: Readonly<Record<string, readonly string[]>>
+  repairAnomalies?: (db: Record<string, any[]>) => number
   seed: (db: Record<string, any[]>) => Promise<LogisticsSeedStepResult> | LogisticsSeedStepResult
   rollback?: (db: Record<string, any[]>) => Record<string, number>
 }
@@ -162,6 +163,16 @@ export async function executeLogisticsDemoSeed(
   }
 
   const db = readRawLocalDb()
+  let repairedTotal = 0
+  for (const mod of modules) {
+    if (mod.repairAnomalies) {
+      repairedTotal += mod.repairAnomalies(db)
+    }
+  }
+  if (repairedTotal > 0) {
+    writeRawLocalDb(db)
+  }
+
   const seedIdMap = collectSeededIdSet(modules)
   const before = snapshotPreExistingRecords(db, seedIdMap)
 
@@ -232,6 +243,16 @@ export function executeLogisticsDemoRollback(
   }
 
   const db = readRawLocalDb()
+  let repairedTotal = 0
+  for (const mod of modules) {
+    if (mod.repairAnomalies) {
+      repairedTotal += mod.repairAnomalies(db)
+    }
+  }
+  if (repairedTotal > 0) {
+    writeRawLocalDb(db)
+  }
+
   const seedIdMap = collectSeededIdSet(modules)
   const before = snapshotPreExistingRecords(db, seedIdMap)
 
