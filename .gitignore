@@ -21,4 +21,6 @@ services/ai-orchestrator/node_modules/
 
 # Untracked submodules & local temp
 crmpanelcckn/
+storage/backups/
+storage/logistics-pods/
 

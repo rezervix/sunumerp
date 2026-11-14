@@ -105,6 +105,12 @@
       "permissions": "{\"dashboard\":[\"read\"],\"projects\":[\"read\",\"update\"],\"icerik-takvimi\":[\"read\",\"create\",\"update\"],\"icerik-magazasi\":[\"read\",\"create\"],\"ajans-kutuphanesi\":[\"read\",\"create\"],\"chat\":[\"read\",\"create\"],\"todos\":[\"read\",\"create\",\"update\"],\"notlarim\":[\"read\",\"create\",\"update\"]}",
       "createdAt": "2026-04-11T13:11:14.402Z",
       "updatedAt": "2026-04-11T13:11:14.402Z"
+    },
+    {
+      "id": "role-tedarikci",
+      "name": "Tedarikçi",
+      "description": "Dış tedarikçi portalı rolü — yalnızca firmasına atanmış satınalma, RFQ ve ASN kayıtlarına erişir.",
+      "permissions": "{\"dashboard\":[\"read\"],\"lojistik_tedarikci\":[\"read\",\"create\",\"update\"],\"tedarikci_portali\":[\"read\",\"create\",\"update\"],\"satinalma\":[\"read\"],\"chat\":[\"read\",\"create\"]}"
     }
   ],
   "user": [
@@ -289,6 +295,22 @@
       "isActive": true,
       "createdAt": "2026-06-30T13:11:14.402Z",
       "updatedAt": "2026-10-25T13:11:14.402Z"
+    },
+    {
+      "id": "user-tedarikci-flora",
+      "username": "tedarikci.royal",
+      "email": "orders@royalfloraholland.com.tr",
+      "password": "$2b$10$uimuKxiABB/BC4mz9QFj9ObVEeE3mLgxPmVTuZ1EK3B2hB/e/NpCa",
+      "fullName": "Arzu Kaya (Royal Flora Tedarikçi)",
+      "phone": "0212 465 88 00",
+      "avatarUrl": null,
+      "department": "Dış Tedarikçi Portalı",
+      "position": "İhracat & Sipariş Sorumlusu",
+      "supplierId": "sup-holland-01",
+      "isActive": true,
+      "mustChangePassword": false,
+      "createdAt": "2026-11-10T09:00:00.000Z",
+      "updatedAt": "2026-11-10T09:00:00.000Z"
     }
   ],
   "userBranchRole": [
@@ -429,6 +451,14 @@
       "userId": "user-izmir-mgr",
       "branchId": "branch-izmir",
       "roleId": "role-branch-admin"
+    },
+    {
+      "id": "ubr-tedarikci-flora-1",
+      "userId": "user-tedarikci-flora",
+      "branchId": "local-debug-branch",
+      "roleId": "role-tedarikci",
+      "assignedAt": "2026-11-10T09:00:00.000Z",
+      "assignedBy": "lojistik-faz1-seed"
     }
   ],
   "module": [

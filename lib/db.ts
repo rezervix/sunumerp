@@ -14,10 +14,12 @@ const rawPrisma =
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = rawPrisma
 
-// Start the Content Cron Service automatically on boot
-import("@/lib/services/cronService").catch((err) => {
-  console.error("Content Cron Service startup failed:", err)
-})
+// Start the Content Cron Service automatically on boot (unless CLI script explicitly opts out)
+if (process.env.SUNUM_DISABLE_CRON !== "1") {
+  import("@/lib/services/cronService").catch((err) => {
+    console.error("Content Cron Service startup failed:", err)
+  })
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DEVRESILIENCE: YEREL HAFİF VERİTABANI VE İLİŞKİ SİMÜLATÖRÜ (JSON DB FALLBACK)
@@ -203,6 +205,8 @@ interface JsonDbData {
   // ── Üretim Modülleri: Faz 9 Entegrasyon, Bildirim & Dashboard ──
   uretimNotificationRule?: any[]
   uretimNotificationPreference?: any[]
+  // ── Lojistik & Depo Modülleri (Faz 2–8 additive koleksiyonları) ──
+  lojistikTelemetryLog?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -335,12 +339,33 @@ const initialData: JsonDbData = {
   licensePlateContent: []
 }
 
-// JSON DB Yardımcıları
+const globalForJsonDb = globalThis as unknown as {
+  __sunumEphemeralJsonDb?: JsonDbData
+  __sunumReadOnlyFs?: boolean
+}
+
+function isReadOnlyFsError(err: any): boolean {
+  const code = err?.code
+  return code === "EROFS" || code === "EACCES" || code === "EPERM"
+}
+
+// JSON DB Yardımcıları (Vercel salt-okunur dosya sistemi için bellek içi fallback destekli)
 function readJsonDb(): JsonDbData {
+  if (globalForJsonDb.__sunumReadOnlyFs && globalForJsonDb.__sunumEphemeralJsonDb) {
+    return globalForJsonDb.__sunumEphemeralJsonDb
+  }
   try {
     if (!fs.existsSync(JSON_DB_PATH)) {
-      fs.mkdirSync(path.dirname(JSON_DB_PATH), { recursive: true })
-      fs.writeFileSync(JSON_DB_PATH, JSON.stringify(initialData, null, 2), "utf8")
+      try {
+        fs.mkdirSync(path.dirname(JSON_DB_PATH), { recursive: true })
+        fs.writeFileSync(JSON_DB_PATH, JSON.stringify(initialData, null, 2), "utf8")
+      } catch (writeErr: any) {
+        if (isReadOnlyFsError(writeErr)) {
+          globalForJsonDb.__sunumReadOnlyFs = true
+          globalForJsonDb.__sunumEphemeralJsonDb = JSON.parse(JSON.stringify(initialData))
+          return globalForJsonDb.__sunumEphemeralJsonDb!
+        }
+      }
       return initialData
     }
     const content = fs.readFileSync(JSON_DB_PATH, "utf8")
@@ -352,33 +377,48 @@ function readJsonDb(): JsonDbData {
         changed = true
       }
     }
-    if (changed) {
+    if (changed && !globalForJsonDb.__sunumReadOnlyFs) {
       writeJsonDb(parsed)
     }
     return parsed
   } catch (err) {
     console.error("[DEVRESILIENCE] JSON DB okuma hatası, varsayılan veri dönüyor:", err)
-    return initialData
+    return globalForJsonDb.__sunumEphemeralJsonDb ?? initialData
   }
 }
 
 function writeJsonDb(data: JsonDbData) {
+  if (globalForJsonDb.__sunumReadOnlyFs) {
+    globalForJsonDb.__sunumEphemeralJsonDb = data
+    return
+  }
   try {
     fs.mkdirSync(path.dirname(JSON_DB_PATH), { recursive: true })
     fs.writeFileSync(JSON_DB_PATH, JSON.stringify(data, null, 2), "utf8")
-  } catch (err) {
+  } catch (err: any) {
+    if (isReadOnlyFsError(err)) {
+      globalForJsonDb.__sunumReadOnlyFs = true
+      globalForJsonDb.__sunumEphemeralJsonDb = data
+      console.warn("[DEVRESILIENCE] Salt-okunur dosya sistemi tespit edildi; demo değişiklikleri oturum belleğinde tutuluyor.")
+      return
+    }
     console.error("[DEVRESILIENCE] JSON DB yazma hatası:", err)
   }
 }
 
 // Prisma metodlarını simüle eden nesne
 class ModelSimulate {
-  constructor(private modelName: keyof JsonDbData) {}
+  constructor(private modelName: keyof JsonDbData) { }
+
+  private isLazyModuleCollection(): boolean {
+    const name = String(this.modelName)
+    return name.startsWith("uretim") || name.startsWith("lojistik")
+  }
 
   private getCollection(): any[] {
     const db = readJsonDb()
     if (!db[this.modelName]) {
-      if (String(this.modelName).startsWith("uretim")) {
+      if (this.isLazyModuleCollection()) {
         return []
       }
       db[this.modelName] = []
@@ -389,7 +429,7 @@ class ModelSimulate {
 
   private saveCollection(collection: any[]) {
     const db = readJsonDb()
-    if (String(this.modelName).startsWith("uretim") && collection.length === 0 && !(this.modelName in initialData)) {
+    if (this.isLazyModuleCollection() && collection.length === 0 && !(this.modelName in initialData)) {
       delete db[this.modelName]
     } else {
       db[this.modelName] = collection
@@ -414,7 +454,7 @@ class ModelSimulate {
 
       for (const [key, value] of Object.entries(where)) {
         if (value === undefined || key === "OR" || key === "AND") continue
-        
+
         // nested objects like { in: [...] }, { contains: "text" }, { gte/lte }, veya bileşik anahtar { itemId, warehouseId, storageBinId }
         if (value && typeof value === "object" && !Array.isArray(value) && !(value instanceof Date)) {
           const valObj = value as any
@@ -485,7 +525,7 @@ class ModelSimulate {
         } else if (itemVal === undefined) {
           itemVal = null
         }
-        
+
         const queryVal = value === undefined ? null : value
         if (itemVal !== queryVal) return false
       }
@@ -552,6 +592,18 @@ class ModelSimulate {
             role: matchedRole ?? { id: ubr.roleId, name: roleName, permissions: "{}" }
           }
         })
+      }
+    }
+
+    if (this.modelName === "userBranchRole" && include) {
+      if (include.role) {
+        enriched.role = (db.role || []).find((r: any) => r.id === item.roleId) ?? null
+      }
+      if (include.branch) {
+        enriched.branch = (db.branch || []).find((b: any) => b.id === item.branchId) ?? null
+      }
+      if (include.user) {
+        enriched.user = (db.user || []).find((u: any) => u.id === item.userId) ?? null
       }
     }
 
@@ -807,10 +859,10 @@ class ModelSimulate {
         const prof = (db.uretimItemProfile || []).find((p: any) => p.itemId === item.id) ?? null
         enriched.uretimProfile = prof
           ? {
-              ...prof,
-              defaultBom: prof.defaultBomId ? ((db.bomHeader || []).find((b: any) => b.id === prof.defaultBomId) ?? null) : null,
-              defaultWorkCenter: prof.defaultWorkCenterId ? ((db.uretimWorkCenter || []).find((wc: any) => wc.id === prof.defaultWorkCenterId) ?? null) : null
-            }
+            ...prof,
+            defaultBom: prof.defaultBomId ? ((db.bomHeader || []).find((b: any) => b.id === prof.defaultBomId) ?? null) : null,
+            defaultWorkCenter: prof.defaultWorkCenterId ? ((db.uretimWorkCenter || []).find((wc: any) => wc.id === prof.defaultWorkCenterId) ?? null) : null
+          }
           : null
       }
       if (include.uretimBomHeaders) enriched.uretimBomHeaders = (db.uretimBomHeader || []).filter((b: any) => b.finishedItemId === item.id)
@@ -1226,7 +1278,7 @@ class ModelSimulate {
         let valB = b[orderKey]
         if (valA instanceof Date) valA = valA.getTime()
         if (valB instanceof Date) valB = valB.getTime()
-        
+
         if (valA < valB) return orderDir === "asc" ? -1 : 1
         if (valA > valB) return orderDir === "asc" ? 1 : -1
         return 0
@@ -1387,7 +1439,7 @@ class ModelSimulate {
     const filtered = this.filterByWhere(collection, args.where)
     const match = filtered[0]
     if (!match) throw new Error(`Kayıt bulunamadı: ${JSON.stringify(args.where)}`)
-    
+
     const idx = collection.findIndex((item) => item.id === match.id)
     collection[idx] = {
       ...this.applyUpdateOperations(collection[idx], args.data),
@@ -1452,9 +1504,61 @@ class ModelSimulate {
 // PRISMA CLIENT PROXY INTERCEPTOR
 // ═══════════════════════════════════════════════════════════════════════════════
 
-let isDbOfflineCached = false
-let lastOfflineCheck = 0
+let isDbOfflineCached = !process.env.DATABASE_URL
+let lastOfflineCheck = isDbOfflineCached ? Date.now() : 0
 const OFFLINE_CACHE_MS = 60000
+
+/**
+ * Veritabanı bağlantı hatalarını veya DATABASE_URL eksikliği (Vercel/offline JSON demo)
+ * durumunu yakalar ve DEVRESILIENCE JSON DB katmanına güvenli geçiş sağlar.
+ */
+function isPrismaOfflineError(err: any): boolean {
+  if (!process.env.DATABASE_URL) return true
+  const name = String(err?.name ?? "")
+  const code = String(err?.errorCode ?? err?.code ?? "")
+  const message = String(err?.message ?? "")
+  return (
+    name === "PrismaClientInitializationError" ||
+    code === "P1001" ||
+    code === "P1002" ||
+    code === "P1003" ||
+    message.includes("P1001") ||
+    message.includes("Can't reach database") ||
+    message.includes("Environment variable not found: DATABASE_URL") ||
+    message.includes("connection") ||
+    message.includes("ECONNREFUSED") ||
+    message.includes("ETIMEDOUT") ||
+    message.includes("ENOTFOUND")
+  )
+}
+
+function simulateQueryRawFallback(args: any[]) {
+  const sql = args[0] ? String(args[0]) : ""
+  if (sql.includes("LibraryFile") && sql.includes("mimeType")) {
+    const db = readJsonDb()
+    const activeFiles = db.libraryFile.filter((f) => !f.isTrashed)
+    const breakdown: Record<string, { count: number; total_size: number }> = {}
+    for (const f of activeFiles) {
+      let cat = "other"
+      const mime = f.mimeType ?? ""
+      if (mime.startsWith("image/")) cat = "image"
+      else if (mime.startsWith("video/")) cat = "video"
+      else if (mime.startsWith("audio/")) cat = "audio"
+      else if (mime === "application/pdf" || mime.includes("vnd") || mime.includes("ms") || mime.startsWith("text/")) cat = "document"
+      else if (mime.includes("zip") || mime.includes("rar") || mime.includes("7z")) cat = "archive"
+
+      if (!breakdown[cat]) breakdown[cat] = { count: 0, total_size: 0 }
+      breakdown[cat].count++
+      breakdown[cat].total_size += Number(f.sizeBytes ?? 0)
+    }
+    return Object.entries(breakdown).map(([cat, val]) => ({
+      mime_prefix: cat,
+      count: BigInt(val.count),
+      total_size: BigInt(val.total_size)
+    }))
+  }
+  return []
+}
 
 export const prisma = new Proxy(rawPrisma, {
   get(target, prop) {
@@ -1638,39 +1742,14 @@ export const prisma = new Proxy(rawPrisma, {
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
     if (propStr === "$queryRaw" || propStr === "$queryRawUnsafe") {
       return async function (...args: any[]) {
+        if (!process.env.DATABASE_URL) {
+          return simulateQueryRawFallback(args)
+        }
         try {
           return await (target as any)[prop].apply(target, args)
         } catch (err: any) {
-          const isConnectionError = 
-            err.message?.includes("P1001") || 
-            err.message?.includes("Can't reach database")
-
-          if (isConnectionError) {
-            const sql = args[0] ? String(args[0]) : ""
-            if (sql.includes("LibraryFile") && sql.includes("mimeType")) {
-              const db = readJsonDb()
-              const activeFiles = db.libraryFile.filter((f) => !f.isTrashed)
-              const breakdown: Record<string, { count: number; total_size: number }> = {}
-              for (const f of activeFiles) {
-                let cat = "other"
-                const mime = f.mimeType ?? ""
-                if (mime.startsWith("image/")) cat = "image"
-                else if (mime.startsWith("video/")) cat = "video"
-                else if (mime.startsWith("audio/")) cat = "audio"
-                else if (mime === "application/pdf" || mime.includes("vnd") || mime.includes("ms") || mime.startsWith("text/")) cat = "document"
-                else if (mime.includes("zip") || mime.includes("rar") || mime.includes("7z")) cat = "archive"
-
-                if (!breakdown[cat]) breakdown[cat] = { count: 0, total_size: 0 }
-                breakdown[cat].count++
-                breakdown[cat].total_size += Number(f.sizeBytes ?? 0)
-              }
-              return Object.entries(breakdown).map(([cat, val]) => ({
-                mime_prefix: cat,
-                count: BigInt(val.count),
-                total_size: BigInt(val.total_size)
-              }))
-            }
-            return []
+          if (isPrismaOfflineError(err)) {
+            return simulateQueryRawFallback(args)
           }
           throw err
         }
@@ -1679,7 +1758,7 @@ export const prisma = new Proxy(rawPrisma, {
 
     if (fallbackModels.includes(propStr)) {
       const dbProp = target[propStr as keyof typeof target]
-      
+
       // Şemada tanımlı değilse doğrudan local simülasyona yönlendir
       if (dbProp === undefined) {
         console.warn(`[DEVRESILIENCE] '${propStr}' şemada bulunamadı, yerel JSON DB kullanılıyor.`)
@@ -1694,7 +1773,7 @@ export const prisma = new Proxy(rawPrisma, {
 
           return async function (...args: any[]) {
             const now = Date.now()
-            if (isDbOfflineCached && now - lastOfflineCheck < OFFLINE_CACHE_MS) {
+            if (!process.env.DATABASE_URL || (isDbOfflineCached && now - lastOfflineCheck < OFFLINE_CACHE_MS)) {
               const simulator = new ModelSimulate(propStr as keyof JsonDbData)
               const simMethod = (simulator as any)[modelProp]
               if (typeof simMethod === "function") {
@@ -1708,17 +1787,11 @@ export const prisma = new Proxy(rawPrisma, {
               isDbOfflineCached = false
               return result
             } catch (err: any) {
-              const isConnectionError = 
-                err.message?.includes("P1001") || 
-                err.message?.includes("Can't reach database") ||
-                err.message?.includes("connection") ||
-                err.code === "P1001"
-
-              if (isConnectionError) {
+              if (isPrismaOfflineError(err)) {
                 isDbOfflineCached = true
                 lastOfflineCheck = Date.now()
                 console.warn(
-                  `[DEVRESILIENCE] Veritabanı çevrimdışı (P1001). ` +
+                  `[DEVRESILIENCE] Veritabanı çevrimdışı (${err?.code || err?.name || "P1001"}). ` +
                   `'${propStr}.${String(modelProp)}' isteği otomatik olarak yerel JSON DB'ye yönlendirildi.`
                 )
                 const simulator = new ModelSimulate(propStr as keyof JsonDbData)
@@ -1742,7 +1815,7 @@ export const prisma = new Proxy(rawPrisma, {
           const res = originalValue.apply(target, args)
           if (res && typeof res.then === "function") {
             return res.catch((err: any) => {
-              if (err.message?.includes("P1001") || err.message?.includes("Can't reach database")) {
+              if (isPrismaOfflineError(err)) {
                 console.warn("[DEVRESILIENCE] Ham Prisma raw sorgusu veritabanı kapalıyken yoksayıldı veya simüle edildi.")
                 return []
               }
@@ -1751,7 +1824,7 @@ export const prisma = new Proxy(rawPrisma, {
           }
           return res
         } catch (err: any) {
-          if (err.message?.includes("P1001") || err.message?.includes("Can't reach database")) {
+          if (isPrismaOfflineError(err)) {
             return []
           }
           throw err
