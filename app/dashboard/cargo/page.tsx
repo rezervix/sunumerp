@@ -252,15 +252,26 @@ export default function CargoPage() {
                     <h1 className="text-2xl lg:text-3xl font-semibold text-white mb-1 tracking-tight">Kargo ve Kurye</h1>
                     <p className="text-sm text-zinc-400">Kargo gönderileri ve fiziksel dosya/evrak teslimatları</p>
                 </div>
-                {(hasPermission("lojistik_filo", "read") || isSuperAdmin) && (
-                    <Link
-                        href="/dashboard/filo"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-emerald-300 transition w-fit"
-                    >
-                        <span className="material-symbols-outlined text-[16px]">local_shipping</span>
-                        Araç &amp; Şoför Filo Yönetimi →
-                    </Link>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                    {(hasPermission("lojistik_sevkiyat_rota", "read") || isSuperAdmin) && (
+                        <Link
+                            href="/dashboard/sevkiyat"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-xs font-medium text-emerald-300 transition w-fit"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">alt_route</span>
+                            Sefer &amp; Rota Planlama →
+                        </Link>
+                    )}
+                    {(hasPermission("lojistik_filo", "read") || isSuperAdmin) && (
+                        <Link
+                            href="/dashboard/filo"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-emerald-300 transition w-fit"
+                        >
+                            <span className="material-symbols-outlined text-[16px]">local_shipping</span>
+                            Araç &amp; Şoför Filo Yönetimi →
+                        </Link>
+                    )}
+                </div>
             </StaggerItem>
 
             {/* Borderless KPI Strip */}

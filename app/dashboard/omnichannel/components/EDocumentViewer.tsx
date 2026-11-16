@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   FileText,
   QrCode,
@@ -23,6 +24,7 @@ interface EDocument {
   documentType: string;
   profileId: string;
   relatedOrderNo?: string | null;
+  shipmentTripId?: string | null;
   receiverTitle: string;
   receiverVknTckn: string;
   receiverTaxOffice?: string | null;
@@ -160,7 +162,24 @@ export function EDocumentViewer({
                             {doc.vehiclePlate}
                           </span>
                           <div className="text-[11px] text-zinc-500 mt-0.5">{doc.driverName}</div>
+                          {doc.shipmentTripId && (
+                            <Link
+                              href={`/dashboard/sevkiyat?tripId=${encodeURIComponent(doc.shipmentTripId)}`}
+                              className="inline-flex items-center gap-1 text-[10px] text-emerald-300 hover:underline mt-0.5"
+                            >
+                              <Truck className="w-3 h-3" />
+                              Sefer Detayı →
+                            </Link>
+                          )}
                         </div>
+                      ) : doc.shipmentTripId ? (
+                        <Link
+                          href={`/dashboard/sevkiyat?tripId=${encodeURIComponent(doc.shipmentTripId)}`}
+                          className="inline-flex items-center gap-1 text-xs text-emerald-300 hover:underline"
+                        >
+                          <Truck className="w-3.5 h-3.5" />
+                          Sefer Planını Gör
+                        </Link>
                       ) : (
                         <span className="text-zinc-600">-</span>
                       )}

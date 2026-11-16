@@ -234,6 +234,7 @@ export function isAnyLogisticsFeatureEnabled(
  * böylece henüz fazı gelmemiş (404 / yarım) ekran linki kullanıcıya asla görünmez.
  */
 export const IMPLEMENTED_LOGISTICS_FLEET_HREFS: readonly string[] = [
+  "/dashboard/sevkiyat",
   "/dashboard/filo",
 ] as const
 

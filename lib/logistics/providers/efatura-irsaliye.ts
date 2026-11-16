@@ -125,23 +125,40 @@ export class DemoDbEDocumentProvider implements ILogisticsEDocumentProvider {
 
 export class GibIntegratorEDocumentProvider implements ILogisticsEDocumentProvider {
   readonly adapterId = "lojistik-gib-external-rest"
-  readonly displayName = "Harici GİB Özel Entegratör (REST)"
+  readonly displayName = "Harici GİB Özel Entegratör (REST / UBL-TR)"
   readonly mode = "external-rest" as const
 
-  constructor(private readonly apiUrl: string) {}
+  constructor(
+    private readonly apiUrl: string,
+    private readonly apiKey?: string,
+    private readonly integratorName?: string
+  ) {}
+
+  private buildHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { "Content-Type": "application/json" }
+    const key = this.apiKey || process.env.LOJISTIK_EDOC_API_KEY
+    if (key) {
+      headers["Authorization"] = `Bearer ${key}`
+      headers["X-Api-Key"] = key
+    }
+    if (this.integratorName) {
+      headers["X-GIB-Integrator"] = this.integratorName
+    }
+    return headers
+  }
 
   async submitEDocument(
     req: EDokumanGonderimIstegi
   ): Promise<EDokumanGonderimSonucu> {
     if (!this.apiUrl || !this.apiUrl.startsWith("http")) {
       throw new Error(
-        "Harici GİB entegratör URL yapılandırması tanımlı değil (SystemConfig -> eDocumentApiUrl)."
+        "Harici GİB entegratör URL yapılandırması tanımlı değil (SystemConfig -> eDocumentApiUrl / LOJISTIK_EDOC_API_URL)."
       )
     }
 
     const res = await fetch(`${this.apiUrl.replace(/\/$/, "")}/documents/submit`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: this.buildHeaders(),
       body: JSON.stringify(req),
     })
     if (!res.ok) {
@@ -154,7 +171,9 @@ export class GibIntegratorEDocumentProvider implements ILogisticsEDocumentProvid
     if (!this.apiUrl || !this.apiUrl.startsWith("http")) {
       throw new Error("Harici GİB entegratör URL yapılandırması eksik.")
     }
-    const res = await fetch(`${this.apiUrl.replace(/\/$/, "")}/documents/${ettnUuid}/status`)
+    const res = await fetch(`${this.apiUrl.replace(/\/$/, "")}/documents/${ettnUuid}/status`, {
+      headers: this.buildHeaders(),
+    })
     if (!res.ok) {
       throw new Error(`Harici GİB durum sorgu hatası: HTTP ${res.status}`)
     }

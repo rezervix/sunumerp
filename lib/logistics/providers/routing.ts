@@ -263,3 +263,102 @@ export class ExternalRoutingProvider implements ILogisticsRoutingProvider {
     }
   }
 }
+
+export type DistanceMatrixEngineType = "LOCAL_COORDINATE" | "OSRM" | "GOOGLE_ROUTES" | "HERE" | "TOMTOM"
+
+export const DISTANCE_MATRIX_ADAPTER_INFO: Record<
+  DistanceMatrixEngineType,
+  { label: string; requiresKeyOrServer: boolean; envVars: string[] }
+> = {
+  LOCAL_COORDINATE: {
+    label: "Koordinat Tabanlı Yerel Mesafe/Süre Matrisi (Varsayılan)",
+    requiresKeyOrServer: false,
+    envVars: [],
+  },
+  OSRM: {
+    label: "OSRM Open Source Routing Machine (/table/v1/driving)",
+    requiresKeyOrServer: true,
+    envVars: ["LOJISTIK_ROUTING_API_URL"],
+  },
+  GOOGLE_ROUTES: {
+    label: "Google Routes / Distance Matrix API",
+    requiresKeyOrServer: true,
+    envVars: ["LOJISTIK_ROUTING_API_KEY"],
+  },
+  HERE: {
+    label: "HERE Matrix Routing v8",
+    requiresKeyOrServer: true,
+    envVars: ["LOJISTIK_ROUTING_API_KEY"],
+  },
+  TOMTOM: {
+    label: "TomTom Matrix Routing v2",
+    requiresKeyOrServer: true,
+    envVars: ["LOJISTIK_ROUTING_API_KEY"],
+  },
+}
+
+/**
+ * Mesafe/süre matrisi sağlayıcısı adaptörü:
+ * Yapılandırılmış harici sağlayıcı yoksa veya anahtar tanımlı değilse
+ * uygulama içi Haversine koordinat matrisine düşer.
+ */
+export async function resolveDistanceDurationMatrixWithAdapter(
+  origin: GeoCoordinate,
+  stops: Array<{ id: string; lat: number; lng: number; weightKg?: number; volumeM3?: number; palletCount?: number; requiresColdChain?: boolean; timeWindowStart?: string | null; timeWindowEnd?: string | null; serviceMinutes?: number; priority?: number }>,
+  options?: { avgSpeedKmh?: number; urbanDetourFactor?: number }
+) {
+  const { buildLocalCoordinateMatrix } = await import("../dispatch/cvrptwSolver")
+  const fallback = buildLocalCoordinateMatrix(
+    { label: origin.label || "Depo", lat: origin.lat, lng: origin.lng },
+    stops,
+    options
+  )
+
+  const engine = String(process.env.LOJISTIK_ROUTING_ENGINE || "LOCAL_COORDINATE").toUpperCase() as DistanceMatrixEngineType
+  const apiUrl = process.env.LOJISTIK_ROUTING_API_URL?.trim()
+  const apiKey = process.env.LOJISTIK_ROUTING_API_KEY?.trim()
+
+  if (engine === "LOCAL_COORDINATE" || stops.length === 0) {
+    return fallback
+  }
+
+  // OSRM Table API örneği (yalnızca URL yapılandırılmışsa canlı istek atılır)
+  if (engine === "OSRM" && apiUrl && apiUrl.startsWith("http")) {
+    try {
+      const coords = [`${origin.lng},${origin.lat}`, ...stops.map((s) => `${s.lng},${s.lat}`)].join(";")
+      const res = await fetch(
+        `${apiUrl.replace(/\/$/, "")}/table/v1/driving/${coords}?annotations=distance,duration`,
+        { signal: AbortSignal.timeout(4500) }
+      )
+      if (res.ok) {
+        const data = await res.json()
+        if (Array.isArray(data?.distances) && Array.isArray(data?.durations)) {
+          const n = fallback.size
+          const distancesKm = new Float64Array(n * n)
+          const durationsMin = new Float64Array(n * n)
+          for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+              const distM = Number(data.distances[i]?.[j])
+              const durS = Number(data.durations[i]?.[j])
+              distancesKm[i * n + j] = Number.isFinite(distM) ? Math.round((distM / 1000) * 100) / 100 : fallback.distancesKm[i * n + j]
+              durationsMin[i * n + j] = Number.isFinite(durS) ? Math.max(1, Math.round(durS / 60)) : fallback.durationsMin[i * n + j]
+            }
+          }
+          return {
+            size: n,
+            distancesKm,
+            durationsMin,
+            providerMode: "external-rest",
+            solverLabel: "OSRM Mesafe/Süre Matrisi + CVRPTW",
+          }
+        }
+      }
+    } catch {
+      return fallback
+    }
+  }
+
+  // Google/HERE/TomTom profilleri anahtar olmadan güvenli fallback döner
+  if (!apiKey) return fallback
+  return fallback
+}

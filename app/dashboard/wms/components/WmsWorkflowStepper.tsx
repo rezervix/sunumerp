@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
+import Link from "next/link"
 import { motion } from "framer-motion"
 import {
   Truck,
@@ -666,7 +667,17 @@ export function WmsWorkflowStepper({
                     {activeStage === "PACKING" && "Sevkiyat tamamlanır"}
                   </span>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(activeStage === "WAVE_PICK" || activeStage === "PACKING") && (
+                      <Link
+                        href={`/dashboard/sevkiyat?addSourceType=WMS_WAVE&addSourceId=${encodeURIComponent(task.id)}`}
+                        className="h-8 px-3 inline-flex items-center gap-1.5 text-xs font-medium border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 rounded-full transition"
+                      >
+                        <Truck className="h-3.5 w-3.5" />
+                        <span>Sefer Planına Aktar</span>
+                      </Link>
+                    )}
+
                     <Button
                       size="sm"
                       variant="outline"

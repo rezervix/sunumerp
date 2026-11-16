@@ -69,6 +69,8 @@ interface BranchOrder {
   orderDate: string
   customerId?: string
   customer?: { id: string; name: string; company?: string }
+  shipmentTripId?: string | null
+  trackingToken?: string | null
 }
 
 interface FileData {
@@ -604,6 +606,28 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-5 lg:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
+                          {order.trackingToken ? (
+                            <Link
+                              href={`/takip/${order.trackingToken}`}
+                              target="_blank"
+                              className="p-2 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
+                              title="Canlı Müşteri Takip Linki"
+                            >
+                              <span className="material-symbols-outlined text-[20px]">share_location</span>
+                            </Link>
+                          ) : (
+                            <Link
+                              href={
+                                order.shipmentTripId
+                                  ? `/dashboard/sevkiyat?tripId=${encodeURIComponent(order.shipmentTripId)}`
+                                  : `/dashboard/sevkiyat?addSourceType=ERP_ORDER&addSourceId=${encodeURIComponent(order.id)}`
+                              }
+                              className="p-2 text-zinc-400 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors flex items-center justify-center"
+                              title={order.shipmentTripId ? "Sefer Planını Gör" : "Sefer Planına Ekle"}
+                            >
+                              <span className="material-symbols-outlined text-[20px]">alt_route</span>
+                            </Link>
+                          )}
                           <button
                             onClick={() => handleOpenQuickRma(order)}
                             className="p-2 text-zinc-400 hover:text-amber-300 hover:bg-amber-500/15 rounded-lg transition-colors flex items-center justify-center"

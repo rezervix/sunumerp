@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   ShoppingBag,
   Split,
@@ -9,6 +10,7 @@ import {
   Sparkles,
   User,
   MapPin,
+  Truck,
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -44,6 +46,8 @@ interface OmnichannelOrder {
   backorderQty?: number;
   eInvoiceNo?: string | null;
   eWaybillNo?: string | null;
+  shipmentTripId?: string | null;
+  trackingToken?: string | null;
   orderDate: string;
   shipmentLines?: OrderLine[];
 }
@@ -316,7 +320,29 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                   </div>
 
                   {ord.status !== 'DELIVERED' && (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {ord.trackingToken ? (
+                        <Link
+                          href={`/takip/${ord.trackingToken}`}
+                          target="_blank"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 rounded-full text-xs font-medium transition"
+                        >
+                          <MapPin className="w-3.5 h-3.5" />
+                          Müşteri Takip
+                        </Link>
+                      ) : (
+                        <Link
+                          href={
+                            ord.shipmentTripId
+                              ? `/dashboard/sevkiyat?tripId=${encodeURIComponent(ord.shipmentTripId)}`
+                              : `/dashboard/sevkiyat?addSourceType=OMNICHANNEL_ORDER&addSourceId=${encodeURIComponent(ord.id)}`
+                          }
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/25 rounded-full text-xs font-medium transition"
+                        >
+                          <Truck className="w-3.5 h-3.5" />
+                          {ord.shipmentTripId ? 'Sefer Planı' : 'Sefere Ekle'}
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           setSplitModalOrder(ord);
