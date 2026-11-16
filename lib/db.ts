@@ -248,6 +248,11 @@ interface JsonDbData {
   lojistikVehicleTelematicMap?: any[]
   lojistikTelemetryEvent?: any[]
   lojistikTelematicErrorLog?: any[]
+  lojistikShipmentTrip?: any[]
+  lojistikShipmentStop?: any[]
+  lojistikDeliveryProof?: any[]
+  lojistikRouteOptimizationJob?: any[]
+  lojistikTrackingEvent?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -2000,7 +2005,12 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikTelematicConnection",
       "lojistikVehicleTelematicMap",
       "lojistikTelemetryEvent",
-      "lojistikTelematicErrorLog"
+      "lojistikTelematicErrorLog",
+      "lojistikShipmentTrip",
+      "lojistikShipmentStop",
+      "lojistikDeliveryProof",
+      "lojistikRouteOptimizationJob",
+      "lojistikTrackingEvent"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

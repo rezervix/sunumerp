@@ -260,6 +260,8 @@ model Order {
   companyName   String?
   customerPhone String?
   files         String?  // JSON array of file URLs
+  shipmentTripId String?
+  trackingToken String?
   orderDate     DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -2600,6 +2602,15 @@ model OmnichannelOrder {
   dropshipSupplier    String?
   eInvoiceNo          String?
   eWaybillNo          String?
+  shipmentTripId      String?
+  trackingToken       String?
+  shippingLat         Float?
+  shippingLng         Float?
+  timeWindowStart     String?
+  timeWindowEnd       String?
+  estimatedWeightKg   Float?
+  estimatedVolumeM3   Float?
+  palletCount         Int?
   orderDate           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
@@ -2733,6 +2744,8 @@ model EDocumentRecord {
   driverId          String?
   driverName        String?
   driverTckn        String?
+  shipmentTripId    String?
+  shipmentStopId    String?
   totalNetAmount    Float    @default(0)
   totalVatAmount    Float    @default(0)
   totalGrossAmount  Float    @default(0)
@@ -5144,6 +5157,176 @@ model LojistikTelematicErrorLog {
 
   @@index([providerCode, createdAt])
 }
+
+// ── Lojistik Faz 6: Sevkiyat, Sefer Planlama, CVRPTW Rota, e-POD & Müşteri Takip ──
+
+model LojistikShipmentTrip {
+  id                            String    @id @default(uuid())
+  tripNumber                    String    @unique
+  title                         String
+  branchId                      String    @default("local-debug-branch")
+  originWarehouseId             String
+  originLabel                   String
+  originLat                     Float
+  originLng                     Float
+  vehicleId                     String?
+  driverId                      String?
+  vehiclePlate                  String?
+  driverName                    String?
+  plannedDateKey                String
+  plannedDepartureAt            DateTime
+  actualDepartureAt             DateTime?
+  plannedCompletionAt           DateTime?
+  actualCompletionAt            DateTime?
+  status                        String    @default("TASLAK") // TASLAK, ONAYLANDI, YUKLENIYOR, YOLDA, TESLIMAT_SURUYOR, TAMAMLANDI, IPTAL
+  totalWeightKg                 Float     @default(0)
+  totalVolumeM3                 Float     @default(0)
+  totalPallets                  Int       @default(0)
+  capacityLoadPct               Float     @default(0)
+  baselineUnoptimizedDistanceKm Float     @default(0)
+  plannedDistanceKm             Float     @default(0)
+  actualDistanceKm              Float     @default(0)
+  plannedDurationMin            Int       @default(0)
+  actualDurationMin             Int       @default(0)
+  routeProviderMode             String    @default("local-solver")
+  routeSolverName               String?
+  eWaybillId                    String?
+  eWaybillNo                    String?
+  eWaybillEttn                  String?
+  replanReason                  String?
+  replanHistoryJson             String?
+  polylineJson                  String?
+  notes                         String?
+  createdBy                     String?
+  approvedBy                    String?
+  approvedAt                    DateTime?
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @updatedAt
+
+  stops      LojistikShipmentStop[]
+  proofs     LojistikDeliveryProof[]
+  optJobs    LojistikRouteOptimizationJob[]
+
+  @@index([branchId, status])
+  @@index([plannedDateKey])
+  @@index([vehicleId])
+  @@index([driverId])
+}
+
+model LojistikShipmentStop {
+  id                  String    @id @default(uuid())
+  tripId              String
+  sequenceNo          Int       @default(1)
+  sourceType          String    @default("OMNICHANNEL_ORDER") // OMNICHANNEL_ORDER, ERP_ORDER, WMS_TRANSFER, WMS_WAVE, MANUAL
+  sourceId            String?
+  sourceRefNo         String?
+  customerId          String?
+  customerName        String
+  contactPhone        String?
+  addressText         String
+  cityDistrict        String?
+  lat                 Float
+  lng                 Float
+  timeWindowStart     String?
+  timeWindowEnd       String?
+  serviceMinutes      Int       @default(10)
+  weightKg            Float     @default(0)
+  volumeM3            Float     @default(0)
+  palletCount         Int       @default(0)
+  requiresColdChain   Boolean   @default(false)
+  priority            Int       @default(1)
+  plannedEtaAt        DateTime?
+  actualArrivalAt     DateTime?
+  actualDepartureAt   DateTime?
+  legDistanceKm       Float     @default(0)
+  cumulativeDistanceKm Float    @default(0)
+  delayMinutes        Int       @default(0)
+  status              String    @default("BEKLIYOR") // BEKLIYOR, YOLDA, VARISTA, TESLIM_EDILDI, KISMI_TESLIM, TESLIM_EDILEMEDI
+  failureReasonCode   String?
+  failureReasonNote   String?
+  driverNote          String?
+  trackingToken       String    @unique
+  trackingExpiresAt   DateTime
+  reassignedFromTripId String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  trip   LojistikShipmentTrip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  proofs LojistikDeliveryProof[]
+
+  @@index([tripId, sequenceNo])
+  @@index([status])
+  @@index([sourceType, sourceId])
+}
+
+model LojistikDeliveryProof {
+  id                 String   @id @default(uuid())
+  tripId             String
+  stopId             String
+  captureMethod      String   @default("IMZA_CIZIM") // IMZA_CIZIM, FOTOGRAF, QR_KOD, PIN_ONAY
+  recipientName      String
+  recipientRelation  String   @default("ALICI") // ALICI, GUVENLIK, RESEPSIYON, KOMSU, DIGER
+  note               String?
+  signatureFileUrl   String?
+  photoFileUrlsJson  String?
+  checksumSha256     String?
+  capturedLat        Float?
+  capturedLng        Float?
+  capturedAt         DateTime @default(now())
+  capturedByDriverId String?
+  createdAt          DateTime @default(now())
+
+  trip LojistikShipmentTrip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  stop LojistikShipmentStop @relation(fields: [stopId], references: [id], onDelete: Cascade)
+
+  @@index([tripId])
+  @@index([stopId])
+}
+
+model LojistikRouteOptimizationJob {
+  id                   String    @id @default(uuid())
+  tripId               String?
+  jobStatus            String    @default("QUEUED") // QUEUED, INITIAL_SOLVING, IMPROVING, COMPLETED, FAILED
+  stageLabel           String    @default("Sırada")
+  progressPct          Int       @default(0)
+  stopCount            Int       @default(0)
+  vehicleCount         Int       @default(1)
+  providerMode         String    @default("local-solver")
+  solverName           String?
+  unoptimizedDistanceKm Float    @default(0)
+  optimizedDistanceKm  Float     @default(0)
+  timeWindowViolations Int       @default(0)
+  capacityOverflowPct  Float     @default(0)
+  durationMs           Int       @default(0)
+  resultJson           String?
+  errorMessage         String?
+  startedAt            DateTime  @default(now())
+  completedAt          DateTime?
+  createdAt            DateTime  @default(now())
+
+  trip LojistikShipmentTrip? @relation(fields: [tripId], references: [id], onDelete: SetNull)
+
+  @@index([tripId, createdAt])
+  @@index([jobStatus])
+}
+
+model LojistikTrackingEvent {
+  id           String   @id @default(uuid())
+  tripId       String
+  stopId       String?
+  eventType    String   // TRIP_CREATED, TRIP_APPROVED, ROUTE_OPTIMIZED, STOP_REORDERED, TRIP_REPLANNED, EWAYBILL_ISSUED, STOP_ARRIVED, STOP_DELIVERED, STOP_FAILED, POD_CAPTURED
+  actorUserId  String?
+  actorName    String?
+  message      String
+  lat          Float?
+  lng          Float?
+  metadataJson String?
+  createdAt    DateTime @default(now())
+
+  @@index([tripId, createdAt])
+  @@index([stopId])
+}
+
 
 
 
