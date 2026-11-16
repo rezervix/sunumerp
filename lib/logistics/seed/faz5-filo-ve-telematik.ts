@@ -314,7 +314,7 @@ export const faz5FleetAndTelematicsSeedModule: LogisticsSeedModule = {
         lastTelemetryProvider: v.lastTelemetryProvider ?? "DEMO_DB",
         assignedDriverId: v.assignedDriverId,
         notes: v.notes ?? null,
-        isActive: v.status !== "OUT_OF_SERVICE",
+        isActive: true,
         createdAt: createdAtBase,
         updatedAt: hoursAgoIso(0.5),
       })

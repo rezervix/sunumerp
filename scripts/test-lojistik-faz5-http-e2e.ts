@@ -191,18 +191,26 @@ async function run() {
       })
     } else if (mode === "demo-off") {
       await check("Demo OFF: Gerçek login + FEATURE_LOJISTIK_FILO durumu & uretim_bakim=false bağımsızlık + 403 doğrulaması", async () => {
-        const [demoAuthRes, loginRes] = await Promise.all([
-          fetch(`${baseUrl}/api/auth/demo`, { method: "POST" }),
+        const [sysRes, portalDemoRes, loginRes] = await Promise.all([
+          fetch(`${baseUrl}/api/system-config`),
+          fetch(`${baseUrl}/api/supplier-portal/demo`),
           fetch(`${baseUrl}/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               username: "admin",
-              password: process.env.DEMO_ADMIN_PASS || "admin123",
+              password: process.env.DEMO_ADMIN_PASS || "demo123",
             }),
           }),
         ])
-        assert.equal(demoAuthRes.status, 403)
+        assert.equal(sysRes.status, 200)
+        const sysJson = await sysRes.json()
+        assert.equal(sysJson.logisticsDemoMode, false)
+
+        assert.equal(portalDemoRes.status, 403)
+        const portalDemoJson = await portalDemoRes.json()
+        assert.equal(portalDemoJson.code, "DEMO_MODE_DISABLED")
+
         assert.equal(loginRes.status, 200)
         const loginJson = await loginRes.json()
         assert.ok(loginJson.token)
@@ -232,7 +240,12 @@ async function run() {
           headers: { "Content-Type": "application/json", "X-Telematics-Signature": demoSig },
           body: raw,
         })
-        assert.equal(res.status, 401, "Demo OFF iken demo telematik sırrı reddedilmelidir")
+        const expectedStatus = process.env.EXPECT_FEATURE_ACTIVE === "true" ? 401 : 403
+        assert.equal(
+          res.status,
+          expectedStatus,
+          `Demo OFF iken beklenen telematik webhook kodu ${expectedStatus}, gelen ${res.status}`
+        )
       })
     }
   } finally {
