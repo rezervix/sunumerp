@@ -267,8 +267,10 @@ export async function lookupOrderForRma(params: {
     const retMap = returnedQtyBySku(omnOrder.orderNumber)
     const edoc = edocs.find(
       (e: any) =>
-        e.relatedOrderNo === omnOrder.orderNumber ||
-        e.documentNo === omnOrder.eInvoiceNo
+        e.profileId !== "IADE" &&
+        !String(e.documentNo || "").startsWith("IAD") &&
+        (e.relatedOrderNo === omnOrder.orderNumber ||
+          e.documentNo === omnOrder.eInvoiceNo)
     )
     const deliveredAt = edoc?.dispatchDate || omnOrder.updatedAt || omnOrder.orderDate
     const lines = await Promise.all(
@@ -329,7 +331,12 @@ export async function lookupOrderForRma(params: {
   if (erpOrder) {
     const orderNo = erpOrder.orderNumber || erpOrder.id
     const retMap = returnedQtyBySku(orderNo)
-    const edoc = edocs.find((e: any) => e.relatedOrderNo === orderNo)
+    const edoc = edocs.find(
+      (e: any) =>
+        e.profileId !== "IADE" &&
+        !String(e.documentNo || "").startsWith("IAD") &&
+        e.relatedOrderNo === orderNo
+    )
     const deliveredAt = edoc?.dispatchDate || erpOrder.orderDate || erpOrder.createdAt
     const defaultItem = items[0] ?? null
     const soldQty = Math.max(1, Number(erpOrder.quantity || 1))
