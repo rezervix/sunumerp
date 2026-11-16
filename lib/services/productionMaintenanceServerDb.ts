@@ -1144,8 +1144,8 @@ export async function getMaintenanceDashboardMetrics() {
 
   // 1. MTBF ve MTTR Hesaplaması
   const totalOperatingHours = assets.reduce((acc: number, a: any) => acc + (a.operatingHours || 0), 0)
-  const breakdownOrders = workOrders.filter((w: any) => w.type === "BREAKDOWN")
-  const totalDowntimeMinutes = workOrders.reduce((acc: number, w: any) => acc + (w.downtimeMinutes || 0), 0)
+  const breakdownOrders = workOrders.filter((w: any) => (w.orderType ?? w.type) === "BREAKDOWN")
+  const totalDowntimeMinutes = workOrders.reduce((acc: number, w: any) => acc + (w.totalDowntimeMinutes ?? w.downtimeMinutes ?? 0), 0)
 
   const mtbf = calculateMTBF(totalOperatingHours, breakdownOrders.length)
   const mttr = calculateMTTR(totalDowntimeMinutes, breakdownOrders.length)
