@@ -2408,6 +2408,18 @@ model Supplier {
   supportsDropship    Boolean  @default(false)
   rating              Float    @default(4.8)
   isActive            Boolean  @default(true)
+  glnNumber           String?
+  category            String?
+  criticalityLevel    String   @default("ORTA")
+  approvalStatus      String   @default("ONAYLI")
+  blacklistedReason   String?
+  paymentTermsLabel   String?
+  taxOffice           String?
+  iban                String?
+  notes               String?
+  scorecardScore      Float?
+  scorecardTier       String?
+  isAlternativeReady  Boolean  @default(true)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
@@ -2429,6 +2441,10 @@ model ReorderPolicy {
   calculatedRop         Float    @default(65)
   economicOrderQty      Float    @default(150)
   minOrderQtyMoq        Float    @default(25)
+  annualDemand          Float?
+  orderingCostTry       Float?
+  holdingCostTry        Float?
+  unitCostTry           Float?
   autoCreatePo          Boolean  @default(true)
   lastCalculatedAt      DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -2459,24 +2475,34 @@ model LowStockAlert {
 }
 
 model PurchaseRequisition {
-  id            String    @id @default(uuid())
-  reqNumber     String    @unique
-  warehouseId   String
-  supplierId    String
-  supplierName  String
-  triggerSource String    @default("AUTO_ROP_ENGINE")
-  status        String    @default("PENDING_APPROVAL")
-  priority      String    @default("HIGH")
-  totalAmount   Float     @default(0)
-  currency      String    @default("TRY")
-  expectedDate  DateTime?
-  linesJson     String?
-  approvedBy    String?
-  notes         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                        String    @id @default(uuid())
+  reqNumber                 String    @unique
+  warehouseId               String
+  supplierId                String
+  supplierName              String
+  triggerSource             String    @default("AUTO_ROP_ENGINE")
+  status                    String    @default("PENDING_APPROVAL")
+  priority                  String    @default("HIGH")
+  totalAmount               Float     @default(0)
+  currency                  String    @default("TRY")
+  expectedDate              DateTime?
+  linesJson                 String?
+  approvedBy                String?
+  notes                     String?
+  poNumber                  String?
+  rfqId                     String?
+  rfqNo                     String?
+  approvalTier              Int       @default(1)
+  requiredApprovalTier      Int       @default(1)
+  dispatchedAt              DateTime?
+  dispatchedChannel         String?
+  supplierConfirmedStatus   String?
+  supplierResponseNote      String?
+  promisedDeliveryDate      DateTime?
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
 
-  lines         PurchaseRequisitionLine[]
+  lines                     PurchaseRequisitionLine[]
 }
 
 model PurchaseRequisitionLine {
@@ -4184,6 +4210,320 @@ model LojistikRfidTagEvent {
   @@index([epcCode, scannedAt])
   @@index([readerId, scannedAt])
   @@index([idempotencyKey])
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LOJİSTİK & TEDARİKÇİ YÖNETİMİ (FAZ 3): ADDITIVE LOJISTIK* MODELLERİ
+// ═══════════════════════════════════════════════════════════════════════════════
+
+model LojistikSupplierItemLink {
+  id           String    @id @default(uuid())
+  supplierId   String
+  itemId       String
+  supplierSku  String?
+  unitCost     Float     @default(0)
+  currency     String    @default("TRY")
+  moq          Float     @default(1)
+  leadTimeDays Int       @default(3)
+  isPrimary    Boolean   @default(false)
+  isActive     Boolean   @default(true)
+  lastQuotedAt DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([supplierId, itemId])
+  @@index([itemId])
+  @@index([supplierId])
+}
+
+model LojistikSupplierDocument {
+  id            String    @id @default(uuid())
+  supplierId    String
+  docType       String    // SOZLESME, ISO_KALITE, VERGI_LEVHA, GIDA_TARIM, FIYAT_LISTESI, DIGER
+  title         String
+  fileName      String
+  fileUrl       String
+  mimeType      String?
+  fileSizeBytes Int?
+  validFrom     DateTime?
+  expiresAt     DateTime?
+  status        String    @default("GECERLI") // GECERLI, YENILEME_YAKIN, SURESI_DOLMUS, INCELEMEDE
+  uploadedBy    String
+  uploadedVia   String    @default("ERP") // ERP, PORTAL
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([supplierId, status])
+}
+
+model LojistikRfq {
+  id                String    @id @default(uuid())
+  rfqNumber         String    @unique
+  title             String
+  warehouseId       String
+  status            String    @default("TEKLIFE_ACIK") // TASLAK, TEKLIFE_ACIK, DEGERLENDIRMEDE, SONUCLANDI, IPTAL
+  dueDate           DateTime
+  currency          String    @default("TRY")
+  invitedSuppliers  String?   // JSON string: string[] of supplierIds
+  awardedSupplierId String?
+  awardedQuoteId    String?
+  convertedPoNo     String?
+  notes             String?
+  createdBy         String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  items             LojistikRfqItem[]
+  quotes            LojistikRfqQuote[]
+
+  @@index([status, dueDate])
+}
+
+model LojistikRfqItem {
+  id              String      @id @default(uuid())
+  rfqId           String
+  itemId          String
+  sku             String
+  itemName        String
+  requestedQty    Float
+  unit            String      @default("Adet")
+  targetUnitPrice Float?
+  notes           String?
+
+  rfq             LojistikRfq @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  quoteLines      LojistikRfqQuoteLine[]
+
+  @@index([rfqId])
+  @@index([itemId])
+}
+
+model LojistikRfqQuote {
+  id                String    @id @default(uuid())
+  rfqId             String
+  supplierId        String
+  quoteNumber       String    @unique
+  status            String    @default("TEKLIF_VERILDI") // TEKLIF_VERILDI, KAZANDI, ELENDI, GERI_CEKILDI
+  leadTimeDays      Int       @default(3)
+  validityDate      DateTime?
+  paymentTerms      String    @default("30 Gün Vadeli")
+  shippingCost      Float     @default(0)
+  totalQuotedAmount Float     @default(0)
+  tcoTotal          Float     @default(0)
+  submittedBy       String?
+  submittedVia      String    @default("ERP") // ERP, PORTAL
+  notes             String?
+  submittedAt       DateTime  @default(now())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  rfq               LojistikRfq @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  lines             LojistikRfqQuoteLine[]
+
+  @@unique([rfqId, supplierId])
+  @@index([supplierId])
+}
+
+model LojistikRfqQuoteLine {
+  id           String           @id @default(uuid())
+  quoteId      String
+  rfqItemId    String
+  itemId       String
+  unitPrice    Float
+  offeredQty   Float
+  leadTimeDays Int?
+  lineTotal    Float
+  notes        String?
+
+  quote        LojistikRfqQuote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  rfqItem      LojistikRfqItem  @relation(fields: [rfqItemId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@index([rfqItemId])
+}
+
+model LojistikPurchaseOrder {
+  id                      String    @id @default(uuid())
+  poNumber                String    @unique
+  supplierId              String
+  warehouseId             String
+  sourceType              String    @default("MANUAL") // AUTO_ROP, RFQ_AWARD, MANUAL, PR_CONVERT
+  sourceRefNo             String?
+  rfqId                   String?
+  requisitionId           String?
+  status                  String    @default("ONAY_BEKLIYOR") // TASLAK, ONAY_BEKLIYOR, TEDARIKCIYE_ILETILDI, TEDARIKCI_ONAYLADI, KISMI_ONAY, RED_BAYRAK, KISMI_TESLIM, TESLIM_ALINDI, TAMAMLANDI, IPTAL
+  priority                String    @default("NORMAL")
+  currentApprovalStep     Int       @default(1)
+  requiredApprovalSteps   Int       @default(1)
+  agreedTotalAmount       Float     @default(0)
+  baselineTotalAmount     Float     @default(0)
+  currency                String    @default("TRY")
+  paymentTerms            String    @default("30 Gün Vadeli")
+  expectedDeliveryDate    DateTime
+  actualDeliveryDate      DateTime?
+  promisedDeliveryDate    DateTime?
+  dispatchedAt            DateTime?
+  dispatchedChannel       String?   // PORTAL, EMAIL, EDI
+  supplierResponseStatus  String    @default("BEKLIYOR") // BEKLIYOR, ONAYLANDI, KISMI_ONAY, RED_BAYRAK
+  supplierResponseNote    String?
+  redFlagReason           String?
+  totalOrderedQty         Float     @default(0)
+  totalReceivedQty        Float     @default(0)
+  totalRejectedQty        Float     @default(0)
+  createdBy               String?
+  notes                   String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  lines                   LojistikPurchaseOrderLine[]
+  approvals               LojistikPoApprovalStep[]
+
+  @@index([supplierId, status])
+  @@index([warehouseId, status])
+  @@index([expectedDeliveryDate])
+}
+
+model LojistikPurchaseOrderLine {
+  id               String                @id @default(uuid())
+  poId             String
+  itemId           String
+  sku              String
+  itemName         String
+  orderedQty       Float
+  receivedQty      Float                 @default(0)
+  rejectedQty      Float                 @default(0)
+  unit             String                @default("Adet")
+  agreedUnitPrice  Float
+  baselineUnitCost Float                 @default(0)
+  lineTotal        Float
+  notes            String?
+
+  po               LojistikPurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+
+  @@index([poId])
+  @@index([itemId])
+}
+
+model LojistikPoApprovalStep {
+  id           String                @id @default(uuid())
+  poId         String
+  stepOrder    Int
+  approverRole String
+  thresholdMin Float                 @default(0)
+  status       String                @default("BEKLIYOR") // BEKLIYOR, ONAYLANDI, REDDEDILDI
+  approvedBy   String?
+  decisionNote String?
+  decidedAt    DateTime?
+  createdAt    DateTime              @default(now())
+
+  po           LojistikPurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+
+  @@index([poId, stepOrder])
+}
+
+model LojistikSupplierAsn {
+  id                String    @id @default(uuid())
+  asnNumber         String    @unique
+  poId              String?
+  poNumber          String
+  supplierId        String
+  warehouseId       String
+  waybillNo         String?
+  trackingNo        String?
+  carrierName       String?
+  vehiclePlate      String?
+  driverName        String?
+  ssccPalletCount   Int       @default(1)
+  expectedArrivalAt DateTime
+  actualArrivalAt   DateTime?
+  status            String    @default("ON_IHBAR") // ON_IHBAR, YOLDA, KAPI_GIRIS, KABUL_TAMAM, IPTAL
+  sourceChannel     String    @default("PORTAL") // PORTAL, ERP, EDI_DESADV
+  ediExternalRef    String?
+  wmsTaskNo         String?
+  notes             String?
+  createdBy         String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  lines             LojistikSupplierAsnLine[]
+
+  @@index([supplierId, status])
+  @@index([poNumber])
+  @@index([warehouseId, status])
+}
+
+model LojistikSupplierAsnLine {
+  id          String              @id @default(uuid())
+  asnId       String
+  poLineId    String?
+  itemId      String
+  sku         String
+  itemName    String
+  shippedQty  Float
+  receivedQty Float               @default(0)
+  damagedQty  Float               @default(0)
+  unit        String              @default("Adet")
+  lotNumber   String?
+  expiryDate  DateTime?
+  ssccCode    String?
+  notes       String?
+
+  asn         LojistikSupplierAsn @relation(fields: [asnId], references: [id], onDelete: Cascade)
+
+  @@index([asnId])
+  @@index([itemId])
+}
+
+model LojistikSupplierScoreConfig {
+  id            String   @id @default(uuid())
+  configKey     String   @unique @default("DEFAULT")
+  otdWeight     Float    @default(35)
+  qtyWeight     Float    @default(25)
+  qualityWeight Float    @default(25)
+  priceWeight   Float    @default(15)
+  updatedBy     String?
+  updatedAt     DateTime @updatedAt
+}
+
+model LojistikSupplierScoreSnapshot {
+  id                    String   @id @default(uuid())
+  supplierId            String
+  periodKey             String   // YYYY-MM veya LIVE
+  otdRate               Float
+  qtyComplianceRate     Float
+  qualityAcceptanceRate Float
+  priceVarianceScore    Float
+  avgPriceVariancePct   Float    @default(0)
+  compositeScore        Float
+  tier                  String   // A, B, C, D
+  poCount               Int      @default(0)
+  onTimePoCount         Int      @default(0)
+  latePoCount           Int      @default(0)
+  totalOrderedQty       Float    @default(0)
+  totalReceivedQty      Float    @default(0)
+  totalRejectedQty      Float    @default(0)
+  calculatedAt          DateTime @default(now())
+  notes                 String?
+
+  @@unique([supplierId, periodKey])
+  @@index([periodKey])
+}
+
+model LojistikSupplierPortalInvite {
+  id          String    @id @default(uuid())
+  supplierId  String
+  tokenId     String    @unique
+  invitedBy   String
+  purpose     String    @default("PORTAL_ACCESS") // PORTAL_ACCESS, RFQ_INVITE, PO_CONFIRM
+  relatedRef  String?
+  expiresAt   DateTime
+  isRevoked   Boolean   @default(false)
+  usedCount   Int       @default(0)
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([supplierId])
 }
 
 

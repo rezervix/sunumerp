@@ -246,17 +246,74 @@ export interface ILogisticsStorageProvider {
   resolveArtifactUrl(storageKey: string): string
 }
 
+export interface EdiDesadvInput {
+  externalRef?: string
+  supplierCode?: string
+  supplierGln?: string
+  poNumber: string
+  waybillNo?: string
+  carrierName?: string
+  vehiclePlate?: string
+  expectedArrivalAt?: string
+  rawEdiText?: string
+  lines: Array<{
+    sku: string
+    shippedQty: number
+    lotNumber?: string
+    expiryDate?: string
+    ssccCode?: string
+  }>
+}
+
+export interface EdiDesadvNormalizedResult {
+  accepted: boolean
+  providerMode: LogisticsProviderMode
+  providerName: string
+  externalRef: string
+  poNumber: string
+  supplierCode?: string
+  supplierGln?: string
+  waybillNo?: string
+  carrierName?: string
+  vehiclePlate?: string
+  expectedArrivalAt: string
+  lines: EdiDesadvInput["lines"]
+  receivedAt: string
+}
+
+export interface ILogisticsEdiAsnProvider {
+  readonly adapterId: string
+  readonly displayName: string
+  readonly mode: LogisticsProviderMode
+  ingestDesadv(input: EdiDesadvInput): Promise<EdiDesadvNormalizedResult>
+  acknowledgeAsnReceipt(params: {
+    asnNumber: string
+    poNumber: string
+    externalRef?: string | null
+    acceptedQty: number
+    damagedQty: number
+  }): Promise<{
+    acknowledged: boolean
+    providerMode: LogisticsProviderMode
+    providerName: string
+    ackRef: string
+    timestamp: string
+  }>
+}
+
 export interface LogisticsProviderBundleConfig {
   eDocumentMode: LogisticsProviderMode
   telematicsMode: LogisticsProviderMode
   routingMode: LogisticsProviderMode
   returnWebhookMode: LogisticsProviderMode
   storageMode: LogisticsProviderMode
+  ediAsnMode?: LogisticsProviderMode
   eDocumentApiUrl?: string
   telematicsApiUrl?: string
   routingApiUrl?: string
   returnWebhookUrl?: string
   objectStorageBaseUrl?: string
+  ediAsnApiUrl?: string
 }
 
 // ── Domain Durum & Seed Tipleri ──────────────────────────────────────────────

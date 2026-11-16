@@ -913,9 +913,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener("system-config-updated", handleUpdate)
   }, [])
 
+  const isSupplierOnlyAccount = Boolean(
+    session &&
+      !isSuperAdmin &&
+      !isPlatformDeveloper &&
+      session.branches?.some((ur) => ur.role?.name === "Tedarikçi")
+  )
+
   useEffect(() => {
-    if (!loading && !session) router.push("/")
-  }, [session, loading, router])
+    if (!loading && !session) {
+      router.push("/")
+    } else if (!loading && isSupplierOnlyAccount) {
+      router.replace("/tedarikci-portali")
+    }
+  }, [session, loading, isSupplierOnlyAccount, router])
 
   // Initialize client log buffer once on mount
   useEffect(() => {
@@ -984,7 +995,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  if (!session) return null
+  if (!session || isSupplierOnlyAccount) return null
 
   const isSecurityDisabledLocally = typeof window !== "undefined" && localStorage.getItem("security-disabled") === "true"
 

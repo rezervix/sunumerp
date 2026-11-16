@@ -10,10 +10,12 @@ import {
 } from "./framework"
 import { faz1SupplierAuthSeedModule } from "./faz1-tedarikci-rol-ve-kullanici"
 import { faz2WmsDeepeningSeedModule } from "./faz2-wms-derinlestirme"
+import { faz3ProcurementAndSupplierSeedModule } from "./faz3-tedarikci-ve-satinalma"
 
 export const LOGISTICS_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz1SupplierAuthSeedModule,
   faz2WmsDeepeningSeedModule,
+  faz3ProcurementAndSupplierSeedModule,
 ]
 
 export async function runAllLogisticsDemoSeeds(options?: {

@@ -62,6 +62,7 @@ const EXTENDED_GET_SECTIONS = new Set([
   "kpi",
   "rfid",
   "offline_logs",
+  "open_asns",
 ])
 
 export async function handleWmsExtendedGet(
@@ -196,6 +197,14 @@ export async function handleWmsExtendedGet(
         take: 40,
       })
       return NextResponse.json({ success: true, logs })
+    }
+
+    if (section === "open_asns") {
+      const { getOpenAsnsForWmsReceiving } = await import(
+        "@/lib/logistics/procurement/asnAndReceivingService"
+      )
+      const asns = await getOpenAsnsForWmsReceiving(warehouseId)
+      return NextResponse.json({ success: true, asns })
     }
 
     return null
@@ -468,6 +477,7 @@ export async function handleWmsExtendedPost(
       const result = await processGoodsReceiptWithVariance({
         warehouseId: body.warehouseId,
         relatedPoNo: body.relatedPoNo,
+        asnId: body.asnId || null,
         partnerName: body.partnerName,
         performedBy: actor,
         method: body.method || "WEB",

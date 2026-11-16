@@ -171,6 +171,7 @@ export async function GET() {
                 username: user.username,
                 email: user.email,
                 fullName: user.fullName,
+                supplierId: (user as any).supplierId ?? null,
                 isActive: user.isActive,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt,

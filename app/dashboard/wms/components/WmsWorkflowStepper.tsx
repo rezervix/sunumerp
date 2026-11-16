@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import {
   Truck,
@@ -156,6 +156,45 @@ export function WmsWorkflowStepper({
   const [rcExpiryDate, setRcExpiryDate] = useState("2026-12-05")
   const [rcTargetBinId, setRcTargetBinId] = useState("")
   const [putawayPreview, setPutawayPreview] = useState<any[]>([])
+  const [openAsns, setOpenAsns] = useState<any[]>([])
+  const [selectedAsnId, setSelectedAsnId] = useState("")
+
+  useEffect(() => {
+    if (!isReceiptModalOpen) return
+    let active = true
+    fetch(`/api/wms?section=open_asns&warehouseId=${encodeURIComponent(rcWhId || "ALL")}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (active && d?.success && Array.isArray(d.asns)) {
+          setOpenAsns(d.asns)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [isReceiptModalOpen, rcWhId])
+
+  const handleSelectAsnPrefill = (asnId: string) => {
+    setSelectedAsnId(asnId)
+    const asn = openAsns.find((a) => a.id === asnId)
+    if (!asn) return
+    setRcWhId(asn.warehouseId || rcWhId)
+    setRcPoNo(asn.poNumber || "")
+    setRcPartnerName(asn.supplierName || "")
+    const firstLine = (asn.lines || [])[0]
+    if (firstLine) {
+      setRcItemId(firstLine.itemId)
+      setRcExpectedQty(String(firstLine.shippedQty || 1))
+      setRcGoodQty(String(firstLine.shippedQty || 1))
+      setRcDamagedQty("0")
+      if (firstLine.lotNumber) setRcLotNumber(firstLine.lotNumber)
+      if (firstLine.expiryDate) {
+        setRcExpiryDate(new Date(firstLine.expiryDate).toISOString().slice(0, 10))
+      }
+      loadPutawayPreview(asn.warehouseId || rcWhId, firstLine.itemId, Number(firstLine.shippedQty || 1))
+    }
+  }
 
   // Put-Away Direktif Kuralları Modalı
   const [isDirectiveModalOpen, setIsDirectiveModalOpen] = useState(false)
@@ -234,6 +273,7 @@ export function WmsWorkflowStepper({
           action: "process_goods_receipt",
           warehouseId: rcWhId,
           relatedPoNo: rcPoNo,
+          asnId: selectedAsnId || null,
           partnerName: rcPartnerName,
           lines: [
             {
@@ -671,6 +711,28 @@ export function WmsWorkflowStepper({
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmitGoodsReceipt} className="space-y-3 text-xs">
+            {openAsns.length > 0 && (
+              <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.06] p-2.5 space-y-1">
+                <label className="text-[11px] font-medium text-[#34D399]">
+                  Açık ASN İhbarından Ön Doldur (Tedarikçi / EDI Köprüsü)
+                </label>
+                <select
+                  value={selectedAsnId}
+                  onChange={(e) => handleSelectAsnPrefill(e.target.value)}
+                  data-testid="wms-asn-prefill-select"
+                  className="w-full h-8 rounded-lg bg-black/50 border border-emerald-500/30 px-2 text-white font-mono text-[11px]"
+                >
+                  <option value="" className="bg-[#111513]">
+                    Manuel Giriş veya Açık ASN Seçiniz ({openAsns.length} açık ihbar)
+                  </option>
+                  {openAsns.map((asn) => (
+                    <option key={asn.id} value={asn.id} className="bg-[#111513]">
+                      {asn.asnNumber} · {asn.poNumber} · {asn.supplierName} ({asn.totalShippedQty} Adet)
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-2.5">
               <div className="space-y-1">
                 <Label className="text-zinc-300">Depo</Label>

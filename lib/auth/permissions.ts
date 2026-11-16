@@ -445,10 +445,7 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     lojistik_iade: ["read"],
   },
   "Tedarikçi": {
-    dashboard: ["read"],
     lojistik_tedarikci: ["read", "create", "update"],
     tedarikci_portali: ["read", "create", "update"],
-    satinalma: ["read"],
-    chat: ["read", "create"],
   },
 }

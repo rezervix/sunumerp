@@ -18,6 +18,12 @@ import { ConsignmentStockManager } from './components/ConsignmentStockManager';
 import { CreateRequisitionModal } from './components/CreateRequisitionModal';
 import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 import { mockDatabase } from '@/lib/data/mockDatabase';
+import { Building2, Scale, ClipboardCheck, Truck, ShieldAlert, BarChart3 } from 'lucide-react';
+import SupplierMasterScorecardTab from './components/SupplierMasterScorecardTab';
+import RfqComparisonTab from './components/RfqComparisonTab';
+import { MultiTierPoTab, EoqSuggestionsPanel } from './components/MultiTierPoAndEoqTab';
+import { AsnTrackingTab, SingleSourceRiskTab } from './components/AsnAndRiskTabs';
+import { ErpPerspectiveSwitchButton } from '@/components/demo/SupplierPortalDemoComponents';
 
 export default function SmartProcurementAndConsignmentPage() {
   const [loading, setLoading] = useState(false);
@@ -31,6 +37,18 @@ export default function SmartProcurementAndConsignmentPage() {
   const [suppliers, setSuppliers] = useState<any[]>(() => mockDatabase.getProcurementOverview().suppliers);
   const [purchaseRequisitions, setPurchaseRequisitions] = useState<any[]>(() => mockDatabase.getProcurementOverview().purchaseRequisitions);
   const [consignmentStocks, setConsignmentStocks] = useState<any[]>(() => mockDatabase.getProcurementOverview().consignmentStocks);
+
+  // Lojistik Faz 3: Tedarikçi Ana Kart, RFQ, Çok Kademeli PO, ASN, EOQ & Risk Verileri
+  const [rfqs, setRfqs] = useState<any[]>([]);
+  const [purchaseOrders, setPurchaseOrders] = useState<any[]>([]);
+  const [asns, setAsns] = useState<any[]>([]);
+  const [scorecards, setScorecards] = useState<any>(null);
+  const [singleSourceRisk, setSingleSourceRisk] = useState<any>(null);
+  const [eoqPolicies, setEoqPolicies] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [invites, setInvites] = useState<any[]>([]);
+  const [warehouses, setWarehouses] = useState<any[]>([]);
+  const [faz3Summary, setFaz3Summary] = useState<any>(null);
 
   // Modal Durumu
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,13 +75,23 @@ export default function SmartProcurementAndConsignmentPage() {
       const res = await fetch('/api/procurement', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (data.success && Array.isArray(data.criticalItems) && data.criticalItems.length > 0) {
+        if (data.success) {
           if (data.stats) setStats(data.stats);
-          if (data.criticalItems) setCriticalItems(data.criticalItems);
-          if (data.allItems) setAllItems(data.allItems);
-          if (data.suppliers) setSuppliers(data.suppliers);
-          if (data.purchaseRequisitions) setPurchaseRequisitions(data.purchaseRequisitions);
-          if (data.consignmentStocks) setConsignmentStocks(data.consignmentStocks);
+          if (Array.isArray(data.criticalItems)) setCriticalItems(data.criticalItems);
+          if (Array.isArray(data.allItems)) setAllItems(data.allItems);
+          if (Array.isArray(data.suppliers)) setSuppliers(data.suppliers);
+          if (Array.isArray(data.purchaseRequisitions)) setPurchaseRequisitions(data.purchaseRequisitions);
+          if (Array.isArray(data.consignmentStocks)) setConsignmentStocks(data.consignmentStocks);
+          if (Array.isArray(data.rfqs)) setRfqs(data.rfqs);
+          if (Array.isArray(data.purchaseOrders)) setPurchaseOrders(data.purchaseOrders);
+          if (Array.isArray(data.asns)) setAsns(data.asns);
+          if (data.scorecards) setScorecards(data.scorecards);
+          if (data.singleSourceRisk) setSingleSourceRisk(data.singleSourceRisk);
+          if (Array.isArray(data.eoqPolicies)) setEoqPolicies(data.eoqPolicies);
+          if (Array.isArray(data.documents)) setDocuments(data.documents);
+          if (Array.isArray(data.invites)) setInvites(data.invites);
+          if (Array.isArray(data.warehouses)) setWarehouses(data.warehouses);
+          if (data.faz3Summary) setFaz3Summary(data.faz3Summary);
           return;
         }
       }
@@ -139,6 +167,36 @@ export default function SmartProcurementAndConsignmentPage() {
       <InventoryModuleNav />
 
       {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR (KUTUSUZ BORDERLESS STRIP) */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-400">
+          {faz3Summary && (
+            <>
+              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
+                Onaylı Tedarikçi: <strong className="text-[#34D399]">{faz3Summary.approvedSuppliers}/{faz3Summary.totalSuppliers}</strong>
+              </span>
+              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
+                Onay Bekleyen PO: <strong className="text-amber-300">{faz3Summary.pendingApprovalPoCount}</strong>
+              </span>
+              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
+                Açık RFQ: <strong className="text-sky-300">{faz3Summary.openRfqCount}</strong>
+              </span>
+              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
+                Açık ASN: <strong className="text-zinc-200">{faz3Summary.openAsnCount}</strong>
+              </span>
+              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
+                Ort. Skor Kartı: <strong className="text-[#34D399]">{faz3Summary.avgSupplierScore}</strong>
+              </span>
+              {faz3Summary.redFlagPoCount > 0 && (
+                <span className="px-2.5 py-1 rounded-lg border border-rose-500/35 bg-rose-500/10 text-rose-300 font-semibold">
+                  {faz3Summary.redFlagPoCount} Kırmızı Bayrak PO
+                </span>
+              )}
+            </>
+          )}
+        </div>
+        <ErpPerspectiveSwitchButton />
+      </div>
+
       <ProcurementSummaryCards
         stats={stats}
         onNewRequisitionClick={() => setIsModalOpen(true)}
@@ -178,42 +236,146 @@ export default function SmartProcurementAndConsignmentPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-1 sm:grid-cols-3 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
+        <TabsList className="flex flex-wrap gap-1.5 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
           <TabsTrigger
             value="critical-rop"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
-            Kritik Stok & ROP Listesi ({criticalItems.length})
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+            Kritik Stok & EOQ/ROP ({criticalItems.length})
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="orders"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+          >
+            <ClipboardCheck className="w-3.5 h-3.5 text-[#34D399]" />
+            Çok Kademeli PO ({purchaseOrders.length})
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="rfq"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+          >
+            <Scale className="w-3.5 h-3.5 text-[#34D399]" />
+            RFQ & Teklif Kıyas ({rfqs.length})
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="asns"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+          >
+            <Truck className="w-3.5 h-3.5 text-[#34D399]" />
+            ASN & EDI Sevkiyat ({asns.length})
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="suppliers"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+          >
+            <Building2 className="w-3.5 h-3.5 text-[#34D399]" />
+            Tedarikçi & Skor Kartı ({suppliers.length})
+          </TabsTrigger>
+
+          <TabsTrigger
+            value="single-source"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+            Tek-Kaynak Riski ({(singleSourceRisk?.riskItems || []).length})
           </TabsTrigger>
 
           <TabsTrigger
             value="requisitions"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <FileCheck2 className="w-4 h-4 text-[#34D399]" />
-            Satın Alma Talepleri (PO) ({purchaseRequisitions.length})
+            <FileCheck2 className="w-3.5 h-3.5 text-[#34D399]" />
+            Satın Alma Talepleri ({purchaseRequisitions.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="consignment"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
           >
-            <Handshake className="w-4 h-4 text-zinc-300" />
-            Konsinye (Emanet) Stoklar ({consignmentStocks.length})
+            <Handshake className="w-3.5 h-3.5 text-zinc-300" />
+            Konsinye Stoklar ({consignmentStocks.length})
           </TabsTrigger>
         </TabsList>
 
-        {/* SEKME 1: KRİTİK STOK VE ROP */}
-        <TabsContent value="critical-rop" className="focus-visible:outline-none">
+        {/* SEKME 1: KRİTİK STOK VE EOQ/ROP */}
+        <TabsContent value="critical-rop" className="focus-visible:outline-none space-y-5">
           <CriticalStockRopTable
             items={criticalItems}
             suppliers={suppliers}
             onOrderCreated={() => fetchProcurementData(true)}
           />
+          {eoqPolicies.length > 0 && (
+            <EoqSuggestionsPanel
+              eoqPolicies={eoqPolicies}
+              onRefresh={() => fetchProcurementData(true)}
+              onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+            />
+          )}
         </TabsContent>
 
-        {/* SEKME 2: SATIN ALMA TALEPLERİ */}
+        {/* SEKME 2: ÇOK KADEMELİ PO */}
+        <TabsContent value="orders" className="focus-visible:outline-none">
+          <MultiTierPoTab
+            purchaseOrders={purchaseOrders}
+            suppliers={suppliers}
+            items={allItems.length > 0 ? allItems : criticalItems}
+            warehouses={warehouses}
+            onRefresh={() => fetchProcurementData(true)}
+            onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+          />
+        </TabsContent>
+
+        {/* SEKME 3: RFQ VE TEKLİF KARŞILAŞTIRMA */}
+        <TabsContent value="rfq" className="focus-visible:outline-none">
+          <RfqComparisonTab
+            rfqs={rfqs}
+            suppliers={suppliers}
+            items={allItems.length > 0 ? allItems : criticalItems}
+            warehouses={warehouses}
+            onRefresh={() => fetchProcurementData(true)}
+            onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+          />
+        </TabsContent>
+
+        {/* SEKME 4: ASN VE EDI SEVKİYAT */}
+        <TabsContent value="asns" className="focus-visible:outline-none">
+          <AsnTrackingTab
+            asns={asns}
+            purchaseOrders={purchaseOrders}
+            suppliers={suppliers}
+            onRefresh={() => fetchProcurementData(true)}
+            onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+          />
+        </TabsContent>
+
+        {/* SEKME 5: TEDARİKÇİ ANA KART VE SKOR KARTI */}
+        <TabsContent value="suppliers" className="focus-visible:outline-none">
+          <SupplierMasterScorecardTab
+            suppliers={suppliers}
+            scorecards={scorecards}
+            documents={documents}
+            invites={invites}
+            items={allItems.length > 0 ? allItems : criticalItems}
+            onRefresh={() => fetchProcurementData(true)}
+            onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+          />
+        </TabsContent>
+
+        {/* SEKME 6: TEK-KAYNAK RİSK ANALİZİ */}
+        <TabsContent value="single-source" className="focus-visible:outline-none">
+          <SingleSourceRiskTab
+            singleSourceRisk={singleSourceRisk}
+            onRefresh={() => fetchProcurementData(true)}
+            onNotify={(msg, isErr) => (isErr ? toast.error(msg) : toast.success(msg))}
+          />
+        </TabsContent>
+
+        {/* SEKME 7: SATIN ALMA TALEPLERİ (LEGACY UYUMLU) */}
         <TabsContent value="requisitions" className="focus-visible:outline-none">
           <PurchaseRequisitionsList
             requisitions={purchaseRequisitions}
@@ -221,7 +383,7 @@ export default function SmartProcurementAndConsignmentPage() {
           />
         </TabsContent>
 
-        {/* SEKME 3: KONSİNYE STOKLAR */}
+        {/* SEKME 8: KONSİNYE STOKLAR (LEGACY UYUMLU) */}
         <TabsContent value="consignment" className="focus-visible:outline-none">
           <ConsignmentStockManager
             consignmentStocks={consignmentStocks}

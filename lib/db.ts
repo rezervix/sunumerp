@@ -212,6 +212,20 @@ interface JsonDbData {
   lojistikKitOrder?: any[]
   lojistikKitOrderComponent?: any[]
   lojistikRfidTagEvent?: any[]
+  lojistikSupplierItemLink?: any[]
+  lojistikSupplierDocument?: any[]
+  lojistikRfq?: any[]
+  lojistikRfqItem?: any[]
+  lojistikRfqQuote?: any[]
+  lojistikRfqQuoteLine?: any[]
+  lojistikPurchaseOrder?: any[]
+  lojistikPurchaseOrderLine?: any[]
+  lojistikPoApprovalStep?: any[]
+  lojistikSupplierAsn?: any[]
+  lojistikSupplierAsnLine?: any[]
+  lojistikSupplierScoreConfig?: any[]
+  lojistikSupplierScoreSnapshot?: any[]
+  lojistikSupplierPortalInvite?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -347,7 +361,21 @@ const initialData: JsonDbData = {
   lojistikCrossDockOrder: [],
   lojistikKitOrder: [],
   lojistikKitOrderComponent: [],
-  lojistikRfidTagEvent: []
+  lojistikRfidTagEvent: [],
+  lojistikSupplierItemLink: [],
+  lojistikSupplierDocument: [],
+  lojistikRfq: [],
+  lojistikRfqItem: [],
+  lojistikRfqQuote: [],
+  lojistikRfqQuoteLine: [],
+  lojistikPurchaseOrder: [],
+  lojistikPurchaseOrderLine: [],
+  lojistikPoApprovalStep: [],
+  lojistikSupplierAsn: [],
+  lojistikSupplierAsnLine: [],
+  lojistikSupplierScoreConfig: [],
+  lojistikSupplierScoreSnapshot: [],
+  lojistikSupplierPortalInvite: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1286,6 +1314,51 @@ class ModelSimulate {
       if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
     }
 
+    if (this.modelName === "lojistikRfq" && include) {
+      if (include.items) {
+        enriched.items = (db.lojistikRfqItem || []).filter((i: any) => i.rfqId === item.id)
+      }
+      if (include.quotes) {
+        enriched.quotes = (db.lojistikRfqQuote || [])
+          .filter((q: any) => q.rfqId === item.id)
+          .map((q: any) => ({
+            ...q,
+            lines: (db.lojistikRfqQuoteLine || []).filter((l: any) => l.quoteId === q.id),
+            supplier: (db.supplier || []).find((s: any) => s.id === q.supplierId) ?? null,
+          }))
+      }
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
+    if (this.modelName === "lojistikRfqQuote" && include) {
+      if (include.lines) enriched.lines = (db.lojistikRfqQuoteLine || []).filter((l: any) => l.quoteId === item.id)
+      if (include.rfq) enriched.rfq = (db.lojistikRfq || []).find((r: any) => r.id === item.rfqId) ?? null
+      if (include.supplier) enriched.supplier = (db.supplier || []).find((s: any) => s.id === item.supplierId) ?? null
+    }
+
+    if (this.modelName === "lojistikPurchaseOrder" && include) {
+      if (include.lines) enriched.lines = (db.lojistikPurchaseOrderLine || []).filter((l: any) => l.poId === item.id)
+      if (include.approvals) {
+        enriched.approvals = (db.lojistikPoApprovalStep || [])
+          .filter((a: any) => a.poId === item.id)
+          .sort((a: any, b: any) => Number(a.stepOrder) - Number(b.stepOrder))
+      }
+      if (include.supplier) enriched.supplier = (db.supplier || []).find((s: any) => s.id === item.supplierId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
+    if (this.modelName === "lojistikSupplierAsn" && include) {
+      if (include.lines) enriched.lines = (db.lojistikSupplierAsnLine || []).filter((l: any) => l.asnId === item.id)
+      if (include.supplier) enriched.supplier = (db.supplier || []).find((s: any) => s.id === item.supplierId) ?? null
+      if (include.warehouse) enriched.warehouse = (db.warehouse || []).find((w: any) => w.id === item.warehouseId) ?? null
+    }
+
+    if (this.modelName === "supplier" && include) {
+      if (include.documents) enriched.documents = (db.lojistikSupplierDocument || []).filter((d: any) => d.supplierId === item.id)
+      if (include.itemLinks) enriched.itemLinks = (db.lojistikSupplierItemLink || []).filter((l: any) => l.supplierId === item.id)
+      if (include.scoreSnapshots) enriched.scoreSnapshots = (db.lojistikSupplierScoreSnapshot || []).filter((s: any) => s.supplierId === item.id)
+    }
+
     return enriched
   }
 
@@ -1424,6 +1497,13 @@ class ModelSimulate {
       warehouseTransferOrder: { lines: { childModel: "transferOrderLine", fk: "transferOrderId" } },
       inventoryCountSession: { lines: { childModel: "inventoryCountLine", fk: "sessionId" } },
       lojistikKitOrder: { components: { childModel: "lojistikKitOrderComponent", fk: "kitOrderId" } },
+      lojistikRfq: { items: { childModel: "lojistikRfqItem", fk: "rfqId" } },
+      lojistikRfqQuote: { lines: { childModel: "lojistikRfqQuoteLine", fk: "quoteId" } },
+      lojistikPurchaseOrder: {
+        lines: { childModel: "lojistikPurchaseOrderLine", fk: "poId" },
+        approvals: { childModel: "lojistikPoApprovalStep", fk: "poId" },
+      },
+      lojistikSupplierAsn: { lines: { childModel: "lojistikSupplierAsnLine", fk: "asnId" } },
       purchaseRequisition: { lines: { childModel: "purchaseRequisitionLine", fk: "requisitionId" } },
       licensePlate: { contents: { childModel: "licensePlateContent", fk: "licensePlateId" } },
       omnichannelOrder: { shipmentLines: { childModel: "orderShipmentLine", fk: "orderId" } },
@@ -1816,7 +1896,21 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikCrossDockOrder",
       "lojistikKitOrder",
       "lojistikKitOrderComponent",
-      "lojistikRfidTagEvent"
+      "lojistikRfidTagEvent",
+      "lojistikSupplierItemLink",
+      "lojistikSupplierDocument",
+      "lojistikRfq",
+      "lojistikRfqItem",
+      "lojistikRfqQuote",
+      "lojistikRfqQuoteLine",
+      "lojistikPurchaseOrder",
+      "lojistikPurchaseOrderLine",
+      "lojistikPoApprovalStep",
+      "lojistikSupplierAsn",
+      "lojistikSupplierAsnLine",
+      "lojistikSupplierScoreConfig",
+      "lojistikSupplierScoreSnapshot",
+      "lojistikSupplierPortalInvite"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

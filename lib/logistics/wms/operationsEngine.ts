@@ -184,6 +184,7 @@ export async function suggestPutawayBins(params: {
 export async function processGoodsReceiptWithVariance(params: {
   warehouseId: string
   relatedPoNo?: string | null
+  asnId?: string | null
   partnerName?: string | null
   performedBy: string
   method?: "WEB" | "HANDHELD_CAMERA" | "HANDHELD_USB" | "OFFLINE_SYNC"
@@ -385,6 +386,26 @@ export async function processGoodsReceiptWithVariance(params: {
     },
     include: { lines: true },
   })
+
+  if (params.asnId || params.relatedPoNo) {
+    try {
+      const { applyGoodsReceiptToAsnAndPo } = await import(
+        "@/lib/logistics/procurement/asnAndReceivingService"
+      )
+      await applyGoodsReceiptToAsnAndPo({
+        asnId: params.asnId ?? null,
+        relatedPoNo: params.relatedPoNo ?? null,
+        wmsTaskNo: task.taskNumber,
+        lines: params.lines.map((l) => ({
+          itemId: l.itemId,
+          receivedGoodQty: Number(l.receivedGoodQty || 0),
+          damagedQty: Number(l.damagedQty || 0),
+        })),
+      })
+    } catch (syncErr) {
+      console.warn("[WMS->Procurement] ASN/PO senkronizasyon uyarısı:", syncErr)
+    }
+  }
 
   return { task, movements }
 }

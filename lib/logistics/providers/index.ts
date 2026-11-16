@@ -9,6 +9,7 @@
 import { getSystemConfig } from "@/lib/system-config"
 import type {
   ILogisticsEDocumentProvider,
+  ILogisticsEdiAsnProvider,
   ILogisticsReturnWebhookProvider,
   ILogisticsRoutingProvider,
   ILogisticsStorageProvider,
@@ -36,6 +37,10 @@ import {
   LocalStorageProofProvider,
   ObjectStorageProofProvider,
 } from "./object-storage"
+import {
+  DemoDbEdiAsnProvider,
+  ExternalEdiGatewayProvider,
+} from "./edi-asn"
 
 export interface LogisticsProviderBundle {
   config: LogisticsProviderBundleConfig
@@ -44,6 +49,7 @@ export interface LogisticsProviderBundle {
   routing: ILogisticsRoutingProvider
   returnWebhook: ILogisticsReturnWebhookProvider
   storage: ILogisticsStorageProvider
+  ediAsn: ILogisticsEdiAsnProvider
 }
 
 function normalizeMode(
@@ -101,6 +107,12 @@ export function resolveLogisticsProviderConfig(
         ext?.storageMode,
       "demo-db"
     ),
+    ediAsnMode: normalizeMode(
+      overrides?.ediAsnMode ??
+        process.env.LOJISTIK_EDI_ASN_PROVIDER ??
+        ext?.ediAsnMode,
+      "demo-db"
+    ),
     eDocumentApiUrl:
       overrides?.eDocumentApiUrl ??
       process.env.LOJISTIK_EDOC_API_URL ??
@@ -121,6 +133,10 @@ export function resolveLogisticsProviderConfig(
       overrides?.objectStorageBaseUrl ??
       process.env.LOJISTIK_STORAGE_BASE_URL ??
       ext?.objectStorageBaseUrl,
+    ediAsnApiUrl:
+      overrides?.ediAsnApiUrl ??
+      process.env.LOJISTIK_EDI_ASN_API_URL ??
+      ext?.ediAsnApiUrl,
   }
 }
 
@@ -154,6 +170,11 @@ export function createLogisticsProviders(
       ? new ObjectStorageProofProvider(config.objectStorageBaseUrl)
       : new LocalStorageProofProvider()
 
+  const ediAsn: ILogisticsEdiAsnProvider =
+    config.ediAsnMode === "external-rest" && config.ediAsnApiUrl
+      ? new ExternalEdiGatewayProvider(config.ediAsnApiUrl)
+      : new DemoDbEdiAsnProvider()
+
   return {
     config,
     eDocument,
@@ -161,5 +182,6 @@ export function createLogisticsProviders(
     routing,
     returnWebhook,
     storage,
+    ediAsn,
   }
 }
