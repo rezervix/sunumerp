@@ -22,12 +22,25 @@ export interface OfflineWmsOperation {
     | "WAVE_PICK"
     | "SSCC_SCAN"
     | "CYCLE_COUNT_LINE"
+    | "RMA_RETURN_RECEIPT"
   codeScanned: string
   sku: string
   itemId?: string
   warehouseId?: string
   taskId?: string
   lineId?: string
+  rmaId?: string
+  rmaNumber?: string
+  trackingNo?: string
+  damagedQty?: number
+  scanMethod?: "USB" | "CAMERA" | "OFFLINE_SYNC"
+  receivedLines?: Array<{
+    lineId?: string
+    sku?: string
+    receivedQty: number
+    damagedQty?: number
+    lotNumber?: string | null
+  }>
   itemName: string
   lotNumber?: string
   binCode: string
@@ -144,7 +157,9 @@ function toServerBatchItem(op: OfflineWmsOperation) {
         ? "RECEIVE"
         : op.operationType === "BLIND_COUNT_ENTRY" || op.operationType === "CYCLE_COUNT_LINE"
           ? "CYCLE_COUNT"
-          : "PUTAWAY"
+          : op.operationType === "RMA_RETURN_RECEIPT"
+            ? "RMA_RETURN_RECEIPT"
+            : "PUTAWAY"
 
   return {
     idempotencyKey: op.idempotencyKey || op.id,
@@ -161,6 +176,13 @@ function toServerBatchItem(op: OfflineWmsOperation) {
       countedQty: op.quantity,
       lotNumber: op.lotNumber,
       lpnCode: op.lpnCode,
+      codeScanned: op.codeScanned,
+      rmaId: op.rmaId,
+      rmaNumber: op.rmaNumber,
+      trackingNo: op.trackingNo,
+      damagedQty: op.damagedQty,
+      scanMethod: op.scanMethod,
+      receivedLines: op.receivedLines,
     },
   }
 }

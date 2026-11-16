@@ -1388,7 +1388,7 @@ export async function processOfflineBatchWithConflictCheck(params: {
   operatorName: string
   queueItems: Array<{
     idempotencyKey: string
-    operationType: "RECEIVE" | "PUTAWAY" | "WAVE_PICK" | "CYCLE_COUNT" | "TRANSFER"
+    operationType: "RECEIVE" | "PUTAWAY" | "WAVE_PICK" | "CYCLE_COUNT" | "TRANSFER" | "RMA_RETURN_RECEIPT"
     payload: Record<string, any>
     queuedAt: string
   }>
@@ -1416,7 +1416,11 @@ export async function processOfflineBatchWithConflictCheck(params: {
       .findFirst({ where: { idempotencyKey: key } })
       .catch(() => null)
     const prevMov = await prisma.stockMovement
-      .findFirst({ where: { idempotencyKey: key } })
+      .findFirst({
+        where: {
+          OR: [{ idempotencyKey: key }, { idempotencyKey: `${key}-L0` }],
+        },
+      })
       .catch(() => null)
 
     if (prevSync?.status === "SYNCED" || prevMov) {
@@ -1496,6 +1500,48 @@ export async function processOfflineBatchWithConflictCheck(params: {
             countedAt: new Date(q.queuedAt || Date.now()),
           },
         })
+      } else if (q.operationType === "RMA_RETURN_RECEIPT") {
+        const { receiveRmaIntoQuarantine } = await import("@/lib/logistics/returns/rmaService")
+        const rawCode = String(p.rmaNumber || p.codeScanned || "").trim()
+        const strippedCode = rawCode.replace(/^RMA\|/i, "").trim()
+        let targetRmaId = p.rmaId
+        if (!targetRmaId && (rawCode || p.trackingNo)) {
+          const matchedRma = await (prisma as any).returnRmaRecord
+            .findFirst({
+              where: {
+                OR: [
+                  ...(rawCode ? [{ labelCode: rawCode }, { returnTrackingNo: rawCode }] : []),
+                  ...(strippedCode ? [{ rmaNumber: strippedCode }] : []),
+                  ...(p.trackingNo ? [{ returnTrackingNo: String(p.trackingNo).trim() }] : []),
+                ],
+              },
+            })
+            .catch(() => null)
+          if (matchedRma) targetRmaId = matchedRma.id
+        }
+        const rmaRes = await receiveRmaIntoQuarantine({
+          rmaId: targetRmaId,
+          rmaNumber: !targetRmaId && /^RMA/i.test(strippedCode) ? strippedCode : undefined,
+          trackingNo: !targetRmaId ? (p.trackingNo || rawCode || undefined) : undefined,
+          warehouseId: p.warehouseId,
+          targetBinCode: p.binCode || "Q-01-01",
+          method: p.scanMethod === "CAMERA" ? "HANDHELD_CAMERA" : p.scanMethod === "USB" ? "HANDHELD_USB" : "OFFLINE_SYNC",
+          deviceId: params.deviceId,
+          idempotencyKey: key,
+          note: p.note || `El terminali iade kabul (${params.deviceId})`,
+          actorName: params.operatorName,
+          receivedLines: Array.isArray(p.receivedLines) ? p.receivedLines : undefined,
+        })
+        if (rmaRes?.duplicate) {
+          results.push({
+            idempotencyKey: key,
+            status: "DUPLICATE_IGNORED",
+            reason: "ALREADY_PROCESSED",
+            detail: `${rmaRes.rma?.rmaNumber || "RMA"} iade kabulü daha önce işlenmiş.`,
+          })
+          continue
+        }
+        resolutionNote = `${rmaRes.rma?.rmaNumber || "RMA"} karantina rafına (${rmaRes.rma?.targetBinCode || p.binCode || "Q-01-01"}) alındı`
       }
     } catch (err: any) {
       syncStatus = "CONFLICT"
