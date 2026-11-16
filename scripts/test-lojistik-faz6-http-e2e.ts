@@ -109,7 +109,7 @@ async function run() {
         assert.ok(Array.isArray(snap.trips) && snap.trips.length >= 4)
         assert.ok(Array.isArray(snap.readyPool) && snap.readyPool.length >= 1)
         assert.ok(snap.kpis && snap.kpis.totalTrips >= 4)
-        assert.ok(snap.adapterStatus && snap.adapterStatus.routing)
+        assert.ok(snap.adapterStatus && snap.adapterStatus.routingEngine)
 
         const trip1 = snap.trips.find((t: any) => t.tripNumber === "SFR-2026-601")
         const trip3 = snap.trips.find((t: any) => t.tripNumber === "SFR-2026-603")
@@ -122,7 +122,7 @@ async function run() {
         const appRes = await fetch(`${baseUrl}/api/sevkiyat`, {
           method: "POST",
           headers: admHeaders,
-          body: JSON.stringify({ action: "approve_trip", tripId: "f6-trip-04" }),
+          body: JSON.stringify({ action: "approve_and_issue_ewaybill", tripId: "f6-trip-04" }),
         })
         assert.equal(appRes.status, 200)
         const appJson = await appRes.json()
@@ -205,7 +205,7 @@ async function run() {
         const sysJson = await sysRes.json()
         assert.equal(sysJson.logisticsDemoMode, false)
         assert.equal(portalDemoRes.status, 403)
-        assert.equal(pubMissing.status, 404)
+        assert.equal(pubMissing.status, process.env.EXPECT_FEATURE_ACTIVE === "true" ? 404 : 403)
 
         assert.equal(loginRes.status, 200)
         const loginJson = await loginRes.json()
