@@ -146,10 +146,9 @@ function removeByIds(arr: any[] | undefined, ids: ReadonlySet<string>): number {
 }
 
 export const faz3ProcurementAndSupplierSeedModule: LogisticsSeedModule = {
-  id: "faz3-tedarikci-ve-satinalma",
-  description:
-    "Faz 3 Tedarikçi Ana Kart, Belge Kasası, Tek-Kaynak Riski, RFQ, Çok Kademeli PO, ASN/EDI, EOQ/ROP ve Skor Kartı demo verileri",
-  seededIds: {
+  moduleKey: "faz3_tedarikci_ve_satinalma",
+  phase: 3,
+  seededIdsByCollection: {
     supplier: [...SEEDED_SUPPLIER_IDS],
     user: [...SEEDED_USER_IDS],
     userBranchRole: [...SEEDED_UBR_IDS],
@@ -1593,10 +1592,15 @@ export const faz3ProcurementAndSupplierSeedModule: LogisticsSeedModule = {
     })
     inserted.lojistikSupplierScoreSnapshot = snapCount
 
+    const totalTargets = Object.values(
+      faz3ProcurementAndSupplierSeedModule.seededIdsByCollection
+    ).reduce((sum, list) => sum + list.length, 0)
+    const totalInserted = Object.values(inserted).reduce((sum, n) => sum + n, 0)
+
     return {
-      moduleId: "faz3-tedarikci-ve-satinalma",
+      moduleKey: "faz3_tedarikci_ve_satinalma",
       inserted,
-      skippedExisting: {},
+      skippedExisting: Math.max(0, totalTargets - totalInserted),
       notes: [
         "9 ek tedarikçi (+4 mevcut = 13 tedarikçi), ikincil portal kullanıcısı (tedarikci.yalova) ve GLN-13 kayıtları eklendi.",
         "Tek-kaynak riski için Orkide ve Oasis Sünger kalemleri bilerek tek onaylı tedarikçiyle bağlandı.",
