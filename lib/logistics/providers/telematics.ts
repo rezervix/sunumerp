@@ -20,41 +20,68 @@ export class DemoDbTelematicsProvider implements ILogisticsTelematicsProvider {
   readonly mode = "demo-db" as const
 
   async listFleetTelemetry(branchId?: string): Promise<TelematikKonumVerisi[]> {
-    // Faz 4'te eklenen LojistikVehicle koleksiyonu varsa doğrudan oradan oku
     const vehicles = await (prisma as any).lojistikVehicle
       ?.findMany?.(branchId ? { where: { branchId } } : undefined)
       .catch(() => [])
 
-    const now = new Date().toISOString()
-
     if (Array.isArray(vehicles) && vehicles.length > 0) {
+      const latestEvents = await (prisma as any).lojistikTelemetryEvent
+        ?.findMany?.({ orderBy: { eventTime: "desc" }, take: 500 })
+        .catch(() => [])
+
+      const evtByVehicle = new Map<string, any>()
+      if (Array.isArray(latestEvents)) {
+        for (const ev of latestEvents) {
+          if (!evtByVehicle.has(ev.vehicleId)) evtByVehicle.set(ev.vehicleId, ev)
+        }
+      }
+
       return vehicles.map((v: any, idx: number) => {
+        const lastEv = evtByVehicle.get(v.id)
         const temp =
-          typeof v.currentTemperatureC === "number"
-            ? v.currentTemperatureC
-            : v.isRefrigerated
-              ? 3.4
-              : 18.2
+          typeof lastEv?.temperatureC === "number"
+            ? lastEv.temperatureC
+            : typeof v.currentTempC === "number"
+              ? v.currentTempC
+              : typeof v.currentTemperatureC === "number"
+                ? v.currentTemperatureC
+                : null
         const maxSafeTemp =
-          typeof v.maxSafeTempC === "number" ? v.maxSafeTempC : v.isRefrigerated ? 6 : 25
-        const isWarn = temp > maxSafeTemp
+          typeof v.targetTempMaxC === "number"
+            ? v.targetTempMaxC
+            : typeof v.maxSafeTempC === "number"
+              ? v.maxSafeTempC
+              : v.isRefrigerated
+                ? 6
+                : 45
+        const isWarn = temp !== null && temp > maxSafeTemp
+        const speedKmh =
+          typeof lastEv?.speedKmh === "number"
+            ? lastEv.speedKmh
+            : typeof v.currentSpeedKmh === "number"
+              ? v.currentSpeedKmh
+              : v.status === "IN_TRANSIT" || v.status === "SEVK_HALINDE"
+                ? 48
+                : 0
         return {
           vehicleId: v.id,
           plate: v.plate || `34 SNR ${700 + idx}`,
-          lat: Number(v.currentLat ?? DEMO_WAREHOUSE_COORDINATES["wh-merkez-01"].lat),
-          lng: Number(v.currentLng ?? DEMO_WAREHOUSE_COORDINATES["wh-merkez-01"].lng),
-          speedKmh: v.status === "SEVK_HALINDE" ? 48 : 0,
-          headingDeg: (idx * 75) % 360,
+          lat: Number(lastEv?.lat ?? v.currentLat ?? DEMO_WAREHOUSE_COORDINATES["wh-merkez-01"].lat),
+          lng: Number(lastEv?.lng ?? v.currentLng ?? DEMO_WAREHOUSE_COORDINATES["wh-merkez-01"].lng),
+          speedKmh,
+          headingDeg: Number(lastEv?.headingDeg ?? v.currentHeadingDeg ?? (idx * 75) % 360),
           temperatureCelsius: temp,
-          humidityPercent: v.isRefrigerated ? 82 : 55,
+          humidityPercent: v.isRefrigerated ? 82 : null,
           doorOpen: false,
-          engineRunning: v.status === "SEVK_HALINDE",
-          recordedAt: now,
+          engineRunning: Boolean(lastEv?.ignitionOn ?? speedKmh > 0),
+          recordedAt: (lastEv?.eventTime || v.lastTelemetryAt || new Date()).toString(),
           status: isWarn
             ? "UYARI"
-            : v.status === "SEVK_HALINDE"
+            : speedKmh > 5
               ? "HAREKETTE"
-              : "BEKLEMEDE",
+              : v.status === "IN_TRANSIT"
+                ? "DURAKTA"
+                : "BEKLEMEDE",
         }
       })
     }
@@ -67,6 +94,7 @@ export class DemoDbTelematicsProvider implements ILogisticsTelematicsProvider {
     const seenPlates = new Set<string>()
     const derived: TelematikKonumVerisi[] = []
     const baseCoord = DEMO_WAREHOUSE_COORDINATES["wh-merkez-01"]
+    const nowIso = new Date().toISOString()
 
     for (const doc of edocs) {
       const plate = String(doc.vehiclePlate || "").trim()
@@ -83,7 +111,7 @@ export class DemoDbTelematicsProvider implements ILogisticsTelematicsProvider {
         humidityPercent: 80,
         doorOpen: false,
         engineRunning: derived.length === 0,
-        recordedAt: now,
+        recordedAt: nowIso,
         status: derived.length === 0 ? "HAREKETTE" : "BEKLEMEDE",
       })
     }

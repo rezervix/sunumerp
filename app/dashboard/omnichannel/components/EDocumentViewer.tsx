@@ -14,6 +14,7 @@ import {
   Download
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { FleetPickerSelect } from '@/components/logistics/FleetPickerSelect';
 
 interface EDocument {
   id: string;
@@ -278,6 +279,14 @@ export function EDocumentViewer({
                   />
                 </div>
               </div>
+
+              <FleetPickerSelect
+                onSelectVehicle={(v, assignedDriver) => {
+                  setVehiclePlate(v.plate);
+                  if (assignedDriver) setDriverName(assignedDriver.fullName);
+                }}
+                onSelectDriver={(d) => setDriverName(d.fullName)}
+              />
 
               <div className="grid grid-cols-3 gap-3">
                 <div>

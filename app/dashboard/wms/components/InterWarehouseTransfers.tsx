@@ -14,6 +14,7 @@ import {
   User
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { FleetPickerSelect } from '@/components/logistics/FleetPickerSelect';
 
 interface TransferLine {
   id: string;
@@ -576,6 +577,19 @@ export function InterWarehouseTransfers({
               </div>
 
               {/* Logistics Details */}
+              <FleetPickerSelect
+                onSelectVehicle={(v, assignedDriver) => {
+                  setVehiclePlate(v.plate);
+                  if (assignedDriver) {
+                    setDriverName(assignedDriver.fullName);
+                    if (assignedDriver.phoneMasked) setDriverPhone(assignedDriver.phoneMasked);
+                  }
+                }}
+                onSelectDriver={(d) => {
+                  setDriverName(d.fullName);
+                  if (d.phoneMasked) setDriverPhone(d.phoneMasked);
+                }}
+              />
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-zinc-300 mb-1.5">

@@ -234,9 +234,7 @@ export function isAnyLogisticsFeatureEnabled(
  * böylece henüz fazı gelmemiş (404 / yarım) ekran linki kullanıcıya asla görünmez.
  */
 export const IMPLEMENTED_LOGISTICS_FLEET_HREFS: readonly string[] = [
-  // Faz 4: "/dashboard/filo" eklenecek
-  // Faz 5: "/dashboard/sevkiyat", "/dashboard/sevkiyat/surucu" eklenecek
-  // Faz 6: "/dashboard/tedarikci-portali" (veya satinalma sekmesi) eklenecek
+  "/dashboard/filo",
 ] as const
 
 export function isLogisticsFleetMenuVisible(

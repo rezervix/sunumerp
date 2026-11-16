@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useLanguage } from "@/lib/context/LanguageContext"
 
 
@@ -251,6 +252,15 @@ export default function CargoPage() {
                     <h1 className="text-2xl lg:text-3xl font-semibold text-white mb-1 tracking-tight">Kargo ve Kurye</h1>
                     <p className="text-sm text-zinc-400">Kargo gönderileri ve fiziksel dosya/evrak teslimatları</p>
                 </div>
+                {(hasPermission("lojistik_filo", "read") || isSuperAdmin) && (
+                    <Link
+                        href="/dashboard/filo"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-emerald-300 transition w-fit"
+                    >
+                        <span className="material-symbols-outlined text-[16px]">local_shipping</span>
+                        Araç &amp; Şoför Filo Yönetimi →
+                    </Link>
+                )}
             </StaggerItem>
 
             {/* Borderless KPI Strip */}
