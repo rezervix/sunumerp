@@ -220,9 +220,13 @@ async function main() {
           }
           assert.strictEqual(isLogisticsFeatureEnabled("lojistik_filo", cfg, "branch-pilot"), true)
           assert.strictEqual(isLogisticsFeatureEnabled("lojistik_wms", cfg, "branch-pilot"), false)
-          // Henüz sayfa dosyası eklenmediği için Faz 1'de boş Lojistik & Filo menüsü kapalı kalmalı
-          assert.strictEqual(isLogisticsFleetMenuVisible(cfg, "branch-pilot"), false)
-          // Sayfa rotası eklendiğinde (Faz 4 simülasyonu) menü görünür olmalı
+          // Boş rota listesi verildiğinde Lojistik & Filo menüsü kapalı kalmalı
+          assert.strictEqual(isLogisticsFleetMenuVisible(cfg, "branch-pilot", []), false)
+          // Sayfa rotası (/dashboard/filo Faz 5'te canlıya alındığı için varsayılan liste) görünür olmalı
+          assert.strictEqual(
+            isLogisticsFleetMenuVisible(cfg, "branch-pilot"),
+            true
+          )
           assert.strictEqual(
             isLogisticsFleetMenuVisible(cfg, "branch-pilot", ["/dashboard/filo"]),
             true
@@ -409,7 +413,7 @@ async function main() {
 
       const rb2 = rollbackAllLogisticsDemoSeeds({ createSafetyBackup: false })
       assert.strictEqual(rb2.preExistingIntegrityIntact, true)
-      assert.strictEqual(rb2.removedByCollection.user, 1)
+      assert.strictEqual(rb2.removedByCollection.user, 2) // 1 Faz 1 (demo) + 1 Faz 3 (yalova)
       assert.strictEqual(rb2.removedByCollection.role, 1)
 
       return "Gerçek ortam reddi, idempotency (3->0 ekleme), veri bütünlüğü ve tek komut rollback doğrulandı"

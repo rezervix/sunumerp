@@ -65,7 +65,7 @@ import {
 } from "@/lib/logistics/seed"
 
 const DB_PATH = path.join(process.cwd(), "storage", "ajans-kutuphanesi", ".local-db.json")
-const SYS_CFG_PATH = path.join(process.cwd(), "storage", "ajans-kutuphanesi", "system_config.json")
+const SYS_CFG_PATH = path.join(process.cwd(), "storage", "system_config.json")
 
 async function expectDomainError(
   fn: () => Promise<any>,
@@ -273,9 +273,9 @@ async function runSuite() {
       const fuelEval = analyzeVehicleFuelLogs(
         "v1",
         [
-          { vehicleId: "v1", fuelDate: "2026-10-01", odometerKm: 10000, liters: 60, totalAmountTry: 2700, fullTank: true, invoiceLiters: 60 },
-          { vehicleId: "v1", fuelDate: "2026-10-15", odometerKm: 11000, liters: 120, totalAmountTry: 5400, fullTank: true, invoiceLiters: 120 },
-          { vehicleId: "v1", fuelDate: "2026-11-01", odometerKm: 12000, liters: 280, totalAmountTry: 12600, fullTank: true, invoiceLiters: 300 },
+          { id: "fl-1", vehicleId: "v1", fuelDate: "2026-10-01", odometerKm: 10000, liters: 60, totalAmountTry: 2700, fullTank: true, invoiceLiters: 60 },
+          { id: "fl-2", vehicleId: "v1", fuelDate: "2026-10-15", odometerKm: 11000, liters: 120, totalAmountTry: 5400, fullTank: true, invoiceLiters: 120 },
+          { id: "fl-3", vehicleId: "v1", fuelDate: "2026-11-01", odometerKm: 12000, liters: 280, totalAmountTry: 12600, fullTank: true, invoiceLiters: 300 },
         ],
         12.0
       )
@@ -330,7 +330,7 @@ async function runSuite() {
         userId: "user-copywriter",
         username: "cem.aslan",
         branchId: "local-debug-branch",
-        roles: ["USER"],
+        roleNames: ["USER"],
         isSuperAdmin: false,
         isPlatformDeveloper: false,
         isSupplierScoped: false,
@@ -340,7 +340,7 @@ async function runSuite() {
         userId: "user-admin",
         username: "admin",
         branchId: "local-debug-branch",
-        roles: ["ADMIN"],
+        roleNames: ["ADMIN"],
         isSuperAdmin: true,
         isPlatformDeveloper: false,
         isSupplierScoped: false,
