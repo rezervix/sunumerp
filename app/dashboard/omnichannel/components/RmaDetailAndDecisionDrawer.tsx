@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
-  Banknote,
   CheckCircle2,
   ClipboardCheck,
   Clock,
+  CreditCard,
   FileCheck2,
   PackageCheck,
-  Printer,
+  QrCode,
   Send,
   ShieldAlert,
   Truck,
@@ -306,7 +306,7 @@ export function RmaDetailAndDecisionDrawer({
               target="_blank"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white"
             >
-              <Printer className="w-3.5 h-3.5 text-[#34D399]" />
+              <QrCode className="w-3.5 h-3.5 text-[#34D399]" />
               Etiket / Fiş
             </Link>
             <button
@@ -715,7 +715,7 @@ export function RmaDetailAndDecisionDrawer({
           <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                <Banknote className="w-4 h-4 text-[#34D399]" />
+                <CreditCard className="w-4 h-4 text-[#34D399]" />
                 Mali Bağlantı &amp; Kredi Notası / Ödeme İadesi
               </div>
               <span className="font-mono text-sm font-bold text-[#34D399]">

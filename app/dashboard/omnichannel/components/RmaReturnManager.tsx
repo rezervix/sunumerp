@@ -5,13 +5,13 @@ import Link from 'next/link';
 import {
   Activity,
   AlertTriangle,
-  Banknote,
   BarChart3,
   CheckCircle2,
   Clock,
+  CreditCard,
   FileCheck2,
   Plus,
-  Printer,
+  QrCode,
   RotateCcw,
   Search,
   ShieldCheck,
@@ -208,7 +208,7 @@ export function RmaReturnManager({
         <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-3">
           {[
             { id: 'list', label: `RMA Kayıtları (${rmaReturns.length})`, icon: RotateCcw },
-            { id: 'credit-notes', label: `Kredi Notaları (${returnCreditNotes.length})`, icon: Banknote },
+            { id: 'credit-notes', label: `Kredi Notaları (${returnCreditNotes.length})`, icon: CreditCard },
             { id: 'policies', label: `İade Politikaları (${returnPolicies.length})`, icon: ShieldCheck },
             { id: 'webhooks', label: `Webhook Günlüğü (${returnWebhookLogs.length})`, icon: Activity },
             { id: 'analytics', label: 'İade Analizi', icon: BarChart3 },
@@ -436,7 +436,7 @@ export function RmaReturnManager({
                               className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] text-zinc-300"
                               title="İade Etiketi / Fişi Yazdır"
                             >
-                              <Printer className="w-3 h-3" />
+                              <QrCode className="w-3 h-3" />
                             </Link>
                             {!rma.rmaStatus && rma.qcInspectionResult === 'PENDING_INSPECTION' && (
                               <button

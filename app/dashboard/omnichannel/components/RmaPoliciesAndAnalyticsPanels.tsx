@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import {
   Activity,
   AlertTriangle,
-  Banknote,
   BarChart3,
   CheckCircle2,
+  CreditCard,
   Plus,
   ShieldCheck,
   Webhook,
@@ -66,7 +66,7 @@ export function RmaCreditNotesPanel({
       <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
         <div>
           <h4 className="text-sm font-semibold text-white flex items-center gap-2">
-            <Banknote className="w-4 h-4 text-[#34D399]" />
+            <CreditCard className="w-4 h-4 text-[#34D399]" />
             İade Kredi Notaları &amp; Mali Onay Kuyruğu ({creditNotes.length})
           </h4>
           <p className="text-xs text-zinc-400 mt-0.5">

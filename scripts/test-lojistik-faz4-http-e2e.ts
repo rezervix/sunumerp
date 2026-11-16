@@ -201,15 +201,47 @@ async function run() {
         }
       })
     } else if (mode === "demo-off") {
-      await check("Demo OFF: /api/system-config logisticsDemoMode=false & /api/auth/demo kapalı", async () => {
-        const [sysRes, demoAuth] = await Promise.all([
+      await check("Demo OFF: /api/system-config & /api/supplier-portal/demo & simulate_return_webhook kapalı", async () => {
+        const [sysRes, portalDemoRes, loginRes] = await Promise.all([
           fetch(`${baseUrl}/api/system-config`),
-          fetch(`${baseUrl}/api/auth/demo`, { method: "POST" }),
+          fetch(`${baseUrl}/api/supplier-portal/demo`),
+          fetch(`${baseUrl}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: "admin",
+              password: process.env.DEMO_ADMIN_PASS || "demo123",
+            }),
+          }),
         ])
         assert.equal(sysRes.status, 200)
         const sysJson = await sysRes.json()
         assert.equal(sysJson.logisticsDemoMode, false)
-        assert.notEqual(demoAuth.status, 200, "Demo OFF iken /api/auth/demo oturum açmamalı")
+
+        assert.equal(portalDemoRes.status, 403)
+        const portalDemoJson = await portalDemoRes.json()
+        assert.equal(portalDemoJson.code, "DEMO_MODE_DISABLED")
+
+        assert.equal(loginRes.status, 200)
+        const loginJson = await loginRes.json()
+        assert.ok(loginJson.token, "Gerçek yerel oturum token'ı dönmeli")
+        const authCookie = `auth-token=${loginJson.token}`
+
+        const [snapRes, simRes] = await Promise.all([
+          fetch(`${baseUrl}/api/omnichannel`, { headers: { Cookie: authCookie } }),
+          fetch(`${baseUrl}/api/omnichannel`, {
+            method: "POST",
+            headers: { Cookie: authCookie, "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "simulate_return_webhook", channelCode: "TRENDYOL" }),
+          }),
+        ])
+        assert.equal(snapRes.status, 200)
+        const snapJson = await snapRes.json()
+        assert.equal(snapJson.featureFlags?.logisticsDemoMode, false)
+
+        assert.equal(simRes.status, 403, "Demo OFF iken simulate_return_webhook 403 dönmeli")
+        const simJson = await simRes.json()
+        assert.equal(simJson.code, "DEMO_MODE_DISABLED")
       })
 
       await check("Demo OFF: İmzalı webhook secret olmadan / demo fallback olmadan reddedilmeli (401)", async () => {
