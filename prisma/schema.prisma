@@ -1829,6 +1829,9 @@ model InventoryItem {
   leadTimeDays           Int      @default(5)
   pickPolicy             String?  // FEFO, FIFO
   defaultPutawayZoneType String?
+  returnWindowDays       Int?
+  warrantyMonths         Int?
+  isReturnable           Boolean  @default(true)
   isActive               Boolean  @default(true)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -1868,6 +1871,7 @@ model InventoryItem {
   uretimQualityNcrs        UretimQualityNcr[]
   uretimMachineSpareParts  UretimMachineSparePart[]
   uretimMaintenanceWorkOrderSpareParts UretimMaintenanceWorkOrderSparePart[]
+  rmaLines                 LojistikRmaLine[]
 
   @@index([category])
   @@index([parentItemId])
@@ -2621,23 +2625,72 @@ model OrderShipmentLine {
 }
 
 model ReturnRmaRecord {
-  id                 String   @id @default(uuid())
-  rmaNumber          String   @unique
-  orderNumber        String
-  channelCode        String
-  customerName       String
-  sku                String
-  itemName           String
-  returnQty          Float
-  returnReason       String
-  qcInspectionResult String   @default("PENDING_INSPECTION")
-  targetWarehouseId  String?
-  targetBinCode      String?
-  refundAmount       Float    @default(0)
-  refundStatus       String   @default("PENDING")
-  returnTrackingNo   String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                       String    @id @default(uuid())
+  rmaNumber                String    @unique
+  orderNumber              String
+  channelCode              String
+  customerName             String
+  sku                      String
+  itemName                 String
+  returnQty                Float
+  returnReason             String
+  qcInspectionResult       String    @default("PENDING_INSPECTION")
+  targetWarehouseId        String?
+  targetBinCode            String?
+  refundAmount             Float     @default(0)
+  refundStatus             String    @default("PENDING")
+  returnTrackingNo         String?
+  rmaStatus                String    @default("TALEP")
+  reasonCode               String    @default("CAYMA_HAKKI")
+  reasonNote               String?
+  orderSourceType          String    @default("OMNICHANNEL")
+  originalOrderId          String?
+  invoiceDocId             String?
+  invoiceNo                String?
+  deliveredAt              DateTime?
+  returnWindowDays         Int       @default(14)
+  returnDeadlineAt         DateTime?
+  warrantyExpiresAt        DateTime?
+  isWithinReturnWindow     Boolean   @default(true)
+  isWithinWarranty         Boolean   @default(false)
+  deadlineOverrideApproved Boolean   @default(false)
+  deadlineOverrideBy       String?
+  deadlineOverrideReason   String?
+  receivedAt               DateTime?
+  receivedBy               String?
+  receivedWarehouseId      String?
+  receivedBinCode          String?
+  inspectedAt              DateTime?
+  decidedAt                DateTime?
+  closedAt                 DateTime?
+  inspectionId             String?
+  ncrId                    String?
+  qualityDecision          String?
+  supplierId               String?
+  poId                     String?
+  creditNoteId             String?
+  creditNoteNo             String?
+  financeRecordId          String?
+  refundApprovedBy         String?
+  refundApprovedAt         DateTime?
+  returnCarrierCode        String?
+  labelCode                String?
+  idempotencyKey           String?
+  externalChannelRef       String?
+  estimatedCostTry         Float     @default(0)
+  recoveredValueTry        Float     @default(0)
+  cycleHours               Float?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  lines                    LojistikRmaLine[]
+  events                   LojistikRmaEventLog[]
+  creditNotes              LojistikRmaCreditNote[]
+
+  @@index([rmaStatus])
+  @@index([orderNumber])
+  @@index([supplierId])
+  @@index([idempotencyKey])
 }
 
 model LogisticsAdapterConfig {
@@ -4524,6 +4577,134 @@ model LojistikSupplierPortalInvite {
   createdAt   DateTime  @default(now())
 
   @@index([supplierId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// LOJİSTİK FAZ 4: TERSİNE LOJİSTİK, İADE (RMA), KARANTİNA & KREDİ NOTASI
+// ─────────────────────────────────────────────────────────────
+
+model LojistikRmaLine {
+  id           String          @id @default(uuid())
+  rmaId        String
+  itemId       String?
+  orderLineId  String?
+  sku          String
+  itemName     String
+  soldQty      Float           @default(0)
+  requestedQty Float           @default(0)
+  receivedQty  Float           @default(0)
+  damagedQty   Float           @default(0)
+  missingQty   Float           @default(0)
+  unitPrice    Float           @default(0)
+  vatRate      Float           @default(20)
+  lotNumber    String?
+  serialNumber String?
+  expiryDate   DateTime?
+  disposition  String?
+  targetBinCode String?
+  inspectionId String?
+  ncrId        String?
+  supplierId   String?
+  notes        String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  rma          ReturnRmaRecord @relation(fields: [rmaId], references: [id], onDelete: Cascade)
+  item         InventoryItem?  @relation(fields: [itemId], references: [id], onDelete: SetNull)
+
+  @@index([rmaId])
+  @@index([itemId])
+  @@index([sku])
+}
+
+model LojistikRmaEventLog {
+  id           String          @id @default(uuid())
+  rmaId        String
+  eventType    String
+  fromStatus   String?
+  toStatus     String?
+  actorUserId  String?
+  actorName    String?
+  method       String          @default("WEB")
+  binCode      String?
+  qtyDelta     Float?
+  note         String?
+  metadataJson String?
+  createdAt    DateTime        @default(now())
+
+  rma          ReturnRmaRecord @relation(fields: [rmaId], references: [id], onDelete: Cascade)
+
+  @@index([rmaId])
+  @@index([createdAt])
+}
+
+model LojistikRmaCreditNote {
+  id           String          @id @default(uuid())
+  creditNoteNo String          @unique
+  rmaId        String
+  rmaNumber    String
+  orderNumber  String
+  customerName String
+  netAmount    Float           @default(0)
+  vatAmount    Float           @default(0)
+  grossAmount  Float           @default(0)
+  currency     String          @default("TRY")
+  status       String          @default("TASLAK_ONAY_BEKLIYOR") // TASLAK_ONAY_BEKLIYOR, ONAYLANDI, IADE_ODENDI, REDDEDILDI
+  eDocumentId  String?
+  eDocumentNo  String?
+  financeId    String?
+  branchId     String          @default("local-debug-branch")
+  requestedBy  String?
+  approvedBy   String?
+  approvedAt   DateTime?
+  paidAt       DateTime?
+  notes        String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  rma          ReturnRmaRecord @relation(fields: [rmaId], references: [id], onDelete: Cascade)
+
+  @@index([rmaId])
+  @@index([status])
+}
+
+model LojistikReturnPolicy {
+  id                String   @id @default(uuid())
+  policyKey         String   @unique
+  title             String
+  category          String?
+  itemId            String?
+  returnWindowDays  Int      @default(14)
+  warrantyMonths    Int      @default(0)
+  restockable       Boolean  @default(true)
+  requireInspection Boolean  @default(true)
+  notes             String?
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([category])
+  @@index([itemId])
+}
+
+model LojistikRmaWebhookLog {
+  id                String   @id @default(uuid())
+  direction         String   @default("INBOUND") // INBOUND | OUTBOUND
+  channelCode       String
+  eventType         String
+  externalRef       String?
+  idempotencyKey    String?
+  rmaId             String?
+  rmaNumber         String?
+  signatureVerified Boolean  @default(false)
+  status            String   @default("ACCEPTED") // ACCEPTED | DUPLICATE | REJECTED | FAILED
+  payloadJson       String
+  responseNote      String?
+  createdAt         DateTime @default(now())
+
+  @@index([channelCode])
+  @@index([idempotencyKey])
+  @@index([rmaId])
 }
 
 

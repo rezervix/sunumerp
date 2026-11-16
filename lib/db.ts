@@ -226,6 +226,11 @@ interface JsonDbData {
   lojistikSupplierScoreConfig?: any[]
   lojistikSupplierScoreSnapshot?: any[]
   lojistikSupplierPortalInvite?: any[]
+  lojistikRmaLine?: any[]
+  lojistikRmaEventLog?: any[]
+  lojistikRmaCreditNote?: any[]
+  lojistikReturnPolicy?: any[]
+  lojistikRmaWebhookLog?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -375,7 +380,12 @@ const initialData: JsonDbData = {
   lojistikSupplierAsnLine: [],
   lojistikSupplierScoreConfig: [],
   lojistikSupplierScoreSnapshot: [],
-  lojistikSupplierPortalInvite: []
+  lojistikSupplierPortalInvite: [],
+  lojistikRmaLine: [],
+  lojistikRmaEventLog: [],
+  lojistikRmaCreditNote: [],
+  lojistikReturnPolicy: [],
+  lojistikRmaWebhookLog: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1359,6 +1369,26 @@ class ModelSimulate {
       if (include.scoreSnapshots) enriched.scoreSnapshots = (db.lojistikSupplierScoreSnapshot || []).filter((s: any) => s.supplierId === item.id)
     }
 
+    if (this.modelName === "returnRmaRecord" && include) {
+      if (include.lines) {
+        enriched.lines = (db.lojistikRmaLine || []).filter((l: any) => l.rmaId === item.id)
+      }
+      if (include.events) {
+        enriched.events = (db.lojistikRmaEventLog || [])
+          .filter((e: any) => e.rmaId === item.id)
+          .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      }
+      if (include.creditNotes) {
+        enriched.creditNotes = (db.lojistikRmaCreditNote || []).filter((c: any) => c.rmaId === item.id)
+      }
+    }
+
+    if (this.modelName === "lojistikRmaCreditNote" && include) {
+      if (include.rma) {
+        enriched.rma = (db.returnRmaRecord || []).find((r: any) => r.id === item.rmaId) ?? null
+      }
+    }
+
     return enriched
   }
 
@@ -1507,6 +1537,10 @@ class ModelSimulate {
       purchaseRequisition: { lines: { childModel: "purchaseRequisitionLine", fk: "requisitionId" } },
       licensePlate: { contents: { childModel: "licensePlateContent", fk: "licensePlateId" } },
       omnichannelOrder: { shipmentLines: { childModel: "orderShipmentLine", fk: "orderId" } },
+      returnRmaRecord: {
+        lines: { childModel: "lojistikRmaLine", fk: "rmaId" },
+        events: { childModel: "lojistikRmaEventLog", fk: "rmaId" },
+      },
     }
     const modelRelations = relationMap[String(this.modelName)]
     if (!modelRelations || !rawData) return rawData
@@ -1910,7 +1944,12 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikSupplierAsnLine",
       "lojistikSupplierScoreConfig",
       "lojistikSupplierScoreSnapshot",
-      "lojistikSupplierPortalInvite"
+      "lojistikSupplierPortalInvite",
+      "lojistikRmaLine",
+      "lojistikRmaEventLog",
+      "lojistikRmaCreditNote",
+      "lojistikReturnPolicy",
+      "lojistikRmaWebhookLog"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
