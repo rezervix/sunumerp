@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
@@ -9,6 +10,7 @@ import { useAuth } from "@/lib/auth/context"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
+import { RmaCreateModal, type EligibleOrder } from "@/app/dashboard/omnichannel/components/RmaCreateModal"
 
 const statusColors = {
   pending: {
@@ -108,6 +110,54 @@ export default function OrdersPage() {
   const [editOrderId, setEditOrderId] = useState<string | null>(null)
   const [selectedOrder, setSelectedOrder] = useState<BranchOrder | null>(null)
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false)
+  const [rmaModalOrder, setRmaModalOrder] = useState<EligibleOrder | null>(null)
+  const [isRmaModalOpen, setIsRmaModalOpen] = useState(false)
+
+  const handleOpenQuickRma = async (order: BranchOrder) => {
+    try {
+      const res = await fetch(
+        `/api/omnichannel?section=order_lookup&orderId=${encodeURIComponent(order.id)}&orderNumber=${encodeURIComponent(order.orderNumber || "")}&orderSourceType=ERP_ORDER`,
+        { cache: "no-store" }
+      )
+      if (res.status === 403) {
+        toast.error("İade / RMA modülü bu şubede veya kullanıcı rolünüzde aktif değil.")
+        return
+      }
+      if (res.ok) {
+        const data = await res.json()
+        if (data.success && data.found) {
+          setRmaModalOrder(data as EligibleOrder)
+          setIsRmaModalOpen(true)
+          return
+        }
+      }
+    } catch {
+      // Fallback
+    }
+    const qty = Math.max(1, Number(order.quantity || 1))
+    const unitPrice = order.totalAmount && qty > 0 ? Number((order.totalAmount / qty).toFixed(2)) : 0
+    setRmaModalOrder({
+      found: true,
+      orderSourceType: "ERP_ORDER",
+      orderId: order.id,
+      orderNumber: order.orderNumber || order.id,
+      channelCode: "ERP",
+      customerName: order.customer?.name || order.customerName || "ERP Müşterisi",
+      deliveredAt: order.orderDate || new Date().toISOString(),
+      lines: [
+        {
+          orderLineId: order.id,
+          sku: "GUL-EKV-01",
+          itemName: order.title || "ERP Sipariş Kalemi",
+          soldQty: qty,
+          alreadyReturnedQty: 0,
+          maxReturnableQty: qty,
+          unitPrice,
+        },
+      ],
+    })
+    setIsRmaModalOpen(true)
+  }
   
   const [customers, setCustomers] = useState<{id: string, name: string, company?: string}[]>(() => mockDatabase.getCustomers() as any)
 
@@ -352,20 +402,29 @@ export default function OrdersPage() {
           </h1>
           <p className="text-zinc-400 mt-1 text-sm">Şube içi siparişlerinizi takip edin ve yönetin</p>
         </div>
-        <button
-          onClick={() => {
-            setEditOrderId(null)
-            setFormData({
-              branchId: "", orderType: "", title: "", description: "", priority: "normal", orderNumber: "",
-              orderDate: new Date().toISOString().split('T')[0], paymentStatus: "unpaid", customerName: "", companyName: "", customerPhone: "", files: [], customerId: ""
-            })
-            setIsCreateDialogOpen(true)
-          }}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all"
-        >
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          <span>Yeni Sipariş</span>
-        </button>
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <Link
+            href="/dashboard/omnichannel?tab=rma"
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-200 rounded-full text-xs font-medium transition-all"
+          >
+            <span className="material-symbols-outlined text-[16px] text-[#34D399]">assignment_return</span>
+            <span>İade &amp; RMA Merkezi</span>
+          </Link>
+          <button
+            onClick={() => {
+              setEditOrderId(null)
+              setFormData({
+                branchId: "", orderType: "", title: "", description: "", priority: "normal", orderNumber: "",
+                orderDate: new Date().toISOString().split('T')[0], paymentStatus: "unpaid", customerName: "", companyName: "", customerPhone: "", files: [], customerId: ""
+              })
+              setIsCreateDialogOpen(true)
+            }}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all"
+          >
+            <span className="material-symbols-outlined text-[18px]">add</span>
+            <span>Yeni Sipariş</span>
+          </button>
+        </div>
       </StaggerItem>
 
       {/* Borderless KPI Strip */}
@@ -545,6 +604,13 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-5 lg:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleOpenQuickRma(order)}
+                            className="p-2 text-zinc-400 hover:text-amber-300 hover:bg-amber-500/15 rounded-lg transition-colors flex items-center justify-center"
+                            title="İade Başlat (RMA)"
+                          >
+                            <span className="material-symbols-outlined text-[20px]">assignment_return</span>
+                          </button>
                           <button
                             onClick={() => window.open(`/dashboard/orders/${order.id}/print`, "_blank")}
                             className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors flex items-center justify-center"
@@ -974,6 +1040,16 @@ export default function OrdersPage() {
           </div>
         </div>
       )}
+      <RmaCreateModal
+        isOpen={isRmaModalOpen}
+        onClose={() => setIsRmaModalOpen(false)}
+        eligibleOrders={rmaModalOrder ? [rmaModalOrder] : []}
+        initialOrderNumber={rmaModalOrder?.orderNumber}
+        onCreated={(rma) => {
+          toast.success(`${rma?.rmaNumber || "RMA"} açıldı. Omnichannel İade & RMA sekmesinden takip edebilirsiniz.`)
+          router.push("/dashboard/omnichannel?tab=rma")
+        }}
+      />
     </StaggerContainer>
   )
 }

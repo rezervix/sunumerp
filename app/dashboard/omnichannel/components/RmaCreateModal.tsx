@@ -90,7 +90,10 @@ export function RmaCreateModal({
   const [selectedQtyBySku, setSelectedQtyBySku] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setSelectedOrder(null);
+      return;
+    }
     if (initialOrderNumber) {
       setSearchTerm(initialOrderNumber);
       const found = eligibleOrders.find(
@@ -103,11 +106,11 @@ export function RmaCreateModal({
         return;
       }
     }
-    if (!selectedOrder && eligibleOrders.length > 0) {
+    if (eligibleOrders.length > 0) {
       selectOrder(eligibleOrders[0]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, initialOrderNumber]);
+  }, [isOpen, initialOrderNumber, eligibleOrders]);
 
   const selectOrder = (ord: EligibleOrder) => {
     setSelectedOrder(ord);
