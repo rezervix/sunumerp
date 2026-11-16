@@ -227,8 +227,9 @@ async function run() {
         assert.ok(loginJson.token, "Gerçek yerel oturum token'ı dönmeli")
         const authCookie = `auth-token=${loginJson.token}`
 
-        const [snapRes, simRes] = await Promise.all([
+        const [snapRes, secRes, simRes] = await Promise.all([
           fetch(`${baseUrl}/api/omnichannel`, { headers: { Cookie: authCookie } }),
+          fetch(`${baseUrl}/api/omnichannel?section=rma_list`, { headers: { Cookie: authCookie } }),
           fetch(`${baseUrl}/api/omnichannel`, {
             method: "POST",
             headers: { Cookie: authCookie, "Content-Type": "application/json" },
@@ -239,9 +240,24 @@ async function run() {
         const snapJson = await snapRes.json()
         assert.equal(snapJson.featureFlags?.logisticsDemoMode, false)
 
+        if (process.env.EXPECT_FEATURE_ACTIVE === "true") {
+          assert.equal(secRes.status, 200, "Demo OFF + FEATURE_LOJISTIK_ALL=true iken rma_list 200 dönmeli")
+        } else {
+          assert.equal(secRes.status, 403)
+          const secJson = await secRes.json()
+          assert.equal(secJson.code, "FEATURE_DISABLED")
+        }
+
         assert.equal(simRes.status, 403, "Demo OFF iken simulate_return_webhook 403 dönmeli")
         const simJson = await simRes.json()
-        assert.equal(simJson.code, "DEMO_MODE_DISABLED")
+        if (process.env.EXPECT_FEATURE_ACTIVE === "true") {
+          assert.equal(simJson.code, "DEMO_MODE_DISABLED")
+        } else {
+          assert.ok(
+            simJson.code === "DEMO_MODE_DISABLED" || simJson.code === "FEATURE_DISABLED",
+            `Beklenmeyen hata kodu: ${simJson.code}`
+          )
+        }
       })
 
       await check("Demo OFF: İmzalı webhook secret olmadan / demo fallback olmadan reddedilmeli (401)", async () => {
