@@ -41,6 +41,49 @@ export async function GET(request: Request) {
       }
 
       const cleanCode = barcode.trim()
+      const strippedRmaCode = cleanCode.replace(/^RMA\|/i, "").trim()
+
+      // RMA belgesi, barkodu (RMA|...) veya kargo takip kodu eşleştirmesi
+      const rmaMatch = await (prisma as any).returnRmaRecord
+        .findFirst({
+          where: {
+            OR: [
+              { labelCode: cleanCode },
+              { rmaNumber: strippedRmaCode },
+              { returnTrackingNo: cleanCode },
+            ],
+          },
+          include: { lines: true },
+        })
+        .catch(() => null)
+
+      if (rmaMatch) {
+        return NextResponse.json({
+          success: true,
+          lookupType: "RMA",
+          rma: rmaMatch,
+          item: {
+            id: rmaMatch.id,
+            sku: rmaMatch.sku,
+            name: `${rmaMatch.rmaNumber} — ${rmaMatch.itemName}`,
+            barcode: cleanCode,
+            baseUnit: "Adet",
+            category: "RMA İade Kabul",
+            salesPrice: 0,
+            totalStock: Number(rmaMatch.returnQty || 0),
+            bins: [
+              {
+                binCode: rmaMatch.targetBinCode || "Q-01-01",
+                binPosition: "Karantina / İade",
+                warehouseName: "Karantina Bölgesi",
+                onHandQty: Number(rmaMatch.returnQty || 0),
+              },
+            ],
+            lotSerials: [],
+          },
+        })
+      }
+
       const item = await (prisma as any).inventoryItem.findFirst({
         where: {
           OR: [
