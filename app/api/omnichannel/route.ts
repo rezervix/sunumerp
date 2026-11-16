@@ -12,9 +12,21 @@ import {
   seedRealisticOmnichannelData
 } from '@/lib/services/omnichannelServerDb';
 import { mockDatabase } from '@/lib/data/mockDatabase';
+import {
+  FAZ4_GET_SECTIONS,
+  FAZ4_POST_ACTIONS,
+  handleReturnsExtendedGet,
+  handleReturnsExtendedPost,
+} from '@/lib/logistics/returns/apiHandlers';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const section = searchParams.get('section');
+    if (section && FAZ4_GET_SECTIONS.has(section)) {
+      return handleReturnsExtendedGet(request);
+    }
+
     const data = await getOmnichannelOverviewSnapshot();
     if (!data.orders || data.orders.length === 0) {
       return NextResponse.json(mockDatabase.getOmnichannelOverview());
@@ -30,6 +42,10 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action } = body;
+
+    if (action && FAZ4_POST_ACTIONS.has(action)) {
+      return handleReturnsExtendedPost(body);
+    }
 
     // 1. Stok Rezervasyonu
     if (action === 'reserve_order_stock') {

@@ -59,6 +59,8 @@ export interface RecordStockLedgerEntryInput {
   reservationId?: string | null
   /** Eğer rezerveli stok tüketiliyorsa (ör. toplama sonrası sevkiyat), reservedQty'den düşülecek miktar */
   consumeReservedQty?: number
+  /** Karantina miktarı değişimi (+ artırma / - azaltma; kullanılabilirden otomatik düşülür) */
+  quarantineDelta?: number
   /** Bloklu raf kuralını geçici bypass (ör. karantina iade veya sayım düzeltme) */
   allowBlockedBin?: boolean
   /** Lot traceability event tipi override */
@@ -449,12 +451,17 @@ export async function recordStockLedgerEntry(
 
   const prevOnHand = Number(balance?.onHandQty || 0)
   const prevReserved = Number(balance?.reservedQty || 0)
+  const prevQuarantine = Number(balance?.quarantineQty || 0)
   const consumeReserved = isOutbound
     ? Math.min(prevReserved, Math.max(0, Number(input.consumeReservedQty || 0)))
     : 0
   const nextReserved = Math.max(0, Number((prevReserved - consumeReserved).toFixed(4)))
+  const nextQuarantine = Math.max(
+    0,
+    Number((prevQuarantine + Number(input.quarantineDelta || 0)).toFixed(4))
+  )
   const nextOnHand = Math.max(0, Number((prevOnHand + signedDelta).toFixed(4)))
-  const nextAvailable = Math.max(0, Number((nextOnHand - nextReserved).toFixed(4)))
+  const nextAvailable = Math.max(0, Number((nextOnHand - nextReserved - nextQuarantine).toFixed(4)))
 
   if (balance) {
     balance = await prisma.stockBalance.update({
@@ -462,6 +469,7 @@ export async function recordStockLedgerEntry(
       data: {
         onHandQty: nextOnHand,
         reservedQty: nextReserved,
+        quarantineQty: nextQuarantine,
         availableQty: nextAvailable,
         binCode: targetBin?.code ?? balance.binCode ?? input.toBinCode ?? input.fromBinCode ?? null,
       },
@@ -477,7 +485,7 @@ export async function recordStockLedgerEntry(
         reservedQty: nextReserved,
         availableQty: nextAvailable,
         inTransitQty: 0,
-        quarantineQty: 0,
+        quarantineQty: nextQuarantine,
         consignmentQty: 0,
       },
     })

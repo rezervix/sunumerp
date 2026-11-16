@@ -195,10 +195,10 @@ export async function recalculateSupplierScorecard(
     }
   }
 
-  // Üretim Modülü Mal Kabul Kalite Muayenelerini (RECEIVING) gerçek veri olarak entegre et
+  // Üretim Modülü Mal Kabul ve İade (RECEIVING / RETURN_RMA) Kalite Muayenelerini gerçek veri olarak entegre et
   const receivingQcs = qcInspections.filter(
     (q: any) =>
-      (q.inspectionType === "RECEIVING" || !q.inspectionType) &&
+      (q.inspectionType === "RECEIVING" || q.inspectionType === "RETURN_RMA" || !q.inspectionType) &&
       q.status !== "CANCELLED"
   )
 

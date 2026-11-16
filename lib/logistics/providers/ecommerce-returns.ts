@@ -33,10 +33,11 @@ export class DemoDbReturnWebhookProvider implements ILogisticsReturnWebhookProvi
       .catch(() => null)
 
     if (rma) {
+      const isRefundState = ["PENDING", "APPROVED_CREDITED", "REJECTED"].includes(status)
       await (prisma as any).returnRmaRecord
         .update({
           where: { id: rma.id },
-          data: { refundStatus: status },
+          data: isRefundState ? { refundStatus: status } : { updatedAt: new Date() },
         })
         .catch(() => null)
     }

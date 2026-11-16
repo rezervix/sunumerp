@@ -1,4 +1,15 @@
 import { prisma } from "@/lib/db"
+import { getServerLogisticsFeatureFlags } from "@/lib/system-config"
+import {
+  decideRmaInspection,
+  listEligibleSalesOrdersForRma,
+  listReturnPolicies,
+} from "@/lib/logistics/returns/rmaService"
+import {
+  getReturnsAnalyticsReport,
+  listCreditNotes,
+  listReturnWebhookLogs,
+} from "@/lib/logistics/returns/financeAndWebhookService"
 
 export interface OmnichannelOverviewStats {
   connectedChannelsCount: number
@@ -270,7 +281,7 @@ export async function seedRealisticOmnichannelData() {
           returnQty: 10,
           returnReason: "Müşteri adres değişikliği nedeniyle teslim edilemedi",
           qcInspectionResult: "RESTOCK_TO_BIN",
-          targetWarehouseId: "wh-merkez",
+          targetWarehouseId: "wh-merkez-01",
           targetBinCode: "A-01-01",
           refundAmount: 850.0,
           refundStatus: "APPROVED_CREDITED",
@@ -290,8 +301,8 @@ export async function seedRealisticOmnichannelData() {
           returnQty: 2,
           returnReason: "Kargo taşıması sırasında çatlak oluşmuş",
           qcInspectionResult: "PENDING_INSPECTION",
-          targetWarehouseId: "wh-merkez",
-          targetBinCode: "KARANTINA-01",
+          targetWarehouseId: "wh-merkez-01",
+          targetBinCode: "Q-01-01",
           refundAmount: 760.0,
           refundStatus: "PENDING",
           returnTrackingNo: "UPS-RMA-1Z88219"
@@ -349,32 +360,45 @@ export async function getOmnichannelOverviewSnapshot() {
       await seedRealisticOmnichannelData()
     }
 
-    const [channels, orders, rmaReturns, logisticsAdapters, eDocuments, items] = await Promise.all([
+    const [channels, orders, rmaReturns, logisticsAdapters, eDocuments, items, storageBins, suppliers] = await Promise.all([
       (prisma as any).salesChannel.findMany({ orderBy: { dailyRevenue: "desc" } }).catch(() => []),
       (prisma as any).omnichannelOrder.findMany({
         include: { shipmentLines: { include: { item: true } } },
         orderBy: { orderDate: "desc" }
       }).catch(() => []),
-      (prisma as any).returnRmaRecord.findMany({ orderBy: { createdAt: "desc" } }).catch(() => []),
+      (prisma as any).returnRmaRecord.findMany({
+        include: { lines: true, events: true, creditNotes: true },
+        orderBy: { createdAt: "desc" }
+      }).catch(() => []),
       (prisma as any).logisticsAdapterConfig.findMany({ orderBy: { slaSuccessPercent: "desc" } }).catch(() => []),
       (prisma as any).eDocumentRecord.findMany({ orderBy: { dispatchDate: "desc" } }).catch(() => []),
       (prisma as any).inventoryItem.findMany({
         include: { stockBalances: true },
         orderBy: { name: "asc" }
-      }).catch(() => [])
+      }).catch(() => []),
+      (prisma as any).storageBin.findMany().catch(() => []),
+      (prisma as any).supplier.findMany({ orderBy: { name: "asc" } }).catch(() => []),
     ])
 
-    // Toplam Yayınlanan Stok (ATP)
+    // Toplam Yayınlanan Stok (ATP) — Karantina ve rezerve stoklar düşülür
     let totalPublishedStock = 0
     for (const item of items) {
       const onHand = (item.stockBalances || []).reduce((s: number, b: any) => s + Number(b.onHandQty || 0), 0)
       const reserved = (item.stockBalances || []).reduce((s: number, b: any) => s + Number(b.reservedQty || 0), 0)
-      totalPublishedStock += Math.max(0, onHand - reserved)
+      const quarantine = (item.stockBalances || []).reduce((s: number, b: any) => s + Number(b.quarantineQty || 0), 0)
+      totalPublishedStock += Math.max(0, onHand - reserved - quarantine)
     }
 
+    const logisticsFlags = getServerLogisticsFeatureFlags()
     const totalDailyOrders = channels.reduce((sum: number, c: any) => sum + Number(c.dailyOrderCount || 0), 0)
     const totalDailyRevenue = channels.reduce((sum: number, c: any) => sum + Number(c.dailyRevenue || 0), 0)
-    const pendingRmaCount = rmaReturns.filter((r: any) => r.qcInspectionResult === "PENDING_INSPECTION").length
+    const pendingRmaCount = rmaReturns.filter((r: any) => {
+      const st = String(r.rmaStatus || "")
+      if (st) {
+        return ["TALEP", "ONAYLANDI", "YOLDA", "TESLIM_ALINDI", "INCELEMEDE"].includes(st)
+      }
+      return r.qcInspectionResult === "PENDING_INSPECTION"
+    }).length
     const activeShipmentsCount = logisticsAdapters.reduce((sum: number, a: any) => sum + Number(a.activeShipments || 0), 0)
     const averageSlaPercent = logisticsAdapters.length > 0
       ? Number((logisticsAdapters.reduce((sum: number, a: any) => sum + Number(a.slaSuccessPercent || 0), 0) / logisticsAdapters.length).toFixed(1))
@@ -390,6 +414,17 @@ export async function getOmnichannelOverviewSnapshot() {
       totalPublishedStock
     }
 
+    const [returnPolicies, returnCreditNotes, returnWebhookLogs, returnAnalytics, eligibleReturnOrders] =
+      logisticsFlags.lojistik_iade
+        ? await Promise.all([
+            listReturnPolicies().catch(() => []),
+            listCreditNotes().catch(() => []),
+            listReturnWebhookLogs(40).catch(() => []),
+            getReturnsAnalyticsReport().catch(() => null),
+            listEligibleSalesOrdersForRma().catch(() => []),
+          ])
+        : [[], [], [], null, []]
+
     return {
       success: true,
       stats,
@@ -398,7 +433,17 @@ export async function getOmnichannelOverviewSnapshot() {
       rmaReturns,
       logisticsAdapters,
       eDocuments,
-      items
+      items,
+      storageBins,
+      suppliers,
+      returnPolicies,
+      returnCreditNotes,
+      returnWebhookLogs,
+      returnAnalytics,
+      eligibleReturnOrders,
+      featureFlags: {
+        lojistik_iade: Boolean(logisticsFlags.lojistik_iade),
+      },
     }
   } catch (error: any) {
     console.error("getOmnichannelOverviewSnapshot error:", error)
@@ -435,7 +480,7 @@ export async function reserveOrderStock(orderId: string, warehouseId?: string) {
     })
     if (!order) throw new Error("Sipariş bulunamadı")
 
-    const whId = warehouseId || "wh-merkez"
+    const whId = warehouseId || "wh-merkez-01"
 
     for (const line of order.shipmentLines || []) {
       if (!line.itemId) continue
@@ -490,7 +535,7 @@ export async function executeSplitShipment(data: {
     })
     if (!order) throw new Error("Sipariş bulunamadı")
 
-    const whId = data.warehouseId || "wh-merkez"
+    const whId = data.warehouseId || "wh-merkez-01"
     const currentShipped = Number(line.shippedQty || 0)
     const newShipped = currentShipped + data.shipQuantity
     const totalQty = Number(line.quantity || 0)
@@ -691,64 +736,27 @@ export async function processRmaDisposition(data: {
   warehouseId?: string
 }) {
   try {
-    const rma = await (prisma as any).returnRmaRecord.findUnique({ where: { id: data.rmaId } })
-    if (!rma) throw new Error("İade (RMA) kaydı bulunamadı")
-
-    const whId = data.warehouseId || rma.targetWarehouseId || "wh-merkez"
-    const binCode = data.targetBinCode || rma.targetBinCode || (data.disposition === "RESTOCK_TO_BIN" ? "A-01-01" : "KARANTINA-01")
-
-    // 1. Ürünü bul
-    const item = await (prisma as any).inventoryItem.findFirst({
-      where: { OR: [{ sku: rma.sku }, { name: rma.itemName }] }
-    }).catch(() => null)
-
-    if (item && data.disposition === "RESTOCK_TO_BIN") {
-      // Sağlam ürün stoğa geri alınır
-      const balance = await (prisma as any).stockBalance.findFirst({
-        where: { itemId: item.id, warehouseId: whId }
-      }).catch(() => null)
-
-      if (balance) {
-        await (prisma as any).stockBalance.update({
-          where: { id: balance.id },
-          data: {
-            onHandQty: { increment: Number(rma.returnQty || 0) },
-            availableQty: { increment: Number(rma.returnQty || 0) }
-          }
-        })
-      }
-
-      // Stok hareketi (IN)
-      await (prisma as any).stockMovement.create({
-        data: {
-          itemId: item.id,
-          warehouseId: whId,
-          movementType: "IN",
-          quantity: Number(rma.returnQty || 0),
-          documentType: "RMA_RESTOCK",
-          documentNo: rma.rmaNumber,
-          notes: `İade Kabul: ${rma.rmaNumber} - Sağlam Ürün Rafa Alındı (${binCode})`
-        }
-      }).catch(() => null)
-    }
-
-    // 2. RMA durumunu güncelle
-    const updated = await (prisma as any).returnRmaRecord.update({
-      where: { id: data.rmaId },
-      data: {
-        qcInspectionResult: data.disposition,
-        targetBinCode: binCode,
-        targetWarehouseId: whId,
-        refundStatus: data.disposition === "RESTOCK_TO_BIN" ? "APPROVED_CREDITED" : "PENDING"
-      }
+    const decision =
+      data.disposition === "RESTOCK_TO_BIN" ? "RESTOCK_TO_BIN" : "REPAIR_REFURBISH"
+    const res = await decideRmaInspection({
+      rmaId: data.rmaId,
+      decision,
+      targetBinCode: data.targetBinCode,
+      warehouseId: data.warehouseId,
+      allowLegacyPendingBypass: true,
     })
+
+    const binCode = res.rma?.targetBinCode || data.targetBinCode || (decision === "RESTOCK_TO_BIN" ? "A-01-01" : "Q-01-01")
 
     return {
       success: true,
-      rma: updated,
-      message: data.disposition === "RESTOCK_TO_BIN"
-        ? `${rma.returnQty} adet sağlam ürün ${binCode} rafına eklendi ve iade onaylandı.`
-        : `${rma.returnQty} adet kusurlu ürün ${binCode} karantinasına sevk edildi.`
+      rma: res.rma,
+      inspection: res.inspection,
+      ncr: res.ncr,
+      message:
+        data.disposition === "RESTOCK_TO_BIN"
+          ? `${res.rma?.returnQty || 0} adet sağlam ürün ${binCode} rafına eklendi ve kalite kararı kaydedildi.`
+          : `${res.rma?.returnQty || 0} adet kusurlu ürün ${binCode} karantinasına sevk edildi ve kalite kaydı açıldı.`,
     }
   } catch (error: any) {
     return { success: false, error: error.message || "RMA muayene işlemi başarısız" }

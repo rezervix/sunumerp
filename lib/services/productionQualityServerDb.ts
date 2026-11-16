@@ -288,7 +288,7 @@ export async function deleteQualityPlan(id: string, userId?: string) {
 export async function findApplicableQualityPlan(params: {
   itemId?: string
   itemGroup?: string
-  controlPoint: "RECEIVING" | "IN_PROCESS" | "FINAL"
+  controlPoint: "RECEIVING" | "IN_PROCESS" | "FINAL" | "RETURN_RMA"
 }) {
   const allPlans = await (db as any).uretimQualityPlan.findMany({
     where: {
@@ -581,7 +581,8 @@ export interface InspectionCreationInput {
   id?: string
   inspectionNumber?: string
   planId?: string | null
-  inspectionType: "RECEIVING" | "IN_PROCESS" | "FINAL"
+  inspectionType: "RECEIVING" | "IN_PROCESS" | "FINAL" | "RETURN_RMA"
+  skipAutoStockBlock?: boolean
   itemId: string
   workOrderId?: string | null
   workOrderOperationId?: string | null
@@ -826,7 +827,7 @@ export async function createQualityInspection(input: InspectionCreationInput, us
   }
 
   // 7. RET VE BLOKAJ YÖNETİMİ: Stok Karantinaya Alma & Blokaj Uygulama
-  if (dispositionResult.isStockBlockRequired) {
+  if (dispositionResult.isStockBlockRequired && !input.skipAutoStockBlock) {
     // A) Eğer Lot/Seri No varsa, LotSerialRecord'u QUARANTINE statüsüne al
     if (input.lotNumber) {
       const lotRecords = await (db as any).lotSerialRecord.findMany({

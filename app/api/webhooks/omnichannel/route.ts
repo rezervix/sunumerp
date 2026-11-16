@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { reserveOrderStock } from '@/lib/services/omnichannelServerDb';
+import { LogisticsDomainError } from '@/lib/logistics/security';
+import { ingestSecureReturnWebhook } from '@/lib/logistics/returns/financeAndWebhookService';
 
 /**
  * Dış Entegratör ve Pazaryeri Webhook Alıcı Uç Noktası (Trendyol, Hepsiburada, Shopify, Kargo vb.)
@@ -16,7 +18,7 @@ export async function GET(request: Request) {
     supportedChannels: ['TRENDYOL', 'HEPSIBURADA', 'SHOPIFY', 'CARGO_TRACKING'],
     documentation: {
       postUrl: '/api/webhooks/omnichannel?channel={channel_code}',
-      authHeader: 'X-Channel-Secret: <your_api_key>',
+      authHeader: 'X-Webhook-Signature: sha256=<hmac> | X-Channel-Secret: <secret>',
       events: ['ORDER_CREATED', 'SHIPMENT_STATUS_UPDATE', 'RETURN_REQUEST']
     }
   });
@@ -26,13 +28,59 @@ export async function POST(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const channel = (searchParams.get('channel') || 'EXTERNAL').toUpperCase();
-    const secretKey = request.headers.get('x-channel-secret') || request.headers.get('authorization');
+    const signatureHeader =
+      request.headers.get('x-webhook-signature') ||
+      request.headers.get('x-hub-signature-256');
+    const secretHeader =
+      request.headers.get('x-channel-secret') ||
+      request.headers.get('authorization');
 
-    const body = await request.json();
-    const event = body.event || body.eventType || 'ORDER_CREATED';
+    const rawBody = await request.text();
+    let body: Record<string, any> = {};
+    try {
+      body = rawBody ? JSON.parse(rawBody) : {};
+    } catch {
+      return NextResponse.json(
+        { success: false, code: 'INVALID_JSON', error: 'Geçersiz JSON webhook gövdesi.' },
+        { status: 400 }
+      );
+    }
+
+    const event = String(body.event || body.eventType || (body.orderNumber && !body.sku ? 'ORDER_CREATED' : 'ORDER_CREATED'));
+
+    // 0. İMZA DOĞRULAMALI İADE TALEBİ WEBHOOK (RETURN_REQUEST)
+    if (event === 'RETURN_REQUEST') {
+      try {
+        const result = await ingestSecureReturnWebhook({
+          channelCode: channel,
+          rawBody,
+          payload: body,
+          signatureHeader,
+          secretHeader,
+        });
+
+        return NextResponse.json({
+          success: true,
+          duplicate: result.duplicate,
+          message: result.duplicate
+            ? `Tekilleştirilen mevcut iade döndü: ${result.rmaNumber}`
+            : `İmzalı iade talebi kabul edildi ve RMA oluşturuldu: ${result.rmaNumber}`,
+          rmaNumber: result.rmaNumber,
+          rma: result.rma,
+        });
+      } catch (err) {
+        if (err instanceof LogisticsDomainError) {
+          return NextResponse.json(
+            { success: false, code: err.code, error: err.message, details: err.details },
+            { status: err.status }
+          );
+        }
+        throw err;
+      }
+    }
 
     // 1. OMNICHANNEL YENİ SİPARİŞ GELMESİ (ORDER_CREATED)
-    if (event === 'ORDER_CREATED' || body.orderNumber) {
+    if (event === 'ORDER_CREATED' || (!body.event && !body.eventType && body.orderNumber)) {
       const orderNo = body.orderNumber || `EXT-${Date.now().toString().slice(-6)}`;
       const customer = body.customerName || body.customer?.fullName || 'Pazaryeri Müşterisi';
       const city = body.city || body.shippingAddress?.city || 'İstanbul';
@@ -110,33 +158,6 @@ export async function POST(request: Request) {
       return NextResponse.json({
         success: true,
         message: `Kargo takip güncellemesi işlendi: ${tracking} -> ${status}`
-      });
-    }
-
-    // 3. İADE TALEBİ GELMESİ (RETURN_REQUEST)
-    if (event === 'RETURN_REQUEST') {
-      const rmaNo = `RMA-${Date.now().toString().slice(-6)}`;
-      const rma = await (prisma as any).returnRmaRecord.create({
-        data: {
-          rmaNumber: rmaNo,
-          orderNumber: body.orderNumber || 'BILINMEYEN',
-          channelCode: channel,
-          customerName: body.customerName || 'Müşteri',
-          sku: body.sku || 'SKU-01',
-          itemName: body.itemName || 'İade Ürün',
-          returnQty: parseFloat(body.quantity || 1),
-          returnReason: body.reason || 'Müşteri vazgeçti',
-          qcInspectionResult: 'PENDING_INSPECTION',
-          refundAmount: parseFloat(body.refundAmount || 0),
-          refundStatus: 'PENDING',
-          returnTrackingNo: body.trackingNumber || null
-        }
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: `İade talebi oluşturuldu: ${rmaNo}`,
-        rma
       });
     }
 
