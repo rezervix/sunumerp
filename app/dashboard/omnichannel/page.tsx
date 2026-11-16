@@ -34,6 +34,31 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
   const [rmaReturns, setRmaReturns] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().rmaReturns);
   const [logisticsAdapters, setLogisticsAdapters] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().logisticsAdapters);
   const [eDocuments, setEDocuments] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().eDocuments);
+  const [storageBins, setStorageBins] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>([]);
+  const [returnPolicies, setReturnPolicies] = useState<any[]>([]);
+  const [returnCreditNotes, setReturnCreditNotes] = useState<any[]>([]);
+  const [returnWebhookLogs, setReturnWebhookLogs] = useState<any[]>([]);
+  const [returnAnalytics, setReturnAnalytics] = useState<any>(null);
+  const [eligibleReturnOrders, setEligibleReturnOrders] = useState<any[]>([]);
+  const [logisticsDemoMode, setLogisticsDemoMode] = useState<boolean>(false);
+  const [lojistikIadeEnabled, setLojistikIadeEnabled] = useState<boolean>(true);
+  const [initialRmaOrder, setInitialRmaOrder] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const sp = new URLSearchParams(window.location.search);
+    const tabParam = sp.get('tab');
+    const rmaOrderParam = sp.get('rmaOrder');
+    if (tabParam && ['orders', 'rma', 'channels', 'edoc'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+    if (rmaOrderParam) {
+      setActiveTab('rma');
+      setInitialRmaOrder(rmaOrderParam);
+    }
+  }, []);
 
   // Modal Durumu
   const [isEdocModalOpen, setIsEdocModalOpen] = useState(false);
@@ -67,6 +92,22 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           if (data.rmaReturns) setRmaReturns(data.rmaReturns);
           if (data.logisticsAdapters) setLogisticsAdapters(data.logisticsAdapters);
           if (data.eDocuments) setEDocuments(data.eDocuments);
+          if (Array.isArray(data.storageBins)) setStorageBins(data.storageBins);
+          if (Array.isArray(data.suppliers)) setSuppliers(data.suppliers);
+          if (Array.isArray(data.items)) setItems(data.items);
+          if (Array.isArray(data.returnPolicies)) setReturnPolicies(data.returnPolicies);
+          if (Array.isArray(data.returnCreditNotes)) setReturnCreditNotes(data.returnCreditNotes);
+          if (Array.isArray(data.returnWebhookLogs)) setReturnWebhookLogs(data.returnWebhookLogs);
+          if (data.returnAnalytics !== undefined) setReturnAnalytics(data.returnAnalytics);
+          if (Array.isArray(data.eligibleReturnOrders)) setEligibleReturnOrders(data.eligibleReturnOrders);
+          if (data.featureFlags) {
+            if (typeof data.featureFlags.logisticsDemoMode === 'boolean') {
+              setLogisticsDemoMode(data.featureFlags.logisticsDemoMode);
+            }
+            if (typeof data.featureFlags.lojistik_iade === 'boolean') {
+              setLojistikIadeEnabled(data.featureFlags.lojistik_iade);
+            }
+          }
           return;
         }
       }
@@ -255,6 +296,17 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           <RmaReturnManager
             rmaReturns={rmaReturns}
             onUpdated={() => fetchOmnichannelData(true)}
+            storageBins={storageBins}
+            suppliers={suppliers}
+            items={items}
+            returnPolicies={returnPolicies}
+            returnCreditNotes={returnCreditNotes}
+            returnWebhookLogs={returnWebhookLogs}
+            returnAnalytics={returnAnalytics}
+            eligibleReturnOrders={eligibleReturnOrders}
+            logisticsDemoMode={logisticsDemoMode}
+            lojistikIadeEnabled={lojistikIadeEnabled}
+            initialOrderNumber={initialRmaOrder}
           />
         </TabsContent>
 
