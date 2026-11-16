@@ -21,6 +21,7 @@ import {
   QrCode,
   X,
   Trash2,
+  RotateCcw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -48,6 +49,7 @@ type OperationType =
   | "BLIND_COUNT_ENTRY"
   | "GOODS_RECEIPT"
   | "SSCC_SCAN"
+  | "RMA_RETURN_RECEIPT"
 
 export default function MobileFieldScannerPwaPage() {
   const [isOfflineMode, setIsOfflineMode] = useState(false)
@@ -56,10 +58,13 @@ export default function MobileFieldScannerPwaPage() {
   const [isSyncing, setIsSyncing] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
-  // Canlı Depo Görevleri (Atanan İşler)
+  // Canlı Depo Görevleri (Atanan İşler) ve Açık İadeler (RMA)
   const [liveTasks, setLiveTasks] = useState<any[]>([])
+  const [openRmas, setOpenRmas] = useState<any[]>([])
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null)
   const [activeLineId, setActiveLineId] = useState<string | null>(null)
+  const [activeRmaId, setActiveRmaId] = useState<string | null>(null)
+  const [activeRmaNumber, setActiveRmaNumber] = useState<string | null>(null)
   const [activeWarehouseId, setActiveWarehouseId] = useState<string>("wh-merkez-01")
 
   // Gerçek Kamera QR / Barkod Okuyucu (@zxing/browser)
@@ -73,6 +78,7 @@ export default function MobileFieldScannerPwaPage() {
   const [operatorName, setOperatorName] = useState("Saha Operatörü")
   const [targetBinCode, setTargetBinCode] = useState("A-01-01")
   const [quantity, setQuantity] = useState("10")
+  const [damagedQty, setDamagedQty] = useState("0")
   const [lotNumber, setLotNumber] = useState("")
 
   // Manuel Barkod Girişi
@@ -122,14 +128,27 @@ export default function MobileFieldScannerPwaPage() {
     }
   }
 
-  // Çevrimdışı Kuyruğu ve Canlı Depo Görevlerini Yükle
+  // Çevrimdışı Kuyruğu, Canlı Depo Görevlerini ve Açık İade RMA'ları Yükle
   const fetchLiveTasks = async () => {
     if (isOfflineMode) return
     try {
-      const res = await fetch("/api/wms", { cache: "no-store" })
-      const data = await res.json()
+      const [wmsRes, rmaRes] = await Promise.all([
+        fetch("/api/wms", { cache: "no-store" }),
+        fetch("/api/omnichannel?section=rma_list", { cache: "no-store" }).catch(() => null),
+      ])
+      const data = await wmsRes.json()
       if (data.success && Array.isArray(data.tasks)) {
         setLiveTasks(data.tasks.filter((t: any) => t.status !== "COMPLETED"))
+      }
+      if (rmaRes && rmaRes.ok) {
+        const rmaJson = await rmaRes.json()
+        if (rmaJson.success && Array.isArray(rmaJson.rmas)) {
+          setOpenRmas(
+            rmaJson.rmas.filter((r: any) =>
+              ["TALEP", "ONAYLANDI", "YOLDA"].includes(String(r.rmaStatus || ""))
+            )
+          )
+        }
       }
     } catch {
       // Çevrimdışı durumda sessiz geç
@@ -228,7 +247,7 @@ export default function MobileFieldScannerPwaPage() {
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [selectedAction, quantity, targetBinCode, lotNumber, isOfflineMode, deviceId, operatorName])
+  }, [selectedAction, quantity, damagedQty, targetBinCode, lotNumber, isOfflineMode, deviceId, operatorName, activeRmaId, activeRmaNumber])
 
   const pendingOfflineCount = (queue || []).filter(q => q.syncStatus === "QUEUED_OFFLINE").length
   const conflictCount = (queue || []).filter(q => q.syncStatus === "CONFLICT").length
@@ -244,52 +263,103 @@ export default function MobileFieldScannerPwaPage() {
     setIsLoadingLookup(true)
     try {
       let matchedItem: any = null
+      let matchedRma: any = null
 
       if (!isOfflineMode) {
         const res = await fetch(`/api/wms?section=lookup&barcode=${encodeURIComponent(code)}`)
         const data = await res.json()
         if (data.success && data.item) {
           matchedItem = data.item
+          if (data.lookupType === "RMA" && data.rma) {
+            matchedRma = data.rma
+          }
         }
+      }
+
+      const effectiveAction: OperationType =
+        matchedRma || /^RMA\|/i.test(code) ? "RMA_RETURN_RECEIPT" : selectedAction
+      if (effectiveAction !== selectedAction) {
+        setSelectedAction(effectiveAction)
       }
 
       if (!matchedItem) {
         matchedItem = {
           id: `local-item-${code}`,
           sku: code,
-          name: selectedAction === "SSCC_SCAN" ? `SSCC / Palet [${code}]` : `Ürün [${code}]`,
+          name:
+            effectiveAction === "SSCC_SCAN"
+              ? `SSCC / Palet [${code}]`
+              : effectiveAction === "RMA_RETURN_RECEIPT"
+                ? `İade Paketi [${code}]`
+                : `Ürün [${code}]`,
           barcode: code,
-          baseUnit: selectedAction === "SSCC_SCAN" ? "Palet" : "Adet",
+          baseUnit: effectiveAction === "SSCC_SCAN" ? "Palet" : "Adet",
           totalStock: 0,
-          bins: [{ binCode: targetBinCode, onHandQty: 0, warehouseName: "Yerel Saha" }]
+          bins: [
+            {
+              binCode: effectiveAction === "RMA_RETURN_RECEIPT" ? "Q-01-01" : targetBinCode,
+              onHandQty: 0,
+              warehouseName: "Yerel Saha",
+            },
+          ],
         }
       }
 
-      const qtyNum = Math.max(1, Number(quantity) || 1)
+      const qtyNum = Math.max(0, Number(quantity) || 0)
+      const dmgNum = Math.max(0, Number(damagedQty) || 0)
+      const effectiveQty = effectiveAction === "RMA_RETURN_RECEIPT" ? qtyNum + dmgNum || Number(matchedRma?.returnQty || 1) : Math.max(1, qtyNum)
+      const effectiveBin =
+        effectiveAction === "RMA_RETURN_RECEIPT"
+          ? matchedRma?.targetBinCode || (targetBinCode === "A-01-01" ? "Q-01-01" : targetBinCode)
+          : targetBinCode
+
+      const rmaReceivedLines =
+        effectiveAction === "RMA_RETURN_RECEIPT" &&
+        matchedRma &&
+        Array.isArray(matchedRma.lines) &&
+        matchedRma.lines.length === 1
+          ? [
+              {
+                lineId: matchedRma.lines[0].id,
+                sku: matchedRma.lines[0].sku,
+                receivedQty: qtyNum > 0 || dmgNum > 0 ? qtyNum : Number(matchedRma.lines[0].requestedQty || matchedRma.returnQty || 1),
+                damagedQty: dmgNum,
+                lotNumber: lotNumber || matchedRma.lines[0].lotNumber || undefined,
+              },
+            ]
+          : undefined
+
       const actionLabels: Record<OperationType, string> = {
         GOODS_RECEIPT: "Mal Kabul (Rampa Girişi)",
         PUTAWAY_CONFIRM: "Rafa Yerleştirme (Put-away)",
         PICK_CONFIRM: "Sipariş Toplama (Pick)",
         BLIND_COUNT_ENTRY: "Hücre Sayımı (Kör Sayım)",
-        SSCC_SCAN: "LPN / SSCC-18 Palet Tarama"
+        SSCC_SCAN: "LPN / SSCC-18 Palet Tarama",
+        RMA_RETURN_RECEIPT: "İade Mal Kabul (RMA Karantina)",
       }
 
       const createdOp = await enqueueOfflineWmsOperation(
         {
           deviceId: scanSource === "CAMERA" ? `${deviceId}-CAM` : deviceId,
           operatorName,
-          operationType: selectedAction,
+          operationType: effectiveAction,
           codeScanned: code,
           sku: matchedItem.sku,
           itemId: matchedItem.id?.startsWith("local-item-") ? undefined : matchedItem.id,
-          warehouseId: activeWarehouseId,
+          warehouseId: matchedRma?.targetWarehouseId || activeWarehouseId,
           taskId: activeTaskId || undefined,
           lineId: activeLineId || undefined,
+          rmaId: matchedRma?.id || activeRmaId || undefined,
+          rmaNumber: matchedRma?.rmaNumber || activeRmaNumber || undefined,
+          trackingNo: matchedRma?.returnTrackingNo || code,
+          damagedQty: effectiveAction === "RMA_RETURN_RECEIPT" ? dmgNum : undefined,
+          scanMethod: scanSource,
+          receivedLines: rmaReceivedLines,
           itemName: matchedItem.name,
           lotNumber: lotNumber || undefined,
-          binCode: targetBinCode,
-          lpnCode: selectedAction === "SSCC_SCAN" ? code : undefined,
-          quantity: qtyNum,
+          binCode: effectiveBin,
+          lpnCode: effectiveAction === "SSCC_SCAN" ? code : undefined,
+          quantity: effectiveQty,
           unit: matchedItem.baseUnit || "Adet"
         },
         isOfflineMode
@@ -306,12 +376,14 @@ export default function MobileFieldScannerPwaPage() {
         unit: matchedItem.baseUnit || "Adet",
         totalStock: matchedItem.totalStock,
         bins: matchedItem.bins || [],
-        processedQty: qtyNum,
-        actionLabel: actionLabels[selectedAction],
+        processedQty: effectiveQty,
+        actionLabel: actionLabels[effectiveAction],
         timestamp: new Date().toLocaleTimeString("tr-TR")
       })
 
       setBarcodeInput("")
+      setActiveRmaId(null)
+      setActiveRmaNumber(null)
 
       if (createdOp.syncStatus === "CONFLICT") {
         playTerminalBeep("error")
@@ -326,12 +398,12 @@ export default function MobileFieldScannerPwaPage() {
       } else if (isOfflineMode || createdOp.syncStatus === "QUEUED_OFFLINE") {
         playTerminalBeep("success")
         toast.warning("Çevrimdışı (Offline) Kuyruğa Alındı", {
-          description: `${matchedItem.name} — ${qtyNum} ${matchedItem.baseUnit} IndexedDB'ye kaydedildi.`
+          description: `${matchedItem.name} — ${effectiveQty} ${matchedItem.baseUnit} IndexedDB'ye kaydedildi.`
         })
       } else {
         playTerminalBeep("success")
         toast.success(`${scanSource === "CAMERA" ? "Kamera" : "Terminal"} Okuması Başarıyla İşlendi!`, {
-          description: `${matchedItem.name} — ${targetBinCode} rafına ${qtyNum} ${matchedItem.baseUnit} işlendi.`
+          description: `${matchedItem.name} — ${effectiveBin} rafına ${effectiveQty} ${matchedItem.baseUnit} işlendi.`
         })
         fetchLiveTasks()
       }
@@ -594,21 +666,98 @@ export default function MobileFieldScannerPwaPage() {
               </div>
             </button>
           </div>
-          <button
-            onClick={() => setSelectedAction("SSCC_SCAN")}
-            className={`mt-2 w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${
-              selectedAction === "SSCC_SCAN"
-                ? "bg-[#34D399] text-[#061811] border-[#34D399] font-semibold"
-                : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <QrCode className={`h-4 w-4 ${selectedAction === "SSCC_SCAN" ? "text-[#061811]" : "text-[#34D399]"}`} />
-              <span className="text-xs font-semibold">5. SSCC-18 Palet / LPN Tarama (GS1-128)</span>
-            </div>
-            <span className="text-[10px] font-mono">AI (00)</span>
-          </button>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <button
+              onClick={() => setSelectedAction("SSCC_SCAN")}
+              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${
+                selectedAction === "SSCC_SCAN"
+                  ? "bg-[#34D399] text-[#061811] border-[#34D399] font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+              }`}
+            >
+              <div className="flex items-center gap-1.5 min-w-0">
+                <QrCode className={`h-4 w-4 shrink-0 ${selectedAction === "SSCC_SCAN" ? "text-[#061811]" : "text-[#34D399]"}`} />
+                <span className="text-[11px] font-semibold truncate">5. SSCC-18 Palet</span>
+              </div>
+              <span className="text-[9px] font-mono shrink-0">AI(00)</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setSelectedAction("RMA_RETURN_RECEIPT")
+                if (targetBinCode === "A-01-01") setTargetBinCode("Q-01-01")
+              }}
+              data-testid="mobile-action-rma-receipt"
+              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${
+                selectedAction === "RMA_RETURN_RECEIPT"
+                  ? "bg-amber-400 text-[#061811] border-amber-400 font-semibold"
+                  : "bg-[#111513] border-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+              }`}
+            >
+              <div className="flex items-center gap-1.5 min-w-0">
+                <RotateCcw className={`h-4 w-4 shrink-0 ${selectedAction === "RMA_RETURN_RECEIPT" ? "text-[#061811]" : "text-amber-400"}`} />
+                <span className="text-[11px] font-semibold truncate">6. İade Kabul (RMA)</span>
+              </div>
+              <span className="text-[9px] font-mono shrink-0">Karantina</span>
+            </button>
+          </div>
         </div>
+
+        {/* AÇIK İADE (RMA) BEKLEYEN PAKETLER */}
+        {(selectedAction === "RMA_RETURN_RECEIPT" || openRmas.length > 0) && openRmas.length > 0 && (
+          <div className="bg-[#111513] border border-amber-500/20 rounded-2xl p-3 space-y-2">
+            <div className="flex items-center justify-between text-[11px] text-amber-300">
+              <span className="flex items-center gap-1.5 font-semibold uppercase tracking-wider">
+                <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+                Teslim Bekleyen İade (RMA) ({openRmas.length})
+              </span>
+              {activeRmaId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveRmaId(null)
+                    setActiveRmaNumber(null)
+                  }}
+                  className="text-[10px] text-zinc-400 hover:text-white cursor-pointer"
+                >
+                  Temizle
+                </button>
+              )}
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {openRmas.slice(0, 6).map((r) => {
+                const isSel = activeRmaId === r.id
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedAction("RMA_RETURN_RECEIPT")
+                      setActiveRmaId(r.id)
+                      setActiveRmaNumber(r.rmaNumber)
+                      setTargetBinCode(r.targetBinCode || "Q-01-01")
+                      setQuantity(String(r.returnQty || 1))
+                      setDamagedQty("0")
+                      setBarcodeInput(r.labelCode || r.rmaNumber)
+                      toast.success(`İade seçildi: ${r.rmaNumber}`)
+                    }}
+                    className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${
+                      isSel
+                        ? "bg-amber-500/20 border-amber-400/50 text-white"
+                        : "bg-black/30 border-white/[0.06] text-zinc-300 hover:bg-white/[0.05]"
+                    }`}
+                  >
+                    <div className="font-mono font-semibold text-amber-300">{r.rmaNumber}</div>
+                    <div className="truncate max-w-[145px]">{r.customerName}</div>
+                    <div className="text-[10px] text-zinc-400 font-mono">
+                      {r.sku} • {r.returnQty} Adet • {r.returnTrackingNo || "Etiketsiz"}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* 3. GERÇEK BARKOD / KAMERA QR GİRİŞ & DONANIM TARAMA VİZÖRÜ */}
         <div className="space-y-2">
@@ -627,7 +776,7 @@ export default function MobileFieldScannerPwaPage() {
                     handleLookupAndExecute(barcodeInput, "USB")
                   }
                 }}
-                placeholder="Barkod / QR / SSCC okutun..."
+                placeholder={selectedAction === "RMA_RETURN_RECEIPT" ? "RMA|... / RMA No / Kargo Takip okutun..." : "Barkod / QR / SSCC okutun..."}
                 className="pl-11 pr-20 h-12 text-sm bg-[#111513] border-white/[0.08] text-white placeholder:text-zinc-600 rounded-2xl focus-visible:ring-[#34D399] font-mono"
               />
               <Button
@@ -650,22 +799,34 @@ export default function MobileFieldScannerPwaPage() {
             </Button>
           </div>
 
-          {/* Hızlı Parametre Çubuğu (Hedef Raf & Miktar) */}
+          {/* Hızlı Parametre Çubuğu (Hedef Raf, Sağlam & Hasarlı Miktar) */}
           <div className="flex items-center gap-2 text-xs">
             <div className="flex-1 bg-[#111513] border border-white/[0.06] rounded-xl px-3 py-2 flex items-center justify-between">
               <span className="text-zinc-500 text-[11px]">Hedef Raf:</span>
               <span className="font-mono font-semibold text-[#34D399]">{targetBinCode}</span>
             </div>
-            <div className="w-28 bg-[#111513] border border-white/[0.06] rounded-xl px-3 py-2 flex items-center justify-between">
-              <span className="text-zinc-500 text-[11px]">Miktar:</span>
+            <div className="w-24 bg-[#111513] border border-white/[0.06] rounded-xl px-2.5 py-2 flex items-center justify-between">
+              <span className="text-zinc-500 text-[11px]">{selectedAction === "RMA_RETURN_RECEIPT" ? "Sağlam:" : "Miktar:"}</span>
               <input
                 type="number"
-                min="1"
+                min="0"
                 value={quantity}
                 onChange={e => setQuantity(e.target.value)}
-                className="w-10 bg-transparent text-right font-semibold text-white focus:outline-none"
+                className="w-9 bg-transparent text-right font-semibold text-white focus:outline-none"
               />
             </div>
+            {selectedAction === "RMA_RETURN_RECEIPT" && (
+              <div className="w-24 bg-[#111513] border border-amber-500/20 rounded-xl px-2.5 py-2 flex items-center justify-between">
+                <span className="text-amber-300 text-[11px]">Hasarlı:</span>
+                <input
+                  type="number"
+                  min="0"
+                  value={damagedQty}
+                  onChange={e => setDamagedQty(e.target.value)}
+                  className="w-8 bg-transparent text-right font-semibold text-amber-200 focus:outline-none"
+                />
+              </div>
+            )}
           </div>
         </div>
 
