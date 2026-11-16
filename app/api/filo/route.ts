@@ -424,6 +424,7 @@ export async function POST(req: Request) {
           itemId: body.itemId,
           quantityUsed: Number(body.quantityUsed || 1),
           warehouseId: body.warehouseId,
+          binCode: body.binCode,
           unitCostOverride: body.unitCostOverride,
           actorUserId: actor.userId,
         })

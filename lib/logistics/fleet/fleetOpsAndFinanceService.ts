@@ -329,6 +329,8 @@ export async function recordFleetWorkOrderSparePart(params: {
   itemId: string
   quantityUsed: number
   warehouseId?: string | null
+  storageBinId?: string | null
+  binCode?: string | null
   unitCostOverride?: number
   actorUserId: string
 }) {
@@ -352,12 +354,28 @@ export async function recordFleetWorkOrderSparePart(params: {
   const balances = await prisma.stockBalance.findMany({ where: { itemId: item.id } }).catch(() => [])
   const targetWhId =
     params.warehouseId ||
-    balances.find((b: any) => Number(b.availableQty || b.onHandQty || 0) >= qty)?.warehouseId
+    balances.find((b: any) => Number(b.availableQty ?? b.onHandQty ?? 0) >= qty)?.warehouseId
 
   if (targetWhId) {
+    const whBalance =
+      balances.find(
+        (b: any) =>
+          b.warehouseId === targetWhId &&
+          (params.storageBinId === undefined || (b.storageBinId ?? null) === (params.storageBinId ?? null)) &&
+          (params.binCode === undefined || (b.binCode ?? null) === (params.binCode ?? null)) &&
+          Number(b.availableQty ?? b.onHandQty ?? 0) >= qty
+      ) || balances.find((b: any) => b.warehouseId === targetWhId)
+
+    const resolvedStorageBinId =
+      params.storageBinId !== undefined ? params.storageBinId : (whBalance?.storageBinId ?? null)
+    const resolvedBinCode =
+      params.binCode !== undefined ? params.binCode : (whBalance?.binCode ?? null)
+
     const ledgerRes = await recordStockLedgerEntry({
       itemId: item.id,
       warehouseId: targetWhId,
+      storageBinId: resolvedStorageBinId,
+      fromBinCode: resolvedBinCode ?? undefined,
       movementType: "ISSUE",
       quantityDelta: qty,
       referenceDocNo: wo.workOrderNumber,
