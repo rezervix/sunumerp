@@ -231,6 +231,23 @@ interface JsonDbData {
   lojistikRmaCreditNote?: any[]
   lojistikReturnPolicy?: any[]
   lojistikRmaWebhookLog?: any[]
+  lojistikVehicle?: any[]
+  lojistikVehicleLease?: any[]
+  lojistikDriver?: any[]
+  lojistikVehicleDocument?: any[]
+  lojistikTrafficPenalty?: any[]
+  lojistikVehicleMaintenancePlan?: any[]
+  lojistikVehicleMaintenanceWorkOrder?: any[]
+  lojistikVehicleMaintenanceSparePart?: any[]
+  lojistikVehicleMaintenanceChecklistResult?: any[]
+  lojistikVehicleFaultLog?: any[]
+  lojistikVehicleTire?: any[]
+  lojistikFuelLog?: any[]
+  lojistikCo2EmissionFactor?: any[]
+  lojistikTelematicConnection?: any[]
+  lojistikVehicleTelematicMap?: any[]
+  lojistikTelemetryEvent?: any[]
+  lojistikTelematicErrorLog?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -385,7 +402,24 @@ const initialData: JsonDbData = {
   lojistikRmaEventLog: [],
   lojistikRmaCreditNote: [],
   lojistikReturnPolicy: [],
-  lojistikRmaWebhookLog: []
+  lojistikRmaWebhookLog: [],
+  lojistikVehicle: [],
+  lojistikVehicleLease: [],
+  lojistikDriver: [],
+  lojistikVehicleDocument: [],
+  lojistikTrafficPenalty: [],
+  lojistikVehicleMaintenancePlan: [],
+  lojistikVehicleMaintenanceWorkOrder: [],
+  lojistikVehicleMaintenanceSparePart: [],
+  lojistikVehicleMaintenanceChecklistResult: [],
+  lojistikVehicleFaultLog: [],
+  lojistikVehicleTire: [],
+  lojistikFuelLog: [],
+  lojistikCo2EmissionFactor: [],
+  lojistikTelematicConnection: [],
+  lojistikVehicleTelematicMap: [],
+  lojistikTelemetryEvent: [],
+  lojistikTelematicErrorLog: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1949,7 +1983,24 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikRmaEventLog",
       "lojistikRmaCreditNote",
       "lojistikReturnPolicy",
-      "lojistikRmaWebhookLog"
+      "lojistikRmaWebhookLog",
+      "lojistikVehicle",
+      "lojistikVehicleLease",
+      "lojistikDriver",
+      "lojistikVehicleDocument",
+      "lojistikTrafficPenalty",
+      "lojistikVehicleMaintenancePlan",
+      "lojistikVehicleMaintenanceWorkOrder",
+      "lojistikVehicleMaintenanceSparePart",
+      "lojistikVehicleMaintenanceChecklistResult",
+      "lojistikVehicleFaultLog",
+      "lojistikVehicleTire",
+      "lojistikFuelLog",
+      "lojistikCo2EmissionFactor",
+      "lojistikTelematicConnection",
+      "lojistikVehicleTelematicMap",
+      "lojistikTelemetryEvent",
+      "lojistikTelematicErrorLog"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

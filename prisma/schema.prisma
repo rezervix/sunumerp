@@ -837,15 +837,19 @@ model Finance {
   category    String
   description String?
   receiptUrl  String?
-  status      String   @default("pending") // pending, approved, rejected
-  approvedBy  String?
-  date        DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status            String   @default("pending") // pending, approved, rejected
+  approvedBy        String?
+  vehicleId         String?
+  driverId          String?
+  fleetCostCategory String?
+  date              DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
 
   @@index([branchId, type])
+  @@index([vehicleId])
 }
 
 // -----------------------------------------
@@ -2233,7 +2237,9 @@ model WarehouseTransferOrder {
   transferReason   String?
   lpnCode          String?
   carrierName      String?
+  vehicleId        String?
   vehiclePlate     String?
+  driverId         String?
   driverName       String?
   driverPhone      String?
   discrepancyNotes String?
@@ -2722,7 +2728,9 @@ model EDocumentRecord {
   dispatchDate      DateTime @default(now())
   carrierName       String?
   carrierVkn        String?
+  vehicleId         String?
   vehiclePlate      String?
+  driverId          String?
   driverName        String?
   driverTckn        String?
   totalNetAmount    Float    @default(0)
@@ -4705,6 +4713,436 @@ model LojistikRmaWebhookLog {
   @@index([channelCode])
   @@index([idempotencyKey])
   @@index([rmaId])
+}
+
+// ── Lojistik Faz 5: Filo, Araç, Şoför, Bakım, Yakıt, Maliyet, Telematik & CO2 ──
+
+model LojistikVehicle {
+  id                    String   @id @default(uuid())
+  code                  String   @unique
+  plate                 String   @unique
+  vin                   String?  @unique
+  brand                 String
+  model                 String
+  modelYear             Int      @default(2024)
+  vehicleType           String   @default("PANEL_VAN") // TRUCK, FRIGO_VAN, PANEL_VAN, MINIBUS, PASSENGER, PICKUP
+  fuelType              String   @default("DIESEL") // DIESEL, PETROL, LPG, HYBRID
+  ownershipType         String   @default("OWNED") // OWNED, LEASED, RENTED
+  branchId              String   @default("local-debug-branch")
+  status                String   @default("ACTIVE") // ACTIVE, IN_TRANSIT, MAINTENANCE, FAULT, OUT_OF_SERVICE
+  capacityKg            Float    @default(1500)
+  capacityM3            Float    @default(10)
+  palletSlots           Int      @default(4)
+  isRefrigerated        Boolean  @default(false)
+  targetTempMinC        Float?
+  targetTempMaxC        Float?
+  odometerKm            Float    @default(0)
+  engineHours           Float    @default(0)
+  expectedLPer100Km     Float    @default(12)
+  tankCapacityLiters    Float    @default(80)
+  acquisitionCostTry    Float    @default(0)
+  monthlyDepreciationTry Float   @default(0)
+  currentLat            Float?
+  currentLng            Float?
+  currentSpeedKmh       Float?
+  currentHeadingDeg     Float?
+  currentTempC          Float?
+  lastTelemetryAt       DateTime?
+  lastTelemetryProvider String?
+  assignedDriverId      String?
+  notes                 String?
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  leases            LojistikVehicleLease[]
+  documents         LojistikVehicleDocument[]
+  penalties         LojistikTrafficPenalty[]
+  maintenancePlans  LojistikVehicleMaintenancePlan[]
+  workOrders        LojistikVehicleMaintenanceWorkOrder[]
+  faultLogs         LojistikVehicleFaultLog[]
+  tires             LojistikVehicleTire[]
+  fuelLogs          LojistikFuelLog[]
+  telematicMaps     LojistikVehicleTelematicMap[]
+  telemetryEvents   LojistikTelemetryEvent[]
+
+  @@index([branchId, status])
+  @@index([assignedDriverId])
+}
+
+model LojistikVehicleLease {
+  id                     String          @id @default(uuid())
+  vehicleId              String
+  lessorName             String
+  contractNo             String
+  startDate              DateTime
+  endDate                DateTime
+  monthlyCostTry         Float           @default(0)
+  annualKmLimit          Int             @default(50000)
+  depreciationMonthlyTry Float           @default(0)
+  notes                  String?
+  isActive               Boolean         @default(true)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([endDate])
+}
+
+model LojistikDriver {
+  id                  String    @id @default(uuid())
+  code                String    @unique
+  userId              String?
+  branchId            String    @default("local-debug-branch")
+  fullName            String
+  tckn                String?
+  phone               String?
+  email               String?
+  homeAddress         String?
+  emergencyContact    String?
+  licenseClass        String    @default("B")
+  licenseNumber       String?
+  licenseExpiresAt    DateTime?
+  srcType             String?
+  srcNumber           String?
+  srcExpiresAt        DateTime?
+  psychotechNumber    String?
+  psychotechExpiresAt DateTime?
+  shiftName           String    @default("Gündüz Vardiyası")
+  shiftStart          String    @default("08:00")
+  shiftEnd            String    @default("17:30")
+  monthlySalaryCostTry Float    @default(0)
+  status              String    @default("AVAILABLE") // AVAILABLE, ON_ROUTE, OFF_DUTY, SUSPENDED
+  notes               String?
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([branchId, status])
+  @@index([userId])
+}
+
+model LojistikVehicleDocument {
+  id                 String          @id @default(uuid())
+  vehicleId          String
+  docType            String          // MUAYENE, TRAFIK_SIGORTASI, KASKO, MTV_VERGI, RUHSAT, FRIGO_KALIBRASYON
+  documentNo         String?
+  issuer             String?
+  issuedAt           DateTime?
+  expiresAt          DateTime?
+  costTry            Float           @default(0)
+  reminderDaysBefore Int             @default(30)
+  financeId          String?
+  notes              String?
+  status             String          @default("VALID")
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, docType])
+  @@index([expiresAt])
+}
+
+model LojistikTrafficPenalty {
+  id                  String          @id @default(uuid())
+  penaltyNo           String          @unique
+  vehicleId           String
+  driverId            String?
+  violationDate       DateTime
+  dueDate             DateTime?
+  location            String?
+  violationType       String
+  reason              String
+  amountTry           Float           @default(0)
+  discountedAmountTry Float?
+  paidAt              DateTime?
+  paymentStatus       String          @default("UNPAID") // UNPAID, PAID, DISPUTED, DEDUCTED_DRIVER
+  financeId           String?
+  notes               String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, violationDate])
+  @@index([driverId])
+  @@index([paymentStatus])
+}
+
+model LojistikVehicleMaintenancePlan {
+  id                 String          @id @default(uuid())
+  code               String          @unique
+  name               String
+  vehicleId          String?
+  vehicleTypeFilter  String?
+  planType           String          @default("METER_KM") // CALENDAR, METER_KM, METER_HOURS, CONDITION
+  frequencyDays      Int?
+  frequencyKm        Float?
+  frequencyHours     Float?
+  conditionParameter String?
+  conditionThreshold Float?
+  lastTriggeredDate  DateTime?
+  lastTriggeredKm    Float?
+  lastTriggeredHours Float?
+  nextScheduledDate  DateTime?
+  estimatedCostTry   Float           @default(0)
+  checklistJson      String?
+  isActive           Boolean         @default(true)
+  notes              String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  vehicle    LojistikVehicle?                    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  workOrders LojistikVehicleMaintenanceWorkOrder[]
+
+  @@index([vehicleId, isActive])
+}
+
+model LojistikVehicleMaintenanceWorkOrder {
+  id                     String          @id @default(uuid())
+  workOrderNumber        String          @unique
+  vehicleId              String
+  planId                 String?
+  orderType              String          @default("PREVENTIVE") // PREVENTIVE, BREAKDOWN, TIRE_SERVICE, INSPECTION_PREP
+  priority               String          @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status                 String          @default("REQUESTED") // REQUESTED, EVALUATED, SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  title                  String
+  description            String?
+  serviceProviderName    String?
+  odometerKmAtService    Float           @default(0)
+  engineHoursAtService   Float           @default(0)
+  downtimeMinutes        Float           @default(0)
+  laborHours             Float           @default(0)
+  laborCostTry           Float           @default(0)
+  sparePartCostTry       Float           @default(0)
+  externalServiceCostTry Float           @default(0)
+  totalCostTry           Float           @default(0)
+  failureReasonCode      String?
+  rootCause              String?
+  checklistResultsJson   String?
+  financeId              String?
+  plannedDate            DateTime?
+  startedAt              DateTime?
+  completedAt            DateTime?
+  createdBy              String?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  vehicle          LojistikVehicle                           @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  plan             LojistikVehicleMaintenancePlan?           @relation(fields: [planId], references: [id], onDelete: SetNull)
+  spareParts       LojistikVehicleMaintenanceSparePart[]
+  checklistResults LojistikVehicleMaintenanceChecklistResult[]
+
+  @@index([vehicleId, status])
+  @@index([orderType])
+}
+
+model LojistikVehicleMaintenanceSparePart {
+  id              String                             @id @default(uuid())
+  workOrderId     String
+  itemId          String
+  quantityUsed    Float                              @default(1)
+  unitCostTry     Float                              @default(0)
+  totalCostTry    Float                              @default(0)
+  stockMovementId String?
+  notes           String?
+  createdAt       DateTime                           @default(now())
+
+  workOrder LojistikVehicleMaintenanceWorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+  @@index([itemId])
+}
+
+model LojistikVehicleMaintenanceChecklistResult {
+  id          String                             @id @default(uuid())
+  workOrderId String
+  sequence    Int                                @default(10)
+  instruction String
+  isPassed    Boolean                            @default(true)
+  measuredVal String?
+  notes       String?
+  checkedAt   DateTime                           @default(now())
+
+  workOrder LojistikVehicleMaintenanceWorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+
+  @@index([workOrderId])
+}
+
+model LojistikVehicleFaultLog {
+  id                  String          @id @default(uuid())
+  faultCode           String          @unique
+  vehicleId           String
+  driverId            String?
+  reportedAt          DateTime        @default(now())
+  odometerKm          Float           @default(0)
+  severity            String          @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  category            String          @default("MEKANIK") // MEKANIK, ELEKTRIK, FRIGO, LASTIK, KAPORTA, DIGER
+  title               String
+  description         String?
+  status              String          @default("OPEN") // OPEN, WORK_ORDER_CREATED, RESOLVED
+  linkedWorkOrderId   String?
+  resolvedAt          DateTime?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, status])
+}
+
+model LojistikVehicleTire {
+  id                  String          @id @default(uuid())
+  vehicleId           String
+  serialOrDot         String
+  brandModel          String
+  sizeCode            String
+  position            String          @default("FRONT_LEFT")
+  installedOdometerKm Float           @default(0)
+  currentTreadDepthMm Float           @default(8.0)
+  minTreadDepthMm     Float           @default(3.0)
+  status              String          @default("ACTIVE") // ACTIVE, ROTATED, NEEDS_REPLACEMENT, SCRAPPED
+  lastInspectedAt     DateTime?
+  costTry             Float           @default(0)
+  notes               String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, position])
+  @@index([status])
+}
+
+model LojistikFuelLog {
+  id                    String          @id @default(uuid())
+  vehicleId             String
+  driverId              String?
+  fuelDate              DateTime
+  fuelType              String          @default("DIESEL")
+  odometerKm            Float
+  liters                Float
+  unitPriceTry          Float           @default(0)
+  totalAmountTry        Float           @default(0)
+  fullTank              Boolean         @default(true)
+  stationName           String?
+  fuelCardNo            String?
+  invoiceRef            String?
+  invoiceLiters         Float?
+  invoiceAmountTry      Float?
+  source                String          @default("MANUAL") // MANUAL, FUEL_CARD_IMPORT, TELEMETICS
+  calculatedLPer100Km   Float?
+  isAnomaly             Boolean         @default(false)
+  anomalyNote           String?
+  financeId             String?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, fuelDate])
+  @@index([invoiceRef])
+}
+
+model LojistikCo2EmissionFactor {
+  id            String   @id @default(uuid())
+  fuelType      String   @unique // DIESEL, PETROL, LPG, HYBRID
+  unit          String   @default("L")
+  kgCo2ePerUnit Float
+  sourceName    String
+  sourceYear    Int
+  sourceVersion String?
+  sourceUrl     String?
+  notes         String?
+  isActive      Boolean  @default(true)
+  updatedBy     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model LojistikTelematicConnection {
+  id               String    @id @default(uuid())
+  providerCode     String    @unique // TRACCAR, FLESPI, GPSGATE_CLOUD, GENERIC_WEBHOOK
+  displayName      String
+  mode             String    @default("DEMO_DB") // DEMO_DB, WEBHOOK_GENERIC, REST_POLLING
+  authType         String    @default("BEARER") // BEARER, HEADER_TOKEN, HMAC_SHA256, API_KEY
+  baseUrl          String?
+  isEnabled        Boolean   @default(true)
+  status           String    @default("DEMO_READY") // DEMO_READY, CONFIGURED, ERROR, DISABLED
+  lastEventAt      DateTime?
+  lastSyncAt       DateTime?
+  fieldMappingJson String?
+  docsUrl          String?
+  docsAccessDate   String?
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model LojistikVehicleTelematicMap {
+  id                 String          @id @default(uuid())
+  vehicleId          String
+  providerCode       String
+  externalDeviceId   String
+  externalVehicleRef String?
+  plateSnapshot      String?
+  vinSnapshot        String?
+  isActive           Boolean         @default(true)
+  lastSeenAt         DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([providerCode, externalDeviceId])
+  @@index([vehicleId])
+}
+
+model LojistikTelemetryEvent {
+  id               String          @id @default(uuid())
+  vehicleId        String
+  driverId         String?
+  providerCode     String
+  externalDeviceId String
+  sourceOrigin     String          @default("DEMO_DB") // DEMO_DB, WEBHOOK, CSV_JSON_IMPORT, TELEMATICS_API
+  idempotencyKey   String          @unique
+  eventType        String          // POSITION, SPEED_VIOLATION, IGNITION_ON, IGNITION_OFF, FUEL_LEVEL, FUEL_REFILL, IDLE_ALERT, HARSH_BRAKE, HARSH_ACCEL, DRIVER_IDENT, TEMP_ALERT
+  eventTime        DateTime
+  receivedAt       DateTime        @default(now())
+  isBackfill       Boolean         @default(false)
+  lat              Float?
+  lng              Float?
+  speedKmh         Float?
+  headingDeg       Float?
+  ignitionOn       Boolean?
+  fuelLevelLiters  Float?
+  fuelLevelPct     Float?
+  odometerKm       Float?
+  temperatureC     Float?
+  idleMinutes      Float?
+  rawPayloadJson   String?
+  createdAt        DateTime        @default(now())
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, eventTime])
+  @@index([providerCode, eventType])
+}
+
+model LojistikTelematicErrorLog {
+  id               String   @id @default(uuid())
+  providerCode     String
+  externalDeviceId String?
+  eventType        String?
+  errorCode        String
+  errorMessage     String
+  rawPayloadJson   String?
+  createdAt        DateTime @default(now())
+
+  @@index([providerCode, createdAt])
 }
 
 
