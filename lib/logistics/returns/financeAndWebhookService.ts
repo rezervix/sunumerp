@@ -716,9 +716,9 @@ export async function getReturnsAnalyticsReport(filters?: {
       .catch(() => []),
     prisma.order.findMany().catch(() => []),
     (prisma as any).supplier.findMany().catch(() => []),
-    (prisma as any).lojistikSupplierScorecard
-      .findMany({ orderBy: { calculatedAt: "desc" } })
-      .catch(() => []),
+    (prisma as any).lojistikSupplierScoreSnapshot
+      ?.findMany({ orderBy: { calculatedAt: "desc" } })
+      .catch(() => []) ?? Promise.resolve([]),
     (prisma as any).lojistikRmaCreditNote.findMany().catch(() => []),
   ])
 
@@ -936,9 +936,13 @@ export async function getReturnsAnalyticsReport(filters?: {
         rtvCount: s.rtvCount,
         scrapCount: s.scrapCount,
         totalCostTry: Number(s.totalCostTry.toFixed(2)),
-        latestQualityScore: sc ? Number(sc.qualityScore || 0) : null,
-        latestOverallScore: sc ? Number(sc.overallScore || 0) : null,
-        latestRiskLevel: sc?.riskLevel || null,
+        latestQualityScore: sc ? Number(sc.qualityAcceptanceRate ?? sc.qualityScore ?? 0) : null,
+        latestOverallScore: sc
+          ? Number(sc.compositeScore ?? sc.overallScore ?? sup?.scorecardScore ?? 0)
+          : sup?.scorecardScore !== undefined
+            ? Number(sup.scorecardScore)
+            : null,
+        latestRiskLevel: sc?.tier || sc?.riskLevel || sup?.scorecardTier || null,
       }
     })
 
