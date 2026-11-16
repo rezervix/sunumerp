@@ -305,10 +305,10 @@ export const faz6DispatchAndRoutingSeedModule: LogisticsSeedModule = {
 
     const dep1Iso = todayAtHhMm(8, 0)
     const opt1 = optimizeSingleTripRoute({
-      origin: { label: whMerkez.label, lat: whMerkez.lat, lng: whMerkez.lng },
+      origin: { label: whMerkez.label || "Tuzla Merkez Depo", lat: whMerkez.lat, lng: whMerkez.lng },
       stops: trip1StopsRaw,
-      departureIso: dep1Iso,
-      speedKmh: 38,
+      plannedDepartureAt: dep1Iso,
+      avgSpeedKmh: 38,
       timeBudgetMs: 120,
     })
     const schedById1 = new Map(opt1.stops.map((s) => [s.id, s]))
@@ -531,10 +531,10 @@ export const faz6DispatchAndRoutingSeedModule: LogisticsSeedModule = {
 
     const dep2Iso = todayAtHhMm(9, 0)
     const opt2 = optimizeSingleTripRoute({
-      origin: { label: whOnline.label, lat: whOnline.lat, lng: whOnline.lng },
+      origin: { label: whOnline.label || "Ümraniye E-Ticaret Hub", lat: whOnline.lat, lng: whOnline.lng },
       stops: trip2StopsRaw,
-      departureIso: dep2Iso,
-      speedKmh: 36,
+      plannedDepartureAt: dep2Iso,
+      avgSpeedKmh: 36,
       timeBudgetMs: 120,
     })
     const schedById2 = new Map(opt2.stops.map((s) => [s.id, s]))
@@ -720,10 +720,10 @@ export const faz6DispatchAndRoutingSeedModule: LogisticsSeedModule = {
 
     const dep3Iso = yesterdayAtHhMm(8, 15)
     const opt3 = optimizeSingleTripRoute({
-      origin: { label: whMerkez.label, lat: whMerkez.lat, lng: whMerkez.lng },
+      origin: { label: whMerkez.label || "Tuzla Merkez Depo", lat: whMerkez.lat, lng: whMerkez.lng },
       stops: trip3StopsRaw,
-      departureIso: dep3Iso,
-      speedKmh: 38,
+      plannedDepartureAt: dep3Iso,
+      avgSpeedKmh: 38,
       timeBudgetMs: 100,
     })
     const schedById3 = new Map(opt3.stops.map((s) => [s.id, s]))
@@ -878,10 +878,10 @@ export const faz6DispatchAndRoutingSeedModule: LogisticsSeedModule = {
 
     const dep4Iso = todayAtHhMm(13, 0)
     const opt4 = optimizeSingleTripRoute({
-      origin: { label: whOnline.label, lat: whOnline.lat, lng: whOnline.lng },
+      origin: { label: whOnline.label || "Ümraniye E-Ticaret Hub", lat: whOnline.lat, lng: whOnline.lng },
       stops: trip4StopsRaw,
-      departureIso: dep4Iso,
-      speedKmh: 36,
+      plannedDepartureAt: dep4Iso,
+      avgSpeedKmh: 36,
       timeBudgetMs: 80,
     })
     const schedById4 = new Map(opt4.stops.map((s) => [s.id, s]))
@@ -1084,7 +1084,7 @@ export const faz6DispatchAndRoutingSeedModule: LogisticsSeedModule = {
       track("lojistikRouteOptimizationJob", {
         id: j.id,
         tripId: j.tripId,
-        jobStatus: "TAMAMLANDI",
+        jobStatus: "COMPLETED",
         stageLabel: `2-Opt + Or-Opt tamamlandı (${j.opt.optimizedDistanceKm} km)`,
         progressPct: 100,
         stopCount: j.stopCount,
