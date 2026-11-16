@@ -1,14 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
-  RotateCcw,
+  Activity,
+  AlertTriangle,
+  Banknote,
+  BarChart3,
   CheckCircle2,
-  AlertTriangle
+  Clock,
+  FileCheck2,
+  Plus,
+  Printer,
+  RotateCcw,
+  Search,
+  ShieldCheck,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  RMA_DECISION_BADGE_CLASSES,
+  RMA_DECISION_LABELS,
+  RMA_REASON_CODES,
+  RMA_REASON_LABELS,
+  RMA_STATUS_BADGE_CLASSES,
+  RMA_STATUS_LABELS,
+  RMA_STATUS_VALUES,
+  evaluateReturnEligibility,
+  normalizeLegacyRmaStatus,
+  type RmaQualityDecision,
+  type RmaReasonCode,
+} from '@/lib/logistics/returns/constantsAndHelpers';
+import { RmaCreateModal, type EligibleOrder } from './RmaCreateModal';
+import { RmaDetailAndDecisionDrawer } from './RmaDetailAndDecisionDrawer';
+import {
+  RmaAnalyticsPanel,
+  RmaCreditNotesPanel,
+  RmaPoliciesPanel,
+  RmaWebhookLogsPanel,
+} from './RmaPoliciesAndAnalyticsPanels';
 
-interface RmaRecord {
+export interface RmaRecord {
   id: string;
   rmaNumber: string;
   orderNumber: string;
@@ -21,21 +53,70 @@ interface RmaRecord {
   qcInspectionResult: string;
   targetWarehouseId?: string | null;
   targetBinCode?: string | null;
+  receivedBinCode?: string | null;
   refundAmount: number;
   refundStatus: string;
   returnTrackingNo?: string | null;
+  rmaStatus?: string | null;
+  reasonCode?: string | null;
+  orderSourceType?: string | null;
+  deliveredAt?: string | null;
+  returnWindowDays?: number | null;
+  returnDeadlineAt?: string | null;
+  warrantyExpiresAt?: string | null;
+  isWithinReturnWindow?: boolean | null;
+  isWithinWarranty?: boolean | null;
+  deadlineOverrideApproved?: boolean | null;
+  qualityDecision?: string | null;
+  creditNoteNo?: string | null;
+  lines?: any[];
+  events?: any[];
+  creditNotes?: any[];
   createdAt: string;
 }
 
 interface Props {
   rmaReturns: RmaRecord[];
   onUpdated: () => void;
+  storageBins?: any[];
+  suppliers?: any[];
+  items?: any[];
+  returnPolicies?: any[];
+  returnCreditNotes?: any[];
+  returnWebhookLogs?: any[];
+  returnAnalytics?: any | null;
+  eligibleReturnOrders?: EligibleOrder[];
+  logisticsDemoMode?: boolean;
+  lojistikIadeEnabled?: boolean;
+  initialOrderNumber?: string;
 }
 
-export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
-  const [submittingId, setSubmittingId] = useState<string | null>(null);
+type RmaSubTab = 'list' | 'credit-notes' | 'policies' | 'webhooks' | 'analytics';
 
-  const handleDisposition = async (
+export function RmaReturnManager({
+  rmaReturns,
+  onUpdated,
+  storageBins = [],
+  suppliers = [],
+  items = [],
+  returnPolicies = [],
+  returnCreditNotes = [],
+  returnWebhookLogs = [],
+  returnAnalytics = null,
+  eligibleReturnOrders = [],
+  logisticsDemoMode = false,
+  lojistikIadeEnabled = true,
+  initialOrderNumber,
+}: Props) {
+  const [submittingId, setSubmittingId] = useState<string | null>(null);
+  const [subTab, setSubTab] = useState<RmaSubTab>('list');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [reasonFilter, setReasonFilter] = useState('ALL');
+  const [isCreateOpen, setIsCreateOpen] = useState(Boolean(initialOrderNumber));
+  const [selectedRma, setSelectedRma] = useState<RmaRecord | null>(null);
+
+  const handleLegacyDisposition = async (
     rmaId: string,
     disposition: 'RESTOCK_TO_BIN' | 'QUARANTINE_REPAIR'
   ) => {
@@ -48,15 +129,13 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
           action: 'process_rma',
           rmaId,
           disposition,
-          targetBinCode: disposition === 'RESTOCK_TO_BIN' ? 'A-01-01' : 'KARANTINA-01'
-        })
+          targetBinCode: disposition === 'RESTOCK_TO_BIN' ? 'A-01-01' : 'Q-01-01',
+        }),
       });
-
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.error || 'İade muayenesi tamamlanamadı');
       }
-
       toast.success(data.message || 'İade muayene işlemi başarıyla tamamlandı!');
       onUpdated();
     } catch (err: any) {
@@ -66,145 +145,356 @@ export function RmaReturnManager({ rmaReturns, onUpdated }: Props) {
     }
   };
 
-  const getQcBadge = (result: string) => {
-    switch (result) {
-      case 'PENDING_INSPECTION':
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <AlertTriangle className="w-3 h-3 text-amber-400" /> Muayene Bekliyor
-          </span>
-        );
-      case 'RESTOCK_TO_BIN':
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Sağlam (Rafa Alındı)
-          </span>
-        );
-      case 'QUARANTINE_REPAIR':
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20">
-            <AlertTriangle className="w-3 h-3 text-rose-400" /> Hasarlı (Karantinada)
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/5 text-zinc-400 border border-white/10">
-            {result}
-          </span>
-        );
-    }
-  };
+  const filteredRmas = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return rmaReturns.filter((r) => {
+      const st = normalizeLegacyRmaStatus(r);
+      if (statusFilter !== 'ALL' && st !== statusFilter) return false;
+      if (reasonFilter !== 'ALL' && (r.reasonCode || 'CAYMA_HAKKI') !== reasonFilter) {
+        return false;
+      }
+      if (q) {
+        const hay =
+          `${r.rmaNumber} ${r.orderNumber} ${r.customerName} ${r.sku} ${r.itemName} ${r.returnTrackingNo || ''}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [rmaReturns, searchQuery, statusFilter, reasonFilter]);
+
+  const openCount = rmaReturns.filter(
+    (r) => !['KAPANDI', 'REDDEDILDI', 'IPTAL'].includes(normalizeLegacyRmaStatus(r))
+  ).length;
+  const quarantineCount = rmaReturns.filter((r) =>
+    ['TESLIM_ALINDI', 'INCELEMEDE'].includes(normalizeLegacyRmaStatus(r))
+  ).length;
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] p-5 rounded-[20px]">
-        <h3 className="text-base font-semibold text-white flex items-center gap-2">
-          <RotateCcw className="w-4 h-4 text-emerald-400" />
-          Müşteri İade & Kalite Kontrol Muayenesi (RMA)
-        </h3>
-        <p className="text-xs text-zinc-400 mt-0.5">
-          Pazaryeri ve e-ticaret iadelerinin kalite kontrolü, sağlam ürünlerin tekrar raf stok bakiyelerine eklenmesi
-        </p>
+      {/* Üst Başlık & Alt Sekmeler */}
+      <div className="bg-[#111513]/90 border border-white/[0.06] p-5 rounded-[20px] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-[#34D399]" />
+              Tersine Lojistik, İade (RMA), Kalite &amp; Kredi Notası Yönetimi
+            </h3>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Omnichannel &amp; ERP sipariş iadeleri, 14 gün/garanti takibi, karantina kabulü, NCR/Skor Kartı ve mali kredi notası
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] text-zinc-300">
+              Açık: <strong className="text-white">{openCount}</strong>
+            </span>
+            <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300">
+              Karantinada: <strong>{quarantineCount}</strong>
+            </span>
+            {lojistikIadeEnabled && (
+              <button
+                type="button"
+                onClick={() => setIsCreateOpen(true)}
+                data-testid="open-create-rma-btn"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Yeni RMA Talebi
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-3">
+          {[
+            { id: 'list', label: `RMA Kayıtları (${rmaReturns.length})`, icon: RotateCcw },
+            { id: 'credit-notes', label: `Kredi Notaları (${returnCreditNotes.length})`, icon: Banknote },
+            { id: 'policies', label: `İade Politikaları (${returnPolicies.length})`, icon: ShieldCheck },
+            { id: 'webhooks', label: `Webhook Günlüğü (${returnWebhookLogs.length})`, icon: Activity },
+            { id: 'analytics', label: 'İade Analizi', icon: BarChart3 },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const active = subTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setSubTab(tab.id as RmaSubTab)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
+                  active
+                    ? 'bg-emerald-500/15 text-[#34D399] border border-emerald-500/30'
+                    : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
-        {rmaReturns.length === 0 ? (
-          <div className="text-center py-10 text-zinc-500 text-xs">
-            Kayıtlı iade (RMA) talebi bulunmuyor.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead>
-                <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] tracking-wider">
-                  <th className="py-3.5 px-4 font-medium">RMA / Sipariş No</th>
-                  <th className="py-3.5 px-3 font-medium">Müşteri & Kanal</th>
-                  <th className="py-3.5 px-3 font-medium">İade Ürün / Neden</th>
-                  <th className="py-3.5 px-3 font-medium text-center">Kalite Durumu</th>
-                  <th className="py-3.5 px-4 font-medium text-right">Karar / Aksiyon</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rmaReturns.map((rma) => (
-                  <tr
-                    key={rma.id}
-                    className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
-                  >
-                    <td className="py-4 px-4">
-                      <div className="font-medium text-white text-sm">
-                        {rma.rmaNumber}
-                      </div>
-                      <div className="text-[11px] text-zinc-500 font-mono mt-0.5">
-                        Sipariş: {rma.orderNumber}
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-3">
-                      <div className="font-medium text-white">
-                        {rma.customerName}
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2.5 py-0.5 text-[10px] font-mono">
-                          {rma.channelCode}
-                        </span>
-                        {rma.returnTrackingNo && (
-                          <span className="text-[11px] text-zinc-500 font-mono">
-                            {rma.returnTrackingNo}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-white">{rma.itemName}</span>
-                        <span className="font-mono text-zinc-500">({rma.sku})</span>
-                        <strong className="text-emerald-400 font-medium">x {rma.returnQty} Adet</strong>
-                      </div>
-                      <div className="text-[11px] text-zinc-500 italic mt-0.5">
-                        {rma.returnReason}
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-3 text-center">
-                      {getQcBadge(rma.qcInspectionResult)}
-                    </td>
-
-                    <td className="py-4 px-4 text-right">
-                      {rma.qcInspectionResult === 'PENDING_INSPECTION' ? (
-                        <div className="inline-flex items-center gap-2">
-                          <button
-                            onClick={() => handleDisposition(rma.id, 'RESTOCK_TO_BIN')}
-                            disabled={submittingId === rma.id}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-400 text-black hover:bg-emerald-300 rounded-full text-xs font-semibold shadow-[0_0_15px_rgba(52,211,153,0.2)] transition active:scale-95 disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            Sağlam Kabul (Rafa Al)
-                          </button>
-
-                          <button
-                            onClick={() => handleDisposition(rma.id, 'QUARANTINE_REPAIR')}
-                            disabled={submittingId === rma.id}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 rounded-full text-xs font-semibold transition active:scale-95 disabled:opacity-50"
-                          >
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                            Kusurlu (Karantina)
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="text-xs text-zinc-400">
-                          <div>Hücre: <strong className="text-white font-mono">{rma.targetBinCode || 'A-01-01'}</strong></div>
-                          <div className="text-emerald-400 font-medium mt-0.5">İade: ₺{rma.refundAmount}</div>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
+      {/* Alt Sekme İçerikleri */}
+      {subTab === 'list' && (
+        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+          {/* Arama & Filtreler */}
+          <div className="p-4 border-b border-white/[0.06] flex flex-wrap gap-2.5 items-center justify-between bg-white/[0.01]">
+            <div className="relative flex-1 min-w-[220px] max-w-sm">
+              <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="RMA no, sipariş no, müşteri, SKU, takip ara..."
+                className="w-full bg-black/40 border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white"
+              />
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+              >
+                <option value="ALL" className="bg-[#111513]">Tüm RMA Durumları</option>
+                {RMA_STATUS_VALUES.map((st) => (
+                  <option key={st} value={st} className="bg-[#111513]">
+                    {RMA_STATUS_LABELS[st]}
+                  </option>
                 ))}
-              </tbody>
-            </table>
+              </select>
+              <select
+                value={reasonFilter}
+                onChange={(e) => setReasonFilter(e.target.value)}
+                className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+              >
+                <option value="ALL" className="bg-[#111513]">Tüm Nedenler</option>
+                {RMA_REASON_CODES.map((code) => (
+                  <option key={code} value={code} className="bg-[#111513]">
+                    {RMA_REASON_LABELS[code]}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        )}
-      </div>
+
+          {filteredRmas.length === 0 ? (
+            <div className="text-center py-10 text-zinc-500 text-xs">
+              Filtreye uygun iade (RMA) kaydı bulunmuyor.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead>
+                  <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] tracking-wider">
+                    <th className="py-3.5 px-4 font-medium">RMA / Sipariş</th>
+                    <th className="py-3.5 px-3 font-medium">Müşteri &amp; Kanal</th>
+                    <th className="py-3.5 px-3 font-medium">Ürün / Neden</th>
+                    <th className="py-3.5 px-3 font-medium">14 Gün / Garanti</th>
+                    <th className="py-3.5 px-3 font-medium text-center">Durum &amp; Karar</th>
+                    <th className="py-3.5 px-4 font-medium text-right">Aksiyonlar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRmas.map((rma) => {
+                    const wfStatus = normalizeLegacyRmaStatus(rma);
+                    const elig = rma.deliveredAt
+                      ? evaluateReturnEligibility({
+                          deliveredAt: rma.deliveredAt,
+                          policyReturnDays: rma.returnWindowDays || 14,
+                        })
+                      : null;
+                    const rCode = (rma.reasonCode || 'CAYMA_HAKKI') as RmaReasonCode;
+                    const lineCount = Array.isArray(rma.lines) ? rma.lines.length : 0;
+
+                    return (
+                      <tr
+                        key={rma.id}
+                        className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
+                      >
+                        <td className="py-3.5 px-4">
+                          <div className="font-mono font-semibold text-white text-sm">
+                            {rma.rmaNumber}
+                          </div>
+                          <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
+                            {rma.orderNumber}
+                            {rma.orderSourceType && (
+                              <span className="ml-1.5 px-1.5 py-0.5 rounded bg-white/[0.05] text-[9px] text-zinc-300">
+                                {rma.orderSourceType === 'ERP_ORDER' ? 'ERP' : 'OMNI'}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-3">
+                          <div className="font-medium text-white">{rma.customerName}</div>
+                          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                            <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2 py-0.5 text-[10px] font-mono">
+                              {rma.channelCode}
+                            </span>
+                            {rma.returnTrackingNo && (
+                              <span className="text-[10px] text-zinc-400 font-mono">
+                                {rma.returnTrackingNo}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-3">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-medium text-white">{rma.itemName}</span>
+                            <span className="font-mono text-zinc-500">({rma.sku})</span>
+                            <strong className="text-[#34D399]">x {rma.returnQty}</strong>
+                            {lineCount > 1 && (
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-300">
+                                {lineCount} kalem
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-white/[0.05] text-zinc-300">
+                              {RMA_REASON_LABELS[rCode] || rma.reasonCode || 'İade'}
+                            </span>
+                            <span className="text-[11px] text-zinc-500 truncate max-w-[200px]">
+                              {rma.returnReason}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3.5 px-3">
+                          {rma.deadlineOverrideApproved ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">
+                              <FileCheck2 className="w-3 h-3" /> İstisna Onaylı
+                            </span>
+                          ) : elig ? (
+                            elig.isWithinReturnWindow ? (
+                              <span
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${
+                                  elig.isExpiringSoon
+                                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                                    : 'bg-emerald-500/10 text-[#34D399] border-emerald-500/25'
+                                }`}
+                              >
+                                <Clock className="w-3 h-3" />
+                                {elig.remainingDays} gün kaldı
+                              </span>
+                            ) : rma.isWithinWarranty ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-sky-500/10 text-sky-300 border border-sky-500/25">
+                                <ShieldCheck className="w-3 h-3" /> Garanti
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-rose-500/10 text-rose-300 border border-rose-500/25">
+                                <AlertTriangle className="w-3 h-3" /> Süre Doldu
+                              </span>
+                            )
+                          ) : (
+                            <span className="text-zinc-500 text-[11px]">
+                              {rma.returnWindowDays || 14} gün
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="py-3.5 px-3 text-center space-y-1">
+                          <div>
+                            <span
+                              className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
+                                RMA_STATUS_BADGE_CLASSES[wfStatus]
+                              }`}
+                            >
+                              {RMA_STATUS_LABELS[wfStatus]}
+                            </span>
+                          </div>
+                          {rma.qualityDecision && (
+                            <div>
+                              <span
+                                className={`inline-flex px-2 py-0.5 rounded-full text-[10px] border ${
+                                  RMA_DECISION_BADGE_CLASSES[
+                                    rma.qualityDecision as RmaQualityDecision
+                                  ] || 'bg-white/5 text-zinc-300 border-white/10'
+                                }`}
+                              >
+                                {RMA_DECISION_LABELS[
+                                  rma.qualityDecision as RmaQualityDecision
+                                ] || rma.qualityDecision}
+                              </span>
+                            </div>
+                          )}
+                        </td>
+
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="inline-flex items-center gap-1.5 flex-wrap justify-end">
+                            <button
+                              type="button"
+                              onClick={() => setSelectedRma(rma)}
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-[11px] font-semibold text-white cursor-pointer"
+                            >
+                              <SlidersHorizontal className="w-3 h-3 text-[#34D399]" />
+                              Yönet
+                            </button>
+                            <Link
+                              href={`/dashboard/omnichannel/rma/${rma.id}/print`}
+                              target="_blank"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] text-zinc-300"
+                              title="İade Etiketi / Fişi Yazdır"
+                            >
+                              <Printer className="w-3 h-3" />
+                            </Link>
+                            {!rma.rmaStatus && rma.qcInspectionResult === 'PENDING_INSPECTION' && (
+                              <button
+                                type="button"
+                                onClick={() => handleLegacyDisposition(rma.id, 'RESTOCK_TO_BIN')}
+                                disabled={submittingId === rma.id}
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-400 text-black hover:bg-emerald-300 rounded-full text-[11px] font-semibold cursor-pointer"
+                              >
+                                <CheckCircle2 className="w-3 h-3" />
+                                Rafa Al
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {subTab === 'credit-notes' && (
+        <RmaCreditNotesPanel creditNotes={returnCreditNotes} onUpdated={onUpdated} />
+      )}
+
+      {subTab === 'policies' && (
+        <RmaPoliciesPanel policies={returnPolicies} items={items} onUpdated={onUpdated} />
+      )}
+
+      {subTab === 'webhooks' && (
+        <RmaWebhookLogsPanel
+          logs={returnWebhookLogs}
+          logisticsDemoMode={logisticsDemoMode}
+          onUpdated={onUpdated}
+        />
+      )}
+
+      {subTab === 'analytics' && <RmaAnalyticsPanel analytics={returnAnalytics} />}
+
+      <RmaCreateModal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        eligibleOrders={eligibleReturnOrders}
+        items={items}
+        initialOrderNumber={initialOrderNumber}
+        onCreated={() => onUpdated()}
+      />
+
+      <RmaDetailAndDecisionDrawer
+        rma={selectedRma}
+        storageBins={storageBins}
+        suppliers={suppliers}
+        onClose={() => setSelectedRma(null)}
+        onUpdated={onUpdated}
+      />
     </div>
   );
 }
