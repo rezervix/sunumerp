@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db"
 import { getServerLogisticsFeatureFlags } from "@/lib/system-config"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 import {
   decideRmaInspection,
   listEligibleSalesOrdersForRma,
@@ -443,6 +444,7 @@ export async function getOmnichannelOverviewSnapshot() {
       eligibleReturnOrders,
       featureFlags: {
         lojistik_iade: Boolean(logisticsFlags.lojistik_iade),
+        logisticsDemoMode: isDemoEnvironment(),
       },
     }
   } catch (error: any) {
