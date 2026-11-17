@@ -399,6 +399,7 @@ export function WmsReservationAndLedgerTab({
               className="h-8.5 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5"
             >
               <option value="ALL" className="bg-[#111513]">Tüm Hareketler</option>
+              <option value="OPENING_BALANCE" className="bg-[#111513]">Açılış Bakiyesi</option>
               <option value="RECEIPT" className="bg-[#111513]">Mal Kabul (RECEIPT)</option>
               <option value="ISSUE" className="bg-[#111513]">Çıkış / Sevk (ISSUE)</option>
               <option value="TRANSFER_OUT" className="bg-[#111513]">Transfer Çıkış</option>
@@ -459,7 +460,9 @@ export function WmsReservationAndLedgerTab({
                       {new Date(m.createdAt).toLocaleString("tr-TR")}
                     </td>
                     <td className="py-3 px-3">
-                      <div className="font-mono font-semibold text-white">{m.movementType}</div>
+                      <div className="font-mono font-semibold text-white">
+                        {m.movementType === "OPENING_BALANCE" ? "Açılış Bakiyesi" : m.movementType}
+                      </div>
                       <div className="text-[11px] text-zinc-500 font-mono">{m.referenceDocNo || "-"}</div>
                     </td>
                     <td className="py-3 px-3">

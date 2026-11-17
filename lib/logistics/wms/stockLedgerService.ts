@@ -13,6 +13,7 @@ import { prisma } from "@/lib/db"
 import { LogisticsDomainError } from "@/lib/logistics/security"
 
 export type StockMovementType =
+  | "OPENING_BALANCE"
   | "RECEIPT"
   | "ISSUE"
   | "TRANSFER_OUT"

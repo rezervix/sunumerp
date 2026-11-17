@@ -521,24 +521,33 @@ export function ItemDetailDrawer({
                         Son Stok Hareketleri
                       </div>
                       <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                        {item.stockMovements.map((move: any) => (
-                          <div
-                            key={move.id}
-                            className="text-[11px] p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between"
-                          >
-                            <div>
-                              <span className={move.movementType === "RECEIPT" ? "text-[#34D399] font-medium" : "text-zinc-300 font-medium"}>
-                                {move.movementType === "RECEIPT" ? "Giriş (+)" : "Çıkış (-)"}
-                              </span>
-                              <span className="text-zinc-500 ml-1.5">
-                                {new Date(move.createdAt).toLocaleDateString("tr-TR")}
+                        {item.stockMovements.map((move: any) => {
+                          const isOpening = move.movementType === "OPENING_BALANCE"
+                          const isInbound =
+                            isOpening ||
+                            ["RECEIPT", "IN", "TRANSFER_IN", "RMA_RETURN", "PRODUCTION_OUTPUT"].includes(
+                              String(move.movementType || "")
+                            ) ||
+                            (move.movementType === "COUNT_ADJUSTMENT" && Number(move.quantity || 0) >= 0)
+                          return (
+                            <div
+                              key={move.id}
+                              className="text-[11px] p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between"
+                            >
+                              <div>
+                                <span className={isInbound ? "text-[#34D399] font-medium" : "text-zinc-300 font-medium"}>
+                                  {isOpening ? "Açılış Bakiyesi (+)" : isInbound ? "Giriş (+)" : "Çıkış (-)"}
+                                </span>
+                                <span className="text-zinc-500 ml-1.5">
+                                  {new Date(move.createdAt).toLocaleDateString("tr-TR")}
+                                </span>
+                              </div>
+                              <span className="font-mono font-medium text-white">
+                                {move.quantity} {move.unit}
                               </span>
                             </div>
-                            <span className="font-mono font-medium text-white">
-                              {move.quantity} {move.unit}
-                            </span>
-                          </div>
-                        ))}
+                          )
+                        })}
                       </div>
                     </div>
                   )}

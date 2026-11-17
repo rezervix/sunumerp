@@ -14,6 +14,7 @@ import { faz3ProcurementAndSupplierSeedModule } from "./faz3-tedarikci-ve-satina
 import { faz4ReturnsAndRmaSeedModule } from "./faz4-iade-ve-rma"
 import { faz5FleetAndTelematicsSeedModule } from "./faz5-filo-ve-telematik"
 import { faz6DispatchAndRoutingSeedModule } from "./faz6-sevkiyat-ve-rota"
+import { faz7FinalAuditSeedModule } from "./faz7-final-ve-denetim"
 
 export const LOGISTICS_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz1SupplierAuthSeedModule,
@@ -22,6 +23,7 @@ export const LOGISTICS_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz4ReturnsAndRmaSeedModule,
   faz5FleetAndTelematicsSeedModule,
   faz6DispatchAndRoutingSeedModule,
+  faz7FinalAuditSeedModule,
 ]
 
 export async function runAllLogisticsDemoSeeds(options?: {
