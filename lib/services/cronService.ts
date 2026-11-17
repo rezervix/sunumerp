@@ -7,6 +7,7 @@
  */
 import { prisma } from "@/lib/db"
 import { createNotification, createNotificationMany } from "./notificationService"
+import { evaluateAndDispatchLogisticsAlerts } from "@/lib/logistics/notifications"
 
 class ContentCronService {
   private intervalId: NodeJS.Timeout | null = null
@@ -15,6 +16,7 @@ class ContentCronService {
   public start() {
     if (this.intervalId) return // Zaten çalışıyor
     if (process.env.NEXT_PHASE === 'phase-production-build') return // Build aşamasında arka plan görevlerini çalıştırma
+    if (process.env.SUNUM_DISABLE_CRON === '1') return
 
     console.log("🚀 İçerik Takvimi Otomatik Hatırlatıcı & Takip Servisi başlatıldı.")
     // Her 60 saniyede bir çalıştır
@@ -47,6 +49,9 @@ class ContentCronService {
         this.checkActiveTaskThresholds(),
         this.sendIdleStaffReminders(),
         this.checkOverdueTasks(),
+        evaluateAndDispatchLogisticsAlerts().catch((err) => {
+          console.error("Logistics Alert Rules Cron Error:", err)
+        }),
       ])
     } catch (error) {
       console.error("Cron Tasks Error:", error)

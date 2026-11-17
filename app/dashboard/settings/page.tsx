@@ -9,6 +9,7 @@ import { LOCALE_LABELS, type SupportedLocale } from "@/lib/i18n"
 import { toast } from "sonner"
 import { extractBrandColorsFromImage, removeLogoBackground, getReadableForeground, generateDarkPaletteFromBrandColor } from "@/lib/utils/brand-engine"
 import type { SystemConfig } from "@/lib/system-config"
+import { LogisticsNotificationPrefsPanel } from "@/components/shared/logistics-notification-prefs-panel"
 import {
   Building2,
   User,
@@ -1179,6 +1180,9 @@ export default function SettingsPage() {
                       })}
                     </div>
                   </div>
+
+                  {/* Kişisel Lojistik & Operasyon Uyarı Kuralları */}
+                  <LogisticsNotificationPrefsPanel />
                 </div>
               )}
 

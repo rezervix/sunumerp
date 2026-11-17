@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, CheckCheck, BellOff } from "lucide-react"
+import { Bell, CheckCheck, BellOff, Settings } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { LogisticsNotificationPrefsPanel } from "@/components/shared/logistics-notification-prefs-panel"
 
 interface Notification {
   id: string
@@ -20,6 +21,7 @@ interface Notification {
 export function NotificationCenter() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [open, setOpen] = useState(false)
+  const [activeView, setActiveView] = useState<"list" | "prefs">("list")
 
   useEffect(() => {
     loadNotifications()
@@ -82,27 +84,49 @@ export function NotificationCenter() {
         <div className="flex items-center justify-between px-4 py-3 bg-white/[0.02] border-b border-white/[0.06]">
           <div className="flex items-center gap-2">
             <Bell size={14} className="text-emerald-400" />
-            <span className="font-medium text-xs text-white">Bildirimler</span>
-            {unreadCount > 0 && (
+            <span className="font-medium text-xs text-white">
+              {activeView === "prefs" ? "Bildirim Tercihleri" : "Bildirimler"}
+            </span>
+            {activeView === "list" && unreadCount > 0 && (
               <Badge variant="secondary" className="text-[10px] h-4 px-1.5 bg-emerald-500/10 text-emerald-400 border-0">
                 {unreadCount}
               </Badge>
             )}
           </div>
-          {unreadCount > 0 && (
+          <div className="flex items-center gap-2">
+            {activeView === "list" && unreadCount > 0 && (
+              <button
+                onClick={() => markAsRead()}
+                className="flex items-center gap-1 text-xs text-emerald-400 hover:underline font-medium cursor-pointer"
+              >
+                <CheckCheck size={13} />
+                Tümünü oku
+              </button>
+            )}
             <button
-              onClick={() => markAsRead()}
-              className="flex items-center gap-1 text-xs text-emerald-400 hover:underline font-medium cursor-pointer"
+              type="button"
+              onClick={() => setActiveView(activeView === "list" ? "prefs" : "list")}
+              title={activeView === "list" ? "Lojistik Bildirim Tercihleri" : "Bildirim Listesine Dön"}
+              aria-label={activeView === "list" ? "Lojistik Bildirim Tercihleri" : "Bildirim Listesine Dön"}
+              className={`p-1 rounded-md transition-colors cursor-pointer ${
+                activeView === "prefs"
+                  ? "bg-emerald-500/20 text-emerald-400"
+                  : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+              }`}
             >
-              <CheckCheck size={13} />
-              Tümünü oku
+              <Settings size={13} />
             </button>
-          )}
+          </div>
         </div>
 
-        {/* List */}
-        <ScrollArea className="max-h-[380px]">
-          {notifications.length === 0 ? (
+        {/* Body */}
+        <ScrollArea className="max-h-[420px]">
+          {activeView === "prefs" ? (
+            <LogisticsNotificationPrefsPanel
+              compact
+              onNotificationsRefreshed={loadNotifications}
+            />
+          ) : notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
               <div className="size-10 rounded-full bg-white/[0.04] flex items-center justify-center">
                 <BellOff size={18} className="text-zinc-500" />
