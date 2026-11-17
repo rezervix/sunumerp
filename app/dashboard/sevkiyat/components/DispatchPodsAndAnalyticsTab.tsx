@@ -201,10 +201,18 @@ export function DispatchPodsAndAnalyticsTab({
       {/* Optimize Edilmiş vs Optimize Edilmemiş Kıyaslama + KPI Detayları */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-4">
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-[#34D399]" />
-            Sevkiyat Performans & Plan–Gerçek Sapma Özeti
-          </h3>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-base font-semibold text-white flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-[#34D399]" />
+              Sevkiyat Performans & Plan–Gerçek Sapma Özeti
+            </h3>
+            <Link
+              href="/dashboard/lojistik-raporlar?module=sevkiyat"
+              className="text-xs text-[#34D399] hover:underline font-medium px-2.5 py-1 rounded-full bg-[#34D399]/10 border border-[#34D399]/20 shrink-0"
+            >
+              Raporlar&apos;a Git →
+            </Link>
+          </div>
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
               <div className="text-zinc-400">Zamanında Teslimat Oranı</div>

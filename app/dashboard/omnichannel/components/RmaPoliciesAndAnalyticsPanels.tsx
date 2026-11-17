@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Activity,
   AlertTriangle,
@@ -612,10 +613,18 @@ export function RmaAnalyticsPanel({ analytics }: { analytics: any | null }) {
       {/* Neden Dağılımı & Karar Dağılımı */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-3">
-          <h4 className="text-sm font-semibold text-white flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-[#34D399]" />
-            Neden Koduna Göre İade Dağılımı
-          </h4>
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-[#34D399]" />
+              Neden Koduna Göre İade Dağılımı
+            </h4>
+            <Link
+              href="/dashboard/lojistik-raporlar?module=omnichannel"
+              className="text-xs text-[#34D399] hover:underline font-medium px-2.5 py-1 rounded-full bg-[#34D399]/10 border border-[#34D399]/20 shrink-0"
+            >
+              Raporlar&apos;a Git →
+            </Link>
+          </div>
           <div className="space-y-2.5">
             {(analytics.byReason || []).map((r: any) => (
               <div key={r.reasonCode} className="space-y-1 text-xs">

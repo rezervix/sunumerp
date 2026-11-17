@@ -24,7 +24,7 @@ import {
   Images, CalendarCheck2, ClipboardList, Globe, LifeBuoy, HelpCircle, Trash2, Terminal,
   Boxes, Warehouse, ShoppingCart, Sparkles, Search, X,
   ShieldAlert, AlertTriangle, AlertCircle, ExternalLink,
-  Factory, GitBranch, Cpu, Hammer, Gauge, ShieldCheck, Wrench
+  Factory, GitBranch, Cpu, Hammer, Gauge, ShieldCheck, Wrench, BarChart3
 } from "lucide-react"
 import {
   resolveProductionFeatureFlags,
@@ -34,6 +34,7 @@ import {
 import {
   IMPLEMENTED_LOGISTICS_FLEET_HREFS,
   isLogisticsFleetMenuVisible,
+  isLogisticsReportsMenuVisible,
   resolveLogisticsFeatureFlags,
   type LogisticsFeatureFlagsConfig,
 } from "@/lib/config/logistics-feature-flags"
@@ -61,6 +62,8 @@ interface NavItemDef {
   icon: React.ElementType
   exact?: boolean
   resource?: string
+  anyResources?: string[]
+  excludeSupplier?: boolean
   adminOnly?: boolean
   devOnly?: boolean
   isLogout?: boolean
@@ -258,7 +261,7 @@ function SidebarContent({
 }: SidebarContentProps) {
 
   const { t } = useLanguage()
-  const { isPlatformDeveloper } = useAuth()
+  const { isPlatformDeveloper, session } = useAuth()
   const { unreadCounts } = useNotificationStore()
   const [subPlan, setSubPlan] = useState<string | null>(null)
   const [featureFlagsConfig, setFeatureFlagsConfig] = useState<ProductionFeatureFlagsConfig | null>(null)
@@ -348,6 +351,16 @@ function SidebarContent({
       ),
     [logisticsDemoMode, logisticsFlagsConfig, currentBranch?.id]
   )
+  const showLogisticsReportsMenu = useMemo(
+    () =>
+      isLogisticsReportsMenuVisible(
+        logisticsFlagsConfig,
+        currentBranch?.id,
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS,
+        logisticsDemoMode
+      ),
+    [logisticsDemoMode, logisticsFlagsConfig, currentBranch?.id]
+  )
 
   const rawCategories: NavCategoryDef[] = useMemo(() => [
     {
@@ -403,6 +416,24 @@ function SidebarContent({
               ...(logisticsFlags.lojistik_iade &&
               IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/iade")
                 ? [{ name: "3. İade & Ters Lojistik", href: "/dashboard/iade", icon: ShieldCheck, resource: "lojistik_iade" }]
+                : []),
+              ...(showLogisticsReportsMenu &&
+              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/lojistik-raporlar")
+                ? [
+                    {
+                      name: "Lojistik Raporları",
+                      href: "/dashboard/lojistik-raporlar",
+                      icon: BarChart3,
+                      anyResources: [
+                        "lojistik_wms",
+                        "lojistik_tedarikci",
+                        "lojistik_sevkiyat_rota",
+                        "lojistik_filo",
+                        "lojistik_iade",
+                      ],
+                      excludeSupplier: true,
+                    },
+                  ]
                 : []),
             ],
           } satisfies NavCategoryDef,
@@ -503,9 +534,18 @@ function SidebarContent({
         { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
       ],
     },
-  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, logisticsFlags])
+  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, showLogisticsReportsMenu, logisticsFlags])
+
+  const currentBranchRoleName = session?.branches?.find((b) => b.branchId === currentBranch?.id)?.role?.name
+  const isSupplierRole = Boolean(
+    !isSuperAdmin &&
+      (session?.user?.supplierId || currentBranchRoleName === "Tedarikçi")
+  )
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
+    if (item.excludeSupplier && isSupplierRole) {
+      return false
+    }
     if (item.devOnly) {
       return isPlatformDeveloper
     }
@@ -528,9 +568,12 @@ function SidebarContent({
       return false
     }
     if (isSuperAdmin) return true
+    if (Array.isArray(item.anyResources) && item.anyResources.length > 0) {
+      return item.anyResources.some((res) => hasPermission(res, "read"))
+    }
     if (item.resource) return hasPermission(item.resource, "read")
     return true
-  }, [isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
+  }, [isSupplierRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
 
   // Filter allowed categories and items
   const availableCategories = useMemo(() => {

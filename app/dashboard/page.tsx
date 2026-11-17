@@ -16,6 +16,7 @@ import {
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ContextualHelp } from "@/components/shared/contextual-help"
+import { LogisticsExecutiveSummarySection } from "./components/LogisticsExecutiveSummarySection"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 import {
@@ -608,6 +609,9 @@ export default function DashboardPage() {
           </div>
         </StaggerItem>
       </div>
+
+      {/* ── Rol Bazlı Lojistik Yönetim Özeti ── */}
+      <LogisticsExecutiveSummarySection branchId={currentBranch?.id} />
 
       {/* ── Recent Activity Bento Card ── */}
       <StaggerItem className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6">

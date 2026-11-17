@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -107,15 +108,23 @@ export function WmsKpiAndRfidTab({ selectedWarehouseId }: WmsKpiAndRfidTabProps)
               </p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={loadData}
-            className="h-8.5 px-3 text-xs border-white/[0.08] bg-white/[0.04] rounded-full gap-1.5"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-            <span>Hesapla</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/lojistik-raporlar?module=wms"
+              className="text-xs text-[#34D399] hover:underline font-medium px-2.5 py-1.5 rounded-full bg-[#34D399]/10 border border-[#34D399]/20"
+            >
+              Raporlar&apos;a Git →
+            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadData}
+              className="h-8.5 px-3 text-xs border-white/[0.08] bg-white/[0.04] rounded-full gap-1.5"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+              <span>Hesapla</span>
+            </Button>
+          </div>
         </div>
 
         {kpi && (

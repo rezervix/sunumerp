@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import {
   Building2,
   ShieldCheck,
@@ -554,11 +555,19 @@ export default function SupplierMasterScorecardTab({
                 <Settings className="size-4 text-[#34D399]" />
                 <span>Skor Kartı Formül Ağırlıkları (Toplam = %100)</span>
               </div>
-              <div className="text-xs font-mono">
-                Toplam:{" "}
-                <span className={Math.abs(weightSum - 100) < 0.01 ? "text-[#34D399]" : "text-rose-400"}>
-                  %{weightSum}
-                </span>
+              <div className="flex items-center gap-3 text-xs font-mono">
+                <Link
+                  href="/dashboard/lojistik-raporlar?module=satinalma"
+                  className="font-sans text-[#34D399] hover:underline font-medium px-2.5 py-1 rounded-full bg-[#34D399]/10 border border-[#34D399]/20"
+                >
+                  Raporlar&apos;a Git →
+                </Link>
+                <div>
+                  Toplam:{" "}
+                  <span className={Math.abs(weightSum - 100) < 0.01 ? "text-[#34D399]" : "text-rose-400"}>
+                    %{weightSum}
+                  </span>
+                </div>
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 items-end">

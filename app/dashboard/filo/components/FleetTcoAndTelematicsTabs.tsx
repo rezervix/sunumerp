@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Activity,
   AlertCircle,
@@ -38,6 +39,12 @@ export function FleetTcoAndEfficiencyTab({
           Araç Bazlı TCO (km Başı Maliyet), Sürüş Verimliliği &amp; Tahmini CO₂
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href="/dashboard/lojistik-raporlar?module=filo"
+            className="text-xs text-[#34D399] hover:underline font-medium px-2.5 py-1.5 rounded-full bg-[#34D399]/10 border border-[#34D399]/20"
+          >
+            Raporlar&apos;a Git →
+          </Link>
           <input
             type="month"
             value={monthInput}
