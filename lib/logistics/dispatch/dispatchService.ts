@@ -15,7 +15,9 @@ import { prisma } from "@/lib/db"
 import { DEMO_WAREHOUSE_COORDINATES } from "@/lib/logistics/constants"
 import { createLogisticsProviders } from "@/lib/logistics/providers"
 import { resolveDistanceDurationMatrixWithAdapter } from "@/lib/logistics/providers/routing"
+import { releaseStockReservation } from "@/lib/logistics/wms/reservationAndFefo"
 import { LogisticsDomainError, logLogisticsAudit } from "@/lib/logistics/security"
+import { getServerLogisticsInvoiceTiming } from "@/lib/system-config"
 import {
   canTransitionDispatchTripStatus,
   computeDispatchKpis,
@@ -421,7 +423,102 @@ export async function listDispatchOverviewAndReadyPool(params?: {
       storageMode: providers.config.storageMode,
     },
     failureReasons: DISPATCH_FAILURE_REASON_LABELS,
+    invoiceTimingConfig: getServerLogisticsInvoiceTiming(),
   }
+}
+
+/**
+ * Açık kritik arızası veya aktif bakım iş emri olan araç ID'lerini döndürür.
+ */
+async function getCriticalFleetBlockers(): Promise<Set<string>> {
+  const dbAny = prisma as any
+  const [faults, workOrders] = await Promise.all([
+    dbAny.lojistikVehicleFaultLog.findMany().catch(() => []),
+    dbAny.lojistikVehicleMaintenanceWorkOrder.findMany().catch(() => []),
+  ])
+  const blocked = new Set<string>()
+  for (const f of faults) {
+    if (f.vehicleId && f.status !== "RESOLVED" && f.status !== "CLOSED" && String(f.severity || "").toUpperCase() === "CRITICAL") {
+      blocked.add(f.vehicleId)
+    }
+  }
+  for (const w of workOrders) {
+    if (w.vehicleId && w.status === "IN_PROGRESS") {
+      blocked.add(w.vehicleId)
+    }
+  }
+  return blocked
+}
+
+/**
+ * Araç arıza/bakım durumunun açık seferlere etkisini bildirir.
+ * Kural: Mevcut seferler ASLA otomatik silinmez veya değiştirilmez; yalnızca uyarı bayrağı ve olay kaydı işlenir.
+ */
+export async function syncVehicleMaintenanceImpactToDispatchTrips(params: {
+  vehicleId: string
+  reason: string
+  severity?: string
+  resolved?: boolean
+  actorUserId?: string
+}) {
+  const dbAny = prisma as any
+  const openTrips = await dbAny.lojistikShipmentTrip
+    .findMany({
+      where: { vehicleId: params.vehicleId },
+    })
+    .catch(() => [])
+
+  const affected = openTrips.filter((t: any) =>
+    ["TASLAK", "ONAYLANDI", "YUKLENIYOR", "YOLDA", "TESLIMAT_SURUYOR"].includes(t.status)
+  )
+  const impactedTrips: any[] = []
+
+  if (params.resolved) {
+    const blockers = await getCriticalFleetBlockers()
+    const veh = await dbAny.lojistikVehicle.findUnique({ where: { id: params.vehicleId } }).catch(() => null)
+    const stillBlocked =
+      blockers.has(params.vehicleId) ||
+      (veh && ["FAULT", "MAINTENANCE", "OUT_OF_SERVICE"].includes(veh.status))
+    if (!stillBlocked) {
+      for (const trip of affected) {
+        if (trip.maintenanceImpactWarning) {
+          await dbAny.lojistikShipmentTrip
+            .update({
+              where: { id: trip.id },
+              data: { maintenanceImpactWarning: null, updatedAt: new Date() },
+            })
+            .catch(() => null)
+        }
+      }
+    }
+    return { impactedTripCount: 0, impactedTrips: [] }
+  }
+
+  for (const trip of affected) {
+    await dbAny.lojistikShipmentTrip
+      .update({
+        where: { id: trip.id },
+        data: { maintenanceImpactWarning: params.reason, updatedAt: new Date() },
+      })
+      .catch(() => null)
+    await appendTrackingEvent({
+      tripId: trip.id,
+      eventType: "VEHICLE_MAINTENANCE_IMPACT",
+      actorUserId: params.actorUserId || "system",
+      actorName: "Filo & Bakım Entegrasyonu",
+      message: `Araç uyarısı (${trip.vehiclePlate || params.vehicleId}): ${params.reason}. Başka araca manuel devir önerilir.`,
+      metadata: { severity: params.severity || "HIGH", vehicleId: params.vehicleId },
+    })
+    impactedTrips.push({
+      id: trip.id,
+      tripNumber: trip.tripNumber,
+      title: trip.title,
+      status: trip.status,
+      vehiclePlate: trip.vehiclePlate,
+    })
+  }
+
+  return { impactedTripCount: impactedTrips.length, impactedTrips }
 }
 
 export async function createDispatchTrip(
@@ -466,6 +563,20 @@ export async function createDispatchTrip(
       priority: Number(s.priority ?? 1),
     }
   })
+
+  if (vehicle) {
+    const blockers = await getCriticalFleetBlockers()
+    if (
+      ["FAULT", "MAINTENANCE", "OUT_OF_SERVICE"].includes(vehicle.status) ||
+      blockers.has(vehicle.id)
+    ) {
+      throw new LogisticsDomainError(
+        "DRIVER_VEHICLE_INCOMPATIBLE",
+        `${vehicle.plate} aracı bakım veya kritik arıza durumunda olduğu için yeni sefere atanamaz.`,
+        409
+      )
+    }
+  }
 
   // Kapasite & Şoför uyumluluk doğrulaması
   const loadEval = evaluateVehicleCapacityLoad(vehicle, normalizedStops)
@@ -671,10 +782,11 @@ export async function runMultiVehicleAutoPlanAndPersist(
     throw new LogisticsDomainError("VALIDATION_ERROR", "Otomatik sefer önerisi için en az 1 bekleyen sipariş gereklidir.", 400)
   }
 
-  const [vehicles, drivers, wh] = await Promise.all([
+  const [vehicles, drivers, wh, blockers] = await Promise.all([
     dbAny.lojistikVehicle.findMany(),
     dbAny.lojistikDriver.findMany(),
     dbAny.warehouse.findUnique({ where: { id: params.originWarehouseId || "wh-merkez-01" } }).catch(() => null),
+    getCriticalFleetBlockers(),
   ])
 
   const drvById = new Map<string, any>(drivers.map((d: any) => [d.id, d]))
@@ -682,6 +794,7 @@ export async function runMultiVehicleAutoPlanAndPersist(
     (v: any) =>
       v.isActive !== false &&
       (v.status === "ACTIVE" || v.status === "IN_TRANSIT") &&
+      !blockers.has(v.id) &&
       (!params.vehicleIds || params.vehicleIds.length === 0 || params.vehicleIds.includes(v.id))
   )
 
@@ -1441,6 +1554,374 @@ export async function driverUpdateTripOrStopExecution(
   return { trip: savedTrip, stop: savedStop }
 }
 
+async function buildBillableInvoiceLinesForStop(
+  stop: any,
+  opts: {
+    isPartial: boolean
+    deliveredRatio: number
+    deliveredItems?: Array<{ sku: string; itemName: string; deliveredQty: number; unitPrice?: number }>
+    vatRate: number
+  }
+) {
+  const dbAny = prisma as any
+  if (Array.isArray(opts.deliveredItems) && opts.deliveredItems.length > 0) {
+    return opts.deliveredItems
+      .filter((x) => Number(x.deliveredQty || 0) > 0)
+      .map((x) => ({
+        sku: x.sku || stop.sourceRefNo || "URUN",
+        name: x.itemName || stop.customerName,
+        quantity: Number(x.deliveredQty),
+        unit: "Adet",
+        unitPrice: Number(x.unitPrice ?? 150),
+        vatRate: opts.vatRate,
+      }))
+  }
+
+  if (stop.sourceType === "OMNICHANNEL_ORDER" && stop.sourceId) {
+    const ord = await dbAny.omnichannelOrder
+      .findUnique({ where: { id: stop.sourceId }, include: { shipmentLines: true } })
+      .catch(() => null)
+    if (ord?.shipmentLines?.length) {
+      return ord.shipmentLines
+        .map((l: any) => {
+          const baseQty = Number(l.shippedQty || l.quantity || 0)
+          const qty = opts.isPartial
+            ? Math.max(0, Math.round(baseQty * opts.deliveredRatio))
+            : baseQty
+          return {
+            sku: l.sku || "SKU",
+            name: l.itemName || ord.customerName,
+            quantity: qty,
+            unit: "Adet",
+            unitPrice: Number(l.unitPrice || 150),
+            vatRate: opts.vatRate,
+          }
+        })
+        .filter((l: any) => l.quantity > 0)
+    }
+    if (ord) {
+      const amt = Number(ord.totalAmount || 0) * opts.deliveredRatio
+      if (amt <= 0) return []
+      return [
+        {
+          sku: ord.orderNumber || stop.sourceRefNo || "OMN",
+          name: `${ord.customerName} Teslimatı`,
+          quantity: 1,
+          unit: "Paket",
+          unitPrice: Number((amt / (1 + opts.vatRate / 100)).toFixed(2)),
+          vatRate: opts.vatRate,
+        },
+      ]
+    }
+  }
+
+  if (stop.sourceType === "ERP_ORDER" && stop.sourceId) {
+    const ord = await dbAny.order.findUnique({ where: { id: stop.sourceId } }).catch(() => null)
+    if (ord) {
+      const baseQty = Math.max(1, Number(ord.quantity || 1))
+      const qty = opts.isPartial ? Math.max(0, Math.round(baseQty * opts.deliveredRatio)) : baseQty
+      if (qty <= 0) return []
+      const gross = Number(ord.totalAmount || baseQty * 250)
+      const perUnitNet = gross / baseQty / (1 + opts.vatRate / 100)
+      return [
+        {
+          sku: ord.orderNumber || ord.id,
+          name: ord.title || stop.customerName,
+          quantity: qty,
+          unit: "Adet",
+          unitPrice: Number(perUnitNet.toFixed(2)),
+          vatRate: opts.vatRate,
+        },
+      ]
+    }
+  }
+
+  const basePallets = Math.max(1, Number(stop.palletCount || 1))
+  const qty = opts.isPartial ? Math.max(0, Math.round(basePallets * opts.deliveredRatio)) : basePallets
+  if (qty <= 0) return []
+  return [
+    {
+      sku: stop.sourceRefNo || stop.id,
+      name: `${stop.customerName} Teslimat Bedeli`,
+      quantity: qty,
+      unit: "Palet",
+      unitPrice: 1250,
+      vatRate: opts.vatRate,
+    },
+  ]
+}
+
+async function ensureDraftSalesEInvoiceForStop(
+  stop: any,
+  trip: any,
+  opts: {
+    isPartial: boolean
+    deliveredRatio: number
+    deliveredItems?: Array<{ sku: string; itemName: string; deliveredQty: number; unitPrice?: number }>
+    timingMode: string
+    vatRate: number
+  }
+) {
+  const dbAny = prisma as any
+  // Çift taslak engeli (idempotency): durak veya ilişkili e-fatura varsa yeniden üretme
+  if (stop.eInvoiceId) {
+    const existing = await dbAny.eDocumentRecord
+      .findUnique({ where: { id: stop.eInvoiceId } })
+      .catch(() => null)
+    if (existing) return existing
+  }
+  const existingByStop = await dbAny.eDocumentRecord
+    .findFirst({ where: { shipmentStopId: stop.id, documentType: "E_FATURA" } })
+    .catch(() => null)
+  if (existingByStop) return existingByStop
+
+  const lines = await buildBillableInvoiceLinesForStop(stop, {
+    isPartial: opts.isPartial,
+    deliveredRatio: opts.deliveredRatio,
+    deliveredItems: opts.deliveredItems,
+    vatRate: opts.vatRate,
+  })
+  if (lines.length === 0) return null
+
+  const linesWithTotals = lines.map((l: any) => {
+    const net = Number(l.quantity) * Number(l.unitPrice || 0)
+    const vat = (net * Number(l.vatRate ?? opts.vatRate)) / 100
+    return {
+      ...l,
+      lineNet: Number(net.toFixed(2)),
+      lineVat: Number(vat.toFixed(2)),
+    }
+  })
+  const totalNet = Number(linesWithTotals.reduce((s: number, l: any) => s + l.lineNet, 0).toFixed(2))
+  const totalVat = Number(linesWithTotals.reduce((s: number, l: any) => s + l.lineVat, 0).toFixed(2))
+  const totalGross = Number((totalNet + totalVat).toFixed(2))
+  if (totalGross <= 0) return null
+
+  const ettnUuid = crypto.randomUUID().toUpperCase()
+  const docNo = `FTR-TSL-${Date.now().toString().slice(-7)}`
+  const edoc = await dbAny.eDocumentRecord.create({
+    data: {
+      ettnUuid,
+      documentNo: docNo,
+      documentType: "E_FATURA",
+      profileId: "TICARIFATURA",
+      documentStatus: "TASLAK",
+      eInvoiceTimingMode: opts.timingMode,
+      relatedOrderNo: stop.sourceRefNo || trip?.tripNumber || stop.id,
+      receiverTitle: stop.customerName,
+      receiverVknTckn: "1111111111",
+      receiverTaxOffice: "Merkez V.D.",
+      dispatchDate: new Date(),
+      carrierName: "Sunum İç Filo Lojistik",
+      vehiclePlate: trip?.vehiclePlate || null,
+      driverName: trip?.driverName || null,
+      shipmentTripId: stop.tripId,
+      shipmentStopId: stop.id,
+      totalNetAmount: totalNet,
+      totalVatAmount: totalVat,
+      totalGrossAmount: totalGross,
+      currency: "TRY",
+      gibStatusCode: "TASLAK",
+      gibStatusText: opts.isPartial
+        ? "Kısmi teslimat kanıtı sonrası taslak e-fatura oluşturuldu"
+        : "Teslimat kanıtı sonrası taslak e-fatura oluşturuldu",
+      linesJson: JSON.stringify(linesWithTotals),
+    },
+  })
+
+  await dbAny.lojistikShipmentStop
+    .update({
+      where: { id: stop.id },
+      data: {
+        eInvoiceId: edoc.id,
+        eInvoiceNo: edoc.documentNo,
+        eInvoiceStatus: "TASLAK",
+        updatedAt: new Date(),
+      },
+    })
+    .catch(() => null)
+
+  if (stop.sourceType === "OMNICHANNEL_ORDER" && stop.sourceId) {
+    await dbAny.omnichannelOrder
+      .update({
+        where: { id: stop.sourceId },
+        data: { eInvoiceNo: edoc.documentNo, eInvoiceStatus: "TASLAK" },
+      })
+      .catch(() => null)
+  } else if (stop.sourceType === "ERP_ORDER" && stop.sourceId) {
+    await dbAny.order
+      .update({
+        where: { id: stop.sourceId },
+        data: { eInvoiceNo: edoc.documentNo, eInvoiceStatus: "TASLAK" },
+      })
+      .catch(() => null)
+  }
+
+  return edoc
+}
+
+/**
+ * Yetkili kullanıcı için durak bazlı "Tek Tıkla E-Fatura Kes" onay adımı.
+ * Kural: Teslim edilemeyen veya teslimatı tamamlanmamış duraklar faturalanamaz; çift kesim idempotency ile engellenir.
+ */
+export async function issueOneClickSalesEInvoiceForStop(
+  stopId: string,
+  actor: { userId: string; username?: string }
+) {
+  const dbAny = prisma as any
+  const stop = await dbAny.lojistikShipmentStop.findUnique({ where: { id: stopId } })
+  if (!stop) {
+    throw new LogisticsDomainError("NOT_FOUND", "Fatura kesilecek sevkiyat durağı bulunamadı.", 404)
+  }
+  if (!["TESLIM_EDILDI", "KISMI_TESLIM"].includes(stop.status)) {
+    throw new LogisticsDomainError(
+      "INVOICE_NOT_ELIGIBLE",
+      `Yalnızca teslim edilen duraklar faturalanabilir (durak durumu: ${stop.status}).`,
+      409
+    )
+  }
+
+  let existingEdoc = stop.eInvoiceId
+    ? await dbAny.eDocumentRecord.findUnique({ where: { id: stop.eInvoiceId } }).catch(() => null)
+    : null
+  if (!existingEdoc) {
+    existingEdoc = await dbAny.eDocumentRecord
+      .findFirst({ where: { shipmentStopId: stop.id, documentType: "E_FATURA" } })
+      .catch(() => null)
+  }
+
+  // Çift kesim idempotency koruması
+  if (
+    stop.eInvoiceStatus === "KESILDI" ||
+    existingEdoc?.documentStatus === "KESILDI" ||
+    existingEdoc?.gibStatusCode === "1300"
+  ) {
+    return {
+      alreadyIssued: true,
+      eDocument: existingEdoc,
+      eInvoiceNo: stop.eInvoiceNo || existingEdoc?.documentNo || null,
+      eInvoiceStatus: "KESILDI" as const,
+    }
+  }
+
+  const trip = await dbAny.lojistikShipmentTrip
+    .findUnique({ where: { id: stop.tripId } })
+    .catch(() => null)
+  const timingCfg = getServerLogisticsInvoiceTiming()
+  const providers = createLogisticsProviders()
+
+  if (!existingEdoc) {
+    existingEdoc = await ensureDraftSalesEInvoiceForStop(stop, trip, {
+      isPartial: stop.status === "KISMI_TESLIM",
+      deliveredRatio: stop.status === "KISMI_TESLIM" ? 0.5 : 1,
+      timingMode: timingCfg.mode,
+      vatRate: timingCfg.defaultVatRate,
+    })
+  }
+  if (!existingEdoc) {
+    throw new LogisticsDomainError(
+      "INVOICE_ZERO_AMOUNT",
+      "Teslim edilen faturalanabilir miktar/tutar bulunamadı.",
+      409
+    )
+  }
+
+  let issuedDocNo = existingEdoc.documentNo
+  let issuedEttn = existingEdoc.ettnUuid
+  let gibStatusCode = "1300"
+  let gibStatusText = "GİB Başarıyla İletildi (Demo Adaptör - Tek Tık Onay)"
+
+  if (providers.config.eDocumentMode === "external-rest" && providers.config.eDocumentApiUrl) {
+    const parsedLines = (() => {
+      try {
+        return JSON.parse(existingEdoc.linesJson || "[]")
+      } catch {
+        return []
+      }
+    })()
+    const extRes = await providers.eDocument.submitEDocument({
+      documentType: "E_FATURA",
+      relatedOrderNo: stop.sourceRefNo || trip?.tripNumber || stop.id,
+      receiverTitle: existingEdoc.receiverTitle,
+      receiverVknTckn: existingEdoc.receiverVknTckn,
+      receiverTaxOffice: existingEdoc.receiverTaxOffice || "Merkez V.D.",
+      vehiclePlate: trip?.vehiclePlate || undefined,
+      driverName: trip?.driverName || undefined,
+      lines: parsedLines,
+    })
+    issuedDocNo = extRes.documentNo
+    issuedEttn = extRes.ettnUuid
+    gibStatusCode = extRes.gibStatusCode
+    gibStatusText = extRes.gibStatusText
+  } else if (String(issuedDocNo).startsWith("FTR-TSL-")) {
+    issuedDocNo = `FTR${new Date().getFullYear()}${String(Date.now()).slice(-7)}`
+  }
+
+  const updatedEdoc = await dbAny.eDocumentRecord.update({
+    where: { id: existingEdoc.id },
+    data: {
+      documentNo: issuedDocNo,
+      ettnUuid: issuedEttn,
+      documentStatus: "KESILDI",
+      gibStatusCode,
+      gibStatusText,
+      dispatchDate: new Date(),
+    },
+  })
+
+  await dbAny.lojistikShipmentStop.update({
+    where: { id: stop.id },
+    data: {
+      eInvoiceId: updatedEdoc.id,
+      eInvoiceNo: updatedEdoc.documentNo,
+      eInvoiceStatus: "KESILDI",
+      updatedAt: new Date(),
+    },
+  })
+
+  if (stop.sourceType === "OMNICHANNEL_ORDER" && stop.sourceId) {
+    await dbAny.omnichannelOrder
+      .update({
+        where: { id: stop.sourceId },
+        data: { eInvoiceNo: updatedEdoc.documentNo, eInvoiceStatus: "KESILDI" },
+      })
+      .catch(() => null)
+  } else if (stop.sourceType === "ERP_ORDER" && stop.sourceId) {
+    await dbAny.order
+      .update({
+        where: { id: stop.sourceId },
+        data: { eInvoiceNo: updatedEdoc.documentNo, eInvoiceStatus: "KESILDI" },
+      })
+      .catch(() => null)
+  }
+
+  await appendTrackingEvent({
+    tripId: stop.tripId,
+    stopId: stop.id,
+    eventType: "EINVOICE_ISSUED",
+    actorUserId: actor.userId,
+    actorName: actor.username || actor.userId,
+    message: `${updatedEdoc.documentNo} numaralı satış E-Faturası kesildi (${stop.customerName}).`,
+    metadata: { eInvoiceId: updatedEdoc.id, ettnUuid: updatedEdoc.ettnUuid },
+  })
+
+  await logLogisticsAudit({
+    userId: actor.userId,
+    action: "ISSUE_ONE_CLICK_EINVOICE",
+    resource: "lojistik_sevkiyat_rota",
+    resourceId: updatedEdoc.id,
+    moduleKey: "lojistik_sevkiyat_rota",
+    metadata: { stopId: stop.id, documentNo: updatedEdoc.documentNo },
+  })
+
+  return {
+    alreadyIssued: false,
+    eDocument: updatedEdoc,
+    eInvoiceNo: updatedEdoc.documentNo,
+    eInvoiceStatus: "KESILDI" as const,
+  }
+}
+
 export async function submitStopDeliveryProof(
   params: {
     stopId: string
@@ -1451,6 +1932,8 @@ export async function submitStopDeliveryProof(
     signatureUrlOrDataUrl?: string | null
     photoUrlsOrDataUrls?: string[]
     deliveryStatus?: "TESLIM_EDILDI" | "KISMI_TESLIM"
+    deliveredRatio?: number
+    deliveredItems?: Array<{ sku: string; itemName: string; deliveredQty: number; unitPrice?: number }>
     capturedLat?: number
     capturedLng?: number
     driverId?: string
@@ -1542,18 +2025,92 @@ export async function submitStopDeliveryProof(
     actor
   )
 
-  // Kaynak siparişi tamamlandı olarak güncelle
+  const isPartial = params.deliveryStatus === "KISMI_TESLIM"
+  const deliveredRatio = isPartial
+    ? Math.max(0.05, Math.min(0.99, Number(params.deliveredRatio ?? 0.5)))
+    : 1
+
+  // Kaynak siparişi ve bağlı WMS görev/rezervasyonunu tamamlandı olarak güncelle
   if (stop.sourceType === "OMNICHANNEL_ORDER" && stop.sourceId) {
     await dbAny.omnichannelOrder
       .update({
         where: { id: stop.sourceId },
-        data: { status: params.deliveryStatus === "KISMI_TESLIM" ? "PARTIALLY_SHIPPED" : "DELIVERED" },
+        data: { status: isPartial ? "PARTIALLY_SHIPPED" : "DELIVERED" },
       })
       .catch(() => null)
-  } else if (stop.sourceType === "ERP_ORDER" && stop.sourceId && params.deliveryStatus !== "KISMI_TESLIM") {
+  } else if (stop.sourceType === "ERP_ORDER" && stop.sourceId && !isPartial) {
     await dbAny.order
       .update({ where: { id: stop.sourceId }, data: { status: "delivered" } })
       .catch(() => null)
+  } else if (stop.sourceType === "WMS_WAVE" && stop.sourceId) {
+    await dbAny.wmsTask
+      .update({
+        where: { id: stop.sourceId },
+        data: {
+          workflowStage: isPartial ? "PACKING" : "SHIPPED",
+          status: isPartial ? "IN_PROGRESS" : "COMPLETED",
+          completedAt: isPartial ? null : new Date(),
+        },
+      })
+      .catch(() => null)
+  }
+
+  // Açık WMS stok rezervasyonlarını teslimat oranına göre FULFILLED olarak kapat
+  if (stop.sourceId || stop.sourceRefNo) {
+    try {
+      const openReservations = await dbAny.lojistikStockReservation
+        .findMany({
+          where: { status: { in: ["ACTIVE", "PARTIAL"] } },
+        })
+        .catch(() => [])
+      for (const r of openReservations) {
+        const matchesSource =
+          (stop.sourceId && r.sourceId === stop.sourceId) ||
+          (stop.sourceRefNo && r.sourceRefNo === stop.sourceRefNo)
+        if (!matchesSource) continue
+        const openQty = Math.max(
+          0,
+          Number(r.reservedQty || 0) - Number(r.fulfilledQty || 0) - Number(r.releasedQty || 0)
+        )
+        if (openQty <= 0) continue
+        await releaseStockReservation({
+          reservationId: r.id,
+          releaseQty: isPartial ? Math.max(1, Math.round(openQty * deliveredRatio)) : openQty,
+          markStatus: "FULFILLED",
+          performedBy: actor.username || actor.userId,
+        })
+      }
+    } catch {
+      // Rezervasyon kapanışı POD kaydını kesmez
+    }
+  }
+
+  // Yapılandırılabilir E-Fatura zamanlamasına göre teslimat sonrası TASLAK e-fatura oluştur (idempotent)
+  let draftInvoice: any = null
+  const timingCfg = getServerLogisticsInvoiceTiming()
+  if (
+    timingCfg.mode === "ON_DELIVERY_DRAFT" &&
+    timingCfg.autoDraftOnDelivery &&
+    (!isPartial || timingCfg.allowPartialDeliveryDraft)
+  ) {
+    draftInvoice = await ensureDraftSalesEInvoiceForStop(stop, statusResult.trip, {
+      isPartial,
+      deliveredRatio,
+      deliveredItems: params.deliveredItems,
+      timingMode: timingCfg.mode,
+      vatRate: timingCfg.defaultVatRate,
+    }).catch(() => null)
+    if (draftInvoice) {
+      await appendTrackingEvent({
+        tripId: stop.tripId,
+        stopId: stop.id,
+        eventType: "EINVOICE_DRAFT_CREATED",
+        actorUserId: actor.userId,
+        actorName: actor.username || actor.userId,
+        message: `${draftInvoice.documentNo} numaralı satış E-Fatura taslağı oluşturuldu (Kesim onayında).`,
+        metadata: { eInvoiceId: draftInvoice.id, isPartial },
+      })
+    }
   }
 
   await appendTrackingEvent({
@@ -1577,7 +2134,7 @@ export async function submitStopDeliveryProof(
     metadata: { tripId: stop.tripId, stopId: stop.id, recipientName: proofRec.recipientName },
   })
 
-  return { proof: proofRec, ...statusResult }
+  return { proof: proofRec, ...statusResult, draftInvoice }
 }
 
 /**

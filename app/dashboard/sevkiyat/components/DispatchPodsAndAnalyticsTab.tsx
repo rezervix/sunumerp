@@ -85,15 +85,40 @@ export function DispatchPodsAndAnalyticsTab({
                           {s.vehiclePlate || '-'} · {s.driverName || '-'} · {s.sourceRefNo || ''}
                         </div>
                       </div>
-                      <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full ${
-                          s.status === 'TESLIM_EDILEMEDI'
-                            ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
-                            : 'bg-emerald-500/15 text-[#34D399] border border-emerald-500/30'
-                        }`}
-                      >
-                        {s.status}
-                      </span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {s.eInvoiceStatus === 'KESILDI' ? (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-[#34D399] border border-emerald-500/30 font-mono">
+                            E-Fatura: {s.eInvoiceNo}
+                          </span>
+                        ) : s.eInvoiceStatus === 'TASLAK' ||
+                          s.status === 'TESLIM_EDILDI' ||
+                          s.status === 'KISMI_TESLIM' ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              onAction('issue_stop_efatura', { stopId: s.id })
+                            }
+                            className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 border border-amber-500/35 font-medium transition cursor-pointer"
+                            title={
+                              s.eInvoiceNo
+                                ? `Taslak: ${s.eInvoiceNo}`
+                                : 'Taslak / Kesime hazır'
+                            }
+                          >
+                            {s.eInvoiceNo ? `Taslak (${s.eInvoiceNo}) · ` : ''}
+                            Tek Tıkla E-Fatura Kes
+                          </button>
+                        ) : null}
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-full ${
+                            s.status === 'TESLIM_EDILEMEDI'
+                              ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30'
+                              : 'bg-emerald-500/15 text-[#34D399] border border-emerald-500/30'
+                          }`}
+                        >
+                          {s.status}
+                        </span>
+                      </div>
                     </div>
 
                     {pod ? (

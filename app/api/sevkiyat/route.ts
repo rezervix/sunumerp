@@ -19,12 +19,14 @@ import {
   driverUpdateTripOrStopExecution,
   dynamicReplanTrip,
   extendOrRotateTrackingLink,
+  issueOneClickSalesEInvoiceForStop,
   listDispatchOverviewAndReadyPool,
   optimizeExistingTripWithJob,
   reorderTripStopsManually,
   runMultiVehicleAutoPlanAndPersist,
   submitStopDeliveryProof,
 } from "@/lib/logistics/dispatch"
+import { getServerLogisticsInvoiceTiming, saveSystemConfig } from "@/lib/system-config"
 
 function resolveDispatchMapConfig() {
   const rawUrl = process.env.LOJISTIK_MAP_TILE_URL?.trim() || null
@@ -132,6 +134,8 @@ export async function POST(req: Request) {
       reorder_stops: "update",
       replan_trip: "update",
       approve_and_issue_ewaybill: "approve",
+      issue_stop_efatura: "approve",
+      update_invoice_timing: "approve",
       driver_update_stop: "update",
       submit_pod: "create",
       extend_tracking: "update",
@@ -236,6 +240,52 @@ export async function POST(req: Request) {
           success: true,
           ...res,
           message: `Sefer onaylandı ve ${res.eWaybillNo} numaralı E-İrsaliye kesildi.`,
+        })
+      }
+      case "issue_stop_efatura": {
+        const res = await issueOneClickSalesEInvoiceForStop(body.stopId, actor)
+        return NextResponse.json({
+          success: true,
+          ...res,
+          message: res.alreadyIssued
+            ? `${res.eInvoiceNo} numaralı E-Fatura daha önce kesilmiş.`
+            : `${res.eInvoiceNo} numaralı satış E-Faturası kesildi.`,
+        })
+      }
+      case "update_invoice_timing": {
+        const current = getServerLogisticsInvoiceTiming()
+        const allowedModes = ["ON_DELIVERY_DRAFT", "ON_WAYBILL_SETTLE", "MANUAL_ONLY"] as const
+        const mode = allowedModes.includes(body.mode) ? body.mode : current.mode
+        const saved = saveSystemConfig({
+          logisticsInvoiceTiming: {
+            mode,
+            autoDraftOnDelivery:
+              typeof body.autoDraftOnDelivery === "boolean"
+                ? body.autoDraftOnDelivery
+                : current.autoDraftOnDelivery,
+            allowPartialDeliveryDraft:
+              typeof body.allowPartialDeliveryDraft === "boolean"
+                ? body.allowPartialDeliveryDraft
+                : current.allowPartialDeliveryDraft,
+            defaultVatRate:
+              Number.isFinite(Number(body.defaultVatRate)) && Number(body.defaultVatRate) >= 0
+                ? Number(body.defaultVatRate)
+                : current.defaultVatRate,
+            updatedAt: new Date().toISOString(),
+            updatedBy: actor.username || actor.userId,
+          },
+        })
+        await logLogisticsAudit({
+          userId: actor.userId,
+          action: "UPDATE_INVOICE_TIMING_POLICY",
+          resource: "lojistik_sevkiyat_rota",
+          moduleKey: "lojistik_sevkiyat_rota",
+          metadata: { mode },
+        })
+        return NextResponse.json({
+          success: true,
+          invoiceTimingConfig: saved.logisticsInvoiceTiming,
+          message: "E-Fatura zamanlama ayarı güncellendi.",
         })
       }
       case "driver_update_stop": {

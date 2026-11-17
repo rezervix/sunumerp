@@ -418,7 +418,46 @@ export async function applyGoodsReceiptToAsnAndPo(params: {
       },
     })
 
-    // Tedarikçi Skor Kartını mal kabul verileriyle anında güncelle
+    // Mal kabul kalite muayenesi kaydını (RECEIVING) otomatik üret -> Tedarikçi Skor Kartına doğrudan besle
+    const batchGood = params.lines.reduce((s, l) => s + Math.max(0, Number(l.receivedGoodQty || 0)), 0)
+    const batchDamaged = params.lines.reduce((s, l) => s + Math.max(0, Number(l.damagedQty || 0)), 0)
+    const qcRefNo = `QC-REC-${params.wmsTaskNo || Date.now()}`
+    const existingQc = await prisma.uretimQualityInspection
+      .findFirst({ where: { inspectionNumber: qcRefNo } })
+      .catch(() => null)
+    if (!existingQc && batchGood + batchDamaged > 0) {
+      const firstLine = (po.lines || [])[0]
+      const supplierObj = await prisma.supplier.findUnique({ where: { id: po.supplierId } }).catch(() => null)
+      await prisma.uretimQualityInspection
+        .create({
+          data: {
+            inspectionNumber: qcRefNo,
+            inspectionType: "RECEIVING",
+            itemId: firstLine?.itemId || params.lines[0]?.itemId || null,
+            supplierId: po.supplierId,
+            supplierName: supplierObj?.name || null,
+            purchaseOrderId: po.id,
+            batchQuantity: Number((batchGood + batchDamaged).toFixed(2)),
+            sampleQuantity: Number(Math.max(1, Math.min(20, batchGood + batchDamaged)).toFixed(2)),
+            status:
+              batchDamaged > 0
+                ? batchGood > 0
+                  ? "CONDITIONAL_PASSED"
+                  : "FAILED"
+                : "PASSED",
+            totalDefects: Math.round(batchDamaged),
+            isStockBlocked: batchDamaged > 0 && batchGood === 0,
+            inspectionDate: new Date(),
+            decisionNotes:
+              batchDamaged > 0
+                ? `Mal kabul sırasında ${batchDamaged} hasarlı/reddedilen kalem tespit edildi (${params.wmsTaskNo}).`
+                : `Mal kabul kalite kontrolü tam sağlam geçti (${params.wmsTaskNo}).`,
+          },
+        })
+        .catch(() => null)
+    }
+
+    // Tedarikçi Skor Kartını mal kabul + kalite muayene verileriyle anında güncelle
     await recalculateSupplierScorecard(po.supplierId, "LIVE")
   }
 

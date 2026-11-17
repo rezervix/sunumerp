@@ -463,6 +463,11 @@ export function DispatchPlanningAndTripsTab({
                       e-İrsaliye: {t.eWaybillNo}
                     </div>
                   )}
+                  {t.maintenanceImpactWarning && (
+                    <div className="text-[10px] text-amber-300 flex items-center gap-1 font-medium">
+                      <AlertTriangle className="w-3 h-3 shrink-0" /> Bakım/Arıza Uyarısı
+                    </div>
+                  )}
                 </button>
               );
             })}
@@ -557,6 +562,28 @@ export function DispatchPlanningAndTripsTab({
                     )}
                   </div>
                 </div>
+
+                {selectedTrip.maintenanceImpactWarning && (
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-200">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" />
+                      <span>
+                        <strong>Araç Bakım/Arıza Etkisi:</strong> {selectedTrip.maintenanceImpactWarning}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplanModalTrip(selectedTrip);
+                        setReplanTargetVehicleId('');
+                        setReplanReason(`Araç arızası/bakımı sebebiyle devir: ${selectedTrip.maintenanceImpactWarning}`);
+                      }}
+                      className="px-3 py-1 rounded-full bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-[11px] font-semibold text-amber-100 cursor-pointer"
+                    >
+                      Başka Araca Devret →
+                    </button>
+                  </div>
+                )}
 
                 <div className="text-[11px] text-zinc-400">
                   Sürükle-bırak yaparak veya ok düğmeleriyle durak sırasını değiştirdiğinizde mesafe ve ETA otomatik yeniden hesaplanır.

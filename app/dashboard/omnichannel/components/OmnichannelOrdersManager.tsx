@@ -45,6 +45,7 @@ interface OmnichannelOrder {
   currency: string;
   backorderQty?: number;
   eInvoiceNo?: string | null;
+  eInvoiceStatus?: string | null;
   eWaybillNo?: string | null;
   shipmentTripId?: string | null;
   trackingToken?: string | null;
@@ -293,6 +294,17 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                         {ord.channelCode}
                       </span>
                       {getStatusBadge(ord.status)}
+                      {ord.eInvoiceNo && (
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-mono border ${
+                            ord.eInvoiceStatus === 'TASLAK'
+                              ? 'bg-amber-500/15 text-amber-200 border-amber-500/30'
+                              : 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
+                          }`}
+                        >
+                          {ord.eInvoiceStatus === 'TASLAK' ? 'Taslak Fatura' : 'E-Fatura'}: {ord.eInvoiceNo}
+                        </span>
+                      )}
                       <span className="text-[11px] text-zinc-500">
                         {new Date(ord.orderDate).toLocaleDateString('tr-TR')}
                       </span>

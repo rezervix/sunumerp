@@ -262,7 +262,26 @@ export async function createFleetFaultAndOptionalWorkOrder(
     fault.linkedWorkOrderId = workOrder.id
   }
 
-  return { fault, workOrder }
+  // Aktif / planlı seferlere arıza etkisini yansıt (sefer silinmez/değişmez, uyarı eklenir)
+  let impactedTrips: any[] = []
+  if (severity === "CRITICAL" || severity === "HIGH") {
+    try {
+      const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
+        "@/lib/logistics/dispatch/dispatchService"
+      )
+      const impact = await syncVehicleMaintenanceImpactToDispatchTrips({
+        vehicleId: vehicle.id,
+        reason: `Kritik/Yüksek araç arızası (${faultCode}: ${fault.title})`,
+        severity,
+        actorUserId: actor.userId,
+      })
+      impactedTrips = impact.impactedTrips
+    } catch {
+      // Çapraz etki uyarısı arıza kaydını kesmez
+    }
+  }
+
+  return { fault, workOrder, impactedTrips }
 }
 
 export async function createFleetWorkOrder(
@@ -310,6 +329,19 @@ export async function createFleetWorkOrder(
       where: { id: vehicle.id },
       data: { status: "MAINTENANCE", updatedAt: new Date() },
     })
+    try {
+      const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
+        "@/lib/logistics/dispatch/dispatchService"
+      )
+      await syncVehicleMaintenanceImpactToDispatchTrips({
+        vehicleId: vehicle.id,
+        reason: `Arıza bakım iş emri açıldı (${woNum}: ${wo.title})`,
+        severity: String(wo.priority || "HIGH"),
+        actorUserId: actor.userId,
+      })
+    } catch {
+      // ignore
+    }
   }
 
   await logLogisticsAudit({
@@ -458,6 +490,19 @@ export async function updateFleetWorkOrderStatus(params: {
     if (vehicle && vehicle.status === "ACTIVE") {
       await dbAny.lojistikVehicle.update({ where: { id: vehicle.id }, data: { status: "MAINTENANCE" } })
     }
+    try {
+      const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
+        "@/lib/logistics/dispatch/dispatchService"
+      )
+      await syncVehicleMaintenanceImpactToDispatchTrips({
+        vehicleId: wo.vehicleId,
+        reason: `Araç bakıma alındı (${wo.workOrderNumber}: ${wo.title})`,
+        severity: String(wo.priority || "HIGH"),
+        actorUserId: params.actorUserId,
+      })
+    } catch {
+      // ignore
+    }
   }
 
   if (params.nextStatus === "COMPLETED") {
@@ -520,6 +565,19 @@ export async function updateFleetWorkOrderStatus(params: {
         where: { id: vehicle.id },
         data: { status: "ACTIVE", updatedAt: new Date() },
       })
+      try {
+        const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
+          "@/lib/logistics/dispatch/dispatchService"
+        )
+        await syncVehicleMaintenanceImpactToDispatchTrips({
+          vehicleId: vehicle.id,
+          reason: `Bakım iş emri tamamlandı (${wo.workOrderNumber})`,
+          resolved: true,
+          actorUserId: params.actorUserId,
+        })
+      } catch {
+        // ignore
+      }
     }
 
     if (params.postToFinance !== false && breakdown.totalCost > 0 && !wo.financeId) {

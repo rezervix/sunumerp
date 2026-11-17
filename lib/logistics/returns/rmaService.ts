@@ -300,6 +300,10 @@ export async function lookupOrderForRma(params: {
       })
     )
 
+    const stopRec = await (prisma as any).lojistikShipmentStop
+      .findFirst({ where: { sourceType: "OMNICHANNEL_ORDER", sourceId: omnOrder.id } })
+      .catch(() => null)
+
     return {
       found: true,
       orderSourceType: "OMNICHANNEL" as const,
@@ -310,6 +314,9 @@ export async function lookupOrderForRma(params: {
       deliveredAt: new Date(deliveredAt).toISOString(),
       invoiceDocId: edoc?.id ?? null,
       invoiceNo: omnOrder.eInvoiceNo || edoc?.documentNo || null,
+      shipmentTripId: omnOrder.shipmentTripId || stopRec?.tripId || null,
+      trackingToken: omnOrder.trackingToken || stopRec?.trackingToken || null,
+      eWaybillNo: omnOrder.eWaybillNo || null,
       lines,
     }
   }
