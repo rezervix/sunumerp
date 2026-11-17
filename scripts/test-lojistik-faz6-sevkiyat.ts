@@ -106,7 +106,7 @@ async function runSuite() {
     // 1. Migration & Rollback Doğrulaması
     await step("Faz 6 migration ve rollback doğrulaması (6/6 valid)", async () => {
       const results = validateAllLogisticsMigrations()
-      assert.equal(results.length, 6, "Toplam 6 lojistik migration bekleniyordu.")
+      assert.equal(results.length, 7, "Toplam 7 lojistik migration bekleniyordu.")
       for (const r of results) {
         assert.equal(r.valid, true, `Migration '${r.migrationName}' geçersiz: ${r.errors.join("; ")}`)
       }

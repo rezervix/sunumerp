@@ -98,6 +98,22 @@ export interface SystemMaintenanceConfig {
   showAnnouncementBanner: boolean
 }
 
+export interface LogisticsInvoiceTimingConfig {
+  mode: "ON_DELIVERY_DRAFT" | "ON_WAYBILL_SETTLE" | "MANUAL_ONLY"
+  autoDraftOnDelivery: boolean
+  allowPartialDeliveryDraft: boolean
+  defaultVatRate: number
+  updatedAt?: string
+  updatedBy?: string
+}
+
+export const DEFAULT_LOGISTICS_INVOICE_TIMING: LogisticsInvoiceTimingConfig = {
+  mode: "ON_DELIVERY_DRAFT",
+  autoDraftOnDelivery: true,
+  allowPartialDeliveryDraft: true,
+  defaultVatRate: 20,
+}
+
 export interface SystemConfig {
   onboarded: boolean
   eulaApproved: boolean
@@ -138,6 +154,7 @@ export interface SystemConfig {
   featureFlags?: ProductionFeatureFlagsConfig
   logisticsFeatureFlags?: LogisticsFeatureFlagsConfig
   logisticsProviders?: Partial<LogisticsProviderBundleConfig>
+  logisticsInvoiceTiming?: Partial<LogisticsInvoiceTimingConfig>
   systemMaintenance?: SystemMaintenanceConfig
 }
 
@@ -214,6 +231,9 @@ const DEFAULT_CONFIG: SystemConfig = {
   logisticsFeatureFlags: {
     ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
   },
+  logisticsInvoiceTiming: {
+    ...DEFAULT_LOGISTICS_INVOICE_TIMING,
+  },
   tamperDetected: false,
   securityDisabled: false
 }
@@ -252,6 +272,10 @@ export function getSystemConfig(): SystemConfig {
         ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
         ...(parsed.logisticsFeatureFlags || {}),
       },
+      logisticsInvoiceTiming: {
+        ...DEFAULT_LOGISTICS_INVOICE_TIMING,
+        ...(parsed.logisticsInvoiceTiming || {}),
+      },
       securityDisabled: disabled
     }
     return merged
@@ -276,6 +300,9 @@ export function saveSystemConfig(config: Partial<SystemConfig>): SystemConfig {
       logisticsFeatureFlags: config.logisticsFeatureFlags
         ? { ...DEFAULT_LOGISTICS_FEATURE_FLAGS, ...(current.logisticsFeatureFlags || {}), ...config.logisticsFeatureFlags }
         : current.logisticsFeatureFlags || { ...DEFAULT_LOGISTICS_FEATURE_FLAGS },
+      logisticsInvoiceTiming: config.logisticsInvoiceTiming
+        ? { ...DEFAULT_LOGISTICS_INVOICE_TIMING, ...(current.logisticsInvoiceTiming || {}), ...config.logisticsInvoiceTiming }
+        : current.logisticsInvoiceTiming || { ...DEFAULT_LOGISTICS_INVOICE_TIMING },
       securityDisabled: isSecurityDisabled()
     }
     const dir = path.dirname(CONFIG_PATH)
@@ -329,5 +356,25 @@ export function getServerLogisticsFeatureFlags(
   const sysConfig = getSystemConfig()
   const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
   return resolveLogisticsFeatureFlags(sysConfig.logisticsFeatureFlags, effectiveScopeId)
+}
+
+/**
+ * Teslimat sonrası E-Fatura taslak/kesim zamanlaması ayarını çözer (hukuki/mali danışman kararına göre ayarlanabilir).
+ */
+export function getServerLogisticsInvoiceTiming(): LogisticsInvoiceTimingConfig {
+  const sysConfig = getSystemConfig()
+  const cfg = {
+    ...DEFAULT_LOGISTICS_INVOICE_TIMING,
+    ...(sysConfig.logisticsInvoiceTiming || {}),
+  }
+  const envMode = process.env.LOJISTIK_EFATURA_TIMING_MODE?.trim().toUpperCase()
+  if (
+    envMode === "ON_DELIVERY_DRAFT" ||
+    envMode === "ON_WAYBILL_SETTLE" ||
+    envMode === "MANUAL_ONLY"
+  ) {
+    cfg.mode = envMode
+  }
+  return cfg
 }
 

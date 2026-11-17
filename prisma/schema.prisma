@@ -75,6 +75,7 @@ model User {
   mustChangePassword   Boolean               @default(false)
   createdBy            String?
   supplierId           String?
+  logisticsNotificationPrefsJson String?
   sessions             UserSession[]
   passwordResetLogs    PasswordResetLog[]
   eodReports           EodReport[]
@@ -262,6 +263,8 @@ model Order {
   files         String?  // JSON array of file URLs
   shipmentTripId String?
   trackingToken String?
+  eInvoiceNo     String?
+  eInvoiceStatus String?
   orderDate     DateTime @default(now())
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -2601,6 +2604,7 @@ model OmnichannelOrder {
   backorderQty        Float    @default(0)
   dropshipSupplier    String?
   eInvoiceNo          String?
+  eInvoiceStatus      String?
   eWaybillNo          String?
   shipmentTripId      String?
   trackingToken       String?
@@ -2752,6 +2756,8 @@ model EDocumentRecord {
   currency          String   @default("TRY")
   gibStatusCode     String   @default("1300")
   gibStatusText     String   @default("GİB Onaylı - Alıcıya İletildi")
+  documentStatus    String   @default("KESILDI")
+  eInvoiceTimingMode String?
   linesJson         String
   createdAt         DateTime @default(now())
 
@@ -5194,6 +5200,7 @@ model LojistikShipmentTrip {
   eWaybillNo                    String?
   eWaybillEttn                  String?
   replanReason                  String?
+  maintenanceImpactWarning      String?
   replanHistoryJson             String?
   polylineJson                  String?
   notes                         String?
@@ -5248,6 +5255,9 @@ model LojistikShipmentStop {
   trackingToken       String    @unique
   trackingExpiresAt   DateTime
   reassignedFromTripId String?
+  eInvoiceId          String?
+  eInvoiceNo          String?
+  eInvoiceStatus      String?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 

@@ -236,6 +236,7 @@ export function isAnyLogisticsFeatureEnabled(
 export const IMPLEMENTED_LOGISTICS_FLEET_HREFS: readonly string[] = [
   "/dashboard/sevkiyat",
   "/dashboard/filo",
+  "/dashboard/lojistik-raporlar",
 ] as const
 
 export function isLogisticsFleetMenuVisible(
@@ -245,10 +246,24 @@ export function isLogisticsFleetMenuVisible(
   demoModeOverride?: boolean
 ): boolean {
   const flags = resolveLogisticsFeatureFlags(config, branchOrCompanyId, demoModeOverride)
-  return LOGISTICS_MODULES_CATALOG.some(
+  const hasFleetMod = LOGISTICS_MODULES_CATALOG.some(
     (mod) =>
       mod.category === "lojistik_filo" &&
       flags[mod.key] &&
       implementedHrefs.includes(mod.primaryHref)
   )
+  const hasReports =
+    implementedHrefs.includes("/dashboard/lojistik-raporlar") &&
+    LOGISTICS_FEATURE_FLAG_KEYS.some((key) => flags[key])
+  return hasFleetMod || hasReports
+}
+
+export function isLogisticsReportsMenuVisible(
+  config?: Partial<LogisticsFeatureFlagsConfig> | null,
+  branchOrCompanyId?: string | null,
+  implementedHrefs: readonly string[] = IMPLEMENTED_LOGISTICS_FLEET_HREFS,
+  demoModeOverride?: boolean
+): boolean {
+  if (!implementedHrefs.includes("/dashboard/lojistik-raporlar")) return false
+  return isAnyLogisticsFeatureEnabled(config, branchOrCompanyId, demoModeOverride)
 }

@@ -76,7 +76,7 @@ async function runSuite() {
     // 1. Additive migration & rollback SQL
     await check("Faz 1–6 SQL Migration & Rollback bütünlüğü", () => {
       const results = validateAllLogisticsMigrations()
-      assert.equal(results.length, 6, "Tam 6 lojistik migration bekleniyordu.")
+      assert.equal(results.length, 7, "Tam 7 lojistik migration bekleniyordu.")
       for (const r of results) {
         assert.equal(r.valid, true, `Migration '${r.migrationName}' geçersiz: ${r.errors.join("; ")}`)
       }
