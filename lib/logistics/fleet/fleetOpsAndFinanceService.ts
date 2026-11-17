@@ -565,19 +565,12 @@ export async function updateFleetWorkOrderStatus(params: {
         where: { id: vehicle.id },
         data: { status: "ACTIVE", updatedAt: new Date() },
       })
-      try {
-        const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
-          "@/lib/logistics/dispatch/dispatchService"
-        )
-        await syncVehicleMaintenanceImpactToDispatchTrips({
-          vehicleId: vehicle.id,
-          reason: `Bakım iş emri tamamlandı (${wo.workOrderNumber})`,
-          resolved: true,
-          actorUserId: params.actorUserId,
+      await dbAny.lojistikVehicleFaultLog
+        .updateMany({
+          where: { linkedWorkOrderId: wo.id },
+          data: { status: "RESOLVED", resolvedAt: new Date() },
         })
-      } catch {
-        // ignore
-      }
+        .catch(() => null)
     }
 
     if (params.postToFinance !== false && breakdown.totalCost > 0 && !wo.financeId) {
@@ -604,6 +597,22 @@ export async function updateFleetWorkOrderStatus(params: {
     where: { id: wo.id },
     data: updates,
   })
+
+  if (params.nextStatus === "COMPLETED" && vehicle) {
+    try {
+      const { syncVehicleMaintenanceImpactToDispatchTrips } = await import(
+        "@/lib/logistics/dispatch/dispatchService"
+      )
+      await syncVehicleMaintenanceImpactToDispatchTrips({
+        vehicleId: vehicle.id,
+        reason: `Bakım iş emri tamamlandı (${wo.workOrderNumber})`,
+        resolved: true,
+        actorUserId: params.actorUserId,
+      })
+    } catch {
+      // ignore
+    }
+  }
 
   await logLogisticsAudit({
     userId: params.actorUserId,

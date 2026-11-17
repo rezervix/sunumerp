@@ -99,7 +99,12 @@ async function resolveInternalRecipients(
       isPlatformDeveloperUser(user.id, user.username),
     ])
 
-    const isSuperOrGlobalAdmin = superAdmin || platformDev
+    const hasSuperRoleName = userBranches.some((ubr) =>
+      ["Super Admin", "Yonetim Kurulu Uyesi", "Genel Mudur"].includes(
+        String(ubr.role?.name || "")
+      )
+    )
+    const isSuperOrGlobalAdmin = superAdmin || platformDev || hasSuperRoleName
     const hasSupplierRole = userBranches.some((ubr) => ubr.role?.name === TEDARIKCI_ROLE_NAME)
     if (!isSuperOrGlobalAdmin && hasSupplierRole) {
       continue

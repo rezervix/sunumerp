@@ -300,9 +300,13 @@ export async function lookupOrderForRma(params: {
       })
     )
 
-    const stopRec = await (prisma as any).lojistikShipmentStop
-      .findFirst({ where: { sourceType: "OMNICHANNEL_ORDER", sourceId: omnOrder.id } })
-      .catch(() => null)
+    const stopRec =
+      (await (prisma as any).lojistikShipmentStop
+        .findFirst({ where: { sourceType: "OMNICHANNEL_ORDER", sourceId: omnOrder.id } })
+        .catch(() => null)) ||
+      (await (prisma as any).lojistikShipmentStop
+        .findFirst({ where: { sourceRefNo: omnOrder.orderNumber } })
+        .catch(() => null))
 
     return {
       found: true,
@@ -355,6 +359,14 @@ export async function lookupOrderForRma(params: {
       warrantyMonths: pol.warrantyMonths,
     })
 
+    const erpStopRec =
+      (await (prisma as any).lojistikShipmentStop
+        .findFirst({ where: { sourceType: "ERP_ORDER", sourceId: erpOrder.id } })
+        .catch(() => null)) ||
+      (await (prisma as any).lojistikShipmentStop
+        .findFirst({ where: { sourceRefNo: orderNo } })
+        .catch(() => null))
+
     return {
       found: true,
       orderSourceType: "ERP_ORDER" as const,
@@ -365,6 +377,8 @@ export async function lookupOrderForRma(params: {
       deliveredAt: new Date(deliveredAt).toISOString(),
       invoiceDocId: edoc?.id ?? null,
       invoiceNo: edoc?.documentNo ?? null,
+      shipmentTripId: erpStopRec?.tripId || null,
+      trackingToken: erpStopRec?.trackingToken || null,
       lines: defaultItem
         ? [
             {

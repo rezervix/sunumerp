@@ -72,6 +72,7 @@ function pushIfMissing(db: Record<string, any[]>, col: string, rec: any): number
 export const faz7FinalAuditSeedModule: LogisticsSeedModule = {
   moduleKey: "faz7_final_ve_denetim",
   phase: 7,
+  seededIdPrefixes: ["f7-"],
   seededIdsByCollection: {
     lojistikShipmentTrip: ["f7-trip-01"],
     lojistikShipmentStop: ["f7-stop-01"],

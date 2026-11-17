@@ -65,6 +65,7 @@ export interface LogisticsSeedModule {
   readonly moduleKey: string
   readonly phase: number
   readonly seededIdsByCollection: Readonly<Record<string, readonly string[]>>
+  readonly seededIdPrefixes?: readonly string[]
   repairAnomalies?: (db: Record<string, any[]>) => number
   seed: (db: Record<string, any[]>) => Promise<LogisticsSeedStepResult> | LogisticsSeedStepResult
   rollback?: (db: Record<string, any[]>) => Record<string, number>
@@ -101,9 +102,20 @@ function collectSeededIdSet(modules: readonly LogisticsSeedModule[]): Record<str
   return map
 }
 
+function collectSeededIdPrefixes(modules: readonly LogisticsSeedModule[]): string[] {
+  const prefixes: string[] = []
+  for (const mod of modules) {
+    if (Array.isArray(mod.seededIdPrefixes)) {
+      prefixes.push(...mod.seededIdPrefixes)
+    }
+  }
+  return prefixes
+}
+
 function snapshotPreExistingRecords(
   db: Record<string, any[]>,
-  ignoreIdsByCollection: Record<string, Set<string>>
+  ignoreIdsByCollection: Record<string, Set<string>>,
+  ignorePrefixes: readonly string[] = []
 ): { counts: Record<string, number>; fingerprints: Record<string, Record<string, string>> } {
   const counts: Record<string, number> = {}
   const fingerprints: Record<string, Record<string, string>> = {}
@@ -117,6 +129,7 @@ function snapshotPreExistingRecords(
       const rec = list[idx]
       const key = String(rec?.id ?? rec?.code ?? `idx:${idx}`)
       if (ignored?.has(key)) continue
+      if (ignorePrefixes.some((p) => key.startsWith(p))) continue
       fingerprints[col][key] = stableHashRecord(rec)
     }
   }
@@ -174,7 +187,8 @@ export async function executeLogisticsDemoSeed(
   }
 
   const seedIdMap = collectSeededIdSet(modules)
-  const before = snapshotPreExistingRecords(db, seedIdMap)
+  const seedPrefixes = collectSeededIdPrefixes(modules)
+  const before = snapshotPreExistingRecords(db, seedIdMap, seedPrefixes)
 
   const modulesExecuted: LogisticsSeedStepResult[] = []
   let anyChanged = false
@@ -254,7 +268,8 @@ export function executeLogisticsDemoRollback(
   }
 
   const seedIdMap = collectSeededIdSet(modules)
-  const before = snapshotPreExistingRecords(db, seedIdMap)
+  const seedPrefixes = collectSeededIdPrefixes(modules)
+  const before = snapshotPreExistingRecords(db, seedIdMap, seedPrefixes)
 
   const removedByCollection: Record<string, number> = {}
 

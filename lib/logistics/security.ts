@@ -118,8 +118,14 @@ export async function getLogisticsScopeContext(
     )
   )
 
+  const effectiveSuperAdmin =
+    superAdmin ||
+    roleNames.some((n) =>
+      ["Super Admin", "Yonetim Kurulu Uyesi", "Genel Mudur"].includes(n)
+    )
+
   const hasSupplierRole = roleNames.includes(TEDARIKCI_ROLE_NAME)
-  const isSupplierScoped = !superAdmin && !platformDev && hasSupplierRole
+  const isSupplierScoped = !effectiveSuperAdmin && !platformDev && hasSupplierRole
 
   let supplierId: string | null = user?.supplierId ?? null
   let supplierCode: string | null = null
@@ -136,7 +142,7 @@ export async function getLogisticsScopeContext(
     username: payload.username,
     branchId: branchId ?? payload.branchId,
     roleNames,
-    isSuperAdmin: superAdmin,
+    isSuperAdmin: effectiveSuperAdmin,
     isPlatformDeveloper: platformDev,
     isSupplierScoped,
     supplierId,
