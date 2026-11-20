@@ -189,8 +189,8 @@ export async function upsertFleetMaintenancePlan(
   const saved = existing
     ? await dbAny.lojistikVehicleMaintenancePlan.update({ where: { id: existing.id }, data: payload })
     : await dbAny.lojistikVehicleMaintenancePlan.create({
-        data: { id: `fpln-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, ...payload, createdAt: new Date() },
-      })
+      data: { id: `fpln-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, ...payload, createdAt: new Date() },
+    })
 
   await logLogisticsAudit({
     userId: actor.userId,
@@ -660,8 +660,8 @@ export async function upsertFleetTire(input: Record<string, any>, actor: { userI
   return existing
     ? await dbAny.lojistikVehicleTire.update({ where: { id: existing.id }, data: payload })
     : await dbAny.lojistikVehicleTire.create({
-        data: { id: `tire-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, ...payload, createdAt: new Date() },
-      })
+      data: { id: `tire-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, ...payload, createdAt: new Date() },
+    })
 }
 
 // ── D: YAKIT KAYITLARI, İTHALAT, L/100KM & FATURA MUTABAKATI ──────────────────
@@ -912,8 +912,8 @@ export async function upsertCo2EmissionFactor(
   return existing
     ? await dbAny.lojistikCo2EmissionFactor.update({ where: { id: existing.id }, data: payload })
     : await dbAny.lojistikCo2EmissionFactor.create({
-        data: { id: `co2-${fuelType.toLowerCase()}`, ...payload, createdAt: new Date() },
-      })
+      data: { id: `co2-${fuelType.toLowerCase()}`, ...payload, createdAt: new Date() },
+    })
 }
 
 export async function getFleetTcoAndEfficiencyReport(params?: { month?: string }) {
