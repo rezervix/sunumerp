@@ -26,6 +26,8 @@
     "seed:demo": "node scripts/seed-demo-database.js",
     "seed:logistics": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/seed-logistics-demo.ts seed",
     "seed:logistics:rollback": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/seed-logistics-demo.ts rollback",
+    "seed:tourism": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/seed-tourism-demo.ts seed",
+    "seed:tourism:rollback": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/seed-tourism-demo.ts rollback",
     "db:backup": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/db-backup-restore.ts backup",
     "db:restore": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/db-backup-restore.ts restore",
     "db:drill": "cross-env SUNUM_DISABLE_CRON=1 npx tsx scripts/db-backup-restore.ts drill",

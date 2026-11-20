@@ -238,7 +238,7 @@ export async function executeLogisticsDemoSeed(
  */
 export function executeLogisticsDemoRollback(
   modules: readonly LogisticsSeedModule[],
-  options?: { createSafetyBackup?: boolean }
+  options?: { createSafetyBackup?: boolean; backupLabel?: string }
 ): {
   success: boolean
   backupId: string | null
@@ -250,7 +250,7 @@ export function executeLogisticsDemoRollback(
   let backupId: string | null = null
   if (options?.createSafetyBackup !== false) {
     const manifest = createDatabaseBackup({
-      label: "pre-logistics-rollback",
+      label: options?.backupLabel ?? "pre-logistics-rollback",
       updateSystemConfigLastBackup: false,
     })
     backupId = manifest.backupId
@@ -290,8 +290,8 @@ export function executeLogisticsDemoRollback(
       if (diff > 0) {
         removedByCollection[col] = (removedByCollection[col] || 0) + diff
       }
-      // Lojistik prefixli boş koleksiyonu tamamen temizle
-      if (col.startsWith("lojistik") && db[col].length === 0) {
+      // Lojistik veya Turizm prefixli boş koleksiyonu tamamen temizle
+      if ((col.startsWith("lojistik") || col.startsWith("turizm")) && db[col].length === 0) {
         delete db[col]
       }
     }
