@@ -167,6 +167,15 @@ function getConfigPath(): string {
 
 const CONFIG_PATH = getConfigPath()
 
+const globalForSystemConfig = globalThis as unknown as {
+  __sunumEphemeralSystemConfig?: SystemConfig
+}
+
+function isReadOnlyFsError(err: unknown): boolean {
+  const code = (err as { code?: string } | null)?.code
+  return code === "EROFS" || code === "EACCES" || code === "EPERM"
+}
+
 /**
  * Checks if the test mode bypass file exists.
  * When ANY of these files exist (e.g. storage/TEST_MODE), security protection & tamper quarantine is DISABLED.
@@ -241,13 +250,29 @@ const DEFAULT_CONFIG: SystemConfig = {
 export function getSystemConfig(): SystemConfig {
   try {
     const disabled = isSecurityDisabled()
-    if (!fs.existsSync(CONFIG_PATH)) {
-      const dir = path.dirname(CONFIG_PATH)
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true })
+    if (globalForSystemConfig.__sunumEphemeralSystemConfig) {
+      const eph = {
+        ...globalForSystemConfig.__sunumEphemeralSystemConfig,
+        securityDisabled: disabled,
       }
+      if (disabled) {
+        eph.tamperDetected = false
+      }
+      return eph
+    }
+    if (!fs.existsSync(CONFIG_PATH)) {
       const initialConfig = { ...DEFAULT_CONFIG, tamperDetected: false }
-      fs.writeFileSync(CONFIG_PATH, JSON.stringify(initialConfig, null, 2), "utf8")
+      try {
+        const dir = path.dirname(CONFIG_PATH)
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true })
+        }
+        fs.writeFileSync(CONFIG_PATH, JSON.stringify(initialConfig, null, 2), "utf8")
+      } catch (writeErr) {
+        if (isReadOnlyFsError(writeErr)) {
+          globalForSystemConfig.__sunumEphemeralSystemConfig = initialConfig
+        }
+      }
       return { ...initialConfig, securityDisabled: disabled }
     }
     const content = fs.readFileSync(CONFIG_PATH, "utf8")
@@ -305,12 +330,22 @@ export function saveSystemConfig(config: Partial<SystemConfig>): SystemConfig {
         : current.logisticsInvoiceTiming || { ...DEFAULT_LOGISTICS_INVOICE_TIMING },
       securityDisabled: isSecurityDisabled()
     }
-    const dir = path.dirname(CONFIG_PATH)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
+    try {
+      const dir = path.dirname(CONFIG_PATH)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
+      fs.writeFileSync(CONFIG_PATH, JSON.stringify(updated, null, 2), "utf8")
+      globalForSystemConfig.__sunumEphemeralSystemConfig = undefined
+      return updated
+    } catch (writeErr) {
+      if (isReadOnlyFsError(writeErr)) {
+        console.warn("[SystemConfig] Salt-okunur dosya sistemi algılandı; yapılandırma bellek önbelleğinde tutuluyor.")
+        globalForSystemConfig.__sunumEphemeralSystemConfig = updated
+        return updated
+      }
+      throw writeErr
     }
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify(updated, null, 2), "utf8")
-    return updated
   } catch (err) {
     console.error("[SystemConfig] Error writing config file:", err)
     throw err
@@ -324,12 +359,22 @@ export function resetSystemConfig(): SystemConfig {
       ...DEFAULT_CONFIG,
       securityDisabled: disabled
     }
-    const dir = path.dirname(CONFIG_PATH)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
+    try {
+      const dir = path.dirname(CONFIG_PATH)
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+      }
+      fs.writeFileSync(CONFIG_PATH, JSON.stringify(resetConfig, null, 2), "utf8")
+      globalForSystemConfig.__sunumEphemeralSystemConfig = undefined
+      return resetConfig
+    } catch (writeErr) {
+      if (isReadOnlyFsError(writeErr)) {
+        console.warn("[SystemConfig] Salt-okunur dosya sistemi algılandı; varsayılan yapılandırma bellek önbelleğinde sıfırlandı.")
+        globalForSystemConfig.__sunumEphemeralSystemConfig = resetConfig
+        return resetConfig
+      }
+      throw writeErr
     }
-    fs.writeFileSync(CONFIG_PATH, JSON.stringify(resetConfig, null, 2), "utf8")
-    return resetConfig
   } catch (err) {
     console.error("[SystemConfig] Error resetting config file:", err)
     throw err

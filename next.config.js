@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: process.env.VERCEL ? undefined : "standalone",
+  outputFileTracingIncludes: {
+    "/**": [
+      "./storage/ajans-kutuphanesi/.local-db.json",
+      "./storage/system_config.json",
+      "./public/uploads/pod-demo/**/*",
+    ],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
