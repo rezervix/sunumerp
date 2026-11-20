@@ -8,6 +8,7 @@ export interface User {
   phone?: string
   avatarUrl?: string
   supplierId?: string | null
+  partnerCompanyId?: string | null
   isActive: boolean
   createdAt: string
   updatedAt: string
@@ -58,6 +59,12 @@ export interface Permissions {
   "ajans-kutuphanesi"?: string[]
   "personel-talepleri"?: string[]
   "icerik-takvimi"?: string[]
+  turizm?: string[]
+  turizm_rentacar?: string[]
+  turizm_otel?: string[]
+  turizm_tur?: string[]
+  turizm_b2b?: string[]
+  partner_portali?: string[]
 }
 
 export interface UserBranchRole {
@@ -78,4 +85,4 @@ export interface AuthSession {
   isPlatformDeveloper?: boolean
 }
 
-export type RoleName = "Super Admin" | "Branch Admin" | "Employee" | "Field Staff" | "Accountant" | "Tedarikçi"
+export type RoleName = "Super Admin" | "Branch Admin" | "Employee" | "Field Staff" | "Accountant" | "Tedarikçi" | "Partner"

@@ -9,6 +9,7 @@ export const ROLE_HIERARCHY = {
   "Field Staff": 2,
   Accountant: 2,
   "Tedarikçi": 1,
+  Partner: 1,
 }
 
 export const RESOURCE_ALIASES: Record<string, string> = {
@@ -109,6 +110,26 @@ export const RESOURCE_ALIASES: Record<string, string> = {
   "lojistik-iade": "lojistik_iade",
   iade: "lojistik_iade",
   rma: "lojistik_iade",
+  // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner İzin Anahtarları ─────────
+  turizm: "turizm",
+  tourism: "turizm",
+  turizm_rentacar: "turizm_rentacar",
+  "turizm-rentacar": "turizm_rentacar",
+  "arac-kiralama": "turizm_rentacar",
+  rentacar: "turizm_rentacar",
+  turizm_otel: "turizm_otel",
+  "turizm-otel": "turizm_otel",
+  otel: "turizm_otel",
+  pms: "turizm_otel",
+  turizm_tur: "turizm_tur",
+  "turizm-tur": "turizm_tur",
+  tur: "turizm_tur",
+  "tur-operatorlugu": "turizm_tur",
+  turizm_b2b: "turizm_b2b",
+  "turizm-b2b": "turizm_b2b",
+  "partner-agi": "turizm_b2b",
+  partner_portali: "partner_portali",
+  "partner-portali": "partner_portali",
 }
 
 export const PRODUCTION_PERMISSION_ACTIONS = [
@@ -150,6 +171,8 @@ const PRODUCTION_ACTION_ALIASES: Record<string, ProductionPermissionAction> = {
 
 export const LOGISTICS_PERMISSION_ACTIONS = PRODUCTION_PERMISSION_ACTIONS
 export const LOGISTICS_PERMISSION_ACTION_LABELS = PRODUCTION_PERMISSION_ACTION_LABELS
+export const TOURISM_PERMISSION_ACTIONS = PRODUCTION_PERMISSION_ACTIONS
+export const TOURISM_PERMISSION_ACTION_LABELS = PRODUCTION_PERMISSION_ACTION_LABELS
 
 export function normalizeProductionPermissionAction(action: string): string {
   return PRODUCTION_ACTION_ALIASES[action.toLowerCase()] ?? action
@@ -200,6 +223,9 @@ export function hasPermission(
     normalizedResource === "lojistik" ||
     normalizedResource.startsWith("lojistik_") ||
     normalizedResource === "tedarikci_portali" ||
+    normalizedResource === "turizm" ||
+    normalizedResource.startsWith("turizm_") ||
+    normalizedResource === "partner_portali" ||
     normalizedResource === "stok" ||
     normalizedResource === "wms" ||
     normalizedResource === "satinalma" ||
@@ -317,6 +343,12 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     lojistik_filo: ["read", "create", "update", "delete", "approve"],
     lojistik_iade: ["read", "create", "update", "delete", "approve"],
     tedarikci_portali: ["read", "create", "update", "delete", "approve"],
+    turizm: ["read", "create", "update", "delete", "approve"],
+    turizm_rentacar: ["read", "create", "update", "delete", "approve"],
+    turizm_otel: ["read", "create", "update", "delete", "approve"],
+    turizm_tur: ["read", "create", "update", "delete", "approve"],
+    turizm_b2b: ["read", "create", "update", "delete", "approve"],
+    partner_portali: ["read", "create", "update", "delete", "approve"],
     trash: ["read", "restore", "purge"],
   },
   "Branch Admin": {
@@ -360,6 +392,12 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     lojistik_filo: ["read", "create", "update", "approve"],
     lojistik_iade: ["read", "create", "update", "approve"],
     tedarikci_portali: ["read", "create", "update"],
+    turizm: ["read", "create", "update", "approve"],
+    turizm_rentacar: ["read", "create", "update", "approve"],
+    turizm_otel: ["read", "create", "update", "approve"],
+    turizm_tur: ["read", "create", "update", "approve"],
+    turizm_b2b: ["read", "create", "update", "approve"],
+    partner_portali: ["read", "create", "update"],
     trash: ["read"],
   },
   Employee: {
@@ -399,6 +437,11 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     lojistik_tedarikci: ["read"],
     lojistik_filo: ["read"],
     lojistik_iade: ["read"],
+    turizm: ["read"],
+    turizm_rentacar: ["read"],
+    turizm_otel: ["read"],
+    turizm_tur: ["read"],
+    turizm_b2b: ["read"],
     trash: ["read"],
   },
   "Field Staff": {
@@ -419,6 +462,9 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     cargo: ["read"],
     lojistik_sevkiyat_rota: ["read", "update"],
     lojistik_filo: ["read"],
+    turizm_rentacar: ["read", "update"],
+    turizm_otel: ["read"],
+    turizm_tur: ["read", "update"],
     announcements: ["read"],
     chat: ["read", "create"],
   },
@@ -443,9 +489,17 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
     omnichannel: ["read"],
     lojistik_tedarikci: ["read"],
     lojistik_iade: ["read"],
+    turizm_rentacar: ["read"],
+    turizm_otel: ["read"],
+    turizm_tur: ["read"],
+    turizm_b2b: ["read"],
   },
   "Tedarikçi": {
     lojistik_tedarikci: ["read", "create", "update"],
     tedarikci_portali: ["read", "create", "update"],
+  },
+  Partner: {
+    turizm_b2b: ["read", "create", "update"],
+    partner_portali: ["read", "create", "update"],
   },
 }

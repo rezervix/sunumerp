@@ -29,6 +29,11 @@ const AVAILABLE_RESOURCES = [
   { key: "lojistik_filo", label: "Lojistik: Filo & Sürücü", actions: ["read", "create", "update", "delete", "approve"] },
   { key: "lojistik_iade", label: "Lojistik: İade & RMA", actions: ["read", "create", "update", "delete", "approve"] },
   { key: "tedarikci_portali", label: "Dış Tedarikçi Portalı", actions: ["read", "create", "update"] },
+  { key: "turizm_rentacar", label: "Turizm: Araç Kiralama (Rent-a-Car)", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "turizm_otel", label: "Turizm: Otel Yönetimi (Mini PMS)", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "turizm_tur", label: "Turizm: Tur Operatörlüğü", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "turizm_b2b", label: "Turizm: B2B Partner Ağı", actions: ["read", "create", "update", "delete", "approve"] },
+  { key: "partner_portali", label: "Dış Partner Portalı", actions: ["read", "create", "update"] },
   { key: "hesaplama", label: "Hesaplama Aracı", actions: ["read"] },
   { key: "announcements", label: "Duyurular", actions: ["read", "write", "delete"] },
 ]
