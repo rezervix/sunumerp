@@ -4,11 +4,24 @@ import { jwtVerify } from "jose"
 import { prisma } from "@/lib/db"
 import { handleLogisticsApiError } from "@/lib/logistics/security"
 import { authenticateSupplierPortalCredentials, ADMIN_RETURN_COOKIE_NAME } from "@/lib/logistics/procurement"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
 
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers)
+    const rl = checkRateLimit(`portal-auth:${ip}`, 20, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Çok fazla giriş denemesi. Lütfen bekleyin." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     const body = await request.json()
     const result = await authenticateSupplierPortalCredentials({
       username: String(body.username || ""),

@@ -2,7 +2,12 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { reserveOrderStock } from '@/lib/services/omnichannelServerDb';
 import { LogisticsDomainError } from '@/lib/logistics/security';
-import { ingestSecureReturnWebhook } from '@/lib/logistics/returns/financeAndWebhookService';
+import { isDemoEnvironment } from '@/lib/config/production-feature-flags';
+import { checkRateLimit, resolveRequestClientIp } from '@/lib/security/rateLimiter';
+import {
+  ingestSecureReturnWebhook,
+  verifyReturnWebhookSignature,
+} from '@/lib/logistics/returns/financeAndWebhookService';
 
 /**
  * Dış Entegratör ve Pazaryeri Webhook Alıcı Uç Noktası (Trendyol, Hepsiburada, Shopify, Kargo vb.)
@@ -26,6 +31,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers);
+    const rl = checkRateLimit(`webhook-omni:${ip}`, 60, 60_000);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: 'RATE_LIMIT_EXCEEDED', error: 'Çok fazla webhook isteği.' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const channel = (searchParams.get('channel') || 'EXTERNAL').toUpperCase();
     const signatureHeader =
@@ -76,6 +90,28 @@ export async function POST(request: Request) {
           );
         }
         throw err;
+      }
+    }
+
+    // Demo kapalıyken (gerçek kurulum) veya imza başlığı gönderilmişse HMAC/Channel Secret doğrula (fail-closed)
+    const demoMode = isDemoEnvironment();
+    const hasAuthHeaders = Boolean(signatureHeader || secretHeader);
+    if (!demoMode || hasAuthHeaders) {
+      const sigCheck = verifyReturnWebhookSignature({
+        rawBody,
+        signatureHeader,
+        secretHeader,
+        channelCode: channel,
+      });
+      if (!sigCheck.verified) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: sigCheck.reason || 'UNAUTHORIZED_WEBHOOK',
+            error: 'Webhook imza veya kanal gizli anahtarı doğrulaması başarısız.',
+          },
+          { status: 401 }
+        );
       }
     }
 

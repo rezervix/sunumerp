@@ -4,7 +4,16 @@
 
 import { NextResponse } from "next/server"
 import { readFile } from "fs/promises"
-import { join, normalize } from "path"
+import { basename, join, normalize } from "path"
+
+const ALLOWED_SERVED_POD_EXTENSIONS = new Set([
+  "png",
+  "jpg",
+  "jpeg",
+  "webp",
+  "pdf",
+  "svg",
+])
 
 export async function GET(
   _req: Request,
@@ -27,8 +36,11 @@ export async function GET(
   ] as const) {
     if (!cand.startsWith(root)) continue
     try {
-      const buf = await readFile(cand)
       const ext = cand.split(".").pop()?.toLowerCase() || ""
+      if (!ALLOWED_SERVED_POD_EXTENSIONS.has(ext)) {
+        return new NextResponse("Forbidden File Type", { status: 403 })
+      }
+      const buf = await readFile(cand)
       const mime =
         ext === "png"
           ? "image/png"
@@ -36,15 +48,24 @@ export async function GET(
             ? "image/jpeg"
             : ext === "webp"
               ? "image/webp"
-              : ext === "svg"
-                ? "image/svg+xml"
-                : "application/octet-stream"
-      return new NextResponse(buf, {
-        headers: {
-          "Content-Type": mime,
-          "Cache-Control": "public, max-age=3600",
-        },
-      })
+              : ext === "pdf"
+                ? "application/pdf"
+                : ext === "svg"
+                  ? "image/svg+xml"
+                  : "application/octet-stream"
+
+      const headers: Record<string, string> = {
+        "Content-Type": mime,
+        "Cache-Control": "public, max-age=3600",
+        "X-Content-Type-Options": "nosniff",
+      }
+      if (ext === "svg") {
+        const safeDownloadName = basename(cand).replace(/[^a-zA-Z0-9._-]/g, "_")
+        headers["Content-Security-Policy"] = "sandbox"
+        headers["Content-Disposition"] = `attachment; filename="${safeDownloadName}"`
+      }
+
+      return new NextResponse(buf, { headers })
     } catch {
       // Sonraki konuma geç
     }

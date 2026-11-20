@@ -7,6 +7,10 @@ import {
   requireLogisticsAccess,
 } from "@/lib/logistics/security"
 import { ingestExternalEdiAsn } from "@/lib/logistics/procurement"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 
 /**
  * Harici EDI / DESADV ASN Entegrasyon Uç Noktası
@@ -15,6 +19,15 @@ import { ingestExternalEdiAsn } from "@/lib/logistics/procurement"
  */
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers)
+    const rl = checkRateLimit(`edi-asn:${ip}`, 60, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "EDI ASN hız limiti aşıldı." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     const apiKeyHeader = request.headers.get("x-edi-api-key") || request.headers.get("x-api-key")
     let actor = "EDI_WEBHOOK"
     let actorUserId: string = "EDI_WEBHOOK_SYSTEM"

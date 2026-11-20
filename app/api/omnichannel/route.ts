@@ -12,6 +12,10 @@ import {
   seedRealisticOmnichannelData
 } from '@/lib/services/omnichannelServerDb';
 import { mockDatabase } from '@/lib/data/mockDatabase';
+import { isDemoEnvironment } from '@/lib/config/production-feature-flags';
+import { requirePermission } from '@/lib/auth/server-permission';
+import { getLogisticsScopeContext } from '@/lib/logistics/security';
+import { checkRateLimit, resolveRequestClientIp } from '@/lib/security/rateLimiter';
 import {
   FAZ4_GET_SECTIONS,
   FAZ4_POST_ACTIONS,
@@ -27,24 +31,86 @@ export async function GET(request: Request) {
       return handleReturnsExtendedGet(request);
     }
 
+    const demoMode = isDemoEnvironment();
+    if (!demoMode) {
+      const omniAuth = await requirePermission('omnichannel', 'read');
+      let authPayload = omniAuth instanceof NextResponse ? null : omniAuth.payload;
+      if (omniAuth instanceof NextResponse) {
+        if (omniAuth.status !== 403) return omniAuth;
+        const altAuth = await requirePermission('lojistik_iade', 'read');
+        if (altAuth instanceof NextResponse) return omniAuth;
+        authPayload = altAuth.payload;
+      }
+      if (authPayload) {
+        const scope = await getLogisticsScopeContext(authPayload, authPayload.branchId);
+        if (scope.isSupplierScoped) {
+          return NextResponse.json(
+            {
+              success: false,
+              code: 'FORBIDDEN_SUPPLIER_SCOPE',
+              error: 'Tedarikçi portal oturumu ile şirket içi sipariş ve iade verilerine erişilemez.',
+            },
+            { status: 403 }
+          );
+        }
+      }
+    }
+
     const data = await getOmnichannelOverviewSnapshot();
-    if (!data.orders || data.orders.length === 0) {
+    if ((!data.orders || data.orders.length === 0) && demoMode) {
       return NextResponse.json(mockDatabase.getOmnichannelOverview());
     }
     return NextResponse.json(data);
   } catch (error: any) {
-    console.warn("GET /api/omnichannel fallback to mockDatabase:", error);
-    return NextResponse.json(mockDatabase.getOmnichannelOverview());
+    if (isDemoEnvironment()) {
+      console.warn("GET /api/omnichannel fallback to mockDatabase:", error);
+      return NextResponse.json(mockDatabase.getOmnichannelOverview());
+    }
+    return NextResponse.json(
+      { success: false, error: 'Omnichannel verileri alınamadı.' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers);
+    const rl = checkRateLimit(`omnichannel-post:${ip}`, 120, 60_000);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: 'RATE_LIMIT_EXCEEDED', error: 'Çok fazla istek gönderildi.' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } }
+      );
+    }
+
     const body = await request.json();
     const { action } = body;
 
     if (action && FAZ4_POST_ACTIONS.has(action)) {
       return handleReturnsExtendedPost(body);
+    }
+
+    const auth = await requirePermission('omnichannel', 'update');
+    let authPayload = auth instanceof NextResponse ? null : auth.payload;
+    if (auth instanceof NextResponse) {
+      if (auth.status !== 403) return auth;
+      const altAuth = await requirePermission('lojistik_iade', 'update');
+      if (altAuth instanceof NextResponse) return auth;
+      authPayload = altAuth.payload;
+    }
+    if (authPayload) {
+      const scope = await getLogisticsScopeContext(authPayload, authPayload.branchId);
+      if (scope.isSupplierScoped) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: 'FORBIDDEN_SUPPLIER_SCOPE',
+            error: 'Tedarikçi portal oturumu ile şirket içi omnichannel işlemi yapılamaz.',
+          },
+          { status: 403 }
+        );
+      }
     }
 
     // 1. Stok Rezervasyonu
@@ -113,6 +179,16 @@ export async function POST(request: Request) {
 
     // 9. Verileri Sıfırla / Seed Et
     if (action === 'seed_reset') {
+      if (!isDemoEnvironment()) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: 'DEMO_MODE_DISABLED',
+            error: 'Örnek veri yükleme yalnızca demo ortamında kullanılabilir.',
+          },
+          { status: 403 }
+        );
+      }
       const result = await seedRealisticOmnichannelData();
       return NextResponse.json(result);
     }

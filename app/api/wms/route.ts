@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
+import { requirePermission } from "@/lib/auth/server-permission"
+import {
+  getLogisticsScopeContext,
+  requireLogisticsAccess,
+} from "@/lib/logistics/security"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 import {
   seedRealisticWmsData,
   getWmsOverviewStats,
@@ -20,17 +30,45 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const section = searchParams.get("section") || "all"
+    const demoMode = isDemoEnvironment()
 
-    // 1. Veritabanı boşsa otomatik tohumla
-    const taskCount = await (prisma as any).wmsTask.count().catch(() => 0)
-    if (taskCount === 0) {
-      await seedRealisticWmsData()
+    // 1. Demo ortamında veritabanı boşsa otomatik tohumla (gerçek kurulumda asla otomatik seed yapılmaz)
+    if (demoMode) {
+      const taskCount = await (prisma as any).wmsTask.count().catch(() => 0)
+      if (taskCount === 0) {
+        await seedRealisticWmsData()
+      }
     }
 
     // Faz 2 genişletilmiş WMS sorguları (hiyerarşi, direktifler, FEFO/FIFO, rezervasyon, LPN/SSCC, etiket, cross-dock, kitting, defter, KPI, RFID)
     const extendedResponse = await handleWmsExtendedGet(section, searchParams)
     if (extendedResponse) {
       return extendedResponse
+    }
+
+    // Gerçek müşteri kurulumunda (demo kapalıyken) ana WMS GET ucu da oturum/yetki ister
+    if (!demoMode) {
+      const wmsAuth = await requirePermission("wms", "read")
+      let authPayload = wmsAuth instanceof NextResponse ? null : wmsAuth.payload
+      if (wmsAuth instanceof NextResponse) {
+        if (wmsAuth.status !== 403) return wmsAuth
+        const invAuth = await requirePermission("inventory", "read")
+        if (invAuth instanceof NextResponse) return wmsAuth
+        authPayload = invAuth.payload
+      }
+      if (authPayload) {
+        const scope = await getLogisticsScopeContext(authPayload, authPayload.branchId)
+        if (scope.isSupplierScoped) {
+          return NextResponse.json(
+            {
+              success: false,
+              code: "FORBIDDEN_SUPPLIER_SCOPE",
+              error: "Tedarikçi portal oturumu ile şirket içi depo ve WMS verilerine erişilemez.",
+            },
+            { status: 403 }
+          )
+        }
+      }
     }
 
     // A. BARKOD / SKU / ÜRÜN SORGULAMA (Mobil El Terminali ve Barkod Tabancası İçin)
@@ -232,7 +270,7 @@ export async function GET(request: Request) {
       }).catch(() => [])
     ])
 
-    if (tasks.length === 0) {
+    if (tasks.length === 0 && demoMode) {
       return NextResponse.json(mockDatabase.getWmsOverview())
     }
 
@@ -248,13 +286,28 @@ export async function GET(request: Request) {
       items
     })
   } catch (error: any) {
-    console.warn("GET /api/wms fallback to mockDatabase:", error)
-    return NextResponse.json(mockDatabase.getWmsOverview())
+    if (isDemoEnvironment()) {
+      console.warn("GET /api/wms fallback to mockDatabase:", error)
+      return NextResponse.json(mockDatabase.getWmsOverview())
+    }
+    return NextResponse.json(
+      { success: false, error: "WMS verileri alınamadı." },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers)
+    const rl = checkRateLimit(`wms-post:${ip}`, 120, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Çok fazla WMS isteği gönderildi." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     const body = await request.json()
     const { action } = body
 
@@ -263,12 +316,23 @@ export async function POST(request: Request) {
       return extendedPostResponse
     }
 
-    const access = await (await import("@/lib/logistics/security")).requireLogisticsAccess({
+    const access = await requireLogisticsAccess({
       flagKey: "lojistik_wms",
       resource: "inventory",
       action: "update",
     })
     if (access instanceof NextResponse) return access
+
+    if (access.scope.isSupplierScoped) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: "FORBIDDEN_SUPPLIER_SCOPE",
+          error: "Tedarikçi portal oturumu ile şirket içi WMS işlemi yapılamaz.",
+        },
+        { status: 403 }
+      )
+    }
 
     // 1. GÖREVİ İLERLET (Adım Adım Sihirbaz)
     if (action === "advance_task") {
@@ -422,6 +486,16 @@ export async function POST(request: Request) {
 
     // 9. TOHUM VERİLERİNİ SIFIRLA / YENİDEN OLUŞTUR
     if (action === "seed_reset") {
+      if (!isDemoEnvironment()) {
+        return NextResponse.json(
+          {
+            success: false,
+            code: "DEMO_MODE_DISABLED",
+            error: "Örnek veri yükleme yalnızca demo ortamında kullanılabilir.",
+          },
+          { status: 403 }
+        )
+      }
       const result = await seedRealisticWmsData()
       return NextResponse.json(result)
     }

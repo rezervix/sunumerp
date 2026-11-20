@@ -13,12 +13,25 @@ import {
   handleLogisticsApiError,
 } from "@/lib/logistics/security"
 import { getPublicCustomerTrackingByToken } from "@/lib/logistics/dispatch"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ token: string }> }
 ) {
   try {
+    const ip = resolveRequestClientIp(req.headers)
+    const rl = checkRateLimit(`public-tracking:${ip}`, 60, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Çok fazla takip sorgusu gönderildi." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     assertLogisticsFeatureEnabled("lojistik_sevkiyat_rota")
     const { token } = await params
     const res = await getPublicCustomerTrackingByToken(token)

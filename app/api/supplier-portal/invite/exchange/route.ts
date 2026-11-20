@@ -5,9 +5,22 @@ import {
   ADMIN_RETURN_COOKIE_NAME,
   exchangeInviteTokenForPortalSession,
 } from "@/lib/logistics/procurement"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 
 export async function POST(request: Request) {
   try {
+    const ip = resolveRequestClientIp(request.headers)
+    const rl = checkRateLimit(`portal-invite:${ip}`, 20, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Çok fazla davet doğrulama isteği. Lütfen bekleyin." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     const body = await request.json()
     const token = String(body.token || "")
     const result = await exchangeInviteTokenForPortalSession(token)

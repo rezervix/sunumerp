@@ -17,9 +17,22 @@ import {
   ingestTelematicsPayloads,
   verifyTelematicsWebhookAuth,
 } from "@/lib/logistics/fleet"
+import {
+  checkRateLimit,
+  resolveRequestClientIp,
+} from "@/lib/security/rateLimiter"
 
 export async function POST(req: Request) {
   try {
+    const ip = resolveRequestClientIp(req.headers)
+    const rl = checkRateLimit(`webhook-telematics:${ip}`, 180, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Telematik hız limiti aşıldı." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     assertLogisticsFeatureEnabled("lojistik_filo")
 
     const { searchParams } = new URL(req.url)

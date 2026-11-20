@@ -15,6 +15,52 @@ import type {
 } from "../types"
 
 const POD_STORAGE_DIR = path.join(process.cwd(), "storage", "logistics-pods")
+const MAX_POD_ARTIFACT_BYTES = 5 * 1024 * 1024
+const ALLOWED_POD_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp", "pdf"])
+const ALLOWED_POD_MIMES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "application/pdf",
+])
+
+function validateAndDecodeProofArtifact(input: {
+  fileName: string
+  mimeType: string
+  base64OrDataUrl: string
+}): { buffer: Buffer; safeName: string; normalizedMime: string } {
+  const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_")
+  const ext = safeName.split(".").pop()?.toLowerCase() || ""
+  const normalizedMime = String(input.mimeType || "").split(";")[0].trim().toLowerCase()
+  const dataUrlMimeMatch = input.base64OrDataUrl.startsWith("data:")
+    ? /^data:([^;,]+)/i.exec(input.base64OrDataUrl)
+    : null
+  const dataUrlMime = dataUrlMimeMatch?.[1]?.trim().toLowerCase()
+
+  if (
+    !ALLOWED_POD_EXTENSIONS.has(ext) ||
+    !ALLOWED_POD_MIMES.has(normalizedMime) ||
+    (dataUrlMime && !ALLOWED_POD_MIMES.has(dataUrlMime))
+  ) {
+    throw new Error(
+      `Geçersiz teslimat kanıtı (POD) dosya türü: ${dataUrlMime || ext || normalizedMime}. Yalnızca PNG, JPG, WEBP ve PDF yüklenebilir.`
+    )
+  }
+
+  const rawBase64 = input.base64OrDataUrl.includes(",")
+    ? input.base64OrDataUrl.split(",")[1] || ""
+    : input.base64OrDataUrl
+  const buffer = Buffer.from(rawBase64, "base64")
+  if (buffer.byteLength === 0) {
+    throw new Error("Teslimat kanıtı (POD) dosyası boş olamaz.")
+  }
+  if (buffer.byteLength > MAX_POD_ARTIFACT_BYTES) {
+    throw new Error("Teslimat kanıtı (POD) dosya boyutu en fazla 5 MB olabilir.")
+  }
+
+  return { buffer, safeName, normalizedMime }
+}
 
 export class LocalStorageProofProvider implements ILogisticsStorageProvider {
   readonly adapterId = "lojistik-local-pod-storage"
@@ -28,11 +74,7 @@ export class LocalStorageProofProvider implements ILogisticsStorageProvider {
     category: "POD_PHOTO" | "POD_SIGNATURE" | "INSPECTION" | "EDOC_PDF" | "ASN_DOC"
     referenceId: string
   }): Promise<StoredProofObject> {
-    const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_")
-    const rawBase64 = input.base64OrDataUrl.includes(",")
-      ? input.base64OrDataUrl.split(",")[1] || ""
-      : input.base64OrDataUrl
-    const buffer = Buffer.from(rawBase64, "base64")
+    const { buffer, safeName, normalizedMime } = validateAndDecodeProofArtifact(input)
     const checksumSha256 = crypto.createHash("sha256").update(buffer).digest("hex")
     const storageKey = `${input.category.toLowerCase()}/${input.referenceId}/${Date.now()}-${safeName}`
 
@@ -47,7 +89,7 @@ export class LocalStorageProofProvider implements ILogisticsStorageProvider {
     return {
       storageKey,
       publicUrl: this.resolveArtifactUrl(storageKey),
-      mimeType: input.mimeType,
+      mimeType: normalizedMime,
       sizeBytes: buffer.byteLength,
       checksumSha256,
       storedAt: new Date().toISOString(),
@@ -76,18 +118,14 @@ export class ObjectStorageProofProvider implements ILogisticsStorageProvider {
     if (!this.baseUrl || !this.baseUrl.startsWith("http")) {
       throw new Error("Harici Nesne Depolama URL yapılandırması eksik.")
     }
-    const rawBase64 = input.base64OrDataUrl.includes(",")
-      ? input.base64OrDataUrl.split(",")[1] || ""
-      : input.base64OrDataUrl
-    const buffer = Buffer.from(rawBase64, "base64")
+    const { buffer, safeName, normalizedMime } = validateAndDecodeProofArtifact(input)
     const checksumSha256 = crypto.createHash("sha256").update(buffer).digest("hex")
-    const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_")
     const storageKey = `${input.category.toLowerCase()}/${input.referenceId}/${safeName}`
 
     return {
       storageKey,
       publicUrl: this.resolveArtifactUrl(storageKey),
-      mimeType: input.mimeType,
+      mimeType: normalizedMime,
       sizeBytes: buffer.byteLength,
       checksumSha256,
       storedAt: new Date().toISOString(),

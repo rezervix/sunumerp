@@ -7,6 +7,28 @@ import {
   handleSupplierPortalAction,
   requireSupplierPortalScope,
 } from "@/lib/logistics/procurement"
+import { checkRateLimit } from "@/lib/security/rateLimiter"
+
+const MAX_PORTAL_UPLOAD_BYTES = 10 * 1024 * 1024 // 10 MB
+const ALLOWED_PORTAL_EXTENSIONS = new Set([
+  "pdf",
+  "png",
+  "jpg",
+  "jpeg",
+  "webp",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+])
+const DISALLOWED_PORTAL_MIMES = new Set([
+  "image/svg+xml",
+  "text/html",
+  "application/javascript",
+  "text/javascript",
+  "application/x-msdownload",
+  "application/x-sh",
+])
 
 export async function GET() {
   try {
@@ -21,6 +43,14 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { payload, scope, supplier } = await requireSupplierPortalScope()
+    const rl = checkRateLimit(`portal-post:${supplier.id}`, 40, 60_000)
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { success: false, code: "RATE_LIMIT_EXCEEDED", error: "Çok fazla tedarikçi portal işlemi." },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } }
+      )
+    }
+
     const contentType = request.headers.get("content-type") || ""
 
     let action = ""
@@ -42,7 +72,39 @@ export async function POST(request: Request) {
       let fileSizeBytes = file?.size || null
 
       if (file) {
+        const ext = (file.name.split(".").pop() || "").toLowerCase()
+        const normalizedMime = (file.type || "").split(";")[0].trim().toLowerCase()
+        if (!ALLOWED_PORTAL_EXTENSIONS.has(ext) || DISALLOWED_PORTAL_MIMES.has(normalizedMime)) {
+          return NextResponse.json(
+            {
+              success: false,
+              code: "INVALID_FILE_TYPE",
+              error: `İzin verilmeyen belge türü (${ext || normalizedMime || "bilinmiyor"}). Yalnızca PDF, PNG, JPG, WEBP, DOC/DOCX ve XLS/XLSX yüklenebilir.`,
+            },
+            { status: 400 }
+          )
+        }
+        if (file.size > MAX_PORTAL_UPLOAD_BYTES) {
+          return NextResponse.json(
+            {
+              success: false,
+              code: "FILE_TOO_LARGE",
+              error: "Dosya boyutu en fazla 10 MB olabilir.",
+            },
+            { status: 413 }
+          )
+        }
         const bytes = Buffer.from(await file.arrayBuffer())
+        if (bytes.length > MAX_PORTAL_UPLOAD_BYTES) {
+          return NextResponse.json(
+            {
+              success: false,
+              code: "FILE_TOO_LARGE",
+              error: "Dosya boyutu en fazla 10 MB olabilir.",
+            },
+            { status: 413 }
+          )
+        }
         const safeName = `${supplier.code}-${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`
         fileName = file.name
         try {
