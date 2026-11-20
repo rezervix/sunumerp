@@ -596,7 +596,20 @@ async function main() {
       assert.ok(minibus && minibus.vehicleType === "MINIBUS", "34 SNR 118 Minibüs korunmalı")
       assert.ok(passenger && passenger.vehicleType === "PASSENGER", "34 SNR 205 Binek araç korunmalı")
 
-      const driversRes = await listFleetDrivers({ revealKvkkPii: false })
+      const driversRes = await listFleetDrivers({
+        scope: {
+          userId: "user-operasyon",
+          username: "operasyon",
+          branchId: "local-debug-branch",
+          roleId: "role-operations",
+          roleName: "Operations",
+          supplierId: null,
+          isSupplierScoped: false,
+          isSuperAdmin: false,
+          isPlatformDeveloper: false,
+        },
+        revealSensitivePii: false,
+      })
       assert.equal(driversRes.drivers.length, 15, "15 mevcut şoför korunmalı")
       assert.ok(
         driversRes.drivers.every((d: any) => String(d.tckn || "").includes("*")),
@@ -614,10 +627,9 @@ async function main() {
           { id: "s1", label: "Kadıköy", lat: 40.9901, lng: 29.0291, weightKg: 120, volumeM3: 1.2 },
           { id: "s2", label: "Ataşehir", lat: 40.9833, lng: 29.1277, weightKg: 150, volumeM3: 1.5 },
         ],
-        vehicleCapacityKg: 1500,
-        vehicleCapacityM3: 10,
       })
-      assert.equal(solved.orderedStops.length, 2)
+      assert.equal(solved.orderedStopIds.length, 2)
+      assert.equal(solved.stops.length, 2)
       assert.ok(solved.optimizedDistanceKm > 0)
       return `${overview.trips.length} aktif/geçmiş sefer ve CVRPTW çözücü (${solved.optimizedDistanceKm} km) doğrulandı`
     })
