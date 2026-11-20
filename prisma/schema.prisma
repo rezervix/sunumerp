@@ -75,6 +75,7 @@ model User {
   mustChangePassword   Boolean               @default(false)
   createdBy            String?
   supplierId           String?
+  partnerCompanyId     String?
   logisticsNotificationPrefsJson String?
   sessions             UserSession[]
   passwordResetLogs    PasswordResetLog[]
@@ -84,6 +85,7 @@ model User {
   trashItems           TrashItem[]
 
   @@index([supplierId])
+  @@index([partnerCompanyId])
 }
 
 model Branch {
@@ -5335,6 +5337,115 @@ model LojistikTrackingEvent {
 
   @@index([tripId, createdAt])
   @@index([stopId])
+}
+
+// ── Turizm Faz 1: Çok Firmalı (Partner) Kiracı Zemini ve Ortak Havuz İskeleti ──
+
+model TurizmPartnerCompany {
+  id                    String   @id @default(uuid())
+  code                  String   @unique
+  name                  String
+  companyType           String   @default("RENTACAR") // MAIN_OPERATOR, RENTACAR, TOUR_OPERATOR, HOTEL, TRANSFER
+  taxNumber             String?
+  taxOffice             String?
+  city                  String?
+  district              String?
+  address               String?
+  contactPerson         String?
+  email                 String?
+  phone                 String?
+  status                String   @default("ACTIVE") // ACTIVE, SUSPENDED, INACTIVE
+  isMainCompany         Boolean  @default(false)
+  defaultCommissionRate Float    @default(0)
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  requestedPartnerships TurizmPartnership[]      @relation("PartnershipRequester")
+  receivedPartnerships  TurizmPartnership[]      @relation("PartnershipTarget")
+  sharedResources       TurizmSharedResource[]   @relation("SharedResourceOwner")
+  ownedCrossBookings    TurizmCrossReservation[] @relation("CrossBookingOwner")
+  madeCrossBookings     TurizmCrossReservation[] @relation("CrossBookingMaker")
+
+  @@index([companyType, status])
+  @@index([isMainCompany])
+}
+
+model TurizmPartnership {
+  id                 String    @id @default(uuid())
+  code               String    @unique
+  requesterCompanyId String
+  targetCompanyId    String
+  status             String    @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
+  commissionRatePct  Float     @default(10)
+  settlementTermDays Int       @default(15)
+  allowWhiteLabel    Boolean   @default(true)
+  notes              String?
+  requestedAt        DateTime  @default(now())
+  respondedAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  requesterCompany  TurizmPartnerCompany     @relation("PartnershipRequester", fields: [requesterCompanyId], references: [id], onDelete: Cascade)
+  targetCompany     TurizmPartnerCompany     @relation("PartnershipTarget", fields: [targetCompanyId], references: [id], onDelete: Cascade)
+  crossReservations TurizmCrossReservation[]
+
+  @@index([requesterCompanyId, status])
+  @@index([targetCompanyId, status])
+}
+
+model TurizmSharedResource {
+  id                String   @id @default(uuid())
+  ownerCompanyId    String
+  resourceType      String   @default("VEHICLE") // VEHICLE, DRIVER, GUIDE, ROOM_ALLOTMENT, TRANSFER_SLOT
+  externalRefId     String?
+  title             String
+  category          String?
+  city              String?
+  capacity          Int      @default(1)
+  netPartnerRateTry Float    @default(0)
+  currency          String   @default("TRY")
+  visibilityScope   String   @default("ALL_APPROVED_PARTNERS") // ALL_APPROVED_PARTNERS, SELECTED_PARTNERS, PRIVATE
+  status            String   @default("ACTIVE") // ACTIVE, PAUSED, ARCHIVED
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  ownerCompany      TurizmPartnerCompany     @relation("SharedResourceOwner", fields: [ownerCompanyId], references: [id], onDelete: Cascade)
+  crossReservations TurizmCrossReservation[]
+
+  @@index([ownerCompanyId, status])
+  @@index([resourceType, city])
+}
+
+model TurizmCrossReservation {
+  id                  String    @id @default(uuid())
+  reservationNo       String    @unique
+  ownerCompanyId      String
+  bookingCompanyId    String
+  partnershipId       String?
+  sharedResourceId    String?
+  resourceType        String    @default("VEHICLE")
+  startAt             DateTime
+  endAt               DateTime
+  status              String    @default("HOLD") // HOLD, PENDING_APPROVAL, CONFIRMED, REJECTED, CANCELLED, COMPLETED
+  isWhiteLabel        Boolean   @default(true)
+  netAmountTry        Float     @default(0)
+  commissionAmountTry Float     @default(0)
+  currency            String    @default("TRY")
+  lockExpiresAt       DateTime?
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  ownerCompany   TurizmPartnerCompany  @relation("CrossBookingOwner", fields: [ownerCompanyId], references: [id], onDelete: Cascade)
+  bookingCompany TurizmPartnerCompany  @relation("CrossBookingMaker", fields: [bookingCompanyId], references: [id], onDelete: Cascade)
+  partnership    TurizmPartnership?    @relation(fields: [partnershipId], references: [id], onDelete: SetNull)
+  sharedResource TurizmSharedResource? @relation(fields: [sharedResourceId], references: [id], onDelete: SetNull)
+
+  @@index([ownerCompanyId, status])
+  @@index([bookingCompanyId, status])
+  @@index([sharedResourceId, startAt, endAt])
 }
 
 

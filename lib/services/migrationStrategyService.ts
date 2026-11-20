@@ -5,6 +5,8 @@ export const URETIM_TABLE_PREFIX = "Uretim"
 export const URETIM_JSON_KEY_PREFIX = "uretim"
 export const LOJISTIK_TABLE_PREFIX = "Lojistik"
 export const LOJISTIK_JSON_KEY_PREFIX = "lojistik"
+export const TURIZM_TABLE_PREFIX = "Turizm"
+export const TURIZM_JSON_KEY_PREFIX = "turizm"
 
 export interface MigrationValidationResult {
   valid: boolean
@@ -172,4 +174,27 @@ export function validateAllUretimMigrations(): MigrationValidationResult[] {
  */
 export function validateAllLogisticsMigrations(): MigrationValidationResult[] {
   return validateMigrationsByKeyword("lojistik", LOJISTIK_TABLE_PREFIX)
+}
+
+/**
+ * Turizm modülleri için Turizm* önekli additive SQL migration çiftini doğrular.
+ */
+export function validateTourismAdditiveMigrationSql(
+  migrationName: string,
+  upSql: string,
+  downSql: string
+): MigrationValidationResult {
+  return validateAdditiveMigrationSql(
+    migrationName,
+    upSql,
+    downSql,
+    TURIZM_TABLE_PREFIX
+  )
+}
+
+/**
+ * prisma/migrations dizini altındaki tüm *_turizm_* migration klasörlerini tarar ve doğrular.
+ */
+export function validateAllTourismMigrations(): MigrationValidationResult[] {
+  return validateMigrationsByKeyword("turizm", TURIZM_TABLE_PREFIX)
 }

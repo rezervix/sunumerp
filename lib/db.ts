@@ -253,6 +253,11 @@ interface JsonDbData {
   lojistikDeliveryProof?: any[]
   lojistikRouteOptimizationJob?: any[]
   lojistikTrackingEvent?: any[]
+  // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 additive koleksiyonları) ──
+  turizmPartnerCompany?: any[]
+  turizmPartnership?: any[]
+  turizmSharedResource?: any[]
+  turizmCrossReservation?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -500,7 +505,7 @@ class ModelSimulate {
 
   private isLazyModuleCollection(): boolean {
     const name = String(this.modelName)
-    return name.startsWith("uretim") || name.startsWith("lojistik")
+    return name.startsWith("uretim") || name.startsWith("lojistik") || name.startsWith("turizm")
   }
 
   private getCollection(): any[] {
@@ -2011,7 +2016,12 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikShipmentStop",
       "lojistikDeliveryProof",
       "lojistikRouteOptimizationJob",
-      "lojistikTrackingEvent"
+      "lojistikTrackingEvent",
+      // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 additive modelleri) ──
+      "turizmPartnerCompany",
+      "turizmPartnership",
+      "turizmSharedResource",
+      "turizmCrossReservation"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
