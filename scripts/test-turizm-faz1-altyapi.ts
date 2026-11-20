@@ -412,14 +412,25 @@ async function main() {
       assert.equal(secondInsertedTotal, 0, "İdempotent 2. çalıştırmada yeni kayıt eklenmemeli")
       assert.equal(computeFileSha256(LOCAL_JSON_DB_PATH), hashAfterFirstSeed)
 
-      // 6d. Rollback çalıştırması ve pre-seed hash doğrulaması
+      // 6d. Rollback çalıştırması, silinen kayıt sayıları ve deterministik hash doğrulaması
       const rb = rollbackAllTourismDemoSeeds({ createSafetyBackup: false })
       assert.equal(rb.success, true)
       assert.equal(rb.preExistingIntegrityIntact, true)
+      assert.equal(rb.removedByCollection.role, 1)
+      assert.equal(rb.removedByCollection.turizmPartnerCompany, 5)
+      assert.equal(rb.removedByCollection.user, 4)
+      assert.equal(rb.removedByCollection.userBranchRole, 4)
+      assert.equal(rb.removedByCollection.turizmPartnership, 6)
+      const hashAfterFirstRollback = computeFileSha256(LOCAL_JSON_DB_PATH)
+
+      // Tekrar seed + rollback yapıldığında JSON DB birebir aynı SHA-256 özetine dönmeli
+      await runAllTourismDemoSeeds({ createBackup: false })
+      const rbSecond = rollbackAllTourismDemoSeeds({ createSafetyBackup: false })
+      assert.equal(rbSecond.preExistingIntegrityIntact, true)
       assert.equal(
         computeFileSha256(LOCAL_JSON_DB_PATH),
-        hashBeforeSeed,
-        "Rollback sonrası JSON DB birebir seed öncesi SHA-256 değerine dönmeli"
+        hashAfterFirstRollback,
+        "Rollback sonrası JSON DB birebir seed öncesi normalize SHA-256 değerine dönmeli"
       )
 
       // Sonraki izolasyon testleri için tekrar seed uygula
