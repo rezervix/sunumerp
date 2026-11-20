@@ -208,7 +208,7 @@ async function main() {
         const logFlags = resolveLogisticsFeatureFlags(undefined, "branch-izmir", false)
         assert.equal(logFlags.lojistik_filo, false)
         assert.equal(logFlags.lojistik_wms, false)
-        const prodFlags = resolveProductionFeatureFlags(undefined, "branch-izmir")
+        const prodFlags = resolveProductionFeatureFlags(undefined, "branch-izmir", false)
         assert.equal(prodFlags.uretim_bom_rota, false)
       }
 
