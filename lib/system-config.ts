@@ -12,6 +12,12 @@ import {
   type LogisticsFeatureFlagsConfig,
   type LogisticsFeatureFlagsMap,
 } from "./config/logistics-feature-flags"
+import {
+  DEFAULT_TOURISM_FEATURE_FLAGS,
+  resolveTourismFeatureFlags,
+  type TourismFeatureFlagsConfig,
+  type TourismFeatureFlagsMap,
+} from "./config/tourism-feature-flags"
 import type { LogisticsProviderBundleConfig } from "./logistics/types"
 
 export interface SubscriptionConfig {
@@ -153,6 +159,7 @@ export interface SystemConfig {
   moduleSettings?: ModuleSettingsConfig
   featureFlags?: ProductionFeatureFlagsConfig
   logisticsFeatureFlags?: LogisticsFeatureFlagsConfig
+  tourismFeatureFlags?: TourismFeatureFlagsConfig
   logisticsProviders?: Partial<LogisticsProviderBundleConfig>
   logisticsInvoiceTiming?: Partial<LogisticsInvoiceTimingConfig>
   systemMaintenance?: SystemMaintenanceConfig
@@ -240,6 +247,9 @@ const DEFAULT_CONFIG: SystemConfig = {
   logisticsFeatureFlags: {
     ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
   },
+  tourismFeatureFlags: {
+    ...DEFAULT_TOURISM_FEATURE_FLAGS,
+  },
   logisticsInvoiceTiming: {
     ...DEFAULT_LOGISTICS_INVOICE_TIMING,
   },
@@ -297,6 +307,10 @@ export function getSystemConfig(): SystemConfig {
         ...DEFAULT_LOGISTICS_FEATURE_FLAGS,
         ...(parsed.logisticsFeatureFlags || {}),
       },
+      tourismFeatureFlags: {
+        ...DEFAULT_TOURISM_FEATURE_FLAGS,
+        ...(parsed.tourismFeatureFlags || {}),
+      },
       logisticsInvoiceTiming: {
         ...DEFAULT_LOGISTICS_INVOICE_TIMING,
         ...(parsed.logisticsInvoiceTiming || {}),
@@ -325,6 +339,9 @@ export function saveSystemConfig(config: Partial<SystemConfig>): SystemConfig {
       logisticsFeatureFlags: config.logisticsFeatureFlags
         ? { ...DEFAULT_LOGISTICS_FEATURE_FLAGS, ...(current.logisticsFeatureFlags || {}), ...config.logisticsFeatureFlags }
         : current.logisticsFeatureFlags || { ...DEFAULT_LOGISTICS_FEATURE_FLAGS },
+      tourismFeatureFlags: config.tourismFeatureFlags
+        ? { ...DEFAULT_TOURISM_FEATURE_FLAGS, ...(current.tourismFeatureFlags || {}), ...config.tourismFeatureFlags }
+        : current.tourismFeatureFlags || { ...DEFAULT_TOURISM_FEATURE_FLAGS },
       logisticsInvoiceTiming: config.logisticsInvoiceTiming
         ? { ...DEFAULT_LOGISTICS_INVOICE_TIMING, ...(current.logisticsInvoiceTiming || {}), ...config.logisticsInvoiceTiming }
         : current.logisticsInvoiceTiming || { ...DEFAULT_LOGISTICS_INVOICE_TIMING },
@@ -401,6 +418,17 @@ export function getServerLogisticsFeatureFlags(
   const sysConfig = getSystemConfig()
   const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
   return resolveLogisticsFeatureFlags(sysConfig.logisticsFeatureFlags, effectiveScopeId)
+}
+
+/**
+ * Sunucu tarafında aktif 4 Turizm modülü özellik bayrağını (firma/şube ve demo ortamı dahil) çözümler.
+ */
+export function getServerTourismFeatureFlags(
+  branchOrCompanyId?: string | null
+): TourismFeatureFlagsMap {
+  const sysConfig = getSystemConfig()
+  const effectiveScopeId = branchOrCompanyId || sysConfig.company?.taxNumber || null
+  return resolveTourismFeatureFlags(sysConfig.tourismFeatureFlags, effectiveScopeId)
 }
 
 /**

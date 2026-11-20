@@ -35,6 +35,7 @@ function maskSensitiveFields(config: ReturnType<typeof getSystemConfig>) {
     hasLogo: Boolean(logoUrl),
     hasBgRemovedLogo: Boolean(bgRemovedLogoUrl),
     logisticsDemoMode: isDemoEnvironment(),
+    tourismDemoMode: isDemoEnvironment(),
     // Integration alan adlarını açıkla ama değerlerini maskele
     integrations: integrations ? {
       efaturaProvider: integrations.efaturaProvider || "",

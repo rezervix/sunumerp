@@ -2,7 +2,11 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { requirePermission } from "@/lib/auth/server-permission"
 import { PRODUCTION_MODULES_CATALOG } from "@/lib/config/production-feature-flags"
-import { getServerProductionFeatureFlags } from "@/lib/system-config"
+import { TOURISM_MODULES_CATALOG } from "@/lib/config/tourism-feature-flags"
+import {
+    getServerProductionFeatureFlags,
+    getServerTourismFeatureFlags,
+} from "@/lib/system-config"
 
 export async function GET(req: Request) {
     // Giriş yapmış kullanıcılara izin verelim
@@ -17,8 +21,9 @@ export async function GET(req: Request) {
             orderBy: { sortOrder: "asc" }
         })
 
-        // Özellik bayrakları kontrolü: sadece açık olan üretim modüllerini izin listesine ekle
+        // Özellik bayrakları kontrolü: sadece açık olan üretim ve turizm modüllerini izin listesine ekle
         const prodFlags = getServerProductionFeatureFlags(branchId)
+        const tourismFlags = getServerTourismFeatureFlags(branchId)
         const existingKeys = new Set(modules.map((m: { key: string }) => m.key))
 
         const enabledProductionModules = PRODUCTION_MODULES_CATALOG.filter(
@@ -30,7 +35,16 @@ export async function GET(req: Request) {
             sortOrder: pm.sortOrder,
         }))
 
-        return NextResponse.json([...modules, ...enabledProductionModules])
+        const enabledTourismModules = TOURISM_MODULES_CATALOG.filter(
+            (tm) => tourismFlags[tm.key] && !existingKeys.has(tm.key)
+        ).map((tm) => ({
+            id: `mod-${tm.key}`,
+            key: tm.key,
+            label: tm.title,
+            sortOrder: tm.sortOrder,
+        }))
+
+        return NextResponse.json([...modules, ...enabledProductionModules, ...enabledTourismModules])
     } catch (error) {
         console.error("Error fetching modules:", error)
         return NextResponse.json({ error: "Internal server error" }, { status: 500 })

@@ -38,6 +38,12 @@ import {
   resolveLogisticsFeatureFlags,
   type LogisticsFeatureFlagsConfig,
 } from "@/lib/config/logistics-feature-flags"
+import {
+  IMPLEMENTED_TOURISM_HREFS,
+  resolveTourismFeatureFlags,
+  type TourismFeatureFlagsConfig,
+} from "@/lib/config/tourism-feature-flags"
+import { PARTNER_ROLE_NAME } from "@/lib/tourism/constants"
 import { motion, AnimatePresence } from "framer-motion"
 import { SupportWidget } from "@/components/support-widget"
 import { initLogCapturer } from "@/lib/utils/log-capturer"
@@ -267,6 +273,8 @@ function SidebarContent({
   const [featureFlagsConfig, setFeatureFlagsConfig] = useState<ProductionFeatureFlagsConfig | null>(null)
   const [logisticsFlagsConfig, setLogisticsFlagsConfig] = useState<LogisticsFeatureFlagsConfig | null>(null)
   const [logisticsDemoMode, setLogisticsDemoMode] = useState<boolean>(true)
+  const [tourismFlagsConfig, setTourismFlagsConfig] = useState<TourismFeatureFlagsConfig | null>(null)
+  const [tourismDemoMode, setTourismDemoMode] = useState<boolean>(true)
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -287,6 +295,12 @@ function SidebarContent({
           setLogisticsFlagsConfig(config.logisticsFeatureFlags || null)
           if (typeof config.logisticsDemoMode === "boolean") {
             setLogisticsDemoMode(config.logisticsDemoMode)
+          }
+          setTourismFlagsConfig(config.tourismFeatureFlags || null)
+          if (typeof config.tourismDemoMode === "boolean") {
+            setTourismDemoMode(config.tourismDemoMode)
+          } else if (typeof config.logisticsDemoMode === "boolean") {
+            setTourismDemoMode(config.logisticsDemoMode)
           }
           const activeLogo = config.bgRemovedLogoUrl || config.logoUrl
           if (activeLogo) {
@@ -360,6 +374,15 @@ function SidebarContent({
         logisticsDemoMode
       ),
     [logisticsDemoMode, logisticsFlagsConfig, currentBranch?.id]
+  )
+  const tourismFlags = useMemo(
+    () =>
+      resolveTourismFeatureFlags(
+        tourismFlagsConfig,
+        currentBranch?.id,
+        tourismDemoMode
+      ),
+    [tourismFlagsConfig, currentBranch?.id, tourismDemoMode]
   )
 
   const rawCategories: NavCategoryDef[] = useMemo(() => [
@@ -435,6 +458,82 @@ function SidebarContent({
                     },
                   ]
                 : []),
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
+    ...(tourismFlags.turizm_rentacar &&
+    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/arac-kiralama")
+      ? [
+          {
+            id: "turizm-rentacar",
+            title: "Araç Kiralama",
+            icon: Truck,
+            items: [
+              {
+                name: "Araç Kiralama Yönetimi",
+                href: "/dashboard/arac-kiralama",
+                icon: Truck,
+                resource: "turizm_rentacar",
+                excludeSupplier: true,
+              },
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
+    ...(tourismFlags.turizm_otel &&
+    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/otel")
+      ? [
+          {
+            id: "turizm-otel",
+            title: "Otel Yönetimi",
+            icon: Building2,
+            items: [
+              {
+                name: "Otel Ön Büro & PMS",
+                href: "/dashboard/otel",
+                icon: Building2,
+                resource: "turizm_otel",
+                excludeSupplier: true,
+              },
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
+    ...(tourismFlags.turizm_tur &&
+    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/tur")
+      ? [
+          {
+            id: "turizm-tur",
+            title: "Tur Operatörlüğü",
+            icon: Globe,
+            items: [
+              {
+                name: "Tur Planlama & Operasyon",
+                href: "/dashboard/tur",
+                icon: Globe,
+                resource: "turizm_tur",
+                excludeSupplier: true,
+              },
+            ],
+          } satisfies NavCategoryDef,
+        ]
+      : []),
+    ...(tourismFlags.turizm_b2b &&
+    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/partner-agi")
+      ? [
+          {
+            id: "turizm-b2b",
+            title: "Partner Ağı",
+            icon: Users,
+            items: [
+              {
+                name: "B2B Partner Ağı & Havuz",
+                href: "/dashboard/partner-agi",
+                icon: Users,
+                resource: "turizm_b2b",
+                excludeSupplier: true,
+              },
             ],
           } satisfies NavCategoryDef,
         ]
@@ -534,17 +633,25 @@ function SidebarContent({
         { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
       ],
     },
-  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, showLogisticsReportsMenu, logisticsFlags])
+  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, showLogisticsReportsMenu, logisticsFlags, tourismFlags])
 
   const currentBranchRoleName = session?.branches?.find((b) => b.branchId === currentBranch?.id)?.role?.name
   const isSupplierRole = Boolean(
     !isSuperAdmin &&
       (session?.user?.supplierId || currentBranchRoleName === "Tedarikçi")
   )
+  const isPartnerRole = Boolean(
+    !isSuperAdmin &&
+      (session?.user?.partnerCompanyId || currentBranchRoleName === PARTNER_ROLE_NAME)
+  )
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
     if (item.excludeSupplier && isSupplierRole) {
       return false
+    }
+    if (isPartnerRole) {
+      if (item.isLogout) return true
+      return item.resource === "turizm_b2b" || item.resource === "partner_portali"
     }
     if (item.devOnly) {
       return isPlatformDeveloper
@@ -573,7 +680,7 @@ function SidebarContent({
     }
     if (item.resource) return hasPermission(item.resource, "read")
     return true
-  }, [isSupplierRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
+  }, [isSupplierRole, isPartnerRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
 
   // Filter allowed categories and items
   const availableCategories = useMemo(() => {
