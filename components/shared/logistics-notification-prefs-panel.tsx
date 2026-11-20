@@ -226,52 +226,54 @@ export function LogisticsNotificationPrefsPanel({
         </div>
       </div>
 
-      {/* 6 Rule Rows */}
+      {/* Aktif Lojistik Bildirim Kuralları */}
       <div className="space-y-2">
-        {data.ruleDefinitions.map((def) => {
-          const isFlagActive = Boolean(data.activeFlags[def.flagKey])
-          const isPermitted = Boolean(data.allowedRules[def.key])
-          const isChecked = Boolean(data.preferences.rules[def.key])
+        {data.ruleDefinitions.filter((def) => Boolean(data.activeFlags[def.flagKey])).length === 0 ? (
+          <div className="p-3.5 rounded-xl bg-background/60 border border-white/[0.06] text-xs text-muted-foreground">
+            Hesabınız için etkin lojistik bildirim kuralı bulunmuyor.
+          </div>
+        ) : (
+          data.ruleDefinitions
+            .filter((def) => Boolean(data.activeFlags[def.flagKey]))
+            .map((def) => {
+              const isPermitted = Boolean(data.allowedRules[def.key])
+              const isChecked = Boolean(data.preferences.rules[def.key])
 
-          return (
-            <div
-              key={def.key}
-              className={`flex items-center justify-between gap-3 ${
-                compact ? "p-2.5" : "p-3.5"
-              } rounded-xl bg-background border border-white/[0.06]`}
-            >
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-semibold text-foreground">{def.title}</span>
-                  {!isFlagActive && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                      Modül Kapalı
-                    </span>
-                  )}
-                  {isFlagActive && !isPermitted && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400">
-                      Yetki Dışı
-                    </span>
-                  )}
+              return (
+                <div
+                  key={def.key}
+                  className={`flex items-center justify-between gap-3 ${
+                    compact ? "p-2.5" : "p-3.5"
+                  } rounded-xl bg-background border border-white/[0.06]`}
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-semibold text-foreground">{def.title}</span>
+                      {!isPermitted && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400">
+                          Yetki Dışı
+                        </span>
+                      )}
+                    </div>
+                    {!compact && (
+                      <p className="text-[11px] text-muted-foreground mt-0.5">{def.description}</p>
+                    )}
+                  </div>
+
+                  <MiniSwitch
+                    checked={isChecked}
+                    disabled={saving || !data.preferences.inAppEnabled}
+                    label={def.title}
+                    onChange={(val) =>
+                      persistPatch({
+                        rules: { [def.key]: val },
+                      })
+                    }
+                  />
                 </div>
-                {!compact && (
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{def.description}</p>
-                )}
-              </div>
-
-              <MiniSwitch
-                checked={isChecked}
-                disabled={saving || !data.preferences.inAppEnabled}
-                label={def.title}
-                onChange={(val) =>
-                  persistPatch({
-                    rules: { [def.key]: val },
-                  })
-                }
-              />
-            </div>
-          )
-        })}
+              )
+            })
+        )}
       </div>
 
       {lastSavedText && (

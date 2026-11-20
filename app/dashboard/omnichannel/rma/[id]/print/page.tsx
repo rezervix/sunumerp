@@ -238,7 +238,7 @@ export default function PrintRmaLabelPage() {
               <h2 className="text-xs font-semibold text-[#434655] uppercase tracking-wider mb-3">
                 İade Kalemleri
               </h2>
-              <div className="overflow-hidden rounded-lg border border-[#e6e8ea]">
+              <div className="overflow-x-auto print:overflow-visible rounded-lg border border-[#e6e8ea]">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-[#f2f4f6] text-xs text-[#434655] uppercase tracking-wider">

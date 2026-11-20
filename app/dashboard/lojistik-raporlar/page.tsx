@@ -82,7 +82,7 @@ function LojistikRaporlarContent() {
         if (!res.ok) {
           setReport(null)
           setErrorMessage(
-            json.error || "Rapor verilerine erişim yetkiniz yok veya ilgili modül kapalı."
+            json.error || "Rapor verilerine erişim yetkiniz bulunmuyor."
           )
           return
         }
@@ -225,13 +225,13 @@ function LojistikRaporlarContent() {
         </div>
       )}
 
-      {/* Yetki / Kapalı Modül Hatası */}
+      {/* Erişim Yetkisi Bilgilendirmesi */}
       {errorMessage && (
         <div className="bg-[#111513] border border-amber-500/30 rounded-[20px] p-8 flex flex-col items-center text-center gap-3">
           <ShieldAlert className="w-8 h-8 text-amber-400" />
           <p className="text-sm font-medium text-white">{errorMessage}</p>
           <p className="text-xs text-zinc-400 max-w-md">
-            Sistem ayarlarından lojistik özellik bayraklarının aktif olduğundan ve rolünüzde en az bir lojistik okuma yetkisi bulunduğundan emin olun.
+            Bu raporları görüntülemek için hesabınızda en az bir lojistik okuma yetkisi bulunduğundan emin olun.
           </p>
         </div>
       )}

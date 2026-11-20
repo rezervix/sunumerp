@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Globe,
   ShoppingBag,
@@ -21,19 +21,30 @@ import { EDocumentViewer } from './components/EDocumentViewer';
 import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 import { mockDatabase } from '@/lib/data/mockDatabase';
 
+const EMPTY_OMNICHANNEL_STATS = {
+  connectedChannelsCount: 0,
+  totalDailyOrders: 0,
+  totalDailyRevenue: 0,
+  pendingRmaCount: 0,
+  activeShipmentsCount: 0,
+  averageSlaPercent: 0,
+  totalPublishedStock: 0,
+};
+
 export default function OmnichannelLogisticsAndEDocumentPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [activeTab, setActiveTab] = useState('orders');
+  const demoModeRef = useRef<boolean | null>(null);
 
-  // Backend Veri Durumları - Anında Canlı Demo Verileri ile Başlat
-  const [stats, setStats] = useState(() => mockDatabase.getOmnichannelOverview().stats);
-  const [channels, setChannels] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().channels);
-  const [orders, setOrders] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().orders);
-  const [rmaReturns, setRmaReturns] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().rmaReturns);
-  const [logisticsAdapters, setLogisticsAdapters] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().logisticsAdapters);
-  const [eDocuments, setEDocuments] = useState<any[]>(() => mockDatabase.getOmnichannelOverview().eDocuments);
+  // Backend Veri Durumları — gerçek DB verisi gelene kadar boş başlar
+  const [stats, setStats] = useState(EMPTY_OMNICHANNEL_STATS);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [rmaReturns, setRmaReturns] = useState<any[]>([]);
+  const [logisticsAdapters, setLogisticsAdapters] = useState<any[]>([]);
+  const [eDocuments, setEDocuments] = useState<any[]>([]);
   const [storageBins, setStorageBins] = useState<any[]>([]);
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
@@ -45,6 +56,24 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
   const [logisticsDemoMode, setLogisticsDemoMode] = useState<boolean>(false);
   const [lojistikIadeEnabled, setLojistikIadeEnabled] = useState<boolean>(true);
   const [initialRmaOrder, setInitialRmaOrder] = useState<string | undefined>(undefined);
+
+  const resolveDemoMode = useCallback(async () => {
+    if (demoModeRef.current !== null) return demoModeRef.current;
+    try {
+      const cfgRes = await fetch('/api/system-config');
+      if (cfgRes.ok) {
+        const cfg = await cfgRes.json();
+        const isDemo = Boolean(cfg?.logisticsDemoMode);
+        demoModeRef.current = isDemo;
+        setLogisticsDemoMode(isDemo);
+        return isDemo;
+      }
+    } catch {
+      // Demo durumu okunamazsa kapalı kabul edilir
+    }
+    demoModeRef.current = false;
+    return false;
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -63,9 +92,10 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
   // Modal Durumu
   const [isEdocModalOpen, setIsEdocModalOpen] = useState(false);
 
-  // Canlı Reaktif Mock DB Dinleyicisi
+  // Canlı Reaktif Mock DB Dinleyicisi (yalnızca demo modunda)
   useEffect(() => {
     const handleDbChange = () => {
+      if (demoModeRef.current !== true) return;
       const o = mockDatabase.getOmnichannelOverview();
       setStats(o.stats);
       setChannels(o.channels);
@@ -78,14 +108,14 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
     return () => window.removeEventListener('sunum-mockdb-change', handleDbChange);
   }, []);
 
-  // Veritabanından Omnichannel Verilerini Çek (Hata veya boş gelirse mockDatabase'e zarifçe döner)
+  // Veritabanından Omnichannel Verilerini Çek (Demo fallback yalnız demo modunda geçerlidir)
   const fetchOmnichannelData = useCallback(async (isSilent = false) => {
     try {
       if (!isSilent) setRefreshing(true);
       const res = await fetch('/api/omnichannel', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        if (data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+        if (data.success && Array.isArray(data.orders)) {
           if (data.stats) setStats(data.stats);
           if (data.channels) setChannels(data.channels);
           if (data.orders) setOrders(data.orders);
@@ -102,6 +132,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           if (Array.isArray(data.eligibleReturnOrders)) setEligibleReturnOrders(data.eligibleReturnOrders);
           if (data.featureFlags) {
             if (typeof data.featureFlags.logisticsDemoMode === 'boolean') {
+              demoModeRef.current = data.featureFlags.logisticsDemoMode;
               setLogisticsDemoMode(data.featureFlags.logisticsDemoMode);
             }
             if (typeof data.featureFlags.lojistik_iade === 'boolean') {
@@ -111,32 +142,36 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           return;
         }
       }
-      // Demo Fallback
-      const o = mockDatabase.getOmnichannelOverview();
-      setStats(o.stats);
-      setChannels(o.channels);
-      setOrders(o.orders);
-      setRmaReturns(o.rmaReturns);
-      setLogisticsAdapters(o.logisticsAdapters);
-      setEDocuments(o.eDocuments);
+      if (res.status !== 401 && res.status !== 403 && (await resolveDemoMode())) {
+        const o = mockDatabase.getOmnichannelOverview();
+        setStats(o.stats);
+        setChannels(o.channels);
+        setOrders(o.orders);
+        setRmaReturns(o.rmaReturns);
+        setLogisticsAdapters(o.logisticsAdapters);
+        setEDocuments(o.eDocuments);
+      }
     } catch (err: any) {
-      console.warn('Omnichannel fetch fallback to demo:', err);
-      const o = mockDatabase.getOmnichannelOverview();
-      setStats(o.stats);
-      setChannels(o.channels);
-      setOrders(o.orders);
-      setRmaReturns(o.rmaReturns);
-      setLogisticsAdapters(o.logisticsAdapters);
-      setEDocuments(o.eDocuments);
+      if (await resolveDemoMode()) {
+        console.warn('Omnichannel fetch fallback to demo:', err);
+        const o = mockDatabase.getOmnichannelOverview();
+        setStats(o.stats);
+        setChannels(o.channels);
+        setOrders(o.orders);
+        setRmaReturns(o.rmaReturns);
+        setLogisticsAdapters(o.logisticsAdapters);
+        setEDocuments(o.eDocuments);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [resolveDemoMode]);
 
   useEffect(() => {
+    resolveDemoMode();
     fetchOmnichannelData(true);
-  }, [fetchOmnichannelData]);
+  }, [fetchOmnichannelData, resolveDemoMode]);
 
   // Tüm Satış Kanallarını Canlı Senkronize Et
   const handleSyncAllChannels = async () => {
@@ -153,13 +188,19 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
           data.message || 'Tüm satış kanallarında (Pazaryerlerinde) stoklar eşitlendi!'
         );
         fetchOmnichannelData(true);
-      } else {
+      } else if (await resolveDemoMode()) {
         mockDatabase.syncAllChannels();
         toast.success('Tüm satış kanallarında (Trendyol, Hepsiburada, Shopify) stoklar demo olarak eşitlendi!');
+      } else {
+        toast.error(data.error || 'Kanal senkronizasyonu yetkiniz yok veya oturum gerekiyor.');
       }
     } catch {
-      mockDatabase.syncAllChannels();
-      toast.success('Tüm satış kanallarında (Trendyol, Hepsiburada, Shopify) stoklar demo olarak eşitlendi!');
+      if (await resolveDemoMode()) {
+        mockDatabase.syncAllChannels();
+        toast.success('Tüm satış kanallarında (Trendyol, Hepsiburada, Shopify) stoklar demo olarak eşitlendi!');
+      } else {
+        toast.error('Satış kanalı senkronizasyonu başarısız.');
+      }
     } finally {
       setIsSyncing(false);
     }

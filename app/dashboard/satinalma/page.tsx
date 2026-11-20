@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   AlertTriangle,
   FileCheck2,
@@ -25,18 +25,31 @@ import { MultiTierPoTab, EoqSuggestionsPanel } from './components/MultiTierPoAnd
 import { AsnTrackingTab, SingleSourceRiskTab } from './components/AsnAndRiskTabs';
 import { ErpPerspectiveSwitchButton } from '@/components/demo/SupplierPortalDemoComponents';
 
+const EMPTY_PROCUREMENT_STATS = {
+  totalCriticalItems: 0,
+  stockoutItems: 0,
+  belowRopItems: 0,
+  pendingPrCount: 0,
+  pendingPrTotalAmount: 0,
+  totalConsignmentValue: 0,
+  unbilledConsignmentPayable: 0,
+  activeSupplierCount: 0,
+};
+
 export default function SmartProcurementAndConsignmentPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('critical-rop');
+  const [demoMode, setDemoMode] = useState(false);
+  const demoModeRef = useRef<boolean | null>(null);
 
-  // Backend Veri Durumları - Anında Canlı Demo Verileri ile Başlat
-  const [stats, setStats] = useState(() => mockDatabase.getProcurementOverview().stats);
-  const [criticalItems, setCriticalItems] = useState<any[]>(() => mockDatabase.getProcurementOverview().criticalItems);
-  const [allItems, setAllItems] = useState<any[]>(() => mockDatabase.getProcurementOverview().allItems);
-  const [suppliers, setSuppliers] = useState<any[]>(() => mockDatabase.getProcurementOverview().suppliers);
-  const [purchaseRequisitions, setPurchaseRequisitions] = useState<any[]>(() => mockDatabase.getProcurementOverview().purchaseRequisitions);
-  const [consignmentStocks, setConsignmentStocks] = useState<any[]>(() => mockDatabase.getProcurementOverview().consignmentStocks);
+  // Backend Veri Durumları — gerçek DB verisi gelene kadar boş başlar
+  const [stats, setStats] = useState(EMPTY_PROCUREMENT_STATS);
+  const [criticalItems, setCriticalItems] = useState<any[]>([]);
+  const [allItems, setAllItems] = useState<any[]>([]);
+  const [suppliers, setSuppliers] = useState<any[]>([]);
+  const [purchaseRequisitions, setPurchaseRequisitions] = useState<any[]>([]);
+  const [consignmentStocks, setConsignmentStocks] = useState<any[]>([]);
 
   // Lojistik Faz 3: Tedarikçi Ana Kart, RFQ, Çok Kademeli PO, ASN, EOQ & Risk Verileri
   const [rfqs, setRfqs] = useState<any[]>([]);
@@ -53,9 +66,28 @@ export default function SmartProcurementAndConsignmentPage() {
   // Modal Durumu
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Canlı Reaktif Mock DB Dinleyicisi
+  const resolveDemoMode = useCallback(async () => {
+    if (demoModeRef.current !== null) return demoModeRef.current;
+    try {
+      const cfgRes = await fetch('/api/system-config');
+      if (cfgRes.ok) {
+        const cfg = await cfgRes.json();
+        const isDemo = Boolean(cfg?.logisticsDemoMode);
+        demoModeRef.current = isDemo;
+        setDemoMode(isDemo);
+        return isDemo;
+      }
+    } catch {
+      // Demo durumu çözülemezse güvenli varsayılan kapalı
+    }
+    demoModeRef.current = false;
+    return false;
+  }, []);
+
+  // Canlı Reaktif Mock DB Dinleyicisi (yalnızca demo modunda)
   useEffect(() => {
     const handleDbChange = () => {
+      if (demoModeRef.current !== true) return;
       const p = mockDatabase.getProcurementOverview();
       setStats(p.stats);
       setCriticalItems(p.criticalItems);
@@ -68,7 +100,7 @@ export default function SmartProcurementAndConsignmentPage() {
     return () => window.removeEventListener('sunum-mockdb-change', handleDbChange);
   }, []);
 
-  // Veritabanından verileri çek (API boş veya hata verirse mockDatabase'e zarifçe döner)
+  // Veritabanından verileri çek (Demo fallback yalnızca demo modunda geçerlidir)
   const fetchProcurementData = useCallback(async (isSilent = false) => {
     try {
       if (!isSilent) setRefreshing(true);
@@ -95,32 +127,36 @@ export default function SmartProcurementAndConsignmentPage() {
           return;
         }
       }
-      // Demo Fallback
-      const p = mockDatabase.getProcurementOverview();
-      setStats(p.stats);
-      setCriticalItems(p.criticalItems);
-      setAllItems(p.allItems);
-      setSuppliers(p.suppliers);
-      setPurchaseRequisitions(p.purchaseRequisitions);
-      setConsignmentStocks(p.consignmentStocks);
+      if (res.status !== 401 && res.status !== 403 && (await resolveDemoMode())) {
+        const p = mockDatabase.getProcurementOverview();
+        setStats(p.stats);
+        setCriticalItems(p.criticalItems);
+        setAllItems(p.allItems);
+        setSuppliers(p.suppliers);
+        setPurchaseRequisitions(p.purchaseRequisitions);
+        setConsignmentStocks(p.consignmentStocks);
+      }
     } catch (err: any) {
-      console.warn('Procurement fetch fallback to demo:', err);
-      const p = mockDatabase.getProcurementOverview();
-      setStats(p.stats);
-      setCriticalItems(p.criticalItems);
-      setAllItems(p.allItems);
-      setSuppliers(p.suppliers);
-      setPurchaseRequisitions(p.purchaseRequisitions);
-      setConsignmentStocks(p.consignmentStocks);
+      if (await resolveDemoMode()) {
+        console.warn('Procurement fetch fallback to demo:', err);
+        const p = mockDatabase.getProcurementOverview();
+        setStats(p.stats);
+        setCriticalItems(p.criticalItems);
+        setAllItems(p.allItems);
+        setSuppliers(p.suppliers);
+        setPurchaseRequisitions(p.purchaseRequisitions);
+        setConsignmentStocks(p.consignmentStocks);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [resolveDemoMode]);
 
   useEffect(() => {
+    resolveDemoMode();
     fetchProcurementData(true);
-  }, [fetchProcurementData]);
+  }, [fetchProcurementData, resolveDemoMode]);
 
   const handleResetSeed = async () => {
     if (!confirm('Satın alma ve konsinye verilerini sıfırlayıp temiz örnek veriler yüklemek istiyor musunuz?')) {
@@ -138,13 +174,19 @@ export default function SmartProcurementAndConsignmentPage() {
       if (data.success) {
         toast.success('Satın alma ve konsinye verileri başarıyla yüklendi');
         fetchProcurementData();
-      } else {
+      } else if (await resolveDemoMode()) {
         mockDatabase.resetToDefault();
         toast.success('Satın alma demo verileri sıfırlandı');
+      } else {
+        toast.error(data.error || 'Bu işlem yalnızca demo ortamında kullanılabilir.');
       }
     } catch {
-      mockDatabase.resetToDefault();
-      toast.success('Satın alma demo verileri sıfırlandı');
+      if (await resolveDemoMode()) {
+        mockDatabase.resetToDefault();
+        toast.success('Satın alma demo verileri sıfırlandı');
+      } else {
+        toast.error('Satın alma sıfırlama işlemi başarısız.');
+      }
     } finally {
       setRefreshing(false);
     }
@@ -223,14 +265,18 @@ export default function SmartProcurementAndConsignmentPage() {
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
           </button>
-          <span className="text-white/20">•</span>
-          <button
-            onClick={handleResetSeed}
-            className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Örnek Verileri Sıfırla
-          </button>
+          {demoMode && (
+            <>
+              <span className="text-white/20">•</span>
+              <button
+                onClick={handleResetSeed}
+                className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Örnek Verileri Sıfırla
+              </button>
+            </>
+          )}
         </div>
       </div>
 
