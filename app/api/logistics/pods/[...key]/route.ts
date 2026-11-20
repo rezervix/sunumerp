@@ -12,6 +12,7 @@ const ALLOWED_SERVED_POD_EXTENSIONS = new Set([
   "jpeg",
   "webp",
   "pdf",
+  "txt",
   "svg",
 ])
 
@@ -50,9 +51,11 @@ export async function GET(
               ? "image/webp"
               : ext === "pdf"
                 ? "application/pdf"
-                : ext === "svg"
-                  ? "image/svg+xml"
-                  : "application/octet-stream"
+                : ext === "txt"
+                  ? "text/plain; charset=utf-8"
+                  : ext === "svg"
+                    ? "image/svg+xml"
+                    : "application/octet-stream"
 
       const headers: Record<string, string> = {
         "Content-Type": mime,

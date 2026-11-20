@@ -374,7 +374,9 @@ async function runUnitAndBenchmarkSuite() {
         const reportPayload = {
           moduleKey: "wms" as const,
           title: "Stok Defteri Yüksek Hacim Benchmark Raporu",
+          subtitle: "Depo stok hareketleri yüksek hacim dışa aktarma testi",
           generatedAt: new Date().toISOString(),
+          filtersApplied: {},
           summaryCards: [
             { label: "Toplam Hareket", value: "1.000" },
             { label: "Toplam Tutar", value: "₺250.000" },
@@ -395,9 +397,9 @@ async function runUnitAndBenchmarkSuite() {
             cost: m.totalCost,
             date: m.createdAt,
           })),
-          chartSeries: [
-            { label: "Giriş", value: 500 },
-            { label: "Çıkış", value: 500 },
+          chartData: [
+            { name: "Giriş", primaryValue: 500, primaryLabel: "Adet" },
+            { name: "Çıkış", primaryValue: 500, primaryLabel: "Adet" },
           ],
           chartTitle: "Hareket Dağılımı",
           filterOptions: {},

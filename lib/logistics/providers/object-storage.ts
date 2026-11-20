@@ -16,13 +16,14 @@ import type {
 
 const POD_STORAGE_DIR = path.join(process.cwd(), "storage", "logistics-pods")
 const MAX_POD_ARTIFACT_BYTES = 5 * 1024 * 1024
-const ALLOWED_POD_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp", "pdf"])
+const ALLOWED_POD_EXTENSIONS = new Set(["png", "jpg", "jpeg", "webp", "pdf", "txt"])
 const ALLOWED_POD_MIMES = new Set([
   "image/png",
   "image/jpeg",
   "image/jpg",
   "image/webp",
   "application/pdf",
+  "text/plain",
 ])
 
 function validateAndDecodeProofArtifact(input: {
