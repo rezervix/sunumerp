@@ -208,8 +208,15 @@ async function main() {
         const logFlags = resolveLogisticsFeatureFlags(undefined, "branch-izmir", false)
         assert.equal(logFlags.lojistik_filo, false)
         assert.equal(logFlags.lojistik_wms, false)
-        const prodFlags = resolveProductionFeatureFlags(undefined, "branch-izmir", false)
-        assert.equal(prodFlags.uretim_bom_rota, false)
+        const prevDisableDemo = process.env.DISABLE_DEMO_MODE
+        process.env.DISABLE_DEMO_MODE = "true"
+        try {
+          const prodFlags = resolveProductionFeatureFlags(undefined, "branch-izmir")
+          assert.equal(prodFlags.uretim_bom_rota, false)
+        } finally {
+          if (prevDisableDemo === undefined) delete process.env.DISABLE_DEMO_MODE
+          else process.env.DISABLE_DEMO_MODE = prevDisableDemo
+        }
       }
 
       // Şube bazlı override testi
