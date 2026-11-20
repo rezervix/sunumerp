@@ -621,8 +621,8 @@ class ModelSimulate {
     })
   }
 
-  private enrichItem(item: any, include: any): any {
-    const db = readJsonDb()
+  private enrichItem(item: any, include: any, preloadedDb?: JsonDbData): any {
+    const db = preloadedDb ?? readJsonDb()
     const enriched = { ...item }
 
     // Dinamik _count hesaplamaları
@@ -1456,8 +1456,9 @@ class ModelSimulate {
     const take = args.take ?? items.length
     items = items.slice(skip, skip + take)
 
-    // İlişki ve sayaç zenginleştirme
-    return items.map((item) => this.enrichItem(item, args.include))
+    // İlişki ve sayaç zenginleştirme (tek okuma ile O(N) disk G/Ç önlenir)
+    const snapshotDb = items.length > 0 ? readJsonDb() : undefined
+    return items.map((item) => this.enrichItem(item, args.include, snapshotDb))
   }
 
   async findUnique(args: any = {}) {
