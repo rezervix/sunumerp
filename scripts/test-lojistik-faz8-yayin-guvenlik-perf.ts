@@ -568,7 +568,7 @@ async function runHttpSecurityAndStressSuite(mode: string, baseUrl: string) {
         assert.equal(pdfUploadRes.status, 200)
 
         // POD PNG nosniff + traversal 403 + SVG sandbox/attachment/nosniff doğrulaması
-        const pngRes = await fetch(`${baseUrl}/api/logistics/pods/pod-demo/proof-1.png`)
+        const pngRes = await fetch(`${baseUrl}/api/logistics/pods/pod-demo/pod-sign-01.png`)
         assert.equal(pngRes.status, 200)
         assert.equal(pngRes.headers.get("x-content-type-options"), "nosniff")
 
