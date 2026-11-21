@@ -1644,7 +1644,6 @@ export async function buildRentACarExportPayload(
     moduleKey: "filo",
     title: "Araç Kiralama (Rent-a-Car) Doluluk, Gelir/Gider ve Filo TCO Kârlılık Raporu",
     generatedAt: new Date().toISOString(),
-    filters: { branchId: params.branchId },
     summaryCards: [
       {
         label: "Kiralama Filosu / Ort. Doluluk",

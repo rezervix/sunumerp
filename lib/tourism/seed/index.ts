@@ -8,7 +8,6 @@
 import {
   executeLogisticsDemoRollback,
   executeLogisticsDemoSeed,
-  type LogisticsSeedExecutionReport,
   type LogisticsSeedModule,
 } from "@/lib/logistics/seed/framework"
 import { faz1TourismPartnerFoundationSeedModule } from "./faz1-partner-firmalar-ve-kullanicilar"
@@ -29,7 +28,7 @@ export async function runAllTourismDemoSeeds(options?: {
   onlyModuleKeys?: string[]
   createBackup?: boolean
   backupLabel?: string
-}): Promise<LogisticsSeedExecutionReport> {
+}) {
   return await executeLogisticsDemoSeed(filterModules(options?.onlyModuleKeys), {
     createBackup: options?.createBackup,
     backupLabel: options?.backupLabel ?? "pre-tourism-seed",
