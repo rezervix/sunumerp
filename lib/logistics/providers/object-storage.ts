@@ -107,7 +107,7 @@ export class ObjectStorageProofProvider implements ILogisticsStorageProvider {
   readonly displayName = "Harici Nesne Depolama (S3 / R2)"
   readonly mode = "object-storage" as const
 
-  constructor(private readonly baseUrl: string) {}
+  constructor(private readonly baseUrl: string) { }
 
   async saveProofArtifact(input: {
     fileName: string

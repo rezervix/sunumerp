@@ -202,11 +202,10 @@ function LojistikRaporlarContent() {
                 role="tab"
                 aria-selected={isSelected}
                 onClick={() => handleModuleSwitch(mod.key)}
-                className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
-                  isSelected
-                    ? "bg-emerald-400/20 text-emerald-300 border-emerald-500/40"
-                    : "bg-[#111513] text-zinc-400 hover:text-white border-white/[0.06]"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${isSelected
+                  ? "bg-emerald-400/20 text-emerald-300 border-emerald-500/40"
+                  : "bg-[#111513] text-zinc-400 hover:text-white border-white/[0.06]"
+                  }`}
               >
                 {mod.shortTitle}
               </button>
@@ -445,11 +444,10 @@ function LojistikRaporlarContent() {
                         {report.columns.map((col) => (
                           <td
                             key={col.key}
-                            className={`py-2.5 px-4 whitespace-nowrap ${
-                              col.format && col.format !== "text"
-                                ? "font-mono tabular-nums text-zinc-200"
-                                : "text-zinc-200"
-                            }`}
+                            className={`py-2.5 px-4 whitespace-nowrap ${col.format && col.format !== "text"
+                              ? "font-mono tabular-nums text-zinc-200"
+                              : "text-zinc-200"
+                              }`}
                           >
                             {formatReportCellValue(row[col.key], col.format)}
                           </td>
