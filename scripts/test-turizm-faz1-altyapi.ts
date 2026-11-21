@@ -247,9 +247,9 @@ async function main() {
       for (const k of TOURISM_FEATURE_FLAG_KEYS) {
         assert.equal(demoFlags[k], true)
       }
-      // Faz 1'de IMPLEMENTED_TOURISM_HREFS boş olduğu için kırık (404) menü linki asla çıkmaz
-      assert.equal(IMPLEMENTED_TOURISM_HREFS.length, 0)
-      assert.equal(getVisibleTourismMenuModules(undefined, null, IMPLEMENTED_TOURISM_HREFS, true).length, 0)
+      // Boş rota listesinde kırık (404) menü linki asla çıkmaz; Faz 2 ile /dashboard/arac-kiralama aktifleşir
+      assert.equal(getVisibleTourismMenuModules(undefined, null, [], true).length, 0)
+      assert.equal(IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/arac-kiralama"), true)
 
       // Simüle edilen tamamlanmış rotalarla: yalnızca bayrağı açık olan sektör başlığı menüde görünür
       const allHrefs = TOURISM_MODULES_CATALOG.map((m) => m.primaryHref)

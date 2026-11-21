@@ -274,7 +274,9 @@ export function isAnyTourismFeatureEnabled(
  * Faz 1'de henüz modül sayfaları eklenmediği için boştur; böylece 404/yarım ekran linki
  * kullanıcıya asla görünmez. Sonraki fazlarda ilgili ekran tamamlandıkça rotası buraya eklenir.
  */
-export const IMPLEMENTED_TOURISM_HREFS: readonly string[] = [] as const
+export const IMPLEMENTED_TOURISM_HREFS: readonly string[] = [
+  "/dashboard/arac-kiralama",
+] as const
 
 export function isTourismModuleMenuVisible(
   flag: TourismFeatureFlagKey,
