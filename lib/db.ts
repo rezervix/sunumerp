@@ -269,6 +269,17 @@ interface JsonDbData {
   turizmRentDepositAndCharge?: any[]
   turizmRentTollPassLog?: any[]
   turizmRentKabisRecord?: any[]
+  // ── Turizm Faz 3: Otel Yönetimi (Mini PMS) additive koleksiyonları ──
+  turizmHotelRoomType?: any[]
+  turizmHotelRoom?: any[]
+  turizmHotelTariff?: any[]
+  turizmHotelPolicyConfig?: any[]
+  turizmHotelAllotment?: any[]
+  turizmHotelReservation?: any[]
+  turizmHotelConflictAttemptLog?: any[]
+  turizmHotelFolioItem?: any[]
+  turizmHotelHousekeepingTask?: any[]
+  turizmHotelKbsRecord?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -455,7 +466,17 @@ const initialData: JsonDbData = {
   turizmRentInspectionForm: [],
   turizmRentDepositAndCharge: [],
   turizmRentTollPassLog: [],
-  turizmRentKabisRecord: []
+  turizmRentKabisRecord: [],
+  turizmHotelRoomType: [],
+  turizmHotelRoom: [],
+  turizmHotelTariff: [],
+  turizmHotelPolicyConfig: [],
+  turizmHotelAllotment: [],
+  turizmHotelReservation: [],
+  turizmHotelConflictAttemptLog: [],
+  turizmHotelFolioItem: [],
+  turizmHotelHousekeepingTask: [],
+  turizmHotelKbsRecord: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1529,6 +1550,68 @@ class ModelSimulate {
       }
     }
 
+    if (this.modelName === "turizmHotelRoom" && include) {
+      if (include.roomType) {
+        enriched.roomType =
+          (db.turizmHotelRoomType || []).find((rt: any) => rt.id === item.roomTypeId) ?? null
+      }
+    }
+
+    if (this.modelName === "turizmHotelTariff" && include) {
+      if (include.roomType) {
+        enriched.roomType =
+          (db.turizmHotelRoomType || []).find((rt: any) => rt.id === item.roomTypeId) ?? null
+      }
+    }
+
+    if (this.modelName === "turizmHotelAllotment" && include) {
+      if (include.roomType) {
+        enriched.roomType =
+          (db.turizmHotelRoomType || []).find((rt: any) => rt.id === item.roomTypeId) ?? null
+      }
+    }
+
+    if (this.modelName === "turizmHotelReservation" && include) {
+      if (include.room) {
+        enriched.room =
+          (db.turizmHotelRoom || []).find((rm: any) => rm.id === item.roomId) ?? null
+      }
+      if (include.roomType) {
+        enriched.roomType =
+          (db.turizmHotelRoomType || []).find((rt: any) => rt.id === item.roomTypeId) ?? null
+      }
+      if (include.customer) {
+        enriched.customer =
+          (db.customer || []).find((c: any) => c.id === item.customerId) ?? null
+      }
+      if (include.allotment && item.allotmentId) {
+        enriched.allotment =
+          (db.turizmHotelAllotment || []).find((a: any) => a.id === item.allotmentId) ?? null
+      }
+      if (include.folioItems) {
+        enriched.folioItems = (db.turizmHotelFolioItem || []).filter(
+          (f: any) => f.reservationId === item.id
+        )
+      }
+      if (include.housekeepingTasks) {
+        enriched.housekeepingTasks = (db.turizmHotelHousekeepingTask || []).filter(
+          (t: any) => t.reservationId === item.id
+        )
+      }
+      if (include.kbsRecords) {
+        enriched.kbsRecords = (db.turizmHotelKbsRecord || []).filter(
+          (k: any) => k.reservationId === item.id
+        )
+      }
+    }
+
+    if (this.modelName === "turizmHotelHousekeepingTask" && include) {
+      if (include.room) {
+        enriched.room =
+          (db.turizmHotelRoom || []).find((rm: any) => rm.id === item.roomId) ?? null
+      }
+    }
+
     return enriched
   }
 
@@ -2128,7 +2211,17 @@ export const prisma = new Proxy(rawPrisma, {
       "turizmRentInspectionForm",
       "turizmRentDepositAndCharge",
       "turizmRentTollPassLog",
-      "turizmRentKabisRecord"
+      "turizmRentKabisRecord",
+      "turizmHotelRoomType",
+      "turizmHotelRoom",
+      "turizmHotelTariff",
+      "turizmHotelPolicyConfig",
+      "turizmHotelAllotment",
+      "turizmHotelReservation",
+      "turizmHotelConflictAttemptLog",
+      "turizmHotelFolioItem",
+      "turizmHotelHousekeepingTask",
+      "turizmHotelKbsRecord"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)

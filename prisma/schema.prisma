@@ -199,6 +199,9 @@ model Customer {
   rentContracts      TurizmRentContract[]
   rentDepositCharges TurizmRentDepositAndCharge[]
   rentKabisRecords   TurizmRentKabisRecord[]
+  hotelReservations  TurizmHotelReservation[]
+  hotelFolioItems    TurizmHotelFolioItem[]
+  hotelKbsRecords    TurizmHotelKbsRecord[]
 }
 
 model Project {
@@ -5864,6 +5867,322 @@ model TurizmRentKabisRecord {
   @@index([preparationStatus])
   @@index([vehicleId])
 }
+
+// ── Turizm Faz 3: Otel Yönetimi (Mini PMS) — turizm_otel ──────────────────────
+
+model TurizmHotelRoomType {
+  id                String   @id @default(uuid())
+  code              String   @unique
+  name              String
+  baseCapacity      Int      @default(2)
+  maxAdults         Int      @default(2)
+  maxChildren       Int      @default(1)
+  bedConfiguration  String   @default("1 Çift Kişilik Yatak")
+  areaSqm           Int      @default(26)
+  amenitiesJson     String?
+  baseRateTry       Float    @default(3500)
+  description       String?
+  sortOrder         Int      @default(10)
+  isActive          Boolean  @default(true)
+  ownerCompanyId    String?  @default("trzm-comp-main")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  rooms        TurizmHotelRoom[]
+  tariffs      TurizmHotelTariff[]
+  allotments   TurizmHotelAllotment[]
+  reservations TurizmHotelReservation[]
+
+  @@index([isActive, sortOrder])
+  @@index([ownerCompanyId])
+}
+
+model TurizmHotelRoom {
+  id               String   @id @default(uuid())
+  roomNumber       String   @unique
+  floorNumber      Int      @default(1)
+  wingOrSection    String   @default("Ana Bina")
+  roomTypeId       String
+  branchId         String   @default("local-debug-branch")
+  status           String   @default("CLEAN_VACANT") // CLEAN_VACANT, OCCUPIED, DIRTY_VACANT, CLEANING_IN_PROGRESS, INSPECTION_PENDING, MAINTENANCE, OUT_OF_ORDER
+  keyCardCode      String?
+  isSmokingAllowed Boolean  @default(false)
+  hasBalcony       Boolean  @default(true)
+  notes            String?
+  isActive         Boolean  @default(true)
+  ownerCompanyId   String?  @default("trzm-comp-main")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  roomType          TurizmHotelRoomType             @relation(fields: [roomTypeId], references: [id], onDelete: Restrict)
+  reservations      TurizmHotelReservation[]
+  folioItems        TurizmHotelFolioItem[]
+  housekeepingTasks TurizmHotelHousekeepingTask[]
+  kbsRecords        TurizmHotelKbsRecord[]
+  conflictLogs      TurizmHotelConflictAttemptLog[]
+
+  @@index([floorNumber, status])
+  @@index([roomTypeId, status])
+  @@index([branchId, status])
+  @@index([ownerCompanyId])
+}
+
+model TurizmHotelTariff {
+  id                String   @id @default(uuid())
+  code              String   @unique
+  name              String
+  roomTypeId        String
+  branchId          String   @default("local-debug-branch")
+  seasonType        String   @default("STANDARD") // STANDARD, HIGH_SEASON, WINTER_PROMO, WEEKEND, AGENCY_CONTRACT
+  boardType         String   @default("BB") // RO, BB, HB, FB, AI
+  validFrom         DateTime
+  validTo           DateTime
+  nightlyRateTry    Float    @default(3500)
+  extraAdultRateTry Float    @default(1000)
+  childRateTry      Float    @default(500)
+  currency          String   @default("TRY")
+  isActive          Boolean  @default(true)
+  ownerCompanyId    String?  @default("trzm-comp-main")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  roomType     TurizmHotelRoomType      @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  reservations TurizmHotelReservation[]
+
+  @@index([roomTypeId, boardType, isActive])
+  @@index([branchId, seasonType])
+}
+
+model TurizmHotelPolicyConfig {
+  id                               String   @id @default(uuid())
+  branchId                         String   @unique @default("local-debug-branch")
+  hotelDisplayName                 String   @default("Örnek Kıyı Konaklama & Butik Otel")
+  defaultCheckInTime               String   @default("14:00")
+  defaultCheckOutTime              String   @default("12:00")
+  lateCheckOutGraceMinutes         Int      @default(60)
+  lateCheckOutFeePct               Float    @default(50)
+  invoiceTimingMode                String   @default("ON_CHECKOUT") // ON_CHECKOUT, ON_CHECKIN, MANUAL
+  defaultVatRatePct                Float    @default(10)
+  accommodationExtraRatePct        Float    @default(2)
+  autoCreateHousekeepingOnCheckOut Boolean  @default(true)
+  requireZeroBalanceOnCheckOut     Boolean  @default(true)
+  updatedBy                        String?
+  ownerCompanyId                   String?  @default("trzm-comp-main")
+  createdAt                        DateTime @default(now())
+  updatedAt                        DateTime @updatedAt
+
+  @@index([ownerCompanyId])
+}
+
+model TurizmHotelAllotment {
+  id                     String   @id @default(uuid())
+  code                   String   @unique
+  agencyName             String
+  agencyCompanyId        String?
+  roomTypeId             String
+  branchId               String   @default("local-debug-branch")
+  validFrom              DateTime
+  validTo                DateTime
+  allocatedRoomsPerNight Int      @default(5)
+  usedRoomNights         Int      @default(0)
+  releaseDaysBefore      Int      @default(7)
+  releaseDeadlineAt      DateTime
+  netRatePerNightTry     Float    @default(3000)
+  warningThresholdPct    Int      @default(80)
+  status                 String   @default("ACTIVE") // ACTIVE, NEAR_LIMIT, EXHAUSTED, RELEASED
+  notes                  String?
+  ownerCompanyId         String?  @default("trzm-comp-main")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  roomType     TurizmHotelRoomType      @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  reservations TurizmHotelReservation[]
+
+  @@index([roomTypeId, status])
+  @@index([agencyCompanyId])
+}
+
+model TurizmHotelReservation {
+  id                   String    @id @default(uuid())
+  reservationNo        String    @unique
+  branchId             String    @default("local-debug-branch")
+  roomId               String
+  roomTypeId           String
+  tariffId             String?
+  allotmentId          String?
+  customerId           String
+  channelSource        String    @default("DIRECT_WEB") // DIRECT_WEB, DIRECT_PHONE, WALK_IN, AGENCY_B2B, OTA_BOOKING, CORPORATE
+  agencyName           String?
+  boardType            String    @default("BB") // RO, BB, HB, FB, AI
+  checkInDate          DateTime
+  checkOutDate         DateTime
+  nightsCount          Int       @default(1)
+  adultsCount          Int       @default(2)
+  childrenCount        Int       @default(0)
+  actualCheckInAt      DateTime?
+  actualCheckOutAt     DateTime?
+  keyCardIssuedCode    String?
+  status               String    @default("CONFIRMED") // PENDING, CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED, NO_SHOW
+  nightlyRateTry       Float     @default(3500)
+  roomTotalTry         Float     @default(3500)
+  extrasTotalTry       Float     @default(0)
+  paidTotalTry         Float     @default(0)
+  balanceDueTry        Float     @default(3500)
+  additionalGuestsJson String?
+  cancelReason         String?
+  conflictLockKey      String?
+  notes                String?
+  ownerCompanyId       String?   @default("trzm-comp-main")
+  createdBy            String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  room              TurizmHotelRoom               @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomType          TurizmHotelRoomType           @relation(fields: [roomTypeId], references: [id], onDelete: Restrict)
+  tariff            TurizmHotelTariff?            @relation(fields: [tariffId], references: [id], onDelete: SetNull)
+  allotment         TurizmHotelAllotment?         @relation(fields: [allotmentId], references: [id], onDelete: SetNull)
+  customer          Customer                      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  folioItems        TurizmHotelFolioItem[]
+  housekeepingTasks TurizmHotelHousekeepingTask[]
+  kbsRecords        TurizmHotelKbsRecord[]
+
+  @@index([roomId, checkInDate, checkOutDate])
+  @@index([branchId, status])
+  @@index([customerId])
+  @@index([allotmentId])
+  @@index([ownerCompanyId])
+}
+
+model TurizmHotelConflictAttemptLog {
+  id                    String   @id @default(uuid())
+  roomId                String?
+  roomNumber            String
+  attemptedCheckIn      DateTime
+  attemptedCheckOut     DateTime
+  conflictingSourceType String   @default("RESERVATION") // RESERVATION, ROOM_MAINTENANCE, ALLOTMENT_OVERFLOW
+  conflictingSourceId   String?
+  conflictingRefNo      String?
+  customerId            String?
+  rejectionCode         String   @default("ROOM_DOUBLE_BOOKING_LOCKED") // ROOM_DOUBLE_BOOKING_LOCKED, ROOM_OUT_OF_ORDER, ALLOTMENT_EXCEEDED
+  rejectionMessage      String
+  actorUserId           String?
+  ownerCompanyId        String?  @default("trzm-comp-main")
+  attemptedAt           DateTime @default(now())
+
+  room TurizmHotelRoom? @relation(fields: [roomId], references: [id], onDelete: SetNull)
+
+  @@index([roomId, attemptedAt])
+  @@index([rejectionCode])
+}
+
+model TurizmHotelFolioItem {
+  id              String   @id @default(uuid())
+  entryNo         String   @unique
+  reservationId   String
+  roomId          String
+  customerId      String
+  folioGroup      String   @default("A_ANA_HESAP") // A_ANA_HESAP, B_EKSTRA_BOLUNMUS, C_ACENTA_FATURASI
+  entryCategory   String   @default("ROOM_NIGHT") // ROOM_NIGHT, MINIBAR, RESTAURANT, LAUNDRY, SPA_EXTRA, LATE_CHECKOUT, PAYMENT_CASH, PAYMENT_CARD, PAYMENT_TRANSFER, REFUND
+  isPayment       Boolean  @default(false)
+  description     String
+  inventoryItemId String?
+  stockMovementId String?
+  quantity        Float    @default(1)
+  unitPriceTry    Float    @default(0)
+  amountTry       Float    @default(0)
+  vatRatePct      Float    @default(10)
+  totalWithVatTry Float    @default(0)
+  paymentMethod   String?
+  financeId       String?
+  eDocumentId     String?
+  eDocumentNo     String?
+  postedByUserId  String?
+  postedAt        DateTime @default(now())
+  ownerCompanyId  String?  @default("trzm-comp-main")
+  createdAt       DateTime @default(now())
+
+  reservation TurizmHotelReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  room        TurizmHotelRoom        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  customer    Customer               @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, folioGroup])
+  @@index([roomId])
+  @@index([entryCategory])
+}
+
+model TurizmHotelHousekeepingTask {
+  id                    String    @id @default(uuid())
+  taskNo                String    @unique
+  roomId                String
+  roomNumber            String
+  floorNumber           Int       @default(1)
+  reservationId         String?
+  taskType              String    @default("CHECKOUT_CLEANING") // CHECKOUT_CLEANING, STAYOVER_CLEANING, DEEP_CLEANING, MINIBAR_COUNT, TECHNICAL_FAULT
+  priority              String    @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  status                String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, INSPECTED, CANCELLED
+  assignedToUserId      String?
+  assignedToName        String?
+  inspectedByUserId     String?
+  inspectedByName       String?
+  checklistJson         String?
+  minibarCountJson      String?
+  faultCategory         String?
+  faultDescription      String?
+  offlineIdempotencyKey String?   @unique
+  startedAt             DateTime?
+  completedAt           DateTime?
+  inspectedAt           DateTime?
+  notes                 String?
+  ownerCompanyId        String?   @default("trzm-comp-main")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  room        TurizmHotelRoom         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  reservation TurizmHotelReservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+
+  @@index([assignedToUserId, status])
+  @@index([roomId, status])
+  @@index([floorNumber, status])
+}
+
+model TurizmHotelKbsRecord {
+  id                   String    @id @default(uuid())
+  kbsRefNo             String    @unique
+  reservationId        String
+  roomId               String
+  roomNumber           String
+  customerId           String
+  notificationType     String    @default("MISAFIR_GIRIS") // MISAFIR_GIRIS, MISAFIR_CIKIS, ODA_DEGISIKLIGI
+  guestFullName        String
+  guestTcknMasked      String?
+  guestPassportMasked  String?
+  guestNationality     String    @default("TR")
+  guestBirthYear       Int?
+  checkInAt            DateTime
+  expectedCheckOutAt   DateTime
+  actualCheckOutAt     DateTime?
+  missingFieldsJson    String?
+  isPayloadComplete    Boolean   @default(true)
+  preparationStatus    String    @default("HAZIRLANDI") // HAZIRLANDI, GONDERILDI_MANUEL, HATALI, EKSIK_VERI
+  exportedFormat       String?   // XML_SABLON, CSV, JSON_PAKET
+  lastExportedAt       DateTime?
+  retryCount           Int       @default(0)
+  lastErrorNote        String?
+  preparedPayloadJson  String?
+  notes                String?
+  ownerCompanyId       String?   @default("trzm-comp-main")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  reservation TurizmHotelReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  room        TurizmHotelRoom        @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  customer    Customer               @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, notificationType])
+  @@index([preparationStatus])
+  @@index([roomId])
+}
+
 
 
 
