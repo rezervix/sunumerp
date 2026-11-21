@@ -17,11 +17,13 @@ import {
 } from "../lib/tourism/seed"
 
 async function main() {
-  const [, , command = "seed"] = process.argv
+  const args = process.argv.slice(2)
+  const noBackup = args.includes("--no-backup")
+  const command = args.find((a) => !a.startsWith("--")) ?? "seed"
 
   if (command === "seed") {
     const report = await runAllTourismDemoSeeds({
-      createBackup: true,
+      createBackup: !noBackup,
       backupLabel: "cli-tourism-seed",
     })
     console.log("✅ Turizm demo seed işlemi başarıyla tamamlandı.")
