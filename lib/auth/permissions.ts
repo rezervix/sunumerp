@@ -8,6 +8,7 @@ export const ROLE_HIERARCHY = {
   Employee: 3,
   "Field Staff": 2,
   Accountant: 2,
+  "Temizlik Personeli": 1,
   "Tedarikçi": 1,
   Partner: 1,
 }
@@ -501,5 +502,8 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
   Partner: {
     turizm_b2b: ["read", "create", "update"],
     partner_portali: ["read", "create", "update"],
+  },
+  "Temizlik Personeli": {
+    turizm_otel: ["read", "update"],
   },
 }

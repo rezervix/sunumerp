@@ -276,6 +276,7 @@ export function isAnyTourismFeatureEnabled(
  */
 export const IMPLEMENTED_TOURISM_HREFS: readonly string[] = [
   "/dashboard/arac-kiralama",
+  "/dashboard/otel",
 ] as const
 
 export function isTourismModuleMenuVisible(

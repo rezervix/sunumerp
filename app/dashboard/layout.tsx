@@ -503,6 +503,14 @@ function SidebarContent({
                 icon: Building2,
                 resource: "turizm_otel",
                 excludeSupplier: true,
+                exact: true,
+              },
+              {
+                name: "Housekeeping Mobil Görevler",
+                href: "/dashboard/otel/housekeeping",
+                icon: ClipboardCheck,
+                resource: "turizm_otel",
+                excludeSupplier: true,
               },
             ],
           } satisfies NavCategoryDef,
@@ -652,10 +660,17 @@ function SidebarContent({
     !isSuperAdmin &&
       (session?.user?.partnerCompanyId || currentBranchRoleName === PARTNER_ROLE_NAME)
   )
+  const isHousekeepingRole = Boolean(
+    !isSuperAdmin && currentBranchRoleName === "Temizlik Personeli"
+  )
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
     if (item.excludeSupplier && isSupplierRole) {
       return false
+    }
+    if (isHousekeepingRole) {
+      if (item.isLogout) return true
+      return item.href === "/dashboard/otel/housekeeping"
     }
     if (isPartnerRole) {
       if (item.isLogout) return true
@@ -688,7 +703,7 @@ function SidebarContent({
     }
     if (item.resource) return hasPermission(item.resource, "read")
     return true
-  }, [isSupplierRole, isPartnerRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
+  }, [isSupplierRole, isHousekeepingRole, isPartnerRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
 
   // Filter allowed categories and items
   const availableCategories = useMemo(() => {
