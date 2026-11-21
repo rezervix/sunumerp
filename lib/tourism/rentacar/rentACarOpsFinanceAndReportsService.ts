@@ -23,7 +23,7 @@ import type { LogisticsReportPayload } from "@/lib/logistics/reports/constantsAn
 import { createNotificationMany } from "@/lib/services/notificationService"
 import { MAIN_COMPANY_ID } from "@/lib/tourism/constants"
 import {
-  filterRecordsByCompanyScope,
+  applyCompanyScopeFilter as filterRecordsByCompanyScope,
   logTourismAudit,
   TourismDomainError,
 } from "@/lib/tourism/security"

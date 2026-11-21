@@ -13,8 +13,8 @@ import { prisma } from "@/lib/db"
 import { checkPermission } from "@/lib/auth/server-permission"
 import { DemoDbEDocumentProvider } from "@/lib/logistics/providers/efatura-irsaliye"
 import {
-  buildCompanyScopedPrismaWhere,
-  filterRecordsByCompanyScope,
+  applyCompanyScopeFilter as filterRecordsByCompanyScope,
+  buildCompanyPrismaWhere as buildCompanyScopedPrismaWhere,
   logTourismAudit,
   TourismDomainError,
 } from "@/lib/tourism/security"
