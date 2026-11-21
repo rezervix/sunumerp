@@ -27,6 +27,7 @@ import {
   DEFAULT_SAMPLE_CONTRACT_TEMPLATE_TEXT,
   doTimeIntervalsOverlap,
   evaluateRenterEligibility,
+  resolveEffectiveVehicleClassId,
   type SelectedExtraServiceInput,
 } from "./constantsAndHelpers"
 
@@ -467,7 +468,7 @@ export async function listRentalFleetVehicles(
     list = list.filter((v: any) => v.branchId === params.branchId)
   }
   if (params.rentalClassId) {
-    list = list.filter((v: any) => v.rentalClassId === params.rentalClassId)
+    list = list.filter((v: any) => resolveEffectiveVehicleClassId(v) === params.rentalClassId)
   }
   if (params.search) {
     const q = params.search.trim().toLowerCase()
@@ -481,7 +482,8 @@ export async function listRentalFleetVehicles(
   }
 
   return list.map((v: any) => {
-    const cls = v.rentalClassId ? classMap.get(v.rentalClassId) : null
+    const effClassId = resolveEffectiveVehicleClassId(v)
+    const cls = effClassId ? classMap.get(effClassId) : null
     const activeRes = activeResByVehicle.get(v.id) || null
     const openWo = workOrders.find(
       (wo: any) =>
@@ -501,9 +503,10 @@ export async function listRentalFleetVehicles(
 
     return {
       ...v,
+      rentalClassId: effClassId,
       rentalStatus: effectiveRentalStatus,
       vehicleClass: cls || null,
-      vehicleClassName: cls?.name || "Atanmamış Sınıf",
+      vehicleClassName: cls?.name || "Genel Kiralama Filosu",
       activeReservation: activeRes,
       openMaintenanceWorkOrder: openWo || null,
     }

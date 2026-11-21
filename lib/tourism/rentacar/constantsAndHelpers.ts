@@ -645,6 +645,18 @@ export function doTimeIntervalsOverlap(
   return as < be && bs < ae
 }
 
+export function resolveEffectiveVehicleClassId(vehicle: any): string | null {
+  if (vehicle?.rentalClassId) return String(vehicle.rentalClassId)
+  if (vehicle?.vehicleType === "MINIBUS") return "trzm-rnt-cls-minibus"
+  if (vehicle?.vehicleType === "PASSENGER") {
+    if (vehicle?.fuelType === "HYBRID" || Number(vehicle?.modelYear) >= 2025) {
+      return "trzm-rnt-cls-sedan"
+    }
+    return "trzm-rnt-cls-kompakt"
+  }
+  return null
+}
+
 export type GanttDayCellStatus = "AVAILABLE" | "RENTED" | "RESERVED" | "MAINTENANCE"
 
 export interface VehicleGanttDayCell {
@@ -709,7 +721,9 @@ export function buildVehicleAvailabilityGantt(params: {
   )
 
   if (params.filterClassId) {
-    filteredVehicles = filteredVehicles.filter((v) => v.rentalClassId === params.filterClassId)
+    filteredVehicles = filteredVehicles.filter(
+      (v) => resolveEffectiveVehicleClassId(v) === params.filterClassId
+    )
   }
   if (params.filterBranchId) {
     filteredVehicles = filteredVehicles.filter((v) => v.branchId === params.filterBranchId)
@@ -723,7 +737,8 @@ export function buildVehicleAvailabilityGantt(params: {
   )
 
   const rows: VehicleAvailabilityGanttRow[] = filteredVehicles.map((v) => {
-    const cls = v.rentalClassId ? params.classesById.get(v.rentalClassId) : null
+    const effClassId = resolveEffectiveVehicleClassId(v)
+    const cls = effClassId ? params.classesById.get(effClassId) : null
     const vRes = activeOrReservedRes.filter((r) => r.vehicleId === v.id)
     const vWos = activeMaintWos.filter((wo) => wo.vehicleId === v.id)
 
@@ -795,7 +810,7 @@ export function buildVehicleAvailabilityGantt(params: {
       plate: v.plate,
       brandModel: `${v.brand} ${v.model} (${v.modelYear || 2024})`,
       branchId: v.branchId || "local-debug-branch",
-      vehicleClassId: v.rentalClassId || null,
+      vehicleClassId: effClassId,
       vehicleClassName: cls?.name || "Genel Filo",
       fleetStatus: v.status,
       rentalStatus: v.rentalStatus || (v.status === "MAINTENANCE" ? "MAINTENANCE" : "AVAILABLE"),

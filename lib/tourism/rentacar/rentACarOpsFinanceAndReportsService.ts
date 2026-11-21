@@ -32,6 +32,7 @@ import {
   compareDeliveryAndReturnForms,
   doTimeIntervalsOverlap,
   RENT_CHARGE_ENTRY_TYPE_LABELS,
+  resolveEffectiveVehicleClassId,
   type RentChargeEntryType,
 } from "./constantsAndHelpers"
 import { createRentACarAdapters } from "./providers"
@@ -1470,7 +1471,8 @@ export async function buildRentACarAnalyticsAndReports(
 
   // 1. Araç Başı Kârlılık & Doluluk (Filo TCO ile Birleştirilmiş)
   const vehicleProfitabilityRows = rentalVehicles.map((v: any) => {
-    const cls = v.rentalClassId ? classById.get(v.rentalClassId) : null
+    const effClassId = resolveEffectiveVehicleClassId(v)
+    const cls = effClassId ? classById.get(effClassId) : null
     const vRes = scopedReservations.filter(
       (r: any) => r.vehicleId === v.id && r.status !== "CANCELLED" && r.status !== "NO_SHOW"
     )
