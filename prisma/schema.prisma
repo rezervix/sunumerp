@@ -171,6 +171,18 @@ model Customer {
   segment      String?   // Wholesale, Retail, Corporate etc.
   recallDate   DateTime? // Recall date
   anniversary  DateTime? // Birthday etc.
+  // ── Turizm & Rent-a-Car Kiracı / Misafir KVKK ve Ehliyet Alanları (Additive) ──
+  tckn                   String?
+  passportNo             String?
+  nationality            String?   @default("TR")
+  birthDate              DateTime?
+  driverLicenseNo        String?
+  driverLicenseClass     String?   @default("B")
+  driverLicenseIssuedAt  DateTime?
+  driverLicenseExpiresAt DateTime?
+  isBlacklisted          Boolean   @default(false)
+  blacklistReason        String?
+  ownerCompanyId         String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -183,6 +195,10 @@ model Customer {
   contacts     CustomerContact[]
   aiMemories   AiConversationMemory[]
   aiAgentLogs  AiAgentLog[]
+  rentReservations   TurizmRentReservation[]
+  rentContracts      TurizmRentContract[]
+  rentDepositCharges TurizmRentDepositAndCharge[]
+  rentKabisRecords   TurizmRentKabisRecord[]
 }
 
 model Project {
@@ -4772,6 +4788,16 @@ model LojistikVehicle {
   lastTelemetryProvider String?
   assignedDriverId      String?
   notes                 String?
+  // ── Turizm Faz 2: Rent-a-Car Ortak Filo Genişletme Alanları (Additive) ──
+  isRentalPool          Boolean  @default(false)
+  rentalClassId         String?
+  rentalStatus          String?  @default("AVAILABLE") // AVAILABLE, RESERVED, RENTED, MAINTENANCE, UNAVAILABLE
+  transmissionType      String?  @default("AUTOMATIC") // AUTOMATIC, MANUAL
+  seatCount             Int?     @default(5)
+  doorCount             Int?     @default(4)
+  baggageCapacity       Int?     @default(3)
+  currentFuelPct        Int?     @default(100)
+  ownerCompanyId        String?
   isActive              Boolean  @default(true)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -4786,9 +4812,17 @@ model LojistikVehicle {
   fuelLogs          LojistikFuelLog[]
   telematicMaps     LojistikVehicleTelematicMap[]
   telemetryEvents   LojistikTelemetryEvent[]
+  rentReservations  TurizmRentReservation[]
+  rentContracts     TurizmRentContract[]
+  rentInspections   TurizmRentInspectionForm[]
+  rentDepositCharges TurizmRentDepositAndCharge[]
+  rentTollPasses    TurizmRentTollPassLog[]
+  rentKabisRecords  TurizmRentKabisRecord[]
+  rentConflictLogs  TurizmRentConflictAttemptLog[]
 
   @@index([branchId, status])
   @@index([assignedDriverId])
+  @@index([isRentalPool, rentalClassId])
 }
 
 model LojistikVehicleLease {
@@ -4883,6 +4917,14 @@ model LojistikTrafficPenalty {
   paymentStatus       String          @default("UNPAID") // UNPAID, PAID, DISPUTED, DEDUCTED_DRIVER
   financeId           String?
   notes               String?
+  // ── Turizm Faz 2: Rent-a-Car Ceza -> Kiralama Eşleştirme ve Müşteriye Yansıtma (Additive) ──
+  matchedReservationId   String?
+  matchedContractId      String?
+  matchedCustomerId      String?
+  reflectionStatus       String?      @default("UNMATCHED") // UNMATCHED, MATCHED_PENDING, REFLECTED_TO_CUSTOMER, COMPANY_LIABILITY
+  reflectedExtraChargeId String?
+  reflectedInvoiceId     String?
+  reflectedAt            DateTime?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
@@ -4891,6 +4933,7 @@ model LojistikTrafficPenalty {
   @@index([vehicleId, violationDate])
   @@index([driverId])
   @@index([paymentStatus])
+  @@index([matchedReservationId])
 }
 
 model LojistikVehicleMaintenancePlan {
@@ -5447,6 +5490,381 @@ model TurizmCrossReservation {
   @@index([bookingCompanyId, status])
   @@index([sharedResourceId, startAt, endAt])
 }
+
+// ── Turizm Faz 2: Araç Kiralama (Rent-a-Car) — turizm_rentacar ────────────────
+
+model TurizmRentVehicleClass {
+  id                         String   @id @default(uuid())
+  code                       String   @unique
+  name                       String
+  segmentCode                String   @default("C") // A, B, C, D, SUV, VIP, MINIBUS
+  transmissionDefault        String   @default("AUTOMATIC") // AUTOMATIC, MANUAL
+  fuelTypeDefault            String   @default("PETROL") // PETROL, DIESEL, HYBRID, ELECTRIC, LPG
+  minDriverAge               Int      @default(21)
+  minLicenseYears            Int      @default(2)
+  defaultDepositTry          Float    @default(5000)
+  dailyKmLimit               Int      @default(250)
+  extraKmUnitPriceTry        Float    @default(6.5)
+  lateReturnHourlyTry        Float    @default(350)
+  missingFuelPricePerPctTry  Float    @default(32)
+  seatCountDefault           Int      @default(5)
+  baggageCountDefault        Int      @default(3)
+  description                String?
+  sortOrder                  Int      @default(10)
+  isActive                   Boolean  @default(true)
+  ownerCompanyId             String?  @default("trzm-comp-main")
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  tariffs      TurizmRentTariff[]
+  reservations TurizmRentReservation[]
+
+  @@index([isActive, sortOrder])
+  @@index([ownerCompanyId])
+}
+
+model TurizmRentTariff {
+  id                  String   @id @default(uuid())
+  code                String   @unique
+  name                String
+  vehicleClassId      String
+  branchId            String   @default("local-debug-branch")
+  seasonType          String   @default("STANDARD") // STANDARD, HIGH_SEASON, WINTER_PROMO, CORPORATE
+  validFrom           DateTime
+  validTo             DateTime
+  dailyRateTry        Float    @default(0)
+  weeklyDailyRateTry  Float    @default(0) // 7+ gün kiralama günlük birim fiyat
+  monthlyDailyRateTry Float    @default(0) // 30+ gün kiralama günlük birim fiyat
+  dailyKmLimit        Int      @default(250)
+  extraKmRateTry      Float    @default(6.5)
+  depositAmountTry    Float    @default(5000)
+  currency            String   @default("TRY")
+  isActive            Boolean  @default(true)
+  ownerCompanyId      String?  @default("trzm-comp-main")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  vehicleClass TurizmRentVehicleClass  @relation(fields: [vehicleClassId], references: [id], onDelete: Cascade)
+  reservations TurizmRentReservation[]
+
+  @@index([vehicleClassId, isActive])
+  @@index([branchId, seasonType])
+}
+
+model TurizmRentExtraService {
+  id             String   @id @default(uuid())
+  code           String   @unique
+  name           String
+  category       String   @default("EQUIPMENT") // EQUIPMENT, DRIVER, INSURANCE, DELIVERY, TOLL_PASS
+  pricingType    String   @default("DAILY") // DAILY, PER_RENTAL
+  unitPriceTry   Float    @default(0)
+  currency       String   @default("TRY")
+  isMandatory    Boolean  @default(false)
+  isActive       Boolean  @default(true)
+  description    String?
+  ownerCompanyId String?  @default("trzm-comp-main")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category, isActive])
+  @@index([ownerCompanyId])
+}
+
+model TurizmRentPolicyConfig {
+  id                            String   @id @default(uuid())
+  branchId                      String   @unique @default("local-debug-branch")
+  ownerCompanyId                String?  @default("trzm-comp-main")
+  minDriverAgeDefault           Int      @default(21)
+  minLicenseYearsDefault        Int      @default(2)
+  gracePeriodMinutes            Int      @default(60)
+  lateHourToFullDayThreshold    Int      @default(4)
+  missingFuelRatePerPctTry      Float    @default(32)
+  cleaningFeeTry                Float    @default(750)
+  adminServiceFeeForPenaltyTry  Float    @default(250)
+  invoiceTimingMode             String   @default("ON_RETURN_COMPLETION") // ON_CONTRACT_APPROVAL, ON_RETURN_COMPLETION, MANUAL
+  defaultVatRatePct             Float    @default(20)
+  contractTemplateTitle         String   @default("ARAÇ KİRALAMA SÖZLEŞMESİ (ÖRNEK ŞABLON)")
+  contractTemplateBodyText      String
+  legalReviewNoticeText         String   @default("Bu metin yalnızca örnek/yer tutucu bir şablondur; canlı kullanımdan önce firmanızın hukuk müşaviri tarafından incelenmesi gerekir.")
+  updatedBy                     String?
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime @updatedAt
+
+  @@index([ownerCompanyId])
+}
+
+model TurizmRentReservation {
+  id                                String    @id @default(uuid())
+  reservationNo                     String    @unique
+  branchId                          String    @default("local-debug-branch")
+  pickupBranchId                    String    @default("local-debug-branch")
+  returnBranchId                    String    @default("local-debug-branch")
+  pickupLocationLabel               String    @default("Merkez Ofis")
+  returnLocationLabel               String    @default("Merkez Ofis")
+  vehicleId                         String
+  vehicleClassId                    String
+  tariffId                          String?
+  customerId                        String
+  additionalDriverName              String?
+  additionalDriverTckn              String?
+  additionalDriverLicenseNo         String?
+  additionalDriverLicenseClass      String?
+  additionalDriverLicenseExpiresAt  DateTime?
+  withChauffeur                     Boolean   @default(false)
+  chauffeurDriverId                 String?
+  startAt                           DateTime
+  endAt                             DateTime
+  originalEndAt                     DateTime?
+  actualPickupAt                    DateTime?
+  actualReturnAt                    DateTime?
+  rentalDays                        Int       @default(1)
+  status                            String    @default("PENDING") // PENDING, CONFIRMED, ACTIVE, COMPLETED, CANCELLED, NO_SHOW
+  dailyRateTry                      Float     @default(0)
+  baseRentalAmountTry               Float     @default(0)
+  extrasTotalTry                    Float     @default(0)
+  discountAmountTry                 Float     @default(0)
+  totalEstimatedTry                 Float     @default(0)
+  finalTotalTry                     Float     @default(0)
+  depositRequiredTry                Float     @default(0)
+  dailyKmLimit                      Int       @default(250)
+  totalKmLimit                      Int       @default(250)
+  extraKmRateTry                    Float     @default(6.5)
+  extrasJson                        String?
+  extensionCount                    Int       @default(0)
+  swappedFromVehicleId              String?
+  swapReason                        String?
+  cancelReason                      String?
+  conflictLockKey                   String?
+  notes                             String?
+  ownerCompanyId                    String?   @default("trzm-comp-main")
+  createdBy                         String?
+  createdAt                         DateTime  @default(now())
+  updatedAt                         DateTime  @updatedAt
+
+  vehicle         LojistikVehicle              @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  vehicleClass    TurizmRentVehicleClass       @relation(fields: [vehicleClassId], references: [id], onDelete: Restrict)
+  tariff          TurizmRentTariff?            @relation(fields: [tariffId], references: [id], onDelete: SetNull)
+  customer        Customer                     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  contract        TurizmRentContract?
+  inspectionForms TurizmRentInspectionForm[]
+  depositCharges  TurizmRentDepositAndCharge[]
+  kabisRecords    TurizmRentKabisRecord[]
+
+  @@index([vehicleId, startAt, endAt])
+  @@index([branchId, status])
+  @@index([customerId])
+  @@index([ownerCompanyId])
+}
+
+model TurizmRentConflictAttemptLog {
+  id                    String   @id @default(uuid())
+  vehicleId             String
+  vehiclePlate          String
+  attemptedStartAt      DateTime
+  attemptedEndAt        DateTime
+  conflictingSourceType String   @default("RESERVATION") // RESERVATION, MAINTENANCE_WORK_ORDER, VEHICLE_STATUS_MAINTENANCE
+  conflictingSourceId   String?
+  conflictingRefNo      String?
+  customerId            String?
+  rejectionCode         String   @default("DOUBLE_BOOKING_LOCKED") // DOUBLE_BOOKING_LOCKED, VEHICLE_IN_MAINTENANCE
+  rejectionMessage      String
+  actorUserId           String?
+  ownerCompanyId        String?  @default("trzm-comp-main")
+  attemptedAt           DateTime @default(now())
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, attemptedAt])
+  @@index([rejectionCode])
+}
+
+model TurizmRentContract {
+  id                       String    @id @default(uuid())
+  contractNo               String    @unique
+  reservationId            String    @unique
+  vehicleId                String
+  customerId               String
+  branchId                 String    @default("local-debug-branch")
+  status                   String    @default("DRAFT") // DRAFT, SIGNED_ACTIVE, CLOSED, CANCELLED
+  templateVersionLabel     String    @default("ÖRNEK ŞABLON v1.0 (Hukuki İnceleme Gerektirir)")
+  renderedTermsText        String
+  startAt                  DateTime
+  endAt                    DateTime
+  agreedDailyRateTry       Float     @default(0)
+  agreedTotalTry           Float     @default(0)
+  depositAmountTry         Float     @default(0)
+  dailyKmLimit             Int       @default(250)
+  totalKmLimit             Int       @default(250)
+  extraKmRateTry           Float     @default(6.5)
+  customerSignatureDataUrl String?
+  customerSignedByName     String?
+  customerSignedAt         DateTime?
+  staffSignedByUserId      String?
+  staffSignedByName        String?
+  staffSignedAt            DateTime?
+  eDocumentId              String?
+  eDocumentNo              String?
+  financeId                String?
+  ownerCompanyId           String?   @default("trzm-comp-main")
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  reservation     TurizmRentReservation        @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  vehicle         LojistikVehicle              @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  customer        Customer                     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  inspectionForms TurizmRentInspectionForm[]
+  depositCharges  TurizmRentDepositAndCharge[]
+  kabisRecords    TurizmRentKabisRecord[]
+
+  @@index([branchId, status])
+  @@index([vehicleId])
+  @@index([customerId])
+}
+
+model TurizmRentInspectionForm {
+  id                    String   @id @default(uuid())
+  formNo                String   @unique
+  reservationId         String
+  contractId            String?
+  vehicleId             String
+  formType              String   @default("DELIVERY") // DELIVERY, RETURN
+  odometerKm            Float    @default(0)
+  fuelLevelPct          Int      @default(100)
+  fuelEighths           Int      @default(8)
+  exteriorConditionNote String?
+  interiorConditionNote String?
+  damageMarkersJson     String?
+  damagePhotoUrlsJson   String?
+  hasNewDamage          Boolean  @default(false)
+  estimatedDamageCostTry Float   @default(0)
+  comparisonSummaryJson String?
+  customerSignatureUrl  String?
+  staffSignatureUrl     String?
+  signedByCustomerName  String?
+  inspectedByUserId     String?
+  inspectedByName       String?
+  capturedLat           Float?
+  capturedLng           Float?
+  inspectedAt           DateTime @default(now())
+  ownerCompanyId        String?  @default("trzm-comp-main")
+  createdAt             DateTime @default(now())
+
+  reservation TurizmRentReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  contract    TurizmRentContract?   @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  vehicle     LojistikVehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, formType])
+  @@index([vehicleId])
+}
+
+model TurizmRentDepositAndCharge {
+  id                  String    @id @default(uuid())
+  entryNo             String    @unique
+  reservationId       String
+  contractId          String?
+  vehicleId           String
+  customerId          String
+  entryType           String    @default("DEPOSIT_COLLECT") // DEPOSIT_COLLECT, DEPOSIT_REFUND, DEPOSIT_DEDUCTION, EXTRA_KM, FUEL_DIFFERENCE, LATE_RETURN, DAMAGE_FEE, TOLL_PASS_REFLECTION, TRAFFIC_PENALTY_REFLECTION, EXTRA_SERVICE
+  status              String    @default("PENDING") // PENDING, COLLECTED, REFUND_PENDING, REFUNDED, INVOICED, WAIVED
+  quantity            Float     @default(1)
+  unitPriceTry        Float     @default(0)
+  amountTry           Float     @default(0)
+  vatRatePct          Float     @default(20)
+  totalWithVatTry     Float     @default(0)
+  currency            String    @default("TRY")
+  calculationRuleNote String?
+  financeId           String?
+  eDocumentId         String?
+  eDocumentNo         String?
+  settledAt           DateTime?
+  notes               String?
+  ownerCompanyId      String?   @default("trzm-comp-main")
+  createdBy           String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  reservation TurizmRentReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  contract    TurizmRentContract?   @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  vehicle     LojistikVehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  customer    Customer              @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, entryType])
+  @@index([status])
+  @@index([customerId])
+}
+
+model TurizmRentTollPassLog {
+  id                   String    @id @default(uuid())
+  passNo               String    @unique
+  vehicleId            String
+  plate                String
+  passDateTime         DateTime
+  highwayOrBridgeName  String
+  entryPoint           String?
+  exitPoint            String?
+  amountTry            Float     @default(0)
+  sourceMode           String    @default("DEMO_ADAPTER") // DEMO_ADAPTER, CSV_IMPORT, MANUAL
+  matchedReservationId String?
+  matchedContractId    String?
+  matchedCustomerId    String?
+  reflectionStatus     String    @default("UNMATCHED") // UNMATCHED, MATCHED_PENDING, REFLECTED_TO_CUSTOMER, COMPANY_USE
+  serviceFeeTry        Float     @default(0)
+  reflectedChargeId    String?
+  notes                String?
+  ownerCompanyId       String?   @default("trzm-comp-main")
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  vehicle LojistikVehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, passDateTime])
+  @@index([plate, passDateTime])
+  @@index([matchedReservationId])
+  @@index([reflectionStatus])
+}
+
+model TurizmRentKabisRecord {
+  id                       String    @id @default(uuid())
+  kabisRefNo               String    @unique
+  reservationId            String
+  contractId               String?
+  vehicleId                String
+  customerId               String
+  notificationType         String    @default("KIRALAMA_ACILIS") // KIRALAMA_ACILIS, KIRALAMA_KAPANIS, EK_SURUCU_BILDIRIMI
+  plate                    String
+  vehicleVin               String?
+  renterFullName           String
+  renterTcknMasked         String?
+  renterPassportMasked     String?
+  renterNationality        String    @default("TR")
+  renterLicenseNoMasked    String?
+  additionalDriverFullName String?
+  pickupAt                 DateTime
+  expectedReturnAt         DateTime
+  actualReturnAt           DateTime?
+  missingFieldsJson        String?
+  isPayloadComplete        Boolean   @default(true)
+  preparationStatus        String    @default("HAZIRLANDI") // HAZIRLANDI, GONDERILDI_MANUEL, HATALI, EKSIK_VERI
+  exportedFormat           String?   // CSV, EXCEL, JSON_PAKET
+  lastExportedAt           DateTime?
+  retryCount               Int       @default(0)
+  lastErrorNote            String?
+  preparedPayloadJson      String?
+  notes                    String?
+  ownerCompanyId           String?   @default("trzm-comp-main")
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  reservation TurizmRentReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  contract    TurizmRentContract?   @relation(fields: [contractId], references: [id], onDelete: SetNull)
+  vehicle     LojistikVehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  customer    Customer              @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId, notificationType])
+  @@index([preparationStatus])
+  @@index([vehicleId])
+}
+
 
 
 

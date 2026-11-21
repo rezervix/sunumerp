@@ -253,11 +253,22 @@ interface JsonDbData {
   lojistikDeliveryProof?: any[]
   lojistikRouteOptimizationJob?: any[]
   lojistikTrackingEvent?: any[]
-  // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 additive koleksiyonları) ──
+  // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 & Faz 2 additive koleksiyonları) ──
   turizmPartnerCompany?: any[]
   turizmPartnership?: any[]
   turizmSharedResource?: any[]
   turizmCrossReservation?: any[]
+  turizmRentVehicleClass?: any[]
+  turizmRentTariff?: any[]
+  turizmRentExtraService?: any[]
+  turizmRentPolicyConfig?: any[]
+  turizmRentReservation?: any[]
+  turizmRentConflictAttemptLog?: any[]
+  turizmRentContract?: any[]
+  turizmRentInspectionForm?: any[]
+  turizmRentDepositAndCharge?: any[]
+  turizmRentTollPassLog?: any[]
+  turizmRentKabisRecord?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -429,7 +440,22 @@ const initialData: JsonDbData = {
   lojistikTelematicConnection: [],
   lojistikVehicleTelematicMap: [],
   lojistikTelemetryEvent: [],
-  lojistikTelematicErrorLog: []
+  lojistikTelematicErrorLog: [],
+  turizmPartnerCompany: [],
+  turizmPartnership: [],
+  turizmSharedResource: [],
+  turizmCrossReservation: [],
+  turizmRentVehicleClass: [],
+  turizmRentTariff: [],
+  turizmRentExtraService: [],
+  turizmRentPolicyConfig: [],
+  turizmRentReservation: [],
+  turizmRentConflictAttemptLog: [],
+  turizmRentContract: [],
+  turizmRentInspectionForm: [],
+  turizmRentDepositAndCharge: [],
+  turizmRentTollPassLog: [],
+  turizmRentKabisRecord: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -1433,6 +1459,76 @@ class ModelSimulate {
       }
     }
 
+    if (this.modelName === "turizmRentTariff" && include) {
+      if (include.vehicleClass) {
+        enriched.vehicleClass =
+          (db.turizmRentVehicleClass || []).find((c: any) => c.id === item.vehicleClassId) ?? null
+      }
+    }
+
+    if (this.modelName === "turizmRentReservation" && include) {
+      if (include.vehicle) {
+        enriched.vehicle =
+          (db.lojistikVehicle || []).find((v: any) => v.id === item.vehicleId) ?? null
+      }
+      if (include.vehicleClass) {
+        enriched.vehicleClass =
+          (db.turizmRentVehicleClass || []).find((c: any) => c.id === item.vehicleClassId) ?? null
+      }
+      if (include.tariff && item.tariffId) {
+        enriched.tariff =
+          (db.turizmRentTariff || []).find((t: any) => t.id === item.tariffId) ?? null
+      }
+      if (include.customer) {
+        enriched.customer =
+          (db.customer || []).find((c: any) => c.id === item.customerId) ?? null
+      }
+      if (include.contract) {
+        enriched.contract =
+          (db.turizmRentContract || []).find((c: any) => c.reservationId === item.id) ?? null
+      }
+      if (include.inspectionForms) {
+        enriched.inspectionForms = (db.turizmRentInspectionForm || []).filter(
+          (f: any) => f.reservationId === item.id
+        )
+      }
+      if (include.depositCharges) {
+        enriched.depositCharges = (db.turizmRentDepositAndCharge || []).filter(
+          (d: any) => d.reservationId === item.id
+        )
+      }
+      if (include.kabisRecords) {
+        enriched.kabisRecords = (db.turizmRentKabisRecord || []).filter(
+          (k: any) => k.reservationId === item.id
+        )
+      }
+    }
+
+    if (this.modelName === "turizmRentContract" && include) {
+      if (include.reservation) {
+        enriched.reservation =
+          (db.turizmRentReservation || []).find((r: any) => r.id === item.reservationId) ?? null
+      }
+      if (include.vehicle) {
+        enriched.vehicle =
+          (db.lojistikVehicle || []).find((v: any) => v.id === item.vehicleId) ?? null
+      }
+      if (include.customer) {
+        enriched.customer =
+          (db.customer || []).find((c: any) => c.id === item.customerId) ?? null
+      }
+      if (include.inspectionForms) {
+        enriched.inspectionForms = (db.turizmRentInspectionForm || []).filter(
+          (f: any) => f.contractId === item.id || f.reservationId === item.reservationId
+        )
+      }
+      if (include.depositCharges) {
+        enriched.depositCharges = (db.turizmRentDepositAndCharge || []).filter(
+          (d: any) => d.contractId === item.id || d.reservationId === item.reservationId
+        )
+      }
+    }
+
     return enriched
   }
 
@@ -2017,11 +2113,22 @@ export const prisma = new Proxy(rawPrisma, {
       "lojistikDeliveryProof",
       "lojistikRouteOptimizationJob",
       "lojistikTrackingEvent",
-      // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 additive modelleri) ──
+      // ── Turizm, Rent-a-Car, Otel PMS & B2B Partner Modülleri (Faz 1 & Faz 2 additive modelleri) ──
       "turizmPartnerCompany",
       "turizmPartnership",
       "turizmSharedResource",
-      "turizmCrossReservation"
+      "turizmCrossReservation",
+      "turizmRentVehicleClass",
+      "turizmRentTariff",
+      "turizmRentExtraService",
+      "turizmRentPolicyConfig",
+      "turizmRentReservation",
+      "turizmRentConflictAttemptLog",
+      "turizmRentContract",
+      "turizmRentInspectionForm",
+      "turizmRentDepositAndCharge",
+      "turizmRentTollPassLog",
+      "turizmRentKabisRecord"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
