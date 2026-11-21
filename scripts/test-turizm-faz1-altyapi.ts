@@ -590,7 +590,12 @@ async function main() {
 
     await step("CHAR_FLEET", "Lojistik Filo araçları (PASSENGER/MINIBUS dahil) ve Şoför KVKK maskelemesi", async () => {
       const vehicles = await listFleetVehicles({})
-      assert.equal(vehicles.length, 18, "18 mevcut filo aracı korunmalı")
+      assert.ok(vehicles.length >= 18, `En az 18 mevcut filo aracı korunmalı (bulunan: ${vehicles.length})`)
+      assert.equal(
+        vehicles.filter((v: any) => String(v.id).startsWith("f5-")).length,
+        18,
+        "18 mevcut f5-* filo aracı birebir korunmalı"
+      )
       const minibus = vehicles.find((v: any) => v.plate === "34 SNR 118")
       const passenger = vehicles.find((v: any) => v.plate === "34 SNR 205")
       assert.ok(minibus && minibus.vehicleType === "MINIBUS", "34 SNR 118 Minibüs korunmalı")

@@ -7,6 +7,7 @@
 process.env.SUNUM_DISABLE_CRON = "1"
 
 import assert from "node:assert/strict"
+import crypto from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { prisma } from "../lib/db"
@@ -21,15 +22,14 @@ import {
   resolveTourismFeatureFlags,
 } from "../lib/config/tourism-feature-flags"
 import {
-  computeFileSha256,
   createDatabaseBackup,
   deleteDatabaseBackup,
-  LOCAL_JSON_DB_PATH,
   restoreDatabaseBackup,
-} from "../lib/services/dbBackupService"
+} from "../lib/services/databaseBackupService"
 import { validateAllTourismMigrations } from "../lib/services/migrationStrategyService"
 import {
   assertLogisticsDemoSeedAllowed,
+  LOCAL_JSON_DB_PATH,
   LogisticsSeedEnvironmentError,
 } from "../lib/logistics/seed/framework"
 import { listFleetVehicles } from "../lib/logistics/fleet"
@@ -62,6 +62,10 @@ import {
 } from "../lib/tourism/rentacar"
 
 const SYS_CFG_PATH = path.join(process.cwd(), "storage", "system_config.json")
+
+function computeFileSha256(filePath: string): string {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex")
+}
 
 async function main() {
   console.log("═══════════════════════════════════════════════════════════════════════")

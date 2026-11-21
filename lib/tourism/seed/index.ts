@@ -6,11 +6,10 @@
  */
 
 import {
-  rollbackTourismSeedModules,
-  runTourismSeedModules,
+  executeLogisticsDemoRollback,
+  executeLogisticsDemoSeed,
+  type LogisticsSeedExecutionReport,
   type LogisticsSeedModule,
-  type LogisticsSeedRollbackReport,
-  type LogisticsSeedRunReport,
 } from "@/lib/logistics/seed/framework"
 import { faz1TourismPartnerFoundationSeedModule } from "./faz1-partner-firmalar-ve-kullanicilar"
 import { faz2RentACarSeedModule } from "./faz2-arac-kiralama"
@@ -20,20 +19,32 @@ export const ALL_TOURISM_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz2RentACarSeedModule,
 ] as const
 
+function filterModules(onlyModuleKeys?: string[]): readonly LogisticsSeedModule[] {
+  if (!onlyModuleKeys || onlyModuleKeys.length === 0) return ALL_TOURISM_SEED_MODULES
+  const keySet = new Set(onlyModuleKeys)
+  return ALL_TOURISM_SEED_MODULES.filter((m) => keySet.has(m.moduleKey))
+}
+
 export async function runAllTourismDemoSeeds(options?: {
   onlyModuleKeys?: string[]
   createBackup?: boolean
   backupLabel?: string
-}): Promise<LogisticsSeedRunReport> {
-  return await runTourismSeedModules(ALL_TOURISM_SEED_MODULES, options)
+}): Promise<LogisticsSeedExecutionReport> {
+  return await executeLogisticsDemoSeed(filterModules(options?.onlyModuleKeys), {
+    createBackup: options?.createBackup,
+    backupLabel: options?.backupLabel ?? "pre-tourism-seed",
+  })
 }
 
 export function rollbackAllTourismDemoSeeds(options?: {
   onlyModuleKeys?: string[]
   createSafetyBackup?: boolean
   backupLabel?: string
-}): LogisticsSeedRollbackReport {
-  return rollbackTourismSeedModules(ALL_TOURISM_SEED_MODULES, options)
+}) {
+  return executeLogisticsDemoRollback(filterModules(options?.onlyModuleKeys), {
+    createSafetyBackup: options?.createSafetyBackup,
+    backupLabel: options?.backupLabel ?? "pre-tourism-rollback",
+  })
 }
 
 export { faz1TourismPartnerFoundationSeedModule, faz2RentACarSeedModule }

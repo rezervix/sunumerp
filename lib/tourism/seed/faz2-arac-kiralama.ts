@@ -2817,4 +2817,20 @@ export const faz2RentACarSeedModule: LogisticsSeedModule = {
       notes,
     }
   },
+  rollback(db) {
+    const removed: Record<string, number> = {}
+    for (const [col, list] of Object.entries(db)) {
+      if (!Array.isArray(list)) continue
+      const before = list.length
+      db[col] = list.filter((rec) => !String(rec?.id ?? "").startsWith(SEED_FAZ2_RENTACAR_PREFIX))
+      const diff = before - db[col].length
+      if (diff > 0) {
+        removed[col] = diff
+      }
+      if (col.startsWith("turizmRent") && db[col].length === 0) {
+        delete db[col]
+      }
+    }
+    return removed
+  },
 }
