@@ -79,7 +79,7 @@ async function main() {
 
   const safetyBackup = createDatabaseBackup({
     label: "test-turizm-faz2-safety",
-    includeSystemConfig: true,
+    updateSystemConfigLastBackup: false,
   })
 
   let passed = 0
@@ -164,9 +164,12 @@ async function main() {
       assert.equal(seed2.success, true)
       assert.equal(seed2.preExistingIntegrityIntact, true)
       const faz2Step2 = seed2.modulesExecuted.find(
-        (m) => m.moduleKey === "turizm_faz2_arac_kiralama"
+        (m: any) => m.moduleKey === "turizm_faz2_arac_kiralama"
       )!
-      const secondInserts = Object.values(faz2Step2.inserted).reduce((a, b) => a + b, 0)
+      const secondInserts = Object.values(faz2Step2.inserted).reduce(
+        (a: number, b: any) => a + Number(b || 0),
+        0
+      )
       assert.equal(secondInserts, 0, "İkinci çalıştırmada sıfır yeni kayıt eklenmeli")
 
       const adminScope = await getTourismScopeContext({

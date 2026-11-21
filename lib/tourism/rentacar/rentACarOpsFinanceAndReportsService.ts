@@ -1647,25 +1647,21 @@ export async function buildRentACarExportPayload(
     filters: { branchId: params.branchId },
     summaryCards: [
       {
-        key: "totalRentalVehicles",
         label: "Kiralama Filosu / Ort. Doluluk",
         value: `${analytics.summary.totalRentalVehicles} Araç (%${analytics.summary.avgUtilizationPct})`,
         hint: `${analytics.summary.activeCount} aktif kirada · ${analytics.summary.completedCount} tamamlandı`,
       },
       {
-        key: "totalRevenueTry",
         label: "Toplam Kiralama + Ek Ücret Geliri",
         value: `${analytics.summary.totalRevenueTry.toLocaleString("tr-TR")} TRY`,
         hint: `${analytics.summary.totalReservations} rezervasyon kaydından`,
       },
       {
-        key: "totalFleetTcoExpenseTry",
         label: "Filo TCO Gideri (Yakıt/Bakım/Kira)",
         value: `${analytics.summary.totalFleetTcoExpenseTry.toLocaleString("tr-TR")} TRY`,
         hint: "Lojistik Filo TCO kayıtlarından hesaplandı",
       },
       {
-        key: "totalNetProfitTry",
         label: "Araç Filosu Net Katkı & İptal Oranı",
         value: `${analytics.summary.totalNetProfitTry.toLocaleString("tr-TR")} TRY`,
         hint: `İptal/No-Show oranı: %${analytics.summary.cancelOrNoShowRatePct}`,

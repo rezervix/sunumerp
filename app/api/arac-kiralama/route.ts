@@ -89,16 +89,17 @@ export async function GET(request: Request) {
     const revealKvkk = searchParams.get("revealKvkk") === "true"
     const demoCompanyId = searchParams.get("demoCompanyId")
 
-    const auth = await requireTourismAccess(
-      "turizm_rentacar",
-      "read",
-      { branchId, allowPartnerScope: true },
-      request
-    )
-    if (!auth.ok) return auth.response
+    const auth = await requireTourismAccess({
+      flagKey: "turizm_rentacar",
+      resource: "turizm_rentacar",
+      action: "read",
+      branchId,
+      allowPartnerScoped: true,
+    })
+    if (auth instanceof NextResponse) return auth
 
     const effectiveScope = applyDemoCompanyPerspectiveIfAllowed(
-      auth.context.scope,
+      auth.scope,
       demoCompanyId
     )
 
@@ -224,16 +225,17 @@ export async function POST(request: Request) {
     }
 
     const requiredPerm = resolveRequiredActionForOperation(action)
-    const auth = await requireTourismAccess(
-      "turizm_rentacar",
-      requiredPerm,
-      { branchId: body.branchId, allowPartnerScope: true },
-      request
-    )
-    if (!auth.ok) return auth.response
+    const auth = await requireTourismAccess({
+      flagKey: "turizm_rentacar",
+      resource: "turizm_rentacar",
+      action: requiredPerm,
+      branchId: body.branchId,
+      allowPartnerScoped: true,
+    })
+    if (auth instanceof NextResponse) return auth
 
     const scope = applyDemoCompanyPerspectiveIfAllowed(
-      auth.context.scope,
+      auth.scope,
       body.demoCompanyId
     )
 

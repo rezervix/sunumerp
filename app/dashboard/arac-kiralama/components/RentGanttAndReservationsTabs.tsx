@@ -8,7 +8,6 @@ import {
   Clock,
   FileText,
   Plus,
-  Printer,
   RefreshCw,
   Search,
   ShieldAlert,
@@ -1220,7 +1219,7 @@ export function RentReservationsAndContractsTab({
                   }
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white cursor-pointer"
                 >
-                  <Printer className="w-3.5 h-3.5 text-[#34D399]" />
+                  <FileText className="w-3.5 h-3.5 text-[#34D399]" />
                   Yazdır / PDF Olarak Kaydet
                 </button>
               )}
