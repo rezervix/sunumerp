@@ -69,7 +69,7 @@
 2. `lib/config/tourism-feature-flags.ts` & `app/dashboard/layout.tsx`: `IMPLEMENTED_TOURISM_HREFS` listesine `"/dashboard/arac-kiralama"` eklendi; yan menüde `"Araç Kiralama"` altına `"Araç Kiralama Yönetimi"` ve `"Mobil Teslim & İade Formu"` eklendi.
 3. `lib/tourism/seed/index.ts`: `faz2RentACarSeedModule` turizm seed kayıt defterine bağlandı.
 4. `scripts/test-turizm-faz1-altyapi.ts`: Additive araç ve tamamlanmış rota beyaz listesi kontrolleri Faz 2 uyumlu hale getirildi.
-5. `storage/ajans-kutuphanesi/.local-db.json`: Faz 2 demo seed kayıtları additive olarak işlendi (`SHA-256: E2BA0C37FBA4184772AE2FCA2D19F1ECAB16B79F219D4EC9C55EF48689A31859`).
+5. `storage/ajans-kutuphanesi/.local-db.json`: Faz 2 demo seed kayıtları additive olarak işlendi (`SHA-256: D3F4E76701FA4A83DCC7B4FCEA52DE24ACDF5AD489C3AECC26BAD1386D36F1C8`).
 
 ---
 

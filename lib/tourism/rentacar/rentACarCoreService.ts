@@ -148,12 +148,12 @@ export async function upsertVehicleClass(
   const saved = existing
     ? await dbAny.turizmRentVehicleClass.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentVehicleClass.create({
-        data: {
-          id: input.id || `trzm-rnt-cls-${Date.now().toString(36)}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: input.id || `trzm-rnt-cls-${Date.now().toString(36)}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -243,12 +243,12 @@ export async function upsertTariff(
   const saved = existing
     ? await dbAny.turizmRentTariff.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentTariff.create({
-        data: {
-          id: input.id || `trzm-rnt-trf-${Date.now().toString(36)}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: input.id || `trzm-rnt-trf-${Date.now().toString(36)}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -303,12 +303,12 @@ export async function upsertExtraService(
   const saved = existing
     ? await dbAny.turizmRentExtraService.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentExtraService.create({
-        data: {
-          id: input.id || `trzm-rnt-ext-${Date.now().toString(36)}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: input.id || `trzm-rnt-ext-${Date.now().toString(36)}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -393,8 +393,8 @@ export async function updateRentPolicyConfig(
     legalReviewNoticeText:
       String(
         input.legalReviewNoticeText ||
-          existing?.legalReviewNoticeText ||
-          "Bu metin yalnızca örnek/yer tutucu bir şablondur; canlı kullanımdan önce firmanızın hukuk müşaviri tarafından incelenmesi gerekir."
+        existing?.legalReviewNoticeText ||
+        "Bu metin yalnızca örnek/yer tutucu bir şablondur; canlı kullanımdan önce firmanızın hukuk müşaviri tarafından incelenmesi gerekir."
       ),
     updatedBy: scope.userId,
     updatedAt: new Date(),
@@ -403,12 +403,12 @@ export async function updateRentPolicyConfig(
   const saved = existing
     ? await dbAny.turizmRentPolicyConfig.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentPolicyConfig.create({
-        data: {
-          id: `trzm-rnt-policy-${branchId}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: `trzm-rnt-policy-${branchId}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -715,12 +715,12 @@ export async function upsertRentalCustomer(
   const saved = existing
     ? await dbAny.customer.update({ where: { id: existing.id }, data: payload })
     : await dbAny.customer.create({
-        data: {
-          id: input.id || `trzm-rnt-cust-${Date.now().toString(36)}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: input.id || `trzm-rnt-cust-${Date.now().toString(36)}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -795,7 +795,7 @@ async function assertVehicleAvailableForWindow(params: {
       wo.completedAt ||
       new Date(
         new Date(woStart).getTime() +
-          Math.max(24, Number(wo.downtimeMinutes || 1440) / 60) * 3_600_000
+        Math.max(24, Number(wo.downtimeMinutes || 1440) / 60) * 3_600_000
       )
     return doTimeIntervalsOverlap(startAt, endAt, woStart, woEnd)
   })
@@ -845,8 +845,8 @@ async function assertVehicleAvailableForWindow(params: {
     )
       .toISOString()
       .slice(0, 10)} – ${new Date(conflictingRes.endAt)
-      .toISOString()
-      .slice(0, 10)} aralığında '${conflictingRes.reservationNo}' numaralı rezervasyon ile dolu.`
+        .toISOString()
+        .slice(0, 10)} aralığında '${conflictingRes.reservationNo}' numaralı rezervasyon ile dolu.`
 
     await dbAny.turizmRentConflictAttemptLog.create({
       data: {
@@ -1001,15 +1001,15 @@ export async function createRentReservation(
       ),
       extraKmRateTry: Number(
         input.extraKmRateTry ??
-          tariff?.extraKmRateTry ??
-          vehicleClass?.extraKmUnitPriceTry ??
-          6.5
+        tariff?.extraKmRateTry ??
+        vehicleClass?.extraKmUnitPriceTry ??
+        6.5
       ),
       depositAmountTry: Number(
         input.depositRequiredTry ??
-          tariff?.depositAmountTry ??
-          vehicleClass?.defaultDepositTry ??
-          5000
+        tariff?.depositAmountTry ??
+        vehicleClass?.defaultDepositTry ??
+        5000
       ),
       selectedExtras,
       discountAmountTry: Number(input.discountAmountTry || 0),
@@ -1579,12 +1579,12 @@ export async function generateOrSignRentContract(
   const saved = existing
     ? await dbAny.turizmRentContract.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentContract.create({
-        data: {
-          id: `trzm-rnt-cnt-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-          ...payload,
-          createdAt: now,
-        },
-      })
+      data: {
+        id: `trzm-rnt-cnt-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        ...payload,
+        createdAt: now,
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
