@@ -101,12 +101,11 @@ export async function prepareOrRefreshKabisRecord(
 
   const kabisRefNo =
     existing?.kabisRefNo ||
-    `KBS-ARAC-${reservation.reservationNo.replace(/^RNT-/, "")}-${
-      notificationType === "KIRALAMA_KAPANIS"
-        ? "KPN"
-        : notificationType === "EK_SURUCU_BILDIRIMI"
-          ? "EKS"
-          : "ACL"
+    `KBS-ARAC-${reservation.reservationNo.replace(/^RNT-/, "")}-${notificationType === "KIRALAMA_KAPANIS"
+      ? "KPN"
+      : notificationType === "EK_SURUCU_BILDIRIMI"
+        ? "EKS"
+        : "ACL"
     }`
 
   const preparedPayload = {
@@ -166,12 +165,12 @@ export async function prepareOrRefreshKabisRecord(
   const saved = existing
     ? await dbAny.turizmRentKabisRecord.update({ where: { id: existing.id }, data: payload })
     : await dbAny.turizmRentKabisRecord.create({
-        data: {
-          id: `trzm-rnt-kbs-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-          ...payload,
-          createdAt: new Date(),
-        },
-      })
+      data: {
+        id: `trzm-rnt-kbs-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        ...payload,
+        createdAt: new Date(),
+      },
+    })
 
   await logTourismAudit({
     userId: scope.userId,
@@ -406,16 +405,16 @@ export async function submitVehicleHandoverInspection(
 
   const savedForm = existingDelivery
     ? await dbAny.turizmRentInspectionForm.update({
-        where: { id: existingDelivery.id },
-        data: formPayload,
-      })
+      where: { id: existingDelivery.id },
+      data: formPayload,
+    })
     : await dbAny.turizmRentInspectionForm.create({
-        data: {
-          id: `trzm-rnt-insp-del-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-          ...formPayload,
-          createdAt: now,
-        },
-      })
+      data: {
+        id: `trzm-rnt-insp-del-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        ...formPayload,
+        createdAt: now,
+      },
+    })
 
   // Rezervasyonu ACTIVE (Kirada) yap, Filo aracını IN_TRANSIT / RENTED olarak güncelle
   await dbAny.turizmRentReservation.update({
@@ -643,16 +642,16 @@ export async function submitVehicleReturnInspection(
 
   const savedReturnForm = existingReturn
     ? await dbAny.turizmRentInspectionForm.update({
-        where: { id: existingReturn.id },
-        data: returnFormPayload,
-      })
+      where: { id: existingReturn.id },
+      data: returnFormPayload,
+    })
     : await dbAny.turizmRentInspectionForm.create({
-        data: {
-          id: `trzm-rnt-insp-ret-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
-          ...returnFormPayload,
-          createdAt: actualReturnAt,
-        },
-      })
+      data: {
+        id: `trzm-rnt-insp-ret-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`,
+        ...returnFormPayload,
+        createdAt: actualReturnAt,
+      },
+    })
 
   // Ek ücret kalemlerini oluştur (Km aşımı, Yakıt farkı, Geç iade, Hasar, Depozito kesintisi/iadesi)
   const vatRatePct = Number(policy.defaultVatRatePct ?? 20)
@@ -895,9 +894,8 @@ export async function recordDepositOrExtraCharge(
         type: "INCOME",
         amount: totalWithVatTry,
         category: "Araç Kiralama Ek Ücret Geliri",
-        description: `${reservation.vehicle?.plate || "Araç"} — ${
-          RENT_CHARGE_ENTRY_TYPE_LABELS[input.entryType] || input.entryType
-        } (${reservation.reservationNo})`,
+        description: `${reservation.vehicle?.plate || "Araç"} — ${RENT_CHARGE_ENTRY_TYPE_LABELS[input.entryType] || input.entryType
+          } (${reservation.reservationNo})`,
         status: "approved",
         approvedBy: scope.userId,
         vehicleId: reservation.vehicleId,
@@ -1033,15 +1031,15 @@ export async function issueRentalInvoiceAndFinanceEntry(
     unitPrice: number
     vatRate: number
   }> = [
-    {
-      sku: `KIRA-${vehicle?.plate || "ARAC"}`,
-      name: `${vehicle?.plate || "Araç"} Kiralama Bedeli (${reservation.rentalDays} Gün)`,
-      quantity: Number(reservation.rentalDays || 1),
-      unit: "Gün",
-      unitPrice: Number(reservation.dailyRateTry || 0),
-      vatRate,
-    },
-  ]
+      {
+        sku: `KIRA-${vehicle?.plate || "ARAC"}`,
+        name: `${vehicle?.plate || "Araç"} Kiralama Bedeli (${reservation.rentalDays} Gün)`,
+        quantity: Number(reservation.rentalDays || 1),
+        unit: "Gün",
+        unitPrice: Number(reservation.dailyRateTry || 0),
+        vatRate,
+      },
+    ]
 
   if (Number(reservation.extrasTotalTry || 0) > 0) {
     lines.push({
@@ -1169,15 +1167,15 @@ export async function importOrRecordTollPasses(
     ? adapters.hgsToll.parseCsvRows(input.csvContent)
     : input.manualPass
       ? [
-          {
-            plate: String(input.manualPass.plate).toUpperCase(),
-            passDateTime: new Date(input.manualPass.passDateTime).toISOString(),
-            highwayOrBridgeName: input.manualPass.highwayOrBridgeName,
-            entryPoint: input.manualPass.entryPoint || null,
-            exitPoint: input.manualPass.exitPoint || null,
-            amountTry: Number(input.manualPass.amountTry || 0),
-          },
-        ]
+        {
+          plate: String(input.manualPass.plate).toUpperCase(),
+          passDateTime: new Date(input.manualPass.passDateTime).toISOString(),
+          highwayOrBridgeName: input.manualPass.highwayOrBridgeName,
+          entryPoint: input.manualPass.entryPoint || null,
+          exitPoint: input.manualPass.exitPoint || null,
+          amountTry: Number(input.manualPass.amountTry || 0),
+        },
+      ]
       : []
 
   const createdPasses: any[] = []
@@ -1358,9 +1356,8 @@ export async function reflectPenaltyOrTollToCustomer(
         unitPriceTry: totalReflectTry,
         vatRatePct: Number(policy.defaultVatRatePct ?? 20),
         status: "INVOICED",
-        calculationRuleNote: `Trafik cezası yansıtması (${penalty.penaltyNo}: ${penalty.reason})${
-          adminFee > 0 ? ` + ${adminFee} TRY hizmet bedeli` : ""
-        }`,
+        calculationRuleNote: `Trafik cezası yansıtması (${penalty.penaltyNo}: ${penalty.reason})${adminFee > 0 ? ` + ${adminFee} TRY hizmet bedeli` : ""
+          }`,
         postToFinance: true,
       },
       scope
@@ -1608,11 +1605,11 @@ export async function buildRentACarAnalyticsAndReports(
   const avgUtilizationPct =
     vehicleProfitabilityRows.length > 0
       ? Number(
-          (
-            vehicleProfitabilityRows.reduce((s, r) => s + r.utilizationPct, 0) /
-            vehicleProfitabilityRows.length
-          ).toFixed(1)
-        )
+        (
+          vehicleProfitabilityRows.reduce((s, r) => s + r.utilizationPct, 0) /
+          vehicleProfitabilityRows.length
+        ).toFixed(1)
+      )
       : 0
 
   return {
@@ -1643,7 +1640,16 @@ export async function buildRentACarExportPayload(
   return {
     moduleKey: "filo",
     title: "Araç Kiralama (Rent-a-Car) Doluluk, Gelir/Gider ve Filo TCO Kârlılık Raporu",
+    subtitle: "Kiralama gelirleri, ek ücretler ve Lojistik Filo TCO giderlerinden canlı hesaplanmıştır",
     generatedAt: new Date().toISOString(),
+    filtersApplied: {},
+    chartTitle: "Sınıf Bazlı Kiralama Geliri (TRY)",
+    chartData: analytics.classRevenueRows.map((c: any) => ({
+      name: c.className,
+      primaryValue: c.revenueTry,
+      primaryLabel: "Gelir (TRY)",
+    })),
+    filterOptions: {},
     summaryCards: [
       {
         label: "Kiralama Filosu / Ort. Doluluk",
@@ -1704,10 +1710,10 @@ export async function exportRentACarReportBuffer(
 
 export interface RentACarAlertItem {
   kind:
-    | "UPCOMING_PICKUP_OR_RETURN"
-    | "OVERDUE_RENTAL_RETURN"
-    | "MAINTENANCE_OR_DOC_CONFLICT"
-    | "PENDING_DEPOSIT_REFUND"
+  | "UPCOMING_PICKUP_OR_RETURN"
+  | "OVERDUE_RENTAL_RETURN"
+  | "MAINTENANCE_OR_DOC_CONFLICT"
+  | "PENDING_DEPOSIT_REFUND"
   severity: "warning" | "error"
   entityId: string
   title: string
