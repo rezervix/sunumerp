@@ -542,6 +542,32 @@ export const faz3HotelPmsSeedModule: LogisticsSeedModule = {
         consignmentQty: 0,
         updatedAt: now,
       })
+      add("stockMovement", {
+        id: `${mp.id}-smv-init`,
+        itemId: mp.id,
+        warehouseId: "wh-merkez-01",
+        movementType: "RECEIPT",
+        quantity: mp.onHandQty,
+        unit: "Adet",
+        valuationMethodUsed: "FIFO",
+        unitCost: mp.standardCost,
+        totalCost: Number((mp.standardCost * mp.onHandQty).toFixed(2)),
+        standardCostVariance: 0,
+        lotNumber: null,
+        serialNumber: null,
+        fromBinCode: null,
+        toBinCode: "MNB-RAF-01",
+        lpnCode: null,
+        referenceDocNo: `OTL-MNB-ACILIS-${mp.sku}`,
+        performedBy: "turizm-faz3-seed",
+        notes: "Otel minibar stok başlangıç giriş hareketi (bakiye-hareket eşitliği)",
+        idempotencyKey: `seed-init-${mp.id}`,
+        deviceId: null,
+        method: "SEED_INIT",
+        reservationId: null,
+        balanceAfterQty: mp.onHandQty,
+        createdAt: now,
+      })
     }
 
     // ── 6. ACENTA KONTENJANLARI (4 Kontenjan — Dolmaya Yakın Uyarılı Dahil) ───

@@ -541,7 +541,7 @@ async function main() {
       assert.ok(IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/otel"), "/dashboard/otel aktif menüde olmalı")
 
       const onlyOtelFlags = resolveTourismFeatureFlags(
-        { turizm_otel: true, turizm_rentacar: false, turizm_tur: false, turizm_partner: false },
+        { turizm_otel: true, turizm_rentacar: false, turizm_tur: false, turizm_b2b: false },
         null,
         false
       )
