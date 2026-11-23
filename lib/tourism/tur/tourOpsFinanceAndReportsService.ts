@@ -5,6 +5,7 @@
  * Raporlar (XLSX/PDF) ve Bildirim Servisi
  */
 
+// @ts-ignore — jspdf ESM bundle projede harici tip paketi olmadan kullanılır (exportReports.ts ile aynı kalıp)
 import { jsPDF } from "jspdf"
 import { prisma } from "@/lib/db"
 import { maskDocumentNo, maskPhone, maskTckn } from "@/lib/logistics/fleet/constantsAndHelpers"
@@ -1261,7 +1262,7 @@ export async function exportTourReportBuffer(
       { key: "netProfitTry", label: "Net Kâr (TRY)", format: "currency" },
       { key: "profitPerPassengerTry", label: "Yolcu Başı Kâr", format: "currency" },
     ],
-    rows: analytics.tourProfitabilityRows,
+    rows: analytics.tourProfitabilityRows as unknown as Array<Record<string, string | number | null>>,
   }
 
   const dateTag = new Date().toISOString().slice(0, 10)
@@ -1522,7 +1523,7 @@ export async function getTourWorkspaceSnapshot(
       guide: gdById.get(t.guideId) || null,
       seatLayout: lay ? { ...lay, slots: buildSeatSlotsFromLayout(lay) } : null,
       stops: tStops,
-      routeEstimate: estimateTourRouteMetrics(tStops),
+      routeEstimate: estimateTourRouteMetrics(tStops as any),
       bookings: tBookings.map((b: any) => ({
         ...b,
         customerName: custById.get(b.customerId)?.name || custById.get(b.customerId)?.company || "Müşteri",

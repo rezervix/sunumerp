@@ -4,8 +4,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   AlertTriangle,
-  ArrowLeft,
   CheckCircle2,
+  Compass,
   CreditCard,
   Download,
   RefreshCw,
@@ -248,7 +248,7 @@ export default function TourGuideMobilePage() {
                   href="/dashboard/tur"
                   className="flex items-center gap-1 rounded-lg border border-white/[0.1] bg-[#161B18] px-2.5 py-1.5 text-xs text-zinc-200"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Operasyon
+                  <Compass className="h-3.5 w-3.5" /> Operasyon
                 </Link>
               )}
               <button

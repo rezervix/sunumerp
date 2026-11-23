@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import {
   AlertTriangle,
   Building2,
-  Calendar,
+  CalendarDays,
   CheckCircle2,
   CreditCard,
   Download,
@@ -576,7 +576,7 @@ export function TourResourceGanttAndConflictsTab({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-[#34D399]" />
+          <CalendarDays className="h-4 w-4 text-[#34D399]" />
           <div>
             <h3 className="text-sm font-semibold text-zinc-100">
               Araç, Şoför & Rehber Çapraz Kaynak Çakışma Takvimi (Gantt)

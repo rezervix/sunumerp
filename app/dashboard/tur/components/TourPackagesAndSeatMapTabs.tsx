@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react';
 import {
   Building2,
-  Calendar,
+  CalendarDays,
   CheckCircle2,
   Compass,
   MapPin,
