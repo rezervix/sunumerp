@@ -16,9 +16,9 @@
     "outputPath": "dist"
   },
   "scripts": {
-    "build": "next build --webpack",
+    "build": "next build",
     "postbuild": "node -e \"if (!process.env.VERCEL) { try { require('child_process').execSync('node scripts/copy-static.js && node scripts/obfuscate.js', {stdio: 'inherit'}); } catch(e){ process.exit(1); } }\"",
-    "dev": "next dev --webpack -p 3020",
+    "dev": "next dev -p 3020",
     "lint": "eslint .",
     "start": "next start",
     "clean": "rimraf dist .next",

@@ -29,6 +29,8 @@ const nextConfig = {
   },
   turbopack: {},
   webpack: (config, { isServer }) => {
+    // Windows pathlerinde kullanıcı adında ünlem (!) işareti varsa Webpack loader syntax ile çakışır.
+    // context ve cacheDirectory temizlenir/normalize edilir.
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -42,7 +44,7 @@ const nextConfig = {
     return config;
   },
   experimental: {
-    webpackBuildWorker: true,
+    webpackBuildWorker: false,
     serverActions: {
       bodySizeLimit: '10gb',
     },

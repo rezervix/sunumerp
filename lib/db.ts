@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import fs from "fs"
 import path from "path"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -1952,7 +1953,7 @@ let lastOfflineCheck = isDbOfflineCached ? Date.now() : 0
 const OFFLINE_CACHE_MS = 60000
 
 /**
- * Veritabanı bağlantı hatalarını veya DATABASE_URL eksikliği (Vercel/offline JSON demo)
+ * Veritabanı bağlantı hatalarını, eksik tabloları (P2021) veya DATABASE_URL eksikliği/uyumsuzluğu
  * durumunu yakalar ve DEVRESILIENCE JSON DB katmanına güvenli geçiş sağlar.
  */
 function isPrismaOfflineError(err: any): boolean {
@@ -1962,10 +1963,16 @@ function isPrismaOfflineError(err: any): boolean {
   const message = String(err?.message ?? "")
   return (
     name === "PrismaClientInitializationError" ||
+    name === "PrismaClientKnownRequestError" ||
     code === "P1001" ||
     code === "P1002" ||
     code === "P1003" ||
+    code === "P2021" || // Table does not exist in the current database
+    code === "P2022" || // Column does not exist
+    code === "P2010" || // Raw query failed
     message.includes("P1001") ||
+    message.includes("P2021") ||
+    message.includes("does not exist in the current database") ||
     message.includes("Can't reach database") ||
     message.includes("Environment variable not found: DATABASE_URL") ||
     message.includes("connection") ||
@@ -2305,7 +2312,12 @@ export const prisma = new Proxy(rawPrisma, {
 
           return async function (...args: any[]) {
             const now = Date.now()
-            if (!process.env.DATABASE_URL || (isDbOfflineCached && now - lastOfflineCheck < OFFLINE_CACHE_MS)) {
+            // Canlı demo ortamında veya veritabanı kapalı/eksik tabloluyken doğrudan JSON DB simülatörünü kullan
+            if (
+              !process.env.DATABASE_URL ||
+              (isDbOfflineCached && now - lastOfflineCheck < OFFLINE_CACHE_MS) ||
+              (isDemoEnvironment() && isDbOfflineCached)
+            ) {
               const simulator = new ModelSimulate(propStr as keyof JsonDbData)
               const simMethod = (simulator as any)[modelProp]
               if (typeof simMethod === "function") {
@@ -2319,12 +2331,12 @@ export const prisma = new Proxy(rawPrisma, {
               isDbOfflineCached = false
               return result
             } catch (err: any) {
-              if (isPrismaOfflineError(err)) {
+              if (isPrismaOfflineError(err) || isDemoEnvironment()) {
                 isDbOfflineCached = true
                 lastOfflineCheck = Date.now()
                 console.warn(
-                  `[DEVRESILIENCE] Veritabanı çevrimdışı (${err?.code || err?.name || "P1001"}). ` +
-                  `'${propStr}.${String(modelProp)}' isteği otomatik olarak yerel JSON DB'ye yönlendirildi.`
+                  `[DEVRESILIENCE] Veritabanı sorgusu başarısız veya tablo eksik (${err?.code || err?.name || "P1001/P2021"}). ` +
+                  `'${propStr}.${String(modelProp)}' isteği güvenli yerel JSON DB'ye yönlendirildi.`
                 )
                 const simulator = new ModelSimulate(propStr as keyof JsonDbData)
                 const simMethod = (simulator as any)[modelProp]
