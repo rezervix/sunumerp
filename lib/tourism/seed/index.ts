@@ -15,6 +15,7 @@ import { faz2RentACarSeedModule } from "./faz2-arac-kiralama"
 import { faz3HotelPmsSeedModule } from "./faz3-otel-pms"
 import { faz4TourOperatorSeedModule } from "./faz4-tur-operatorlugu"
 import { faz5B2bPartnerNetworkSeedModule } from "./faz5-b2b-partner-agi"
+import { faz6IntegrationAndDashboardsSeedModule } from "./faz6-entegrasyon-ve-panolar"
 
 export const ALL_TOURISM_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz1TourismPartnerFoundationSeedModule,
@@ -22,6 +23,7 @@ export const ALL_TOURISM_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz3HotelPmsSeedModule,
   faz4TourOperatorSeedModule,
   faz5B2bPartnerNetworkSeedModule,
+  faz6IntegrationAndDashboardsSeedModule,
 ] as const
 
 function filterModules(onlyModuleKeys?: string[]): readonly LogisticsSeedModule[] {
@@ -58,4 +60,5 @@ export {
   faz3HotelPmsSeedModule,
   faz4TourOperatorSeedModule,
   faz5B2bPartnerNetworkSeedModule,
+  faz6IntegrationAndDashboardsSeedModule,
 }

@@ -17,6 +17,7 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { LogisticsExecutiveSummarySection } from "./components/LogisticsExecutiveSummarySection"
+import { TourismExecutiveSummarySection } from "./components/TourismExecutiveSummarySection"
 import { useLanguage } from "@/lib/context/LanguageContext"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 import {
@@ -612,6 +613,9 @@ export default function DashboardPage() {
 
       {/* ── Rol Bazlı Lojistik Yönetim Özeti ── */}
       <LogisticsExecutiveSummarySection branchId={currentBranch?.id} />
+
+      {/* ── Rol ve Sektör Bazlı Turizm & Ağırlama Yönetim Özeti ── */}
+      <TourismExecutiveSummarySection branchId={currentBranch?.id} />
 
       {/* ── Recent Activity Bento Card ── */}
       <StaggerItem className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6">
