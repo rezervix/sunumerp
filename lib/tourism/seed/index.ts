@@ -12,10 +12,12 @@ import {
 } from "@/lib/logistics/seed/framework"
 import { faz1TourismPartnerFoundationSeedModule } from "./faz1-partner-firmalar-ve-kullanicilar"
 import { faz2RentACarSeedModule } from "./faz2-arac-kiralama"
+import { faz3HotelPmsSeedModule } from "./faz3-otel-pms"
 
 export const ALL_TOURISM_SEED_MODULES: readonly LogisticsSeedModule[] = [
   faz1TourismPartnerFoundationSeedModule,
   faz2RentACarSeedModule,
+  faz3HotelPmsSeedModule,
 ] as const
 
 function filterModules(onlyModuleKeys?: string[]): readonly LogisticsSeedModule[] {
@@ -46,4 +48,8 @@ export function rollbackAllTourismDemoSeeds(options?: {
   })
 }
 
-export { faz1TourismPartnerFoundationSeedModule, faz2RentACarSeedModule }
+export {
+  faz1TourismPartnerFoundationSeedModule,
+  faz2RentACarSeedModule,
+  faz3HotelPmsSeedModule,
+}
