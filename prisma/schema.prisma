@@ -5441,21 +5441,31 @@ model TurizmPartnership {
 }
 
 model TurizmSharedResource {
-  id                String   @id @default(uuid())
-  ownerCompanyId    String
-  resourceType      String   @default("VEHICLE") // VEHICLE, DRIVER, GUIDE, ROOM_ALLOTMENT, TRANSFER_SLOT
-  externalRefId     String?
-  title             String
-  category          String?
-  city              String?
-  capacity          Int      @default(1)
-  netPartnerRateTry Float    @default(0)
-  currency          String   @default("TRY")
-  visibilityScope   String   @default("ALL_APPROVED_PARTNERS") // ALL_APPROVED_PARTNERS, SELECTED_PARTNERS, PRIVATE
-  status            String   @default("ACTIVE") // ACTIVE, PAUSED, ARCHIVED
-  notes             String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                    String    @id @default(uuid())
+  ownerCompanyId        String
+  resourceType          String    @default("VEHICLE") // VEHICLE, DRIVER, GUIDE, ROOM_ALLOTMENT, TRANSFER_SLOT
+  externalRefId         String?
+  title                 String
+  category              String?
+  city                  String?
+  capacity              Int       @default(1)
+  netPartnerRateTry     Float     @default(0)
+  currency              String    @default("TRY")
+  visibilityScope       String    @default("ALL_APPROVED_PARTNERS") // ALL_APPROVED_PARTNERS, SELECTED_PARTNERS, PRIVATE
+  status                String    @default("ACTIVE") // ACTIVE, PAUSED, ARCHIVED
+  notes                 String?
+  // Faz 5 additive fields
+  availableFrom         DateTime?
+  availableTo           DateTime?
+  minDurationDays       Int       @default(1)
+  commissionRatePct     Float     @default(10)
+  approvalMode          String    @default("MANUAL") // AUTO, MANUAL
+  allowedPartnerIdsJson String?
+  hideSensitiveFields   Boolean   @default(true)
+  sensitiveMetaJson     String?
+  withdrawalRuleNote    String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   ownerCompany      TurizmPartnerCompany     @relation("SharedResourceOwner", fields: [ownerCompanyId], references: [id], onDelete: Cascade)
   crossReservations TurizmCrossReservation[]
@@ -5465,24 +5475,38 @@ model TurizmSharedResource {
 }
 
 model TurizmCrossReservation {
-  id                  String    @id @default(uuid())
-  reservationNo       String    @unique
-  ownerCompanyId      String
-  bookingCompanyId    String
-  partnershipId       String?
-  sharedResourceId    String?
-  resourceType        String    @default("VEHICLE")
-  startAt             DateTime
-  endAt               DateTime
-  status              String    @default("HOLD") // HOLD, PENDING_APPROVAL, CONFIRMED, REJECTED, CANCELLED, COMPLETED
-  isWhiteLabel        Boolean   @default(true)
-  netAmountTry        Float     @default(0)
-  commissionAmountTry Float     @default(0)
-  currency            String    @default("TRY")
-  lockExpiresAt       DateTime?
-  notes               String?
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                   String    @id @default(uuid())
+  reservationNo        String    @unique
+  ownerCompanyId       String
+  bookingCompanyId     String
+  partnershipId        String?
+  sharedResourceId     String?
+  resourceType         String    @default("VEHICLE")
+  startAt              DateTime
+  endAt                DateTime
+  status               String    @default("HOLD") // HOLD, PENDING_APPROVAL, CONFIRMED, REJECTED, CANCELLED, COMPLETED
+  isWhiteLabel         Boolean   @default(true)
+  netAmountTry         Float     @default(0)
+  commissionAmountTry  Float     @default(0)
+  currency             String    @default("TRY")
+  lockExpiresAt        DateTime?
+  notes                String?
+  // Faz 5 additive fields
+  quantity             Int       @default(1)
+  guestOrCustomerLabel String?
+  commissionRatePct    Float     @default(10)
+  ownerNetAmountTry    Float     @default(0)
+  grossAmountTry       Float     @default(0)
+  underlyingModuleType String?   // RENTACAR, HOTEL, TOUR, TRANSFER
+  underlyingRecordId   String?
+  approvedByUserId     String?
+  approvedAt           DateTime?
+  rejectedReason       String?
+  settlementId         String?
+  eDocumentRefNo       String?
+  eDocumentIssuedAt    DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   ownerCompany   TurizmPartnerCompany  @relation("CrossBookingOwner", fields: [ownerCompanyId], references: [id], onDelete: Cascade)
   bookingCompany TurizmPartnerCompany  @relation("CrossBookingMaker", fields: [bookingCompanyId], references: [id], onDelete: Cascade)
@@ -6429,6 +6453,108 @@ model TurizmTourFieldLog {
   recordedAt            DateTime @default(now())
 
   @@index([tourId, recordedAt])
+}
+
+// ── Turizm Faz 5: B2B Partner Ağı — turizm_b2b ────────────────────────────────
+
+model TurizmPartnershipHistoryLog {
+  id             String   @id @default(uuid())
+  partnershipId  String
+  fromStatus     String?
+  toStatus       String
+  actorCompanyId String?
+  actorUserId    String?
+  actorName      String?
+  reason         String?
+  createdAt      DateTime @default(now())
+
+  @@index([partnershipId, createdAt])
+}
+
+model TurizmPartnerSettlement {
+  id                  String    @id @default(uuid())
+  settlementNo        String    @unique
+  periodLabel         String
+  periodStart         DateTime
+  periodEnd           DateTime
+  ownerCompanyId      String
+  bookingCompanyId    String
+  reservationCount    Int       @default(0)
+  grossVolumeTry      Float     @default(0)
+  commissionTotalTry  Float     @default(0)
+  ownerNetPayableTry  Float     @default(0)
+  adjustmentAmountTry Float     @default(0)
+  adjustmentReason    String?
+  status              String    @default("PENDING_COUNTERPARTY") // DRAFT, PENDING_COUNTERPARTY, APPROVED_BOTH, DISPUTED, SETTLED
+  ownerApprovedAt     DateTime?
+  ownerApprovedBy     String?
+  bookerApprovedAt    DateTime?
+  bookerApprovedBy    String?
+  disputeNote         String?
+  eDocumentRefNo      String?
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([ownerCompanyId, status])
+  @@index([bookingCompanyId, status])
+}
+
+model TurizmPartnerLedgerEntry {
+  id                    String    @id @default(uuid())
+  entryNo               String    @unique
+  pairKey               String
+  companyId             String
+  counterpartyCompanyId String
+  crossReservationId    String?
+  settlementId          String?
+  entryType             String    @default("RECEIVABLE") // RECEIVABLE, PAYABLE, COMMISSION_INCOME, COMMISSION_EXPENSE, ADJUSTMENT, PAYMENT
+  direction             String    @default("DEBIT") // DEBIT, CREDIT
+  amountTry             Float     @default(0)
+  currency              String    @default("TRY")
+  status                String    @default("OPEN") // OPEN, SETTLED, VOID
+  dueDate               DateTime?
+  financeId             String?
+  eDocumentRefNo        String?
+  description           String
+  createdAt             DateTime  @default(now())
+
+  @@index([companyId, status])
+  @@index([counterpartyCompanyId])
+  @@index([pairKey])
+  @@index([crossReservationId])
+}
+
+model TurizmPartnerMessage {
+  id                 String   @id @default(uuid())
+  crossReservationId String
+  senderCompanyId    String
+  senderUserId       String?
+  senderName         String
+  messageType        String   @default("NOTE") // NOTE, APPROVAL_REQUEST, CHANGE_REQUEST, SYSTEM
+  body               String
+  createdAt          DateTime @default(now())
+
+  @@index([crossReservationId, createdAt])
+}
+
+model TurizmPartnerConflictLog {
+  id                         String   @id @default(uuid())
+  sharedResourceId           String?
+  resourceTitle              String
+  ownerCompanyId             String
+  bookingCompanyId           String
+  attemptedStartAt           DateTime
+  attemptedEndAt             DateTime
+  conflictReservationNo      String?
+  rejectionCode              String
+  rejectionMessage           String
+  alternativesSuggestedCount Int      @default(0)
+  actorUserId                String?
+  attemptedAt                DateTime @default(now())
+
+  @@index([ownerCompanyId, attemptedAt])
+  @@index([bookingCompanyId, attemptedAt])
 }
 
 

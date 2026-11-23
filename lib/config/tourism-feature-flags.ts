@@ -278,6 +278,7 @@ export const IMPLEMENTED_TOURISM_HREFS: readonly string[] = [
   "/dashboard/arac-kiralama",
   "/dashboard/otel",
   "/dashboard/tur",
+  "/dashboard/partner-agi",
 ] as const
 
 export function isTourismModuleMenuVisible(
