@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import {
   AlertTriangle,
-  ArrowRightLeft,
+  ArrowRight,
   Building2,
   CheckCircle2,
   CreditCard,
@@ -283,7 +283,7 @@ export default function PartnerAgiDashboardPage() {
         {(
           [
             ["pool", "Ortak Kaynak Havuzu & Takvim", Globe],
-            ["reservations", "Çapraz Rezervasyonlar & Mesajlar", ArrowRightLeft],
+            ["reservations", "Çapraz Rezervasyonlar & Mesajlar", ArrowRight],
             ["partners", "Partner Firmalar & Onay", Users],
             ["settlements", "Komisyon & Mutabakat", ShieldCheck],
             ["ledger", "Karşılıklı Cari", CreditCard],

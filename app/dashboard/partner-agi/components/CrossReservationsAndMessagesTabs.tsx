@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import {
   AlertTriangle,
-  ArrowRightLeft,
+  ArrowRight,
   CalendarDays,
   CheckCircle2,
   FileText,
@@ -39,7 +39,7 @@ export function CrossReservationsAndMessagesTabs({ data, busy, onAction }: Cross
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-            <ArrowRightLeft className="h-4 w-4 text-emerald-400" /> Çapraz Rezervasyonlar ve Partner Mesajlaşma
+            <ArrowRight className="h-4 w-4 text-emerald-400" /> Çapraz Rezervasyonlar ve Partner Mesajlaşma
           </h2>
           <p className="text-xs text-zinc-400">
             Gelen (kaynak sahibi olduğunuz) ve giden (partnerden rezerve ettiğiniz) white-label rezervasyonları yönetin.
