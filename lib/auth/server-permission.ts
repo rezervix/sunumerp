@@ -14,6 +14,7 @@ import {
 } from "@/lib/auth/permissions"
 import { verifyIntegrityHeaders } from "./integrity"
 import { getSystemConfig, isSecurityDisabled } from "@/lib/system-config"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
 
@@ -28,6 +29,7 @@ export interface AuthPayload {
 /**
  * Cookie'den JWT token'ı doğrular ve payload döndürür.
  * Oturum durumunu (UserSession) veritabanından doğrular.
+ * Demo ortamında token yoksa veya geçersizse otomatik demo Super Admin payload döner.
  */
 export async function getAuthPayload(): Promise<AuthPayload | null> {
   try {
@@ -40,14 +42,50 @@ export async function getAuthPayload(): Promise<AuthPayload | null> {
 
     const cookieStore = await cookies()
     const token = cookieStore.get("auth-token")?.value
-    if (!token) return null
+    if (!token) {
+      if (isDemoEnvironment()) {
+        return {
+          userId: "user-admin",
+          username: "admin",
+          branchId: "local-debug-branch",
+          roleName: "Super Admin",
+        }
+      }
+      return null
+    }
 
     const secret = new TextEncoder().encode(JWT_SECRET)
-    const { payload } = await jwtVerify(token, secret)
+    let payload: any
+    try {
+      const verified = await jwtVerify(token, secret)
+      payload = verified.payload
+    } catch (jwtErr) {
+      if (isDemoEnvironment()) {
+        return {
+          userId: "user-admin",
+          username: "admin",
+          branchId: "local-debug-branch",
+          roleName: "Super Admin",
+        }
+      }
+      return null
+    }
+
     const authPayload = payload as unknown as AuthPayload
 
     // Debug kullanıcısı ise veritabanı kontrolünü atla — yalnızca development ortamında geçerlidir
     if (authPayload.userId === DEBUG_USER_ID && process.env.NODE_ENV !== "production") {
+      return authPayload
+    }
+
+    // Demo kullanıcıları (user-admin / demo-user) için demo ortamında DB kontrolü zorlamaz
+    if (
+      isDemoEnvironment() &&
+      (authPayload.userId === "user-admin" ||
+        authPayload.userId === "demo-user" ||
+        authPayload.username === "admin" ||
+        authPayload.username === "demo")
+    ) {
       return authPayload
     }
 
@@ -57,6 +95,9 @@ export async function getAuthPayload(): Promise<AuthPayload | null> {
         where: { id: authPayload.sessionId }
       })
       if (!session || !session.isActive || session.revokedAt) {
+        if (isDemoEnvironment()) {
+          return authPayload
+        }
         console.warn(`[getAuthPayload] Session ${authPayload.sessionId} is inactive or revoked.`)
         return null
       }
@@ -64,12 +105,23 @@ export async function getAuthPayload(): Promise<AuthPayload | null> {
       // sessionId yoksa (eski token) sadece kullanıcının aktifliğini doğrula
       const user = await prisma.user.findUnique({ where: { id: authPayload.userId } })
       if (!user || !user.isActive) {
+        if (isDemoEnvironment()) {
+          return authPayload
+        }
         return null
       }
     }
 
     return authPayload
   } catch {
+    if (isDemoEnvironment()) {
+      return {
+        userId: "user-admin",
+        username: "admin",
+        branchId: "local-debug-branch",
+        roleName: "Super Admin",
+      }
+    }
     return null
   }
 }
@@ -164,6 +216,11 @@ export async function checkPermission(
 export async function isSuperAdminUser(userId: string): Promise<boolean> {
   // DEBUG_USER_ID bypass yalnızca development ortamında etkin
   if (userId === DEBUG_USER_ID && process.env.NODE_ENV !== "production") return true
+
+  // Demo ortamında user-admin, demo-user ve local-debug-user daima Super Admin yetkisine sahiptir
+  if (isDemoEnvironment() && (userId === "user-admin" || userId === "demo-user" || userId === "local-debug-user")) {
+    return true
+  }
 
   try {
     const adminRoles = await prisma.userBranchRole.findFirst({

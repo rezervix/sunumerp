@@ -7,6 +7,7 @@
 
 import { prisma } from "@/lib/db"
 import { getServerTourismFeatureFlags } from "@/lib/system-config"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 import type { TourismScopeContext } from "@/lib/tourism/types"
 
 export interface TourismExecutiveSummaryResponse {
@@ -46,6 +47,7 @@ export async function getTourismExecutiveSummary(
   scope: TourismScopeContext
 ): Promise<TourismExecutiveSummaryResponse> {
   const flags = getServerTourismFeatureFlags(scope.branchId)
+  const isDemo = isDemoEnvironment()
   const permittedModules: string[] = []
   const modules: TourismExecutiveSummaryResponse["modules"] = {}
 
@@ -67,10 +69,10 @@ export async function getTourismExecutiveSummary(
     const utilPct = Math.min(100, Math.round((rentedVehicleIds.size / totalVehicles) * 100))
 
     modules.rentacar = {
-      activeRentalsCount: activeRentals.length,
-      availableVehiclesCount: availableCount,
-      monthlyRevenueTry: Math.round(monthlyRev),
-      utilizationRatePct: utilPct,
+      activeRentalsCount: activeRentals.length || (isDemo ? 12 : 0),
+      availableVehiclesCount: availableCount || (isDemo ? 23 : 0),
+      monthlyRevenueTry: Math.round(monthlyRev) || (isDemo ? 485000 : 0),
+      utilizationRatePct: utilPct || (isDemo ? 78 : 0),
     }
   }
 
@@ -92,11 +94,11 @@ export async function getTourismExecutiveSummary(
       .reduce((sum: number, r: any) => sum + (r.balanceDueTry || 0), 0)
 
     modules.hotel = {
-      todayCheckInsCount: allHotelRes.filter((r: any) => r.status === "CONFIRMED").length,
-      todayCheckOutsCount: checkedIn.length,
-      occupancyRatePct: occPct,
-      dirtyRoomsCount: dirtyRooms,
-      openFoliosBalanceTry: Math.round(openFolioBalance),
+      todayCheckInsCount: allHotelRes.filter((r: any) => r.status === "CONFIRMED").length || (isDemo ? 6 : 0),
+      todayCheckOutsCount: checkedIn.length || (isDemo ? 4 : 0),
+      occupancyRatePct: occPct || (isDemo ? 82 : 0),
+      dirtyRoomsCount: dirtyRooms || (isDemo ? 3 : 0),
+      openFoliosBalanceTry: Math.round(openFolioBalance) || (isDemo ? 142500 : 0),
     }
   }
 
@@ -115,10 +117,10 @@ export async function getTourismExecutiveSummary(
       .reduce((sum: number, b: any) => sum + (b.passengerCount || 1), 0)
 
     modules.tour = {
-      upcomingToursCount: activeTours.length,
-      totalPassengersCount: totalPax,
+      upcomingToursCount: activeTours.length || (isDemo ? 8 : 0),
+      totalPassengersCount: totalPax || (isDemo ? 144 : 0),
       averageProfitMarginPct: 28,
-      activeGuidesCount: allGuides.filter((g: any) => g.isActive !== false).length,
+      activeGuidesCount: allGuides.filter((g: any) => g.isActive !== false).length || (isDemo ? 4 : 0),
     }
   }
 
@@ -144,11 +146,11 @@ export async function getTourismExecutiveSummary(
       .reduce((s: number, l: any) => s + (l.amountTry || 0), 0)
 
     modules.b2b = {
-      approvedPartnersCount: approvedPartners,
-      activeCrossBookingsCount: activeCross,
-      sharedResourcesCount: allShared.filter((s: any) => s.status === "ACTIVE").length,
-      openReceivableTry: Math.round(openRec),
-      openPayableTry: Math.round(openPay),
+      approvedPartnersCount: approvedPartners || (isDemo ? 5 : 0),
+      activeCrossBookingsCount: activeCross || (isDemo ? 7 : 0),
+      sharedResourcesCount: allShared.filter((s: any) => s.status === "ACTIVE").length || (isDemo ? 14 : 0),
+      openReceivableTry: Math.round(openRec) || (isDemo ? 128400 : 0),
+      openPayableTry: Math.round(openPay) || (isDemo ? 86500 : 0),
     }
   }
 

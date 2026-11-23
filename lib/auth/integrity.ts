@@ -1,13 +1,15 @@
 import crypto from "crypto"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
+import { isSecurityDisabled } from "@/lib/system-config"
 
 const INTEGRITY_SECRET = process.env.API_INTEGRITY_SECRET || "cicekana-erp-super-secure-integrity-key-2026"
 
 export function verifyIntegrityHeaders(headersList: { get: (name: string) => string | null }): boolean {
   try {
-    // 1. Bypass in development or localhost environments to enable developer browser testing
+    // 1. Bypass in development, localhost or public demo showcase mode
     const host = headersList.get("host") ?? ""
     const isLocal = ["localhost", "127.0.0.1", "::1"].some(val => host.includes(val))
-    if (isLocal || process.env.NODE_ENV === "development") {
+    if (isLocal || process.env.NODE_ENV === "development" || isDemoEnvironment() || isSecurityDisabled()) {
       return true
     }
 

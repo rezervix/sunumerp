@@ -4,6 +4,7 @@ import { jwtVerify } from "jose"
 import { prisma } from "@/lib/db"
 import { createLocalDebugSession, DEBUG_USER_ID } from "@/lib/auth/local-debug"
 import { isPlatformDeveloperUser } from "@/lib/auth/server-permission"
+import { isDemoEnvironment } from "@/lib/config/production-feature-flags"
 
 if (!process.env.JWT_SECRET) {
     console.warn(
@@ -13,6 +14,92 @@ if (!process.env.JWT_SECRET) {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
+
+function getDemoSuperAdminResponse(token?: string) {
+    const defaultBranches = [
+        { id: "local-debug-branch", name: "Merkez Şube (İstanbul Levent)", code: "HQ", themeColor: "#2563EB", isActive: true },
+        { id: "branch-ankara", name: "Ankara Çankaya Şubesi", code: "ANK-001", themeColor: "#10B981", isActive: true },
+        { id: "branch-izmir", name: "İzmir Alsancak Şubesi", code: "IZM-001", themeColor: "#8B5CF6", isActive: true },
+        { id: "branch-bursa", name: "Bursa Nilüfer Şubesi", code: "BUR-001", themeColor: "#F59E0B", isActive: true }
+    ]
+    const fullPermissions = {
+        dashboard: ["read", "create", "update", "delete"],
+        branches: ["read", "create", "update", "delete", "manage_all"],
+        users: ["read", "create", "update", "delete", "assign_roles"],
+        customers: ["read", "create", "update", "delete", "view_all_branches"],
+        leads: ["read", "create", "update", "delete", "view_all_branches"],
+        financial: ["read", "create", "update", "delete", "view_all_branches"],
+        orders: ["read", "create", "update", "delete", "approve", "view_all_branches"],
+        files: ["read", "create", "update", "delete", "view_all_branches"],
+        reports: ["read", "create", "update", "delete"],
+        settings: ["manage_system", "manage_branches"],
+        magaza: ["read", "create", "update", "delete"],
+        b2b: ["read", "create", "update", "delete"],
+        cargo: ["read", "create", "update", "delete"],
+        chat: ["read", "create", "update", "delete"],
+        announcements: ["read", "create", "update", "delete"],
+        takvim: ["read", "create", "update", "delete"],
+        yapilacaklar: ["read", "create", "update", "delete"],
+        todos: ["read", "create", "update", "delete"],
+        notlarim: ["read", "create", "update", "delete"],
+        notes: ["read", "create", "update", "delete"],
+        hesaplama: ["read", "create", "update", "delete"],
+        socialMedia: ["read", "create", "update", "delete"],
+        "sosyal-medya": ["read", "create", "update", "delete"],
+        ai: ["read", "upload"],
+        hr: ["read", "create", "update", "delete"],
+        projects: ["read", "create", "update", "delete"],
+        tasks: ["read", "create", "update", "delete"],
+        stok: ["read", "create", "update", "delete"],
+        wms: ["read", "create", "update", "delete"],
+        satinalma: ["read", "create", "update", "delete"],
+        omnichannel: ["read", "create", "update", "delete"],
+        "stok-ai": ["read", "create", "update", "delete"],
+        lojistik_wms: ["read", "create", "update", "delete"],
+        lojistik_tedarikci: ["read", "create", "update", "delete"],
+        lojistik_sevkiyat_rota: ["read", "create", "update", "delete"],
+        lojistik_filo: ["read", "create", "update", "delete"],
+        lojistik_iade: ["read", "create", "update", "delete"],
+        turizm_rentacar: ["read", "create", "update", "delete"],
+        turizm_otel: ["read", "create", "update", "delete"],
+        turizm_tur: ["read", "create", "update", "delete"],
+        turizm_b2b: ["read", "create", "update", "delete"],
+        uretim_bom_rota: ["read", "create", "update", "delete"],
+        uretim_mrp_mps: ["read", "create", "update", "delete"],
+        uretim_is_emri: ["read", "create", "update", "delete"],
+        uretim_kapasite: ["read", "create", "update", "delete"],
+        uretim_kalite: ["read", "create", "update", "delete"],
+        uretim_bakim: ["read", "create", "update", "delete"],
+    }
+    const demoUser = {
+        id: "user-admin",
+        username: "admin",
+        email: "demo@sunumerp.com",
+        fullName: "Sunum ERP Demo Yöneticisi",
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+    }
+    const mappedBranches = defaultBranches.map(b => ({
+        id: `ubr-${b.id}`,
+        userId: demoUser.id,
+        branchId: b.id,
+        roleId: "role-super-admin",
+        branch: b,
+        role: {
+            id: "role-super-admin",
+            name: "Super Admin",
+            description: "Demo Yetkili Yönetici",
+            permissions: fullPermissions
+        }
+    }))
+    return NextResponse.json({
+        user: demoUser,
+        branches: mappedBranches,
+        isPlatformDeveloper: true,
+        token: token || "demo-token"
+    })
+}
 
 export async function GET() {
     try {
@@ -25,6 +112,10 @@ export async function GET() {
         )
 
         if (!token) {
+            if (isDemoEnvironment()) {
+                console.log("[auth/me] No token found in Demo mode -> returning Demo Super Admin session")
+                return getDemoSuperAdminResponse()
+            }
             console.log("[auth/me] No token found -> returning 401 Not authenticated")
             return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
         }
@@ -37,6 +128,10 @@ export async function GET() {
             payload = result.payload as typeof payload
             console.log("[auth/me] JWT verified. Payload userId:", payload.userId)
         } catch (jwtError) {
+            if (isDemoEnvironment()) {
+                console.log("[auth/me] Token verification failed in Demo mode -> returning Demo Super Admin session")
+                return getDemoSuperAdminResponse(token)
+            }
             console.error("[auth/me] Token verification failed:", jwtError)
             return NextResponse.json({ error: "Token verification failed" }, { status: 401 })
         }

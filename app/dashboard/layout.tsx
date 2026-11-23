@@ -398,80 +398,23 @@ function SidebarContent({
       ],
     },
     {
-      id: "satis",
-      title: (t.nav as any).sales || "Satış / Operasyon",
-      icon: ShoppingBag,
+      id: "turizm-ve-otel",
+      title: "Turizm & Ağırlama",
+      icon: Globe,
       items: [
-        { name: t.nav.orders, href: "/dashboard/orders", icon: ShoppingBag, resource: "orders" },
-        { name: t.nav.store, href: "/dashboard/b2b", icon: Store, resource: "magaza" },
-        { name: t.nav.customers, href: "/dashboard/customers", icon: Users, resource: "customers" },
-        { name: t.nav.leads, href: "/dashboard/leads", icon: TrendingUp, resource: "leads" },
-        { name: t.nav.cargo, href: "/dashboard/cargo", icon: Truck, resource: "cargo" },
-      ],
-    },
-    {
-      id: "stok",
-      title: "Stok ve Depo Yönetimi",
-      icon: Boxes,
-      items: [
-        { name: "1. Stok Kartları & Envanter", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
-        { name: "2. Depo Operasyonları & Sayım (WMS)", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
-        { name: "3. Satın Alma & Otomatik Sipariş", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
-        { name: "4. Çok Kanallı Satış & Sevkiyat", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
-        { name: "5. AI Analiz & Ayarlar", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
-      ],
-    },
-    ...(showLogisticsFleetCategory
-      ? [
-          {
-            id: "lojistik-filo",
-            title: "Lojistik & Filo",
-            icon: Truck,
-            items: [
-              ...(logisticsFlags.lojistik_sevkiyat_rota &&
-              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/sevkiyat")
-                ? [{ name: "1. Sevkiyat & Rota Planlama", href: "/dashboard/sevkiyat", icon: Truck, resource: "lojistik_sevkiyat_rota" }]
-                : []),
-              ...(logisticsFlags.lojistik_filo &&
-              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/filo")
-                ? [{ name: "2. Araç & Sürücü Yönetimi", href: "/dashboard/filo", icon: Truck, resource: "lojistik_filo" }]
-                : []),
-              ...(logisticsFlags.lojistik_iade &&
-              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/iade")
-                ? [{ name: "3. İade & Ters Lojistik", href: "/dashboard/iade", icon: ShieldCheck, resource: "lojistik_iade" }]
-                : []),
-              ...(showLogisticsReportsMenu &&
-              IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/lojistik-raporlar")
-                ? [
-                    {
-                      name: "Lojistik Raporları",
-                      href: "/dashboard/lojistik-raporlar",
-                      icon: BarChart3,
-                      anyResources: [
-                        "lojistik_wms",
-                        "lojistik_tedarikci",
-                        "lojistik_sevkiyat_rota",
-                        "lojistik_filo",
-                        "lojistik_iade",
-                      ],
-                      excludeSupplier: true,
-                    },
-                  ]
-                : []),
-            ],
-          } satisfies NavCategoryDef,
-        ]
-      : []),
-    ...(tourismFlags.turizm_rentacar &&
-    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/arac-kiralama")
-      ? [
-          {
-            id: "turizm-rentacar",
-            title: "Araç Kiralama",
-            icon: Truck,
-            items: [
+        {
+          name: "Turizm Yönetim Panosu",
+          href: "/dashboard/turizm",
+          icon: LayoutDashboard,
+          resource: "turizm_rentacar",
+          excludeSupplier: true,
+          exact: true,
+        },
+        ...(tourismFlags.turizm_rentacar &&
+        IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/arac-kiralama")
+          ? [
               {
-                name: "Araç Kiralama Yönetimi",
+                name: "Araç Kiralama (Rent-a-Car)",
                 href: "/dashboard/arac-kiralama",
                 icon: Truck,
                 resource: "turizm_rentacar",
@@ -479,26 +422,19 @@ function SidebarContent({
                 exact: true,
               },
               {
-                name: "Mobil Teslim & İade Formu",
+                name: "Mobil Teslim & İade",
                 href: "/dashboard/arac-kiralama/teslim-iade",
                 icon: ClipboardCheck,
                 resource: "turizm_rentacar",
                 excludeSupplier: true,
               },
-            ],
-          } satisfies NavCategoryDef,
-        ]
-      : []),
-    ...(tourismFlags.turizm_otel &&
-    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/otel")
-      ? [
-          {
-            id: "turizm-otel",
-            title: "Otel Yönetimi",
-            icon: Building2,
-            items: [
+            ]
+          : []),
+        ...(tourismFlags.turizm_otel &&
+        IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/otel")
+          ? [
               {
-                name: "Otel Ön Büro & PMS",
+                name: "Otel Ön Büro (Mini PMS)",
                 href: "/dashboard/otel",
                 icon: Building2,
                 resource: "turizm_otel",
@@ -506,26 +442,19 @@ function SidebarContent({
                 exact: true,
               },
               {
-                name: "Housekeeping Mobil Görevler",
+                name: "Housekeeping Görevleri",
                 href: "/dashboard/otel/housekeeping",
                 icon: ClipboardCheck,
                 resource: "turizm_otel",
                 excludeSupplier: true,
               },
-            ],
-          } satisfies NavCategoryDef,
-        ]
-      : []),
-    ...(tourismFlags.turizm_tur &&
-    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/tur")
-      ? [
-          {
-            id: "turizm-tur",
-            title: "Tur Operatörlüğü",
-            icon: Globe,
-            items: [
+            ]
+          : []),
+        ...(tourismFlags.turizm_tur &&
+        IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/tur")
+          ? [
               {
-                name: "Tur Planlama & Operasyon",
+                name: "Tur Operatörlüğü & Paketler",
                 href: "/dashboard/tur",
                 icon: Globe,
                 resource: "turizm_tur",
@@ -533,24 +462,17 @@ function SidebarContent({
                 exact: true,
               },
               {
-                name: "Rehber & Şoför Mobil Saha",
+                name: "Rehber & Şoför Sahası",
                 href: "/dashboard/tur/rehber",
                 icon: ClipboardCheck,
                 resource: "turizm_tur",
                 excludeSupplier: true,
               },
-            ],
-          } satisfies NavCategoryDef,
-        ]
-      : []),
-    ...(tourismFlags.turizm_b2b &&
-    IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/partner-agi")
-      ? [
-          {
-            id: "turizm-b2b",
-            title: "Partner Ağı",
-            icon: Users,
-            items: [
+            ]
+          : []),
+        ...(tourismFlags.turizm_b2b &&
+        IMPLEMENTED_TOURISM_HREFS.includes("/dashboard/partner-agi")
+          ? [
               {
                 name: "B2B Partner Ağı & Havuz",
                 href: "/dashboard/partner-agi",
@@ -558,15 +480,64 @@ function SidebarContent({
                 resource: "turizm_b2b",
                 excludeSupplier: true,
               },
-            ],
-          } satisfies NavCategoryDef,
-        ]
-      : []),
+            ]
+          : []),
+        {
+          name: "Birleşik Turizm Raporları",
+          href: "/dashboard/turizm/raporlar",
+          icon: BarChart3,
+          resource: "turizm_rentacar",
+          excludeSupplier: true,
+        },
+      ],
+    },
+    {
+      id: "lojistik-ve-tedarik",
+      title: "Lojistik & Tedarik Zinciri",
+      icon: Truck,
+      items: [
+        { name: "1. Stok Kartları & Envanter", href: "/dashboard/stok", icon: Boxes, resource: "stok" },
+        { name: "2. Depo Operasyonları & Sayım (WMS)", href: "/dashboard/wms", icon: Warehouse, resource: "wms" },
+        { name: "3. Satın Alma & Otomatik Sipariş", href: "/dashboard/satinalma", icon: ShoppingCart, resource: "satinalma" },
+        { name: "4. Çok Kanallı Satış & Sevkiyat", href: "/dashboard/omnichannel", icon: Globe, resource: "omnichannel" },
+        ...(logisticsFlags.lojistik_sevkiyat_rota &&
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/sevkiyat")
+          ? [{ name: "5. Sevkiyat & Rota Planlama", href: "/dashboard/sevkiyat", icon: Truck, resource: "lojistik_sevkiyat_rota" }]
+          : []),
+        ...(logisticsFlags.lojistik_filo &&
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/filo")
+          ? [{ name: "6. Araç & Sürücü Filosu", href: "/dashboard/filo", icon: Truck, resource: "lojistik_filo" }]
+          : []),
+        ...(logisticsFlags.lojistik_iade &&
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/iade")
+          ? [{ name: "7. İade & Ters Lojistik", href: "/dashboard/iade", icon: ShieldCheck, resource: "lojistik_iade" }]
+          : []),
+        { name: "8. AI Analiz & Stok Tahmini", href: "/dashboard/stok-ai", icon: Sparkles, resource: "stok-ai" },
+        ...(showLogisticsReportsMenu &&
+        IMPLEMENTED_LOGISTICS_FLEET_HREFS.includes("/dashboard/lojistik-raporlar")
+          ? [
+              {
+                name: "9. Lojistik ve Filo Raporları",
+                href: "/dashboard/lojistik-raporlar",
+                icon: BarChart3,
+                anyResources: [
+                  "lojistik_wms",
+                  "lojistik_tedarikci",
+                  "lojistik_sevkiyat_rota",
+                  "lojistik_filo",
+                  "lojistik_iade",
+                ],
+                excludeSupplier: true,
+              },
+            ]
+          : []),
+      ],
+    },
     ...(showUretimCategory
       ? [
           {
             id: "uretim",
-            title: "Üretim",
+            title: "Üretim Yönetimi",
             icon: Factory,
             items: [
               ...(prodFlags.uretim_bom_rota
@@ -592,8 +563,29 @@ function SidebarContent({
         ]
       : []),
     {
+      id: "satis",
+      title: (t.nav as any).sales || "Ticari & Müşteri (CRM)",
+      icon: ShoppingBag,
+      items: [
+        { name: t.nav.orders, href: "/dashboard/orders", icon: ShoppingBag, resource: "orders" },
+        { name: t.nav.store, href: "/dashboard/b2b", icon: Store, resource: "magaza" },
+        { name: t.nav.customers, href: "/dashboard/customers", icon: Users, resource: "customers" },
+        { name: t.nav.leads, href: "/dashboard/leads", icon: TrendingUp, resource: "leads" },
+        { name: t.nav.cargo, href: "/dashboard/cargo", icon: Truck, resource: "cargo" },
+      ],
+    },
+    {
+      id: "finans",
+      title: "Finans & Muhasebe",
+      icon: CreditCard,
+      items: [
+        { name: t.nav.finance, href: "/dashboard/finance", icon: CreditCard, resource: "financial" },
+        { name: t.nav.calculator, href: "/dashboard/hesaplama-araci", icon: Calculator, resource: "hesaplama" },
+      ],
+    },
+    {
       id: "proje",
-      title: t.nav.projects || "Proje & Görevler",
+      title: t.nav.projects || "Proje & Denetim",
       icon: FolderOpen,
       items: [
         { name: t.nav.projects, href: "/dashboard/projects", icon: FolderOpen, resource: "projects" },
@@ -613,15 +605,6 @@ function SidebarContent({
         { name: t.nav.contentCalendar, href: "/dashboard/icerik-takvimi", icon: CalendarCheck2, resource: "icerik-takvimi" },
         { name: t.nav.agencyLibrary, href: "/dashboard/ajans-kutuphanesi", icon: Library, resource: "ajans-kutuphanesi" },
         { name: t.nav.contentStore, href: "/dashboard/icerik-magazasi", icon: Images, resource: "icerik-magazasi" },
-      ],
-    },
-    {
-      id: "finans",
-      title: "Finans & Hesaplama",
-      icon: CreditCard,
-      items: [
-        { name: t.nav.finance, href: "/dashboard/finance", icon: CreditCard, resource: "financial" },
-        { name: t.nav.calculator, href: "/dashboard/hesaplama-araci", icon: Calculator, resource: "hesaplama" },
       ],
     },
     {
@@ -645,7 +628,7 @@ function SidebarContent({
     },
     {
       id: "sistem",
-      title: "Sistem",
+      title: "Yönetim & Sistem",
       icon: Shield,
       items: [
         { name: t.nav.branches, href: "/dashboard/branches", icon: Building2, adminOnly: true },
@@ -657,7 +640,7 @@ function SidebarContent({
         { name: t.nav.logout, href: "#logout", icon: LogOut, isLogout: true },
       ],
     },
-  ], [t, showUretimCategory, prodFlags, showLogisticsFleetCategory, showLogisticsReportsMenu, logisticsFlags, tourismFlags])
+  ], [t, showUretimCategory, prodFlags, showLogisticsReportsMenu, logisticsFlags, tourismFlags])
 
   const currentBranchRoleName = session?.branches?.find((b) => b.branchId === currentBranch?.id)?.role?.name
   const isSupplierRole = Boolean(
