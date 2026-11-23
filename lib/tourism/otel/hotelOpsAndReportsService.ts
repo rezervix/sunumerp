@@ -1320,8 +1320,9 @@ export async function reportRoomTechnicalFault(
 
 export async function syncOfflineHousekeepingBatch(
   input: {
-    events: Array<{
-      idempotencyKey: string
+    events?: Array<{
+      idempotencyKey?: string
+      offlineIdempotencyKey?: string
       eventType: "UPDATE_TASK_STATUS" | "REPORT_TECHNICAL_FAULT"
       taskId?: string
       roomId?: string
@@ -1333,30 +1334,99 @@ export async function syncOfflineHousekeepingBatch(
       markRoomOutOfOrder?: boolean
       notes?: string
     }>
+    operations?: Array<{
+      offlineIdempotencyKey: string
+      taskId?: string
+      roomId?: string
+      operationType: "START_CLEANING" | "COMPLETE_CLEANING" | "REPORT_FAULT" | "MINIBAR_COUNT"
+      notes?: string
+      faultCategory?: string
+      faultDescription?: string
+      markRoomOutOfOrder?: boolean
+      minibarItems?: Array<{ inventoryItemId: string; consumedQty?: number; quantity?: number }>
+    }>
   },
   scope: TourismScopeContext
 ) {
   const dbAny = prisma as any
   const results: Array<{
     idempotencyKey: string
+    offlineIdempotencyKey: string
     status: "SYNCED" | "DUPLICATE_IGNORED" | "ERROR"
     message?: string
   }> = []
+
+  const normalizedEvents: Array<{
+    key: string
+    eventType: "UPDATE_TASK_STATUS" | "REPORT_TECHNICAL_FAULT"
+    taskId?: string
+    roomId?: string
+    status?: "IN_PROGRESS" | "COMPLETED" | "INSPECTED"
+    checklist?: Array<{ key: string; label: string; done: boolean }>
+    minibarItems?: Array<{ inventoryItemId: string; quantity: number }>
+    faultCategory?: string
+    faultDescription?: string
+    markRoomOutOfOrder?: boolean
+    notes?: string
+  }> = []
+
+  for (const ev of input.events || []) {
+    normalizedEvents.push({
+      key: String(ev.offlineIdempotencyKey || ev.idempotencyKey || "").trim(),
+      eventType: ev.eventType,
+      taskId: ev.taskId,
+      roomId: ev.roomId,
+      status: ev.status,
+      checklist: ev.checklist,
+      minibarItems: ev.minibarItems,
+      faultCategory: ev.faultCategory,
+      faultDescription: ev.faultDescription,
+      markRoomOutOfOrder: ev.markRoomOutOfOrder,
+      notes: ev.notes,
+    })
+  }
+
+  for (const op of input.operations || []) {
+    const isFault = op.operationType === "REPORT_FAULT"
+    const nextStatus =
+      op.operationType === "START_CLEANING" ? "IN_PROGRESS" : "COMPLETED"
+    normalizedEvents.push({
+      key: String(op.offlineIdempotencyKey || "").trim(),
+      eventType: isFault ? "REPORT_TECHNICAL_FAULT" : "UPDATE_TASK_STATUS",
+      taskId: op.taskId,
+      roomId: op.roomId,
+      status: nextStatus,
+      minibarItems: op.minibarItems?.map((m) => ({
+        inventoryItemId: m.inventoryItemId,
+        quantity: Number(m.consumedQty ?? m.quantity ?? 0),
+      })),
+      faultCategory: op.faultCategory,
+      faultDescription: op.faultDescription,
+      markRoomOutOfOrder: op.markRoomOutOfOrder,
+      notes: op.notes,
+    })
+  }
 
   const existingTasks = await dbAny.turizmHotelHousekeepingTask.findMany()
   const processedKeys = new Set<string>(
     existingTasks.map((t: any) => t.offlineIdempotencyKey).filter(Boolean)
   )
 
-  for (const ev of input.events || []) {
-    const key = String(ev.idempotencyKey || "").trim()
+  for (const ev of normalizedEvents) {
+    const key = ev.key
     if (!key) {
-      results.push({ idempotencyKey: "", status: "ERROR", message: "idempotencyKey eksik." })
+      results.push({
+        idempotencyKey: "",
+        offlineIdempotencyKey: "",
+        status: "ERROR",
+        message: "idempotencyKey eksik.",
+      })
       continue
     }
     if (processedKeys.has(key)) {
       results.push({
         idempotencyKey: key,
+        offlineIdempotencyKey: key,
         status: "DUPLICATE_IGNORED",
         message: "Bu çevrimdışı olay daha önce işlendi (idempotent).",
       })
@@ -1378,6 +1448,7 @@ export async function syncOfflineHousekeepingBatch(
         processedKeys.add(key)
         results.push({
           idempotencyKey: key,
+          offlineIdempotencyKey: key,
           status: res.duplicateIgnored ? "DUPLICATE_IGNORED" : "SYNCED",
         })
       } else if (ev.eventType === "UPDATE_TASK_STATUS" && ev.taskId && ev.status) {
@@ -1393,10 +1464,11 @@ export async function syncOfflineHousekeepingBatch(
           scope
         )
         processedKeys.add(key)
-        results.push({ idempotencyKey: key, status: "SYNCED" })
+        results.push({ idempotencyKey: key, offlineIdempotencyKey: key, status: "SYNCED" })
       } else {
         results.push({
           idempotencyKey: key,
+          offlineIdempotencyKey: key,
           status: "ERROR",
           message: "Geçersiz çevrimdışı olay parametreleri.",
         })
@@ -1404,6 +1476,7 @@ export async function syncOfflineHousekeepingBatch(
     } catch (err: any) {
       results.push({
         idempotencyKey: key,
+        offlineIdempotencyKey: key,
         status: "ERROR",
         message: err?.message || "Olay işlenemedi.",
       })
