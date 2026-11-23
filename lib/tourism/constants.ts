@@ -18,6 +18,7 @@ export const TURIZM_JSON_KEY_PREFIX = "turizm"
 export const TURIZM_SEED_MARKER_PREFIX = "trzm-"
 export const PARTNER_ROLE_NAME = "Partner"
 export const HOUSEKEEPING_ROLE_NAME = "Temizlik Personeli"
+export const GUIDE_ROLE_NAME = "Tur Rehberi"
 export const MAIN_COMPANY_ID = "trzm-comp-main"
 
 export const PARTNER_COMPANY_TYPE_LABELS: Record<PartnerCompanyType, string> = {

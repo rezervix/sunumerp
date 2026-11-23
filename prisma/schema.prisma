@@ -6183,6 +6183,254 @@ model TurizmHotelKbsRecord {
   @@index([roomId])
 }
 
+// ── Turizm Faz 4: Tur Operatörlüğü — turizm_tur ───────────────────────────────
+
+model TurizmTourGuide {
+  id              String   @id @default(uuid())
+  code            String   @unique
+  userId          String?
+  fullName        String
+  licenseNo       String?
+  languagesJson   String?
+  phone           String?
+  email           String?
+  dailyFeeTry     Float    @default(3500)
+  status          String   @default("ACTIVE") // ACTIVE, ON_TOUR, OFF_DUTY
+  notes           String?
+  isActive        Boolean  @default(true)
+  ownerCompanyId  String?  @default("trzm-comp-main")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status, isActive])
+  @@index([ownerCompanyId])
+}
+
+model TurizmTourAgency {
+  id                  String   @id @default(uuid())
+  code                String   @unique
+  name                String
+  partnerCompanyId    String?
+  contactPerson       String?
+  phone               String?
+  email               String?
+  commissionRatePct   Float    @default(12)
+  defaultQuotaPerTour Int      @default(10)
+  settlementTermDays  Int      @default(15)
+  status              String   @default("ACTIVE") // ACTIVE, PAUSED
+  notes               String?
+  ownerCompanyId      String?  @default("trzm-comp-main")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([status])
+  @@index([ownerCompanyId])
+}
+
+model TurizmTourSeatLayout {
+  id                         String   @id @default(uuid())
+  code                       String   @unique
+  name                       String
+  vehicleCategory            String   @default("OTOBUS") // OTOBUS, MIDIBUS, MINIBUS, VIP_VAN
+  totalSeats                 Int      @default(45)
+  rowsCount                  Int      @default(11)
+  seatsPerRow                Int      @default(4)
+  aisleAfterCol              Int      @default(2)
+  seatMapJson                String?
+  enforceGenderRuleDefault   Boolean  @default(true)
+  allowFamilyAdjacentDefault Boolean  @default(true)
+  isActive                   Boolean  @default(true)
+  ownerCompanyId             String?  @default("trzm-comp-main")
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  @@index([vehicleCategory])
+}
+
+model TurizmTourPackage {
+  id                         String   @id @default(uuid())
+  code                       String   @unique
+  title                      String
+  destinationCity            String
+  departureCity              String   @default("İstanbul")
+  tourType                   String   @default("DAY_TRIP") // DAY_TRIP, MULTI_DAY
+  durationDays               Int      @default(1)
+  startAt                    DateTime
+  endAt                      DateTime
+  itineraryJson              String?
+  adultPriceTry              Float    @default(2500)
+  childPriceTry              Float    @default(1750)
+  capacity                   Int      @default(45)
+  minParticipants            Int      @default(15)
+  status                     String   @default("ON_SALE") // DRAFT, ON_SALE, FULL, GUARANTEED, COMPLETED, CANCELLED
+  branchId                   String   @default("local-debug-branch")
+  vehicleId                  String?
+  driverId                   String?
+  guideId                    String?
+  seatLayoutId               String?
+  hotelAllotmentId           String?
+  hotelRoomIdsJson           String?
+  hotelNightlyCostPerRoomTry Float    @default(0)
+  agencyQuotasJson           String?
+  enforceGenderSeatRule      Boolean  @default(true)
+  allowFamilySeatOverride    Boolean  @default(true)
+  estimatedDistanceKm        Float    @default(0)
+  estimatedDurationMinutes   Int      @default(0)
+  notes                      String?
+  ownerCompanyId             String?  @default("trzm-comp-main")
+  createdBy                  String?
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+
+  @@index([status, startAt])
+  @@index([vehicleId, startAt, endAt])
+  @@index([driverId, startAt, endAt])
+  @@index([guideId, startAt, endAt])
+  @@index([ownerCompanyId])
+}
+
+model TurizmTourPickupStop {
+  id                       String   @id @default(uuid())
+  tourId                   String
+  sequenceNo               Int      @default(1)
+  stopName                 String
+  district                 String?
+  address                  String?
+  pickupTime               String   @default("07:00")
+  lat                      Float    @default(41.0082)
+  lng                      Float    @default(28.9784)
+  estimatedMinutesFromStart Int     @default(0)
+  ownerCompanyId           String?  @default("trzm-comp-main")
+  createdAt                DateTime @default(now())
+
+  @@index([tourId, sequenceNo])
+}
+
+model TurizmTourBooking {
+  id                      String   @id @default(uuid())
+  bookingNo               String   @unique
+  tourId                  String
+  customerId              String
+  branchId                String   @default("local-debug-branch")
+  bookingType             String   @default("INDIVIDUAL") // INDIVIDUAL, GROUP
+  groupName               String?
+  agencyId                String?
+  agencyName              String?
+  channelSource           String   @default("DIRECT_WEB") // DIRECT_WEB, DIRECT_OFFICE, AGENCY_B2B, CORPORATE, ONLINE_PORTAL
+  passengerCount          Int      @default(1)
+  totalPriceTry           Float    @default(0)
+  paidAmountTry           Float    @default(0)
+  balanceDueTry           Float    @default(0)
+  agencyCommissionRatePct Float    @default(0)
+  agencyCommissionTry     Float    @default(0)
+  paymentStatus           String   @default("UNPAID") // UNPAID, PARTIAL, PAID, REFUNDED
+  status                  String   @default("CONFIRMED") // PENDING, CONFIRMED, CANCELLED, NO_SHOW
+  hotelReservationIdsJson String?
+  financeId               String?
+  eDocumentId             String?
+  eDocumentNo             String?
+  cancelReason            String?
+  notes                   String?
+  ownerCompanyId          String?  @default("trzm-comp-main")
+  createdBy               String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@index([tourId, status])
+  @@index([customerId])
+  @@index([agencyId])
+  @@index([ownerCompanyId])
+}
+
+model TurizmTourPassenger {
+  id                    String    @id @default(uuid())
+  bookingId             String
+  tourId                String
+  fullName              String
+  tckn                  String?
+  passportNo            String?
+  nationality           String    @default("TR")
+  birthDate             DateTime?
+  phone                 String?
+  gender                String    @default("UNSPECIFIED") // M, F, UNSPECIFIED
+  familyGroupCode       String?
+  seatNumber            String?
+  pickupStopId          String?
+  boardingStatus        String    @default("WAITING") // WAITING, BOARDED, NO_SHOW
+  boardedAt             DateTime?
+  hotelRoomId           String?
+  hotelReservationId    String?
+  kbsRecordId           String?
+  emergencyNote         String?
+  offlineIdempotencyKey String?   @unique
+  ownerCompanyId        String?   @default("trzm-comp-main")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([tourId, seatNumber])
+  @@index([bookingId])
+  @@index([pickupStopId])
+}
+
+model TurizmTourExpenseItem {
+  id             String   @id @default(uuid())
+  tourId         String
+  category       String   @default("OTHER") // VEHICLE_FUEL, GUIDE_FEE, HOTEL_ACCOMMODATION, MUSEUM_TICKET, MEAL_CATERING, HIGHWAY_TOLL, AGENCY_COMMISSION, OTHER
+  description    String
+  quantity       Float    @default(1)
+  unitCostTry    Float    @default(0)
+  totalCostTry   Float    @default(0)
+  sourceRefType  String?  // FLEET_FUEL, HOTEL_PMS, GUIDE, AGENCY, MANUAL
+  sourceRefId    String?
+  financeId      String?
+  recordedBy     String?
+  ownerCompanyId String?  @default("trzm-comp-main")
+  createdAt      DateTime @default(now())
+
+  @@index([tourId, category])
+}
+
+model TurizmTourConflictLog {
+  id                String   @id @default(uuid())
+  tourId            String?
+  tourCode          String?
+  resourceType      String   // VEHICLE, DRIVER, GUIDE, SEAT, CAPACITY, AGENCY_QUOTA
+  resourceId        String?
+  resourceLabel     String
+  attemptedStartAt  DateTime
+  attemptedEndAt    DateTime
+  conflictSource    String   // TOUR_OVERLAP, FLEET_MAINTENANCE, RENTACAR_OVERLAP, SEAT_LOCK, SEAT_GENDER_RULE, AGENCY_QUOTA
+  conflictRefNo     String?
+  rejectionCode     String
+  rejectionMessage  String
+  resolved          Boolean  @default(false)
+  resolutionNote    String?
+  actorUserId       String?
+  ownerCompanyId    String?  @default("trzm-comp-main")
+  attemptedAt       DateTime @default(now())
+
+  @@index([tourId, attemptedAt])
+  @@index([resourceType, rejectionCode])
+}
+
+model TurizmTourFieldLog {
+  id                    String   @id @default(uuid())
+  tourId                String
+  logType               String   @default("EMERGENCY_NOTE") // BOARDING_SYNC, EMERGENCY_NOTE, FIELD_COLLECTION, INCIDENT
+  bookingId             String?
+  passengerId           String?
+  amountTry             Float    @default(0)
+  paymentMethod         String?
+  note                  String
+  recordedByUserId      String?
+  recordedByName        String?
+  offlineIdempotencyKey String?  @unique
+  ownerCompanyId        String?  @default("trzm-comp-main")
+  recordedAt            DateTime @default(now())
+
+  @@index([tourId, recordedAt])
+}
+
 
 
 

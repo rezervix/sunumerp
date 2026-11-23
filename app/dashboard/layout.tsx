@@ -530,6 +530,14 @@ function SidebarContent({
                 icon: Globe,
                 resource: "turizm_tur",
                 excludeSupplier: true,
+                exact: true,
+              },
+              {
+                name: "Rehber & Şoför Mobil Saha",
+                href: "/dashboard/tur/rehber",
+                icon: ClipboardCheck,
+                resource: "turizm_tur",
+                excludeSupplier: true,
               },
             ],
           } satisfies NavCategoryDef,
@@ -663,6 +671,9 @@ function SidebarContent({
   const isHousekeepingRole = Boolean(
     !isSuperAdmin && currentBranchRoleName === "Temizlik Personeli"
   )
+  const isTourGuideRole = Boolean(
+    !isSuperAdmin && currentBranchRoleName === "Tur Rehberi"
+  )
 
   const isItemAllowed = useCallback((item: NavItemDef) => {
     if (item.excludeSupplier && isSupplierRole) {
@@ -671,6 +682,10 @@ function SidebarContent({
     if (isHousekeepingRole) {
       if (item.isLogout) return true
       return item.href === "/dashboard/otel/housekeeping"
+    }
+    if (isTourGuideRole) {
+      if (item.isLogout) return true
+      return item.href === "/dashboard/tur/rehber"
     }
     if (isPartnerRole) {
       if (item.isLogout) return true
@@ -703,7 +718,7 @@ function SidebarContent({
     }
     if (item.resource) return hasPermission(item.resource, "read")
     return true
-  }, [isSupplierRole, isHousekeepingRole, isPartnerRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
+  }, [isSupplierRole, isHousekeepingRole, isTourGuideRole, isPartnerRole, isPlatformDeveloper, subPlan, isSuperAdmin, hasPermission])
 
   // Filter allowed categories and items
   const availableCategories = useMemo(() => {

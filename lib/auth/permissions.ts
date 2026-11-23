@@ -506,4 +506,7 @@ export const DEFAULT_ROLES: Record<string, Permissions> = {
   "Temizlik Personeli": {
     turizm_otel: ["read", "update"],
   },
+  "Tur Rehberi": {
+    turizm_tur: ["read", "update"],
+  },
 }

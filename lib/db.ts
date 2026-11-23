@@ -280,6 +280,17 @@ interface JsonDbData {
   turizmHotelFolioItem?: any[]
   turizmHotelHousekeepingTask?: any[]
   turizmHotelKbsRecord?: any[]
+  // ── Turizm Faz 4: Tur Operatörlüğü additive koleksiyonları ──
+  turizmTourGuide?: any[]
+  turizmTourAgency?: any[]
+  turizmTourSeatLayout?: any[]
+  turizmTourPackage?: any[]
+  turizmTourPickupStop?: any[]
+  turizmTourBooking?: any[]
+  turizmTourPassenger?: any[]
+  turizmTourExpenseItem?: any[]
+  turizmTourConflictLog?: any[]
+  turizmTourFieldLog?: any[]
 }
 
 const initialData: JsonDbData = {
@@ -476,7 +487,17 @@ const initialData: JsonDbData = {
   turizmHotelConflictAttemptLog: [],
   turizmHotelFolioItem: [],
   turizmHotelHousekeepingTask: [],
-  turizmHotelKbsRecord: []
+  turizmHotelKbsRecord: [],
+  turizmTourGuide: [],
+  turizmTourAgency: [],
+  turizmTourSeatLayout: [],
+  turizmTourPackage: [],
+  turizmTourPickupStop: [],
+  turizmTourBooking: [],
+  turizmTourPassenger: [],
+  turizmTourExpenseItem: [],
+  turizmTourConflictLog: [],
+  turizmTourFieldLog: []
 }
 
 const globalForJsonDb = globalThis as unknown as {
@@ -2221,7 +2242,17 @@ export const prisma = new Proxy(rawPrisma, {
       "turizmHotelConflictAttemptLog",
       "turizmHotelFolioItem",
       "turizmHotelHousekeepingTask",
-      "turizmHotelKbsRecord"
+      "turizmHotelKbsRecord",
+      "turizmTourGuide",
+      "turizmTourAgency",
+      "turizmTourSeatLayout",
+      "turizmTourPackage",
+      "turizmTourPickupStop",
+      "turizmTourBooking",
+      "turizmTourPassenger",
+      "turizmTourExpenseItem",
+      "turizmTourConflictLog",
+      "turizmTourFieldLog"
     ]
 
     // $queryRaw stats simülasyonu (yerel test için veritabanı kapalıyken istatistik grafiklerini çalıştırır)
