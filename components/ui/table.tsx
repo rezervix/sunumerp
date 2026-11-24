@@ -104,6 +104,38 @@ function TableCaption({
   )
 }
 
+function TableEmpty({
+  className,
+  children,
+  colSpan = 5,
+  title,
+  description,
+  ...props
+}: React.ComponentProps<'tr'> & {
+  colSpan?: number
+  title?: string
+  description?: string
+}) {
+  return (
+    <tr data-slot="table-empty" className={cn('hover:bg-transparent', className)} {...props}>
+      <td
+        colSpan={colSpan}
+        className="h-32 text-center text-xs text-[var(--text-muted)] p-6"
+      >
+        {children ? (
+          children
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-1">
+            {title && <span className="font-medium text-[var(--text)]">{title}</span>}
+            {description && <span className="text-[var(--text-muted)]">{description}</span>}
+            {!title && !description && 'Kayıt bulunamadı.'}
+          </div>
+        )}
+      </td>
+    </tr>
+  )
+}
+
 export {
   Table,
   TableHeader,
@@ -113,4 +145,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableEmpty,
 }

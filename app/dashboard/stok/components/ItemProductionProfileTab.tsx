@@ -14,16 +14,16 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import {
-  Factory,
   Save,
   RotateCcw,
   Loader2,
   GitBranch,
-  Gauge,
+  Activity,
   Clock,
   ShieldAlert,
   CheckCircle2,
 } from "lucide-react"
+import { IconFactory } from "@/components/ui/app-icons"
 import {
   LOT_SIZING_RULE_LABELS,
   PRODUCTION_ITEM_TYPE_LABELS,
@@ -186,8 +186,8 @@ export function ItemProductionProfileTab({
 
   if (loading) {
     return (
-      <div className="py-8 flex flex-col items-center justify-center gap-2 text-zinc-400">
-        <Loader2 className="h-5 w-5 animate-spin text-[#34D399]" />
+      <div className="py-8 flex flex-col items-center justify-center gap-2 text-[--text-muted]">
+        <Loader2 className="h-5 w-5 animate-spin text-[--brand]" />
         <span className="text-xs">1-1 Üretim profili yükleniyor...</span>
       </div>
     )
@@ -196,16 +196,16 @@ export function ItemProductionProfileTab({
   return (
     <div className="space-y-4">
       {/* Üst Bilgi ve Durum Rozeti */}
-      <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between gap-2">
+      <div className="p-3.5 rounded-xl bg-white border border-[--line] flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[#34D399]">
-            <Factory className="h-4 w-4" />
+          <div className="h-8 w-8 rounded-lg bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
+            <IconFactory size={16} />
           </div>
           <div>
-            <span className="text-xs font-semibold text-white block">
+            <span className="text-xs font-semibold text-[--text] block">
               1-1 Üretim & MRP Parametre Kartı
             </span>
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-[11px] text-[--text-muted]">
               Mevcut stok kartını bozmadan ek tabloda (`UretimItemProfile`) tutulur
             </span>
           </div>
@@ -213,8 +213,8 @@ export function ItemProductionProfileTab({
         <span
           className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border ${
             isConfiguredInDb
-              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-              : "bg-white/[0.04] text-zinc-400 border-white/[0.08]"
+              ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
+              : "bg-[--muted-bg]/40 text-[--text-muted] border-[--line]"
           }`}
         >
           {isConfiguredInDb ? (
@@ -230,17 +230,17 @@ export function ItemProductionProfileTab({
       {/* 1. ÜRÜN TİPİ VE ÜRETİM YÖNTEMİ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label className="text-[11px] font-medium text-zinc-300">
+          <Label className="text-[11px] font-medium text-[--text-2]">
             Üretim Ürün Tipi
           </Label>
           <Select
             value={productionItemType}
             onValueChange={(v) => setProductionItemType(v as ProductionItemType)}
           >
-            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
               {(Object.entries(PRODUCTION_ITEM_TYPE_LABELS) as [ProductionItemType, string][]).map(
                 ([code, label]) => (
                   <SelectItem key={code} value={code} className="text-xs">
@@ -253,17 +253,17 @@ export function ItemProductionProfileTab({
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-[11px] font-medium text-zinc-300">
+          <Label className="text-[11px] font-medium text-[--text-2]">
             Üretim / İkmal Yöntemi
           </Label>
           <Select
             value={productionMethod}
             onValueChange={(v) => setProductionMethod(v as ProductionMethod)}
           >
-            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
               {(Object.entries(PRODUCTION_METHOD_LABELS) as [ProductionMethod, string][]).map(
                 ([code, label]) => (
                   <SelectItem key={code} value={code} className="text-xs">
@@ -279,8 +279,8 @@ export function ItemProductionProfileTab({
       {/* 2. TEDARİK SÜRESİ, MİN/EMNİYET STOK VE GÜVENLİK STOĞU */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400 flex items-center gap-1">
-            <Clock className="h-3 w-3 text-zinc-500" />
+          <Label className="text-[11px] font-medium text-[--text-muted] flex items-center gap-1">
+            <Clock className="h-3 w-3 text-[--text-muted]" />
             Tedarik (Gün)
           </Label>
           <Input
@@ -288,12 +288,12 @@ export function ItemProductionProfileTab({
             min="0"
             value={leadTimeDays}
             onChange={(e) => setLeadTimeDays(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400">
+          <Label className="text-[11px] font-medium text-[--text-muted]">
             Üretim (Saat)
           </Label>
           <Input
@@ -302,12 +302,12 @@ export function ItemProductionProfileTab({
             step="0.5"
             value={productionLeadTimeHours}
             onChange={(e) => setProductionLeadTimeHours(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400">
+          <Label className="text-[11px] font-medium text-[--text-muted]">
             Min/Emniyet ({baseUnit})
           </Label>
           <Input
@@ -316,12 +316,12 @@ export function ItemProductionProfileTab({
             step="any"
             value={minStockLevel}
             onChange={(e) => setMinStockLevel(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400 flex items-center gap-1">
+          <Label className="text-[11px] font-medium text-[--text-muted] flex items-center gap-1">
             <ShieldAlert className="h-3 w-3 text-amber-400" />
             Güvenlik Stoğu
           </Label>
@@ -331,7 +331,7 @@ export function ItemProductionProfileTab({
             step="any"
             value={safetyStockQty}
             onChange={(e) => setSafetyStockQty(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
       </div>
@@ -339,17 +339,17 @@ export function ItemProductionProfileTab({
       {/* 3. LOT KURALI VE LOT BÜYÜKLÜĞÜ */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div className="col-span-2 space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400">
+          <Label className="text-[11px] font-medium text-[--text-muted]">
             Lot Büyüklüğü Kuralı
           </Label>
           <Select
             value={lotSizingRule}
             onValueChange={(v) => setLotSizingRule(v as LotSizingRule)}
           >
-            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5">
+            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
               {(Object.entries(LOT_SIZING_RULE_LABELS) as [LotSizingRule, string][]).map(
                 ([code, label]) => (
                   <SelectItem key={code} value={code} className="text-xs">
@@ -362,7 +362,7 @@ export function ItemProductionProfileTab({
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400">
+          <Label className="text-[11px] font-medium text-[--text-muted]">
             Lot Büyüklüğü
           </Label>
           <Input
@@ -371,12 +371,12 @@ export function ItemProductionProfileTab({
             step="any"
             value={standardLotSize}
             onChange={(e) => setStandardLotSize(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[11px] font-medium text-zinc-400">
+          <Label className="text-[11px] font-medium text-[--text-muted]">
             Fire Toleransı (%)
           </Label>
           <Input
@@ -386,7 +386,7 @@ export function ItemProductionProfileTab({
             step="0.5"
             value={scrapTolerancePercent}
             onChange={(e) => setScrapTolerancePercent(e.target.value)}
-            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
           />
         </div>
       </div>
@@ -394,16 +394,16 @@ export function ItemProductionProfileTab({
       {/* 4. VARSAYILAN REÇETE (BOM) VE İŞ MERKEZİ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label className="text-[11px] font-medium text-zinc-300 flex items-center gap-1">
-            <GitBranch className="h-3 w-3 text-[#34D399]" />
+          <Label className="text-[11px] font-medium text-[--text-2] flex items-center gap-1">
+            <GitBranch className="h-3 w-3 text-[--brand]" />
             Varsayılan Ürün Reçetesi (BOM)
           </Label>
           <Select value={defaultBomId} onValueChange={setDefaultBomId}>
-            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
               <SelectValue placeholder="Reçete seçin..." />
             </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
-              <SelectItem value="none" className="text-xs text-zinc-400">
+            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
+              <SelectItem value="none" className="text-xs text-[--text-muted]">
                 Reçete Bağlı Değil
               </SelectItem>
               {availableBoms.map((b: any) => (
@@ -416,19 +416,19 @@ export function ItemProductionProfileTab({
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-[11px] font-medium text-zinc-300 flex items-center gap-1">
-            <Gauge className="h-3 w-3 text-cyan-400" />
+          <Label className="text-[11px] font-medium text-[--text-2] flex items-center gap-1">
+            <Activity className="h-3 w-3 text-[--text-muted]" />
             Varsayılan İş Merkezi / İstasyon
           </Label>
           <Select
             value={defaultWorkCenterId}
             onValueChange={setDefaultWorkCenterId}
           >
-            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
               <SelectValue placeholder="İş merkezi seçin..." />
             </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
-              <SelectItem value="none" className="text-xs text-zinc-400">
+            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
+              <SelectItem value="none" className="text-xs text-[--text-muted]">
                 İstasyon Seçilmedi
               </SelectItem>
               {availableWorkCenters.map((wc: any) => (
@@ -442,7 +442,7 @@ export function ItemProductionProfileTab({
       </div>
 
       {/* 5. OTOMATİK SARFİYAT (BACKFLUSH) & KALİTE KONTROL */}
-      <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="p-3 rounded-xl bg-[--muted-bg]/30 border border-[--line] grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="flex items-center space-x-2">
           <Checkbox
             id="drawer-backflush"
@@ -451,7 +451,7 @@ export function ItemProductionProfileTab({
           />
           <Label
             htmlFor="drawer-backflush"
-            className="text-xs text-zinc-300 cursor-pointer"
+            className="text-xs text-[--text-2] cursor-pointer"
           >
             Otomatik Hammadde Sarfiyatı (Backflush)
           </Label>
@@ -465,7 +465,7 @@ export function ItemProductionProfileTab({
           />
           <Label
             htmlFor="drawer-qc"
-            className="text-xs text-zinc-300 cursor-pointer"
+            className="text-xs text-[--text-2] cursor-pointer"
           >
             Üretim Sonu Kalite Kontrol Zorunlu
           </Label>
@@ -481,7 +481,7 @@ export function ItemProductionProfileTab({
             size="sm"
             disabled={saving}
             onClick={handleReset}
-            className="text-xs h-8.5 bg-white/[0.03] border-white/[0.08] text-zinc-300 hover:text-white rounded-xl cursor-pointer gap-1.5"
+            className="text-xs h-8.5 bg-white border-[--line] text-[--text-2] hover:text-[--text] rounded-xl cursor-pointer gap-1.5"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Sıfırla
@@ -492,7 +492,7 @@ export function ItemProductionProfileTab({
           size="sm"
           disabled={saving}
           onClick={handleSave}
-          className="text-xs h-8.5 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl cursor-pointer gap-1.5 shadow-lg shadow-emerald-500/20"
+          className="text-xs h-8.5 bg-[--brand] hover:bg-[--brand-hover] text-white font-medium rounded-xl cursor-pointer gap-1.5 shadow-sm"
         >
           {saving ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

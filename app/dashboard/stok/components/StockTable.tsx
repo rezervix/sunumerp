@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
   Select,
   SelectContent,
@@ -19,14 +19,18 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import {
-  Search,
-  ArrowDownLeft,
-  ArrowUpRight,
-  Eye,
-  AlertTriangle,
-  Boxes,
-  Layers
-} from "lucide-react"
+  IconArrowDownLeft,
+  IconArrowUpRight,
+  IconEye,
+  IconAlertTriangle,
+  IconBoxes,
+  IconLayers,
+  IconChevronLeft,
+  IconChevronRight
+} from "@/components/ui/app-icons"
+import { FilterBar } from "@/components/shared/filter-bar"
+import { LedStockBar } from "@/components/shared/led-stock-bar"
+import { safeText, safeCurrency, safeNumber } from "@/lib/utils/safe-display"
 
 interface StockTableProps {
   items: any[]
@@ -35,236 +39,258 @@ interface StockTableProps {
   onQuickMove: (mode: "IN" | "OUT", itemId: string) => void
 }
 
+const ITEMS_PER_PAGE = 10
+
 export function StockTable({
   items,
-  loading,
+  loading = false,
   onSelectItem,
   onQuickMove
 }: StockTableProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("ALL")
   const [stockStatusFilter, setStockStatusFilter] = useState("ALL")
+  const [currentPage, setCurrentPage] = useState(1)
 
   // Benzersiz kategorileri topla
-  const categories = Array.from(new Set(items.map(i => i.category || "Genel")))
+  const categories = useMemo(() => {
+    return Array.from(new Set(items.map(i => i.category || "Genel"))).filter(Boolean)
+  }, [items])
 
   // Filtreleme
-  const filteredItems = items.filter(item => {
-    const q = searchQuery.toLowerCase().trim()
-    const matchesSearch =
-      !q ||
-      item.name?.toLowerCase().includes(q) ||
-      item.sku?.toLowerCase().includes(q) ||
-      item.barcode?.toLowerCase().includes(q)
+  const filteredItems = useMemo(() => {
+    return items.filter(item => {
+      const q = searchQuery.toLowerCase().trim()
+      const name = safeText(item.name, "").toLowerCase()
+      const sku = safeText(item.sku, "").toLowerCase()
+      const barcode = safeText(item.barcode, "").toLowerCase()
 
-    const matchesCategory =
-      selectedCategory === "ALL" || item.category === selectedCategory
+      const matchesSearch = !q || name.includes(q) || sku.includes(q) || barcode.includes(q)
 
-    const isCritical = (item.totalOnHand || 0) <= Number(item.minStockLevel || 0)
-    const matchesStock =
-      stockStatusFilter === "ALL" ||
-      (stockStatusFilter === "CRITICAL" && isCritical) ||
-      (stockStatusFilter === "NORMAL" && !isCritical)
+      const matchesCategory =
+        selectedCategory === "ALL" || (item.category || "Genel") === selectedCategory
 
-    return matchesSearch && matchesCategory && matchesStock
-  })
+      const totalStock = safeNumber(item.totalOnHand, 0)
+      const minStock = safeNumber(item.minStockLevel, 10)
+      const isCritical = totalStock <= minStock
 
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
-      maximumFractionDigits: 2
-    }).format(val || 0)
+      const matchesStock =
+        stockStatusFilter === "ALL" ||
+        (stockStatusFilter === "CRITICAL" && isCritical) ||
+        (stockStatusFilter === "NORMAL" && !isCritical)
+
+      return matchesSearch && matchesCategory && matchesStock
+    })
+  }, [items, searchQuery, selectedCategory, stockStatusFilter])
+
+  // Sayfalama
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE))
+  const paginatedItems = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE
+    return filteredItems.slice(start, start + ITEMS_PER_PAGE)
+  }, [filteredItems, currentPage])
+
+  // Arama değiştiğinde 1. sayfaya dön
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val)
+    setCurrentPage(1)
   }
 
   return (
     <div className="space-y-4">
-      {/* ARAMA VE FİLTRELEME ÇUBUĞU */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] p-4 rounded-[20px]">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-          <Input
-            placeholder="Ürün adı, SKU veya barkod ile ara..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="pl-10 text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl focus:border-[#34D399] h-9.5"
-          />
-        </div>
-
-        <div className="flex items-center gap-2.5">
-          {/* Kategori Filtresi */}
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-36 sm:w-44 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
-              <SelectValue placeholder="Tüm Kategoriler" />
-            </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
-              <SelectItem value="ALL" className="text-xs">Tüm Kategoriler</SelectItem>
-              {categories.map(cat => (
-                <SelectItem key={cat} value={cat} className="text-xs">
-                  {cat}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Stok Durumu Filtresi */}
-          <Select value={stockStatusFilter} onValueChange={setStockStatusFilter}>
-            <SelectTrigger className="w-36 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
-              <SelectValue placeholder="Stok Durumu" />
-            </SelectTrigger>
-            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
-              <SelectItem value="ALL" className="text-xs">Tüm Stoklar</SelectItem>
-              <SelectItem value="CRITICAL" className="text-xs text-rose-400 font-medium">
-                Kritik Seviyedekiler
+      {/* 1. TEKİL FİLTRE BARI (FAZ 4) */}
+      <FilterBar
+        searchValue={searchQuery}
+        onSearchChange={handleSearchChange}
+        searchPlaceholder="Ürün adı, SKU veya barkod ile filtrele..."
+        onCustomizeClick={() => {}}
+      >
+        {/* Kategori Filtresi */}
+        <Select
+          value={selectedCategory}
+          onValueChange={val => {
+            setSelectedCategory(val)
+            setCurrentPage(1)
+          }}
+        >
+          <SelectTrigger className="w-36 sm:w-44 text-xs bg-white border-[--line] text-[--text-2] rounded-xl h-9">
+            <SelectValue placeholder="Tüm Kategoriler" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
+            <SelectItem value="ALL" className="text-xs">Tüm Kategoriler</SelectItem>
+            {categories.map(cat => (
+              <SelectItem key={cat} value={cat} className="text-xs">
+                {safeText(cat)}
               </SelectItem>
-              <SelectItem value="NORMAL" className="text-xs">Yeterli Seviye</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+            ))}
+          </SelectContent>
+        </Select>
 
-      {/* SADE & ŞIK 6 SÜTUNLU ANA TABLO */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] overflow-hidden shadow-2xl">
+        {/* Stok Durumu Filtresi */}
+        <Select
+          value={stockStatusFilter}
+          onValueChange={val => {
+            setStockStatusFilter(val)
+            setCurrentPage(1)
+          }}
+        >
+          <SelectTrigger className="w-36 text-xs bg-white border-[--line] text-[--text-2] rounded-xl h-9">
+            <SelectValue placeholder="Stok Durumu" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
+            <SelectItem value="ALL" className="text-xs">Tüm Stoklar</SelectItem>
+            <SelectItem value="CRITICAL" className="text-xs text-[--bad] font-medium">
+              Kritik Seviyedekiler
+            </SelectItem>
+            <SelectItem value="NORMAL" className="text-xs">Yeterli Seviye</SelectItem>
+          </SelectContent>
+        </Select>
+      </FilterBar>
+
+      {/* 2. ANA TABLO KARTI (CAM ÇERÇEVE, BEYAZ TABLO SATIRLARI) */}
+      <div className="bg-white border border-[--line] rounded-[20px] overflow-hidden shadow-card">
         <Table>
-          <TableHeader className="bg-white/[0.02]">
-            <TableRow className="border-b border-white/[0.06] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
-              <TableHead className="w-[30%] py-4 pl-5 text-zinc-400 font-medium">1. Ürün Bilgisi</TableHead>
-              <TableHead className="w-[15%] text-zinc-400 font-medium">2. Kategori & Tür</TableHead>
-              <TableHead className="w-[20%] text-zinc-400 font-medium">3. Stok & Seviye (LED)</TableHead>
-              <TableHead className="w-[12%] text-right text-zinc-400 font-medium">4. Birim Maliyet</TableHead>
-              <TableHead className="w-[12%] text-right text-zinc-400 font-medium">5. Satış Fiyatı</TableHead>
-              <TableHead className="w-[11%] text-right pr-5 text-zinc-400 font-medium">6. İşlemler</TableHead>
+          <TableHeader className="bg-[--muted-bg]/60">
+            <TableRow className="border-b border-[--line] hover:bg-transparent">
+              <TableHead className="w-[30%] py-3.5 pl-6 text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                1. Ürün Bilgisi
+              </TableHead>
+              <TableHead className="w-[15%] text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                2. Kategori & Değerleme
+              </TableHead>
+              <TableHead className="w-[20%] text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                3. Stok & Seviye (LED)
+              </TableHead>
+              <TableHead className="w-[12%] text-right text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                4. Birim Maliyet
+              </TableHead>
+              <TableHead className="w-[12%] text-right text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                5. Satış Fiyatı
+              </TableHead>
+              <TableHead className="w-[11%] text-right pr-6 text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">
+                6. İşlemler
+              </TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
             {loading ? (
-              <TableRow className="border-b border-white/[0.04]">
-                <TableCell colSpan={6} className="h-32 text-center text-xs text-zinc-500">
+              <TableRow>
+                <TableCell colSpan={6} className="h-36 text-center text-xs text-[--text-muted]">
                   Stok verileri yükleniyor...
                 </TableCell>
               </TableRow>
-            ) : filteredItems.length === 0 ? (
-              <TableRow className="border-b border-white/[0.04]">
-                <TableCell colSpan={6} className="h-32 text-center text-xs text-zinc-500">
-                  <div className="flex flex-col items-center justify-center gap-2 py-4">
-                    <Boxes className="h-8 w-8 text-zinc-600" />
+            ) : paginatedItems.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-36 text-center text-xs text-[--text-muted]">
+                  <div className="flex flex-col items-center justify-center gap-2 py-6">
+                    <IconBoxes size={32} className="text-[--text-muted]" />
                     <span>Aramanıza uygun ürün bulunamadı.</span>
                   </div>
                 </TableCell>
               </TableRow>
             ) : (
-              filteredItems.map(item => {
-                const totalStock = item.totalOnHand || 0
-                const availableStock = item.totalAvailable || 0
-                const minStock = Number(item.minStockLevel || 10)
+              paginatedItems.map(item => {
+                const totalStock = safeNumber(item.totalOnHand, 0)
+                const availableStock = safeNumber(item.totalAvailable, 0)
+                const minStock = safeNumber(item.minStockLevel, 10)
                 const isCritical = totalStock <= minStock
-                const unitCost = Number(item.fifoUnitCost || item.currentAvgCost || item.standardCost || 0)
-
-                // 5-Segment LED Bar calculation
-                const ratio = minStock > 0 ? totalStock / (minStock * 2) : totalStock > 0 ? 1 : 0
-                const activeSegments = Math.min(5, Math.max(totalStock > 0 ? 1 : 0, Math.round(ratio * 5)))
+                const unitCost = safeNumber(
+                  item.fifoUnitCost ?? item.currentAvgCost ?? item.standardCost,
+                  0
+                )
+                const salesPrice = safeNumber(item.salesPrice, 0)
 
                 return (
                   <TableRow
                     key={item.id}
                     onClick={() => onSelectItem(item.id)}
-                    className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors cursor-pointer group"
+                    className="border-b border-[--line-soft] hover:bg-[--brand-soft]/40 transition-colors cursor-pointer group"
                   >
                     {/* SÜTUN 1: ÜRÜN BİLGİSİ */}
-                    <TableCell className="py-4 pl-5">
+                    <TableCell className="py-3.5 pl-6">
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-medium text-sm text-white group-hover:text-[#34D399] transition-colors">
-                            {item.name}
+                          <span className="font-medium text-sm text-[--text] group-hover:text-[--brand] transition-colors">
+                            {safeText(item.name, "İsimsiz Ürün")}
                           </span>
                           {item.itemType === "MATRIX_PARENT" && (
-                            <span className="inline-flex items-center bg-white/[0.05] text-zinc-400 border border-white/[0.08] rounded-full px-2 py-0.5 text-[10px] font-medium">
-                              <Layers className="h-2.5 w-2.5 mr-1" />
+                            <Badge variant="neutral" size="sm">
+                              <IconLayers size={11} className="mr-1" />
                               Varyantlı
-                            </span>
+                            </Badge>
                           )}
                           {item.bomHeaders && item.bomHeaders.length > 0 && (
-                            <span className="inline-flex items-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full px-2 py-0.5 text-[10px] font-medium">
+                            <Badge variant="brand" size="sm">
                               Reçeteli (BOM)
-                            </span>
+                            </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-mono">
-                          <span>SKU: {item.sku}</span>
+
+                        <div className="flex items-center gap-2 text-[11px] text-[--text-muted] font-mono">
+                          <span>SKU: {safeText(item.sku, "—")}</span>
                           {item.barcode && item.barcode !== item.sku && (
                             <>
                               <span>•</span>
-                              <span>Barkod: {item.barcode}</span>
+                              <span>Barkod: {safeText(item.barcode)}</span>
                             </>
                           )}
                         </div>
                       </div>
                     </TableCell>
 
-                    {/* SÜTUN 2: KATEGORİ & TÜR */}
+                    {/* SÜTUN 2: KATEGORİ & DEĞERLEME */}
                     <TableCell>
                       <div className="space-y-1">
-                        <span className="inline-flex bg-white/[0.04] text-zinc-300 border border-white/[0.08] rounded-full px-3 py-0.5 text-xs">
-                          {item.category || "Genel"}
-                        </span>
-                        <span className="text-[10px] text-zinc-500 block">
-                          {item.valuationMethod} Değerleme
+                        <Badge variant="outline" size="sm">
+                          {safeText(item.category, "Genel")}
+                        </Badge>
+                        <span className="text-[11px] text-[--text-muted] block">
+                          {safeText(item.valuationMethod, "FIFO")} Değerleme
                         </span>
                       </div>
                     </TableCell>
 
-                    {/* SÜTUN 3: MEVCUT STOK & BİRİM & KESİKLİ LED ÇUBUĞU */}
+                    {/* SÜTUN 3: STOK MİKTARI + LED ÇUBUK */}
                     <TableCell>
-                      <div className="space-y-1.5">
+                      <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className={`text-sm font-semibold ${
-                            isCritical ? "text-rose-400" : "text-white"
-                          }`}>
-                            {totalStock} {item.baseUnit}
+                          <span
+                            className={`text-sm font-semibold tabular-nums ${
+                              isCritical ? "text-[--bad]" : "text-[--text]"
+                            }`}
+                          >
+                            {totalStock} {safeText(item.baseUnit, "Adet")}
                           </span>
                           {isCritical ? (
-                            <span
-                              title={`Kritik stok uyarısı! Min: ${minStock}`}
-                              className="inline-flex items-center gap-1 bg-rose-500/10 text-rose-300 border border-rose-500/20 rounded-full px-2 py-0.5 text-[10px] font-medium"
-                            >
-                              <AlertTriangle className="h-2.5 w-2.5" />
+                            <Badge variant="bad" size="sm" className="gap-1">
+                              <IconAlertTriangle size={11} />
                               Kritik
-                            </span>
+                            </Badge>
                           ) : (
-                            <span className="inline-flex items-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full px-2 py-0.5 text-[10px] font-medium">
+                            <Badge variant="neutral" size="sm">
                               Yeterli
-                            </span>
+                            </Badge>
                           )}
                         </div>
 
-                        {/* Kesikli (Segmented) LED Bar */}
-                        <div className="flex items-center gap-1 pt-0.5">
-                          {[0, 1, 2, 3, 4].map(idx => (
-                            <div
-                              key={idx}
-                              className={`h-1.5 w-3.5 rounded-full transition-colors ${
-                                idx < activeSegments
-                                  ? isCritical
-                                    ? "bg-rose-400 shadow-[0_0_6px_rgba(244,63,94,0.4)]"
-                                    : "bg-[#34D399] shadow-[0_0_6px_rgba(52,211,153,0.35)]"
-                                  : "bg-white/[0.08]"
-                              }`}
-                            />
-                          ))}
-                          <span className="text-[10px] text-zinc-500 ml-1.5">
-                            {availableStock} uygun
-                          </span>
-                        </div>
+                        {/* LED Çubuğu */}
+                        <LedStockBar
+                          total={totalStock}
+                          minLevel={minStock}
+                          isCritical={isCritical}
+                          availableText={`${availableStock} uygun`}
+                        />
                       </div>
                     </TableCell>
 
                     {/* SÜTUN 4: BİRİM MALİYET */}
                     <TableCell className="text-right">
                       <div className="space-y-0.5">
-                        <span className="text-xs font-semibold text-zinc-200 block">
-                          {formatCurrency(unitCost)}
+                        <span className="text-xs font-semibold text-[--text] tabular-nums block">
+                          {safeCurrency(unitCost)}
                         </span>
-                        <span className="text-[10px] text-zinc-500 block">
+                        <span className="text-[11px] text-[--text-muted] block">
                           Katman Bazlı
                         </span>
                       </div>
@@ -273,44 +299,47 @@ export function StockTable({
                     {/* SÜTUN 5: SATIŞ FİYATI */}
                     <TableCell className="text-right">
                       <div className="space-y-0.5">
-                        <span className="text-xs font-semibold text-[#34D399] block font-mono">
-                          {formatCurrency(item.salesPrice || 0)}
+                        <span className="text-xs font-semibold text-[--text] tabular-nums block">
+                          {safeCurrency(salesPrice)}
                         </span>
-                        <span className="text-[10px] text-zinc-500 block">
+                        <span className="text-[11px] text-[--text-muted] block">
                           KDV Dahil
                         </span>
                       </div>
                     </TableCell>
 
-                    {/* SÜTUN 6: İŞLEMLER */}
-                    <TableCell className="text-right pr-5" onClick={e => e.stopPropagation()}>
-                      <div className="flex items-center justify-end gap-1.5">
+                    {/* SÜTUN 6: İŞLEMLER (YALNIZCA HOVER İLE GÖRÜNÜR) */}
+                    <TableCell
+                      className="text-right pr-6"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           size="sm"
                           variant="ghost"
-                          title="Hızlı Stok Girişi (Alış/İrsaliye)"
+                          title="Hızlı Stok Girişi"
                           onClick={() => onQuickMove("IN", item.id)}
-                          className="h-8 w-8 p-0 text-[#34D399] hover:bg-emerald-500/10 rounded-lg cursor-pointer"
+                          className="h-8 w-8 p-0 text-[--brand] hover:bg-[--brand-soft] rounded-lg cursor-pointer"
                         >
-                          <ArrowDownLeft className="h-4 w-4" />
+                          <IconArrowDownLeft size={16} />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
-                          title="Hızlı Stok Çıkışı (Satış/Sarf)"
+                          title="Hızlı Stok Çıkışı"
                           onClick={() => onQuickMove("OUT", item.id)}
-                          className="h-8 w-8 p-0 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg cursor-pointer"
+                          className="h-8 w-8 p-0 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg cursor-pointer"
                         >
-                          <ArrowUpRight className="h-4 w-4" />
+                          <IconArrowUpRight size={16} />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
-                          title="Detaylı İncele (Çekmece)"
+                          title="Detaylı İncele"
                           onClick={() => onSelectItem(item.id)}
-                          className="h-8 w-8 p-0 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg cursor-pointer"
+                          className="h-8 w-8 p-0 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg cursor-pointer"
                         >
-                          <Eye className="h-4 w-4" />
+                          <IconEye size={16} />
                         </Button>
                       </div>
                     </TableCell>
@@ -320,6 +349,41 @@ export function StockTable({
             )}
           </TableBody>
         </Table>
+
+        {/* 3. ALT BİLGİ & SAYFALAMA */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-3.5 bg-[--muted-bg]/40 border-t border-[--line]">
+          <span className="text-xs text-[--text-muted] tabular-nums">
+            Toplam <strong className="text-[--text]">{filteredItems.length}</strong> kalem ürünün{" "}
+            {filteredItems.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}-
+            {Math.min(currentPage * ITEMS_PER_PAGE, filteredItems.length)} arası gösteriliyor
+          </span>
+
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1.5">
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                className="h-8 px-2.5 text-xs rounded-xl"
+              >
+                <IconChevronLeft size={14} />
+              </Button>
+              <span className="text-xs text-[--text] font-medium px-2 tabular-nums">
+                {currentPage} / {totalPages}
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                className="h-8 px-2.5 text-xs rounded-xl"
+              >
+                <IconChevronRight size={14} />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

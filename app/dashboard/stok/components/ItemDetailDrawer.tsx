@@ -11,26 +11,26 @@ import {
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Warehouse,
-  Layers,
-  Clock,
-  Scale,
-  ArrowDownLeft,
-  ArrowUpRight,
-  History,
-  Loader2,
-  Calendar,
-  Factory,
-  QrCode,
-  Lock
-} from "lucide-react"
+  IconWarehouse,
+  IconLayers,
+  IconClock,
+  IconArrowDownLeft,
+  IconArrowUpRight,
+  IconLoader,
+  IconQrCode,
+  IconAlertTriangle,
+  IconFactory,
+  IconHistory
+} from "@/components/ui/app-icons"
 import { useAuth } from "@/lib/auth/context"
 import { isAnyProductionFeatureEnabled } from "@/lib/config/production-feature-flags"
 import { ItemProductionProfileTab } from "./ItemProductionProfileTab"
 import { PrintableLabelModal } from "../../wms/components/PrintableLabelModal"
 import { mockDatabase } from "@/lib/data/mockDatabase"
+import { safeText, safeCurrency, safeNumber, safeDate } from "@/lib/utils/safe-display"
 
 interface ItemDetailDrawerProps {
   itemId: string | null
@@ -91,14 +91,6 @@ export function ItemDetailDrawer({
   const valuation = data?.valuation
   const activeReservations: any[] = Array.isArray(data?.reservations) ? data.reservations : []
 
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
-      maximumFractionDigits: 2
-    }).format(val || 0)
-  }
-
   // Canlı birim çevrim testi
   const handleQuickConvert = (unitRule: any) => {
     const qty = Number(convertQty) || 1
@@ -106,19 +98,24 @@ export function ItemDetailDrawer({
     setConvertedResult(`${qty} ${unitRule.fromUnit} = ${targetBase} ${item.baseUnit}`)
   }
 
+  const totalOnHand = (item?.stockBalances || []).reduce(
+    (s: number, b: any) => s + Number(b.onHandQty || 0),
+    0
+  )
+
   return (
     <Sheet open={isOpen} onOpenChange={open => !open && onClose()}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-xl p-0 overflow-y-auto backdrop-blur-xl bg-[#111513] border-l border-white/[0.06] shadow-2xl flex flex-col text-white"
+        className="w-full sm:max-w-xl p-0 overflow-y-auto bg-white border-l border-[--line] shadow-2xl flex flex-col text-[--text]"
       >
         {loading ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-zinc-400 gap-2">
-            <Loader2 className="h-7 w-7 animate-spin text-[#34D399]" />
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-[--text-muted] gap-3">
+            <IconLoader size={28} className="text-[--brand]" />
             <p className="text-xs">Veritabanından ürün ve maliyet katmanları çekiliyor...</p>
           </div>
         ) : !item ? (
-          <div className="p-6 text-center text-xs text-zinc-500">Ürün bilgisi yüklenemedi.</div>
+          <div className="p-6 text-center text-xs text-[--text-muted]">Ürün bilgisi yüklenemedi.</div>
         ) : (
           <motion.div
             initial={{ x: 60, opacity: 0 }}
@@ -127,55 +124,57 @@ export function ItemDetailDrawer({
             className="flex-1 flex flex-col"
           >
             {/* 1. ÇEKMECE ÜST BİLGİ ALANI */}
-            <div className="p-6 border-b border-white/[0.06] bg-white/[0.01] space-y-4">
+            <div className="p-6 border-b border-[--line] bg-[--page]/50 space-y-4">
               <SheetHeader className="text-left space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-[11px] bg-white/[0.05] text-zinc-300 border border-white/[0.08] rounded-full px-3 py-0.5">
-                    {item.sku}
-                  </span>
-                  <span className="bg-white/[0.04] text-zinc-400 border border-white/[0.08] rounded-full px-3 py-0.5 text-[11px]">
-                    {item.category}
-                  </span>
+                  <Badge variant="outline" size="sm" className="font-mono">
+                    {safeText(item.sku, "SKU Yok")}
+                  </Badge>
+                  <Badge variant="neutral" size="sm">
+                    {safeText(item.category, "Genel")}
+                  </Badge>
                   {item.trackExpiry && (
-                    <span className="bg-amber-500/10 text-amber-300 border border-amber-500/20 rounded-full px-2.5 py-0.5 text-[10px] font-medium">
+                    <Badge variant="warn" size="sm">
                       SKT Hassas
-                    </span>
+                    </Badge>
                   )}
                 </div>
-                <SheetTitle className="text-lg font-semibold text-white leading-snug">
-                  {item.name}
+
+                <SheetTitle className="text-lg font-semibold text-[--text] leading-snug">
+                  {safeText(item.name)}
                 </SheetTitle>
-                <SheetDescription className="text-xs text-zinc-400">
-                  Barkod: <span className="font-mono text-zinc-300">{item.barcode || item.sku}</span> • Değerleme: <span className="font-medium text-[#34D399]">{item.valuationMethod}</span>
+
+                <SheetDescription className="text-xs text-[--text-muted]">
+                  Barkod: <span className="font-mono text-[--text-2]">{safeText(item.barcode, item.sku)}</span> • Değerleme: <span className="font-medium text-[--brand]">{safeText(item.valuationMethod, "FIFO")}</span>
                 </SheetDescription>
               </SheetHeader>
 
               {/* Hızlı Özet İstatistikleri */}
               <div className="grid grid-cols-3 gap-3 pt-1">
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider block">
+                <div className="p-3.5 rounded-xl bg-white border border-[--line]">
+                  <span className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider block">
                     Mevcut Stok
                   </span>
-                  <span className="text-base font-semibold text-white mt-1 block">
-                    {(item.stockBalances || []).reduce((s: number, b: any) => s + Number(b.onHandQty || 0), 0)} {item.baseUnit}
+                  <span className="text-base font-semibold text-[--text] mt-1 block tabular-nums">
+                    {totalOnHand} {safeText(item.baseUnit, "Adet")}
                   </span>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider block">
+                <div className="p-3.5 rounded-xl bg-white border border-[--line]">
+                  <span className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider block">
                     Birim Maliyet (FIFO)
                   </span>
-                  <span className="text-base font-semibold text-[#34D399] mt-1 block font-mono">
-                    {formatCurrency(item.fifoUnitCost || item.standardCost || 0)}
+                  <span className="text-base font-semibold text-[--brand] mt-1 block tabular-nums">
+                    {safeCurrency(item.fifoUnitCost || item.standardCost || 0)}
                   </span>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-                  <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider block">
+                <div className="p-3.5 rounded-xl bg-white border border-[--line]">
+                  <span className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider block">
                     Satış Fiyatı
                   </span>
-                  <span className="text-base font-semibold text-white mt-1 block font-mono">
-                    {formatCurrency(item.salesPrice || 0)}
+                  <span className="text-base font-semibold text-[--text] mt-1 block tabular-nums">
+                    {safeCurrency(item.salesPrice || 0)}
                   </span>
                 </div>
               </div>
@@ -184,48 +183,48 @@ export function ItemDetailDrawer({
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => onQuickMove("IN", item.id)}
-                  className="flex-1 text-xs gap-1.5 bg-[#34D399]/10 text-[#34D399] border-emerald-500/20 hover:bg-[#34D399]/20 rounded-full cursor-pointer h-9"
+                  className="flex-1 text-xs gap-1.5 text-[--brand] hover:bg-[--brand-soft] rounded-xl h-9"
                 >
-                  <ArrowDownLeft className="h-3.5 w-3.5" />
+                  <IconArrowDownLeft size={15} />
                   Stok Girişi Yap
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => onQuickMove("OUT", item.id)}
-                  className="flex-1 text-xs gap-1.5 bg-white/[0.04] text-zinc-300 border-white/[0.08] hover:bg-white/[0.08] hover:text-white rounded-full cursor-pointer h-9"
+                  className="flex-1 text-xs gap-1.5 text-[--text-2] hover:bg-[--muted-bg] rounded-xl h-9"
                 >
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+                  <IconArrowUpRight size={15} />
                   Stok Çıkışı Yap
                 </Button>
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setLabelItemOpen(true)}
-                  className="text-xs gap-1.5 bg-white/[0.04] text-[#34D399] border-white/[0.08] hover:bg-white/[0.08] rounded-full cursor-pointer h-9 px-3.5"
+                  className="text-xs gap-1.5 rounded-xl h-9 px-3.5"
                   title="SKU QR / Barkod Etiketi Yazdır"
                 >
-                  <QrCode className="h-3.5 w-3.5" />
+                  <IconQrCode size={15} />
                   Etiket
                 </Button>
               </div>
 
               {/* Çıkış Politikası & RFID Bilgisi */}
               <div className="flex flex-wrap items-center gap-2 text-[11px]">
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-[#34D399] border border-emerald-500/20 font-mono">
-                  Politika: {item.pickPolicy || (item.trackExpiry ? "FEFO" : "FIFO")}
-                </span>
+                <Badge variant="brand" size="sm">
+                  Politika: {safeText(item.pickPolicy, item.trackExpiry ? "FEFO" : "FIFO")}
+                </Badge>
                 {item.trackSerial && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.05] text-zinc-300 border border-white/[0.08] font-mono">
+                  <Badge variant="neutral" size="sm">
                     Seri Takibi Aktif
-                  </span>
+                  </Badge>
                 )}
                 {item.rfidEpcPrefix && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/20 font-mono">
-                    RFID: {item.rfidEpcPrefix}
-                  </span>
+                  <Badge variant="neutral" size="sm">
+                    RFID: {safeText(item.rfidEpcPrefix)}
+                  </Badge>
                 )}
               </div>
             </div>
@@ -236,30 +235,30 @@ export function ItemDetailDrawer({
                 <TabsList
                   className={`grid ${
                     showProductionTab ? "grid-cols-5" : "grid-cols-4"
-                  } w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-4`}
+                  } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-4`}
                 >
-                  <TabsTrigger value="locations" className="text-xs py-1.5 gap-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">
-                    <Warehouse className="h-3.5 w-3.5" />
+                  <TabsTrigger value="locations" className="text-xs py-1.5 gap-1 rounded-lg">
+                    <IconWarehouse size={13} />
                     Depo / Raf
                   </TabsTrigger>
-                  <TabsTrigger value="costlayers" className="text-xs py-1.5 gap-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">
-                    <Layers className="h-3.5 w-3.5" />
+                  <TabsTrigger value="costlayers" className="text-xs py-1.5 gap-1 rounded-lg">
+                    <IconLayers size={13} />
                     Katmanlar
                   </TabsTrigger>
-                  <TabsTrigger value="units" className="text-xs py-1.5 gap-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">
-                    <Scale className="h-3.5 w-3.5" />
+                  <TabsTrigger value="units" className="text-xs py-1.5 gap-1 rounded-lg">
+                    <IconLayers size={13} />
                     Birimler
                   </TabsTrigger>
-                  <TabsTrigger value="lots" className="text-xs py-1.5 gap-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">
-                    <Clock className="h-3.5 w-3.5" />
+                  <TabsTrigger value="lots" className="text-xs py-1.5 gap-1 rounded-lg">
+                    <IconClock size={13} />
                     Lot / SKT
                   </TabsTrigger>
                   {showProductionTab && (
                     <TabsTrigger
                       value="production"
-                      className="text-xs py-1.5 gap-1 text-emerald-400 data-[state=active]:text-white data-[state=active]:bg-emerald-500/20 rounded-lg"
+                      className="text-xs py-1.5 gap-1 text-[--brand] rounded-lg"
                     >
-                      <Factory className="h-3.5 w-3.5" />
+                      <IconFactory size={13} />
                       Üretim
                     </TabsTrigger>
                   )}
@@ -267,12 +266,12 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 1: DEPO VE RAF DAĞILIMI */}
                 <TabsContent value="locations" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wide">
                     Depo ve Raf Bazında Anlık Stok
                   </h4>
 
                   {(!item.stockBalances || item.stockBalances.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
+                    <div className="text-center py-6 text-xs text-[--text-muted] border border-dashed border-[--line] rounded-xl">
                       Bu ürüne ait henüz kayıtlı stok hareketi bulunmuyor.
                     </div>
                   ) : (
@@ -280,33 +279,33 @@ export function ItemDetailDrawer({
                       {item.stockBalances.map((bal: any) => (
                         <div
                           key={bal.id}
-                          className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-colors flex items-center justify-between"
+                          className="p-3.5 rounded-xl bg-white border border-[--line] hover:border-[--brand-line] transition-colors flex items-center justify-between"
                         >
                           <div className="space-y-1">
-                            <span className="text-xs font-semibold text-white block">
-                              {bal.warehouse?.name || "Depo"}
+                            <span className="text-xs font-semibold text-[--text] block">
+                              {safeText(bal.warehouse?.name, "Depo")}
                             </span>
-                            <div className="flex items-center gap-1.5 text-[11px] text-zinc-400">
+                            <div className="flex items-center gap-1.5 text-[11px] text-[--text-muted]">
                               <span>Raf / Lokasyon:</span>
-                              <span className="font-mono text-[10px] bg-white/[0.06] text-zinc-300 border border-white/[0.08] rounded-full px-2 py-0.5">
-                                {bal.storageBin?.code || bal.binCode || "Genel Depo"}
-                              </span>
+                              <Badge variant="neutral" size="sm">
+                                {safeText(bal.storageBin?.code, bal.binCode || "Genel Depo")}
+                              </Badge>
                               {bal.storageBin?.binPosition && (
-                                <span className="text-zinc-500">({bal.storageBin.binPosition})</span>
+                                <span className="text-[--text-muted]">({bal.storageBin.binPosition})</span>
                               )}
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-sm font-semibold text-white block">
-                              {bal.onHandQty} {item.baseUnit}
+                            <span className="text-sm font-semibold text-[--text] block tabular-nums">
+                              {safeNumber(bal.onHandQty)} {safeText(item.baseUnit, "Adet")}
                             </span>
                             <div className="flex items-center justify-end gap-2 text-[10px]">
                               {Number(bal.reservedQty || 0) > 0 && (
-                                <span className="text-amber-300 font-mono">
+                                <span className="text-[--warn] font-mono">
                                   Rezerve: {bal.reservedQty}
                                 </span>
                               )}
-                              <span className="text-[#34D399] font-medium">
+                              <span className="text-[--brand] font-medium">
                                 Kullanılabilir: {bal.availableQty}
                               </span>
                             </div>
@@ -316,25 +315,25 @@ export function ItemDetailDrawer({
                     </div>
                   )}
 
-                  {/* Açık Stok Rezervasyonları (Fiziksel / Rezerve / Kullanılabilir Ayrımı) */}
+                  {/* Açık Stok Rezervasyonları */}
                   {activeReservations.length > 0 && (
-                    <div className="pt-3 space-y-2 border-t border-white/[0.06]">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300">
-                        <Lock className="h-3.5 w-3.5" />
+                    <div className="pt-3 space-y-2 border-t border-[--line]">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[--warn]">
+                        <IconAlertTriangle size={14} />
                         Aktif WMS Rezervasyonları ({activeReservations.length})
                       </div>
                       <div className="space-y-1.5">
                         {activeReservations.map((r: any) => (
                           <div
                             key={r.id}
-                            className="p-2.5 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 flex items-center justify-between text-[11px]"
+                            className="p-2.5 rounded-xl bg-[--warn-soft] border border-[--warn]/20 flex items-center justify-between text-[11px]"
                           >
                             <div>
-                              <span className="font-mono font-semibold text-white">{r.reservationNo}</span>
-                              <span className="text-zinc-400 ml-2">{r.sourceDocNo || r.sourceDocType}</span>
+                              <span className="font-mono font-semibold text-[--text]">{safeText(r.reservationNo)}</span>
+                              <span className="text-[--text-muted] ml-2">{safeText(r.sourceDocNo, r.sourceDocType)}</span>
                             </div>
-                            <span className="font-mono font-semibold text-amber-300">
-                              {r.reservedQty} {item.baseUnit}
+                            <span className="font-mono font-semibold text-[--warn] tabular-nums">
+                              {r.reservedQty} {safeText(item.baseUnit, "Adet")}
                             </span>
                           </div>
                         ))}
@@ -346,16 +345,16 @@ export function ItemDetailDrawer({
                 {/* SEKME 2: FIFO / LIFO MALİYET KATMANLARI */}
                 <TabsContent value="costlayers" className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+                    <h4 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wide">
                       Aktif Maliyet Katmanları (CostLayers)
                     </h4>
-                    <span className="text-[11px] text-zinc-400">
-                      Yöntem: <strong className="text-[#34D399]">{item.valuationMethod}</strong>
+                    <span className="text-[11px] text-[--text-muted]">
+                      Yöntem: <strong className="text-[--brand]">{safeText(item.valuationMethod, "FIFO")}</strong>
                     </span>
                   </div>
 
                   {(!item.costLayers || item.costLayers.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
+                    <div className="text-center py-6 text-xs text-[--text-muted] border border-dashed border-[--line] rounded-xl">
                       Aktif maliyet katmanı bulunmuyor.
                     </div>
                   ) : (
@@ -363,24 +362,26 @@ export function ItemDetailDrawer({
                       {item.costLayers.map((layer: any, idx: number) => (
                         <div
                           key={layer.id}
-                          className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-1.5"
+                          className="p-3.5 rounded-xl bg-white border border-[--line] space-y-1.5"
                         >
                           <div className="flex items-center justify-between text-xs">
                             <div className="flex items-center gap-2">
-                              <span className="h-5 w-5 rounded-full bg-white/[0.06] text-zinc-300 flex items-center justify-center text-[10px] font-bold">
+                              <span className="h-5 w-5 rounded-full bg-[--muted-bg] text-[--text-2] flex items-center justify-center text-[10px] font-bold">
                                 {idx + 1}
                               </span>
-                              <span className="font-mono font-medium text-white">
-                                {layer.receiptDocNo}
+                              <span className="font-mono font-medium text-[--text]">
+                                {safeText(layer.receiptDocNo, "—")}
                               </span>
                             </div>
-                            <span className="font-semibold text-[#34D399] font-mono">
-                              {formatCurrency(layer.unitCost)} / {item.baseUnit}
+                            <span className="font-semibold text-[--brand] tabular-nums">
+                              {safeCurrency(layer.unitCost)} / {safeText(item.baseUnit, "Adet")}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1.5 border-t border-white/[0.04]">
-                            <span>Giriş: {new Date(layer.layerDate).toLocaleDateString("tr-TR")}</span>
-                            <span>Kalan: <strong className="text-white">{layer.remainingQty}</strong> / {layer.initialQty} {item.baseUnit}</span>
+                          <div className="flex items-center justify-between text-[11px] text-[--text-muted] pt-1.5 border-t border-[--line-soft]">
+                            <span>Giriş: {safeDate(layer.layerDate)}</span>
+                            <span>
+                              Kalan: <strong className="text-[--text]">{layer.remainingQty}</strong> / {layer.initialQty} {safeText(item.baseUnit, "Adet")}
+                            </span>
                           </div>
                         </div>
                       ))}
@@ -389,12 +390,12 @@ export function ItemDetailDrawer({
 
                   {/* Canlı Değerleme Özeti */}
                   {valuation && (
-                    <div className="mt-4 p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06] text-xs space-y-1.5">
-                      <span className="font-semibold text-zinc-300 block">Değerleme Karşılaştırması:</span>
-                      <div className="grid grid-cols-3 gap-2 text-[11px] text-zinc-400">
-                        <div>FIFO: <strong className="text-[#34D399] font-mono">{formatCurrency(valuation.fifoUnitCost)}</strong></div>
-                        <div>LIFO: <strong className="text-zinc-200 font-mono">{formatCurrency(valuation.lifoUnitCost)}</strong></div>
-                        <div>Ağırlıklı Ort: <strong className="text-zinc-200 font-mono">{formatCurrency(valuation.weightedAvgUnitCost)}</strong></div>
+                    <div className="mt-4 p-3.5 rounded-xl bg-[--muted-bg]/50 border border-[--line] text-xs space-y-1.5">
+                      <span className="font-semibold text-[--text] block">Değerleme Karşılaştırması:</span>
+                      <div className="grid grid-cols-3 gap-2 text-[11px] text-[--text-muted]">
+                        <div>FIFO: <strong className="text-[--brand] tabular-nums">{safeCurrency(valuation.fifoUnitCost)}</strong></div>
+                        <div>LIFO: <strong className="text-[--text] tabular-nums">{safeCurrency(valuation.lifoUnitCost)}</strong></div>
+                        <div>Ağırlıklı Ort: <strong className="text-[--text] tabular-nums">{safeCurrency(valuation.weightedAvgUnitCost)}</strong></div>
                       </div>
                     </div>
                   )}
@@ -402,13 +403,13 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 3: ÇOKLU BİRİM ÇEVRİMLERİ */}
                 <TabsContent value="units" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wide">
                     Tanımlı Birim Çevrim Katsayıları
                   </h4>
 
                   {(!item.unitConversions || item.unitConversions.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
-                      Bu ürüne tanımlanmış ek birim çevrimi yok. Baz birim: {item.baseUnit}
+                    <div className="text-center py-6 text-xs text-[--text-muted] border border-dashed border-[--line] rounded-xl">
+                      Bu ürüne tanımlanmış ek birim çevrimi yok. Baz birim: {safeText(item.baseUnit, "Adet")}
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -416,16 +417,16 @@ export function ItemDetailDrawer({
                         {item.unitConversions.map((uc: any) => (
                           <div
                             key={uc.id}
-                            className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs"
+                            className="p-3 rounded-xl bg-white border border-[--line] flex items-center justify-between text-xs"
                           >
-                            <span className="font-medium text-white">
-                              1 {uc.fromUnit} = {uc.multiplier} {item.baseUnit}
+                            <span className="font-medium text-[--text]">
+                              1 {safeText(uc.fromUnit)} = {uc.multiplier} {safeText(item.baseUnit, "Adet")}
                             </span>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => handleQuickConvert(uc)}
-                              className="text-[11px] h-7 text-[#34D399] hover:bg-emerald-500/10 rounded-lg"
+                              className="text-[11px] h-7 text-[--brand] hover:bg-[--brand-soft] rounded-lg"
                             >
                               Hesapla
                             </Button>
@@ -434,26 +435,27 @@ export function ItemDetailDrawer({
                       </div>
 
                       {/* Hızlı Çevrim Aracı */}
-                      <div className="p-3.5 bg-white/[0.02] border border-white/[0.06] rounded-xl space-y-2">
-                        <span className="text-xs font-semibold text-zinc-300 block">Canlı Birim Dönüştürücü:</span>
+                      <div className="p-3.5 bg-[--muted-bg]/50 border border-[--line] rounded-xl space-y-2">
+                        <span className="text-xs font-semibold text-[--text] block">Canlı Birim Dönüştürücü:</span>
                         <div className="flex gap-2">
                           <Input
                             type="number"
                             value={convertQty}
                             onChange={e => setConvertQty(e.target.value)}
                             placeholder="Miktar"
-                            className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white w-24 rounded-lg"
+                            className="text-xs h-8 bg-white border-[--line] text-[--text] w-24 rounded-lg"
                           />
                           <Button
                             size="sm"
+                            variant="primary"
                             onClick={() => handleQuickConvert(item.unitConversions[0])}
-                            className="text-xs h-8 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-lg"
+                            className="text-xs h-8 rounded-lg"
                           >
                             Çevir
                           </Button>
                         </div>
                         {convertedResult && (
-                          <div className="text-xs font-medium text-[#34D399] bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/20">
+                          <div className="text-xs font-medium text-[--brand] bg-[--brand-soft] p-2.5 rounded-lg border border-[--brand-line]">
                             {convertedResult}
                           </div>
                         )}
@@ -464,12 +466,12 @@ export function ItemDetailDrawer({
 
                 {/* SEKME 4: LOT VE SKT GEÇMİŞİ */}
                 <TabsContent value="lots" className="space-y-3">
-                  <h4 className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+                  <h4 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wide">
                     Parti, Lot ve Son Kullanma Tarihleri
                   </h4>
 
                   {(!item.lotSerials || item.lotSerials.length === 0) ? (
-                    <div className="text-center py-6 text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-xl">
+                    <div className="text-center py-6 text-xs text-[--text-muted] border border-dashed border-[--line] rounded-xl">
                       Bu üründe henüz kayıtlı Lot / Seri bulunmuyor.
                     </div>
                   ) : (
@@ -482,30 +484,28 @@ export function ItemDetailDrawer({
                         return (
                           <div
                             key={lot.id}
-                            className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-1.5"
+                            className="p-3.5 rounded-xl bg-white border border-[--line] space-y-1.5"
                           >
                             <div className="flex items-center justify-between text-xs">
-                              <span className="font-mono font-semibold text-white">
-                                {lot.lotNumber}
+                              <span className="font-mono font-semibold text-[--text]">
+                                {safeText(lot.lotNumber, "Lot Yok")}
                               </span>
                               {daysLeft !== null && (
-                                <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-medium border ${
-                                  daysLeft <= 7
-                                    ? "bg-rose-500/10 text-rose-300 border-rose-500/20"
-                                    : daysLeft <= 15
-                                    ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
-                                    : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                                }`}>
+                                <Badge
+                                  variant={daysLeft <= 7 ? "bad" : daysLeft <= 15 ? "warn" : "ok"}
+                                  size="sm"
+                                >
                                   {daysLeft <= 0 ? "SKT Doldu!" : `${daysLeft} gün kaldı`}
-                                </span>
+                                </Badge>
                               )}
                             </div>
-                            <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1 border-t border-white/[0.04]">
-                              <span className="flex items-center gap-1">
-                                <Calendar className="h-3 w-3 text-zinc-500" />
-                                {lot.expiryDate ? new Date(lot.expiryDate).toLocaleDateString("tr-TR") : "Süresiz"}
+                            <div className="flex items-center justify-between text-[11px] text-[--text-muted] pt-1 border-t border-[--line-soft]">
+                              <span>
+                                {lot.expiryDate ? safeDate(lot.expiryDate) : "Süresiz"}
                               </span>
-                              <span>Kalan: <strong className="text-white">{lot.remainingQty}</strong> {item.baseUnit}</span>
+                              <span>
+                                Kalan: <strong className="text-[--text]">{lot.remainingQty}</strong> {safeText(item.baseUnit, "Adet")}
+                              </span>
                             </div>
                           </div>
                         )
@@ -516,8 +516,8 @@ export function ItemDetailDrawer({
                   {/* Son Hareketler */}
                   {item.stockMovements && item.stockMovements.length > 0 && (
                     <div className="pt-4 space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400">
-                        <History className="h-3.5 w-3.5 text-[#34D399]" />
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[--text-muted]">
+                        <IconHistory size={14} className="text-[--brand]" />
                         Son Stok Hareketleri
                       </div>
                       <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
@@ -532,18 +532,18 @@ export function ItemDetailDrawer({
                           return (
                             <div
                               key={move.id}
-                              className="text-[11px] p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-between"
+                              className="text-[11px] p-2.5 rounded-xl bg-[--muted-bg]/40 border border-[--line-soft] flex items-center justify-between"
                             >
                               <div>
-                                <span className={isInbound ? "text-[#34D399] font-medium" : "text-zinc-300 font-medium"}>
+                                <span className={isInbound ? "text-[--brand] font-medium" : "text-[--text-2] font-medium"}>
                                   {isOpening ? "Açılış Bakiyesi (+)" : isInbound ? "Giriş (+)" : "Çıkış (-)"}
                                 </span>
-                                <span className="text-zinc-500 ml-1.5">
-                                  {new Date(move.createdAt).toLocaleDateString("tr-TR")}
+                                <span className="text-[--text-muted] ml-1.5">
+                                  {safeDate(move.createdAt)}
                                 </span>
                               </div>
-                              <span className="font-mono font-medium text-white">
-                                {move.quantity} {move.unit}
+                              <span className="font-mono font-medium text-[--text]">
+                                {move.quantity} {safeText(move.unit, "Adet")}
                               </span>
                             </div>
                           )

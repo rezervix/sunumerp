@@ -3,26 +3,34 @@ import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
+import { IconLoader } from '@/components/ui/app-icons'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all duration-150 ease-out cursor-pointer select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:outline-2 focus-visible:outline-[var(--brand)] focus-visible:outline-offset-2 aria-invalid:border-[var(--bad-fill)] aria-invalid:ring-2 aria-invalid:ring-[var(--bad-fill)]/20",
   {
     variants: {
       variant: {
-        default: 'bg-[#34D399] text-[#061811] font-medium hover:bg-[#34D399]/90 shadow-sm',
-        destructive:
-          'bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20 focus-visible:ring-rose-500/20',
-        outline:
-          'border border-white/[0.06] bg-[#111513]/90 text-zinc-200 shadow-xs hover:bg-emerald-400/15 hover:text-emerald-300 hover:border-emerald-500/25',
+        default:
+          'bg-gradient-to-r from-[var(--brand)] to-[var(--blue)] text-white shadow-[var(--shadow-brand)] hover:from-[var(--brand-hover)] hover:to-[var(--brand-hover)] active:scale-[0.99]',
+        primary:
+          'bg-gradient-to-r from-[var(--brand)] to-[var(--blue)] text-white shadow-[var(--shadow-brand)] hover:from-[var(--brand-hover)] hover:to-[var(--brand-hover)] active:scale-[0.99]',
         secondary:
-          'bg-emerald-400/15 text-emerald-300 border border-emerald-500/25 hover:bg-emerald-400/25',
+          'bg-[var(--bg)] text-[var(--text-2)] border border-[var(--line)] hover:bg-[var(--muted-bg)] hover:border-[var(--brand-line)] hover:text-[var(--text)] active:bg-[var(--brand-soft)]',
+        outline:
+          'bg-[var(--bg)] text-[var(--text-2)] border border-[var(--line)] hover:bg-[var(--muted-bg)] hover:border-[var(--brand-line)] hover:text-[var(--text)] active:bg-[var(--brand-soft)]',
         ghost:
-          'text-zinc-400 hover:bg-white/[0.04] hover:text-white',
-        link: 'text-emerald-400 underline-offset-4 hover:underline',
+          'bg-transparent text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] active:bg-[var(--brand-soft-2)]',
+        tertiary:
+          'bg-transparent text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] active:bg-[var(--brand-soft-2)]',
+        destructive:
+          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-white active:opacity-95',
+        danger:
+          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-white active:opacity-95',
+        link: 'text-[var(--brand)] underline-offset-4 hover:text-[var(--brand-hover)] hover:underline px-0',
       },
       size: {
         default: 'h-9 px-5 py-2 has-[>svg]:px-4',
-        sm: 'h-8 rounded-full gap-1.5 px-3.5 has-[>svg]:px-3',
+        sm: 'h-8 rounded-full gap-1.5 px-3.5 text-xs has-[>svg]:px-3',
         lg: 'h-10 rounded-full px-6 has-[>svg]:px-4',
         icon: 'size-9 rounded-full',
         'icon-sm': 'size-8 rounded-full',
@@ -41,19 +49,38 @@ function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  disabled,
+  children,
   ...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    loading?: boolean
   }) {
-  const Comp = asChild ? Slot : 'button'
+  if (asChild && !loading) {
+    return (
+      <Slot
+        data-slot="button"
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      >
+        {children}
+      </Slot>
+    )
+  }
 
   return (
-    <Comp
+    <button
       data-slot="button"
+      aria-busy={loading || undefined}
+      disabled={disabled || loading}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {loading && <IconLoader className="size-4 shrink-0" />}
+      {children}
+    </button>
   )
 }
 

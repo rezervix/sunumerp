@@ -19,82 +19,11 @@ export function SaasManager() {
         if (!res.ok) return
         const config = await res.json()
 
-        // Apply theme colors
-        if (config.themeColors) {
-          const {
-            primary, accent, primaryForeground, accentForeground,
-            darkBackground, darkCard, darkPopover, darkSidebar, darkHeader,
-            darkPrimary, darkPrimaryForeground, darkAccent, darkAccentForeground,
-            darkForeground, darkMutedForeground, darkBorder
-          } = config.themeColors
-
-          const pFg = primaryForeground || "#FFFFFF"
-          const aFg = accentForeground || "#FFFFFF"
-          
-          // Dark mode custom tokens derived from brand kit
-          const dBg = darkBackground || "#171310"
-          const dCard = darkCard || "#231C17"
-          const dPopover = darkPopover || "#2E261F"
-          const dSidebar = darkSidebar || "#1C1613"
-          const dHeader = darkHeader || dSidebar
-          const dPrimary = darkPrimary || primary || "#E6923C"
-          const dPrimaryFg = darkPrimaryForeground || "#FFFFFF"
-          const dAccent = darkAccent || accent || "#E2534B"
-          const dAccentFg = darkAccentForeground || "#FFFFFF"
-          const dFg = darkForeground || "#F6F3F0"
-          const dMutedFg = darkMutedForeground || "#A89F95"
-          const dBorder = darkBorder || "rgba(248, 239, 226, 0.1)"
-
-          // Inject custom color styles
-          let styleEl = document.getElementById("dynamic-brand-kit")
-          if (!styleEl) {
-            styleEl = document.createElement("style")
-            styleEl.id = "dynamic-brand-kit"
-            document.head.appendChild(styleEl)
-          }
-
-          styleEl.innerHTML = `
-            :root {
-              --primary: ${primary};
-              --primary-foreground: ${pFg};
-              --ring: ${primary};
-              --accent: ${accent};
-              --accent-foreground: ${aFg};
-              --sidebar-primary: ${primary};
-              --sidebar-primary-foreground: ${pFg};
-              --sidebar-accent-foreground: ${primary};
-            }
-            .dark {
-              --background: ${dBg};
-              --foreground: ${dFg};
-              --card: ${dCard};
-              --card-foreground: ${dFg};
-              --popover: ${dPopover};
-              --popover-foreground: ${dFg};
-              --sidebar: ${dSidebar};
-              --sidebar-foreground: ${dFg};
-              --sidebar-border: ${dBorder};
-              --sidebar-primary: ${dPrimary};
-              --sidebar-primary-foreground: ${dPrimaryFg};
-              --sidebar-accent-foreground: ${dPrimary};
-              --header: ${dHeader};
-              --header-border: ${dBorder};
-              --primary: ${dPrimary};
-              --primary-foreground: ${dPrimaryFg};
-              --ring: ${dPrimary};
-              --accent: ${dAccent};
-              --accent-foreground: ${dAccentFg};
-              --muted-foreground: ${dMutedFg};
-              --border: ${dBorder};
-            }
-          `
-
-          // Store colors locally for immediate availability on reload
-          localStorage.setItem("theme-primary", primary)
-          localStorage.setItem("theme-accent", accent)
-          localStorage.setItem("theme-dark-bg", dBg)
-          localStorage.setItem("theme-dark-card", dCard)
-          localStorage.setItem("theme-dark-primary", dPrimary)
+        // Faz 4 Token Bütünlüğü: "Berrak Cam & Kurumsal Mavi" tek doğruluk kaynağı (:root B1 token'ları)
+        // Eski koyu/sarı dinamik tema enjeksiyonunun --primary / --ring / --brand token'larını ezmesi engellenir.
+        const legacyStyleEl = document.getElementById("dynamic-brand-kit")
+        if (legacyStyleEl) {
+          legacyStyleEl.remove()
         }
 
         // Apply custom logo if stored in config (prefer bgRemovedLogoUrl if available)

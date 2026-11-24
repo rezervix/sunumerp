@@ -4,11 +4,11 @@ import React, { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import {
-  PackagePlus,
-  ArrowDownLeft,
-  ArrowUpRight,
-  RefreshCw
-} from "lucide-react"
+  IconPlus,
+  IconArrowDownLeft,
+  IconArrowUpRight,
+  IconRefresh
+} from "@/components/ui/app-icons"
 
 import { InventoryModuleNav } from "./components/InventoryModuleNav"
 import { ExecutiveAiBanner } from "./components/ExecutiveAiBanner"
@@ -45,7 +45,7 @@ export default function StockDashboardPage() {
     return () => window.removeEventListener("sunum-mockdb-change", handleDbChange)
   }, [])
 
-  // Gerçek veritabanından veri çekme (Hata veya boş gelirse mockDatabase'e zarifçe döner)
+  // Veritabanından veri çekme (Demo fallback mantığı korunur)
   const fetchInventory = useCallback(async (isSilent = false) => {
     if (!isSilent) setLoading(true)
     else setRefreshing(true)
@@ -81,7 +81,7 @@ export default function StockDashboardPage() {
     fetchInventory(true)
   }, [fetchInventory])
 
-  // Hızlı hareket kısayolu (tablodan veya üst bardan tetiklenebilir)
+  // Hızlı hareket kısayolu
   const handleOpenQuickMove = (mode: "IN" | "OUT", itemId?: string) => {
     setQuickMoveMode(mode)
     if (itemId) {
@@ -97,28 +97,21 @@ export default function StockDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* ══════════════════════════════════════════════════════════
-          0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON
-         ══════════════════════════════════════════════════════════ */}
+    <div className="space-y-8">
+      {/* 0. MODÜL İÇİ NAVİGASYON (AÇIK CAM TEMA) */}
       <InventoryModuleNav />
 
-      {/* ══════════════════════════════════════════════════════════
-          1. GERÇEK VERİTABANI ANALİZİNDEN BESLENEN 2 CÜMLELİK
-             "AKILLI YÖNETİCİ ÖZETİ VE ÖNERİ" BANDI (FAZ 4)
-         ══════════════════════════════════════════════════════════ */}
+      {/* 1. AI YÖNETİCİ ÖZETİ BARI (FAZ 4) */}
       <ExecutiveAiBanner
         refreshTrigger={aiRefreshKey}
         onQuickStockEntry={itemId => handleOpenQuickMove("IN", itemId)}
       />
 
-      {/* ══════════════════════════════════════════════════════════
-          2. ÜST BAR: BAŞLIK + 3 NET ÇALIŞAN AKSİYON BUTONU
-         ══════════════════════════════════════════════════════════ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+      {/* 2. BAŞLIK BÖLGESİ: BAŞLIK + TEK BİRİNCİL BUTON & İKİNCİL BUTONLAR */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl font-light tracking-tight text-white">
+            <h1 className="text-2xl font-semibold tracking-tight text-[--text]">
               Stok Kartları & Envanter Yönetimi
             </h1>
             <Button
@@ -126,61 +119,58 @@ export default function StockDashboardPage() {
               size="sm"
               onClick={() => fetchInventory(true)}
               disabled={loading || refreshing}
-              className="h-8 w-8 p-0 text-zinc-500 hover:text-white hover:bg-white/[0.06] rounded-full cursor-pointer"
+              className="h-8 w-8 p-0 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-full cursor-pointer"
               title="Verileri Yenile"
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin text-[#34D399]" : ""}`} />
+              <IconRefresh size={15} className={refreshing ? "animate-spin text-[--brand]" : ""} />
             </Button>
           </div>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-[--text-muted] mt-1">
             Gerçek zamanlı depo bakiyeleri, FIFO maliyet katmanları ve parti izlenebilirliği
           </p>
         </div>
 
-        {/* 3 NET ÇALIŞAN AKSİYON BUTONU */}
+        {/* AKSİYON BUTONLARI: SAYFA BAŞINA TEK BİRİNCİL BUTON */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* BUTON 1: + YENİ ÜRÜN TANIMLA */}
+          {/* TEK BİRİNCİL BUTON */}
           <Button
-            onClick={() => setIsCreateOpen(true)}
+            variant="primary"
             size="sm"
-            className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-4 gap-1.5 rounded-full shadow-lg shadow-emerald-500/20 cursor-pointer"
+            onClick={() => setIsCreateOpen(true)}
+            className="h-9 px-4 gap-1.5 rounded-xl cursor-pointer"
           >
-            <PackagePlus className="h-4 w-4" />
+            <IconPlus size={15} />
             Yeni Ürün Tanımla
           </Button>
 
-          {/* BUTON 2: HIZLI STOK GİRİŞİ (ALIŞ/İRSALİYE) */}
+          {/* İKİNCİL BUTON: HIZLI STOK GİRİŞİ */}
           <Button
-            onClick={() => handleOpenQuickMove("IN")}
+            variant="secondary"
             size="sm"
-            variant="outline"
-            className="bg-white/[0.04] border-white/[0.08] text-zinc-300 hover:bg-white/[0.08] hover:text-white text-xs h-9 px-3.5 gap-1.5 rounded-full cursor-pointer"
+            onClick={() => handleOpenQuickMove("IN")}
+            className="h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
           >
-            <ArrowDownLeft className="h-4 w-4 text-[#34D399]" />
+            <IconArrowDownLeft size={15} className="text-[--brand]" />
             Hızlı Stok Girişi
           </Button>
 
-          {/* BUTON 3: HIZLI STOK ÇIKIŞI (SATIŞ/SARF) */}
+          {/* İKİNCİL BUTON: HIZLI STOK ÇIKIŞI */}
           <Button
-            onClick={() => handleOpenQuickMove("OUT")}
+            variant="secondary"
             size="sm"
-            variant="outline"
-            className="bg-white/[0.04] border-white/[0.08] text-zinc-300 hover:bg-white/[0.08] hover:text-white text-xs h-9 px-3.5 gap-1.5 rounded-full cursor-pointer"
+            onClick={() => handleOpenQuickMove("OUT")}
+            className="h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
           >
-            <ArrowUpRight className="h-4 w-4 text-zinc-400" />
+            <IconArrowUpRight size={15} className="text-[--text-muted]" />
             Hızlı Stok Çıkışı
           </Button>
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════════
-          3. 4 NET ÖZET KART (KUTUSUZ / BORDERLESS KPI STRIP)
-         ══════════════════════════════════════════════════════════ */}
+      {/* 3. KUTUSUZ 4'LÜ KPI ŞERİDİ (B4) */}
       <StockSummaryCards stats={stats} loading={loading} />
 
-      {/* ══════════════════════════════════════════════════════════
-          4. SADELEŞTİRİLMİŞ 6 SÜTUNLU ANA STOK TABLOSU
-         ══════════════════════════════════════════════════════════ */}
+      {/* 4. SADELEŞTİRİLMİŞ 6 SÜTUNLU ANA STOK TABLOSU (FAZ 4) */}
       <StockTable
         items={items}
         loading={loading}
@@ -188,9 +178,7 @@ export default function StockDashboardPage() {
         onQuickMove={handleOpenQuickMove}
       />
 
-      {/* ══════════════════════════════════════════════════════════
-          5. CANLI VERİTABANI DETAY ÇEKMECESİ (DRAWER)
-         ══════════════════════════════════════════════════════════ */}
+      {/* 5. DETAY ÇEKMECESİ (DRAWER) */}
       <ItemDetailDrawer
         itemId={selectedItemId}
         isOpen={isDrawerOpen}
@@ -201,9 +189,7 @@ export default function StockDashboardPage() {
         }}
       />
 
-      {/* ══════════════════════════════════════════════════════════
-          6. "+ YENİ ÜRÜN TANIMLA" MODAL (4 TEMEL ALAN + GELİŞMİŞ)
-         ══════════════════════════════════════════════════════════ */}
+      {/* 6. YENİ ÜRÜN TANIMLA MODAL */}
       <CreateItemModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
@@ -215,9 +201,7 @@ export default function StockDashboardPage() {
         }}
       />
 
-      {/* ══════════════════════════════════════════════════════════
-          7. HIZLI STOK GİRİŞİ / ÇIKIŞI MODAL
-         ══════════════════════════════════════════════════════════ */}
+      {/* 7. HIZLI STOK GİRİŞİ / ÇIKIŞI MODAL */}
       <QuickStockMovementModal
         isOpen={isQuickMoveOpen}
         onClose={() => setIsQuickMoveOpen(false)}

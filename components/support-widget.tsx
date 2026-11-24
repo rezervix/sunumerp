@@ -242,11 +242,11 @@ export function SupportWidget() {
 
   return (
     <>
-      {/* Floating Action Button (FAB) */}
+      {/* Floating Action Button (FAB) — Daron AMA AI solunda sade cam destek butonu */}
       <button
         id="support-widget-fab"
         onClick={handleOpenWidget}
-        className="fixed bottom-6 right-6 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-[#111513]/95 border border-white/[0.08] text-zinc-400 hover:text-emerald-300 hover:border-emerald-500/30 shadow-lg transition-all duration-200 focus:outline-none cursor-pointer backdrop-blur-xl"
+        className="fixed bottom-5 right-40 z-40 hidden sm:flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/85 border border-[var(--line)] text-[var(--text-muted)] hover:text-[var(--brand)] hover:border-[var(--brand-line)] shadow-[var(--shadow-card)] transition-all duration-150 focus:outline-none cursor-pointer backdrop-blur-xl"
         title="Destek Talebi / Hata Bildir"
       >
         <LifeBuoy size={16} />

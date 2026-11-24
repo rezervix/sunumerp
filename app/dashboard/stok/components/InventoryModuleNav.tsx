@@ -5,44 +5,44 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import {
-  Boxes,
-  Warehouse,
-  ShoppingCart,
-  Globe,
-  Sparkles
-} from "lucide-react"
+  IconBoxes,
+  IconWarehouse,
+  IconShoppingBag,
+  IconGlobe,
+  IconSparkles
+} from "@/components/ui/app-icons"
 
 const MODULE_TABS = [
   {
     id: "stok",
-    label: "1. Stok Kartları & Envanter",
+    label: "Stok & Envanter",
     href: "/dashboard/stok",
-    icon: Boxes
+    icon: IconBoxes
   },
   {
     id: "wms",
-    label: "2. Depo Operasyonları & Sayım (WMS)",
+    label: "Depo (WMS)",
     href: "/dashboard/wms",
-    icon: Warehouse
+    icon: IconWarehouse
   },
   {
     id: "satinalma",
-    label: "3. Satın Alma & Otomatik Sipariş",
+    label: "Satın Alma",
     href: "/dashboard/satinalma",
-    icon: ShoppingCart
+    icon: IconShoppingBag
   },
   {
     id: "omnichannel",
-    label: "4. Çok Kanallı Satış & Sevkiyat",
+    label: "Çok Kanallı Satış",
     href: "/dashboard/omnichannel",
-    icon: Globe
+    icon: IconGlobe
   },
   {
     id: "stok-ai",
-    label: "5. AI Analiz & Ayarlar",
+    label: "AI Analiz",
     href: "/dashboard/stok-ai",
     matchPaths: ["/dashboard/stok-ai", "/dashboard/envanter-ekosistem"],
-    icon: Sparkles
+    icon: IconSparkles
   }
 ]
 
@@ -50,7 +50,7 @@ export function InventoryModuleNav() {
   const pathname = usePathname()
 
   return (
-    <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-2xl p-1.5 overflow-x-auto shadow-2xl">
+    <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-2xl p-1.5 overflow-x-auto shadow-xs">
       <div className="flex items-center gap-1.5 min-w-max">
         {MODULE_TABS.map(tab => {
           const Icon = tab.icon
@@ -62,19 +62,21 @@ export function InventoryModuleNav() {
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
-                isActive ? "text-white font-semibold" : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+              className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                isActive
+                  ? "text-[--brand] font-semibold"
+                  : "text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg]"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="inventoryModuleNavActive"
-                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.12] rounded-xl shadow-sm"
+                  className="absolute inset-0 bg-[--brand-soft] border border-[--brand-line] rounded-xl shadow-xs"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Icon className={`h-3.5 w-3.5 ${isActive ? "text-[#34D399]" : "text-zinc-500"}`} />
+              <span className="relative z-10 flex items-center gap-1.5">
+                <Icon size={14} className={isActive ? "text-[--brand]" : "text-[--text-muted]"} />
                 <span>{tab.label}</span>
               </span>
             </Link>

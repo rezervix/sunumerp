@@ -262,17 +262,17 @@ export function CreateItemModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && onClose()}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto backdrop-blur-xl bg-[#111513] border border-white/[0.08] rounded-2xl shadow-2xl text-white">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white border border-[--line] rounded-2xl shadow-2xl text-[--text]">
         <DialogHeader>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-[#34D399] border border-emerald-500/20">
+            <div className="p-2 rounded-xl bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
               <PackagePlus className="h-5 w-5" />
             </div>
             <div>
-              <DialogTitle className="text-base font-semibold text-white">
+              <DialogTitle className="text-base font-semibold text-[--text]">
                 Yeni Ürün Tanımla
               </DialogTitle>
-              <DialogDescription className="text-xs text-zinc-400">
+              <DialogDescription className="text-xs text-[--text-muted]">
                 Stok kartınızı hızla oluşturun; isteğe bağlı varyant, reçete ve birim çevrimlerini yapılandırın.
               </DialogDescription>
             </div>
@@ -290,23 +290,23 @@ export function CreateItemModal({
           {/* ══════════════════════════════════════════════════════════
               4 TEMEL ALAN (İLK BAKIŞTA GÖRÜNEN SADE FORM)
              ══════════════════════════════════════════════════════════ */}
-          <div className="p-4 bg-white/[0.02] border border-white/[0.06] rounded-2xl space-y-3.5">
-            <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.06]">
-              <span className="text-xs font-semibold text-[#34D399] uppercase tracking-wide">
+          <div className="p-4 bg-[--muted-bg]/30 border border-[--line] rounded-2xl space-y-3.5">
+            <div className="flex items-center justify-between pb-1.5 border-b border-[--line]">
+              <span className="text-xs font-semibold text-[--brand] uppercase tracking-wide">
                 Temel Ürün Bilgileri
               </span>
-              <span className="text-[11px] text-zinc-500">* Zorunlu 4 temel alan</span>
+              <span className="text-[11px] text-[--text-muted]">* Zorunlu 4 temel alan</span>
             </div>
 
             {/* ALAN 1: ÜRÜN ADI */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium text-zinc-300">1. Ürün Adı *</Label>
+              <Label className="text-xs font-medium text-[--text-2]">1. Ürün Adı *</Label>
               <Input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="Örn: Ekvator Kırmızı Gül veya Kazablanka Lilyum"
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl focus:border-[#34D399] h-9.5"
+                className="text-xs bg-white border-[--line] text-[--text] rounded-xl focus:border-[--brand] h-9.5"
                 required
               />
             </div>
@@ -315,11 +315,11 @@ export function CreateItemModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-zinc-300">2. Ürün Kodu (SKU) *</Label>
+                  <Label className="text-xs font-medium text-[--text-2]">2. Ürün Kodu (SKU) *</Label>
                   <button
                     type="button"
                     onClick={handleAutoGenerateSku}
-                    className="text-[11px] text-[#34D399] hover:text-[#34D399]/80 flex items-center gap-1 font-medium cursor-pointer"
+                    className="text-[11px] text-[--brand] hover:text-[--brand]/80 flex items-center gap-1 font-medium cursor-pointer"
                   >
                     <Sparkles className="h-3 w-3" />
                     Otomatik Üret
@@ -330,19 +330,19 @@ export function CreateItemModal({
                   value={sku}
                   onChange={e => setSku(e.target.value.toUpperCase())}
                   placeholder="GUL-EKV-01"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl uppercase h-9.5"
+                  className="text-xs font-mono bg-white border-[--line] text-[--text] rounded-xl uppercase h-9.5"
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">Barkod (EAN / GTIN)</Label>
+                <Label className="text-xs font-medium text-[--text-2]">Barkod (EAN / GTIN)</Label>
                 <Input
                   type="text"
                   value={barcode}
                   onChange={e => setBarcode(e.target.value)}
                   placeholder="8690001001"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                  className="text-xs font-mono bg-white border-[--line] text-[--text] rounded-xl h-9.5"
                 />
               </div>
             </div>
@@ -350,7 +350,7 @@ export function CreateItemModal({
             {/* ALAN 3: BAŞLANGIÇ STOĞU + DEPO (VE RAF) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">3. Başlangıç Stoğu</Label>
+                <Label className="text-xs font-medium text-[--text-2]">3. Başlangıç Stoğu</Label>
                 <div className="flex gap-1.5">
                   <Input
                     type="number"
@@ -359,13 +359,13 @@ export function CreateItemModal({
                     value={initialStock}
                     onChange={e => setInitialStock(e.target.value)}
                     placeholder="0"
-                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                    className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9.5"
                   />
                   <Select value={baseUnit} onValueChange={setBaseUnit}>
-                    <SelectTrigger className="w-24 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl shrink-0 h-9.5">
+                    <SelectTrigger className="w-24 text-xs bg-white border-[--line] text-[--text-2] rounded-xl shrink-0 h-9.5">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                    <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                       <SelectItem value="Adet" className="text-xs">Adet</SelectItem>
                       <SelectItem value="Demet" className="text-xs">Demet</SelectItem>
                       <SelectItem value="Dal" className="text-xs">Dal</SelectItem>
@@ -379,12 +379,12 @@ export function CreateItemModal({
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">Giriş Deposu</Label>
+                <Label className="text-xs font-medium text-[--text-2]">Giriş Deposu</Label>
                 <Select value={warehouseId} onValueChange={setWarehouseId}>
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-[--text-2] rounded-xl h-9.5">
                     <SelectValue placeholder="Depo..." />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                     {warehouses.map(wh => (
                       <SelectItem key={wh.id} value={wh.id} className="text-xs">
                         {wh.name}
@@ -395,13 +395,13 @@ export function CreateItemModal({
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">Raf / Göz (Opsiyonel)</Label>
+                <Label className="text-xs font-medium text-[--text-2]">Raf / Göz (Opsiyonel)</Label>
                 <Select value={storageBinId} onValueChange={setStorageBinId}>
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-[--text-2] rounded-xl h-9.5">
                     <SelectValue placeholder="Raf seçin..." />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
-                    <SelectItem value="none" className="text-xs text-zinc-500">Genel Depo</SelectItem>
+                  <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
+                    <SelectItem value="none" className="text-xs text-[--text-muted]">Genel Depo</SelectItem>
                     {availableBins.map((bin: any) => (
                       <SelectItem key={bin.id} value={bin.id} className="text-xs">
                         {bin.code} {bin.binPosition ? `(${bin.binPosition})` : ""}
@@ -415,7 +415,7 @@ export function CreateItemModal({
             {/* ALAN 4: SATIŞ FİYATI & MALİYET */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">4. Satış Fiyatı (₺) *</Label>
+                <Label className="text-xs font-medium text-[--text-2]">4. Satış Fiyatı (₺) *</Label>
                 <Input
                   type="number"
                   min="0"
@@ -423,12 +423,12 @@ export function CreateItemModal({
                   value={salesPrice}
                   onChange={e => setSalesPrice(e.target.value)}
                   placeholder="0.00 ₺"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5 font-medium"
+                  className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9.5 font-medium"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-zinc-300">Alış Maliyeti (Standart ₺)</Label>
+                <Label className="text-xs font-medium text-[--text-2]">Alış Maliyeti (Standart ₺)</Label>
                 <Input
                   type="number"
                   min="0"
@@ -436,7 +436,7 @@ export function CreateItemModal({
                   value={standardCost}
                   onChange={e => setStandardCost(e.target.value)}
                   placeholder="0.00 ₺"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5 font-medium"
+                  className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9.5 font-medium"
                 />
               </div>
             </div>
@@ -445,28 +445,27 @@ export function CreateItemModal({
           {/* ══════════════════════════════════════════════════════════
               GELİŞMİŞ ÖZELLİKLER (AKORDEON ALTINDA TEMİZ SEKMELER)
              ══════════════════════════════════════════════════════════ */}
-          <Accordion type="single" collapsible className="w-full bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
+          <Accordion type="single" collapsible className="w-full bg-[--muted-bg]/30 border border-[--line] rounded-2xl overflow-hidden">
             <AccordionItem value="advanced-options" className="border-none">
-              <AccordionTrigger className="px-4 py-3 hover:no-underline text-xs font-medium text-zinc-300 hover:text-white">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline text-xs font-medium text-[--text-2] hover:text-[--text]">
                 <span className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-[#34D399]" />
+                  <span className="h-2 w-2 rounded-full bg-[--brand]" />
                   Gelişmiş Özellikler (Varyant, Lot/SKT, Birim Çevrimi, BOM Reçetesi, FIFO)
                 </span>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-4 pt-1">
                 <Tabs defaultValue="variants" className="w-full">
                   <TabsList
-                    className={`grid ${
-                      showProductionTab ? "grid-cols-6" : "grid-cols-5"
-                    } w-full bg-black/40 border border-white/[0.06] p-1 rounded-xl mb-3`}
+                    className={`grid ${showProductionTab ? "grid-cols-6" : "grid-cols-5"
+                      } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-3`}
                   >
-                    <TabsTrigger value="variants" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Varyantlar</TabsTrigger>
-                    <TabsTrigger value="lots" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Lot / SKT</TabsTrigger>
-                    <TabsTrigger value="units" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Çoklu Birim</TabsTrigger>
-                    <TabsTrigger value="costing" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">Değerleme</TabsTrigger>
-                    <TabsTrigger value="bom" className="text-[11px] py-1 text-zinc-400 data-[state=active]:text-white data-[state=active]:bg-white/[0.1] rounded-lg">BOM Reçete</TabsTrigger>
+                    <TabsTrigger value="variants" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Varyantlar</TabsTrigger>
+                    <TabsTrigger value="lots" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Lot / SKT</TabsTrigger>
+                    <TabsTrigger value="units" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Çoklu Birim</TabsTrigger>
+                    <TabsTrigger value="costing" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Değerleme</TabsTrigger>
+                    <TabsTrigger value="bom" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">BOM Reçete</TabsTrigger>
                     {showProductionTab && (
-                      <TabsTrigger value="production" className="text-[11px] py-1 text-emerald-400 data-[state=active]:text-white data-[state=active]:bg-emerald-500/20 rounded-lg">
+                      <TabsTrigger value="production" className="text-[11px] py-1 text-[--brand] data-[state=active]:text-[--text] data-[state=active]:bg-[--brand-soft] rounded-lg">
                         Üretim Kartı
                       </TabsTrigger>
                     )}
@@ -475,7 +474,7 @@ export function CreateItemModal({
                   {/* SEKME 1: VARYANTLAR (Renk / Beden) */}
                   <TabsContent value="variants" className="space-y-3 pt-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-[--text-muted]">
                         Ürününüzün Renk, Beden veya Boyut varyantları varsa tanımlayın.
                       </p>
                       <Button
@@ -483,7 +482,7 @@ export function CreateItemModal({
                         variant="outline"
                         size="sm"
                         onClick={handleAddVariant}
-                        className="text-xs h-7.5 gap-1 bg-white/[0.04] text-zinc-300 hover:text-white border-white/[0.08] rounded-lg"
+                        className="text-xs h-7.5 gap-1 bg-[--muted-bg]/40 text-[--text-2] hover:text-[--text] border-[--line] rounded-lg"
                       >
                         <Plus className="h-3 w-3" />
                         Varyant Ekle
@@ -491,13 +490,13 @@ export function CreateItemModal({
                     </div>
 
                     {variants.length === 0 ? (
-                      <div className="text-center py-4 border border-dashed border-white/[0.08] rounded-xl text-xs text-zinc-500">
+                      <div className="text-center py-4 border border-dashed border-[--line] rounded-xl text-xs text-[--text-muted]">
                         Tanımlı varyant yok. Tekil ürün olarak kaydedilecektir.
                       </div>
                     ) : (
                       <div className="space-y-2">
                         {variants.map((v, idx) => (
-                          <div key={idx} className="flex items-center gap-2 bg-white/[0.03] p-2 rounded-xl border border-white/[0.06] text-xs">
+                          <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded-xl border border-[--line] text-xs">
                             <Input
                               value={v.variantName}
                               onChange={e => {
@@ -506,7 +505,7 @@ export function CreateItemModal({
                                 setVariants(next)
                               }}
                               placeholder="Varyant Adı (Örn: Pudra Pembe, 70cm)"
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                             />
                             <Input
                               value={v.sku}
@@ -516,7 +515,7 @@ export function CreateItemModal({
                                 setVariants(next)
                               }}
                               placeholder="Varyant SKU"
-                              className="text-xs h-8 font-mono bg-white/[0.04] border-white/[0.08] text-white rounded-lg w-32"
+                              className="text-xs h-8 font-mono bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg w-32"
                             />
                             <Input
                               type="number"
@@ -527,7 +526,7 @@ export function CreateItemModal({
                                 setVariants(next)
                               }}
                               placeholder="Stok"
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg w-20"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg w-20"
                             />
                             <Button
                               type="button"
@@ -553,7 +552,7 @@ export function CreateItemModal({
                           checked={trackLot}
                           onCheckedChange={checked => setTrackLot(Boolean(checked))}
                         />
-                        <Label htmlFor="trackLot" className="text-xs font-medium text-zinc-300 cursor-pointer">
+                        <Label htmlFor="trackLot" className="text-xs font-medium text-[--text-2] cursor-pointer">
                           Parti / Lot Numarası Takibi
                         </Label>
                       </div>
@@ -563,7 +562,7 @@ export function CreateItemModal({
                           checked={trackExpiry}
                           onCheckedChange={checked => setTrackExpiry(Boolean(checked))}
                         />
-                        <Label htmlFor="trackExpiry" className="text-xs font-medium text-zinc-300 cursor-pointer">
+                        <Label htmlFor="trackExpiry" className="text-xs font-medium text-[--text-2] cursor-pointer">
                           Son Kullanma / FEFO Takibi
                         </Label>
                       </div>
@@ -573,31 +572,31 @@ export function CreateItemModal({
                           checked={trackSerial}
                           onCheckedChange={checked => setTrackSerial(Boolean(checked))}
                         />
-                        <Label htmlFor="trackSerial" className="text-xs font-medium text-zinc-300 cursor-pointer">
+                        <Label htmlFor="trackSerial" className="text-xs font-medium text-[--text-2] cursor-pointer">
                           Seri No (Serial) Takibi
                         </Label>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-white/[0.02] border border-white/[0.06] rounded-xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[--muted-bg]/30 border border-[--line] rounded-xl">
                       <div className="space-y-1">
-                        <Label className="text-[11px] font-medium text-zinc-300">Çıkış Öncelik Politikası</Label>
+                        <Label className="text-[11px] font-medium text-[--text-2]">Çıkış Öncelik Politikası</Label>
                         <select
                           value={pickPolicy}
                           onChange={e => setPickPolicy(e.target.value as "FEFO" | "FIFO")}
-                          className="w-full h-8 text-xs bg-black/40 border border-white/[0.08] text-white rounded-lg px-2"
+                          className="w-full h-8 text-xs bg-[--muted-bg] border border-[--line] text-[--text] rounded-lg px-2"
                         >
-                          <option value="FEFO" className="bg-[#111513]">FEFO (İlk Biten Önce Çıkar)</option>
-                          <option value="FIFO" className="bg-[#111513]">FIFO (İlk Giren Önce Çıkar)</option>
+                          <option value="FEFO" className="bg-white">FEFO (İlk Biten Önce Çıkar)</option>
+                          <option value="FIFO" className="bg-white">FIFO (İlk Giren Önce Çıkar)</option>
                         </select>
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[11px] font-medium text-zinc-300">RFID EPC Ön Eki (Opsiyonel)</Label>
+                        <Label className="text-[11px] font-medium text-[--text-2]">RFID EPC Ön Eki (Opsiyonel)</Label>
                         <Input
                           value={rfidEpcPrefix}
                           onChange={e => setRfidEpcPrefix(e.target.value)}
                           placeholder="Örn: E280117000000201GUL"
-                          className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-lg"
+                          className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] font-mono rounded-lg"
                         />
                       </div>
                     </div>
@@ -606,34 +605,34 @@ export function CreateItemModal({
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-amber-500/[0.05] rounded-xl border border-amber-500/20">
                         {trackLot && (
                           <div className="space-y-1">
-                            <Label className="text-[11px] font-medium text-zinc-300">İlk Lot No</Label>
+                            <Label className="text-[11px] font-medium text-[--text-2]">İlk Lot No</Label>
                             <Input
                               value={lotNumber}
                               onChange={e => setLotNumber(e.target.value)}
                               placeholder="LOT-2026-..."
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white font-mono rounded-lg"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] font-mono rounded-lg"
                             />
                           </div>
                         )}
                         {trackExpiry && (
                           <div className="space-y-1">
-                            <Label className="text-[11px] font-medium text-zinc-300">İlk SKT Tarihi</Label>
+                            <Label className="text-[11px] font-medium text-[--text-2]">İlk SKT Tarihi</Label>
                             <Input
                               type="date"
                               value={expiryDate}
                               onChange={e => setExpiryDate(e.target.value)}
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                             />
                           </div>
                         )}
                         <div className="space-y-1">
-                          <Label className="text-[11px] font-medium text-zinc-300">Raf Ömrü (Gün)</Label>
+                          <Label className="text-[11px] font-medium text-[--text-2]">Raf Ömrü (Gün)</Label>
                           <Input
                             type="number"
                             value={shelfLifeDays}
                             onChange={e => setShelfLifeDays(e.target.value)}
                             placeholder="7 gün"
-                            className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                            className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                           />
                         </div>
                       </div>
@@ -643,7 +642,7 @@ export function CreateItemModal({
                   {/* SEKME 3: ÇOKLU BİRİM ÇEVRİMİ */}
                   <TabsContent value="units" className="space-y-3 pt-1">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-[--text-muted]">
                         Örn: 1 Koli = 20 Adet, 1 Demet = 20 Dal gibi katsayı kuralları.
                       </p>
                       <Button
@@ -651,7 +650,7 @@ export function CreateItemModal({
                         variant="outline"
                         size="sm"
                         onClick={handleAddUnitConversion}
-                        className="text-xs h-7.5 gap-1 bg-white/[0.04] text-zinc-300 hover:text-white border-white/[0.08] rounded-lg"
+                        className="text-xs h-7.5 gap-1 bg-[--muted-bg]/40 text-[--text-2] hover:text-[--text] border-[--line] rounded-lg"
                       >
                         <Plus className="h-3 w-3" />
                         Birim Kuralı Ekle
@@ -659,14 +658,14 @@ export function CreateItemModal({
                     </div>
 
                     {unitConversions.length === 0 ? (
-                      <div className="text-center py-4 border border-dashed border-white/[0.08] rounded-xl text-xs text-zinc-500">
+                      <div className="text-center py-4 border border-dashed border-[--line] rounded-xl text-xs text-[--text-muted]">
                         Özel birim çevrim kuralı tanımlanmadı. Sadece baz birim ({baseUnit}) geçerli.
                       </div>
                     ) : (
                       <div className="space-y-2">
                         {unitConversions.map((uc, idx) => (
-                          <div key={idx} className="flex items-center gap-2 bg-white/[0.03] p-2 rounded-xl border border-white/[0.06] text-xs">
-                            <span className="text-zinc-500">1</span>
+                          <div key={idx} className="flex items-center gap-2 bg-white p-2 rounded-xl border border-[--line] text-xs">
+                            <span className="text-[--text-muted]">1</span>
                             <Input
                               value={uc.fromUnit}
                               onChange={e => {
@@ -675,9 +674,9 @@ export function CreateItemModal({
                                 setUnitConversions(next)
                               }}
                               placeholder="Birim (Örn: Koli)"
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg w-28"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg w-28"
                             />
-                            <span className="text-zinc-500">=</span>
+                            <span className="text-[--text-muted]">=</span>
                             <Input
                               type="number"
                               step="any"
@@ -687,9 +686,9 @@ export function CreateItemModal({
                                 next[idx].multiplier = Number(e.target.value)
                                 setUnitConversions(next)
                               }}
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg w-20"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg w-20"
                             />
-                            <span className="text-zinc-300 font-medium">{baseUnit}</span>
+                            <span className="text-[--text-2] font-medium">{baseUnit}</span>
                             <Button
                               type="button"
                               variant="ghost"
@@ -709,12 +708,12 @@ export function CreateItemModal({
                   <TabsContent value="costing" className="space-y-3 pt-1">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="space-y-1">
-                        <Label className="text-xs font-medium text-zinc-300">Değerleme Yöntemi</Label>
+                        <Label className="text-xs font-medium text-[--text-2]">Değerleme Yöntemi</Label>
                         <Select value={valuationMethod} onValueChange={setValuationMethod}>
-                          <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                          <SelectTrigger className="text-xs bg-white border-[--line] text-[--text-2] rounded-xl h-9.5">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                          <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                             <SelectItem value="FIFO" className="text-xs">FIFO (İlk Giren İlk Çıkar)</SelectItem>
                             <SelectItem value="LIFO" className="text-xs">LIFO (Son Giren İlk Çıkar)</SelectItem>
                             <SelectItem value="WEIGHTED_AVERAGE" className="text-xs">Ağırlıklı Ortalama Maliyet</SelectItem>
@@ -724,22 +723,22 @@ export function CreateItemModal({
                       </div>
 
                       <div className="space-y-1">
-                        <Label className="text-xs font-medium text-zinc-300">Kritik Min. Stok Sınırı</Label>
+                        <Label className="text-xs font-medium text-[--text-2]">Kritik Min. Stok Sınırı</Label>
                         <Input
                           type="number"
                           value={minStockLevel}
                           onChange={e => setMinStockLevel(e.target.value)}
-                          className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                          className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9.5"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <Label className="text-xs font-medium text-zinc-300">Maksimum Stok Sınırı</Label>
+                        <Label className="text-xs font-medium text-[--text-2]">Maksimum Stok Sınırı</Label>
                         <Input
                           type="number"
                           value={maxStockLevel}
                           onChange={e => setMaxStockLevel(e.target.value)}
-                          className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                          className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9.5"
                         />
                       </div>
                     </div>
@@ -753,21 +752,21 @@ export function CreateItemModal({
                         checked={isBom}
                         onCheckedChange={checked => setIsBom(Boolean(checked))}
                       />
-                      <Label htmlFor="isBom" className="text-xs font-medium text-zinc-300 cursor-pointer">
+                      <Label htmlFor="isBom" className="text-xs font-medium text-[--text-2] cursor-pointer">
                         Bu ürün reçeteli bir mamuldür (BOM / İmalat Reçetesi Tanımla)
                       </Label>
                     </div>
 
                     {isBom && (
-                      <div className="space-y-3 p-3 bg-white/[0.02] rounded-xl border border-white/[0.06]">
+                      <div className="space-y-3 p-3 bg-[--muted-bg]/30 rounded-xl border border-[--line]">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-[#34D399]">Reçete Bileşenleri</span>
+                          <span className="text-xs font-medium text-[--brand]">Reçete Bileşenleri</span>
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={handleAddBomComponent}
-                            className="text-xs h-7.5 gap-1 bg-white/[0.04] text-zinc-300 hover:text-white border-white/[0.08] rounded-lg"
+                            className="text-xs h-7.5 gap-1 bg-[--muted-bg]/40 text-[--text-2] hover:text-[--text] border-[--line] rounded-lg"
                           >
                             <Plus className="h-3 w-3" />
                             Bileşen Ekle
@@ -775,7 +774,7 @@ export function CreateItemModal({
                         </div>
 
                         {bomComponents.map((comp, idx) => (
-                          <div key={idx} className="flex items-center gap-2 bg-black/30 p-2 rounded-xl border border-white/[0.06] text-xs">
+                          <div key={idx} className="flex items-center gap-2 bg-black/30 p-2 rounded-xl border border-[--line] text-xs">
                             <Select
                               value={comp.componentItemId}
                               onValueChange={val => {
@@ -786,10 +785,10 @@ export function CreateItemModal({
                                 setBomComponents(next)
                               }}
                             >
-                              <SelectTrigger className="text-xs h-8 flex-1 bg-white/[0.04] border-white/[0.08] text-white rounded-lg">
+                              <SelectTrigger className="text-xs h-8 flex-1 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                              <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                                 {existingItems.map(item => (
                                   <SelectItem key={item.id} value={item.id} className="text-xs">
                                     {item.name} ({item.sku})
@@ -806,9 +805,9 @@ export function CreateItemModal({
                                 next[idx].quantity = Number(e.target.value)
                                 setBomComponents(next)
                               }}
-                              className="text-xs h-8 w-20 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                              className="text-xs h-8 w-20 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                             />
-                            <span className="text-zinc-300 font-medium">{comp.unit}</span>
+                            <span className="text-[--text-2] font-medium">{comp.unit}</span>
                             <Button
                               type="button"
                               variant="ghost"
@@ -823,21 +822,21 @@ export function CreateItemModal({
 
                         <div className="grid grid-cols-2 gap-3 pt-2">
                           <div className="space-y-1">
-                            <Label className="text-[11px] font-medium text-zinc-300">İşçilik Gideri (₺)</Label>
+                            <Label className="text-[11px] font-medium text-[--text-2]">İşçilik Gideri (₺)</Label>
                             <Input
                               type="number"
                               value={laborCost}
                               onChange={e => setLaborCost(e.target.value)}
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                             />
                           </div>
                           <div className="space-y-1">
-                            <Label className="text-[11px] font-medium text-zinc-300">Genel Üretim Gideri (₺)</Label>
+                            <Label className="text-[11px] font-medium text-[--text-2]">Genel Üretim Gideri (₺)</Label>
                             <Input
                               type="number"
                               value={overheadCost}
                               onChange={e => setOverheadCost(e.target.value)}
-                              className="text-xs h-8 bg-white/[0.04] border-white/[0.08] text-white rounded-lg"
+                              className="text-xs h-8 bg-[--muted-bg]/40 border-[--line] text-[--text] rounded-lg"
                             />
                           </div>
                         </div>
@@ -847,20 +846,20 @@ export function CreateItemModal({
 
                   {showProductionTab && (
                     <TabsContent value="production" className="space-y-3 pt-1">
-                      <p className="text-xs text-zinc-400">
+                      <p className="text-xs text-[--text-muted]">
                         1-1 bağlı üretim profili (`UretimItemProfile`) alanları:
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-zinc-300">Üretim Ürün Tipi</Label>
+                          <Label className="text-xs font-medium text-[--text-2]">Üretim Ürün Tipi</Label>
                           <Select
                             value={productionItemType}
                             onValueChange={v => setProductionItemType(v as ProductionItemType)}
                           >
-                            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                               {(Object.entries(PRODUCTION_ITEM_TYPE_LABELS) as [ProductionItemType, string][]).map(
                                 ([code, label]) => (
                                   <SelectItem key={code} value={code} className="text-xs">
@@ -873,15 +872,15 @@ export function CreateItemModal({
                         </div>
 
                         <div className="space-y-1">
-                          <Label className="text-xs font-medium text-zinc-300">Üretim Yöntemi</Label>
+                          <Label className="text-xs font-medium text-[--text-2]">Üretim Yöntemi</Label>
                           <Select
                             value={productionMethod}
                             onValueChange={v => setProductionMethod(v as ProductionMethod)}
                           >
-                            <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                            <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-9">
                               <SelectValue />
                             </SelectTrigger>
-                            <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                            <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                               {(Object.entries(PRODUCTION_METHOD_LABELS) as [ProductionMethod, string][]).map(
                                 ([code, label]) => (
                                   <SelectItem key={code} value={code} className="text-xs">
@@ -896,59 +895,59 @@ export function CreateItemModal({
 
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                         <div className="space-y-1">
-                          <Label className="text-[11px] font-medium text-zinc-300">Tedarik Süresi (Gün)</Label>
+                          <Label className="text-[11px] font-medium text-[--text-2]">Tedarik Süresi (Gün)</Label>
                           <Input
                             type="number"
                             min="0"
                             value={leadTimeDays}
                             onChange={e => setLeadTimeDays(e.target.value)}
-                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-[11px] font-medium text-zinc-300">Üretim Süresi (Saat)</Label>
+                          <Label className="text-[11px] font-medium text-[--text-2]">Üretim Süresi (Saat)</Label>
                           <Input
                             type="number"
                             min="0"
                             step="0.5"
                             value={productionLeadTimeHours}
                             onChange={e => setProductionLeadTimeHours(e.target.value)}
-                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-[11px] font-medium text-zinc-300">Güvenlik Stoğu</Label>
+                          <Label className="text-[11px] font-medium text-[--text-2]">Güvenlik Stoğu</Label>
                           <Input
                             type="number"
                             min="0"
                             value={safetyStockQty}
                             onChange={e => setSafetyStockQty(e.target.value)}
-                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-[11px] font-medium text-zinc-300">Lot Büyüklüğü</Label>
+                          <Label className="text-[11px] font-medium text-[--text-2]">Lot Büyüklüğü</Label>
                           <Input
                             type="number"
                             min="0.01"
                             step="any"
                             value={standardLotSize}
                             onChange={e => setStandardLotSize(e.target.value)}
-                            className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5 font-mono"
+                            className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5 font-mono"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <Label className="text-[11px] font-medium text-zinc-300">Lot Kuralı</Label>
+                        <Label className="text-[11px] font-medium text-[--text-2]">Lot Kuralı</Label>
                         <Select
                           value={lotSizingRule}
                           onValueChange={v => setLotSizingRule(v as LotSizingRule)}
                         >
-                          <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-8.5">
+                          <SelectTrigger className="text-xs bg-white border-[--line] text-[--text] rounded-xl h-8.5">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                          <SelectContent className="bg-white border border-[--line] text-[--text] shadow-lg">
                             {(Object.entries(LOT_SIZING_RULE_LABELS) as [LotSizingRule, string][]).map(
                               ([code, label]) => (
                                 <SelectItem key={code} value={code} className="text-xs">
@@ -973,7 +972,7 @@ export function CreateItemModal({
               size="sm"
               onClick={onClose}
               disabled={loading}
-              className="bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 border-white/[0.08] rounded-full cursor-pointer h-9 px-4"
+              className="bg-[--muted-bg]/40 hover:bg-white/[0.08] text-[--text-2] border-[--line] rounded-full cursor-pointer h-9 px-4"
             >
               İptal
             </Button>
@@ -981,7 +980,7 @@ export function CreateItemModal({
               type="submit"
               size="sm"
               disabled={loading}
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full cursor-pointer h-9 px-4 shadow-lg shadow-emerald-500/20"
+              className="bg-[--brand] hover:bg-[--brand]/90 text-[#061811] font-semibold rounded-full cursor-pointer h-9 px-4 shadow-lg shadow-xs"
             >
               {loading && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
               Ürünü Kaydet

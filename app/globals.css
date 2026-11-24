@@ -3,8 +3,108 @@
 
 @custom-variant dark (&:is(.dark, .dark *));
 
-/* ── Obsidian Carbon & Emerald Mint Tokens ─────────── */
-:root,
+/* ══════════════════════════════════════════════════════════════════════════
+   FAZ 1 — "Berrak Cam & Kurumsal Mavi" Tasarım Token'ları (Tek Doğruluk Kaynağı)
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* B1. Ana Renk Token'ları */
+  --bg: #FFFFFF;
+  --page: #F6F8FB;
+  --text: #0B1B33;
+  --text-2: #33445E;
+  --text-muted: #5B6B82;
+  --navy: #07254A;
+  --brand: #1267E6;
+  --brand-hover: #0F5FDB;
+  --blue: #1579F9;
+  --sky: #2A93F3;
+  --brand-soft: #EEF5FF;
+  --brand-soft-2: #DCEAFE;
+  --brand-line: #BBD7FD;
+  --line: #E3E8F0;
+  --line-soft: #EDF1F6;
+  --muted-bg: #F1F4F9;
+
+  /* B1. Durum Token'ları (Yalnızca anlam için; dekoratif kullanım yasak) */
+  --ok: #0B7A3E;
+  --ok-soft: #E7F6EC;
+  --ok-fill: #16A34A;
+  --warn: #9A5B00;
+  --warn-soft: #FFF4DC;
+  --warn-fill: #F5A524;
+  --bad: #C42B31;
+  --bad-soft: #FDECEC;
+  --bad-fill: #E5484D;
+
+  /* B3. Radius, Gölge, Blur ve Yüzey Token'ları */
+  --radius: 1.25rem;
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 1px 2px rgba(11, 27, 51, 0.04), 0 12px 32px -16px rgba(11, 27, 51, 0.12);
+  --shadow-modal: 0 4px 12px rgba(11, 27, 51, 0.06), 0 24px 48px -12px rgba(11, 27, 51, 0.16);
+  --shadow-brand: 0 8px 24px -8px rgba(18, 103, 230, 0.28);
+  --ambient-page: radial-gradient(circle at 100% 0%, rgba(18, 103, 230, 0.06) 0%, transparent 55%);
+  --gradient-brand: linear-gradient(135deg, var(--brand) 0%, var(--blue) 100%);
+
+  --blur-glass: 24px;
+  --blur-tooltip: 12px;
+
+  /* B5. Hareket / Geçiş Süresi Token'ları */
+  --duration-fast: 150ms;
+  --duration-normal: 220ms;
+  --duration-slow: 300ms;
+  --ease-out-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* B6. Grafik Serileri (1: brand, 2: sky, 3: navy) */
+  --chart-1: var(--brand);
+  --chart-2: var(--sky);
+  --chart-3: var(--navy);
+  --chart-ok: var(--ok-fill);
+  --chart-warn: var(--warn-fill);
+  --chart-bad: var(--bad-fill);
+
+  /* Shadcn / Radix Açık Tema Eşlemesi (:root) */
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--bg);
+  --card-foreground: var(--text);
+  --popover: var(--bg);
+  --popover-foreground: var(--text);
+  --primary: var(--brand);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--muted-bg);
+  --secondary-foreground: var(--text-2);
+  --muted: var(--muted-bg);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand);
+  --destructive: var(--bad-fill);
+  --destructive-foreground: #FFFFFF;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--brand);
+
+  --sidebar: var(--bg);
+  --sidebar-foreground: var(--text);
+  --sidebar-border: var(--line);
+  --sidebar-muted: var(--text-muted);
+  --sidebar-accent: var(--brand-soft);
+  --sidebar-accent-foreground: var(--brand);
+  --sidebar-primary: var(--brand);
+
+  --header: rgba(255, 255, 255, 0.8);
+  --header-border: var(--line);
+
+  --shadow-xs: 0 1px 2px rgba(11, 27, 51, 0.04);
+  --shadow-sm: var(--shadow-card);
+  --shadow-md: 0 8px 24px -12px rgba(11, 27, 51, 0.14);
+  --shadow-lg: var(--shadow-modal);
+  --shadow-soft: var(--shadow-card);
+}
+
+/* ── Legacy "Obsidian Carbon & Emerald Mint" (.dark) — Faz 2-4 Geçişine Kadar Korunur ── */
 .dark {
   --background: #080A09;
   --foreground: #F4F4F5;
@@ -25,7 +125,6 @@
   --border: rgba(255, 255, 255, 0.06);
   --input: rgba(255, 255, 255, 0.06);
   --ring: #34D399;
-  --radius: 1.25rem;
 
   /* Sidebar */
   --sidebar: rgba(17, 21, 19, 0.9);
@@ -45,15 +144,54 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.65);
-
   --shadow-soft: var(--shadow-sm);
 }
 
-/* ── Tailwind Theme ───────────────────────────────── */
+/* ── Tailwind v4 Semantik Tema Yapılandırması ─────────────────────── */
 @theme inline {
-  --font-sans: "Inter", "sans-serif";
-  --font-display: "Inter", "sans-serif";
+  --font-sans: var(--font-inter, "Inter"), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter, "Inter"), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
+  /* B1. Berrak Cam & Kurumsal Mavi Semantik İsimler */
+  --color-bg: var(--bg);
+  --color-surface: var(--bg);
+  --color-page: var(--page);
+  --color-surface-muted: var(--muted-bg);
+  --color-muted-bg: var(--muted-bg);
+
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-muted: var(--text-muted);
+
+  --color-navy: var(--navy);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-blue: var(--blue);
+  --color-brand-sky: var(--sky);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-2: var(--brand-soft-2);
+  --color-brand-line: var(--brand-line);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-ok-fill: var(--ok-fill);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-fill: var(--warn-fill);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-bad-fill: var(--bad-fill);
+
+  /* Grafik Token'ları */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+
+  /* Shadcn / Mevcut Uyumluluk Token'ları */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -74,51 +212,92 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* Sidebar tokens */
+  /* Sidebar & Header tokens */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-accent: var(--sidebar-accent);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-
-  /* Header tokens */
   --color-header: var(--header);
   --color-header-border: var(--header-border);
 
+  /* Radius Token'ları */
   --radius-sm: calc(var(--radius) - 8px);
   --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: var(--radius);
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+  --radius-pill: var(--radius-pill);
 
+  /* Gölge, Blur ve Geçiş Token'ları */
   --shadow-soft: var(--shadow-sm);
+  --shadow-card: var(--shadow-card);
+  --shadow-modal: var(--shadow-modal);
+  --shadow-brand: var(--shadow-brand);
+
+  --blur-glass: var(--blur-glass);
+  --blur-tooltip: var(--blur-tooltip);
+
+  --ease-smooth: var(--ease-out-smooth);
 }
 
-/* ── Base ─────────────────────────────────────────── */
+/* ── Global Base (Faz 1: --page zemin, --text metin, --brand odak halkası, seçim rengi) ── */
 @layer base {
   * {
     border-color: var(--border);
-    outline-color: color-mix(in srgb, var(--ring), transparent 50%);
+    outline-color: color-mix(in srgb, var(--brand), transparent 45%);
   }
 
   body {
-    background-color: #080A09;
-    background-image:
-      radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 55%);
+    background-color: var(--page);
+    background-image: var(--ambient-page);
     background-attachment: fixed;
-    color: var(--foreground);
-    height: 100vh;
-    overflow: hidden;
+    color: var(--text);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: var(--font-sans);
+    font-variant-numeric: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Tipografi Devrimi: Ana başlıklar ve büyük KPI rakamları ince, zarif ve tabular-nums */
-  h1,
+  /* Erişilebilirlik: Klavye odak halkası her zaman --brand (#1267E6) */
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  /* Global metin seçim rengi */
+  ::selection {
+    background-color: var(--brand-soft-2);
+    color: var(--navy);
+  }
+
+  /* Radix Portal kapsayıcıları aktif temanın (--foreground) metin rengini korur */
+  [data-slot="dialog-content"],
+  [data-slot="alert-dialog-content"],
+  [data-slot="sheet-content"],
+  [data-slot="drawer-content"] {
+    color: var(--foreground);
+  }
+
+  /* B5. prefers-reduced-motion açıkken animasyonları ve geçişleri kapat */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Legacy kart başlık/rakam kuralı (mevcut ekranlar için korunur) */
   .glass-card .text-2xl,
   .glass-card .text-3xl,
   .glass-card .text-4xl,
@@ -130,7 +309,114 @@
   }
 }
 
-/* ── Typography Utilities ────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════
+   YENİ "Berrak Cam & Kurumsal Mavi" Yardımcı Sınıflar (B3, B4, B6, B7)
+   ══════════════════════════════════════════════════════════════════════════ */
+@utility surface-glass {
+  background-color: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+@utility surface-opaque {
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+@utility tooltip-glass {
+  background-color: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(var(--blur-tooltip));
+  -webkit-backdrop-filter: blur(var(--blur-tooltip));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
+}
+
+@utility eyebrow-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.btn-brand-primary {
+  background-image: var(--gradient-brand);
+  color: #FFFFFF;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-brand);
+  transition: filter var(--duration-fast) ease-out, transform var(--duration-fast) ease-out, box-shadow var(--duration-fast) ease-out;
+}
+
+.btn-brand-primary:hover {
+  background-image: none;
+  background-color: var(--brand-hover);
+}
+
+.btn-brand-secondary {
+  background-color: var(--bg);
+  color: var(--text-2);
+  border: 1px solid var(--line);
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-fast) ease-out, border-color var(--duration-fast) ease-out, color var(--duration-fast) ease-out;
+}
+
+.btn-brand-secondary:hover {
+  background-color: var(--muted-bg);
+  border-color: var(--brand-line);
+  color: var(--text);
+}
+
+.btn-brand-tertiary {
+  background-color: transparent;
+  color: var(--text-2);
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-fast) ease-out, color var(--duration-fast) ease-out;
+}
+
+.btn-brand-tertiary:hover {
+  background-color: var(--brand-soft);
+  color: var(--brand);
+}
+
+.badge-ok {
+  background-color: var(--ok-soft);
+  color: var(--ok);
+}
+
+.badge-warn {
+  background-color: var(--warn-soft);
+  color: var(--warn);
+}
+
+.badge-bad {
+  background-color: var(--bad-soft);
+  color: var(--bad);
+}
+
+.badge-brand {
+  background-color: var(--brand-soft);
+  color: var(--brand);
+  border: 1px solid var(--brand-line);
+}
+
+.badge-neutral {
+  background-color: var(--muted-bg);
+  color: var(--text-2);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ESKİ (LEGACY) YARDIMCI SINIFLAR — Mevcut Ekranlar Kırılmasın Diye Korunur
+   ══════════════════════════════════════════════════════════════════════════ */
 @utility text-display {
   font-size: 1.75rem;
   font-weight: 300;
@@ -174,7 +460,6 @@
   color: var(--muted-foreground);
 }
 
-/* ── Layout Utilities ────────────────────────────── */
 @utility sidebar-item {
   display: flex;
   align-items: center;
@@ -207,15 +492,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(11, 27, 51, 0.14);
   border-radius: 999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(52, 211, 153, 0.3);
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* ── Sparkline utilities ─────────────────────────── */
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--brand) 38%, transparent);
+}
+
+/* ── Sparkline utilities (Legacy + Brand) ────────── */
 .sparkline {
   fill: none;
   stroke: #34d399;
@@ -223,43 +512,92 @@
   stroke-linecap: round;
 }
 
+.sparkline-brand {
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
 .sparkline-down { stroke: #f43f5e; }
 .sparkline-neutral { stroke: #71717a; }
 
-/* ── Obsidian Carbon Glassmorphism Utilities ─────── */
+/* ── Legacy Yardımcı Sınıflar (Açık Tema Token'larına Eşlendi — Kırılma Önleyici) ── */
 .glass-panel {
-  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl;
+  background-color: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
 }
 
 .glass-card {
-  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl transition-all;
+  background-color: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(var(--blur-glass));
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
+  transition: all var(--duration-fast) ease-out;
 }
 
 .glass-input {
-  @apply bg-[#080A09]/80 backdrop-blur-sm border border-white/[0.06] focus:border-emerald-500/30 text-white placeholder:text-zinc-500 rounded-xl;
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: var(--radius-control);
+}
+
+.glass-input::placeholder {
+  color: var(--text-muted);
+}
+
+.glass-input:focus {
+  border-color: var(--brand);
 }
 
 .glass-table-container {
-  @apply bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl;
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  color: var(--text);
 }
 
-/* ── Single Accent & Badge Utilities ─────────────── */
 .btn-primary-emerald {
-  @apply bg-[#34D399] text-[#061811] font-medium rounded-full hover:bg-[#34D399]/90 transition-all;
+  background-image: var(--gradient-brand);
+  color: #FFFFFF;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-brand);
+  transition: all var(--duration-fast) ease-out;
+}
+
+.btn-primary-emerald:hover {
+  background-image: none;
+  background-color: var(--brand-hover);
 }
 
 .accent-emerald-pill {
-  @apply bg-emerald-400/15 text-emerald-300 border border-emerald-500/25;
+  background-color: var(--brand-soft);
+  color: var(--brand);
+  border: 1px solid var(--brand-line);
 }
 
 .badge-positive {
-  @apply bg-emerald-500/10 text-emerald-400;
+  background-color: var(--ok-soft);
+  color: var(--ok);
 }
 
 .badge-pending {
-  @apply bg-amber-500/10 text-amber-300;
+  background-color: var(--warn-soft);
+  color: var(--warn);
 }
 
 .badge-critical {
-  @apply bg-rose-500/10 text-rose-400;
+  background-color: var(--bad-soft);
+  color: var(--bad);
 }

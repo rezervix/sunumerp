@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, CheckCheck, BellOff, Settings } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { LogisticsNotificationPrefsPanel } from "@/components/shared/logistics-notification-prefs-panel"
+import { IconBell, IconCheck, IconSettings } from "@/components/ui/app-icons"
+import { safeDate, safeText } from "@/lib/utils/safe-display"
 
 interface Notification {
   id: string
@@ -49,8 +50,10 @@ export function NotificationCenter() {
         body: JSON.stringify(id ? { id } : { all: true }),
       })
       if (res.ok) {
-        setNotifications(prev =>
-          prev.map(n => (id ? (n.id === id ? { ...n, isRead: true } : n) : { ...n, isRead: true }))
+        setNotifications((prev) =>
+          prev.map((n) =>
+            id ? (n.id === id ? { ...n, isRead: true } : n) : { ...n, isRead: true }
+          )
         )
       }
     } catch {
@@ -58,37 +61,36 @@ export function NotificationCenter() {
     }
   }
 
-  const unreadCount = notifications.filter(n => !n.isRead).length
+  const unreadCount = notifications.filter((n) => !n.isRead).length
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="relative size-8 rounded-full bg-transparent hover:bg-white/[0.06] text-zinc-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+          className="relative size-9 rounded-full bg-transparent hover:bg-[var(--brand-soft)] text-[var(--text-2)] hover:text-[var(--brand)] flex items-center justify-center transition-colors duration-150 cursor-pointer"
           aria-label="Bildirimler"
         >
-          <Bell size={17} />
+          <IconBell size={18} />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 size-2 rounded-full bg-emerald-400 ring-2 ring-[#111513]" />
+            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-[var(--brand)] ring-2 ring-white" />
           )}
         </button>
       </PopoverTrigger>
 
       <PopoverContent
         align="end"
-        sideOffset={10}
-        className="w-80 max-w-[calc(100vw-2rem)] p-0 glass-panel rounded-[20px] overflow-hidden text-white border-white/[0.06]"
+        sideOffset={8}
+        className="w-80 max-w-[calc(100vw-2rem)] p-0 rounded-[20px] overflow-hidden bg-[var(--bg)] text-[var(--text)] border border-[var(--line)] shadow-[var(--shadow-card)]"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 bg-white/[0.02] border-b border-white/[0.06]">
+        <div className="flex items-center justify-between px-4 py-3 bg-[var(--page)]/70 border-b border-[var(--line-soft)]">
           <div className="flex items-center gap-2">
-            <Bell size={14} className="text-emerald-400" />
-            <span className="font-medium text-xs text-white">
+            <IconBell size={14} className="text-[var(--brand)]" />
+            <span className="font-semibold text-xs text-[var(--text)]">
               {activeView === "prefs" ? "Bildirim Tercihleri" : "Bildirimler"}
             </span>
             {activeView === "list" && unreadCount > 0 && (
-              <Badge variant="secondary" className="text-[10px] h-4 px-1.5 bg-emerald-500/10 text-emerald-400 border-0">
+              <Badge variant="brand" className="text-[10px] h-4 px-1.5">
                 {unreadCount}
               </Badge>
             )}
@@ -97,51 +99,50 @@ export function NotificationCenter() {
             {activeView === "list" && unreadCount > 0 && (
               <button
                 onClick={() => markAsRead()}
-                className="flex items-center gap-1 text-xs text-emerald-400 hover:underline font-medium cursor-pointer"
+                className="flex items-center gap-1 text-xs text-[var(--brand)] hover:underline font-medium cursor-pointer"
               >
-                <CheckCheck size={13} />
+                <IconCheck size={13} />
                 Tümünü oku
               </button>
             )}
             <button
               type="button"
               onClick={() => setActiveView(activeView === "list" ? "prefs" : "list")}
-              title={activeView === "list" ? "Lojistik Bildirim Tercihleri" : "Bildirim Listesine Dön"}
-              aria-label={activeView === "list" ? "Lojistik Bildirim Tercihleri" : "Bildirim Listesine Dön"}
-              className={`p-1 rounded-md transition-colors cursor-pointer ${
+              title={activeView === "list" ? "Bildirim Tercihleri" : "Bildirim Listesine Dön"}
+              aria-label={activeView === "list" ? "Bildirim Tercihleri" : "Bildirim Listesine Dön"}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
                 activeView === "prefs"
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+                  ? "bg-[var(--brand-soft)] text-[var(--brand)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]"
               }`}
             >
-              <Settings size={13} />
+              <IconSettings size={14} />
             </button>
           </div>
         </div>
 
-        {/* Body */}
-        <ScrollArea className="max-h-[420px]">
+        <ScrollArea className="max-h-[400px]">
           {activeView === "prefs" ? (
             <LogisticsNotificationPrefsPanel
               compact
               onNotificationsRefreshed={loadNotifications}
             />
           ) : notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-3">
-              <div className="size-10 rounded-full bg-white/[0.04] flex items-center justify-center">
-                <BellOff size={18} className="text-zinc-500" />
+            <div className="flex flex-col items-center justify-center py-10 gap-2">
+              <div className="size-9 rounded-full bg-[var(--muted-bg)] flex items-center justify-center text-[var(--text-muted)]">
+                <IconBell size={16} />
               </div>
-              <p className="text-xs text-zinc-500">Henüz bildirim yok</p>
+              <p className="text-xs text-[var(--text-muted)]">Henüz yeni bildirim yok</p>
             </div>
           ) : (
             <div>
               {notifications.map((n, idx) => (
                 <div key={n.id}>
-                  {idx > 0 && <Separator className="bg-white/[0.06]" />}
+                  {idx > 0 && <Separator />}
                   <div
                     className={[
-                      "px-4 py-3 hover:bg-white/[0.04] transition-colors cursor-pointer relative",
-                      !n.isRead ? "bg-emerald-500/[0.05]" : "",
+                      "px-4 py-3 hover:bg-[var(--page)] transition-colors cursor-pointer relative",
+                      !n.isRead ? "bg-[var(--brand-soft)]/55" : "bg-[var(--bg)]",
                     ].join(" ")}
                     onClick={() => {
                       if (!n.isRead) markAsRead(n.id)
@@ -151,15 +152,23 @@ export function NotificationCenter() {
                     role="button"
                   >
                     {!n.isRead && (
-                      <span className="absolute left-2 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-emerald-400" />
+                      <span className="absolute left-2 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-[var(--brand)]" />
                     )}
-                    <div className="pl-3">
-                      <p className={`text-xs leading-snug ${!n.isRead ? "font-medium text-white" : "text-zinc-300"}`}>
-                        {n.title}
+                    <div className="pl-2.5">
+                      <p
+                        className={`text-xs leading-snug ${
+                          !n.isRead
+                            ? "font-semibold text-[var(--text)]"
+                            : "text-[var(--text-2)]"
+                        }`}
+                      >
+                        {safeText(n.title, "Bildirim")}
                       </p>
-                      <p className="text-[11px] text-zinc-400 mt-0.5 line-clamp-2">{n.message}</p>
-                      <p className="text-[10px] text-zinc-500 mt-1 tabular-nums">
-                        {new Date(n.createdAt).toLocaleString("tr-TR")}
+                      <p className="text-[11px] text-[var(--text-muted)] mt-0.5 line-clamp-2">
+                        {safeText(n.message, "")}
+                      </p>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-1">
+                        {safeDate(n.createdAt, true)}
                       </p>
                     </div>
                   </div>
