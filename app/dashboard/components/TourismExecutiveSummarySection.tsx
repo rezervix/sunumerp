@@ -6,14 +6,11 @@ import {
   ArrowRight,
   BarChart3,
   Building2,
-  CalendarDays,
   Compass,
-  FileSpreadsheet,
   Globe,
-  ShieldCheck,
-  Users,
 } from "lucide-react"
 import type { TourismExecutiveSummaryResponse } from "@/lib/tourism/dashboard/tourismSummaryService"
+import { safeNumber } from "@/lib/utils/safe-display"
 
 export function TourismExecutiveSummarySection({
   branchId,
@@ -58,15 +55,15 @@ export function TourismExecutiveSummarySection({
     <section
       aria-label="Turizm ve Ağırlama Yönetim Özeti"
       data-testid="tourism-executive-summary"
-      className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 space-y-4"
+      className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-sm space-y-4"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
+          <p className="text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium">
             Turizm, Konaklama &amp; Partner Ekosistemi
           </p>
-          <h2 className="text-lg font-light text-white tracking-tight mt-0.5 flex items-center gap-2">
-            <Compass className="w-4 h-4 text-emerald-400" />
+          <h2 className="text-lg font-semibold text-[--navy] tracking-tight mt-0.5 flex items-center gap-2">
+            <Compass className="w-5 h-5 text-[--brand]" />
             Sektörel Yönetim Panosu
           </h2>
         </div>
@@ -74,14 +71,14 @@ export function TourismExecutiveSummarySection({
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/turizm"
-            className="inline-flex items-center gap-1.5 bg-white/[0.05] text-zinc-200 border border-white/[0.1] hover:bg-white/[0.1] text-xs h-8 px-3 rounded-full font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 bg-white text-[--text-2] border border-[--line] hover:bg-[--muted-bg] text-xs h-8 px-3 rounded-full font-medium transition-colors shadow-xs"
           >
             Sektör Detay Panosu
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
           <Link
             href="/dashboard/turizm/raporlar"
-            className="inline-flex items-center gap-1.5 bg-emerald-400/15 text-emerald-300 border border-emerald-500/25 hover:bg-emerald-400/25 text-xs h-8 px-3.5 rounded-full font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 bg-[--brand-soft] text-[--brand] border border-[--brand-line] hover:bg-[--brand-soft]/80 text-xs h-8 px-3.5 rounded-full font-medium transition-colors shadow-xs"
           >
             <BarChart3 className="w-3.5 h-3.5" />
             Birleşik Turizm Raporları
@@ -93,19 +90,19 @@ export function TourismExecutiveSummarySection({
         {modules.rentacar && (
           <Link
             href="/dashboard/arac-kiralama"
-            className="group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-2xl p-4 transition-colors block"
+            className="group bg-white hover:bg-[--brand-soft]/30 border border-[--line] rounded-2xl p-4 transition-all block shadow-xs"
           >
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+            <div className="flex items-center justify-between text-xs text-[--text-muted]">
               <span>Araç Kiralama (Rent-a-Car)</span>
-              <Compass className="w-4 h-4 text-emerald-400" />
+              <Compass className="w-4 h-4 text-[--brand]" />
             </div>
-            <div className="text-2xl font-light text-white tabular-nums mt-2">
-              {modules.rentacar.activeRentalsCount}{" "}
-              <span className="text-xs text-zinc-500">aktif kiralama</span>
+            <div className="text-2xl font-light text-[--text] tabular-nums mt-2">
+              {safeNumber(modules.rentacar.activeRentalsCount, 0)}{" "}
+              <span className="text-xs text-[--text-muted]">aktif kiralama</span>
             </div>
-            <div className="text-[11px] text-zinc-400 mt-2 flex items-center justify-between">
+            <div className="text-[11px] text-[--text-muted] mt-2 flex items-center justify-between">
               <span>Filo Doluluğu: %{modules.rentacar.utilizationRatePct}</span>
-              <span className="text-emerald-400 font-medium">₺{modules.rentacar.monthlyRevenueTry.toLocaleString("tr-TR")}</span>
+              <span className="text-[--ok] font-semibold">₺{safeNumber(modules.rentacar.monthlyRevenueTry, 0).toLocaleString("tr-TR")}</span>
             </div>
           </Link>
         )}
@@ -113,19 +110,19 @@ export function TourismExecutiveSummarySection({
         {modules.hotel && (
           <Link
             href="/dashboard/otel"
-            className="group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-2xl p-4 transition-colors block"
+            className="group bg-white hover:bg-[--brand-soft]/30 border border-[--line] rounded-2xl p-4 transition-all block shadow-xs"
           >
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+            <div className="flex items-center justify-between text-xs text-[--text-muted]">
               <span>Otel Yönetimi (Mini PMS)</span>
-              <Building2 className="w-4 h-4 text-sky-400" />
+              <Building2 className="w-4 h-4 text-[--sky]" />
             </div>
-            <div className="text-2xl font-light text-white tabular-nums mt-2">
-              %{modules.hotel.occupancyRatePct}{" "}
-              <span className="text-xs text-zinc-500">oda doluluğu</span>
+            <div className="text-2xl font-light text-[--text] tabular-nums mt-2">
+              %{safeNumber(modules.hotel.occupancyRatePct, 0)}{" "}
+              <span className="text-xs text-[--text-muted]">oda doluluğu</span>
             </div>
-            <div className="text-[11px] text-zinc-400 mt-2 flex items-center justify-between">
+            <div className="text-[11px] text-[--text-muted] mt-2 flex items-center justify-between">
               <span>Giriş/Çıkış: {modules.hotel.todayCheckInsCount} / {modules.hotel.todayCheckOutsCount}</span>
-              <span className="text-amber-400">{modules.hotel.dirtyRoomsCount} kirli oda</span>
+              <span className="text-[--warn] font-medium">{modules.hotel.dirtyRoomsCount} kirli oda</span>
             </div>
           </Link>
         )}
@@ -133,19 +130,19 @@ export function TourismExecutiveSummarySection({
         {modules.tour && (
           <Link
             href="/dashboard/tur"
-            className="group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-2xl p-4 transition-colors block"
+            className="group bg-white hover:bg-[--brand-soft]/30 border border-[--line] rounded-2xl p-4 transition-all block shadow-xs"
           >
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+            <div className="flex items-center justify-between text-xs text-[--text-muted]">
               <span>Tur Operatörlüğü</span>
-              <Compass className="w-4 h-4 text-purple-400" />
+              <Compass className="w-4 h-4 text-[--navy]" />
             </div>
-            <div className="text-2xl font-light text-white tabular-nums mt-2">
-              {modules.tour.upcomingToursCount}{" "}
-              <span className="text-xs text-zinc-500">yaklaşan tur</span>
+            <div className="text-2xl font-light text-[--text] tabular-nums mt-2">
+              {safeNumber(modules.tour.upcomingToursCount, 0)}{" "}
+              <span className="text-xs text-[--text-muted]">yaklaşan tur</span>
             </div>
-            <div className="text-[11px] text-zinc-400 mt-2 flex items-center justify-between">
+            <div className="text-[11px] text-[--text-muted] mt-2 flex items-center justify-between">
               <span>Kayıtlı Yolcu: {modules.tour.totalPassengersCount}</span>
-              <span className="text-purple-400">{modules.tour.activeGuidesCount} rehber</span>
+              <span className="text-[--text-2] font-medium">{modules.tour.activeGuidesCount} rehber</span>
             </div>
           </Link>
         )}
@@ -153,19 +150,19 @@ export function TourismExecutiveSummarySection({
         {modules.b2b && (
           <Link
             href="/dashboard/partner-agi"
-            className="group bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-2xl p-4 transition-colors block"
+            className="group bg-white hover:bg-[--brand-soft]/30 border border-[--line] rounded-2xl p-4 transition-all block shadow-xs"
           >
-            <div className="flex items-center justify-between text-xs text-zinc-400">
+            <div className="flex items-center justify-between text-xs text-[--text-muted]">
               <span>B2B Partner Ağı</span>
-              <Globe className="w-4 h-4 text-teal-400" />
+              <Globe className="w-4 h-4 text-[--brand]" />
             </div>
-            <div className="text-2xl font-light text-white tabular-nums mt-2">
-              {modules.b2b.approvedPartnersCount}{" "}
-              <span className="text-xs text-zinc-500">onaylı partner</span>
+            <div className="text-2xl font-light text-[--text] tabular-nums mt-2">
+              {safeNumber(modules.b2b.approvedPartnersCount, 0)}{" "}
+              <span className="text-xs text-[--text-muted]">onaylı partner</span>
             </div>
-            <div className="text-[11px] text-zinc-400 mt-2 flex items-center justify-between">
+            <div className="text-[11px] text-[--text-muted] mt-2 flex items-center justify-between">
               <span>Çapraz Rez: {modules.b2b.activeCrossBookingsCount}</span>
-              <span className="text-emerald-400 font-medium">₺{modules.b2b.openReceivableTry.toLocaleString("tr-TR")} alacak</span>
+              <span className="text-[--ok] font-semibold">₺{safeNumber(modules.b2b.openReceivableTry, 0).toLocaleString("tr-TR")} alacak</span>
             </div>
           </Link>
         )}

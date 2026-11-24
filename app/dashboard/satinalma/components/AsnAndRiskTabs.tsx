@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react"
+import { safeText, safeNumber, safeDate } from "@/lib/utils/safe-display"
 
 export function AsnTrackingTab({
   asns,
@@ -28,7 +29,7 @@ export function AsnTrackingTab({
   const [busyId, setBusyId] = useState<string | null>(null)
   const [ediOpen, setEdiOpen] = useState(false)
 
-  const openPos = purchaseOrders.filter((p) =>
+  const openPos = (purchaseOrders || []).filter((p) =>
     ["TEDARIKCIYE_ILETILDI", "TEDARIKCI_ONAYLADI", "KISMI_ONAY", "KISMI_TESLIM"].includes(p.status)
   )
   const [ediForm, setEdiForm] = useState({
@@ -120,15 +121,15 @@ export function AsnTrackingTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-3.5">
-        <div className="flex items-center gap-2 text-sm font-semibold text-white">
-          <Truck className="size-4 text-[#34D399]" />
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[--line] bg-white/80 backdrop-blur-xl p-3.5 shadow-sm">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[--text]">
+          <Truck className="size-4 text-[--brand]" />
           <span>ASN Ön Sevkiyat İhbarları & WMS Mal Kabul Entegrasyonu</span>
         </div>
         <button
           type="button"
           onClick={() => setEdiOpen((v) => !v)}
-          className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl border border-[#34D399]/35 bg-[#34D399]/10 text-[#34D399] text-xs font-semibold"
+          className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full border border-[--brand-line] bg-[--brand-soft] text-[--brand] text-xs font-semibold hover:bg-[--brand-soft]/80 transition cursor-pointer"
         >
           <Webhook className="size-3.5" />
           EDI DESADV Al / İçe Aktar
@@ -138,50 +139,50 @@ export function AsnTrackingTab({
       {ediOpen && (
         <form
           onSubmit={handleIngestEdi}
-          className="rounded-2xl border border-emerald-500/25 bg-[#121614] p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs items-end"
+          className="rounded-2xl border border-[--brand-line] bg-white p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs items-end shadow-md"
         >
           <div className="sm:col-span-2">
-            <label className="text-zinc-400">Eşleşecek PO</label>
+            <label className="text-[--text-muted]">Eşleşecek PO</label>
             <select
               value={ediForm.poNumber}
               onChange={(e) => setEdiForm((f) => ({ ...f, poNumber: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             >
               {purchaseOrders.map((p) => (
                 <option key={p.id} value={p.poNumber}>
-                  {p.poNumber} — {p.supplierName}
+                  {safeText(p.poNumber)} — {safeText(p.supplierName)}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-zinc-400">İrsaliye No</label>
+            <label className="text-[--text-muted]">İrsaliye No</label>
             <input
               value={ediForm.waybillNo}
               onChange={(e) => setEdiForm((f) => ({ ...f, waybillNo: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             />
           </div>
           <div>
-            <label className="text-zinc-400">Araç Plaka</label>
+            <label className="text-[--text-muted]">Araç Plaka</label>
             <input
               value={ediForm.vehiclePlate}
               onChange={(e) => setEdiForm((f) => ({ ...f, vehiclePlate: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             />
           </div>
           <button
             type="submit"
-            className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             EDI DESADV İşle
           </button>
         </form>
       )}
 
-      <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-[#121614]/80">
-        <table className="w-full text-left text-xs">
-          <thead className="border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+      <div className="overflow-x-auto rounded-2xl border border-[--line] bg-white shadow-sm">
+        <table className="w-full text-left text-xs border-collapse">
+          <thead className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
             <tr>
               <th className="py-3 px-4">ASN / PO</th>
               <th className="py-3 px-3">Tedarikçi & Kanal</th>
@@ -191,46 +192,46 @@ export function AsnTrackingTab({
               <th className="py-3 px-4 text-right">WMS Mal Kabul Köprüsü</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.04]">
-            {asns.map((a) => (
-              <tr key={a.id} className="hover:bg-white/[0.02]">
+          <tbody className="divide-y divide-[--line]">
+            {(asns || []).map((a) => (
+              <tr key={a.id} className="hover:bg-[--brand-soft]/30 transition">
                 <td className="py-3 px-4">
-                  <div className="font-mono font-bold text-[#34D399]">{a.asnNumber}</div>
-                  <div className="text-[11px] font-mono text-zinc-400">PO: {a.poNumber}</div>
+                  <div className="font-mono font-bold text-[--brand]">{safeText(a.asnNumber)}</div>
+                  <div className="text-[11px] font-mono text-[--text-muted]">PO: {safeText(a.poNumber)}</div>
                 </td>
                 <td className="py-3 px-3">
-                  <div className="text-zinc-100 font-medium">{a.supplierName}</div>
-                  <div className="text-[11px] text-zinc-500">
-                    Kanal: {a.sourceChannel} · Depo: {a.warehouseName}
+                  <div className="text-[--text] font-medium">{safeText(a.supplierName)}</div>
+                  <div className="text-[11px] text-[--text-muted]">
+                    Kanal: {safeText(a.sourceChannel)} · Depo: {safeText(a.warehouseName)}
                   </div>
                 </td>
                 <td className="py-3 px-3">
-                  <div className="text-zinc-200">{a.carrierName || "-"}</div>
-                  <div className="text-[11px] font-mono text-zinc-500">
-                    {a.vehiclePlate || "-"} · İrsaliye: {a.waybillNo || "-"}
+                  <div className="text-[--text-2]">{safeText(a.carrierName, "-")}</div>
+                  <div className="text-[11px] font-mono text-[--text-muted]">
+                    {safeText(a.vehiclePlate, "-")} · İrsaliye: {safeText(a.waybillNo, "-")}
                   </div>
                 </td>
-                <td className="py-3 px-3 text-right font-mono">
-                  <span className="text-zinc-100">{a.totalShippedQty}</span>
-                  <span className="text-zinc-500"> / {a.totalReceivedQty} Adet</span>
+                <td className="py-3 px-3 text-right font-mono tabular-nums">
+                  <span className="text-[--text] font-semibold">{safeNumber(a.totalShippedQty)}</span>
+                  <span className="text-[--text-muted]"> / {safeNumber(a.totalReceivedQty)} Adet</span>
                 </td>
                 <td className="py-3 px-3">
                   <span
                     className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
                       a.status === "KABUL_TAMAM"
-                        ? "bg-emerald-500/15 text-[#34D399] border-emerald-500/30"
+                        ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
                         : a.status === "KAPI_GIRIS"
-                          ? "bg-sky-500/15 text-sky-300 border-sky-500/30"
-                          : "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                          ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
+                          : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
                     }`}
                   >
-                    {a.status}
+                    {safeText(a.status)}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-right">
                   {a.status === "KABUL_TAMAM" ? (
-                    <span className="text-[11px] font-mono text-[#34D399]">
-                      WMS Görevi: {a.wmsTaskNo || "Tamam"}
+                    <span className="text-[11px] font-mono text-[--ok] font-semibold">
+                      WMS Görevi: {safeText(a.wmsTaskNo, "Tamam")}
                     </span>
                   ) : (
                     <div className="inline-flex items-center gap-1.5">
@@ -239,7 +240,7 @@ export function AsnTrackingTab({
                           type="button"
                           disabled={busyId === a.id}
                           onClick={() => handleAdvanceStatus(a.id, "KAPI_GIRIS")}
-                          className="h-7 px-2.5 rounded-lg border border-white/10 bg-white/[0.04] text-zinc-200 text-[11px]"
+                          className="h-7 px-2.5 rounded-full border border-[--line] bg-white text-[--text-2] text-[11px] font-medium hover:bg-[--muted-bg] transition cursor-pointer"
                         >
                           Kapı Girişi
                         </button>
@@ -249,7 +250,7 @@ export function AsnTrackingTab({
                         disabled={busyId === a.id}
                         onClick={() => handleReceiveToWms(a.id)}
                         data-testid={`receive-asn-${a.asnNumber}`}
-                        className="inline-flex items-center gap-1 h-7 px-3 rounded-lg bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-[11px] font-semibold"
+                        className="inline-flex items-center gap-1 h-7 px-3 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-[11px] font-semibold shadow-sm transition cursor-pointer"
                       >
                         <PackageCheck className="size-3.5" />
                         {busyId === a.id ? "İşleniyor..." : "WMS Mal Kabule Al"}
@@ -311,34 +312,34 @@ export function SingleSourceRiskTab({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-        <div className="rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-3.5">
-          <div className="text-[11px] text-zinc-400">Çoklu Kaynak Güvencesi (≥2 Tedarikçi)</div>
-          <div className="text-xl font-bold text-[#34D399] mt-1">
-            {singleSourceRisk?.multiSourceSafeCount ?? 0} SKU
+        <div className="rounded-2xl border border-[--line] bg-white p-3.5 shadow-sm">
+          <div className="text-[11px] text-[--text-muted]">Çoklu Kaynak Güvencesi (≥2 Tedarikçi)</div>
+          <div className="text-xl font-bold text-[--ok] mt-1 tabular-nums">
+            {safeNumber(singleSourceRisk?.multiSourceSafeCount, 0)} SKU
           </div>
         </div>
-        <div className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.06] p-3.5">
-          <div className="text-[11px] text-amber-200">Tek Kaynak Riski Altındaki SKU</div>
-          <div className="text-xl font-bold text-amber-300 mt-1">
-            {singleSourceRisk?.singleSourceRiskCount ?? 0} SKU
+        <div className="rounded-2xl border border-[--warn]/25 bg-[--warn-soft]/50 p-3.5 shadow-sm">
+          <div className="text-[11px] text-[--warn]">Tek Kaynak Riski Altındaki SKU</div>
+          <div className="text-xl font-bold text-[--warn] mt-1 tabular-nums">
+            {safeNumber(singleSourceRisk?.singleSourceRiskCount, 0)} SKU
           </div>
         </div>
-        <div className="rounded-2xl border border-rose-500/25 bg-rose-500/[0.06] p-3.5">
-          <div className="text-[11px] text-rose-200">Onaylı Tedarikçisiz / Engelli SKU</div>
-          <div className="text-xl font-bold text-rose-300 mt-1">
-            {singleSourceRisk?.noApprovedSupplierCount ?? 0} SKU
+        <div className="rounded-2xl border border-[--bad]/25 bg-[--bad-soft]/50 p-3.5 shadow-sm">
+          <div className="text-[11px] text-[--bad]">Onaylı Tedarikçisiz / Engelli SKU</div>
+          <div className="text-xl font-bold text-[--bad] mt-1 tabular-nums">
+            {safeNumber(singleSourceRisk?.noApprovedSupplierCount, 0)} SKU
           </div>
         </div>
-        <div className="rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-3.5">
-          <div className="text-[11px] text-zinc-400">Aktif Kalem Toplamı</div>
-          <div className="text-xl font-bold text-white mt-1">
-            {singleSourceRisk?.totalActiveItems ?? 0} SKU
+        <div className="rounded-2xl border border-[--line] bg-white p-3.5 shadow-sm">
+          <div className="text-[11px] text-[--text-muted]">Aktif Kalem Toplamı</div>
+          <div className="text-xl font-bold text-[--text] mt-1 tabular-nums">
+            {safeNumber(singleSourceRisk?.totalActiveItems, 0)} SKU
           </div>
         </div>
       </div>
 
       {riskItems.length === 0 ? (
-        <div className="rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.05] p-8 text-center text-xs text-[#34D399]">
+        <div className="rounded-2xl border border-[--ok]/25 bg-[--ok-soft]/50 p-8 text-center text-xs text-[--ok] font-medium shadow-sm">
           Tüm aktif ürünlerde en az 2 onaylı alternatif tedarikçi tanımlı; tek-kaynak kesinti riski yok.
         </div>
       ) : (
@@ -346,31 +347,31 @@ export function SingleSourceRiskTab({
           {riskItems.map((item: any) => (
             <div
               key={item.itemId}
-              className="rounded-2xl border border-amber-500/25 bg-[#121614]/85 p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+              className="rounded-2xl border border-[--warn]/25 bg-white p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4 shadow-sm"
             >
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <ShieldAlert
                     className={`size-4 ${
-                      item.approvedSupplierCount === 0 ? "text-rose-400" : "text-amber-400"
+                      item.approvedSupplierCount === 0 ? "text-[--bad]" : "text-[--warn]"
                     }`}
                   />
-                  <span className="font-semibold text-white text-sm">{item.itemName}</span>
-                  <span className="font-mono text-[11px] text-zinc-400">{item.sku}</span>
+                  <span className="font-semibold text-[--text] text-sm">{safeText(item.itemName)}</span>
+                  <span className="font-mono text-[11px] text-[--brand]">{safeText(item.sku)}</span>
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                       item.approvedSupplierCount === 0
-                        ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
-                        : "bg-amber-500/15 text-amber-300 border-amber-500/30"
+                        ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
+                        : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
                     }`}
                   >
                     {item.approvedSupplierCount === 0 ? "Tedarikçisiz Kritik Risk" : "Tek Kaynak Riski"}
                   </span>
                 </div>
-                <div className="text-xs text-zinc-400">
-                  Mevcut Stok: <strong className="text-zinc-200">{item.availableQty}</strong> · ROP:{" "}
-                  <strong className="text-zinc-200">{item.reorderPoint}</strong> · Aktif Bağlı:{" "}
-                  {item.currentSuppliers.length > 0
+                <div className="text-xs text-[--text-muted]">
+                  Mevcut Stok: <strong className="text-[--text] font-mono">{safeNumber(item.availableQty)}</strong> · ROP:{" "}
+                  <strong className="text-[--text] font-mono">{safeNumber(item.reorderPoint)}</strong> · Aktif Bağlı:{" "}
+                  {item.currentSuppliers && item.currentSuppliers.length > 0
                     ? item.currentSuppliers.map((cs: any) => `${cs.name} (${cs.leadTimeDays}g)`).join(", ")
                     : "Yok"}
                 </div>
@@ -386,11 +387,11 @@ export function SingleSourceRiskTab({
                       disabled={linkingKey === key}
                       onClick={() => handleLinkAlternative(item, cand)}
                       data-testid={`link-alt-${item.sku}-${cand.code}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#34D399]/35 bg-[#34D399]/10 hover:bg-[#34D399]/20 text-xs text-[#34D399] font-medium"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[--brand-line] bg-[--brand-soft] hover:bg-[--brand-soft]/80 text-xs text-[--brand] font-medium transition cursor-pointer"
                     >
                       <Plus className="size-3.5" />
                       <span>
-                        {cand.name} (Skor {cand.scorecardScore}, {cand.leadTimeDays}g) Bağla
+                        {safeText(cand.name)} (Skor {safeNumber(cand.scorecardScore)}, {safeNumber(cand.leadTimeDays)}g) Bağla
                       </span>
                     </button>
                   )

@@ -282,7 +282,7 @@ export function ProductionCapacityWorkspace() {
   return (
     <div className="space-y-6">
       {/* ── ÜST BAŞLIK VE EYLEMLER ── */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-zinc-900/60 border border-white/10 backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-zinc-900/60 border border-[--line] backdrop-blur-md">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
             <Cpu className="w-6 h-6 animate-pulse" />
@@ -308,7 +308,7 @@ export function ProductionCapacityWorkspace() {
             size="sm"
             onClick={fetchData}
             disabled={loading}
-            className="rounded-xl border-white/10 hover:bg-white/5 text-zinc-300"
+            className="rounded-xl border-[--line] hover:bg-white/5 text-zinc-300"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -396,12 +396,12 @@ export function ProductionCapacityWorkspace() {
       )}
 
       {/* ── MODÜL SEKMELERİ ── */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+      <div className="flex items-center gap-2 border-b border-[--line] pb-2">
         <button
           onClick={() => setActiveTab("overview")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             activeTab === "overview"
-              ? "bg-white/10 text-white border border-white/10"
+              ? "bg-white/10 text-white border border-[--line]"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -413,7 +413,7 @@ export function ProductionCapacityWorkspace() {
           onClick={() => setActiveTab("gantt")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             activeTab === "gantt"
-              ? "bg-white/10 text-white border border-white/10"
+              ? "bg-white/10 text-white border border-[--line]"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -425,7 +425,7 @@ export function ProductionCapacityWorkspace() {
           onClick={() => setActiveTab("ctp")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             activeTab === "ctp"
-              ? "bg-white/10 text-white border border-white/10"
+              ? "bg-white/10 text-white border border-[--line]"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -437,7 +437,7 @@ export function ProductionCapacityWorkspace() {
           onClick={() => setActiveTab("variance")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             activeTab === "variance"
-              ? "bg-white/10 text-white border border-white/10"
+              ? "bg-white/10 text-white border border-[--line]"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -449,7 +449,7 @@ export function ProductionCapacityWorkspace() {
           onClick={() => setActiveTab("alerts")}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             activeTab === "alerts"
-              ? "bg-white/10 text-white border border-white/10"
+              ? "bg-white/10 text-white border border-[--line]"
               : "text-zinc-400 hover:text-white"
           }`}
         >
@@ -493,7 +493,7 @@ export function ProductionCapacityWorkspace() {
                     </TableRow>
                   ) : (
                     overviewData.workCenters.map((wc: any) => (
-                      <TableRow key={wc.workCenterId} className="border-white/5 hover:bg-white/[0.02]">
+                      <TableRow key={wc.workCenterId} className="border-white/5 hover:bg-[--page]">
                         <TableCell className="font-mono font-medium text-amber-400">{wc.code}</TableCell>
                         <TableCell className="font-semibold text-white">{wc.name}</TableCell>
                         <TableCell className="text-zinc-300 font-mono">
@@ -504,7 +504,7 @@ export function ProductionCapacityWorkspace() {
                           {wc.workingDays.join(", ")}
                         </TableCell>
                         <TableCell>
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
                             Aktif
                           </span>
                         </TableCell>
@@ -530,15 +530,15 @@ export function ProductionCapacityWorkspace() {
                   value={ganttSearchQuery}
                   onChange={(e) => setGanttSearchQuery(e.target.value)}
                   placeholder="İş Emri veya Operasyon Ara..."
-                  className="pl-9 h-10 w-64 bg-zinc-900 border-white/10 text-sm"
+                  className="pl-9 h-10 w-64 bg-zinc-900 border-[--line] text-sm"
                 />
               </div>
 
               <Select value={ganttFilterWc} onValueChange={setGanttFilterWc}>
-                <SelectTrigger className="w-56 h-10 bg-zinc-900 border-white/10 text-sm">
+                <SelectTrigger className="w-56 h-10 bg-zinc-900 border-[--line] text-sm">
                   <SelectValue placeholder="İş Merkezi Filtresi" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white">
                   <SelectItem value="ALL">Tüm İstasyonlar</SelectItem>
                   {(ganttData?.workCenters || []).map((w: any) => (
                     <SelectItem key={w.workCenterId} value={w.workCenterId}>
@@ -554,7 +554,7 @@ export function ProductionCapacityWorkspace() {
                 <span className="w-3 h-3 rounded bg-blue-500 inline-block" /> Planlandı
               </span>
               <span className="flex items-center gap-1.5 text-zinc-400">
-                <span className="w-3 h-3 rounded bg-emerald-500 inline-block" /> İcrada
+                <span className="w-3 h-3 rounded bg-[--brand] inline-block" /> İcrada
               </span>
               <span className="flex items-center gap-1.5 text-zinc-400">
                 <span className="w-3 h-3 rounded bg-purple-500 inline-block" /> Kilitli
@@ -575,7 +575,7 @@ export function ProductionCapacityWorkspace() {
                 return (
                   <div
                     key={wc.workCenterId}
-                    className="p-5 rounded-2xl bg-zinc-900/60 border border-white/10 space-y-3"
+                    className="p-5 rounded-2xl bg-zinc-900/60 border border-[--line] space-y-3"
                   >
                     <div className="flex items-center justify-between border-b border-white/5 pb-2">
                       <div className="flex items-center gap-3">
@@ -643,7 +643,7 @@ export function ProductionCapacityWorkspace() {
       {/* ── TAB 3: SÖZ VERİLEBİLİR TESLİM TARİHİ (CTP) ── */}
       {activeTab === "ctp" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="p-6 rounded-3xl bg-zinc-900/60 border border-white/10 space-y-4">
+          <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <Target className="w-5 h-5 text-amber-400" />
               <h2 className="text-base font-semibold text-white">CTP Simülasyon Talebi</h2>
@@ -659,7 +659,7 @@ export function ProductionCapacityWorkspace() {
                   value={ctpItemId}
                   onChange={(e) => setCtpItemId(e.target.value)}
                   placeholder="Mamul ID veya SKU..."
-                  className="h-10 bg-zinc-900 border-white/10 text-sm mt-1"
+                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1"
                 />
               </div>
 
@@ -669,7 +669,7 @@ export function ProductionCapacityWorkspace() {
                   type="number"
                   value={ctpQuantity}
                   onChange={(e) => setCtpQuantity(e.target.value)}
-                  className="h-10 bg-zinc-900 border-white/10 text-sm mt-1 font-mono"
+                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1 font-mono"
                 />
               </div>
 
@@ -679,7 +679,7 @@ export function ProductionCapacityWorkspace() {
                   type="date"
                   value={ctpRequestedDate}
                   onChange={(e) => setCtpRequestedDate(e.target.value)}
-                  className="h-10 bg-zinc-900 border-white/10 text-sm mt-1"
+                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1"
                 />
               </div>
 
@@ -698,7 +698,7 @@ export function ProductionCapacityWorkspace() {
             </form>
           </div>
 
-          <div className="lg:col-span-2 p-6 rounded-3xl bg-zinc-900/60 border border-white/10 space-y-4">
+          <div className="lg:col-span-2 p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
             <h2 className="text-base font-semibold text-white flex items-center gap-2">
               <Calendar className="w-5 h-5 text-amber-400" />
               Simülasyon Sonucu ve Çizelge Önerisi
@@ -713,7 +713,7 @@ export function ProductionCapacityWorkspace() {
                 <div
                   className={`p-4 rounded-2xl border flex items-center justify-between ${
                     ctpResult.isFeasible
-                      ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-300"
+                      ? "bg-[--brand-soft] border-[--brand-line] text-[--brand]"
                       : "bg-rose-950/20 border-rose-500/30 text-rose-300"
                   }`}
                 >
@@ -770,7 +770,7 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── TAB 4: SÜRE VARYANSI & STANDART ÖNERİSİ ── */}
       {activeTab === "variance" && (
-        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-white/10 space-y-4">
+        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-base font-semibold text-white">Planlanan vs. Gerçekleşen Çevrim Süreleri</h2>
@@ -803,7 +803,7 @@ export function ProductionCapacityWorkspace() {
                   varianceData.map((v: any, idx: number) => {
                     const isPositive = v.variancePercent > 0
                     return (
-                      <TableRow key={idx} className="border-white/5 hover:bg-white/[0.02] text-xs font-mono">
+                      <TableRow key={idx} className="border-white/5 hover:bg-[--page] text-xs font-mono">
                         <TableCell className="font-semibold text-white font-sans">{v.operationName}</TableCell>
                         <TableCell className="text-zinc-400">{v.sampleCount} İcra</TableCell>
                         <TableCell className="text-zinc-300">{v.plannedStandardMinutes} dk</TableCell>
@@ -811,7 +811,7 @@ export function ProductionCapacityWorkspace() {
                         <TableCell>
                           <span
                             className={`px-2 py-0.5 rounded ${
-                              isPositive ? "bg-rose-500/10 text-rose-400" : "bg-emerald-500/10 text-emerald-400"
+                              isPositive ? "bg-rose-500/10 text-rose-400" : "bg-[--brand]/10 text-[--brand]"
                             }`}
                           >
                             {isPositive ? "+" : ""}
@@ -833,7 +833,7 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── TAB 5: DARBOĞAZ & UYARILAR ── */}
       {activeTab === "alerts" && (
-        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-white/10 space-y-4">
+        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold text-white">Aktif Kapasite ve Aşırı Yük Uyarıları</h2>
             <span className="text-xs text-zinc-500">Eşik Aşımı (≥ %95) ve Darboğazlar</span>
@@ -842,14 +842,14 @@ export function ProductionCapacityWorkspace() {
           <div className="space-y-3">
             {(!overviewData?.recentAlerts || overviewData.recentAlerts.length === 0) ? (
               <div className="p-12 text-center rounded-2xl bg-zinc-900/30 border border-white/5 text-zinc-500">
-                <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
+                <CheckCircle2 className="w-10 h-10 text-[--brand] mx-auto mb-2" />
                 Aktif bir kapasite aşımı veya darboğaz uyarısı bulunmuyor.
               </div>
             ) : (
               overviewData.recentAlerts.map((alert: any) => (
                 <div
                   key={alert.id}
-                  className="p-4 rounded-2xl bg-zinc-900/80 border border-white/10 flex items-center justify-between gap-4"
+                  className="p-4 rounded-2xl bg-zinc-900/80 border border-[--line] flex items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-3">
                     <AlertTriangle
@@ -869,7 +869,7 @@ export function ProductionCapacityWorkspace() {
                     size="sm"
                     variant="outline"
                     onClick={() => handleAcknowledgeAlert(alert.id)}
-                    className="rounded-xl border-white/10 text-xs shrink-0"
+                    className="rounded-xl border-[--line] text-xs shrink-0"
                   >
                     İncelendi
                   </Button>
@@ -882,7 +882,7 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── HESAPLAMA MODALI ── */}
       <Dialog open={calculateModalOpen} onOpenChange={setCalculateModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-900 border-white/10 text-white rounded-3xl">
+        <DialogContent className="sm:max-w-md bg-zinc-900 border-[--line] text-white rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">Kapasite Çizelgeleme Motorunu Çalıştır</DialogTitle>
             <DialogDescription className="text-xs text-zinc-400">
@@ -894,10 +894,10 @@ export function ProductionCapacityWorkspace() {
             <div>
               <Label className="text-xs text-zinc-300">Kapasite Modu *</Label>
               <Select value={schedulingMode} onValueChange={(v: any) => setSchedulingMode(v)}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-white/10 mt-1">
+                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white">
                   <SelectItem value="FINITE">Sonlu Kapasite (Finite - Makine Çakışması Yok)</SelectItem>
                   <SelectItem value="INFINITE">Sonsuz Kapasite (Infinite - Yük Görüntüleme)</SelectItem>
                 </SelectContent>
@@ -907,10 +907,10 @@ export function ProductionCapacityWorkspace() {
             <div>
               <Label className="text-xs text-zinc-300">Öncelik Kuralı (Dispatching Rule) *</Label>
               <Select value={priorityRule} onValueChange={(v: any) => setPriorityRule(v)}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-white/10 mt-1">
+                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white">
                   <SelectItem value="EDD">En Erken Teslim Tarihi (Earliest Due Date - EDD)</SelectItem>
                   <SelectItem value="FCFS">İlk Gelen İlk Yapılır (FCFS)</SelectItem>
                   <SelectItem value="CR">Kritik Oran (Critical Ratio - CR)</SelectItem>
@@ -925,7 +925,7 @@ export function ProductionCapacityWorkspace() {
                 type="number"
                 value={overloadThreshold}
                 onChange={(e) => setOverloadThreshold(e.target.value)}
-                className="h-10 bg-zinc-950 border-white/10 mt-1 font-mono"
+                className="h-10 bg-zinc-950 border-[--line] mt-1 font-mono"
               />
             </div>
           </div>
@@ -934,7 +934,7 @@ export function ProductionCapacityWorkspace() {
             <Button
               variant="outline"
               onClick={() => setCalculateModalOpen(false)}
-              className="rounded-xl border-white/10"
+              className="rounded-xl border-[--line]"
             >
               Vazgeç
             </Button>
@@ -952,7 +952,7 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── GÖREV DÜZENLEME & YENİDEN ZAMANLAMA MODALI ── */}
       <Dialog open={Boolean(selectedTaskForEdit)} onOpenChange={() => setSelectedTaskForEdit(null)}>
-        <DialogContent className="sm:max-w-lg bg-zinc-900 border-white/10 text-white rounded-3xl">
+        <DialogContent className="sm:max-w-lg bg-zinc-900 border-[--line] text-white rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">
               Operasyon Çizelgesini Düzenle (#{selectedTaskForEdit?.operation?.operationNumber})
@@ -969,7 +969,7 @@ export function ProductionCapacityWorkspace() {
                 type="datetime-local"
                 value={editStartDate}
                 onChange={(e) => setEditStartDate(e.target.value)}
-                className="h-10 bg-zinc-950 border-white/10 mt-1"
+                className="h-10 bg-zinc-950 border-[--line] mt-1"
               />
             </div>
 
@@ -979,17 +979,17 @@ export function ProductionCapacityWorkspace() {
                 type="datetime-local"
                 value={editEndDate}
                 onChange={(e) => setEditEndDate(e.target.value)}
-                className="h-10 bg-zinc-950 border-white/10 mt-1"
+                className="h-10 bg-zinc-950 border-[--line] mt-1"
               />
             </div>
 
             <div>
               <Label className="text-xs text-zinc-300">Atanan İş Merkezi</Label>
               <Select value={editWorkCenterId} onValueChange={setEditWorkCenterId}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-white/10 mt-1">
+                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white">
                   {(ganttData?.workCenters || []).map((w: any) => (
                     <SelectItem key={w.workCenterId} value={w.workCenterId}>
                       {w.code} - {w.name}
@@ -1005,7 +1005,7 @@ export function ProductionCapacityWorkspace() {
                 id="editLock"
                 checked={editIsLocked}
                 onChange={(e) => setEditIsLocked(e.target.checked)}
-                className="w-4 h-4 rounded bg-zinc-950 border-white/20 text-amber-500 focus:ring-amber-500"
+                className="w-4 h-4 rounded bg-zinc-950 border-[--line] text-amber-500 focus:ring-amber-500"
               />
               <Label htmlFor="editLock" className="text-xs text-zinc-300 cursor-pointer">
                 Bu operasyonu kilitle (Yeniden otomatik planlamada yeri sabit kalır)
@@ -1017,7 +1017,7 @@ export function ProductionCapacityWorkspace() {
             <Button
               variant="outline"
               onClick={() => setSelectedTaskForEdit(null)}
-              className="rounded-xl border-white/10"
+              className="rounded-xl border-[--line]"
             >
               Vazgeç
             </Button>

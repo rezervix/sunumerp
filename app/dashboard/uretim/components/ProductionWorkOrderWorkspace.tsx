@@ -88,7 +88,7 @@ const STATUS_CONFIG: Record<
   },
   IN_PROGRESS: {
     label: "Devam Ediyor",
-    badgeClass: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    badgeClass: "bg-[--brand]/10 text-[--brand] border-[--brand-line]",
     icon: Play,
   },
   PAUSED: {
@@ -383,10 +383,10 @@ export function ProductionWorkOrderWorkspace() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase tracking-wider font-semibold text-emerald-400">
+            <span className="text-xs uppercase tracking-wider font-semibold text-[--brand]">
               Üretim Yönetim Sistemi (Faz 5)
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
               Canlı İcra
             </span>
           </div>
@@ -400,12 +400,12 @@ export function ProductionWorkOrderWorkspace() {
 
         <div className="flex items-center gap-2">
           {/* Sekme Değiştirici */}
-          <div className="flex p-1 rounded-xl bg-zinc-900 border border-white/10 text-xs">
+          <div className="flex p-1 rounded-xl bg-zinc-900 border border-[--line] text-xs">
             <button
               onClick={() => setActiveTab("dashboard")}
               className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
                 activeTab === "dashboard"
-                  ? "bg-emerald-600 text-white shadow"
+                  ? "bg-[--brand] text-white shadow"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
@@ -415,7 +415,7 @@ export function ProductionWorkOrderWorkspace() {
               onClick={() => setActiveTab("work_orders")}
               className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
                 activeTab === "work_orders"
-                  ? "bg-emerald-600 text-white shadow"
+                  ? "bg-[--brand] text-white shadow"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
@@ -425,7 +425,7 @@ export function ProductionWorkOrderWorkspace() {
               onClick={() => setActiveTab("terminal")}
               className={`px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center gap-1.5 ${
                 activeTab === "terminal"
-                  ? "bg-emerald-600 text-white shadow"
+                  ? "bg-[--brand] text-white shadow"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
@@ -452,7 +452,7 @@ export function ProductionWorkOrderWorkspace() {
         <div className="space-y-6">
           {/* Üst KPI Kartları */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10">
+            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-[--line]">
               <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                 Aktif İş Emirleri
               </span>
@@ -464,17 +464,17 @@ export function ProductionWorkOrderWorkspace() {
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-emerald-400">
+            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-[--line]">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-[--brand]">
                 Devam Eden Operasyonlar
               </span>
-              <div className="text-2xl font-light text-emerald-400 font-mono mt-1">
+              <div className="text-2xl font-light text-[--brand] font-mono mt-1">
                 {dashboardData?.inProgressOperationsCount ?? 0}
               </div>
               <p className="text-[11px] text-zinc-400 mt-1">Atölyede Tezgah Başında</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10">
+            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-[--line]">
               <span className="text-[11px] font-medium uppercase tracking-wider text-amber-400">
                 Geciken İş Emirleri
               </span>
@@ -484,7 +484,7 @@ export function ProductionWorkOrderWorkspace() {
               <p className="text-[11px] text-zinc-400 mt-1">Termin Tarihi Aşılan</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-white/10">
+            <div className="p-4 rounded-2xl bg-zinc-900/70 border border-[--line]">
               <span className="text-[11px] font-medium uppercase tracking-wider text-cyan-400">
                 Genel OEE / Tamamlanma
               </span>
@@ -496,7 +496,7 @@ export function ProductionWorkOrderWorkspace() {
           </div>
 
           {/* Durum Dağılımı Rozetleri */}
-          <div className="p-4 rounded-2xl bg-zinc-900/50 border border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 rounded-2xl bg-zinc-900/50 border border-[--line] flex flex-wrap items-center justify-between gap-3">
             <span className="text-xs font-semibold text-zinc-300">İş Emri Durum Dağılımı:</span>
             <div className="flex flex-wrap items-center gap-2">
               {Object.entries(dashboardData?.statusCounts || {}).map(([st, cnt]) => (
@@ -513,8 +513,8 @@ export function ProductionWorkOrderWorkspace() {
           </div>
 
           {/* Aktif İş Emirleri Canlı Çizelgesi */}
-          <div className="glass-table-container overflow-hidden rounded-2xl border border-white/10">
-            <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+          <div className="glass-table-container overflow-hidden rounded-2xl border border-[--line]">
+            <div className="px-5 py-4 border-b border-[--line] flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-semibold text-white">Canlı Atölye İş Emirleri</h3>
                 <p className="text-xs text-zinc-400">Devam eden ve serbest bırakılmış üretim emirleri</p>
@@ -524,7 +524,7 @@ export function ProductionWorkOrderWorkspace() {
                 size="sm"
                 onClick={fetchDashboard}
                 disabled={loadingDashboard}
-                className="h-8 border-white/10 text-xs"
+                className="h-8 border-[--line] text-xs"
               >
                 <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loadingDashboard ? "animate-spin" : ""}`} />
                 Yenile
@@ -533,7 +533,7 @@ export function ProductionWorkOrderWorkspace() {
 
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-white/10 bg-white/[0.02]">
+                <TableRow className="border-b border-[--line] bg-[--page]">
                   <TableHead className="text-xs">İş Emri No</TableHead>
                   <TableHead className="text-xs">Mamul / Ürün</TableHead>
                   <TableHead className="text-xs">Durum</TableHead>
@@ -559,7 +559,7 @@ export function ProductionWorkOrderWorkspace() {
                       : 0
 
                     return (
-                      <TableRow key={order.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                      <TableRow key={order.id} className="border-b border-white/5 hover:bg-[--page]">
                         <TableCell className="font-mono text-xs font-semibold text-white">
                           {order.workOrderNumber}
                         </TableCell>
@@ -580,14 +580,14 @@ export function ProductionWorkOrderWorkspace() {
                             </div>
                             <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
                               <div
-                                className="h-full bg-emerald-500 rounded-full transition-all"
+                                className="h-full bg-[--brand] rounded-full transition-all"
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="font-mono text-xs">
-                          <span className="text-emerald-400 font-bold">{order.producedQuantity}</span> / {order.plannedQuantity} {order.unit}
+                          <span className="text-[--brand] font-bold">{order.producedQuantity}</span> / {order.plannedQuantity} {order.unit}
                         </TableCell>
                         <TableCell>
                           {order.isDelayed ? (
@@ -623,7 +623,7 @@ export function ProductionWorkOrderWorkspace() {
       {activeTab === "work_orders" && (
         <div className="space-y-4">
           {/* Filtre ve Arama Çubuğu */}
-          <div className="p-4 rounded-2xl bg-zinc-900/60 border border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 rounded-2xl bg-zinc-900/60 border border-[--line] flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3 flex-1">
               <div className="relative min-w-[240px] max-w-sm">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -631,16 +631,16 @@ export function ProductionWorkOrderWorkspace() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="İş emri no, ürün, lot no ara..."
-                  className="pl-9 h-9 bg-zinc-900 border-white/10 text-xs"
+                  className="pl-9 h-9 bg-zinc-900 border-[--line] text-xs"
                 />
               </div>
 
               <div className="w-40">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="h-9 bg-zinc-900 border-white/10 text-xs">
+                  <SelectTrigger className="h-9 bg-zinc-900 border-[--line] text-xs">
                     <SelectValue placeholder="Tüm Durumlar" />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-white text-xs">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-white text-xs">
                     <SelectItem value="ALL">Tüm Durumlar</SelectItem>
                     <SelectItem value="PLANNED">Planlandı</SelectItem>
                     <SelectItem value="APPROVED">Onaylandı</SelectItem>
@@ -655,10 +655,10 @@ export function ProductionWorkOrderWorkspace() {
 
               <div className="w-36">
                 <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                  <SelectTrigger className="h-9 bg-zinc-900 border-white/10 text-xs">
+                  <SelectTrigger className="h-9 bg-zinc-900 border-[--line] text-xs">
                     <SelectValue placeholder="Tüm Öncelikler" />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-white text-xs">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-white text-xs">
                     <SelectItem value="ALL">Tüm Öncelikler</SelectItem>
                     <SelectItem value="LOW">Düşük</SelectItem>
                     <SelectItem value="MEDIUM">Normal</SelectItem>
@@ -674,7 +674,7 @@ export function ProductionWorkOrderWorkspace() {
               size="sm"
               onClick={fetchWorkOrders}
               disabled={loadingOrders}
-              className="h-9 border-white/10 text-xs"
+              className="h-9 border-[--line] text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loadingOrders ? "animate-spin" : ""}`} />
               Filtrele
@@ -682,10 +682,10 @@ export function ProductionWorkOrderWorkspace() {
           </div>
 
           {/* İş Emirleri Tablosu */}
-          <div className="glass-table-container overflow-hidden rounded-2xl border border-white/10">
+          <div className="glass-table-container overflow-hidden rounded-2xl border border-[--line]">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-white/10 bg-white/[0.02]">
+                <TableRow className="border-b border-[--line] bg-[--page]">
                   <TableHead className="text-xs">İş Emri No</TableHead>
                   <TableHead className="text-xs">Ürün Adı / SKU</TableHead>
                   <TableHead className="text-xs">Durum</TableHead>
@@ -712,7 +712,7 @@ export function ProductionWorkOrderWorkspace() {
                       <TableRow
                         key={wo.id}
                         onClick={() => setSelectedOrderId(wo.id)}
-                        className="border-b border-white/5 hover:bg-white/[0.03] cursor-pointer"
+                        className="border-b border-white/5 hover:bg-white cursor-pointer"
                       >
                         <TableCell className="font-mono text-xs font-bold text-white">
                           {wo.workOrderNumber}
@@ -743,7 +743,7 @@ export function ProductionWorkOrderWorkspace() {
                         <TableCell className="font-mono text-xs font-medium text-white">
                           {wo.plannedQuantity} {wo.unit}
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-emerald-400 font-bold">
+                        <TableCell className="font-mono text-xs text-[--brand] font-bold">
                           {wo.producedQuantity} {wo.unit}
                         </TableCell>
                         <TableCell className="text-xs text-zinc-400 font-mono">
@@ -773,17 +773,17 @@ export function ProductionWorkOrderWorkspace() {
 
       {/* ── DETAY ÇEKMECESİ (SHEET / DRAWER) ── */}
       <Sheet open={!!selectedOrderId} onOpenChange={(open) => !open && setSelectedOrderId(null)}>
-        <SheetContent className="sm:max-w-2xl bg-zinc-950 border-white/10 text-white overflow-y-auto">
+        <SheetContent className="sm:max-w-2xl bg-zinc-950 border-[--line] text-white overflow-y-auto">
           {loadingDetail || !orderDetail ? (
             <div className="py-20 text-center text-zinc-500 text-sm">
-              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-emerald-400" />
+              <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[--brand]" />
               İş emri detayları yükleniyor...
             </div>
           ) : (
             <div className="space-y-6">
               <SheetHeader>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
                     {orderDetail.workOrderNumber}
                   </span>
                   <span
@@ -803,7 +803,7 @@ export function ProductionWorkOrderWorkspace() {
               </SheetHeader>
 
               {/* DURUM EYLEMLERİ ÇUBUĞU */}
-              <div className="p-3 rounded-xl bg-zinc-900 border border-white/10 flex flex-wrap items-center gap-2">
+              <div className="p-3 rounded-xl bg-zinc-900 border border-[--line] flex flex-wrap items-center gap-2">
                 <span className="text-xs text-zinc-400 font-medium mr-1">Eylemler:</span>
 
                 {orderDetail.status === "PLANNED" && (
@@ -832,7 +832,7 @@ export function ProductionWorkOrderWorkspace() {
                   <Button
                     size="sm"
                     onClick={() => handleStatusChange("IN_PROGRESS")}
-                    className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold"
+                    className="h-8 bg-[--brand] hover:bg-[--brand] text-white text-xs font-semibold"
                   >
                     <Play className="w-3.5 h-3.5 mr-1" />
                     Üretime Başla
@@ -865,7 +865,7 @@ export function ProductionWorkOrderWorkspace() {
                     size="sm"
                     variant="outline"
                     onClick={() => setSplitModalOpen(true)}
-                    className="h-8 border-white/10 text-xs"
+                    className="h-8 border-[--line] text-xs"
                   >
                     <Split className="w-3.5 h-3.5 mr-1 text-cyan-400" />
                     Böl (Split)
@@ -874,12 +874,12 @@ export function ProductionWorkOrderWorkspace() {
               </div>
 
               {/* Alt Sekmeler */}
-              <div className="flex border-b border-white/10 text-xs font-medium">
+              <div className="flex border-b border-[--line] text-xs font-medium">
                 <button
                   onClick={() => setDetailTab("materials")}
                   className={`pb-2 px-3 transition-colors ${
                     detailTab === "materials"
-                      ? "border-b-2 border-emerald-500 text-emerald-400 font-bold"
+                      ? "border-b-2 border-[--brand] text-[--brand] font-bold"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -889,7 +889,7 @@ export function ProductionWorkOrderWorkspace() {
                   onClick={() => setDetailTab("operations")}
                   className={`pb-2 px-3 transition-colors ${
                     detailTab === "operations"
-                      ? "border-b-2 border-emerald-500 text-emerald-400 font-bold"
+                      ? "border-b-2 border-[--brand] text-[--brand] font-bold"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -899,7 +899,7 @@ export function ProductionWorkOrderWorkspace() {
                   onClick={() => setDetailTab("costing")}
                   className={`pb-2 px-3 transition-colors ${
                     detailTab === "costing"
-                      ? "border-b-2 border-emerald-500 text-emerald-400 font-bold"
+                      ? "border-b-2 border-[--brand] text-[--brand] font-bold"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -913,7 +913,7 @@ export function ProductionWorkOrderWorkspace() {
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="border-b border-white/10 bg-white/[0.02]">
+                        <TableRow className="border-b border-[--line] bg-[--page]">
                           <TableHead className="text-xs">Hammadde</TableHead>
                           <TableHead className="text-xs">Gerekli</TableHead>
                           <TableHead className="text-xs">Rezerve</TableHead>
@@ -931,9 +931,9 @@ export function ProductionWorkOrderWorkspace() {
                             </TableCell>
                             <TableCell className="font-mono">{mat.requiredQuantity} {mat.unit}</TableCell>
                             <TableCell className="font-mono text-cyan-400">{mat.reservedQuantity} {mat.unit}</TableCell>
-                            <TableCell className="font-mono text-emerald-400 font-bold">{mat.issuedQuantity} {mat.unit}</TableCell>
+                            <TableCell className="font-mono text-[--brand] font-bold">{mat.issuedQuantity} {mat.unit}</TableCell>
                             <TableCell>
-                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
+                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-[--line]">
                                 {mat.consumptionMethod}
                               </span>
                             </TableCell>
@@ -947,7 +947,7 @@ export function ProductionWorkOrderWorkspace() {
                                     setIssueQty(String(mat.requiredQuantity - mat.issuedQuantity))
                                     setIssueMaterialModalOpen(true)
                                   }}
-                                  className="h-7 text-[11px] border-emerald-500/30 text-emerald-300"
+                                  className="h-7 text-[11px] border-[--brand-line] text-[--brand]"
                                 >
                                   Sarf Et
                                 </Button>
@@ -981,7 +981,7 @@ export function ProductionWorkOrderWorkspace() {
                       </div>
 
                       <div className="text-right font-mono">
-                        <span className="text-emerald-400 font-bold">{op.producedQuantity}</span> / {op.plannedQuantity}
+                        <span className="text-[--brand] font-bold">{op.producedQuantity}</span> / {op.plannedQuantity}
                         <div className="text-[10px] text-zinc-500">{op.status}</div>
                       </div>
                     </div>
@@ -1004,7 +1004,7 @@ export function ProductionWorkOrderWorkspace() {
 
                         <div className="p-3 rounded-xl bg-zinc-900 border border-white/5">
                           <p className="text-[10px] text-zinc-400 uppercase">Gerçekleşen Fiili Maliyet</p>
-                          <p className="text-lg font-mono font-bold text-emerald-400 mt-1">
+                          <p className="text-lg font-mono font-bold text-[--brand] mt-1">
                             ₺{costSummary.totalActualCost?.toLocaleString("tr-TR", { minimumFractionDigits: 2 })}
                           </p>
                         </div>
@@ -1027,9 +1027,9 @@ export function ProductionWorkOrderWorkspace() {
                           <span className="text-zinc-400">Hurda / Fire Maliyeti:</span>
                           <span className="font-mono text-red-400">₺{costSummary.scrapCost?.toFixed(2)}</span>
                         </div>
-                        <div className="pt-2 border-t border-white/10 flex justify-between font-bold">
+                        <div className="pt-2 border-t border-[--line] flex justify-between font-bold">
                           <span className="text-zinc-200">Maliyet Sapması:</span>
-                          <span className={`font-mono ${costSummary.varianceAmount > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                          <span className={`font-mono ${costSummary.varianceAmount > 0 ? "text-red-400" : "text-[--brand]"}`}>
                             {costSummary.variancePercentage > 0 ? "+" : ""}{costSummary.variancePercentage?.toFixed(2)}% (₺{costSummary.varianceAmount?.toFixed(2)})
                           </span>
                         </div>
@@ -1049,7 +1049,7 @@ export function ProductionWorkOrderWorkspace() {
 
       {/* ── MODAL: YENİ İŞ EMRİ OLUŞTUR ── */}
       <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-lg">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Yeni Üretim / İş Emri Aç</DialogTitle>
             <DialogDescription className="text-zinc-400">
@@ -1072,10 +1072,10 @@ export function ProductionWorkOrderWorkspace() {
                   }))
                 }}
               >
-                <SelectTrigger className="bg-zinc-900 border-white/15 mt-1 text-xs">
+                <SelectTrigger className="bg-zinc-900 border-[--line] mt-1 text-xs">
                   <SelectValue placeholder="Reçete / Mamul Seçiniz" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white text-xs">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white text-xs">
                   {bomList.map((b) => (
                     <SelectItem key={b.id} value={b.id}>
                       {b.item?.name || b.bomCode} (Rev: {b.revision})
@@ -1093,7 +1093,7 @@ export function ProductionWorkOrderWorkspace() {
                   min="1"
                   value={newOrderForm.plannedQuantity}
                   onChange={(e) => setNewOrderForm((prev) => ({ ...prev, plannedQuantity: e.target.value }))}
-                  className="bg-zinc-900 border-white/15 mt-1"
+                  className="bg-zinc-900 border-[--line] mt-1"
                 />
               </div>
 
@@ -1103,10 +1103,10 @@ export function ProductionWorkOrderWorkspace() {
                   value={newOrderForm.priority}
                   onValueChange={(val) => setNewOrderForm((prev) => ({ ...prev, priority: val }))}
                 >
-                  <SelectTrigger className="bg-zinc-900 border-white/15 mt-1 text-xs">
+                  <SelectTrigger className="bg-zinc-900 border-[--line] mt-1 text-xs">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-white text-xs">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-white text-xs">
                     <SelectItem value="LOW">Düşük</SelectItem>
                     <SelectItem value="MEDIUM">Normal</SelectItem>
                     <SelectItem value="HIGH">Yüksek</SelectItem>
@@ -1122,13 +1122,13 @@ export function ProductionWorkOrderWorkspace() {
                 value={newOrderForm.lotNumber}
                 onChange={(e) => setNewOrderForm((prev) => ({ ...prev, lotNumber: e.target.value }))}
                 placeholder="Örn: LOT-2026-001 (Boşsa otomatik atanır)"
-                className="bg-zinc-900 border-white/15 mt-1 text-xs font-mono"
+                className="bg-zinc-900 border-[--line] mt-1 text-xs font-mono"
               />
             </div>
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setCreateModalOpen(false)} className="border-white/10">
+            <Button variant="outline" onClick={() => setCreateModalOpen(false)} className="border-[--line]">
               Vazgeç
             </Button>
             <Button onClick={handleCreateWorkOrder} className="btn-primary-emerald font-semibold">
@@ -1140,7 +1140,7 @@ export function ProductionWorkOrderWorkspace() {
 
       {/* ── MODAL: MANUEL MALZEME SARFİYATI ── */}
       <Dialog open={issueMaterialModalOpen} onOpenChange={setIssueMaterialModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-md">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Manuel Hammadde Sarfiyatı</DialogTitle>
             <DialogDescription className="text-zinc-400">
@@ -1157,7 +1157,7 @@ export function ProductionWorkOrderWorkspace() {
                 step="any"
                 value={issueQty}
                 onChange={(e) => setIssueQty(e.target.value)}
-                className="bg-zinc-900 border-white/15 mt-1 font-mono text-lg"
+                className="bg-zinc-900 border-[--line] mt-1 font-mono text-lg"
               />
             </div>
 
@@ -1167,13 +1167,13 @@ export function ProductionWorkOrderWorkspace() {
                 value={issueLot}
                 onChange={(e) => setIssueLot(e.target.value)}
                 placeholder="Örn: RAW-LOT-01"
-                className="bg-zinc-900 border-white/15 mt-1 font-mono"
+                className="bg-zinc-900 border-[--line] mt-1 font-mono"
               />
             </div>
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setIssueMaterialModalOpen(false)} className="border-white/10">
+            <Button variant="outline" onClick={() => setIssueMaterialModalOpen(false)} className="border-[--line]">
               Vazgeç
             </Button>
             <Button onClick={handleIssueMaterial} className="btn-primary-emerald font-semibold">
@@ -1185,7 +1185,7 @@ export function ProductionWorkOrderWorkspace() {
 
       {/* ── MODAL: İŞ EMRİ BÖLME (SPLIT) ── */}
       <Dialog open={splitModalOpen} onOpenChange={setSplitModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-md">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Split className="w-5 h-5 text-cyan-400" />
@@ -1203,12 +1203,12 @@ export function ProductionWorkOrderWorkspace() {
               min="1"
               value={splitQty}
               onChange={(e) => setSplitQty(e.target.value)}
-              className="bg-zinc-900 border-white/15 mt-1 font-mono text-lg"
+              className="bg-zinc-900 border-[--line] mt-1 font-mono text-lg"
             />
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setSplitModalOpen(false)} className="border-white/10">
+            <Button variant="outline" onClick={() => setSplitModalOpen(false)} className="border-[--line]">
               Vazgeç
             </Button>
             <Button onClick={handleSplitWorkOrder} className="bg-cyan-600 hover:bg-cyan-500 text-white font-semibold">

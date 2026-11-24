@@ -26,7 +26,7 @@ export const SEED_FAZ2_RENTACAR_PREFIX = "trzm-rnt-"
 const DEMO_SIGNATURE_DATA_URL =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="260" height="80" viewBox="0 0 260 80"><rect width="260" height="80" fill="#0B0F0D"/><path d="M22 55 C55 18, 80 65, 118 32 C145 14, 170 58, 232 28" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round"/><text x="20" y="72" fill="#71717A" font-family="monospace" font-size="10">DIJITAL MUSTERI IMZASI (DEMO)</text></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="260" height="80" viewBox="0 0 260 80"><rect width="260" height="80" fill="#0B0F0D"/><path d="M22 55 C55 18, 80 65, 118 32 C145 14, 170 58, 232 28" fill="none" stroke="#1267E6" stroke-width="3" stroke-linecap="round"/><text x="20" y="72" fill="#71717A" font-family="monospace" font-size="10">DIJITAL MUSTERI IMZASI (DEMO)</text></svg>`
   )
 
 function pushIfMissing(db: Record<string, any[]>, col: string, rec: any): number {

@@ -58,7 +58,7 @@ interface MapConfig {
 }
 
 const STATUS_MARKER_COLORS: Record<string, string> = {
-  ACTIVE: '#34D399',
+  ACTIVE: '#1267E6',
   IN_TRANSIT: '#38BDF8',
   MAINTENANCE: '#FBBF24',
   FAULT: '#F43F5E',
@@ -74,7 +74,7 @@ function getVehicleMarkerColor(v: MapVehiclePoint): string {
   ) {
     return '#F43F5E';
   }
-  return STATUS_MARKER_COLORS[v.status] || '#34D399';
+  return STATUS_MARKER_COLORS[v.status] || '#1267E6';
 }
 
 export function FleetLiveMap({
@@ -273,11 +273,11 @@ export function FleetLiveMap({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[white]/90 border border-[--line] rounded-[20px] p-4">
         <div className="flex flex-wrap items-center gap-2">
-          <Compass className="w-4 h-4 text-[#34D399]" />
+          <Compass className="w-4 h-4 text-[#1267E6]" />
           <span className="text-sm font-semibold text-white">Canlı Filo Haritası</span>
-          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-[#34D399] border border-emerald-500/25">
+          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[--brand]/10 text-[#1267E6] border border-[--brand]/25">
             {visibleVehicles.length} Konumlu Araç · Son {hoursWindow} Saat İz
           </span>
           {isDemoMode && (
@@ -305,8 +305,8 @@ export function FleetLiveMap({
             onClick={() => setShowAllTrails((prev) => !prev)}
             className={`px-3 py-1.5 rounded-full text-xs border cursor-pointer transition ${
               showAllTrails
-                ? 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
-                : 'bg-white/[0.04] text-zinc-300 border-white/[0.08]'
+                ? 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
+                : 'bg-[--muted-bg] text-zinc-300 border-[--line]'
             }`}
           >
             {showAllTrails ? 'Tüm Rotalar Açık' : 'Tüm Rotaları Göster'}
@@ -316,9 +316,9 @@ export function FleetLiveMap({
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-[#34D399] ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-[#1267E6] ${loading ? 'animate-spin' : ''}`} />
             Yenile
           </button>
         </div>
@@ -332,13 +332,13 @@ export function FleetLiveMap({
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 relative bg-[#0B100E] border border-white/[0.08] rounded-[20px] overflow-hidden min-h-[460px]">
+        <div className="lg:col-span-2 relative bg-[#0B100E] border border-[--line] rounded-[20px] overflow-hidden min-h-[460px]">
           <div ref={containerRef} className="w-full h-[460px] z-0" />
 
           {/* Harita Durum Renk Göstergesi + Zorunlu Atıf Çubuğu */}
           <div className="absolute top-3 left-3 z-[400] bg-[#0B0F0D]/90 backdrop-blur-md border border-white/[0.1] rounded-xl px-3 py-2 text-[11px] flex flex-wrap gap-3 text-zinc-300">
             <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#38BDF8]" /> Seferde</span>
-            <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#34D399]" /> Hazır</span>
+            <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#1267E6]" /> Hazır</span>
             <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#FBBF24]" /> Bakımda</span>
             <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#F43F5E]" /> Arıza / Isı İhlali</span>
           </div>
@@ -349,13 +349,13 @@ export function FleetLiveMap({
         </div>
 
         {/* Sağ Detay Paneli & Araç Seçim Listesi */}
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-col gap-3 max-h-[460px] overflow-y-auto">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-col gap-3 max-h-[460px] overflow-y-auto">
           {selectedVehicle ? (
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-3.5 space-y-2.5">
+            <div className="bg-white border border-[--line] rounded-2xl p-3.5 space-y-2.5">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="text-base font-bold text-white flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-[#34D399]" />
+                    <Truck className="w-4 h-4 text-[#1267E6]" />
                     {selectedVehicle.plate}
                   </div>
                   <div className="text-xs text-zinc-400">
@@ -375,7 +375,7 @@ export function FleetLiveMap({
                 <div className="bg-[#0B0F0D] rounded-xl p-2 border border-white/[0.05]">
                   <div className="text-[10px] text-zinc-500">Şoför</div>
                   <div className="text-zinc-200 font-medium flex items-center gap-1 mt-0.5">
-                    <UserCheck className="w-3 h-3 text-[#34D399]" />
+                    <UserCheck className="w-3 h-3 text-[#1267E6]" />
                     {selectedVehicle.driverName || 'Atanmadı'}
                   </div>
                 </div>
@@ -419,9 +419,9 @@ export function FleetLiveMap({
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1 border-t border-white/[0.06]">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1 border-t border-[--line]">
                 <span className="inline-flex items-center gap-1">
-                  <Info className="w-3 h-3 text-[#34D399]" />
+                  <Info className="w-3 h-3 text-[#1267E6]" />
                   {selectedVehicle.lastTelemetryProvider || (isDemoMode ? 'DEMO Veritabanı' : 'Telematik')}
                 </span>
                 <span className="font-mono">{selectedVehicle.trail?.length || 0} iz noktası ({hoursWindow}s)</span>
@@ -446,8 +446,8 @@ export function FleetLiveMap({
                   onClick={() => setSelectedId(v.id)}
                   className={`w-full text-left px-3 py-2 rounded-xl border text-xs flex items-center justify-between transition cursor-pointer ${
                     active
-                      ? 'bg-emerald-500/15 border-emerald-500/35 text-white'
-                      : 'bg-white/[0.02] border-white/[0.05] text-zinc-300 hover:bg-white/[0.05]'
+                      ? 'bg-[--brand]/15 border-[--brand]/35 text-white'
+                      : 'bg-[--page] border-white/[0.05] text-zinc-300 hover:bg-white/[0.05]'
                   }`}
                 >
                   <div className="flex items-center gap-2">

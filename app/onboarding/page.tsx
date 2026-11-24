@@ -23,14 +23,14 @@ export default function OnboardingPage() {
   const [logoName, setLogoName] = useState<string>("")
   
   // Light Theme Palette
-  const [primaryColor, setPrimaryColor] = useState("#10B981")
+  const [primaryColor, setPrimaryColor] = useState("#1267E6")
   const [accentColor, setAccentColor] = useState("#06B6D4")
   const [extractedPalette, setExtractedPalette] = useState<ExtractedColor[]>([])
 
   // Dark Theme Palette (Derived from Logo)
-  const [darkBgColor, setDarkBgColor] = useState("#080A09")
-  const [darkCardColor, setDarkCardColor] = useState("#111513")
-  const [darkPrimaryColor, setDarkPrimaryColor] = useState("#34D399")
+  const [darkBgColor, setDarkBgColor] = useState("#F6F8FB")
+  const [darkCardColor, setDarkCardColor] = useState("white")
+  const [darkPrimaryColor, setDarkPrimaryColor] = useState("#1267E6")
   const [darkAccentColor, setDarkAccentColor] = useState("#22D3EE")
   
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -94,7 +94,7 @@ export default function OnboardingPage() {
         }
       }
       img.onerror = () => {
-        setPrimaryColor("#10B981")
+        setPrimaryColor("#1267E6")
         setAccentColor("#06B6D4")
         setIsAnalyzing(false)
       }
@@ -177,17 +177,17 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#080A09] text-white p-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#F6F8FB] text-white p-6 relative overflow-hidden">
       {/* Dynamic Glowing accents */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
-      <div className="fixed -top-32 -left-32 w-96 h-96 rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
+      <div className="fixed -top-32 -left-32 w-96 h-96 rounded-full bg-[--brand]/10 blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-3xl bg-[#111513]/90 backdrop-blur-2xl rounded-[24px] border border-white/10 shadow-2xl p-8 relative overflow-hidden z-10">
+      <div className="w-full max-w-3xl bg-[white]/90 backdrop-blur-2xl rounded-[24px] border border-[--line] shadow-2xl p-8 relative overflow-hidden z-10">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[--line]">
           <div className="flex items-center gap-3">
-            <div className="size-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+            <div className="size-10 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center text-[--brand] font-bold shadow-[0_0_15px_rgba(52,211,153,0.15)]">
               S
             </div>
             <div>
@@ -195,7 +195,7 @@ export default function OnboardingPage() {
               <p className="text-xs text-zinc-400">Otonom Kurulum ve Dinamik Tema Tasarımı</p>
             </div>
           </div>
-          <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-semibold flex items-center gap-1.5">
+          <span className="px-3 py-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full text-xs font-semibold flex items-center gap-1.5">
             <Sparkles size={13} /> Marka Kiti
           </span>
         </div>
@@ -204,7 +204,7 @@ export default function OnboardingPage() {
         <div className="space-y-6">
           <div>
             <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Palette className="text-emerald-400 size-5" /> Akıllı Logo ve Tema Motoru
+              <Palette className="text-[--brand] size-5" /> Akıllı Logo ve Tema Motoru
             </h2>
             <p className="text-xs text-zinc-400 mt-1">Şirket logonuzu yükleyin; renk analiz motoru marka kimliğinizi ve arka planını otomatik düzenler.</p>
           </div>
@@ -212,7 +212,7 @@ export default function OnboardingPage() {
           {/* Drag & Drop File Upload */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-white/10 hover:border-emerald-500/40 bg-white/[0.02] hover:bg-emerald-500/[0.02] rounded-2xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3"
+            className="border-2 border-dashed border-[--line] hover:border-[--brand-line] bg-[--page] hover:bg-[--brand]/[0.02] rounded-2xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3"
           >
             <input
               type="file"
@@ -224,7 +224,7 @@ export default function OnboardingPage() {
             {activeLogo ? (
               <div className="space-y-3">
                 <div className="flex justify-center items-center gap-6">
-                  <div className="size-24 rounded-2xl bg-[#080A09] p-2.5 flex items-center justify-center shadow-md border border-white/10 relative">
+                  <div className="size-24 rounded-2xl bg-[#F6F8FB] p-2.5 flex items-center justify-center shadow-md border border-[--line] relative">
                     <span className="absolute -top-2 left-2 text-[9px] font-bold bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded">Koyu Zemin</span>
                     <img src={activeLogo} alt="Logo Dark" className="max-h-full max-w-full object-contain" />
                   </div>
@@ -233,12 +233,12 @@ export default function OnboardingPage() {
                     <img src={activeLogo} alt="Logo Light" className="max-h-full max-w-full object-contain" />
                   </div>
                 </div>
-                <p className="text-xs font-semibold text-emerald-400">{logoName}</p>
+                <p className="text-xs font-semibold text-[--brand]">{logoName}</p>
               </div>
             ) : (
               <>
-                <div className="size-12 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400">
-                  <Upload size={20} className="text-emerald-400" />
+                <div className="size-12 rounded-xl bg-[--muted-bg] border border-[--line] flex items-center justify-center text-zinc-400">
+                  <Upload size={20} className="text-[--brand]" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">Logonuzu Sürükleyin veya Tıklayın</p>
@@ -250,17 +250,17 @@ export default function OnboardingPage() {
 
           {/* Background Removal & Quality Controls */}
           {originalLogo && (
-            <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/10 space-y-2">
+            <div className="bg-[--page] p-4 rounded-2xl border border-[--line] space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Wand2 className="size-4 text-emerald-400" />
+                  <Wand2 className="size-4 text-[--brand]" />
                   <span className="text-xs font-semibold text-white">Arka Planı Otomatik Temizle (Şeffaflaştır)</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAutoRemoveBg(!autoRemoveBg)}
                   className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                    autoRemoveBg ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)]" : "bg-white/10"
+                    autoRemoveBg ? "bg-[--brand] shadow-[0_0_12px_rgba(52,211,153,0.5)]" : "bg-white/10"
                   }`}
                 >
                   <span
@@ -289,9 +289,9 @@ export default function OnboardingPage() {
                         setAccentColor(extractedPalette[idx + 1].hex)
                       }
                     }}
-                    className="flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-white/[0.02] hover:border-emerald-500/50 transition-all text-left shrink-0 cursor-pointer"
+                    className="flex items-center gap-2 p-2.5 rounded-xl border border-[--line] bg-[--page] hover:border-[--brand-line] transition-all text-left shrink-0 cursor-pointer"
                   >
-                    <span className="size-6 rounded-lg shadow-inner border border-white/10" style={{ backgroundColor: color.hex }} />
+                    <span className="size-6 rounded-lg shadow-inner border border-[--line]" style={{ backgroundColor: color.hex }} />
                     <div>
                       <p className="text-xs font-mono font-bold text-white">{color.hex}</p>
                       <p className="text-[9px] text-zinc-400">WCAG {color.contrastWithWhite >= 4.5 ? "AA ✓" : "Düşük"}</p>
@@ -306,13 +306,13 @@ export default function OnboardingPage() {
           {originalLogo && (
             <div className="space-y-4">
               {/* Light Theme Pickers */}
-              <div className="bg-white/[0.02] p-4 rounded-2xl border border-white/10 space-y-3">
+              <div className="bg-[--page] p-4 rounded-2xl border border-[--line] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sun className="size-4 text-amber-400" />
                     <span className="text-xs font-bold uppercase tracking-wider text-white">Açık Tema Renk Paleti</span>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line] flex items-center gap-1">
                     <ShieldCheck size={10} /> Kontrast: {contrastRatio.toFixed(1)}:1
                   </span>
                 </div>
@@ -360,16 +360,16 @@ export default function OnboardingPage() {
               </div>
 
               {/* Dynamic Dark Theme Pickers */}
-              <div className="bg-[#080A09] text-white p-4 rounded-2xl border border-white/10 space-y-3">
+              <div className="bg-[#F6F8FB] text-white p-4 rounded-2xl border border-[--line] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Moon className="size-4 text-emerald-400" />
+                    <Moon className="size-4 text-[--brand]" />
                     <span className="text-xs font-bold uppercase tracking-wider text-zinc-200">Logodan Üretilen Karanlık Tema Paleti</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleRegenerateDarkTheme()}
-                    className="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center gap-1 cursor-pointer border border-emerald-500/20"
+                    className="text-[10px] font-bold px-2 py-1 rounded-lg bg-[--brand]/10 text-[--brand] hover:bg-[--brand]/20 transition-colors flex items-center gap-1 cursor-pointer border border-[--brand-line]"
                   >
                     <RefreshCw size={10} /> Yeniden Üret
                   </button>
@@ -429,7 +429,7 @@ export default function OnboardingPage() {
             type="button"
             onClick={handleCompleteOnboarding}
             disabled={isAnalyzing || isSaving || !originalLogo}
-            className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.3)] cursor-pointer"
+            className="w-full h-12 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-semibold text-xs transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.3)] cursor-pointer"
           >
             {isSaving ? "Kaydediliyor..." : isAnalyzing ? "Analiz Ediliyor..." : (
               <> Kurulumu Tamamla ve Paket Seçimine Geç <Check size={16} /> </>

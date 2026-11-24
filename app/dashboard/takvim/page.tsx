@@ -42,7 +42,7 @@ function formatDateLabel(isoStr: string) {
 function eventTypeMeta(type: CalendarEvent["type"]) {
   const map: Record<CalendarEvent["type"], { label: string; bg: string; text: string }> = {
     appointment:     { label: "Randevu",       bg: "bg-blue-100  dark:bg-blue-900/40",   text: "text-blue-700   dark:text-blue-300" },
-    income_payment:  { label: "Alınacak Ödeme",bg: "bg-emerald-100 dark:bg-emerald-900/40", text: "text-emerald-700 dark:text-emerald-300" },
+    income_payment:  { label: "Alınacak Ödeme",bg: "bg-[--brand-soft]", text: "text-[--brand]" },
     expense_payment: { label: "Yapılacak Ödeme",bg: "bg-red-100  dark:bg-red-900/40",     text: "text-red-700    dark:text-red-300" },
     reminder:        { label: "Hatırlatıcı",   bg: "bg-amber-100  dark:bg-amber-900/40",  text: "text-amber-700  dark:text-amber-300" },
     todo:            { label: "Yapılacak",      bg: "bg-violet-100 dark:bg-violet-900/40", text: "text-violet-700 dark:text-violet-300" },
@@ -82,7 +82,7 @@ function AppointmentModal({ date, branchId, onClose, onSaved }: AppointmentModal
 
   const COLORS = [
     { hex: "#3B82F6", label: "Mavi" },
-    { hex: "#10b981", label: "Yeşil" },
+    { hex: "#1267E6", label: "Kurumsal Mavi" },
     { hex: "#f59e0b", label: "Sarı" },
     { hex: "#ef4444", label: "Kırmızı" },
     { hex: "#8b5cf6", label: "Mor" },
@@ -561,7 +561,7 @@ export default function TakvimPage() {
       <div className="flex flex-wrap gap-3 text-xs font-medium">
         {[
           { color: "#3B82F6", label: "Müşteri Randevusu" },
-          { color: "#10b981", label: "Alınacak Ödeme" },
+          { color: "#1267E6", label: "Alınacak Ödeme" },
           { color: "#ef4444", label: "Yapılacak Ödeme" },
           { color: "#f59e0b", label: "Hatırlatıcı" },
           { color: "#d97706", label: "Özel Gün / Tatil" },

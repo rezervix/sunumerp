@@ -43,12 +43,12 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
   return (
     <div
       className={cn(
-        "relative w-full rounded-2xl border border-emerald-500/20 bg-[#111513]/90 backdrop-blur-xl p-5 shadow-2xl transition-all animate-in fade-in slide-in-from-bottom-2 duration-300",
+        "relative w-full rounded-2xl border border-[--brand-line] bg-[white]/90 backdrop-blur-xl p-5 shadow-2xl transition-all animate-in fade-in slide-in-from-bottom-2 duration-300",
         className
       )}
     >
       <div className="flex gap-4 items-start">
-        <div className="size-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20 text-emerald-400">
+        <div className="size-10 rounded-xl bg-[--brand]/10 flex items-center justify-center shrink-0 border border-[--brand-line] text-[--brand]">
           <Info size={20} className="animate-pulse" />
         </div>
         
@@ -64,13 +64,13 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
               Değerli Ekip Arkadaşlarımız,
             </p>
             <p>
-              Operasyonel verimliliğimizi ve veri güvenliğimizi en üst seviyeye taşımak amacıyla gerçekleştirdiğimiz dijital dönüşüm süreçlerimizin bir parçası olarak, yeni <strong className="font-semibold text-emerald-400">Ajans Kütüphanesi</strong> sistemimiz devreye alınmıştır.
+              Operasyonel verimliliğimizi ve veri güvenliğimizi en üst seviyeye taşımak amacıyla gerçekleştirdiğimiz dijital dönüşüm süreçlerimizin bir parçası olarak, yeni <strong className="font-semibold text-[--brand]">Ajans Kütüphanesi</strong> sistemimiz devreye alınmıştır.
             </p>
             <p>
               Geçmişte harici bulut servisleri üzerinden yürütülen tüm dosya yönetimi, paylaşım, arşivleme ve içerik yükleme süreçleri artık tamamen bu yeni merkezi panelimiz üzerinden gerçekleştirilecektir.
             </p>
             <p>
-              Tüm iş süreçlerinizde dosya ve arşiv yönetimlerinizi bu panel aracılığıyla sürdürmenizi önemle rica ederiz. Sorularınız için <strong className="font-semibold text-emerald-400">{BRAND_CONFIG.contactPerson}</strong> ile iletişime geçebilirsiniz.
+              Tüm iş süreçlerinizde dosya ve arşiv yönetimlerinizi bu panel aracılığıyla sürdürmenizi önemle rica ederiz. Sorularınız için <strong className="font-semibold text-[--brand]">{BRAND_CONFIG.contactPerson}</strong> ile iletişime geçebilirsiniz.
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
             variant="outline"
             size="sm"
             onClick={handleClose}
-            className="text-xs h-8 border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors rounded-xl"
+            className="text-xs h-8 border-[--line] bg-[--page] text-zinc-400 hover:text-white hover:bg-[--muted-bg] transition-colors rounded-xl"
           >
             <X size={13} className="sm:mr-1" />
             <span className="hidden sm:inline">Anladım, kapat</span>

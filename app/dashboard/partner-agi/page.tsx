@@ -123,7 +123,7 @@ export default function PartnerAgiDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <Globe className="h-5 w-5 text-emerald-400" />
+            <Globe className="h-5 w-5 text-[--brand]" />
             <h1 className="text-xl font-bold tracking-tight text-zinc-100">B2B Partner Ağı</h1>
             {data?.activeCompany && (
               <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-300">
@@ -159,9 +159,9 @@ export default function PartnerAgiDashboardPage() {
 
       {/* MADDE J: DEMO "FİRMA PERSPEKTİFİ" GEÇİŞ ÇUBUĞU (Yalnızca Demo Modunda Görünür) */}
       {data?.isDemoMode && perspectiveList.length > 0 && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-3.5 space-y-2">
+        <div className="rounded-xl border border-[--brand-line] bg-[--brand-soft] p-3.5 space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[--brand]">
               <Building2 className="h-4 w-4" />
               <span>Demo Kolaylığı — Firma Perspektifi (Kısıtlı Tek-Firma İzolasyonu)</span>
             </div>
@@ -180,8 +180,8 @@ export default function PartnerAgiDashboardPage() {
                   onClick={() => switchDemoPerspective(comp.id)}
                   className={`rounded-lg border px-3 py-1.5 text-xs transition ${
                     isSelected
-                      ? "border-emerald-400 bg-emerald-600 text-white font-semibold"
-                      : "border-zinc-700 bg-zinc-900/80 text-zinc-300 hover:border-emerald-500/50 hover:text-zinc-100"
+                      ? "border-[--brand] bg-[--brand] text-white font-semibold"
+                      : "border-zinc-700 bg-zinc-900/80 text-zinc-300 hover:border-[--brand-line] hover:text-zinc-100"
                   }`}
                 >
                   {comp.name}
@@ -231,9 +231,9 @@ export default function PartnerAgiDashboardPage() {
         </div>
       )}
       {noticeMsg && (
-        <div className="flex items-center justify-between gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-200">
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-[--brand-line] bg-[--brand]/10 px-4 py-2.5 text-xs text-[--text]">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-[--brand]" />
             <span>{noticeMsg}</span>
           </div>
           <button type="button" onClick={() => setNoticeMsg(null)}><X className="h-3.5 w-3.5" /></button>
@@ -250,7 +250,7 @@ export default function PartnerAgiDashboardPage() {
         </div>
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
           <div className="text-[11px] text-zinc-400">Erişilebilir Partner Kaynağı</div>
-          <div className="text-lg font-bold text-emerald-300 mt-1">{analytics.visiblePartnerResourceCount ?? 0}</div>
+          <div className="text-lg font-bold text-[--brand] mt-1">{analytics.visiblePartnerResourceCount ?? 0}</div>
         </div>
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
           <div className="text-[11px] text-zinc-400">Çapraz Rezervasyon</div>
@@ -264,7 +264,7 @@ export default function PartnerAgiDashboardPage() {
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
           <div className="text-[11px] text-zinc-400">Açık Alacak / Borç</div>
           <div className="text-sm font-bold mt-1">
-            <span className="text-emerald-300">{formatTryB2b(analytics.openReceivableTry)}</span>
+            <span className="text-[--brand]">{formatTryB2b(analytics.openReceivableTry)}</span>
             <span className="text-zinc-500 mx-1">/</span>
             <span className="text-rose-300">{formatTryB2b(analytics.openPayableTry)}</span>
           </div>
@@ -296,7 +296,7 @@ export default function PartnerAgiDashboardPage() {
             onClick={() => setActiveTab(key)}
             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
               activeTab === key
-                ? "bg-emerald-600 text-white"
+                ? "bg-[--brand] text-white"
                 : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
             }`}
           >

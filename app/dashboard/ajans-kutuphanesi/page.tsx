@@ -99,28 +99,28 @@ export default function AjansKutuphanesiPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-7rem)] -m-4 lg:-m-6 overflow-hidden rounded-[20px] border border-white/[0.06] shadow-2xl bg-[#080A09]">
+    <div className="flex h-[calc(100vh-7rem)] -m-4 lg:-m-6 overflow-hidden rounded-[20px] border border-[--line] shadow-2xl bg-[#F6F8FB]">
 
       {/* ── Sol Panel (Sidebar) ── */}
-      <aside className="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 border-r border-white/[0.06] bg-[#111513]/90 backdrop-blur-xl">
+      <aside className="hidden lg:flex flex-col w-56 xl:w-64 shrink-0 border-r border-[--line] bg-[white]/90 backdrop-blur-xl">
         {/* Başlık */}
-        <div className="flex items-center gap-2.5 px-4 py-4 border-b border-white/[0.06]">
-          <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
-            <Library size={16} className="text-emerald-400" />
+        <div className="flex items-center gap-2.5 px-4 py-4 border-b border-[--line]">
+          <div className="size-8 rounded-lg bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0 text-[--brand]">
+            <Library size={16} className="text-[--brand]" />
           </div>
           <div>
             <p className="text-sm font-semibold text-white leading-tight">Ajans Kütüphanesi</p>
             <div className="flex items-center gap-1.5">
               <p className="text-caption text-muted-foreground">Dosya Yönetimi</p>
               {process.env.NODE_ENV !== "production" && (
-                <span className="inline-flex items-center size-2 rounded-full bg-emerald-500 animate-pulse" title="Geliştirici Esneklik Protokolü Aktif (Yerel JSON DB / Araç Simülasyonu)" />
+                <span className="inline-flex items-center size-2 rounded-full bg-[--brand] animate-pulse" title="Geliştirici Esneklik Protokolü Aktif (Yerel JSON DB / Araç Simülasyonu)" />
               )}
             </div>
           </div>
         </div>
 
         {/* Hızlı erişim */}
-        <div className="px-3 py-2 space-y-0.5 border-b border-white/[0.06]">
+        <div className="px-3 py-2 space-y-0.5 border-b border-[--line]">
           {(
             [
               { key: "all", icon: Home, label: "Tüm Dosyalar" },
@@ -139,8 +139,8 @@ export default function AjansKutuphanesiPage() {
               className={cn(
                 "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-all",
                 section === key
-                  ? "bg-emerald-500/10 text-emerald-400 font-medium border border-emerald-500/20"
-                  : "text-zinc-400 hover:bg-white/[0.03] hover:text-white border border-transparent"
+                  ? "bg-[--brand]/10 text-[--brand] font-medium border border-[--brand-line]"
+                  : "text-zinc-400 hover:bg-white hover:text-white border border-transparent"
               )}
             >
               <Icon size={14} className="shrink-0" />
@@ -170,7 +170,7 @@ export default function AjansKutuphanesiPage() {
       {/* ── Ana İçerik ── */}
       <main className="flex flex-col flex-1 min-w-0 overflow-hidden bg-[#0A0D0B]">
         {/* Üst çubuk */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-white/[0.06] shrink-0 bg-[#111513]/80 backdrop-blur-xl">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-[--line] shrink-0 bg-[white]/80 backdrop-blur-xl">
           {/* Breadcrumb */}
           <div className="flex items-center gap-1 flex-1 min-w-0 overflow-hidden">
             <button

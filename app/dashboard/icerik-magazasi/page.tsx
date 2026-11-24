@@ -221,7 +221,7 @@ export default function IcerikMagazasiPage() {
       {/* Başlık */}
       <div className="flex items-center justify-between gap-4 flex-wrap pb-1">
         <div className="flex items-center gap-3">
-          <div className="size-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <div className="size-10 rounded-2xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center text-[--brand]">
             <Sparkles size={20} />
           </div>
           <div>
@@ -237,7 +237,7 @@ export default function IcerikMagazasiPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder={tText("common.search", "Ara...")}
-              className="h-9 pl-9 pr-8 w-52 text-xs rounded-xl border border-white/[0.08] bg-white/[0.03] text-white focus:outline-none focus:border-emerald-500/50"
+              className="h-9 pl-9 pr-8 w-52 text-xs rounded-xl border border-[--line] bg-white text-white focus:outline-none focus:border-[--brand-line]"
             />
             {search && (
               <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
@@ -246,21 +246,21 @@ export default function IcerikMagazasiPage() {
             )}
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9 border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white hover:bg-white/[0.06]">
+          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9 border-[--line] bg-[--page] text-zinc-300 hover:text-white hover:bg-[--muted-bg]">
             <SlidersHorizontal size={14} />
             Filtrele
-            {activeFilterCount > 0 && <span className="ml-1 size-5 rounded-full bg-emerald-500 text-black text-[10px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
+            {activeFilterCount > 0 && <span className="ml-1 size-5 rounded-full bg-[--brand] text-black text-[10px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
           </Button>
 
           {/* Toplu İşlem modu */}
           {canBulkActions && (
-            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className={`flex items-center gap-1.5 text-xs rounded-xl h-9 ${bulkMode ? "bg-emerald-500 text-black font-semibold" : "border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white"}`}>
+            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className={`flex items-center gap-1.5 text-xs rounded-xl h-9 ${bulkMode ? "bg-[--brand] text-black font-semibold" : "border-[--line] bg-[--page] text-zinc-300 hover:text-white"}`}>
               {bulkMode ? <><CheckSquare size={14} /> Toplu: Açık</> : <><Square size={14} /> Toplu İşlem</>}
             </Button>
           )}
 
           {canUpload && (
-            <Button onClick={() => setUploadOpen(true)} size="sm" className="flex items-center gap-1.5 text-xs rounded-xl h-9 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all">
+            <Button onClick={() => setUploadOpen(true)} size="sm" className="flex items-center gap-1.5 text-xs rounded-xl h-9 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-semibold shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all">
               <Plus size={14} /> İçerik Yükle
             </Button>
           )}
@@ -268,7 +268,7 @@ export default function IcerikMagazasiPage() {
       </div>
 
       {/* Sekmeler */}
-      <div className="flex items-center gap-1 border-b border-white/[0.06] overflow-x-auto whitespace-nowrap hide-scrollbar pb-1">
+      <div className="flex items-center gap-1 border-b border-[--line] overflow-x-auto whitespace-nowrap hide-scrollbar pb-1">
         {tabs.filter(t => t.show).map(tab => {
           const isActive = activeTab === tab.id
           return (
@@ -282,7 +282,7 @@ export default function IcerikMagazasiPage() {
               {isActive && (
                 <motion.div
                   layoutId="contentStoreActiveTab"
-                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.08] rounded-xl"
+                  className="absolute inset-0 bg-white/[0.08] border border-[--line] rounded-xl"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
@@ -311,7 +311,7 @@ export default function IcerikMagazasiPage() {
             </Button>
             {canApprove && (
               <>
-                <Button size="sm" onClick={() => bulkAction("approve")} disabled={bulkLoading} className="text-xs h-8 rounded-lg bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5">
+                <Button size="sm" onClick={() => bulkAction("approve")} disabled={bulkLoading} className="text-xs h-8 rounded-lg bg-[--brand] hover:bg-[--brand-hover] flex items-center gap-1.5">
                   <CheckCircle size={13} /> Tümünü Onayla
                 </Button>
                 <Button size="sm" variant="destructive" onClick={() => setShowBulkRejectModal(true)} disabled={bulkLoading} className="text-xs h-8 rounded-lg flex items-center gap-1.5">

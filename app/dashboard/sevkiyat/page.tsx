@@ -125,15 +125,15 @@ export default function SevkiyatVeRotaPage() {
   };
 
   return (
-    <StaggerContainer className="space-y-6">
+    <StaggerContainer className="space-y-8">
       {/* Üst Başlık */}
       <StaggerItem className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight flex items-center gap-2.5">
-            <Truck className="w-7 h-7 text-[#34D399]" />
+          <h1 className="text-2xl font-semibold text-[--text] tracking-tight flex items-center gap-2.5">
+            <Truck className="w-7 h-7 text-[--brand]" />
             Sevkiyat &amp; Çok Duraklı Rota Planlama
           </h1>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-[--text-muted] mt-1">
             Kapasite &amp; zaman penceresi kısıtlı sefer planlama, CVRPTW optimizasyon, e-İrsaliye ve teslimat kanıtı (e-POD)
           </p>
         </div>
@@ -141,19 +141,19 @@ export default function SevkiyatVeRotaPage() {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/dashboard/sevkiyat/surucu"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#34D399] hover:bg-[#10B981] text-[#061811] text-xs font-semibold transition"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95 transition"
           >
             <Smartphone className="w-4 h-4" /> Sürücü Mobil &amp; e-POD
           </Link>
           <Link
             href="/dashboard/filo"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-zinc-200 transition"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-xs text-[--text] transition"
           >
             Filo &amp; Araçlar
           </Link>
           <Link
             href="/dashboard/cargo"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-zinc-200 transition"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-xs text-[--text] transition"
           >
             Dış Kargo &amp; Kurye
           </Link>
@@ -161,62 +161,62 @@ export default function SevkiyatVeRotaPage() {
             type="button"
             onClick={() => fetchOverview(false)}
             disabled={refreshing}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-300 transition"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-xs text-[--text-2] transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} /> Yenile
           </button>
         </div>
       </StaggerItem>
 
-      {/* Üst KPI Kartları (Gerçek Kayıtlardan Hesaplanır) */}
-      <StaggerItem className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">Aktif / Toplam Sefer</div>
-          <div className="text-2xl font-bold text-white mt-1">
-            {kpis.activeTrips} <span className="text-sm font-normal text-zinc-400">/ {kpis.totalTrips}</span>
+      {/* Kutusuz KPI Şeridi */}
+      <StaggerItem className="grid grid-cols-2 lg:grid-cols-6 gap-6 pt-2 pb-4 border-b border-[--line]">
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Aktif / Toplam Sefer</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--text] mt-1">
+            {kpis.activeTrips} <span className="text-base font-normal text-[--text-muted]">/ {kpis.totalTrips}</span>
           </div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">{kpis.totalStops} toplam durak</div>
+          <div className="text-xs text-[--text-muted] mt-1">{kpis.totalStops} toplam durak</div>
         </div>
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">Zamanında Teslimat</div>
-          <div className="text-2xl font-bold text-[#34D399] mt-1">
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Zamanında Teslimat</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--ok] mt-1">
             %<AnimatedNumber value={kpis.onTimeDeliveryRatePct} />
           </div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">Teslim edilemeyen: %{kpis.failedDeliveryRatePct}</div>
+          <div className="text-xs text-[--text-muted] mt-1">Teslim edilemeyen: %{kpis.failedDeliveryRatePct}</div>
         </div>
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">Araç Doluluk</div>
-          <div className="text-2xl font-bold text-white mt-1">
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Araç Doluluk</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--text] mt-1">
             %<AnimatedNumber value={kpis.avgCapacityLoadPct} />
           </div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">Durak/araç/gün: {kpis.avgStopsPerVehicleDay}</div>
+          <div className="text-xs text-[--text-muted] mt-1">Durak/araç/gün: {kpis.avgStopsPerVehicleDay}</div>
         </div>
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">Planlanan / Gerçek Km</div>
-          <div className="text-2xl font-bold text-white mt-1">{kpis.totalPlannedDistanceKm} km</div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">Sapma: %{kpis.distanceVariancePct}</div>
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Planlanan / Gerçek Km</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--text] mt-1">{kpis.totalPlannedDistanceKm} km</div>
+          <div className="text-xs text-[--text-muted] mt-1">Sapma: %{kpis.distanceVariancePct}</div>
         </div>
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">Rota Tasarrufu</div>
-          <div className="text-2xl font-bold text-[#34D399] mt-1">{kpis.optimizationSavedKm} km</div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">Ham rotaya göre %{kpis.optimizationSavedPct}</div>
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Rota Tasarrufu</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--brand] mt-1">{kpis.optimizationSavedKm} km</div>
+          <div className="text-xs text-[--text-muted] mt-1">Ham rotaya göre %{kpis.optimizationSavedPct}</div>
         </div>
-        <div className="p-4 rounded-[20px] bg-[#111513]/90 border border-white/[0.06]">
-          <div className="text-[11px] text-zinc-400 uppercase tracking-wider">E-İrsaliye &amp; e-POD</div>
-          <div className="text-2xl font-bold text-white mt-1">{kpis.eWaybillIssuedTrips} / {kpis.podCapturedStops}</div>
-          <div className="text-[11px] text-zinc-500 mt-0.5">Sefer irsaliyesi / kanıtlı durak</div>
+        <div>
+          <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">E-İrsaliye &amp; e-POD</div>
+          <div className="text-3xl font-light tracking-tight tabular-nums text-[--text] mt-1">{kpis.eWaybillIssuedTrips} / {kpis.podCapturedStops}</div>
+          <div className="text-xs text-[--text-muted] mt-1">Sefer irsaliyesi / kanıtlı durak</div>
         </div>
       </StaggerItem>
 
       {/* Sekme Çubuğu */}
-      <StaggerItem className="inline-flex flex-wrap gap-1 bg-[#111513] p-1 rounded-full border border-white/[0.06]">
+      <StaggerItem className="inline-flex flex-wrap gap-1 bg-[--muted-bg] p-1 rounded-full border border-[--line]">
         <button
           type="button"
           onClick={() => setActiveTab('planning')}
           className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
             activeTab === 'planning'
-              ? 'bg-[#34D399] text-[#061811] font-semibold'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
+              : 'text-[--text-muted] hover:text-[--text]'
           }`}
         >
           <Truck className="w-3.5 h-3.5" /> Sefer Planlama, Rota &amp; Harita
@@ -226,8 +226,8 @@ export default function SevkiyatVeRotaPage() {
           onClick={() => setActiveTab('pods')}
           className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
             activeTab === 'pods'
-              ? 'bg-[#34D399] text-[#061811] font-semibold'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
+              : 'text-[--text-muted] hover:text-[--text]'
           }`}
         >
           <FileCheck2 className="w-3.5 h-3.5" /> Teslimat Kanıtları (e-POD) &amp; Takip
@@ -237,8 +237,8 @@ export default function SevkiyatVeRotaPage() {
           onClick={() => setActiveTab('analytics')}
           className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
             activeTab === 'analytics'
-              ? 'bg-[#34D399] text-[#061811] font-semibold'
-              : 'text-zinc-400 hover:text-white'
+              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
+              : 'text-[--text-muted] hover:text-[--text]'
           }`}
         >
           <BarChart3 className="w-3.5 h-3.5" /> Göstergeler, İş Geçmişi &amp; Adaptörler
@@ -247,7 +247,7 @@ export default function SevkiyatVeRotaPage() {
 
       {/* İçerik */}
       {loading ? (
-        <div className="p-12 rounded-[20px] bg-[#111513]/90 border border-white/[0.06] text-center text-sm text-zinc-400">
+        <div className="p-12 rounded-[20px] bg-white/80 backdrop-blur-xl border border-[--line] text-center text-sm text-[--text-muted] shadow-sm">
           Sevkiyat verileri yükleniyor...
         </div>
       ) : activeTab === 'planning' ? (

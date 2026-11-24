@@ -65,9 +65,9 @@ function SwitchToggle({ checked, onChange, disabled, danger }: { checked: boolea
       className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
         checked
           ? danger
-            ? "bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)] justify-end"
-            : "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
-          : "bg-zinc-800 justify-start"
+            ? "bg-[--bad] justify-end"
+            : "bg-[--brand] justify-end"
+          : "bg-[--line] justify-start"
       }`}
     >
       <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
@@ -504,17 +504,17 @@ export default function SettingsPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] pb-24 space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-light text-white tracking-tight">
+            <h1 className="text-3xl font-light text-[--text] tracking-tight">
               {t.settings.systemSettingsTitle}
             </h1>
-            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
               {t.common.enterpriseVersion}
             </span>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[--text-muted] mt-1">
             {t.settings.systemSettingsSubtitle}
           </p>
         </div>
@@ -522,7 +522,7 @@ export default function SettingsPage() {
         {/* Action Buttons Header */}
         <div className="flex items-center gap-3">
           {isDirty && (
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-amber-300 bg-amber-500/10 px-3 py-1.5 rounded-full border border-amber-500/20 animate-pulse">
+            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-[--warn] bg-[--warn-soft] px-3 py-1.5 rounded-full border border-[--warn-soft] animate-pulse">
               <Info className="w-3.5 h-3.5" />
               {t.common.unsavedChanges}
             </span>
@@ -530,7 +530,7 @@ export default function SettingsPage() {
           <button
             onClick={handleCancelChanges}
             disabled={!isDirty || saving}
-            className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] disabled:opacity-40 transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-[--text-2] hover:text-[--text] bg-white hover:bg-[--muted-bg] disabled:opacity-40 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             {t.common.cancel}
@@ -538,7 +538,7 @@ export default function SettingsPage() {
           <button
             onClick={handleSaveAll}
             disabled={!isDirty || saving}
-            className="px-4 py-2 text-xs font-medium rounded-full bg-[#34D399] hover:bg-emerald-400 text-[#061811] disabled:opacity-40 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white disabled:opacity-40 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
           >
             {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
             {t.common.saveChanges}
@@ -553,18 +553,18 @@ export default function SettingsPage() {
         <div className="lg:col-span-4 xl:col-span-3 space-y-3 sticky top-4">
           {/* Tab Search Filter */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-zinc-500" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-[--text-muted]" />
             <input
               type="text"
               placeholder={t.common.searchInSettings}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-[#111513] border border-white/[0.06] rounded-full text-xs text-white focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-zinc-500"
+              className="w-full pl-9 pr-3 py-2 bg-white border border-[--line] rounded-full text-xs text-[--text] focus:outline-none focus:border-[--brand] transition-all placeholder:text-[--text-muted] shadow-sm"
             />
           </div>
 
           {/* Navigation Tab Buttons */}
-          <nav role="tablist" aria-label="Ayarlar Kategorileri" className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0 scrollbar-none bg-[#111513]/90 p-2 rounded-[20px] border border-white/[0.06]">
+          <nav role="tablist" aria-label="Ayarlar Kategorileri" className="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-1 pb-2 lg:pb-0 scrollbar-none bg-white/80 backdrop-blur-xl p-2 rounded-[20px] border border-[--line] shadow-sm">
             {filteredTabs.map(tab => {
               const Icon = tab.icon
               const isActive = activeTab === tab.id
@@ -579,19 +579,19 @@ export default function SettingsPage() {
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${
                     isActive
                       ? tab.danger
-                        ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-xs"
-                        : "bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-xs"
+                        ? "bg-[--bad-soft] border-[--bad-soft] text-[--bad] shadow-xs"
+                        : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-xs"
                       : tab.danger
-                      ? "border-transparent text-rose-400/80 hover:bg-rose-500/10"
-                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+                      ? "border-transparent text-[--bad] hover:bg-[--bad-soft]"
+                      : "border-transparent text-[--text-muted] hover:bg-[--muted-bg] hover:text-[--text]"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? (tab.danger ? "text-rose-400" : "text-emerald-400") : "text-zinc-500"}`} />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? (tab.danger ? "text-[--bad]" : "text-[--brand]") : "text-[--text-muted]"}`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <span className="truncate">{tab.label}</span>
                       {tab.badge && (
-                        <span className="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 shrink-0">
+                        <span className="text-[9px] uppercase tracking-wider font-bold px-1.5 py-0.2 rounded bg-[--brand-soft] text-[--brand] border border-[--brand-line] shrink-0">
                           {tab.badge}
                         </span>
                       )}

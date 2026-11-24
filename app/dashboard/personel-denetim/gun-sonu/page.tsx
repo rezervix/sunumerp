@@ -161,9 +161,9 @@ export default function GunSonuRaporuPage() {
   if (loading) {
     return (
       <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center space-y-4">
-        <RefreshCw className="h-8 w-8 text-emerald-400 animate-spin" />
-        <p className="text-zinc-400 font-medium animate-pulse text-xs">Gün Sonu Raporunuz hazırlanıyor...</p>
-        <span className="text-[11px] text-zinc-500 max-w-xs text-center">
+        <RefreshCw className="h-8 w-8 text-[--brand] animate-spin" />
+        <p className="text-[--text-muted] font-medium animate-pulse text-xs">Gün Sonu Raporunuz hazırlanıyor...</p>
+        <span className="text-[11px] text-[--text-muted] max-w-xs text-center">
           Bugünkü görevleriniz, içerik takvimi değişiklikleriniz ve chat aktiviteleriniz taranıyor.
         </span>
       </div>
@@ -174,8 +174,8 @@ export default function GunSonuRaporuPage() {
     return (
       <div className="p-6 text-center space-y-4">
         <AlertTriangle className="h-10 w-10 text-rose-500 mx-auto" />
-        <h2 className="text-lg font-semibold text-white">Rapor Yüklenemedi</h2>
-        <Button onClick={() => fetchReport()} className="rounded-full bg-emerald-400 text-black font-semibold">Tekrar Dene</Button>
+        <h2 className="text-lg font-semibold text-[--text]">Rapor Yüklenemedi</h2>
+        <Button onClick={() => fetchReport()} className="rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] text-black font-semibold">Tekrar Dene</Button>
       </div>
     )
   }
@@ -183,33 +183,33 @@ export default function GunSonuRaporuPage() {
   const isSubmitted = report.status === "submitted"
 
   return (
-    <div className="min-h-full p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-white">
+    <div className="min-h-full p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto text-[--text]">
       {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[--line] pb-5">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => router.push("/dashboard/personel-denetim")}
-              className="h-8 w-8 text-zinc-400 hover:text-white rounded-full"
+              className="h-8 w-8 text-[--text-muted] hover:text-[--text] rounded-full"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight flex items-center gap-2 text-white">
-              <ClipboardCheck className="h-5 w-5 text-emerald-400" />
+            <h1 className="text-xl sm:text-2xl font-semibold tracking-tight flex items-center gap-2 text-[--text]">
+              <ClipboardCheck className="h-5 w-5 text-[--brand]" />
               Gün Sonu Raporu
             </h1>
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
               isSubmitted 
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" 
                 : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
             }`}>
-              <span className={`h-1.5 w-1.5 rounded-full ${isSubmitted ? "bg-emerald-400" : "bg-amber-400"}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${isSubmitted ? "bg-gradient-to-r from-[--brand] to-[--blue] text-[--text]" : "bg-amber-400"}`} />
               {isSubmitted ? "Gönderildi" : "Taslak"}
             </span>
           </div>
-          <p className="text-xs text-zinc-400 font-medium pl-10 font-mono">
+          <p className="text-xs text-[--text-muted] font-medium pl-10 font-mono">
             {todayStr}
           </p>
         </div>
@@ -220,7 +220,7 @@ export default function GunSonuRaporuPage() {
               variant="outline"
               onClick={() => fetchReport(true)}
               disabled={regenerating || submitting}
-              className="gap-2 border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
+              className="gap-2 border-[--line] bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${regenerating ? "animate-spin" : ""}`} />
               Yeniden Derle
@@ -230,7 +230,7 @@ export default function GunSonuRaporuPage() {
           <Button
             onClick={handleSubmit}
             disabled={submitting || isSubmitted}
-            className="gap-2 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold rounded-full text-xs h-9 shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50"
+            className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold rounded-full text-xs h-9 shadow-sm disabled:opacity-50"
           >
             {isSubmitted ? (
               <>
@@ -248,13 +248,13 @@ export default function GunSonuRaporuPage() {
       </div>
 
       {isSubmitted && (
-        <Card className="bg-emerald-500/10 border border-emerald-500/20 rounded-[20px]">
+        <Card className="bg-[--brand-soft] border border-[--brand-line] rounded-[20px]">
           <CardContent className="p-4 flex items-center gap-3">
-            <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-            <div className="text-xs text-emerald-200">
-              <span className="font-semibold text-emerald-400">Harika iş!</span> Bugünün raporu kaydedildi ve ilgili yöneticilere bildirim gönderildi. Raporunuz artık salt okunur moddadır.
+            <CheckCircle2 className="h-5 w-5 text-[--brand] shrink-0" />
+            <div className="text-xs text-[--brand]">
+              <span className="font-semibold text-[--brand]">Harika iş!</span> Bugünün raporu kaydedildi ve ilgili yöneticilere bildirim gönderildi. Raporunuz artık salt okunur moddadır.
               {report.submittedAt && (
-                <span className="block text-[11px] text-zinc-400 mt-1 font-mono">
+                <span className="block text-[11px] text-[--text-muted] mt-1 font-mono">
                   Gönderilme saati: {new Date(report.submittedAt).toLocaleTimeString("tr-TR")}
                 </span>
               )}
@@ -269,27 +269,27 @@ export default function GunSonuRaporuPage() {
         {/* Left 2 Columns: Auto generated items */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">Bugün Yapılan İşler (Otomatik)</h2>
-            <span className="text-xs text-zinc-500">ERP sistemindeki hareketlerinizden derlenmiştir.</span>
+            <h2 className="text-base font-semibold text-[--text]">Bugün Yapılan İşler (Otomatik)</h2>
+            <span className="text-xs text-[--text-muted]">ERP sistemindeki hareketlerinizden derlenmiştir.</span>
           </div>
 
           {report.autoContent.length === 0 ? (
-            <Card className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px]">
-              <CardContent className="py-8 text-center text-zinc-500 text-xs">
+            <Card className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px]">
+              <CardContent className="py-8 text-center text-[--text-muted] text-xs">
                 Bugün için herhangi bir otomatik aktivite bulunamadı. Lütfen sağ taraftaki ERP dışı notlar alanını kullanın veya yeniden derlemeyi deneyin.
               </CardContent>
             </Card>
           ) : (
             report.autoContent.map((branch, bIdx) => (
-              <Card key={bIdx} className="overflow-hidden border border-white/[0.06] bg-[#111513]/90 rounded-[20px] shadow-xl">
-                <CardHeader className="bg-[#0d100e] py-3 px-4 flex flex-row items-center justify-between border-b border-white/[0.06]">
+              <Card key={bIdx} className="overflow-hidden border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl">
+                <CardHeader className="bg-[#0d100e] py-3 px-4 flex flex-row items-center justify-between border-b border-[--line]">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                    <CardTitle className="text-sm font-semibold text-white">
+                    <span className="h-2 w-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[--text]" />
+                    <CardTitle className="text-sm font-semibold text-[--text]">
                       {branch.branchName}
                     </CardTitle>
                   </div>
-                  <span className="text-[10px] bg-white/5 text-zinc-400 border border-white/10 py-0.5 px-2.5 rounded-full font-mono font-medium">
+                  <span className="text-[10px] bg-white/5 text-[--text-muted] border border-[--line] py-0.5 px-2.5 rounded-full font-mono font-medium">
                     {branch.items.length} Madde
                   </span>
                 </CardHeader>
@@ -302,17 +302,17 @@ export default function GunSonuRaporuPage() {
                         <li 
                           key={iIdx} 
                           className={`group flex items-start gap-3 p-2.5 rounded-xl transition-all ${
-                            isEditing ? "bg-white/5 border border-emerald-500/30" : "hover:bg-white/[0.02]"
+                            isEditing ? "bg-white/5 border border-[--brand-line]" : "hover:bg-white/[0.02]"
                           }`}
                         >
-                          <span className="text-emerald-400 font-bold text-xs mt-0.5 shrink-0">•</span>
+                          <span className="text-[--brand] font-bold text-xs mt-0.5 shrink-0">•</span>
                           
                           {isEditing ? (
                             <div className="flex-1 flex gap-2">
                               <Input 
                                 value={editingText} 
                                 onChange={(e) => setEditingText(e.target.value)}
-                                className="h-8 py-1 text-xs bg-black/40 border-white/10 text-white rounded-lg"
+                                className="h-8 py-1 text-xs bg-black/40 border-[--line] text-[--text] rounded-lg"
                                 autoFocus
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") saveEditing(bIdx, iIdx)
@@ -322,7 +322,7 @@ export default function GunSonuRaporuPage() {
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
-                                className="h-8 w-8 text-emerald-400 hover:bg-emerald-500/10 shrink-0 rounded-lg"
+                                className="h-8 w-8 text-[--brand] hover:bg-[--brand-soft] shrink-0 rounded-lg"
                                 onClick={() => saveEditing(bIdx, iIdx)}
                               >
                                 <Check className="h-4 w-4" />
@@ -346,7 +346,7 @@ export default function GunSonuRaporuPage() {
                                   <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="h-7 w-7 text-zinc-500 hover:text-white rounded-lg"
+                                    className="h-7 w-7 text-[--text-muted] hover:text-[--text] rounded-lg"
                                     onClick={() => startEditing(bIdx, iIdx, item)}
                                   >
                                     <Edit className="h-3.5 w-3.5" />
@@ -354,7 +354,7 @@ export default function GunSonuRaporuPage() {
                                   <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="h-7 w-7 text-zinc-500 hover:text-rose-400 rounded-lg"
+                                    className="h-7 w-7 text-[--text-muted] hover:text-rose-400 rounded-lg"
                                     onClick={() => handleDeleteBullet(bIdx, iIdx)}
                                   >
                                     <Trash2 className="h-3.5 w-3.5" />
@@ -370,12 +370,12 @@ export default function GunSonuRaporuPage() {
 
                   {/* Add manual achievement bullet inside this branch card */}
                   {!isSubmitted && (
-                    <div className="pt-3 border-t border-white/[0.06] flex gap-2">
+                    <div className="pt-3 border-t border-[--line] flex gap-2">
                       <Input
                         placeholder={`${branch.branchName} için ek madde ekleyin...`}
                         value={newItemTexts[bIdx] || ""}
                         onChange={(e) => setNewItemTexts(prev => ({ ...prev, [bIdx]: e.target.value }))}
-                        className="h-8 text-xs bg-white/[0.03] border-white/10 rounded-xl text-white placeholder-zinc-500"
+                        className="h-8 text-xs bg-white/[0.03] border-[--line] rounded-xl text-[--text] placeholder-zinc-500"
                         onKeyDown={(e) => {
                           if (e.key === "Enter") handleAddBullet(bIdx)
                         }}
@@ -383,7 +383,7 @@ export default function GunSonuRaporuPage() {
                       <Button
                         size="sm"
                         onClick={() => handleAddBullet(bIdx)}
-                        className="h-8 gap-1.5 px-3 shrink-0 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-zinc-300"
+                        className="h-8 gap-1.5 px-3 shrink-0 rounded-full bg-white/5 hover:bg-white/10 border border-[--line] text-xs text-zinc-300"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         Ekle
@@ -399,20 +399,20 @@ export default function GunSonuRaporuPage() {
         {/* Right 1 Column: Manual Non-ERP notes */}
         <div className="space-y-6">
           <div className="space-y-1">
-            <h2 className="text-base font-semibold text-white">ERP Dışı Gelişmeler</h2>
-            <p className="text-xs text-zinc-500">Sistem dışı bağımlılıkları ve IT taleplerini kaydedin.</p>
+            <h2 className="text-base font-semibold text-[--text]">ERP Dışı Gelişmeler</h2>
+            <p className="text-xs text-[--text-muted]">Sistem dışı bağımlılıkları ve IT taleplerini kaydedin.</p>
           </div>
 
-          <Card className="border border-white/[0.06] bg-[#111513]/90 rounded-[20px] shadow-xl">
-            <CardHeader className="bg-[#0d100e] border-b border-white/[0.06] py-3 px-4">
+          <Card className="border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl">
+            <CardHeader className="bg-[#0d100e] border-b border-[--line] py-3 px-4">
               <CardTitle className="text-xs font-semibold flex items-center gap-1.5 text-amber-400">
                 <AlertTriangle className="h-4 w-4" />
                 Dış Bağımlılık & Özel Notlar
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <p className="text-xs text-zinc-400 leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-white/[0.06]">
-                <strong className="text-white">Dikkat:</strong> Buraya sadece ERP sisteminde karşılığı olmayan (VPS sunucu sorunları, WhatsApp müşteri onay beklemeleri, IT ekibinden beklenen yetkiler gibi) konuları not edin.
+              <p className="text-xs text-[--text-muted] leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-[--line]">
+                <strong className="text-[--text]">Dikkat:</strong> Buraya sadece ERP sisteminde karşılığı olmayan (VPS sunucu sorunları, WhatsApp müşteri onay beklemeleri, IT ekibinden beklenen yetkiler gibi) konuları not edin.
               </p>
               
               <Textarea
@@ -424,17 +424,17 @@ export default function GunSonuRaporuPage() {
                   }
                 }}
                 disabled={isSubmitted}
-                className="min-h-[220px] text-xs leading-relaxed bg-white/[0.03] border-white/10 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
+                className="min-h-[220px] text-xs leading-relaxed bg-white/[0.03] border-[--line] rounded-xl text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
               />
             </CardContent>
           </Card>
 
           {/* Audit History / logs */}
           {report.auditLogs && report.auditLogs.length > 0 && (
-            <Card className="border border-white/[0.06] bg-[#111513]/90 rounded-[20px] shadow-xl">
-              <CardHeader className="py-3 px-4 border-b border-white/[0.06] flex flex-row items-center gap-2">
-                <History className="h-4 w-4 text-zinc-500" />
-                <CardTitle className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+            <Card className="border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl">
+              <CardHeader className="py-3 px-4 border-b border-[--line] flex flex-row items-center gap-2">
+                <History className="h-4 w-4 text-[--text-muted]" />
+                <CardTitle className="text-xs font-medium uppercase tracking-wider text-[--text-muted]">
                   Değişiklik Geçmişi
                 </CardTitle>
               </CardHeader>
@@ -442,14 +442,14 @@ export default function GunSonuRaporuPage() {
                 <div className="space-y-3">
                   {report.auditLogs.map((log) => (
                     <div key={log.id} className="flex gap-2 text-xs">
-                      <Clock className="h-3.5 w-3.5 text-zinc-500 shrink-0 mt-0.5" />
+                      <Clock className="h-3.5 w-3.5 text-[--text-muted] shrink-0 mt-0.5" />
                       <div className="space-y-0.5">
                         <span className="font-medium text-zinc-300">
                           {log.action === "create_draft" ? "Taslak Oluşturuldu" : 
                            log.action === "update_draft" ? "Taslak Güncellendi" : 
                            log.action === "submit" ? "Rapor Gönderildi" : log.action}
                         </span>
-                        <span className="block text-[10px] text-zinc-500 font-mono">
+                        <span className="block text-[10px] text-[--text-muted] font-mono">
                           {new Date(log.createdAt).toLocaleString("tr-TR")}
                         </span>
                       </div>

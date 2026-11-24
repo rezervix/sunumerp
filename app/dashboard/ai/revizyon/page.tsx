@@ -4,7 +4,8 @@ import React, { useEffect, useMemo, useState, useRef, type ChangeEvent } from "r
 import { useAuth } from "@/lib/auth/context"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { Upload, FileText, CheckCircle2, Loader2, Sparkles, AlertCircle, Clock, ShieldCheck } from "lucide-react"
+import { Upload, FileText, CheckCircle2, Loader2, Sparkles, AlertCircle } from "lucide-react"
+import { safeText, safeDate } from "@/lib/utils/safe-display"
 
 type AnalysisRecord = {
   id: string
@@ -142,35 +143,35 @@ export default function AiRevizyonPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between pb-2 border-b border-white/[0.06]">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between pb-4 border-b border-[--line]">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-white">AI Destekli Revizyon Optimizasyonu</h1>
-          <p className="text-xs text-zinc-400 mt-1 max-w-2xl">
+          <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight text-[--text]">AI Destekli Revizyon Optimizasyonu</h1>
+          <p className="text-sm text-[--text-muted] mt-1 max-w-2xl">
             WhatsApp metinlerini yükleyin, müşteri taleplerini, tercihlerini ve potansiyel red-flag uyarılarını saniyeler içinde çıkarın.
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 text-xs text-emerald-400">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[--brand-soft] border border-[--brand-line] px-3 py-1.5 text-xs text-[--brand] font-medium shadow-xs">
             <FileText size={14} /> {currentBranch ? currentBranch.name : "Şube seçilmedi"}
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.03] border border-white/[0.08] px-3 py-1.5 text-xs text-zinc-300 font-mono">
-            <Upload size={14} className="text-zinc-500" /> {fileName || ".txt dosyası bekliyor"}
+          <span className="inline-flex items-center gap-2 rounded-full bg-white border border-[--line] px-3 py-1.5 text-xs text-[--text-2] font-mono shadow-xs">
+            <Upload size={14} className="text-[--text-muted]" /> {fileName || ".txt dosyası bekliyor"}
           </span>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         {/* Upload & Form Section */}
-        <section className="space-y-5 rounded-[20px] border border-white/[0.06] bg-[#111513]/90 backdrop-blur-xl p-6 shadow-2xl">
+        <section className="space-y-5 rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl p-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+            <div className="rounded-2xl bg-[--brand-soft] border border-[--brand-line] p-3 text-[--brand] shadow-sm">
               <Sparkles size={20} />
             </div>
             <div>
-              <h2 className="text-base font-medium text-white">WhatsApp Metni Yükle & Analiz Et</h2>
-              <p className="text-xs text-zinc-400">Metin dosyasını sürükleyip bırakın veya metni yapıştırın.</p>
+              <h2 className="text-base font-semibold text-[--navy]">WhatsApp Metni Yükle &amp; Analiz Et</h2>
+              <p className="text-xs text-[--text-muted]">Metin dosyasını sürükleyip bırakın veya metni yapıştırın.</p>
             </div>
           </div>
 
@@ -182,18 +183,18 @@ export default function AiRevizyonPage() {
             onDrop={handleDrop}
             className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
               isDragging
-                ? "border-emerald-500/70 bg-emerald-500/10 shadow-[0_0_25px_rgba(16,185,129,0.25)]"
-                : "border-white/[0.08] bg-white/[0.02] hover:border-emerald-500/30 hover:bg-white/[0.03]"
+                ? "border-[--brand] bg-[--brand-soft]/50 shadow-sm"
+                : "border-[--line] bg-[--page] hover:border-[--brand] hover:bg-white"
             }`}
           >
             <div className="flex flex-col items-center gap-2">
-              <div className="size-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <div className="size-10 rounded-xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
                 <Upload size={18} />
               </div>
-              <p className="text-xs text-zinc-300 font-medium">
+              <p className="text-xs text-[--text] font-medium">
                 {fileName ? fileName : "WhatsApp .txt sohbet dosyasını buraya sürükleyin"}
               </p>
-              <label className="cursor-pointer text-xs font-semibold text-emerald-400 hover:text-emerald-300 underline underline-offset-4">
+              <label className="cursor-pointer text-xs font-semibold text-[--brand] hover:text-[--brand-hover] underline underline-offset-4">
                 veya cihazdan dosya seçin
                 <input type="file" accept=".txt" className="hidden" onChange={handleFileChange} />
               </label>
@@ -202,24 +203,24 @@ export default function AiRevizyonPage() {
 
           <div className="grid gap-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-zinc-400">Müşteri / Proje Adı (opsiyonel)</label>
+              <label className="block text-xs font-medium text-[--text-2]">Müşteri / Proje Adı (opsiyonel)</label>
               <input
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Örn: Levent Loft - Revizyon Grubu"
-                className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-xs text-white placeholder-zinc-500 outline-none focus:border-emerald-500/50"
+                className="w-full rounded-xl border border-[--line] bg-white px-4 py-2.5 text-xs text-[--text] placeholder:text-[--text-muted] outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] shadow-sm transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-zinc-400">WhatsApp Metin İçeriği</label>
+              <label className="block text-xs font-medium text-[--text-2]">WhatsApp Metin İçeriği</label>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 rows={10}
                 placeholder="WhatsApp metnini buraya yapıştırın veya yukarıdaki alandan dosya bırakın..."
-                className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-xs text-zinc-200 placeholder-zinc-500 outline-none focus:border-emerald-500/50 leading-relaxed font-mono"
+                className="w-full resize-none rounded-xl border border-[--line] bg-white px-4 py-3 text-xs text-[--text] placeholder:text-[--text-muted] outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] leading-relaxed font-mono shadow-sm transition-all"
               />
             </div>
 
@@ -227,7 +228,7 @@ export default function AiRevizyonPage() {
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !canUseAi}
-                className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
+                className="bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white font-medium text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all"
               >
                 {isSubmitting ? (
                   <><Loader2 size={14} className="mr-2 animate-spin" /> AI Analiz Ediyor...</>
@@ -240,36 +241,36 @@ export default function AiRevizyonPage() {
         </section>
 
         {/* Right Section: Past Analyses */}
-        <section className="space-y-5 rounded-[20px] border border-white/[0.06] bg-[#111513]/90 backdrop-blur-xl p-6 shadow-2xl">
+        <section className="space-y-5 rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl p-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-emerald-400">
+            <div className="rounded-2xl bg-[--ok-soft] border border-[--ok-soft] p-3 text-[--ok]">
               <CheckCircle2 size={20} />
             </div>
             <div>
-              <h2 className="text-base font-medium text-white">Geçmiş Analizler</h2>
-              <p className="text-xs text-zinc-400">Kayıtlı revizyon analizleri ve içgörüler.</p>
+              <h2 className="text-base font-semibold text-[--navy]">Geçmiş Analizler</h2>
+              <p className="text-xs text-[--text-muted]">Kayıtlı revizyon analizleri ve içgörüler.</p>
             </div>
           </div>
 
           {loading ? (
-            <div className="flex min-h-[220px] items-center justify-center text-zinc-500">
-              <Loader2 size={22} className="animate-spin text-emerald-400" />
+            <div className="flex min-h-[220px] items-center justify-center text-[--text-muted]">
+              <Loader2 size={22} className="animate-spin text-[--brand]" />
             </div>
           ) : analyses.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-white/[0.08] p-8 text-center text-xs text-zinc-500">
+            <div className="rounded-2xl border border-dashed border-[--line] p-8 text-center text-xs text-[--text-muted]">
               Kayıtlı herhangi bir analiz bulunmuyor.
             </div>
           ) : (
             <div className="space-y-4 max-h-[640px] overflow-y-auto pr-1">
               {analyses.map((analysis) => (
-                <article key={analysis.id} className="rounded-2xl border border-white/[0.06] p-4 bg-white/[0.02] hover:bg-white/[0.04] transition-all space-y-3">
-                  <div className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-2">
+                <article key={analysis.id} className="rounded-2xl border border-[--line] p-4 bg-white hover:bg-[--brand-soft]/20 transition-all space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between gap-2 border-b border-[--line] pb-2">
                     <div>
-                      <h3 className="text-sm font-medium text-white">{analysis.customerName || "İsimsiz Müşteri / Sohbet"}</h3>
-                      <p className="text-[10px] text-zinc-500 font-mono mt-0.5">{new Date(analysis.createdAt).toLocaleString("tr-TR")}</p>
+                      <h3 className="text-sm font-semibold text-[--navy]">{safeText(analysis.customerName, "İsimsiz Müşteri / Sohbet")}</h3>
+                      <p className="text-[10px] text-[--text-muted] font-mono mt-0.5">{safeDate(analysis.createdAt)}</p>
                     </div>
                     {analysis.uploadedBy?.fullName && (
-                      <span className="rounded-full bg-white/[0.05] border border-white/[0.08] px-2.5 py-0.5 text-[10px] font-mono text-zinc-300">
+                      <span className="rounded-full bg-[--muted-bg] border border-[--line] px-2.5 py-0.5 text-[10px] font-mono text-[--text-2]">
                         {analysis.uploadedBy.fullName}
                       </span>
                     )}
@@ -277,16 +278,16 @@ export default function AiRevizyonPage() {
 
                   <div className="space-y-2.5">
                     {/* Özet */}
-                    <div className="rounded-xl bg-black/30 border border-white/[0.04] p-3 text-xs text-zinc-300">
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 mb-1">Özet</div>
-                      <p className="text-xs leading-relaxed">{analysis.summary}</p>
+                    <div className="rounded-xl bg-[--page] border border-[--line] p-3 text-xs text-[--text]">
+                      <div className="text-[10px] font-semibold uppercase tracking-wider text-[--brand] mb-1">Özet</div>
+                      <p className="text-xs leading-relaxed text-[--text-2]">{analysis.summary}</p>
                     </div>
 
                     {/* Tercihler */}
                     {analysis.preferences?.length > 0 && (
-                      <div className="rounded-xl bg-black/30 border border-white/[0.04] p-3 text-xs text-zinc-300">
-                        <div className="text-[10px] font-semibold uppercase tracking-wider text-sky-400 mb-1">Müşteri Tercihleri</div>
-                        <ul className="list-disc space-y-1 pl-4 text-xs text-zinc-300">
+                      <div className="rounded-xl bg-[--page] border border-[--line] p-3 text-xs text-[--text]">
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-[--navy] mb-1">Müşteri Tercihleri</div>
+                        <ul className="list-disc space-y-1 pl-4 text-xs text-[--text-2]">
                           {analysis.preferences.map((item, idx) => (
                             <li key={idx}>{item}</li>
                           ))}
@@ -296,12 +297,12 @@ export default function AiRevizyonPage() {
 
                     {/* Red Flags */}
                     {analysis.redFlags?.length > 0 && (
-                      <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-3 text-xs text-rose-300">
-                        <div className="text-[10px] font-semibold uppercase tracking-wider text-rose-400 mb-1 flex items-center gap-1">
+                      <div className="rounded-xl bg-[--bad-soft] border border-[--bad-soft] p-3 text-xs text-[--bad]">
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-[--bad] mb-1 flex items-center gap-1">
                           <AlertCircle size={12} />
-                          Risk & Red Flag Uyarıları
+                          Risk &amp; Red Flag Uyarıları
                         </div>
-                        <ul className="list-disc space-y-1 pl-4 text-xs text-rose-200">
+                        <ul className="list-disc space-y-1 pl-4 text-xs text-[--bad]">
                           {analysis.redFlags.map((item, idx) => (
                             <li key={idx}>{item}</li>
                           ))}

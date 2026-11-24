@@ -242,7 +242,7 @@ export function HotelReservationsAndCheckInOutTab({
   return (
     <div className="space-y-4">
       {/* Üst Çubuk */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex flex-wrap items-center gap-2">
           {['ALL', 'CONFIRMED', 'CHECKED_IN', 'PENDING', 'CHECKED_OUT', 'CANCELLED'].map((st) => (
             <button
@@ -251,8 +251,8 @@ export function HotelReservationsAndCheckInOutTab({
               onClick={() => setStatusFilter(st)}
               className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
                 statusFilter === st
-                  ? 'bg-[#34D399] text-[#080A09]'
-                  : 'bg-[#161B18] text-zinc-300 hover:bg-white/[0.06]'
+                  ? 'bg-[#1267E6] text-[#F6F8FB]'
+                  : 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'
               }`}
             >
               {st === 'ALL'
@@ -275,7 +275,7 @@ export function HotelReservationsAndCheckInOutTab({
           <button
             type="button"
             onClick={() => setShowCreateForm((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-1.5 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             <Plus className="h-3.5 w-3.5" /> Yeni Rezervasyon
           </button>
@@ -286,10 +286,10 @@ export function HotelReservationsAndCheckInOutTab({
       {showCreateForm && (
         <form
           onSubmit={handleCreateReservation}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-emerald-500/30 bg-[#111513] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand-line] bg-[white] p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#34D399]">
+            <h4 className="text-sm font-semibold text-[#1267E6]">
               Yeni Otel Rezervasyonu (Sunucu Tarafı Atomik Çakışma & Kontenjan Kilitli)
             </h4>
             <button
@@ -439,7 +439,7 @@ export function HotelReservationsAndCheckInOutTab({
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-lg bg-[#34D399] px-4 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300 disabled:opacity-50"
+              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover] disabled:opacity-50"
             >
               {submitting ? 'Kontrol Ediliyor...' : 'Rezervasyonu Kaydet'}
             </button>
@@ -449,7 +449,7 @@ export function HotelReservationsAndCheckInOutTab({
 
       {/* Check-In Paneli (KVKK Veri Minimizasyonu — Kimlik Fotokopisi Saklanmaz) */}
       {checkInTarget && (
-        <div className="space-y-3 rounded-xl border border-sky-500/40 bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-sky-500/40 bg-[white] p-4">
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-sm font-semibold text-sky-300">
@@ -538,7 +538,7 @@ export function HotelReservationsAndCheckInOutTab({
 
       {/* Check-Out Paneli (Bakiye Kontrolü + Otomatik Housekeeping + Fatura) */}
       {checkOutTarget && (
-        <div className="space-y-3 rounded-xl border border-amber-500/40 bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-amber-500/40 bg-[white] p-4">
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-sm font-semibold text-amber-300">
@@ -572,7 +572,7 @@ export function HotelReservationsAndCheckInOutTab({
             </div>
             <div>
               <span className="text-zinc-500">Ödenen:</span>{' '}
-              <strong className="text-[#34D399]">
+              <strong className="text-[#1267E6]">
                 {Number(checkOutTarget.paidTotalTry || 0).toLocaleString('tr-TR')} ₺
               </strong>
             </div>
@@ -582,7 +582,7 @@ export function HotelReservationsAndCheckInOutTab({
                 className={
                   Number(checkOutTarget.balanceDueTry || 0) > 0
                     ? 'text-amber-300'
-                    : 'text-[#34D399]'
+                    : 'text-[#1267E6]'
                 }
               >
                 {Number(checkOutTarget.balanceDueTry || 0).toLocaleString('tr-TR')} ₺
@@ -606,7 +606,7 @@ export function HotelReservationsAndCheckInOutTab({
                 </select>
               </div>
             ) : (
-              <span className="flex items-center gap-1.5 text-xs text-[#34D399]">
+              <span className="flex items-center gap-1.5 text-xs text-[#1267E6]">
                 <CheckCircle2 className="h-4 w-4" /> Folio bakiyesi kapalı (0 ₺).
               </span>
             )}
@@ -615,7 +615,7 @@ export function HotelReservationsAndCheckInOutTab({
               type="button"
               disabled={submitting}
               onClick={handleConfirmCheckOut}
-              className="rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-[#080A09] hover:bg-amber-300 disabled:opacity-50"
+              className="rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-amber-300 disabled:opacity-50"
             >
               {submitting ? 'Tamamlanıyor...' : 'Check-Out Tamamla'}
             </button>
@@ -624,9 +624,9 @@ export function HotelReservationsAndCheckInOutTab({
       )}
 
       {/* Rezervasyon Listesi */}
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
         <table className="w-full min-w-[920px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
             <tr>
               <th className="px-3 py-2.5">Rez No / Kanal</th>
               <th className="px-3 py-2.5">Oda & Tip</th>
@@ -639,7 +639,7 @@ export function HotelReservationsAndCheckInOutTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05]">
             {filtered.map((r) => (
-              <tr key={r.id} className="hover:bg-white/[0.02]">
+              <tr key={r.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5">
                   <div className="font-mono font-semibold text-zinc-100">{r.reservationNo}</div>
                   <div className="text-[10px] text-zinc-400">
@@ -673,7 +673,7 @@ export function HotelReservationsAndCheckInOutTab({
                   <span
                     className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
                       HOTEL_RESERVATION_STATUS_BADGES[r.status as HotelReservationStatus] ||
-                      'border-white/10 text-zinc-300'
+                      'border-[--line] text-zinc-300'
                     }`}
                   >
                     {HOTEL_RESERVATION_STATUS_LABELS[r.status as HotelReservationStatus] ||
@@ -689,7 +689,7 @@ export function HotelReservationsAndCheckInOutTab({
                   </div>
                   <div
                     className={`text-[10px] ${
-                      Number(r.balanceDueTry || 0) > 0 ? 'text-amber-300' : 'text-[#34D399]'
+                      Number(r.balanceDueTry || 0) > 0 ? 'text-amber-300' : 'text-[#1267E6]'
                     }`}
                   >
                     Bakiye: {Number(r.balanceDueTry || 0).toLocaleString('tr-TR')} ₺
@@ -729,7 +729,7 @@ export function HotelReservationsAndCheckInOutTab({
                     <button
                       type="button"
                       onClick={() => onOpenFolio(r.id)}
-                      className="rounded-md bg-emerald-500/15 px-2 py-1 text-[11px] font-medium text-[#34D399] hover:bg-emerald-500/30"
+                      className="rounded-md bg-[--brand]/15 px-2 py-1 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/30"
                     >
                       Folio
                     </button>
@@ -904,9 +904,9 @@ export function HotelFolioAndBillingTab({
   return (
     <div className="space-y-4">
       {/* Rezervasyon Seçici */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <CreditCard className="h-4 w-4 text-[#34D399]" />
+          <CreditCard className="h-4 w-4 text-[#1267E6]" />
           <h3 className="text-sm font-semibold text-zinc-100">
             Oda Hesabı (Folio), Stok Bağlı Minibar, Split Folio & E-Belge
           </h3>
@@ -939,13 +939,13 @@ export function HotelFolioAndBillingTab({
               return (
                 <div
                   key={grp}
-                  className="rounded-xl border border-white/[0.08] bg-[#111513] p-4"
+                  className="rounded-xl border border-[--line] bg-[white] p-4"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-zinc-200">
                       {HOTEL_FOLIO_GROUP_LABELS[grp]}
                     </span>
-                    <span className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-zinc-400">
+                    <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-zinc-400">
                       {g.itemCount} kalem
                     </span>
                   </div>
@@ -954,7 +954,7 @@ export function HotelFolioAndBillingTab({
                       Borç: {Number(g.chargesTry).toLocaleString('tr-TR')} ₺ · Ödenen:{' '}
                       {Number(g.paymentsTry).toLocaleString('tr-TR')} ₺
                     </span>
-                    <strong className="text-sm text-[#34D399]">
+                    <strong className="text-sm text-[#1267E6]">
                       {Number(g.balanceTry).toLocaleString('tr-TR')} ₺
                     </strong>
                   </div>
@@ -962,7 +962,7 @@ export function HotelFolioAndBillingTab({
                     type="button"
                     disabled={busy || g.chargesTry <= 0}
                     onClick={() => handleIssueInvoice(grp)}
-                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 py-1.5 text-[11px] font-medium text-[#34D399] hover:bg-emerald-500/20 disabled:opacity-40"
+                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 py-1.5 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/20 disabled:opacity-40"
                   >
                     <FileText className="h-3.5 w-3.5" /> Bu Folioyu Faturala (E-Belge)
                   </button>
@@ -974,7 +974,7 @@ export function HotelFolioAndBillingTab({
           {/* Yeni Masraf / Stok Bağlı Minibar / Kısmi Tahsilat Formu */}
           <form
             onSubmit={handleAddEntry}
-            className="grid grid-cols-1 gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4 md:grid-cols-6"
+            className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-6"
           >
             <div>
               <label className="mb-1 block text-[11px] text-zinc-400">Kalem Türü</label>
@@ -1008,13 +1008,13 @@ export function HotelFolioAndBillingTab({
 
             {entryCategory === 'MINIBAR' ? (
               <div className="md:col-span-2">
-                <label className="mb-1 block text-[11px] text-[#34D399]">
+                <label className="mb-1 block text-[11px] text-[#1267E6]">
                   Minibar Stok Ürünü (Stoktan Düşer)
                 </label>
                 <select
                   value={inventoryItemId}
                   onChange={(e) => handleSelectMinibar(e.target.value)}
-                  className="w-full rounded-lg border border-emerald-500/30 bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[--brand-line] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
                 >
                   {minibarItems.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -1059,7 +1059,7 @@ export function HotelFolioAndBillingTab({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300 disabled:opacity-50"
+                className="w-full rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover] disabled:opacity-50"
               >
                 Folioya İşle
               </button>
@@ -1067,9 +1067,9 @@ export function HotelFolioAndBillingTab({
           </form>
 
           {/* Folio Hareket Tablosu */}
-          <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
             <table className="w-full min-w-[820px] text-left text-xs">
-              <thead className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
                 <tr>
                   <th className="px-3 py-2.5">Kalem No</th>
                   <th className="px-3 py-2.5">Kategori / Açıklama</th>
@@ -1080,7 +1080,7 @@ export function HotelFolioAndBillingTab({
               </thead>
               <tbody className="divide-y divide-white/[0.05]">
                 {(selectedRes.folioItems || []).map((item: any) => (
-                  <tr key={item.id} className="hover:bg-white/[0.02]">
+                  <tr key={item.id} className="hover:bg-[--page]">
                     <td className="px-3 py-2 font-mono text-[11px] text-zinc-400">
                       {item.entryNo}
                     </td>
@@ -1110,7 +1110,7 @@ export function HotelFolioAndBillingTab({
                     </td>
                     <td
                       className={`px-3 py-2 text-right font-mono font-semibold ${
-                        item.isPayment ? 'text-[#34D399]' : 'text-zinc-100'
+                        item.isPayment ? 'text-[#1267E6]' : 'text-zinc-100'
                       }`}
                     >
                       {item.isPayment ? '− ' : '+ '}
@@ -1123,7 +1123,7 @@ export function HotelFolioAndBillingTab({
                         </span>
                       )}
                       {item.eDocumentNo ? (
-                        <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[#34D399]">
+                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[#1267E6]">
                           {item.eDocumentNo}
                         </span>
                       ) : (

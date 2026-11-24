@@ -32,7 +32,7 @@ import { TrashPreviewModal, TrashItemData } from "./trash-preview-modal"
 const ENTITY_LABEL_MAP: Record<string, { label: string; color: string }> = {
   Customer: { label: "Müşteri / CRM", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
   Lead: { label: "Potansiyel Müşteri", color: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" },
-  Finance: { label: "Finans Kaydı", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
+  Finance: { label: "Finans Kaydı", color: "bg-[--brand]/10 text-[--brand] border-[--brand-line]" },
   Order: { label: "Sipariş", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
   Product: { label: "Ürün", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
   Project: { label: "Proje", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" },
@@ -222,7 +222,7 @@ export function TrashTable() {
         <div
           className={`p-3.5 rounded-xl border text-sm flex items-center justify-between shadow-md transition-all ${
             notification.type === "success"
-              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+              ? "bg-[--brand]/10 border-[--brand-line] text-[--brand]"
               : "bg-red-500/10 border-red-500/30 text-red-400"
           }`}
         >
@@ -241,13 +241,13 @@ export function TrashTable() {
       )}
 
       {/* Üst Kısım: Kategori Sekmeleri (Tabs) */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/[0.06] pb-3">
+      <div className="flex flex-wrap items-center gap-2 border-b border-[--line] pb-3">
         <button
           onClick={() => { setSelectedCategory("ALL"); setPage(1) }}
           className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
             selectedCategory === "ALL"
-              ? "bg-emerald-500 text-black font-semibold shadow-[0_0_12px_rgba(52,211,153,0.3)]"
-              : "bg-[#111513] border border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+              ? "bg-[--brand] text-black font-semibold shadow-[0_0_12px_rgba(52,211,153,0.3)]"
+              : "bg-[white] border border-[--line] text-zinc-400 hover:text-white hover:border-[--line]"
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
@@ -267,8 +267,8 @@ export function TrashTable() {
               onClick={() => { setSelectedCategory(key); setPage(1) }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
                 selectedCategory === key
-                  ? "bg-emerald-500 text-black font-semibold shadow-[0_0_12px_rgba(52,211,153,0.3)]"
-                  : "bg-[#111513] border border-white/10 text-zinc-400 hover:text-white hover:border-white/20"
+                  ? "bg-[--brand] text-black font-semibold shadow-[0_0_12px_rgba(52,211,153,0.3)]"
+                  : "bg-[white] border border-[--line] text-zinc-400 hover:text-white hover:border-[--line]"
               }`}
             >
               {config.label}
@@ -283,14 +283,14 @@ export function TrashTable() {
       </div>
 
       {/* Filtre ve Aksiyon Barı */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#111513]/90 p-4 rounded-[20px] border border-white/[0.06] shadow-xs">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[white]/90 p-4 rounded-[20px] border border-[--line] shadow-xs">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             placeholder="Başlık, silen kullanıcı veya tür ara..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1) }}
-            className="pl-9 h-10 text-xs rounded-xl bg-white/[0.03] border-white/10 text-white placeholder:text-zinc-500 focus-visible:ring-emerald-500/50"
+            className="pl-9 h-10 text-xs rounded-xl bg-white border-[--line] text-white placeholder:text-zinc-500 focus-visible:ring-[--brand]/50"
           />
         </div>
 
@@ -302,7 +302,7 @@ export function TrashTable() {
                 variant="outline"
                 onClick={() => handleBulkAction("restore_bulk")}
                 disabled={actionLoading}
-                className="h-9 text-xs gap-1.5 text-emerald-400 hover:text-emerald-300 border-emerald-500/30 bg-emerald-500/10 cursor-pointer"
+                className="h-9 text-xs gap-1.5 text-[--brand] hover:text-[--brand] border-[--brand-line] bg-[--brand]/10 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Seçilenleri Geri Yükle ({selectedIds.length})
@@ -346,15 +346,15 @@ export function TrashTable() {
       </div>
 
       {/* Tablo */}
-      <div className="border border-white/[0.06] rounded-[20px] bg-[#111513]/90 overflow-hidden shadow-xs">
+      <div className="border border-[--line] rounded-[20px] bg-[white]/90 overflow-hidden shadow-xs">
         <Table>
-          <TableHeader className="bg-white/[0.02] border-b border-white/[0.06] text-xs">
-            <TableRow className="border-b border-white/[0.06]">
+          <TableHeader className="bg-[--page] border-b border-[--line] text-xs">
+            <TableRow className="border-b border-[--line]">
               <TableHead className="w-10 text-center">
                 <Checkbox
                   checked={items.length > 0 && selectedIds.length === items.length}
                   onCheckedChange={toggleSelectAll}
-                  className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:text-black"
+                  className="border-[--line] data-[state=checked]:bg-[--brand] data-[state=checked]:text-black"
                 />
               </TableHead>
               <TableHead className="text-zinc-400">Öge Başlığı & ID</TableHead>
@@ -371,7 +371,7 @@ export function TrashTable() {
               <TableRow className="border-b border-white/[0.04]">
                 <TableCell colSpan={7} className="h-40 text-center text-xs text-zinc-500">
                   <div className="flex flex-col items-center justify-center gap-2">
-                    <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
+                    <RefreshCw className="w-6 h-6 animate-spin text-[--brand]" />
                     <span>Çöp kutusu ögeleri yükleniyor...</span>
                   </div>
                 </TableCell>
@@ -380,7 +380,7 @@ export function TrashTable() {
               <TableRow className="border-b border-white/[0.04]">
                 <TableCell colSpan={7} className="h-44 text-center text-xs text-zinc-500">
                   <div className="flex flex-col items-center justify-center gap-2">
-                    <CheckCircle2 className="w-8 h-8 text-emerald-400/60" />
+                    <CheckCircle2 className="w-8 h-8 text-[--brand]/60" />
                     <span className="font-semibold text-white">Geri Dönüşüm Kutusu Boş</span>
                     <span>Bu kategoride silinmiş herhangi bir veri bulunmamaktadır.</span>
                   </div>
@@ -399,12 +399,12 @@ export function TrashTable() {
                 )
 
                 return (
-                  <TableRow key={item.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors text-xs">
+                  <TableRow key={item.id} className="border-b border-white/[0.04] hover:bg-[--page] transition-colors text-xs">
                     <TableCell className="text-center">
                       <Checkbox
                         checked={selectedIds.includes(item.id)}
                         onCheckedChange={() => toggleSelectOne(item.id)}
-                        className="border-white/20 data-[state=checked]:bg-emerald-500 data-[state=checked]:text-black"
+                        className="border-[--line] data-[state=checked]:bg-[--brand] data-[state=checked]:text-black"
                       />
                     </TableCell>
 
@@ -423,7 +423,7 @@ export function TrashTable() {
 
                     <TableCell>
                       <div className="flex items-center gap-1.5 text-zinc-400">
-                        <User className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <User className="w-3.5 h-3.5 text-[--brand] shrink-0" />
                         <span className="font-medium text-zinc-200">{item.deletedByFullName}</span>
                       </div>
                     </TableCell>
@@ -457,7 +457,7 @@ export function TrashTable() {
                           size="icon"
                           variant="ghost"
                           onClick={() => handleRestore(item.id)}
-                          className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 cursor-pointer"
+                          className="h-8 w-8 text-[--brand] hover:text-[--brand] hover:bg-[--brand]/10 cursor-pointer"
                           title="Geri Yükle"
                         >
                           <RotateCcw className="w-4 h-4" />
@@ -493,7 +493,7 @@ export function TrashTable() {
               variant="outline"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-8 px-2 border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+              className="h-8 px-2 border-[--line] bg-white text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -503,7 +503,7 @@ export function TrashTable() {
               variant="outline"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="h-8 px-2 border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+              className="h-8 px-2 border-[--line] bg-white text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
             >
               <ChevronRight className="w-4 h-4" />
             </Button>

@@ -52,11 +52,11 @@ export const DISPATCH_TRIP_STATUS_LABELS: Record<DispatchTripStatus, string> = {
 
 export const DISPATCH_TRIP_STATUS_BADGES: Record<DispatchTripStatus, string> = {
   TASLAK: "bg-zinc-500/15 text-zinc-300 border-white/[0.1]",
-  ONAYLANDI: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  ONAYLANDI: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   YUKLENIYOR: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   YOLDA: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   TESLIMAT_SURUYOR: "bg-teal-500/15 text-teal-300 border-teal-500/30",
-  TAMAMLANDI: "bg-emerald-500/20 text-[#34D399] border-emerald-500/40",
+  TAMAMLANDI: "bg-[--brand]/20 text-[#1267E6] border-[--brand]/40",
   IPTAL: "bg-rose-500/15 text-rose-300 border-rose-500/30",
 }
 
@@ -73,7 +73,7 @@ export const DISPATCH_STOP_STATUS_BADGES: Record<DispatchStopStatus, string> = {
   BEKLIYOR: "bg-zinc-500/15 text-zinc-300 border-white/[0.08]",
   YOLDA: "bg-sky-500/15 text-sky-300 border-sky-500/25",
   VARISTA: "bg-amber-500/15 text-amber-300 border-amber-500/25",
-  TESLIM_EDILDI: "bg-emerald-500/15 text-[#34D399] border-emerald-500/30",
+  TESLIM_EDILDI: "bg-[--brand]/15 text-[#1267E6] border-[--brand]/30",
   KISMI_TESLIM: "bg-amber-500/20 text-amber-200 border-amber-500/35",
   TESLIM_EDILEMEDI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
 }

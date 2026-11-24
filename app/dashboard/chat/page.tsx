@@ -525,32 +525,32 @@ export default function ChatPage() {
   const selectedPresence = getSelectedDmPresence()
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] min-h-[500px] overflow-hidden rounded-[24px] border border-white/[0.06] bg-[#111513]/90 backdrop-blur-xl shadow-2xl relative">
+    <div className="flex flex-col h-[calc(100vh-140px)] min-h-[500px] overflow-hidden rounded-[24px] border border-[--line] bg-white/80 backdrop-blur-xl backdrop-blur-xl shadow-2xl relative">
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar Panel */}
-        <div className={`w-80 border-r border-white/[0.06] flex flex-col h-full overflow-hidden shrink-0 bg-[#0c100e]/80 ${selectedConversation ? "max-lg:hidden" : "max-lg:w-full"}`}>
+        <div className={`w-80 border-r border-[--line] flex flex-col h-full overflow-hidden shrink-0 bg-[#0c100e]/80 ${selectedConversation ? "max-lg:hidden" : "max-lg:w-full"}`}>
           {/* Header Action Tools */}
-          <div className="p-4 pb-2 flex items-center justify-between border-b border-white/[0.06] select-none">
-            <h2 className="text-base font-light text-white tracking-tight">Sohbetler</h2>
+          <div className="p-4 pb-2 flex items-center justify-between border-b border-[--line] select-none">
+            <h2 className="text-base font-light text-[--text] tracking-tight">Sohbetler</h2>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setIsStarredOpen(true)}
                 title="Yıldızlı Mesajlar"
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-zinc-400 hover:text-amber-400 transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-amber-400 transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">star</span>
               </button>
               <button
                 onClick={() => setIsBlockedOpen(true)}
                 title="Engellenenler"
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-zinc-400 hover:text-rose-400 transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-rose-400 transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">block</span>
               </button>
               <button
                 onClick={() => setIsCreateOpen(true)}
                 title="Yeni Sohbet Başlat"
-                className="w-8 h-8 rounded-full bg-[#34D399] hover:bg-emerald-400 text-[#061811] flex items-center justify-center shadow-md shadow-emerald-500/20 transition-transform active:scale-95 cursor-pointer font-bold"
+                className="w-8 h-8 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white flex items-center justify-center shadow-xs transition-transform active:scale-95 cursor-pointer font-bold"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
               </button>
@@ -565,9 +565,9 @@ export default function ChatPage() {
                 placeholder="Sohbet arayın..."
                 value={convSearchQuery}
                 onChange={(e) => setConvSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.03] focus:border-emerald-500/30 text-white placeholder:text-zinc-500 focus:outline-none text-xs transition-all"
+                className="w-full pl-9 pr-4 py-2 rounded-full border border-[--line] bg-white/[0.03] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] text-[--text] placeholder:text-[--text-muted] focus:outline-none text-xs transition-all"
               />
-              <span className="material-symbols-outlined text-zinc-500 text-[16px] absolute left-3 top-2.5">
+              <span className="material-symbols-outlined text-[--text-muted] text-[16px] absolute left-3 top-2.5">
                 search
               </span>
             </div>
@@ -589,8 +589,8 @@ export default function ChatPage() {
                 }}
                 className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shrink-0 border transition-all cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-emerald-400/15 text-emerald-300 border-emerald-500/25 shadow-xs"
-                    : "bg-white/[0.02] text-zinc-400 border-white/[0.05] hover:text-white hover:bg-white/[0.05]"
+                    ? "bg-[--brand]/15 text-[--brand] border-[--brand-line] shadow-xs"
+                    : "bg-white/[0.02] text-[--text-muted] border-white/[0.05] hover:text-[--text] hover:bg-white/[0.05]"
                 }`}
               >
                 <span className="material-symbols-outlined text-[14px]">{tab.icon}</span>
@@ -602,7 +602,7 @@ export default function ChatPage() {
           {/* Conversations scroll area */}
           <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
             {filteredConversations.length === 0 ? (
-              <div className="text-center py-12 text-xs text-zinc-500 select-none">
+              <div className="text-center py-12 text-xs text-[--text-muted] select-none">
                 Sohbet bulunmuyor.
               </div>
             ) : (
@@ -624,35 +624,35 @@ export default function ChatPage() {
                       onClick={() => setSelectedConversation(c)}
                       className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all border text-left cursor-pointer ${
                         isSelected
-                          ? "bg-emerald-400/10 border-emerald-500/25 shadow-xs"
+                          ? "bg-[--brand]/10 border-[--brand-line] shadow-xs"
                           : "hover:bg-white/[0.04] border-transparent"
                       }`}
                     >
                       <div className="relative shrink-0 select-none">
-                        <Avatar className="w-10 h-10 border border-white/[0.06]">
+                        <Avatar className="w-10 h-10 border border-[--line]">
                           <AvatarImage src={c.type === "dm" ? otherUser?.avatarUrl : c.avatarUrl} />
-                          <AvatarFallback className="bg-emerald-500/10 text-emerald-400 font-medium text-xs">
+                          <AvatarFallback className="bg-[--brand]/10 text-[--brand] font-medium text-xs">
                             {name?.slice(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         {/* DM Active presence dot */}
                         {c.type === "dm" && userPresences[otherUser?.id]?.isOnline && (
-                          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#0c100e] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#0c100e] bg-[--brand] shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
                         )}
                       </div>
 
                       <div className="flex-1 min-w-0 flex flex-col gap-0.5 pr-6">
                         <div className="flex items-center justify-between">
-                          <span className="font-medium text-xs truncate text-white flex items-center gap-1.5">
+                          <span className="font-medium text-xs truncate text-[--text] flex items-center gap-1.5">
                             {name}
                             {c.isMuted && (
-                              <span className="material-symbols-outlined text-[13px] text-zinc-500 select-none">
+                              <span className="material-symbols-outlined text-[13px] text-[--text-muted] select-none">
                                 volume_off
                               </span>
                             )}
                           </span>
                           {c.lastActivityAt && (
-                            <span className="text-[10px] text-zinc-500 select-none font-mono">
+                            <span className="text-[10px] text-[--text-muted] select-none font-mono">
                               {new Date(c.lastActivityAt).toLocaleTimeString("tr-TR", {
                                 hour: "2-digit",
                                 minute: "2-digit",
@@ -664,15 +664,15 @@ export default function ChatPage() {
                         {/* Display live typing / recording statuses or lastMessage */}
                         <div className="text-[11px] truncate flex items-center justify-between">
                           {isTypingNow ? (
-                            <span className="text-emerald-400 font-medium animate-pulse select-none">
+                            <span className="text-[--brand] font-medium animate-pulse select-none">
                               Yazıyor...
                             </span>
                           ) : isRecordingNow ? (
-                            <span className="text-emerald-400 font-medium animate-pulse select-none">
+                            <span className="text-[--brand] font-medium animate-pulse select-none">
                               Ses kaydediyor...
                             </span>
                           ) : (
-                            <span className="text-zinc-400 truncate">
+                            <span className="text-[--text-muted] truncate">
                               {c.lastMessage?.isDeleted
                                 ? "Bu mesaj silindi"
                                 : c.lastMessage?.content || "Dosya eki"}
@@ -681,7 +681,7 @@ export default function ChatPage() {
 
                           {/* Unread count badge */}
                           {unread > 0 && (
-                            <span className="bg-[#34D399] text-[#061811] text-[10px] font-bold px-1.5 py-0.2 rounded-full shrink-0 select-none">
+                            <span className="bg-[--brand] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full shrink-0 select-none">
                               {unread}
                             </span>
                           )}
@@ -693,11 +693,11 @@ export default function ChatPage() {
                     <div className="absolute right-3 top-[50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="w-7 h-7 rounded-full bg-[#111513] border border-white/[0.08] shadow-md flex items-center justify-center hover:scale-105 active:scale-95 text-zinc-300">
+                          <button className="w-7 h-7 rounded-full bg-white border border-white/[0.08] shadow-md flex items-center justify-center hover:scale-105 active:scale-95 text-zinc-300">
                             <span className="material-symbols-outlined text-[15px]">expand_more</span>
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-[#111513] border border-white/[0.08] text-white rounded-xl p-1 shadow-2xl w-44">
+                        <DropdownMenuContent className="bg-white border border-white/[0.08] text-[--text] rounded-xl p-1 shadow-2xl w-44">
                           <DropdownMenuItem onClick={() => handleMarkUnread(c.id)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                             <span className="material-symbols-outlined text-[16px]">mark_chat_unread</span> Okunmadı İşaretle
                           </DropdownMenuItem>
@@ -732,20 +732,20 @@ export default function ChatPage() {
         </div>
 
         {/* Chat Box Container */}
-        <div className={`flex-1 flex flex-col h-full bg-[#080A09]/70 relative overflow-hidden ${!selectedConversation ? "max-lg:hidden" : ""}`}>
+        <div className={`flex-1 flex flex-col h-full bg-[--page] relative overflow-hidden ${!selectedConversation ? "max-lg:hidden" : ""}`}>
           {selectedConversation ? (
             <>
               {/* Header Box */}
-              <div className="px-6 py-3.5 border-b border-white/[0.06] bg-[#111513]/80 backdrop-blur-md flex-shrink-0 flex items-center justify-between z-10 shadow-xs select-none">
+              <div className="px-6 py-3.5 border-b border-[--line] bg-white/80 backdrop-blur-md flex-shrink-0 flex items-center justify-between z-10 shadow-xs select-none">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setSelectedConversation(null)}
-                    className="lg:hidden p-1 mr-1 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg flex items-center justify-center shrink-0 cursor-pointer"
+                    className="lg:hidden p-1 mr-1 text-[--text-muted] hover:text-[--text] hover:bg-white/[0.06] rounded-lg flex items-center justify-center shrink-0 cursor-pointer"
                     title="Geri"
                   >
                     <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                   </button>
-                  <Avatar className="w-10 h-10 border border-white/[0.06]">
+                  <Avatar className="w-10 h-10 border border-[--line]">
                     <AvatarImage
                       src={
                         selectedConversation.type === "dm"
@@ -753,7 +753,7 @@ export default function ChatPage() {
                           : selectedConversation.avatarUrl
                       }
                     />
-                    <AvatarFallback className="bg-emerald-500/10 text-emerald-400 font-medium text-xs">
+                    <AvatarFallback className="bg-[--brand]/10 text-[--brand] font-medium text-xs">
                       {(selectedConversation.type === "dm"
                         ? selectedConversation.participants?.find((p: any) => p.user.id !== session?.user.id)?.user.fullName
                         : selectedConversation.name
@@ -763,16 +763,16 @@ export default function ChatPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <h2 className="text-sm font-medium text-white">
+                    <h2 className="text-sm font-medium text-[--text]">
                       {selectedConversation.type === "dm"
                         ? selectedConversation.participants?.find((p: any) => p.user.id !== session?.user.id)?.user.fullName
                         : selectedConversation.name}
                     </h2>
-                    <span className="text-[11px] text-zinc-400 font-normal mt-0.5 flex items-center gap-1.5">
+                    <span className="text-[11px] text-[--text-muted] font-normal mt-0.5 flex items-center gap-1.5">
                       {selectedConversation.type === "dm" ? (
                         selectedPresence?.isOnline ? (
-                          <span className="text-emerald-400 flex items-center gap-1.5 font-medium">
-                            <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                          <span className="text-[--brand] flex items-center gap-1.5 font-medium">
+                            <span className="size-2 rounded-full bg-[--brand] shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
                             Çevrimiçi
                           </span>
                         ) : selectedPresence?.lastSeenAt ? (
@@ -791,7 +791,7 @@ export default function ChatPage() {
                   <button
                     onClick={() => setIsImportOpen(true)}
                     title="Geçmişi İçe Aktar"
-                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/[0.06] transition-colors text-zinc-400 hover:text-white"
+                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/[0.06] transition-colors text-[--text-muted] hover:text-[--text]"
                   >
                     <span className="material-symbols-outlined text-[20px]">upload_file</span>
                   </button>
@@ -864,7 +864,7 @@ export default function ChatPage() {
               <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined text-[36px]">chat_bubble_outline</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">ERP WhatsApp Chat</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-[--text]">ERP WhatsApp Chat</h3>
               <p className="text-xs text-gray-500 max-w-xs mt-1 leading-relaxed">
                 İletişime başlamak için soldan bir bireysel sohbet, grup veya şube kanalı seçin.
               </p>

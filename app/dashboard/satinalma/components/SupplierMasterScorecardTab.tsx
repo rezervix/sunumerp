@@ -31,6 +31,7 @@ import {
   validateGln13,
   generateGln13,
 } from "@/lib/logistics/procurement/constantsAndHelpers"
+import { safeText, safeNumber, safeDate } from "@/lib/utils/safe-display"
 
 interface SupplierMasterScorecardTabProps {
   suppliers: any[]
@@ -118,7 +119,7 @@ export default function SupplierMasterScorecardTab({
   })
   const [linkModalOpen, setLinkModalOpen] = useState(false)
 
-  const filteredSuppliers = suppliers.filter((s) => {
+  const filteredSuppliers = (suppliers || []).filter((s) => {
     if (statusFilter !== "ALL" && s.approvalStatus !== statusFilter) return false
     if (search.trim()) {
       const q = search.trim().toLowerCase()
@@ -163,12 +164,12 @@ export default function SupplierMasterScorecardTab({
       email: s.email || "",
       phone: s.phone || "",
       glnNumber: s.glnNumber || "",
-      category: s.category || "GENEL",
+      category: s.category || "KESME_CICEK",
       criticalityLevel: s.criticalityLevel || "ORTA",
       approvalStatus: s.approvalStatus || "ONAYLI",
       blacklistedReason: s.blacklistedReason || "",
-      leadTimeDays: String(s.leadTimeDays ?? 5),
-      paymentTermsDays: String(s.paymentTermsDays ?? 30),
+      leadTimeDays: String(s.leadTimeDays || 3),
+      paymentTermsDays: String(s.paymentTermsDays || 30),
       iban: s.iban || "",
       taxNumber: s.taxNumber || "",
       notes: s.notes || "",
@@ -177,23 +178,24 @@ export default function SupplierMasterScorecardTab({
 
   const handleSaveSupplier = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (supplierForm.glnNumber.trim()) {
+    if (supplierForm.glnNumber) {
       const check = validateGln13(supplierForm.glnNumber)
       if (!check.valid) {
-        onNotify(check.reason || "GLN-13 geçersiz.", true)
+        onNotify(`Geçersiz GLN-13 numarası: ${check.reason}`, true)
         return
       }
     }
+
     setSavingSupplier(true)
     try {
       const res = await fetch("/api/procurement", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: "upsert_supplier",
+          action: "upsert_supplier_master",
           ...supplierForm,
-          leadTimeDays: Number(supplierForm.leadTimeDays),
-          paymentTermsDays: Number(supplierForm.paymentTermsDays),
+          leadTimeDays: Number(supplierForm.leadTimeDays || 3),
+          paymentTermsDays: Number(supplierForm.paymentTermsDays || 30),
         }),
       })
       const data = await res.json()
@@ -201,7 +203,7 @@ export default function SupplierMasterScorecardTab({
         onNotify(data.error || "Tedarikçi kaydedilemedi.", true)
         return
       }
-      onNotify(data.message || "Tedarikçi kartı kaydedildi.")
+      onNotify(data.message)
       setEditingSupplier(null)
       await onRefresh()
     } finally {
@@ -210,26 +212,23 @@ export default function SupplierMasterScorecardTab({
   }
 
   const handleCreateInvite = async (supplier: any) => {
-    const res = await fetch("/api/procurement", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "create_portal_invite",
-        supplierId: supplier.id,
-        purpose: "PORTAL_ACCESS",
-        expiresInHours: 168,
-      }),
-    })
-    const data = await res.json()
-    if (!res.ok || !data.success) {
-      onNotify(data.error || "Davet linki oluşturulamadı.", true)
-      return
+    try {
+      const res = await fetch("/api/procurement", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "create_supplier_portal_invite", supplierId: supplier.id }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        onNotify(data.error || "Portal daveti oluşturulamadı.", true)
+        return
+      }
+      setLatestInviteUrl(data.inviteUrl)
+      onNotify(`${supplier.name} için imzalı portal davet bağlantısı hazırlandı.`)
+      await onRefresh()
+    } catch {
+      onNotify("Davet üretilirken hata oluştu.", true)
     }
-    const fullUrl =
-      typeof window !== "undefined" ? `${window.location.origin}${data.portalPath}` : data.portalPath
-    setLatestInviteUrl(fullUrl)
-    onNotify(data.message)
-    await onRefresh()
   }
 
   const handleSaveWeights = async () => {
@@ -239,7 +238,7 @@ export default function SupplierMasterScorecardTab({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: "update_scorecard_weights",
+          action: "update_scorecard_config",
           otdWeight: Number(weights.otdWeight),
           qtyWeight: Number(weights.qtyWeight),
           qualityWeight: Number(weights.qualityWeight),
@@ -326,7 +325,7 @@ export default function SupplierMasterScorecardTab({
   return (
     <div className="space-y-4">
       {/* Üst Alt-Görünüm Geçişi & Aksiyonlar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[--line] bg-white/80 backdrop-blur-xl p-3 shadow-sm">
         <div className="flex flex-wrap gap-1.5">
           {[
             { id: "directory", label: `Tedarikçi Ana Kartları (${suppliers.length})`, icon: Building2 },
@@ -340,10 +339,10 @@ export default function SupplierMasterScorecardTab({
                 key={tab.id}
                 type="button"
                 onClick={() => setSubView(tab.id as any)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                   active
-                    ? "bg-[#34D399]/15 text-[#34D399] border border-[#34D399]/30"
-                    : "text-zinc-400 hover:text-zinc-200 border border-transparent"
+                    ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]"
+                    : "text-[--text-muted] hover:text-[--text] border border-transparent hover:bg-[--muted-bg]"
                 }`}
               >
                 <Icon className="size-3.5" />
@@ -357,16 +356,16 @@ export default function SupplierMasterScorecardTab({
           <button
             type="button"
             onClick={() => setLinkModalOpen(true)}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs text-zinc-200"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-[--line] bg-white hover:bg-[--muted-bg] text-xs text-[--text-2] font-medium transition cursor-pointer"
           >
-            <Plus className="size-3.5 text-[#34D399]" />
+            <Plus className="size-3.5 text-[--brand]" />
             Katalog Ürün Bağla
           </button>
           <button
             type="button"
             onClick={openCreateSupplier}
             data-testid="new-supplier-btn"
-            className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold"
+            className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold shadow-sm transition cursor-pointer"
           >
             <Plus className="size-3.5" />
             Yeni Tedarikçi Ekle
@@ -376,13 +375,13 @@ export default function SupplierMasterScorecardTab({
 
       {/* Oluşturulan İmzalı Davet Linki Banner */}
       {latestInviteUrl && (
-        <div className="rounded-2xl border border-[#34D399]/30 bg-[#34D399]/[0.07] p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="rounded-2xl border border-[--brand-line] bg-[--brand-soft]/70 p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-sm">
           <div className="min-w-0 flex-1 space-y-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#34D399]">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[--brand]">
               <KeyRound className="size-4" />
               <span>İmzalı Tedarikçi Portal Davet Bağlantısı (7 Gün Geçerli)</span>
             </div>
-            <div className="text-[11px] font-mono text-zinc-200 truncate">{latestInviteUrl}</div>
+            <div className="text-[11px] font-mono text-[--text] truncate">{latestInviteUrl}</div>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -392,16 +391,16 @@ export default function SupplierMasterScorecardTab({
                 setCopiedInvite(true)
                 setTimeout(() => setCopiedInvite(false), 2000)
               }}
-              className="inline-flex items-center gap-1 h-8 px-3 rounded-lg bg-white/10 hover:bg-white/15 text-xs text-white"
+              className="inline-flex items-center gap-1 h-8 px-3 rounded-full bg-white border border-[--line] hover:bg-[--muted-bg] text-xs text-[--text] font-medium transition cursor-pointer"
             >
-              {copiedInvite ? <Check className="size-3.5 text-[#34D399]" /> : <Copy className="size-3.5" />}
+              {copiedInvite ? <Check className="size-3.5 text-[--ok]" /> : <Copy className="size-3.5" />}
               {copiedInvite ? "Kopyalandı" : "Kopyala"}
             </button>
             <a
               href={latestInviteUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1 h-8 px-3 rounded-lg bg-[#34D399] text-[#061811] text-xs font-semibold"
+              className="inline-flex items-center gap-1 h-8 px-3.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95 transition"
             >
               <ExternalLink className="size-3.5" />
               Portalda Aç
@@ -415,18 +414,18 @@ export default function SupplierMasterScorecardTab({
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex-1 min-w-[220px]">
-              <Search className="size-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="size-3.5 text-[--text-muted] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Tedarikçi adı, kodu veya GLN-13 ile ara..."
-                className="w-full h-9 pl-9 pr-3 rounded-xl border border-white/10 bg-[#0D100F] text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-[#34D399]"
+                className="w-full h-9 pl-9 pr-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] placeholder:text-[--text-muted] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
             </div>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-9 rounded-xl border border-white/10 bg-[#0D100F] px-3 text-xs text-zinc-200"
+              className="h-9 rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             >
               <option value="ALL">Tüm Onay Durumları</option>
               <option value="ONAYLI">Onaylı</option>
@@ -436,9 +435,9 @@ export default function SupplierMasterScorecardTab({
             </select>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-[#121614]/80">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-white/[0.06] text-[11px] uppercase tracking-wider text-zinc-400">
+          <div className="overflow-x-auto rounded-2xl border border-[--line] bg-white shadow-sm">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
                 <tr>
                   <th className="py-3 px-4">Tedarikçi / GLN-13</th>
                   <th className="py-3 px-3">Kategori & Kritiklik</th>
@@ -449,69 +448,73 @@ export default function SupplierMasterScorecardTab({
                   <th className="py-3 px-4 text-right">İşlemler</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-[--line]">
                 {filteredSuppliers.map((sup) => (
-                  <tr key={sup.id} className="hover:bg-white/[0.02]">
+                  <tr key={sup.id} className="hover:bg-[--brand-soft]/30 transition">
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-zinc-100">{sup.name}</div>
-                      <div className="text-[11px] font-mono text-zinc-400 mt-0.5">
-                        {sup.code}
+                      <div className="font-semibold text-[--text]">{safeText(sup.name)}</div>
+                      <div className="text-[11px] font-mono text-[--brand] mt-0.5">
+                        {safeText(sup.code)}
                         {sup.glnNumber ? ` · GLN ${sup.glnNumber}` : " · GLN Tanımsız"}
                       </div>
                       {sup.blacklistedReason && sup.approvalStatus === "KARALISTE" && (
-                        <div className="text-[11px] text-rose-300 mt-0.5">
-                          Engel Nedeni: {sup.blacklistedReason}
+                        <div className="text-[11px] text-[--bad] mt-0.5 font-medium">
+                          Engel Nedeni: {safeText(sup.blacklistedReason)}
                         </div>
                       )}
                     </td>
                     <td className="py-3 px-3">
-                      <div className="text-zinc-200">
-                        {SUPPLIER_CATEGORY_LABELS[sup.category] || sup.category}
+                      <div className="text-[--text]">
+                        {SUPPLIER_CATEGORY_LABELS[sup.category] || safeText(sup.category)}
                       </div>
-                      <div className="text-[11px] text-zinc-500">
-                        Kritiklik: {SUPPLIER_CRITICALITY_LABELS[sup.criticalityLevel] || sup.criticalityLevel} ·{" "}
-                        {sup.linkedItemCount} SKU
+                      <div className="text-[11px] text-[--text-muted]">
+                        Kritiklik: {SUPPLIER_CRITICALITY_LABELS[sup.criticalityLevel] || safeText(sup.criticalityLevel)} ·{" "}
+                        {safeNumber(sup.linkedItemCount)} SKU
                       </div>
                     </td>
                     <td className="py-3 px-3">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-medium ${
-                          SUPPLIER_APPROVAL_BADGES[sup.approvalStatus] || SUPPLIER_APPROVAL_BADGES.ADAY
+                          sup.approvalStatus === "ONAYLI"
+                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
+                            : sup.approvalStatus === "KARALISTE"
+                              ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
+                              : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
                         }`}
                       >
-                        {SUPPLIER_APPROVAL_LABELS[sup.approvalStatus] || sup.approvalStatus}
+                        {SUPPLIER_APPROVAL_LABELS[sup.approvalStatus] || safeText(sup.approvalStatus)}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-right font-mono">
-                      <span className="font-semibold text-zinc-100">
+                    <td className="py-3 px-3 text-right font-mono tabular-nums">
+                      <span className="font-semibold text-[--text]">
                         {Number(sup.effectiveScore || 0).toFixed(1)}
                       </span>
                       <span
                         className={`ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${
                           sup.effectiveTier === "A"
-                            ? "bg-emerald-500/20 text-[#34D399]"
+                            ? "bg-[--ok-soft] text-[--ok]"
                             : sup.effectiveTier === "B"
-                              ? "bg-sky-500/20 text-sky-300"
+                              ? "bg-[--brand-soft] text-[--brand]"
                               : sup.effectiveTier === "C"
-                                ? "bg-amber-500/20 text-amber-300"
-                                : "bg-rose-500/20 text-rose-300"
+                                ? "bg-[--warn-soft] text-[--warn]"
+                                : "bg-[--bad-soft] text-[--bad]"
                         }`}
                       >
-                        {sup.effectiveTier}
+                        {safeText(sup.effectiveTier)}
                       </span>
                     </td>
                     <td className="py-3 px-3 text-right">
-                      <div className="text-zinc-200">{sup.leadTimeDays} Gün</div>
-                      <div className="text-[11px] text-zinc-500">{sup.paymentTermsLabel}</div>
+                      <div className="text-[--text] font-mono tabular-nums">{safeNumber(sup.leadTimeDays)} Gün</div>
+                      <div className="text-[11px] text-[--text-muted]">{safeText(sup.paymentTermsLabel)}</div>
                     </td>
                     <td className="py-3 px-3 text-center">
                       <div className="inline-flex items-center gap-1 text-[11px]">
-                        <span className="text-[#34D399]">{sup.documentSummary?.valid || 0} Geçerli</span>
-                        {(sup.documentSummary?.expiringSoon || 0) > 0 && (
-                          <span className="text-amber-300">· {sup.documentSummary.expiringSoon} Yakın</span>
+                        <span className="text-[--ok] font-semibold">{safeNumber(sup.documentSummary?.valid, 0)} Geçerli</span>
+                        {safeNumber(sup.documentSummary?.expiringSoon, 0) > 0 && (
+                          <span className="text-[--warn]">· {sup.documentSummary.expiringSoon} Yakın</span>
                         )}
-                        {(sup.documentSummary?.expired || 0) > 0 && (
-                          <span className="text-rose-400">· {sup.documentSummary.expired} Süresi Dolmuş</span>
+                        {safeNumber(sup.documentSummary?.expired, 0) > 0 && (
+                          <span className="text-[--bad]">· {sup.documentSummary.expired} Süresi Dolmuş</span>
                         )}
                       </div>
                     </td>
@@ -520,7 +523,7 @@ export default function SupplierMasterScorecardTab({
                         <button
                           type="button"
                           onClick={() => openEditSupplier(sup)}
-                          className="h-7 px-2.5 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-200 inline-flex items-center gap-1"
+                          className="h-7 px-2.5 rounded-full border border-[--line] bg-white hover:bg-[--muted-bg] text-[--text-2] inline-flex items-center gap-1 text-xs font-medium transition cursor-pointer"
                         >
                           <Edit className="size-3" />
                           Düzenle
@@ -529,7 +532,7 @@ export default function SupplierMasterScorecardTab({
                           <button
                             type="button"
                             onClick={() => handleCreateInvite(sup)}
-                            className="h-7 px-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/10 hover:bg-emerald-500/20 text-[#34D399] inline-flex items-center gap-1"
+                            className="h-7 px-2.5 rounded-full border border-[--brand-line] bg-[--brand-soft] hover:bg-[--brand-soft]/80 text-[--brand] inline-flex items-center gap-1 text-xs font-medium transition cursor-pointer"
                           >
                             <KeyRound className="size-3" />
                             Portal Daveti
@@ -549,22 +552,22 @@ export default function SupplierMasterScorecardTab({
       {subView === "scorecards" && (
         <div className="space-y-4">
           {/* Ağırlık Yapılandırma Kartı */}
-          <div className="rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-4 space-y-3">
+          <div className="rounded-2xl border border-[--line] bg-white/80 backdrop-blur-xl p-4 space-y-3 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2 text-sm font-semibold text-zinc-100">
-                <Settings className="size-4 text-[#34D399]" />
+              <div className="flex items-center gap-2 text-sm font-semibold text-[--text]">
+                <Settings className="size-4 text-[--brand]" />
                 <span>Skor Kartı Formül Ağırlıkları (Toplam = %100)</span>
               </div>
               <div className="flex items-center gap-3 text-xs font-mono">
                 <Link
                   href="/dashboard/lojistik-raporlar?module=satinalma"
-                  className="font-sans text-[#34D399] hover:underline font-medium px-2.5 py-1 rounded-full bg-[#34D399]/10 border border-[#34D399]/20"
+                  className="font-sans text-[--brand] hover:underline font-medium px-2.5 py-1 rounded-full bg-[--brand-soft] border border-[--brand-line]"
                 >
                   Raporlar&apos;a Git →
                 </Link>
                 <div>
                   Toplam:{" "}
-                  <span className={Math.abs(weightSum - 100) < 0.01 ? "text-[#34D399]" : "text-rose-400"}>
+                  <span className={Math.abs(weightSum - 100) < 0.01 ? "text-[--ok] font-semibold" : "text-[--bad] font-semibold"}>
                     %{weightSum}
                   </span>
                 </div>
@@ -572,46 +575,46 @@ export default function SupplierMasterScorecardTab({
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 items-end">
               <div>
-                <label className="text-[11px] text-zinc-400">Zamanında Teslim (OTD %)</label>
+                <label className="text-[11px] text-[--text-muted]">Zamanında Teslim (OTD %)</label>
                 <input
                   type="number"
                   value={weights.otdWeight}
                   onChange={(e) => setWeights((w) => ({ ...w, otdWeight: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] font-bold focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-zinc-400">Miktar Uyumu (%)</label>
+                <label className="text-[11px] text-[--text-muted]">Miktar Uyumu (%)</label>
                 <input
                   type="number"
                   value={weights.qtyWeight}
                   onChange={(e) => setWeights((w) => ({ ...w, qtyWeight: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] font-bold focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-zinc-400">Kalite Kabul (%)</label>
+                <label className="text-[11px] text-[--text-muted]">Kalite Kabul (%)</label>
                 <input
                   type="number"
                   value={weights.qualityWeight}
                   onChange={(e) => setWeights((w) => ({ ...w, qualityWeight: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] font-bold focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-[11px] text-zinc-400">Fiyat Tutarlılığı (%)</label>
+                <label className="text-[11px] text-[--text-muted]">Fiyat Tutarlılığı (%)</label>
                 <input
                   type="number"
                   value={weights.priceWeight}
                   onChange={(e) => setWeights((w) => ({ ...w, priceWeight: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] font-bold focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 disabled={savingWeights}
                 onClick={handleSaveWeights}
-                className="h-9 px-4 rounded-xl bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold inline-flex items-center justify-center gap-1.5 disabled:opacity-50 transition cursor-pointer shadow-sm"
               >
                 <RefreshCw className={`size-3.5 ${savingWeights ? "animate-spin" : ""}`} />
                 Kaydet & Yeniden Puanla
@@ -621,22 +624,22 @@ export default function SupplierMasterScorecardTab({
 
           {/* 6 Aylık Konsolide Trend */}
           {Array.isArray(scorecards?.monthlyTrend) && scorecards.monthlyTrend.length > 0 && (
-            <div className="rounded-2xl border border-white/[0.07] bg-[#121614]/80 p-4">
-              <div className="text-xs font-semibold text-zinc-200 mb-3">
+            <div className="rounded-2xl border border-[--line] bg-white p-4 shadow-sm">
+              <div className="text-xs font-semibold text-[--text] mb-3">
                 6 Aylık Tedarikçi Performans Trendi (Ortalama Bileşik Skor & OTD %)
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5">
                 {scorecards.monthlyTrend.map((m: any) => (
                   <div
                     key={m.periodKey}
-                    className="rounded-xl border border-white/[0.06] bg-[#0B0E0D] p-2.5 text-xs"
+                    className="rounded-xl border border-[--line] bg-[--muted-bg]/40 p-2.5 text-xs"
                   >
-                    <div className="font-mono text-[11px] text-zinc-400">{m.periodKey}</div>
-                    <div className="text-lg font-bold text-[#34D399] mt-0.5">
-                      {m.avgCompositeScore}
+                    <div className="font-mono text-[11px] text-[--text-muted]">{safeText(m.periodKey)}</div>
+                    <div className="text-lg font-bold text-[--brand] mt-0.5 tabular-nums">
+                      {safeNumber(m.avgCompositeScore)}
                     </div>
-                    <div className="text-[10px] text-zinc-400">
-                      OTD %{m.avgOtdRate} · Kalite %{m.avgQualityRate}
+                    <div className="text-[10px] text-[--text-muted]">
+                      OTD %{safeNumber(m.avgOtdRate)} · Kalite %{safeNumber(m.avgQualityRate)}
                     </div>
                   </div>
                 ))}
@@ -645,9 +648,9 @@ export default function SupplierMasterScorecardTab({
           )}
 
           {/* Canlı Tedarikçi Sıralama Tablosu */}
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-[#121614]/80">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+          <div className="overflow-x-auto rounded-2xl border border-[--line] bg-white shadow-sm">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
                 <tr>
                   <th className="py-3 px-4">Tedarikçi</th>
                   <th className="py-3 px-3 text-right">PO Sayısı</th>
@@ -658,28 +661,28 @@ export default function SupplierMasterScorecardTab({
                   <th className="py-3 px-4 text-right">Bileşik Skor</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-[--line]">
                 {(scorecards?.liveSnapshots || []).map((row: any) => (
-                  <tr key={row.id} className="hover:bg-white/[0.02]">
+                  <tr key={row.id} className="hover:bg-[--brand-soft]/30 transition">
                     <td className="py-3 px-4">
-                      <div className="font-medium text-zinc-100">{row.supplierName}</div>
-                      <div className="text-[11px] font-mono text-zinc-500">{row.supplierCode}</div>
+                      <div className="font-medium text-[--text]">{safeText(row.supplierName)}</div>
+                      <div className="text-[11px] font-mono text-[--brand]">{safeText(row.supplierCode)}</div>
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-zinc-300">
-                      {row.poCount} ({row.onTimePoCount} vaktinde)
+                    <td className="py-3 px-3 text-right font-mono tabular-nums text-[--text-2]">
+                      {safeNumber(row.poCount)} ({safeNumber(row.onTimePoCount)} vaktinde)
                     </td>
-                    <td className="py-3 px-3 text-right font-mono text-zinc-200">%{row.otdRate}</td>
-                    <td className="py-3 px-3 text-right font-mono text-zinc-200">%{row.qtyComplianceRate}</td>
-                    <td className="py-3 px-3 text-right font-mono text-zinc-200">%{row.qualityAcceptanceRate}</td>
-                    <td className="py-3 px-3 text-right font-mono">
-                      <span className={row.avgPriceVariancePct > 0 ? "text-amber-300" : "text-[#34D399]"}>
-                        {row.avgPriceVariancePct > 0 ? `+${row.avgPriceVariancePct}%` : `${row.avgPriceVariancePct}%`}
+                    <td className="py-3 px-3 text-right font-mono tabular-nums text-[--text]">%{safeNumber(row.otdRate)}</td>
+                    <td className="py-3 px-3 text-right font-mono tabular-nums text-[--text]">%{safeNumber(row.qtyComplianceRate)}</td>
+                    <td className="py-3 px-3 text-right font-mono tabular-nums text-[--text]">%{safeNumber(row.qualityAcceptanceRate)}</td>
+                    <td className="py-3 px-3 text-right font-mono tabular-nums">
+                      <span className={safeNumber(row.avgPriceVariancePct) > 0 ? "text-[--warn]" : "text-[--ok]"}>
+                        {safeNumber(row.avgPriceVariancePct) > 0 ? `+${row.avgPriceVariancePct}%` : `${row.avgPriceVariancePct}%`}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono">
-                      <span className="text-sm font-bold text-white">{row.compositeScore}</span>
-                      <span className="ml-1.5 px-1.5 py-0.5 rounded bg-[#34D399]/15 text-[#34D399] font-bold">
-                        {row.tier}
+                    <td className="py-3 px-4 text-right font-mono tabular-nums">
+                      <span className="text-sm font-bold text-[--text]">{safeNumber(row.compositeScore)}</span>
+                      <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-[--brand-soft] text-[--brand] font-bold border border-[--brand-line]">
+                        {safeText(row.tier)}
                       </span>
                     </td>
                   </tr>
@@ -694,13 +697,13 @@ export default function SupplierMasterScorecardTab({
       {subView === "documents" && (
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <div className="text-xs text-zinc-400">
+            <div className="text-xs text-[--text-muted]">
               Geçerliliği yaklaşan veya süresi dolmuş sertifikalar satın alma risk analizine yansır.
             </div>
             <button
               type="button"
               onClick={() => setDocFormOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#34D399]/15 border border-[#34D399]/30 text-[#34D399] text-xs font-medium"
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-[--brand-soft] border border-[--brand-line] text-[--brand] text-xs font-medium hover:bg-[--brand-soft]/80 transition cursor-pointer"
             >
               <Upload className="size-3.5" />
               Yeni Belge Ekle
@@ -710,23 +713,23 @@ export default function SupplierMasterScorecardTab({
           {docFormOpen && (
             <form
               onSubmit={handleSaveDocument}
-              className="rounded-2xl border border-white/10 bg-[#121614] p-4 grid grid-cols-1 sm:grid-cols-3 gap-3"
+              className="rounded-2xl border border-[--brand-line] bg-white p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 shadow-md text-xs"
             >
               <select
                 value={docForm.supplierId}
                 onChange={(e) => setDocForm((f) => ({ ...f, supplierId: e.target.value }))}
-                className="h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                className="h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               >
                 {suppliers.map((s) => (
                   <option key={s.id} value={s.id}>
-                    {s.name}
+                    {safeText(s.name)}
                   </option>
                 ))}
               </select>
               <select
                 value={docForm.docType}
                 onChange={(e) => setDocForm((f) => ({ ...f, docType: e.target.value }))}
-                className="h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                className="h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               >
                 {Object.entries(DOC_TYPE_LABELS).map(([k, v]) => (
                   <option key={k} value={k}>
@@ -739,33 +742,33 @@ export default function SupplierMasterScorecardTab({
                 placeholder="Belge başlığı (ör. ISO 9001:2015 Sertifikası)"
                 value={docForm.title}
                 onChange={(e) => setDocForm((f) => ({ ...f, title: e.target.value }))}
-                className="h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                className="h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
               <input
                 required
                 placeholder="Dosya adı (ör. iso9001.pdf)"
                 value={docForm.fileName}
                 onChange={(e) => setDocForm((f) => ({ ...f, fileName: e.target.value }))}
-                className="h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                className="h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
               <input
                 type="date"
                 value={docForm.expiresAt}
                 onChange={(e) => setDocForm((f) => ({ ...f, expiresAt: e.target.value }))}
-                className="h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-xs text-white"
+                className="h-9 px-3 rounded-xl border border-[--line] bg-white text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
               <button
                 type="submit"
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] text-xs font-semibold"
+                className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold hover:opacity-95 shadow-sm transition cursor-pointer"
               >
                 Belge Kasasına Kaydet
               </button>
             </form>
           )}
 
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.07] bg-[#121614]/80">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+          <div className="overflow-x-auto rounded-2xl border border-[--line] bg-white shadow-sm">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
                 <tr>
                   <th className="py-3 px-4">Belge Başlığı</th>
                   <th className="py-3 px-3">Tedarikçi</th>
@@ -775,34 +778,34 @@ export default function SupplierMasterScorecardTab({
                   <th className="py-3 px-4 text-right">İşlem</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-[--line]">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-white/[0.02]">
+                  <tr key={doc.id} className="hover:bg-[--brand-soft]/30 transition">
                     <td className="py-3 px-4">
-                      <div className="font-medium text-zinc-100">{doc.title}</div>
-                      <div className="text-[11px] font-mono text-zinc-500">{doc.fileName}</div>
+                      <div className="font-medium text-[--text]">{safeText(doc.title)}</div>
+                      <div className="text-[11px] font-mono text-[--text-muted]">{safeText(doc.fileName)}</div>
                     </td>
-                    <td className="py-3 px-3 text-zinc-300">{doc.supplierName}</td>
+                    <td className="py-3 px-3 text-[--text-2]">{safeText(doc.supplierName)}</td>
                     <td className="py-3 px-3">
-                      <div className="text-zinc-200">{DOC_TYPE_LABELS[doc.docType] || doc.docType}</div>
-                      <div className="text-[10px] text-zinc-500">Kanal: {doc.uploadedVia}</div>
+                      <div className="text-[--text]">{DOC_TYPE_LABELS[doc.docType] || safeText(doc.docType)}</div>
+                      <div className="text-[10px] text-[--text-muted]">Kanal: {safeText(doc.uploadedVia)}</div>
                     </td>
-                    <td className="py-3 px-3 font-mono text-zinc-300">
-                      {doc.expiresAt ? new Date(doc.expiresAt).toLocaleDateString("tr-TR") : "Süresiz"}
+                    <td className="py-3 px-3 font-mono text-[--text-2] tabular-nums">
+                      {doc.expiresAt ? safeDate(doc.expiresAt) : "Süresiz"}
                     </td>
                     <td className="py-3 px-3">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
                           doc.status === "GECERLI"
-                            ? "bg-emerald-500/10 text-[#34D399] border-emerald-500/25"
+                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
                             : doc.status === "YENILEME_YAKIN"
-                              ? "bg-amber-500/10 text-amber-300 border-amber-500/25"
+                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
                               : doc.status === "SURESI_DOLMUS"
-                                ? "bg-rose-500/10 text-rose-300 border-rose-500/25"
-                                : "bg-sky-500/10 text-sky-300 border-sky-500/25"
+                                ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
+                                : "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
                         }`}
                       >
-                        {DOC_STATUS_LABELS[doc.status] || doc.status}
+                        {DOC_STATUS_LABELS[doc.status] || safeText(doc.status)}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -810,7 +813,7 @@ export default function SupplierMasterScorecardTab({
                         <button
                           type="button"
                           onClick={() => handleReviewDoc(doc.id, "ONAYLA")}
-                          className="h-7 px-2.5 rounded-lg bg-[#34D399]/15 text-[#34D399] border border-[#34D399]/30 text-[11px]"
+                          className="h-7 px-2.5 rounded-full bg-[--ok-soft] text-[--ok] border border-[--ok]/25 text-[11px] font-medium hover:bg-[--ok-soft]/80 transition cursor-pointer"
                         >
                           Onayla
                         </button>
@@ -826,20 +829,20 @@ export default function SupplierMasterScorecardTab({
 
       {/* TEDARİKÇİ EKLE/DÜZENLE MODAL */}
       {editingSupplier && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[--navy]/40 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleSaveSupplier}
-            className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#101412] p-5 space-y-4 max-h-[90vh] overflow-y-auto"
+            className="w-full max-w-2xl rounded-2xl border border-[--line] bg-white p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-xl text-[--text]"
           >
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-              <div className="font-semibold text-white text-sm flex items-center gap-2">
-                <Building2 className="size-4 text-[#34D399]" />
-                {editingSupplier.isNew ? "Yeni Tedarikçi Kartı Oluştur" : `Tedarikçi Düzenle: ${supplierForm.name}`}
+            <div className="flex items-center justify-between border-b border-[--line] pb-3">
+              <div className="font-semibold text-[--text] text-sm flex items-center gap-2">
+                <Building2 className="size-4 text-[--brand]" />
+                {editingSupplier.isNew ? "Yeni Tedarikçi Kartı Oluştur" : `Tedarikçi Düzenle: ${safeText(supplierForm.name)}`}
               </div>
               <button
                 type="button"
                 onClick={() => setEditingSupplier(null)}
-                className="text-xs text-zinc-400 hover:text-white"
+                className="text-xs text-[--text-muted] hover:text-[--text]"
               >
                 Kapat
               </button>
@@ -847,38 +850,38 @@ export default function SupplierMasterScorecardTab({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="text-zinc-400">Tedarikçi Kodu</label>
+                <label className="text-[--text-muted]">Tedarikçi Kodu</label>
                 <input
                   value={supplierForm.code}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, code: e.target.value }))}
                   placeholder="Boş bırakılırsa otomatik üretilir"
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">Ticari Unvan *</label>
+                <label className="text-[--text-muted]">Ticari Unvan *</label>
                 <input
                   required
                   value={supplierForm.name}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, name: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">GS1 GLN-13 Numarası (Mod-10 Doğrulamalı)</label>
+                <label className="text-[--text-muted]">GS1 GLN-13 Numarası (Mod-10 Doğrulamalı)</label>
                 <input
                   value={supplierForm.glnNumber}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, glnNumber: e.target.value }))}
                   placeholder="13 haneli GLN kodu"
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white font-mono"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] font-mono focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">Kategori</label>
+                <label className="text-[--text-muted]">Kategori</label>
                 <select
                   value={supplierForm.category}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, category: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 >
                   {Object.entries(SUPPLIER_CATEGORY_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>
@@ -888,11 +891,11 @@ export default function SupplierMasterScorecardTab({
                 </select>
               </div>
               <div>
-                <label className="text-zinc-400">Kritiklik Seviyesi</label>
+                <label className="text-[--text-muted]">Kritiklik Seviyesi</label>
                 <select
                   value={supplierForm.criticalityLevel}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, criticalityLevel: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 >
                   {Object.entries(SUPPLIER_CRITICALITY_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>
@@ -902,11 +905,11 @@ export default function SupplierMasterScorecardTab({
                 </select>
               </div>
               <div>
-                <label className="text-zinc-400">Onay / Yönetişim Durumu</label>
+                <label className="text-[--text-muted]">Onay / Yönetişim Durumu</label>
                 <select
                   value={supplierForm.approvalStatus}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, approvalStatus: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 >
                   {Object.entries(SUPPLIER_APPROVAL_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>
@@ -917,66 +920,66 @@ export default function SupplierMasterScorecardTab({
               </div>
               {supplierForm.approvalStatus === "KARALISTE" && (
                 <div className="sm:col-span-2">
-                  <label className="text-rose-300 font-medium">Kara Liste Gerekçesi (Zorunlu) *</label>
+                  <label className="text-[--bad] font-medium">Kara Liste Gerekçesi (Zorunlu) *</label>
                   <input
                     required
                     value={supplierForm.blacklistedReason}
                     onChange={(e) => setSupplierForm((f) => ({ ...f, blacklistedReason: e.target.value }))}
                     placeholder="Örn: Tekrarlayan soğuk zincir ihlali ve kalite reddi"
-                    className="mt-1 w-full h-9 px-3 rounded-xl border border-rose-500/40 bg-[#0A0D0C] text-white"
+                    className="mt-1 w-full h-9 px-3 rounded-xl border border-[--bad]/40 bg-white text-[--bad] focus:outline-none"
                   />
                 </div>
               )}
               <div>
-                <label className="text-zinc-400">Ortalama Termin (Gün)</label>
+                <label className="text-[--text-muted]">Ortalama Termin (Gün)</label>
                 <input
                   type="number"
                   min={1}
                   value={supplierForm.leadTimeDays}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, leadTimeDays: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">Ödeme Vadesi (Gün)</label>
+                <label className="text-[--text-muted]">Ödeme Vadesi (Gün)</label>
                 <input
                   type="number"
                   min={0}
                   value={supplierForm.paymentTermsDays}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, paymentTermsDays: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">Yetkili Kişi</label>
+                <label className="text-[--text-muted]">Yetkili Kişi</label>
                 <input
                   value={supplierForm.contactPerson}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, contactPerson: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="text-zinc-400">E-Posta</label>
+                <label className="text-[--text-muted]">E-Posta</label>
                 <input
                   value={supplierForm.email}
                   onChange={(e) => setSupplierForm((f) => ({ ...f, email: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.08]">
+            <div className="flex justify-end gap-2 pt-2 border-t border-[--line]">
               <button
                 type="button"
                 onClick={() => setEditingSupplier(null)}
-                className="h-9 px-4 rounded-xl border border-white/10 text-xs text-zinc-300"
+                className="h-9 px-4 rounded-full border border-[--line] text-xs text-[--text-2] hover:bg-[--muted-bg] transition cursor-pointer"
               >
                 Vazgeç
               </button>
               <button
                 type="submit"
                 disabled={savingSupplier}
-                className="h-9 px-4 rounded-xl bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold"
+                className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold shadow-sm transition cursor-pointer"
               >
                 {savingSupplier ? "Kaydediliyor..." : "Tedarikçiyi Kaydet"}
               </button>
@@ -987,79 +990,79 @@ export default function SupplierMasterScorecardTab({
 
       {/* KATALOG ÜRÜN BAĞLAMA MODAL */}
       {linkModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-[--navy]/40 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={handleSaveItemLink}
-            className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#101412] p-5 space-y-4 text-xs"
+            className="w-full max-w-lg rounded-2xl border border-[--line] bg-white p-5 space-y-4 text-xs shadow-xl text-[--text]"
           >
-            <div className="flex justify-between items-center border-b border-white/10 pb-2.5">
-              <span className="font-semibold text-white text-sm">Tedarikçi-Ürün Katalog Bağlantısı</span>
-              <button type="button" onClick={() => setLinkModalOpen(false)} className="text-zinc-400">
+            <div className="flex justify-between items-center border-b border-[--line] pb-2.5">
+              <span className="font-semibold text-[--text] text-sm">Tedarikçi-Ürün Katalog Bağlantısı</span>
+              <button type="button" onClick={() => setLinkModalOpen(false)} className="text-[--text-muted] hover:text-[--text]">
                 Kapat
               </button>
             </div>
             <div className="space-y-3">
               <div>
-                <label className="text-zinc-400">Onaylı Tedarikçi</label>
+                <label className="text-[--text-muted]">Onaylı Tedarikçi</label>
                 <select
                   value={linkForm.supplierId}
                   onChange={(e) => setLinkForm((f) => ({ ...f, supplierId: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 >
                   {suppliers
                     .filter((s) => s.approvalStatus === "ONAYLI" && s.isActive)
                     .map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.name} ({s.code})
+                        {safeText(s.name)} ({safeText(s.code)})
                       </option>
                     ))}
                 </select>
               </div>
               <div>
-                <label className="text-zinc-400">Stok Kalemi</label>
+                <label className="text-[--text-muted]">Stok Kalemi</label>
                 <select
                   value={linkForm.itemId}
                   onChange={(e) => setLinkForm((f) => ({ ...f, itemId: e.target.value }))}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                 >
                   {items.map((it) => (
                     <option key={it.id} value={it.id}>
-                      {it.sku} — {it.name}
+                      {safeText(it.sku)} — {safeText(it.name)}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="text-zinc-400">Birim Fiyat (₺)</label>
+                  <label className="text-[--text-muted]">Birim Fiyat (₺)</label>
                   <input
                     type="number"
                     step="0.01"
                     value={linkForm.unitCost}
                     onChange={(e) => setLinkForm((f) => ({ ...f, unitCost: e.target.value }))}
-                    className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                    className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400">MOQ</label>
+                  <label className="text-[--text-muted]">MOQ</label>
                   <input
                     type="number"
                     value={linkForm.moq}
                     onChange={(e) => setLinkForm((f) => ({ ...f, moq: e.target.value }))}
-                    className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                    className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400">Termin (Gün)</label>
+                  <label className="text-[--text-muted]">Termin (Gün)</label>
                   <input
                     type="number"
                     value={linkForm.leadTimeDays}
                     onChange={(e) => setLinkForm((f) => ({ ...f, leadTimeDays: e.target.value }))}
-                    className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                    className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
                   />
                 </div>
               </div>
-              <label className="flex items-center gap-2 text-zinc-300">
+              <label className="flex items-center gap-2 text-[--text-2]">
                 <input
                   type="checkbox"
                   checked={linkForm.isPrimary}
@@ -1068,10 +1071,10 @@ export default function SupplierMasterScorecardTab({
                 Birincil tedarikçi olarak işaretle
               </label>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-2 pt-2 border-t border-[--line]">
               <button
                 type="submit"
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+                className="h-9 px-5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
               >
                 Bağlantıyı Kaydet
               </button>

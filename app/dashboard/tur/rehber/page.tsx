@@ -228,12 +228,12 @@ export default function TourGuideMobilePage() {
   const isRestricted = Boolean(data?.isRestrictedGuide);
 
   return (
-    <div className="min-h-screen bg-[#080A09] p-4 text-zinc-100">
+    <div className="min-h-screen bg-[#F6F8FB] p-4 text-zinc-100">
       <div className="mx-auto max-w-3xl space-y-4">
-        <div className="rounded-2xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-2xl border border-[--line] bg-[white] p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5 text-[#34D399]" />
+              <Smartphone className="h-5 w-5 text-[#1267E6]" />
               <div>
                 <h1 className="text-lg font-bold text-white">Rehber & Şoför Mobil Saha Ekranı</h1>
                 <p className="text-[11px] text-zinc-400">
@@ -256,7 +256,7 @@ export default function TourGuideMobilePage() {
                 onClick={() => setSimulatedOffline((v) => !v)}
                 className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${
                   effectiveOnline
-                    ? 'border-emerald-500/35 bg-emerald-500/15 text-[#34D399]'
+                    ? 'border-[--brand]/35 bg-[--brand]/15 text-[#1267E6]'
                     : 'border-amber-500/40 bg-amber-500/20 text-amber-300'
                 }`}
               >
@@ -283,7 +283,7 @@ export default function TourGuideMobilePage() {
               type="button"
               disabled={syncing || !effectiveOnline}
               onClick={handleSync}
-              className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-1.5 font-semibold text-[#080A09] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 font-semibold text-[#F6F8FB] disabled:opacity-50"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
               Senkronize Et
@@ -292,7 +292,7 @@ export default function TourGuideMobilePage() {
         )}
 
         {/* Tur Seçimi */}
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/[0.08] bg-[#111513] p-3">
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[--line] bg-[white] p-3">
           <select
             value={activeTour?.id || ''}
             onChange={(e) => setSelectedTourId(e.target.value)}
@@ -307,7 +307,7 @@ export default function TourGuideMobilePage() {
           {activeTour && (
             <a
               href={`/api/tur?section=manifesto_pdf&tourId=${encodeURIComponent(activeTour.id)}`}
-              className="flex items-center gap-1 rounded-lg bg-emerald-500/15 px-3 py-2 text-xs font-medium text-[#34D399]"
+              className="flex items-center gap-1 rounded-lg bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[#1267E6]"
             >
               <Download className="h-3.5 w-3.5" /> Manifesto PDF
             </a>
@@ -316,7 +316,7 @@ export default function TourGuideMobilePage() {
 
         {/* Yolcu Listesi & Tek Tıkla Yoklama */}
         {loading && !data ? (
-          <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-8 text-center text-xs text-zinc-400">
+          <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
             Tur yolcu listesi yükleniyor...
           </div>
         ) : activeTour ? (
@@ -325,11 +325,11 @@ export default function TourGuideMobilePage() {
               {(activeTour.passengers || []).map((p: any) => (
                 <div
                   key={p.id}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.08] bg-[#111513] p-3"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[--line] bg-[white] p-3"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-xs font-bold text-[#34D399]">
+                      <span className="rounded bg-[--brand]/20 px-2 py-0.5 font-mono text-xs font-bold text-[#1267E6]">
                         K:{p.seatNumber || '-'}
                       </span>
                       <strong className="text-sm text-white">{p.fullName}</strong>
@@ -341,7 +341,7 @@ export default function TourGuideMobilePage() {
                   <div className="flex items-center gap-1.5">
                     <span
                       className={`rounded-full border px-2 py-0.5 text-[10px] ${
-                        TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-white/10'
+                        TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]'
                       }`}
                     >
                       {TOUR_BOARDING_STATUS_LABELS[p.boardingStatus] || p.boardingStatus}
@@ -349,7 +349,7 @@ export default function TourGuideMobilePage() {
                     <button
                       type="button"
                       onClick={() => handleToggleBoarding(p, 'BOARDED')}
-                      className="rounded-lg bg-[#34D399] px-2.5 py-1.5 text-xs font-semibold text-[#080A09]"
+                      className="rounded-lg bg-[#1267E6] px-2.5 py-1.5 text-xs font-semibold text-[#F6F8FB]"
                     >
                       Bindi
                     </button>
@@ -369,9 +369,9 @@ export default function TourGuideMobilePage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <form
                 onSubmit={handleFieldCollection}
-                className="space-y-2.5 rounded-xl border border-emerald-500/30 bg-[#111513] p-4"
+                className="space-y-2.5 rounded-xl border border-[--brand-line] bg-[white] p-4"
               >
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#34D399]">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1267E6]">
                   <CreditCard className="h-4 w-4" /> Saha Ödeme Tahsilatı
                 </div>
                 <select
@@ -408,7 +408,7 @@ export default function TourGuideMobilePage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-[#34D399] py-2 text-xs font-semibold text-[#080A09]"
+                  className="w-full rounded-lg bg-[#1267E6] py-2 text-xs font-semibold text-[#F6F8FB]"
                 >
                   Tahsilatı Kaydet
                 </button>
@@ -416,7 +416,7 @@ export default function TourGuideMobilePage() {
 
               <form
                 onSubmit={handleSaveEmergencyNote}
-                className="space-y-2.5 rounded-xl border border-amber-500/30 bg-[#111513] p-4"
+                className="space-y-2.5 rounded-xl border border-amber-500/30 bg-[white] p-4"
               >
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300">
                   <AlertTriangle className="h-4 w-4" /> Acil Saha Notu / Operasyon Bildirimi
@@ -431,7 +431,7 @@ export default function TourGuideMobilePage() {
                 />
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-amber-400 py-2 text-xs font-semibold text-[#080A09]"
+                  className="w-full rounded-lg bg-amber-400 py-2 text-xs font-semibold text-[#F6F8FB]"
                 >
                   Saha Notunu Kaydet
                 </button>
@@ -439,7 +439,7 @@ export default function TourGuideMobilePage() {
             </div>
           </>
         ) : (
-          <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-8 text-center text-xs text-zinc-400">
+          <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
             Atanmış aktif tur bulunmuyor.
           </div>
         )}

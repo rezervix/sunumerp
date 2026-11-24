@@ -27,12 +27,12 @@ interface MapConfig {
 }
 
 const STOP_MARKER_COLORS: Record<string, string> = {
-  BEKLIYOR: '#94A3B8',
-  YOLDA: '#38BDF8',
-  VARISTA: '#FBBF24',
-  TESLIM_EDILDI: '#34D399',
-  KISMI_TESLIM: '#FBBF24',
-  TESLIM_EDILEMEDI: '#F43F5E',
+  BEKLIYOR: '#5B6B82',
+  YOLDA: '#1267E6',
+  VARISTA: '#9A5B00',
+  TESLIM_EDILDI: '#0B7A3E',
+  KISMI_TESLIM: '#9A5B00',
+  TESLIM_EDILEMEDI: '#C42B31',
 };
 
 export function DispatchRouteMap({
@@ -88,19 +88,19 @@ export function DispatchRouteMap({
             tile.height = size.y;
             const ctx = tile.getContext('2d');
             if (ctx) {
-              ctx.fillStyle = '#0B100E';
+              ctx.fillStyle = '#F6F8FB';
               ctx.fillRect(0, 0, size.x, size.y);
-              ctx.strokeStyle = 'rgba(52, 211, 153, 0.08)';
+              ctx.strokeStyle = 'rgba(18, 103, 230, 0.08)';
               ctx.lineWidth = 1;
               ctx.strokeRect(0, 0, size.x, size.y);
-              ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+              ctx.strokeStyle = 'rgba(11, 27, 51, 0.04)';
               ctx.beginPath();
               ctx.moveTo(size.x / 2, 0);
               ctx.lineTo(size.x / 2, size.y);
               ctx.moveTo(0, size.y / 2);
-              ctx.lineTo(size.x, size.y / 2);
+              ctx.lineTo(size.x / 2, size.y);
               ctx.stroke();
-              ctx.fillStyle = 'rgba(148, 163, 184, 0.25)';
+              ctx.fillStyle = 'rgba(91, 107, 130, 0.45)';
               ctx.font = '10px monospace';
               ctx.fillText(`Z${coords.z} (${coords.x},${coords.y})`, 8, 16);
             }
@@ -134,7 +134,7 @@ export function DispatchRouteMap({
 
     if (polyline && polyline.length > 1) {
       L.polyline(polyline, {
-        color: '#34D399',
+        color: '#1267E6',
         weight: 3.5,
         opacity: 0.9,
       }).addTo(layerGroup);
@@ -145,7 +145,7 @@ export function DispatchRouteMap({
       const depotMarker = L.circleMarker([origin.lat, origin.lng], {
         radius: 9,
         color: '#FFFFFF',
-        fillColor: '#10B981',
+        fillColor: '#07254A',
         fillOpacity: 1,
         weight: 2.5,
       });
@@ -158,14 +158,14 @@ export function DispatchRouteMap({
       bounds.push([s.lat, s.lng]);
       const color =
         Number(s.delayMinutes || 0) > 10 && s.status !== 'TESLIM_EDILDI'
-          ? '#F43F5E'
-          : STOP_MARKER_COLORS[s.status] || '#38BDF8';
+          ? '#C42B31'
+          : STOP_MARKER_COLORS[s.status] || '#1267E6';
       const statusTxt =
         DISPATCH_STOP_STATUS_LABELS[s.status as DispatchStopStatus] || s.status;
 
       const marker = L.circleMarker([s.lat, s.lng], {
         radius: 8,
-        color: '#0B0F0D',
+        color: '#FFFFFF',
         fillColor: color,
         fillOpacity: 0.95,
         weight: 2,
@@ -196,41 +196,41 @@ export function DispatchRouteMap({
   }, [origin?.lat, origin?.lng, stops, polyline]);
 
   return (
-    <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+    <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 space-y-3 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2 text-sm font-semibold text-white">
-          <Compass className="w-4 h-4 text-[#34D399]" />
+        <div className="flex items-center gap-2 text-sm font-semibold text-[--text]">
+          <Compass className="w-4 h-4 text-[--brand]" />
           {tripNumber ? `${tripNumber} Rota Haritası` : 'Sefer Rota Haritası'} ({stops.length} Durak)
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-[11px] text-zinc-400">
+        <div className="flex flex-wrap items-center gap-3 text-[11px] text-[--text-muted]">
           <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]" /> Depo / Teslim
+            <span className="w-2.5 h-2.5 rounded-full bg-[--ok-fill]" /> Depo / Teslim
           </span>
           <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#38BDF8]" /> Yolda
+            <span className="w-2.5 h-2.5 rounded-full bg-[--brand]" /> Yolda
           </span>
           <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FBBF24]" /> Varış / Kısmi
+            <span className="w-2.5 h-2.5 rounded-full bg-[--warn-fill]" /> Varış / Kısmi
           </span>
           <span className="inline-flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#F43F5E]" /> Gecikme / Başarısız
+            <span className="w-2.5 h-2.5 rounded-full bg-[--bad-fill]" /> Gecikme / Başarısız
           </span>
         </div>
       </div>
 
       <div
         ref={containerRef}
-        className="w-full h-[300px] rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0B100E]"
+        className="w-full h-[300px] rounded-2xl overflow-hidden border border-[--line] bg-[--page]"
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-zinc-500">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[--text-muted]">
         <span className="inline-flex items-center gap-1.5">
-          <Info className="w-3.5 h-3.5 text-zinc-400" />
+          <Info className="w-3.5 h-3.5 text-[--text-muted]" />
           {mapConfig.attribution}
         </span>
         <span className="inline-flex items-center gap-1">
-          <MapPin className="w-3 h-3 text-[#34D399]" />
-          {mapConfig.hasExternalTileConfig ? 'Harici Harita Karosu Aktif' : 'Yerleşik Koyu Koordinat Kanvası'}
+          <MapPin className="w-3 h-3 text-[--brand]" />
+          {mapConfig.hasExternalTileConfig ? 'Harici Harita Karosu Aktif' : 'Yerleşik Koordinat Kanvası'}
         </span>
       </div>
     </div>

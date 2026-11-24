@@ -37,7 +37,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="bg-[#111513]/90 backdrop-blur-2xl rounded-[24px] border border-white/10 shadow-2xl p-8 space-y-6 text-white">
+    <div className="bg-[white]/90 backdrop-blur-2xl rounded-[24px] border border-[--line] shadow-2xl p-8 space-y-6 text-white">
       <div className="lg:hidden text-center">
         <h2 className="text-xl font-bold text-white">{t.login.form.submit}</h2>
         <p className="text-xs text-zinc-400 mt-1">{t.login.subtitle}</p>
@@ -63,7 +63,7 @@ export function LoginForm() {
               value={username}
               onChange={e => setUsername(e.target.value)}
               required
-              className="pl-10 h-11 bg-white/[0.03] border-white/10 text-white placeholder:text-zinc-600 focus-visible:ring-emerald-500/50 rounded-xl text-xs"
+              className="pl-10 h-11 bg-white border-[--line] text-white placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
               placeholder="kullanici.adi"
               autoComplete="username"
             />
@@ -73,7 +73,7 @@ export function LoginForm() {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label htmlFor="password" className="text-xs font-medium text-zinc-300">{t.login.form.password}</Label>
-            <Link href="/forgot-password" className="text-xs text-emerald-400 hover:underline font-medium">
+            <Link href="/forgot-password" className="text-xs text-[--brand] hover:underline font-medium">
               {t.login.form.forgotPassword}
             </Link>
           </div>
@@ -85,7 +85,7 @@ export function LoginForm() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="pl-10 pr-10 h-11 bg-white/[0.03] border-white/10 text-white placeholder:text-zinc-600 focus-visible:ring-emerald-500/50 rounded-xl text-xs"
+              className="pl-10 pr-10 h-11 bg-white border-[--line] text-white placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
               placeholder="••••••••"
               autoComplete="current-password"
             />
@@ -103,7 +103,7 @@ export function LoginForm() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full mt-2 gap-2 h-11 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl text-xs shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all cursor-pointer disabled:opacity-50"
+          className="w-full mt-2 gap-2 h-11 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-semibold rounded-xl text-xs shadow-[0_0_20px_rgba(52,211,153,0.3)] transition-all cursor-pointer disabled:opacity-50"
           size="lg"
         >
           {loading ? (

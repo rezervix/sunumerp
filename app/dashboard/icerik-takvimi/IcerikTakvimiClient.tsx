@@ -545,7 +545,7 @@ export default function IcerikTakvimiClient() {
       </div>
 
       {/* ── KUTUSUZ ÖZET DASHBOARD ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 py-4 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 py-4 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
             <Calendar size={13} className="text-zinc-400" />
@@ -555,7 +555,7 @@ export default function IcerikTakvimiClient() {
             <span className="text-3xl font-light text-white">
               {todayStats.total}
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
               İçerik
             </span>
           </div>
@@ -600,7 +600,7 @@ export default function IcerikTakvimiClient() {
             <span className="text-3xl font-light text-white">
               {todayStats.published}
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
               Canlıda
             </span>
           </div>
@@ -775,7 +775,7 @@ function MonthView({
       </div>
 
       {/* Günler */}
-      <div className="grid grid-cols-7 gap-px bg-white/[0.06] rounded-2xl overflow-hidden border border-white/[0.06]">
+      <div className="grid grid-cols-7 gap-px bg-[--muted-bg] rounded-2xl overflow-hidden border border-[--line]">
         {days.map((day, idx) => {
           const key = formatDateKey(day)
           const dayItems = itemsByDay.get(key) || []
@@ -788,8 +788,8 @@ function MonthView({
             <div
               key={idx}
               className={[
-                "min-h-[110px] bg-[#111513]/90 p-2 cursor-pointer group transition-colors",
-                "hover:bg-white/[0.03]",
+                "min-h-[110px] bg-[white]/90 p-2 cursor-pointer group transition-colors",
+                "hover:bg-white",
                 !isCurrentMonth ? "opacity-30" : "",
               ].join(" ")}
               onClick={() => onDayClick(day)}
@@ -798,12 +798,12 @@ function MonthView({
               <div className="flex items-center justify-between mb-1.5">
                 <span className={[
                   "text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-all",
-                  isToday ? "bg-emerald-500 text-black font-bold shadow-[0_0_10px_#34D399]" : "text-zinc-400 group-hover:text-white",
+                  isToday ? "bg-[--brand] text-black font-bold shadow-[0_0_10px_#1267E6]" : "text-zinc-400 group-hover:text-white",
                 ].join(" ")}>
                   {day.getDate()}
                 </span>
                 {hasContent && (
-                  <span className="text-[9px] text-zinc-500 group-hover:text-emerald-400 transition-colors">
+                  <span className="text-[9px] text-zinc-500 group-hover:text-[--brand] transition-colors">
                     +Ekle
                   </span>
                 )}
@@ -886,14 +886,14 @@ function WeekView({
               <div
                 className={[
                   "text-center py-2 rounded-xl cursor-pointer transition-colors border",
-                  isToday ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-white/[0.02] border-white/[0.04] hover:bg-white/[0.04]",
+                  isToday ? "bg-[--brand]/10 border-[--brand-line] text-[--brand]" : "bg-[--page] border-white/[0.04] hover:bg-[--muted-bg]",
                 ].join(" ")}
                 onClick={() => onDayClick(day)}
               >
                 <div className="text-[10px] text-zinc-400">{TURKISH_DAYS[idx]}</div>
                 <div className={[
                   "text-sm font-semibold mt-0.5",
-                  isToday ? "text-emerald-400 font-bold" : "text-white",
+                  isToday ? "text-[--brand] font-bold" : "text-white",
                 ].join(" ")}>
                   {day.getDate()}
                 </div>
@@ -1027,11 +1027,11 @@ function ListView({
             <div className="flex items-center gap-3 mb-2">
               <div className={[
                 "text-sm font-medium",
-                isToday ? "text-emerald-400 font-semibold" : "text-white",
+                isToday ? "text-[--brand] font-semibold" : "text-white",
               ].join(" ")}>
                 {isToday ? "Bugün — " : ""}{dateLabel}
               </div>
-              <div className="flex-1 h-px bg-white/[0.06]" />
+              <div className="flex-1 h-px bg-[--muted-bg]" />
               <span className="text-xs text-zinc-500 font-mono">
                 {dayItems.length} içerik{dayShoots.length > 0 ? ` · ${dayShoots.length} çekim` : ""}
               </span>

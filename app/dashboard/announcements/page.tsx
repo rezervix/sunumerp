@@ -8,8 +8,8 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth/context"
 
 const targetConfig: Record<string, { label: string; icon: string; bg: string; text: string }> = {
-    all: { label: "Herkese", icon: "public", bg: "bg-emerald-500/10", text: "text-emerald-400 border border-emerald-500/20" },
-    branch: { label: "Şubelere", icon: "domain", bg: "bg-white/[0.06]", text: "text-zinc-300 border border-white/[0.08]" },
+    all: { label: "Herkese", icon: "public", bg: "bg-[--brand-soft]", text: "text-[--brand] border border-[--brand-line]" },
+    branch: { label: "Şubelere", icon: "domain", bg: "bg-white/[0.06]", text: "text-zinc-300 border border-[--line]" },
     staff: { label: "Personele", icon: "group", bg: "bg-amber-500/10", text: "text-amber-300 border border-amber-500/20" },
 }
 
@@ -92,7 +92,7 @@ export default function AnnouncementsPage() {
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
                     placeholder="Duyuru başlığı"
-                    className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white placeholder:text-zinc-500 outline-none transition-all"
+                    className="w-full px-4 py-2 bg-white border border-[--line] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] rounded-xl text-sm text-[--text] placeholder-[--text-muted] outline-none transition-all shadow-xs"
                 />
             </div>
             <div className="space-y-2">
@@ -102,7 +102,7 @@ export default function AnnouncementsPage() {
                     onChange={e => setForm({ ...form, content: e.target.value })}
                     rows={4}
                     placeholder="Duyuru metni..."
-                    className="w-full px-4 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white placeholder:text-zinc-500 outline-none transition-all resize-none"
+                    className="w-full px-4 py-2 bg-white border border-[--line] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] rounded-xl text-sm text-[--text] placeholder-[--text-muted] outline-none transition-all resize-none shadow-xs"
                 />
             </div>
             <div className="space-y-2">
@@ -110,11 +110,11 @@ export default function AnnouncementsPage() {
                 <select
                     value={form.targetType}
                     onChange={e => setForm({ ...form, targetType: e.target.value as Announcement["targetType"] })}
-                    className="w-full px-4 py-2 bg-[#111513] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm text-white outline-none transition-all"
+                    className="w-full px-4 py-2 bg-white border border-[--line] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] rounded-xl text-sm text-[--text] outline-none transition-all shadow-xs"
                 >
-                    <option value="all" className="bg-[#111513]">Herkese</option>
-                    <option value="branch" className="bg-[#111513]">Şubelere</option>
-                    <option value="staff" className="bg-[#111513]">Personele</option>
+                    <option value="all" >Herkese</option>
+                    <option value="branch" >Şubelere</option>
+                    <option value="staff" >Personele</option>
                 </select>
             </div>
         </div>
@@ -130,7 +130,7 @@ export default function AnnouncementsPage() {
                 {isSuperAdmin && (
                     <button
                         onClick={() => setIsCreateOpen(true)}
-                        className="inline-flex items-center justify-center gap-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] px-4 py-2 rounded-full text-xs font-medium transition-colors shadow-sm cursor-pointer"
+                        className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white px-4 py-2 rounded-full text-xs font-medium transition-all shadow-sm cursor-pointer"
                     >
                         <span className="material-symbols-outlined text-[16px]">add</span>
                         Yeni Duyuru
@@ -140,7 +140,7 @@ export default function AnnouncementsPage() {
 
             <div className="grid gap-4">
                 {items.length === 0 && (
-                    <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-xl p-12 text-center flex flex-col items-center justify-center text-zinc-500">
+                    <div className="bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-sm p-12 text-center flex flex-col items-center justify-center text-[--text-muted]">
                         <span className="material-symbols-outlined text-4xl mb-4 sm:text-5xl text-zinc-600">campaign</span>
                         <p className="text-sm font-medium text-zinc-300">Henüz duyuru bulunmuyor</p>
                         <p className="text-xs text-zinc-500 mt-1">Yeni bir duyuru oluşturarak tüm ekiple paylaşabilirsiniz.</p>
@@ -150,7 +150,7 @@ export default function AnnouncementsPage() {
                     const cfg = targetConfig[item.targetType]
                     const Icon = cfg.icon
                     return (
-                        <div key={item.id} className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-xl p-6 group transition-all">
+                        <div key={item.id} className="bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-sm p-6 group transition-all">
                             <div className="flex items-start justify-between gap-4 mb-4">
                                 <div className="flex items-start gap-4 flex-1">
                                     <div className={`p-3 rounded-2xl ${cfg.bg}`}>
@@ -174,7 +174,7 @@ export default function AnnouncementsPage() {
                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => openEdit(item)}
-                                            className="p-1.5 text-zinc-400 hover:text-emerald-300 hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                                            className="p-1.5 text-zinc-400 hover:text-[--brand] hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
                                             title="Düzenle"
                                         >
                                             <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -200,8 +200,8 @@ export default function AnnouncementsPage() {
             {/* Create Modal */}
             {isCreateOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+                    <div className="bg-white border border-[--line] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
                             <div>
                                 <h3 className="text-base font-medium text-white">Yeni Duyuru</h3>
                                 <p className="text-xs text-zinc-400 mt-0.5">Tüm kullanıcılara duyuru yayınlayın</p>
@@ -213,7 +213,7 @@ export default function AnnouncementsPage() {
                         <div className="px-6 flex-1 overflow-y-auto">
                             <FormContent />
                         </div>
-                        <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 mt-auto">
+                        <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsCreateOpen(false)}
                                 className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
@@ -223,7 +223,7 @@ export default function AnnouncementsPage() {
                             <button
                                 onClick={handleCreate}
                                 disabled={loading || !form.title || !form.content}
-                                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                             >
                                 {loading ? "Yayınlanıyor..." : "Yayınla"}
                             </button>
@@ -235,8 +235,8 @@ export default function AnnouncementsPage() {
             {/* Edit Modal */}
             {isEditOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div className="bg-[#111513] border border-white/[0.08] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+                    <div className="bg-white border border-[--line] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
                             <div>
                                 <h3 className="text-base font-medium text-white">Duyuruyu Düzenle</h3>
                             </div>
@@ -247,7 +247,7 @@ export default function AnnouncementsPage() {
                         <div className="px-6 flex-1 overflow-y-auto">
                             <FormContent />
                         </div>
-                        <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 mt-auto">
+                        <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsEditOpen(false)}
                                 className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
@@ -257,7 +257,7 @@ export default function AnnouncementsPage() {
                             <button
                                 onClick={handleEdit}
                                 disabled={loading}
-                                className="px-4 py-2 text-xs font-medium text-[#061811] bg-[#34D399] hover:bg-emerald-400 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                             >
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>

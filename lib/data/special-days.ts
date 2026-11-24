@@ -10,11 +10,11 @@ export type SpecialDay = {
 
 export const SPECIAL_DAYS: SpecialDay[] = [
   { id: "new-year", title: "Yılbaşı", month: 1, day: 1, isHoliday: true, color: "#EF4444" },
-  { id: "ramadan-1", title: "Ramazan Bayramı", month: 4, day: 10, isHoliday: true, color: "#10B981" },
+  { id: "ramadan-1", title: "Ramazan Bayramı", month: 4, day: 10, isHoliday: true, color: "#1267E6" },
   { id: "sov-children", title: "Ulusal Egemenlik ve Çocuk Bayramı", month: 4, day: 23, isHoliday: true, color: "#EF4444" },
   { id: "labor", title: "Emek ve Dayanışma Günü", month: 5, day: 1, isHoliday: true, color: "#3B82F6" },
   { id: "youth", title: "Atatürk'ü Anma, Gençlik ve Spor Bayramı", month: 5, day: 19, isHoliday: true, color: "#EF4444" },
-  { id: "sacrifice-1", title: "Kurban Bayramı", month: 6, day: 16, isHoliday: true, color: "#10B981" },
+  { id: "sacrifice-1", title: "Kurban Bayramı", month: 6, day: 16, isHoliday: true, color: "#1267E6" },
   { id: "democracy", title: "Demokrasi ve Milli Birlik Günü", month: 7, day: 15, isHoliday: true, color: "#EF4444" },
   { id: "victory", title: "Zafer Bayramı", month: 8, day: 30, isHoliday: true, color: "#EF4444" },
   { id: "republic", title: "Cumhuriyet Bayramı", month: 10, day: 29, isHoliday: true, color: "#EF4444" },

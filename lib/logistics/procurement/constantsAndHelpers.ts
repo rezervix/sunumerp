@@ -43,7 +43,7 @@ export const SUPPLIER_APPROVAL_LABELS: Record<string, string> = {
 }
 
 export const SUPPLIER_APPROVAL_BADGES: Record<string, string> = {
-  ONAYLI: "bg-emerald-500/10 text-[#34D399] border-emerald-500/25",
+  ONAYLI: "bg-[--brand]/10 text-[#1267E6] border-[--brand]/25",
   ASKIDA: "bg-amber-500/10 text-amber-300 border-amber-500/25",
   KARALISTE: "bg-rose-500/10 text-rose-300 border-rose-500/25",
   ADAY: "bg-zinc-500/10 text-zinc-300 border-white/[0.08]",

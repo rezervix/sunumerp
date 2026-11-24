@@ -26,7 +26,7 @@ import {
 
 const GANTT_CELL_BADGES: Record<string, { bg: string; label: string; short: string }> = {
   RENTED: {
-    bg: 'bg-emerald-500/25 text-[#34D399] border-emerald-500/40',
+    bg: 'bg-[--brand]/25 text-[#1267E6] border-[--brand-line]',
     label: 'Kirada (Teslim Edildi)',
     short: 'KİRADA',
   },
@@ -41,7 +41,7 @@ const GANTT_CELL_BADGES: Record<string, { bg: string; label: string; short: stri
     short: 'BAKIM',
   },
   AVAILABLE: {
-    bg: 'bg-white/[0.03] text-zinc-500 border-white/[0.05]',
+    bg: 'bg-white text-zinc-500 border-white/[0.05]',
     label: 'Müsait (Boş Gün)',
     short: 'BOŞ',
   },
@@ -74,14 +74,14 @@ export function RentAvailabilityGanttTab({
   return (
     <div className="space-y-4">
       {/* Filtre Çubuğu ve Renk Lejantı */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
           <div>
             <label className="block text-[10px] text-zinc-400 mb-1">Araç Sınıfı Filtresi</label>
             <select
               value={selectedClassId}
               onChange={(e) => onFilterChange({ classId: e.target.value })}
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
             >
               <option value="">Tüm Araç Sınıfları</option>
               {classes.map((cls: any) => (
@@ -97,7 +97,7 @@ export function RentAvailabilityGanttTab({
             <select
               value={selectedBranchId}
               onChange={(e) => onFilterChange({ branchId: e.target.value })}
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
             >
               <option value="">Tüm Şubeler</option>
               <option value="local-debug-branch">İstanbul Levent Merkez</option>
@@ -113,15 +113,15 @@ export function RentAvailabilityGanttTab({
               type="date"
               value={ganttStartDate}
               onChange={(e) => onFilterChange({ startDate: e.target.value })}
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
             />
           </div>
         </div>
 
         {/* Renk=Durum Lejantı */}
         <div className="flex flex-wrap items-center gap-2 text-[11px]">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-[#34D399] border border-emerald-500/30">
-            <span className="w-2 h-2 rounded-full bg-[#34D399]" /> Kirada
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[--brand]/20 text-[#1267E6] border border-[--brand-line]">
+            <span className="w-2 h-2 rounded-full bg-[#1267E6]" /> Kirada
           </span>
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30">
             <span className="w-2 h-2 rounded-full bg-sky-400" /> Rezerve
@@ -129,14 +129,14 @@ export function RentAvailabilityGanttTab({
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">
             <span className="w-2 h-2 rounded-full bg-amber-400" /> Bakımda (Kiralanamaz)
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] text-zinc-300 border border-white/[0.08]">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[--muted-bg] text-zinc-300 border border-[--line]">
             <span className="w-2 h-2 rounded-full bg-zinc-400" /> Boş / Müsait Gün
           </span>
         </div>
       </div>
 
       {/* Gantt Zaman Çizelgesi Tablosu */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 overflow-x-auto">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 overflow-x-auto">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h3 className="text-sm font-semibold text-white">
@@ -150,8 +150,8 @@ export function RentAvailabilityGanttTab({
 
         <table className="w-full text-left border-collapse min-w-[1100px]">
           <thead>
-            <tr className="border-b border-white/[0.08] text-[10px] text-zinc-400">
-              <th className="py-2.5 px-3 w-56 sticky left-0 bg-[#111513] z-10">Araç &amp; Sınıf</th>
+            <tr className="border-b border-[--line] text-[10px] text-zinc-400">
+              <th className="py-2.5 px-3 w-56 sticky left-0 bg-[white] z-10">Araç &amp; Sınıf</th>
               <th className="py-2.5 px-2 w-28 text-center">Doluluk / Boş Gün</th>
               {dateHeaders.map((dt) => {
                 const [, m, d] = dt.split('-');
@@ -165,8 +165,8 @@ export function RentAvailabilityGanttTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05] text-xs">
             {rows.map((row: any) => (
-              <tr key={row.vehicleId} className="hover:bg-white/[0.02]">
-                <td className="py-2.5 px-3 sticky left-0 bg-[#111513] z-10 border-r border-white/[0.05]">
+              <tr key={row.vehicleId} className="hover:bg-[--page]">
+                <td className="py-2.5 px-3 sticky left-0 bg-[white] z-10 border-r border-white/[0.05]">
                   <div className="font-mono font-semibold text-white flex items-center gap-1.5">
                     <span>{row.plate}</span>
                     {row.rentalStatus === 'MAINTENANCE' && (
@@ -176,7 +176,7 @@ export function RentAvailabilityGanttTab({
                     )}
                   </div>
                   <div className="text-[11px] text-zinc-400 truncate">{row.brandModel}</div>
-                  <div className="text-[10px] text-[#34D399]">{row.vehicleClassName}</div>
+                  <div className="text-[10px] text-[#1267E6]">{row.vehicleClassName}</div>
                 </td>
                 <td className="py-2 px-2 text-center font-mono">
                   <div className="text-xs font-semibold text-white">%{row.occupancyPct}</div>
@@ -220,7 +220,7 @@ export function RentAvailabilityGanttTab({
       </div>
 
       {/* Atomik Çift Rezervasyon & Bakım Çakışması Engellenen Girişimler Günlüğü */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
         <div className="flex items-center gap-2 mb-2.5">
           <ShieldAlert className="w-4 h-4 text-amber-400" />
           <h4 className="text-xs font-semibold text-white">
@@ -231,7 +231,7 @@ export function RentAvailabilityGanttTab({
           {conflictLogs.slice(0, 6).map((log: any) => (
             <div
               key={log.id}
-              className="bg-[#080A09]/80 border border-amber-500/20 rounded-xl p-3 text-xs space-y-1"
+              className="bg-[#F6F8FB]/80 border border-amber-500/20 rounded-xl p-3 text-xs space-y-1"
             >
               <div className="flex items-center justify-between">
                 <span className="font-mono font-semibold text-amber-300">{log.vehiclePlate}</span>
@@ -496,7 +496,7 @@ export function RentReservationsAndContractsTab({
     if (!ctx) return;
     isDrawingRef.current = true;
     hasDrawnSigRef.current = true;
-    ctx.strokeStyle = '#34D399';
+    ctx.strokeStyle = '#1267E6';
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.beginPath();
@@ -606,7 +606,7 @@ export function RentReservationsAndContractsTab({
   return (
     <div className="space-y-4">
       {/* Üst Filtre ve Yeni Rezervasyon Butonu */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="relative">
             <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-2.5" />
@@ -615,14 +615,14 @@ export function RentReservationsAndContractsTab({
               placeholder="Rezervasyon no, plaka, müşteri ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl pl-8 pr-3 py-1.5 text-xs text-white w-64"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl pl-8 pr-3 py-1.5 text-xs text-white w-64"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+            className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
           >
             <option value="">Tüm Durumlar ({reservations.length})</option>
             <option value="ACTIVE">Kirada / Aktif</option>
@@ -637,7 +637,7 @@ export function RentReservationsAndContractsTab({
         <button
           type="button"
           onClick={() => setShowNewModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#34D399] hover:bg-emerald-400 text-[#061811] text-xs font-semibold cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1267E6] hover:bg-[--brand] text-white text-xs font-semibold cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Yeni Kiralama Rezervasyonu
@@ -645,10 +645,10 @@ export function RentReservationsAndContractsTab({
       </div>
 
       {/* Rezervasyonlar Tablosu */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 overflow-x-auto">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[980px]">
           <thead>
-            <tr className="border-b border-white/[0.08] text-[11px] text-zinc-400">
+            <tr className="border-b border-[--line] text-[11px] text-zinc-400">
               <th className="py-2.5 px-3">Rezervasyon / Sözleşme</th>
               <th className="py-2.5 px-3">Araç &amp; Sınıf</th>
               <th className="py-2.5 px-3">Kiracı Müşteri &amp; Ek Sürücü</th>
@@ -670,11 +670,11 @@ export function RentReservationsAndContractsTab({
                 r.status === 'ACTIVE' && new Date(r.endAt).getTime() < Date.now();
 
               return (
-                <tr key={r.id} className="hover:bg-white/[0.02]">
+                <tr key={r.id} className="hover:bg-[--page]">
                   <td className="py-3 px-3">
                     <div className="font-mono font-semibold text-white">{r.reservationNo}</div>
                     {contract ? (
-                      <div className="text-[11px] text-[#34D399] font-mono">
+                      <div className="text-[11px] text-[#1267E6] font-mono">
                         {contract.contractNo} ({RENT_CONTRACT_STATUS_LABELS[contract.status as RentContractStatus] || contract.status})
                       </div>
                     ) : (
@@ -752,7 +752,7 @@ export function RentReservationsAndContractsTab({
                           setSignerName(r.customer?.name || '');
                           setActiveContractModal({ reservation: r, contract });
                         }}
-                        className="px-2.5 py-1 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-[11px] text-white cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-[--muted-bg] hover:bg-white/[0.12] text-[11px] text-white cursor-pointer"
                       >
                         Sözleşme / İmza
                       </button>
@@ -762,7 +762,7 @@ export function RentReservationsAndContractsTab({
                           <button
                             type="button"
                             onClick={() => onGoToHandoverForReservation(r.id)}
-                            className="px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-[11px] text-[#34D399] border border-emerald-500/30 cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg bg-[--brand]/20 hover:bg-[--brand]/30 text-[11px] text-[#1267E6] border border-[--brand-line] cursor-pointer"
                           >
                             {r.status === 'CONFIRMED' ? 'Teslim Formu' : 'İade Al'}
                           </button>
@@ -802,7 +802,7 @@ export function RentReservationsAndContractsTab({
                         <button
                           type="button"
                           onClick={() => handleStatusChange(r.id, 'CONFIRMED')}
-                          className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-[#34D399] text-[11px] cursor-pointer"
+                          className="px-2.5 py-1 rounded-lg bg-[--brand]/20 text-[#1267E6] text-[11px] cursor-pointer"
                         >
                           Onayla
                         </button>
@@ -831,7 +831,7 @@ export function RentReservationsAndContractsTab({
       {/* YENİ REZERVASYON MODAL */}
       {showNewModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111513] border border-white/[0.1] rounded-[20px] max-w-2xl w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-[white] border border-white/[0.1] rounded-[20px] max-w-2xl w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-white">
                 Yeni Kiralama Rezervasyonu (Atomik Çakışma &amp; Ehliyet Kontrolü)
@@ -852,7 +852,7 @@ export function RentReservationsAndContractsTab({
                   <select
                     value={newVehicleId}
                     onChange={(e) => setNewVehicleId(e.target.value)}
-                    className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
                   >
                     {rentalVehicles.map((v) => (
                       <option key={v.id} value={v.id}>
@@ -867,7 +867,7 @@ export function RentReservationsAndContractsTab({
                   <select
                     value={newCustomerId}
                     onChange={(e) => setNewCustomerId(e.target.value)}
-                    className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
                   >
                     {customers.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -883,7 +883,7 @@ export function RentReservationsAndContractsTab({
                     type="datetime-local"
                     value={newStartAt}
                     onChange={(e) => setNewStartAt(e.target.value)}
-                    className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
                     required
                   />
                 </div>
@@ -894,7 +894,7 @@ export function RentReservationsAndContractsTab({
                     type="datetime-local"
                     value={newEndAt}
                     onChange={(e) => setNewEndAt(e.target.value)}
-                    className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
                     required
                   />
                 </div>
@@ -910,8 +910,8 @@ export function RentReservationsAndContractsTab({
                         key={ex.id}
                         className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer ${
                           checked
-                            ? 'bg-emerald-500/15 border-emerald-500/40 text-white'
-                            : 'bg-[#080A09] border-white/[0.08] text-zinc-300'
+                            ? 'bg-[--brand]/15 border-[--brand-line] text-white'
+                            : 'bg-[#F6F8FB] border-[--line] text-zinc-300'
                         }`}
                       >
                         <div className="flex items-center gap-2">
@@ -926,7 +926,7 @@ export function RentReservationsAndContractsTab({
                           />
                           <span>{ex.name}</span>
                         </div>
-                        <span className="font-mono text-[#34D399]">
+                        <span className="font-mono text-[#1267E6]">
                           ₺{ex.unitPriceTry}/{ex.pricingType === 'DAILY' ? 'gün' : 'kira'}
                         </span>
                       </label>
@@ -943,7 +943,7 @@ export function RentReservationsAndContractsTab({
                     value={additionalDriverName}
                     onChange={(e) => setAdditionalDriverName(e.target.value)}
                     placeholder="Örn: Selin Arslan"
-                    className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
                   />
                 </div>
 
@@ -960,7 +960,7 @@ export function RentReservationsAndContractsTab({
                     <select
                       value={chauffeurDriverId}
                       onChange={(e) => setChauffeurDriverId(e.target.value)}
-                      className="w-full mt-1.5 bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white"
+                      className="w-full mt-1.5 bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white"
                     >
                       <option value="">Şoför Seçiniz</option>
                       {chauffeurDrivers.map((d) => (
@@ -974,7 +974,7 @@ export function RentReservationsAndContractsTab({
               </div>
 
               {/* Canlı Fiyat Özeti */}
-              <div className="bg-[#080A09] border border-emerald-500/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="bg-[#F6F8FB] border border-[--brand-line] rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <div className="text-[11px] text-zinc-400">
                     {livePricing.rentalDays} Gün ({livePricing.tierApplied} Kademe) · Günlük ₺
@@ -987,7 +987,7 @@ export function RentReservationsAndContractsTab({
                     {livePricing.depositRequiredTry.toLocaleString('tr-TR')}
                   </div>
                 </div>
-                <div className="text-base font-bold font-mono text-[#34D399]">
+                <div className="text-base font-bold font-mono text-[#1267E6]">
                   Toplam: ₺{livePricing.totalEstimatedTry.toLocaleString('tr-TR')}
                 </div>
               </div>
@@ -996,14 +996,14 @@ export function RentReservationsAndContractsTab({
                 <button
                   type="button"
                   onClick={() => setShowNewModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white/[0.06] text-zinc-300 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[--muted-bg] text-zinc-300 cursor-pointer"
                 >
                   Vazgeç
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
                 >
                   {submitting ? 'Kaydediliyor...' : 'Atomik Kontrol İle Rezervasyonu Kaydet'}
                 </button>
@@ -1016,7 +1016,7 @@ export function RentReservationsAndContractsTab({
       {/* SÜRE UZATMA MODAL */}
       {extendModalRes && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111513] border border-white/[0.1] rounded-[20px] max-w-md w-full p-5 space-y-3 text-xs">
+          <div className="bg-[white] border border-white/[0.1] rounded-[20px] max-w-md w-full p-5 space-y-3 text-xs">
             <h3 className="text-sm font-bold text-white">
               Rezervasyon Süresi Uzat — {extendModalRes.reservationNo}
             </h3>
@@ -1029,7 +1029,7 @@ export function RentReservationsAndContractsTab({
                 type="datetime-local"
                 value={extendEndAt}
                 onChange={(e) => setExtendEndAt(e.target.value)}
-                className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
               />
             </div>
             <div>
@@ -1039,14 +1039,14 @@ export function RentReservationsAndContractsTab({
                 value={extendNotes}
                 onChange={(e) => setExtendNotes(e.target.value)}
                 placeholder="Müşteri talebiyle uzatıldı"
-                className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
               />
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setExtendModalRes(null)}
-                className="px-3 py-1.5 rounded-xl bg-white/[0.06] text-zinc-300 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-[--muted-bg] text-zinc-300 cursor-pointer"
               >
                 Kapat
               </button>
@@ -1054,7 +1054,7 @@ export function RentReservationsAndContractsTab({
                 type="button"
                 disabled={submitting}
                 onClick={handleExtendReservation}
-                className="px-4 py-1.5 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+                className="px-4 py-1.5 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
               >
                 Süreyi Uzat
               </button>
@@ -1066,7 +1066,7 @@ export function RentReservationsAndContractsTab({
       {/* ARAÇ DEĞİŞTİRME / İKAME MODAL */}
       {swapModalRes && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111513] border border-white/[0.1] rounded-[20px] max-w-md w-full p-5 space-y-3 text-xs">
+          <div className="bg-[white] border border-white/[0.1] rounded-[20px] max-w-md w-full p-5 space-y-3 text-xs">
             <h3 className="text-sm font-bold text-white">
               Araç Değiştir / İkame Ata — {swapModalRes.reservationNo}
             </h3>
@@ -1075,7 +1075,7 @@ export function RentReservationsAndContractsTab({
               <select
                 value={swapNewVehicleId}
                 onChange={(e) => setSwapNewVehicleId(e.target.value)}
-                className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
               >
                 {rentalVehicles
                   .filter((v) => v.id !== swapModalRes.vehicleId)
@@ -1092,14 +1092,14 @@ export function RentReservationsAndContractsTab({
                 type="text"
                 value={swapReason}
                 onChange={(e) => setSwapReason(e.target.value)}
-                className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
               />
             </div>
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setSwapModalRes(null)}
-                className="px-3 py-1.5 rounded-xl bg-white/[0.06] text-zinc-300 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-[--muted-bg] text-zinc-300 cursor-pointer"
               >
                 Kapat
               </button>
@@ -1107,7 +1107,7 @@ export function RentReservationsAndContractsTab({
                 type="button"
                 disabled={submitting}
                 onClick={handleSwapVehicle}
-                className="px-4 py-1.5 rounded-xl bg-amber-400 text-[#061811] font-semibold cursor-pointer"
+                className="px-4 py-1.5 rounded-xl bg-amber-400 text-white font-semibold cursor-pointer"
               >
                 Aracı Değiştir
               </button>
@@ -1119,7 +1119,7 @@ export function RentReservationsAndContractsTab({
       {/* KİRALAMA SÖZLEŞMESİ, TARAYICI İMZA ALANI VE YAZDIR / PDF MODAL */}
       {activeContractModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111513] border border-white/[0.1] rounded-[20px] max-w-3xl w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs">
+          <div className="bg-[white] border border-white/[0.1] rounded-[20px] max-w-3xl w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto text-xs">
             <div className="flex items-center justify-between">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -1140,7 +1140,7 @@ export function RentReservationsAndContractsTab({
               </button>
             </div>
 
-            <pre className="bg-[#080A09] border border-white/[0.08] rounded-xl p-4 text-[11px] text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed max-h-60 overflow-y-auto">
+            <pre className="bg-[#F6F8FB] border border-[--line] rounded-xl p-4 text-[11px] text-zinc-200 whitespace-pre-wrap font-sans leading-relaxed max-h-60 overflow-y-auto">
               {activeContractModal.contract?.renderedTermsText ||
                 'Sözleşme metni rezervasyon bilgilerinden üretilmeye hazır. Aşağıdan imzalayarak sözleşmeyi oluşturabilirsiniz.'}
             </pre>
@@ -1152,11 +1152,11 @@ export function RentReservationsAndContractsTab({
                   type="text"
                   value={signerName}
                   onChange={(e) => setSignerName(e.target.value)}
-                  className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white mb-2"
+                  className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white mb-2"
                 />
                 {activeContractModal.contract?.customerSignatureDataUrl && (
-                  <div className="bg-[#080A09] border border-emerald-500/30 rounded-xl p-2">
-                    <div className="text-[10px] text-[#34D399] mb-1">Kayıtlı Dijital İmza:</div>
+                  <div className="bg-[#F6F8FB] border border-[--brand-line] rounded-xl p-2">
+                    <div className="text-[10px] text-[#1267E6] mb-1">Kayıtlı Dijital İmza:</div>
                     <img
                       src={activeContractModal.contract.customerSignatureDataUrl}
                       alt="Müşteri İmzası"
@@ -1202,7 +1202,7 @@ export function RentReservationsAndContractsTab({
                     if (t) moveSigDraw(t.clientX - rect.left, t.clientY - rect.top);
                   }}
                   onTouchEnd={endSigDraw}
-                  className="w-full bg-[#080A09] border border-dashed border-emerald-500/40 rounded-xl cursor-crosshair"
+                  className="w-full bg-[#F6F8FB] border border-dashed border-[--brand-line] rounded-xl cursor-crosshair"
                 />
               </div>
             </div>
@@ -1219,7 +1219,7 @@ export function RentReservationsAndContractsTab({
                   }
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white cursor-pointer"
                 >
-                  <FileText className="w-3.5 h-3.5 text-[#34D399]" />
+                  <FileText className="w-3.5 h-3.5 text-[#1267E6]" />
                   Yazdır / PDF Olarak Kaydet
                 </button>
               )}
@@ -1228,7 +1228,7 @@ export function RentReservationsAndContractsTab({
                 <button
                   type="button"
                   onClick={() => setActiveContractModal(null)}
-                  className="px-3.5 py-2 rounded-xl bg-white/[0.06] text-zinc-300 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-[--muted-bg] text-zinc-300 cursor-pointer"
                 >
                   Kapat
                 </button>
@@ -1236,7 +1236,7 @@ export function RentReservationsAndContractsTab({
                   type="button"
                   disabled={submitting}
                   onClick={handleGenerateOrSignContract}
-                  className="px-4 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
                 >
                   {submitting ? 'Kaydediliyor...' : 'Sözleşmeyi Üret & Dijital İmzayı Kaydet'}
                 </button>

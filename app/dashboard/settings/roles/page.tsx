@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth/context"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import { safeText } from "@/lib/utils/safe-display"
 
 interface Role {
   id: string
@@ -56,7 +57,6 @@ export default function RolesPage() {
   const [saving, setSaving] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  // Sadece super admin erişebilir
   useEffect(() => {
     if (!authLoading && !isSuperAdmin) {
       toast.error("Bu sayfaya erişim yetkiniz yok")
@@ -187,39 +187,42 @@ export default function RolesPage() {
   if (authLoading || !isSuperAdmin) return null
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="p-6 max-w-6xl mx-auto space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[--line]">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rol Yönetimi</h1>
-          <p className="text-sm text-gray-500 mt-1">Sistemdeki yetki gruplarını ve erişim sınırlarını yönetin.</p>
+          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-[--text]">Rol Yönetimi</h1>
+          <p className="text-sm text-[--text-muted] mt-1">Sistemdeki yetki gruplarını ve erişim sınırlarını yönetin.</p>
         </div>
-        <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
+        <button
+          onClick={() => handleOpenModal()}
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full text-sm font-medium transition-all shadow-sm"
+        >
           <span className="material-symbols-outlined text-[20px]">add</span>
           Yeni Rol Ekle
-        </Button>
+        </button>
       </div>
 
       {loading ? (
         <div className="flex justify-center p-12">
-          <span className="material-symbols-outlined animate-spin text-gray-400 text-4xl">progress_activity</span>
+          <span className="material-symbols-outlined animate-spin text-[--brand] text-4xl">progress_activity</span>
         </div>
       ) : roles.length === 0 ? (
-        <div className="text-center p-12 bg-[#111513]/90 rounded-[20px] border border-white/[0.06]">
-          <p className="text-zinc-500 text-sm">Henüz özel rol oluşturulmamış.</p>
+        <div className="text-center p-12 bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-sm">
+          <p className="text-[--text-muted] text-sm">Henüz özel rol oluşturulmamış.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {roles.map(role => (
-            <div key={role.id} className="bg-[#111513]/90 p-5 rounded-[20px] shadow-2xl border border-white/[0.06] flex flex-col h-full">
+            <div key={role.id} className="bg-white/80 backdrop-blur-xl p-5 rounded-[20px] shadow-sm border border-[--line] flex flex-col h-full hover:border-[--brand-line] transition-all">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="font-medium text-white text-base">{role.name}</h3>
-                  <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{role.description || "Açıklama yok"}</p>
+                  <h3 className="font-semibold text-[--navy] text-base">{safeText(role.name, "İsimsiz Rol")}</h3>
+                  <p className="text-xs text-[--text-muted] mt-1 line-clamp-2">{safeText(role.description, "Açıklama yok")}</p>
                 </div>
-                <div className="flex gap-1 shrink-0 bg-white/[0.04] p-1 rounded-full border border-white/[0.06]">
+                <div className="flex gap-1 shrink-0 bg-[--muted-bg] p-1 rounded-full border border-[--line]">
                   <button
                     onClick={() => handleOpenModal(role)}
-                    className="p-1.5 text-zinc-400 hover:text-emerald-300 transition-colors rounded-full cursor-pointer"
+                    className="p-1.5 text-[--text-muted] hover:text-[--brand] transition-colors rounded-full cursor-pointer"
                     title="Düzenle"
                   >
                     <span className="material-symbols-outlined text-[16px]">edit</span>
@@ -228,7 +231,7 @@ export default function RolesPage() {
                     <button
                       onClick={() => handleDelete(role.id)}
                       disabled={deletingId === role.id}
-                      className="p-1.5 text-zinc-400 hover:text-rose-400 transition-colors rounded-full disabled:opacity-50 cursor-pointer"
+                      className="p-1.5 text-[--text-muted] hover:text-[--bad] transition-colors rounded-full disabled:opacity-50 cursor-pointer"
                       title="Sil"
                     >
                       {deletingId === role.id
@@ -240,21 +243,21 @@ export default function RolesPage() {
                 </div>
               </div>
 
-              <div className="mt-auto pt-4 border-t border-white/[0.06]">
-                <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-2">Erişim İzinleri Özeti</p>
+              <div className="mt-auto pt-4 border-t border-[--line]">
+                <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-[--text-muted] mb-2">Erişim İzinleri Özeti</p>
                 <div className="flex flex-wrap gap-1.5">
                   {Object.keys(role.permissions || {}).slice(0, 4).map(res => (
-                    <span key={res} className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] rounded-full font-medium">
+                    <span key={res} className="px-2 py-0.5 bg-[--brand-soft] text-[--brand] border border-[--brand-line] text-[10px] rounded-full font-medium">
                       {AVAILABLE_RESOURCES.find(r => r.key === res)?.label || res}
                     </span>
                   ))}
                   {Object.keys(role.permissions || {}).length > 4 && (
-                    <span className="px-2 py-0.5 bg-white/[0.06] text-zinc-400 text-[10px] rounded-full font-medium">
+                    <span className="px-2 py-0.5 bg-[--muted-bg] text-[--text-muted] border border-[--line] text-[10px] rounded-full font-medium">
                       +{Object.keys(role.permissions || {}).length - 4} daha
                     </span>
                   )}
                   {Object.keys(role.permissions || {}).length === 0 && (
-                    <span className="text-xs text-zinc-500 italic">Hiçbir yetki yok</span>
+                    <span className="text-xs text-[--text-muted] italic">Hiçbir yetki yok</span>
                   )}
                 </div>
               </div>
@@ -265,13 +268,13 @@ export default function RolesPage() {
 
       {/* Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#111513] border border-white/[0.08] text-white w-full max-w-2xl rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
-              <h2 className="text-base font-medium text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white border border-[--line] text-[--text] w-full max-w-2xl rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-[--line] bg-[--page] flex items-center justify-between">
+              <h2 className="text-base font-semibold text-[--navy]">
                 {editingRole ? "Rolü Düzenle" : "Yeni Rol Ekle"}
               </h2>
-              <button onClick={handleCloseModal} className="text-zinc-400 hover:text-white cursor-pointer">
+              <button onClick={handleCloseModal} className="text-[--text-muted] hover:text-[--text] cursor-pointer">
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
@@ -280,21 +283,21 @@ export default function RolesPage() {
               <form id="roleForm" onSubmit={handleSave} className="space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300 mb-1">Rol Adı *</label>
+                    <label className="block text-xs font-medium text-[--text-2] mb-1">Rol Adı *</label>
                     <input
                       required
                       type="text"
-                      className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm outline-none text-white transition-all"
+                      className="w-full px-3.5 py-2 bg-white border border-[--line] focus:border-[--brand] rounded-xl text-sm outline-none text-[--text] transition-all shadow-sm"
                       value={formData.name}
                       onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       disabled={editingRole?.name === "Super Admin"}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-zinc-300 mb-1">Açıklama</label>
+                    <label className="block text-xs font-medium text-[--text-2] mb-1">Açıklama</label>
                     <textarea
                       rows={2}
-                      className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-sm outline-none resize-none text-white transition-all"
+                      className="w-full px-3.5 py-2 bg-white border border-[--line] focus:border-[--brand] rounded-xl text-sm outline-none resize-none text-[--text] transition-all shadow-sm"
                       value={formData.description}
                       onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     />
@@ -302,13 +305,13 @@ export default function RolesPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-xs font-medium uppercase tracking-[0.12em] text-zinc-400 mb-3 pb-2 border-b border-white/[0.06]">
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-[--text-muted] mb-3 pb-2 border-b border-[--line]">
                     Modül İzinleri
                   </h3>
                   <div className="space-y-3">
                     {AVAILABLE_RESOURCES.map(resource => (
-                      <div key={resource.key} className="bg-[#080A09]/60 p-4 rounded-xl border border-white/[0.06]">
-                        <div className="font-medium text-xs text-white mb-3">{resource.label}</div>
+                      <div key={resource.key} className="bg-[--page] p-4 rounded-xl border border-[--line]">
+                        <div className="font-semibold text-xs text-[--navy] mb-3">{resource.label}</div>
                         <div className="flex flex-wrap gap-5">
                           {resource.actions.map(action => {
                             const isChecked = (formData.permissions[resource.key] || []).includes(action)
@@ -320,13 +323,13 @@ export default function RolesPage() {
                                   onClick={() => handleTogglePermission(resource.key, action)}
                                   className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 ${
                                     isChecked
-                                      ? "bg-emerald-500 shadow-[0_0_10px_rgba(52,211,153,0.5)] justify-end"
-                                      : "bg-zinc-800 justify-start"
+                                      ? "bg-[--brand] justify-end"
+                                      : "bg-[--line] justify-start"
                                   }`}
                                 >
                                   <span className="size-4 rounded-full bg-white shadow-xs" />
                                 </button>
-                                <span className="text-xs text-zinc-300 capitalize">
+                                <span className="text-xs text-[--text-2] capitalize">
                                   {action === "read"
                                     ? "Görüntüle"
                                     : action === "write"
@@ -352,12 +355,12 @@ export default function RolesPage() {
               </form>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5">
-              <Button type="button" variant="outline" className="rounded-full h-9 text-xs" onClick={handleCloseModal}>İptal</Button>
+            <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5">
+              <Button type="button" variant="outline" className="rounded-full h-9 text-xs border border-[--line] text-[--text-2] bg-white hover:bg-[--muted-bg]" onClick={handleCloseModal}>İptal</Button>
               <Button
                 type="submit"
                 form="roleForm"
-                className="bg-[#34D399] text-[#061811] hover:bg-emerald-400 font-medium rounded-full h-9 text-xs"
+                className="bg-gradient-to-r from-[--brand] to-[--blue] text-white hover:opacity-90 font-medium rounded-full h-9 text-xs shadow-sm"
                 disabled={saving || editingRole?.name === "Super Admin"}
               >
                 {saving ? "Kaydediliyor..." : "Kaydet"}

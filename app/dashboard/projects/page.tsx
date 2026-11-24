@@ -165,33 +165,33 @@ export default function ProjectsPage() {
       case "completed":
       case "Tamamlandı":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Tamamlandı
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--ok-soft] text-[--ok] border border-[--ok]/20">
+            <CheckCircle2 className="w-3 h-3 text-[--ok]" /> Tamamlandı
           </span>
         )
       case "active":
       case "Devam Ediyor":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Clock className="w-3 h-3 text-emerald-400" /> Devam Ediyor
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
+            <Clock className="w-3 h-3 text-[--brand]" /> Devam Ediyor
           </span>
         )
       case "Test Aşamasında":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-            <Clock className="w-3 h-3 text-cyan-400" /> Test Aşamasında
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--brand-soft] text-[--sky] border border-[--brand-line]">
+            <Clock className="w-3 h-3 text-[--sky]" /> Test Aşamasında
           </span>
         )
       case "Planlanıyor":
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
-            <Clock className="w-3 h-3 text-purple-400" /> Planlanıyor
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--muted-bg] text-[--navy] border border-[--line]">
+            <Clock className="w-3 h-3 text-[--navy]" /> Planlanıyor
           </span>
         )
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <AlertTriangle className="w-3 h-3 text-amber-400" /> Beklemede
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--warn-soft] text-[--warn] border border-[--warn]/20">
+            <AlertTriangle className="w-3 h-3 text-[--warn]" /> Beklemede
           </span>
         )
     }
@@ -216,8 +216,8 @@ export default function ProjectsPage() {
       {/* Üst Başlık & Yeni Proje Aksiyonu */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">Projeler</h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[--text]">Projeler</h1>
+          <p className="text-xs sm:text-sm text-[--text-muted] mt-1">
             {currentBranch ? `${currentBranch.name} • Proje ve operasyonel teslimat takibi` : "Proje yönetimi ve iş takibi"}
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function ProjectsPage() {
             setFormData({ name: "", description: "", status: "active", progress: 0, startDate: "", endDate: "", customerNotes: "" })
             setIsCreateDialogOpen(true)
           }}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold text-xs sm:text-sm rounded-full shadow-[0_0_20px_rgba(52,211,153,0.25)] transition active:scale-95"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-medium text-xs sm:text-sm rounded-full shadow-sm transition active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Yeni Proje Ekle
@@ -234,43 +234,43 @@ export default function ProjectsPage() {
       </div>
 
       {/* Kutusuz (Borderless) Üst KPI Şeridi */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-4 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <FolderOpen className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <FolderOpen className="w-3.5 h-3.5 text-[--brand]" />
             Toplam Proje
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1 tabular-nums">
             <AnimatedNumber value={totalProjects} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <Clock className="w-3.5 h-3.5 text-emerald-400" />
-            Aktif Devam Eden
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <Clock className="w-3.5 h-3.5 text-[--brand]" />
+            Aktif Projeler
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1 tabular-nums">
             <AnimatedNumber value={activeProjects} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[--brand]" />
             Tamamlanan
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1 tabular-nums">
             <AnimatedNumber value={completedProjects} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[--brand]" />
             Ortalama İlerleme
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1 tabular-nums">
             <AnimatedNumber value={avgProgress} suffix="%" />
           </div>
         </div>
@@ -278,12 +278,12 @@ export default function ProjectsPage() {
 
       {/* Proje Kartları Izgarası */}
       {displayProjects.length === 0 ? (
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center shadow-xl">
-          <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
-            <FolderOpen className="w-6 h-6 text-zinc-400" />
+        <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-12 text-center shadow-sm">
+          <div className="w-14 h-14 bg-[--muted-bg] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[--line]">
+            <FolderOpen className="w-6 h-6 text-[--text-muted]" />
           </div>
-          <h3 className="text-base font-semibold text-white mb-1">Henüz kayıtlı proje bulunmuyor</h3>
-          <p className="text-xs text-zinc-500">Yeni bir proje ekleyerek operasyonel iş takibine başlayabilirsiniz.</p>
+          <h3 className="text-base font-semibold text-[--text] mb-1">Henüz kayıtlı proje bulunmuyor</h3>
+          <p className="text-xs text-[--text-muted]">Yeni bir proje ekleyerek operasyonel iş takibine başlayabilirsiniz.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-14 justify-items-center py-6">
@@ -329,7 +329,7 @@ export default function ProjectsPage() {
             return (
               <div key={project.id} className="flex flex-col items-center gap-3">
                 <GlassFolder
-                  tone="dark"
+                  tone="light"
                   art={artTheme}
                   seed={index * 7 + 3}
                   appearDelay={index * 90}
@@ -394,9 +394,9 @@ export default function ProjectsPage() {
                 />
 
                 {/* İlerleme Çubuğu ve Durum Rozeti (Klasör Altı Mikro Bilgi) */}
-                <div className="h-1.5 w-[300px] rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="h-1.5 w-[300px] rounded-full bg-[--line] overflow-hidden">
                   <div
-                    className="h-full bg-emerald-400 rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(52,211,153,0.4)]"
+                    className="h-full bg-[--brand] rounded-full transition-all duration-500"
                     style={{ width: `${Math.min(100, Math.max(0, project.progress || 0))}%` }}
                   />
                 </div>
@@ -411,59 +411,59 @@ export default function ProjectsPage() {
 
       {/* Yeni Proje Ekleme Modalı */}
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-white">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-[--text]">
+            <div className="px-6 py-4 border-b border-[--line] bg-[--page] flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">Yeni Proje Ekle</h3>
-                <p className="text-xs text-zinc-400">{currentBranch?.name} şubesi için yeni proje kaydı oluşturun</p>
+                <h3 className="text-base font-semibold text-[--navy]">Yeni Proje Ekle</h3>
+                <p className="text-xs text-[--text-muted]">{currentBranch?.name} şubesi için yeni proje kaydı oluşturun</p>
               </div>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+              <button onClick={() => setIsCreateDialogOpen(false)} className="text-[--text-muted] hover:text-[--text] p-1 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Proje Adı *</label>
+                <label className="text-xs font-medium text-[--text-muted]">Proje Adı *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Örn: Kurumsal ERP Dönüşümü"
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Açıklama</label>
+                <label className="text-xs font-medium text-[--text-muted]">Açıklama</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Proje hedefleri ve kapsamı..."
                   rows={2}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Müşteri Notları</label>
+                <label className="text-xs font-medium text-[--text-muted]">Müşteri Notları</label>
                 <textarea
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
                   placeholder="Müşteriye özel talepler, revizyon notları..."
                   rows={2}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Durum</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Durum</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     <option value="active">Devam Ediyor</option>
                     <option value="on_hold">Beklemede</option>
@@ -472,22 +472,22 @@ export default function ProjectsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Başlangıç Tarihi</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Başlangıç Tarihi</label>
                   <input
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Bitiş Tarihi</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Bitiş Tarihi</label>
                   <input
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
 
@@ -508,17 +508,17 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white hover:bg-[--muted-bg] rounded-full transition-colors cursor-pointer"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Ekleniyor..." : "Proje Ekle"}
               </button>
@@ -529,56 +529,56 @@ export default function ProjectsPage() {
 
       {/* Proje Düzenleme Modalı */}
       {isEditDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-white">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-[--text]">
+            <div className="px-6 py-4 border-b border-[--line] bg-[--page] flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">Proje Düzenle</h3>
-                <p className="text-xs text-zinc-400">Proje detaylarını ve tamamlanma oranını güncelleyin</p>
+                <h3 className="text-base font-semibold text-[--navy]">Proje Düzenle</h3>
+                <p className="text-xs text-[--text-muted]">Proje detaylarını ve tamamlanma oranını güncelleyin</p>
               </div>
-              <button onClick={() => setIsEditDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+              <button onClick={() => setIsEditDialogOpen(false)} className="text-[--text-muted] hover:text-[--text] p-1 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Proje Adı *</label>
+                <label className="text-xs font-medium text-[--text-muted]">Proje Adı *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Açıklama</label>
+                <label className="text-xs font-medium text-[--text-muted]">Açıklama</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={2}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Müşteri Notları</label>
+                <label className="text-xs font-medium text-[--text-muted]">Müşteri Notları</label>
                 <textarea
                   value={formData.customerNotes}
                   onChange={(e) => setFormData({ ...formData, customerNotes: e.target.value })}
                   rows={2}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Durum</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Durum</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     <option value="active">Devam Ediyor</option>
                     <option value="on_hold">Beklemede</option>
@@ -588,8 +588,8 @@ export default function ProjectsPage() {
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-medium text-zinc-400">İlerleme</label>
-                    <span className="text-xs font-mono font-medium text-emerald-400">%{formData.progress}</span>
+                    <label className="text-xs font-medium text-[--text-muted]">İlerleme</label>
+                    <span className="text-xs font-mono font-medium text-[--brand]">%{formData.progress}</span>
                   </div>
                   <input
                     type="range"
@@ -597,27 +597,27 @@ export default function ProjectsPage() {
                     max="100"
                     value={formData.progress}
                     onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
-                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-emerald-400 mt-2"
+                    className="w-full h-2 bg-[--line] rounded-lg appearance-none cursor-pointer accent-[--brand] mt-2"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Başlangıç Tarihi</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Başlangıç Tarihi</label>
                   <input
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Bitiş Tarihi</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Bitiş Tarihi</label>
                   <input
                     type="date"
                     value={formData.endDate}
                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
               </div>
@@ -638,17 +638,17 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsEditDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white hover:bg-[--muted-bg] rounded-full transition-colors cursor-pointer"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleEdit}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Güncelleniyor..." : "Güncelle"}
               </button>

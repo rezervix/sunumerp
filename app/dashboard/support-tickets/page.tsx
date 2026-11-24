@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth/context"
 import { toast } from "sonner"
 import {
-  LifeBuoy, Search, Filter, Calendar, User, Check, X, Eye, Trash2,
-  AlertCircle, ArrowRight, MessageSquare, Clock, ShieldAlert, Laptop,
-  ExternalLink, Terminal, Globe, ChevronLeft, ChevronRight, Send, Loader2,
+  LifeBuoy, Filter, Eye, Trash2,
+  AlertCircle, MessageSquare, Clock, Laptop,
+  ExternalLink, Terminal, ChevronLeft, ChevronRight, Send, Loader2,
   Layers, Bug
 } from "lucide-react"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
@@ -248,13 +248,19 @@ export default function SupportTicketsPage() {
       })
 
       if (res.ok) {
-        const commentsList = await res.json()
+        const commentData = await res.json()
         toast.success("Yorum eklendi.")
+        setSelectedTicket(prev => {
+          if (!prev) return null
+          return {
+            ...prev,
+            internalComments: [...(prev.internalComments || []), commentData]
+          }
+        })
         setNewComment("")
-        setTickets(prev => prev.map(t => t.id === selectedTicket.id ? { ...t, internalComments: commentsList } : t))
-        setSelectedTicket(prev => prev ? { ...prev, internalComments: commentsList } : null)
       } else {
-        toast.error("Yorum eklenirken hata oluştu.")
+        const err = await res.json()
+        toast.error(err.error || "Yorum eklenemedi.")
       }
     } catch (e) {
       console.error(e)
@@ -262,7 +268,7 @@ export default function SupportTicketsPage() {
     }
   }
 
-  // Delete support ticket (Soft delete)
+  // Delete ticket
   const handleDeleteTicket = async () => {
     if (!selectedTicket) return
     if (!confirm("Bu destek talebini silmek istediğinize emin misiniz?")) return
@@ -273,11 +279,13 @@ export default function SupportTicketsPage() {
       })
 
       if (res.ok) {
-        toast.success("Talep başarıyla silindi (Soft Delete).")
-        setDetailModalOpen(false)
+        toast.success("Talep silindi.")
         setTickets(prev => prev.filter(t => t.id !== selectedTicket.id))
+        setDetailModalOpen(false)
+        setSelectedTicket(null)
       } else {
-        toast.error("Silme işlemi başarısız.")
+        const err = await res.json()
+        toast.error(err.error || "Silinemedi.")
       }
     } catch (e) {
       console.error(e)
@@ -285,7 +293,6 @@ export default function SupportTicketsPage() {
     }
   }
 
-  // Dashboard Stats Calculations
   const totalOpen = tickets.filter(t => t.status === "open").length
   const totalInProgress = tickets.filter(t => t.status === "in_progress").length
   const vibeBugsCount = tickets.filter(t => t.category === "ui_bug" || t.category === "backend_error").length
@@ -297,73 +304,73 @@ export default function SupportTicketsPage() {
       {/* Title */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-            <LifeBuoy className="text-emerald-400 size-6" />
+          <h2 className="text-xl font-bold tracking-tight text-[--text] flex items-center gap-2">
+            <LifeBuoy className="text-[--brand] size-6" />
             Teknik Destek ve Hata Bildirim Talepleri
           </h2>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-[--text-muted]">
             Sistemde kullanıcıların karşılaştığı ekran hataları ve telemetri log raporları.
           </p>
         </div>
       </div>
 
       {/* Borderless KPI Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-4 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-4 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-2 text-zinc-400 mb-1">
-            <Layers className="size-4 text-zinc-500" />
+          <div className="flex items-center gap-2 text-[--text-muted] mb-1">
+            <Layers className="size-4 text-[--text-muted]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">TOPLAM TALEP</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-white tracking-tight">
+            <span className="text-4xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={totalCount} />
             </span>
-            <span className="text-[10px] text-zinc-400 font-medium px-2 py-0.5 rounded-full bg-white/[0.05]">
+            <span className="text-[10px] text-[--text-muted] font-medium px-2 py-0.5 rounded-full bg-[--muted-bg]">
               Kayıtlı
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-zinc-400 mb-1">
-            <AlertCircle className="size-4 text-emerald-400" />
+          <div className="flex items-center gap-2 text-[--text-muted] mb-1">
+            <AlertCircle className="size-4 text-[--brand]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">AÇIK TALEPLER</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-emerald-400 tracking-tight">
+            <span className="text-4xl font-light text-[--brand] tracking-tight tabular-nums">
               <AnimatedNumber value={totalOpen} />
             </span>
-            <span className="text-[10px] text-emerald-400 font-medium px-2 py-0.5 rounded-full bg-emerald-500/10">
+            <span className="text-[10px] text-[--brand] font-medium px-2 py-0.5 rounded-full bg-[--brand-soft] border border-[--brand-line]">
               Beklemede
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-zinc-400 mb-1">
-            <Clock className="size-4 text-blue-400" />
+          <div className="flex items-center gap-2 text-[--text-muted] mb-1">
+            <Clock className="size-4 text-[--sky]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">İŞLEMDEKİLER</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-blue-400 tracking-tight">
+            <span className="text-4xl font-light text-[--sky] tracking-tight tabular-nums">
               <AnimatedNumber value={totalInProgress} />
             </span>
-            <span className="text-[10px] text-blue-400 font-medium px-2 py-0.5 rounded-full bg-blue-500/10">
+            <span className="text-[10px] text-[--sky] font-medium px-2 py-0.5 rounded-full bg-[--brand-soft] border border-[--brand-line]">
               Geliştirme
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-zinc-400 mb-1">
-            <Bug className="size-4 text-amber-400" />
+          <div className="flex items-center gap-2 text-[--text-muted] mb-1">
+            <Bug className="size-4 text-[--bad]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">UI / API HATALARI</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-amber-400 tracking-tight">
+            <span className="text-4xl font-light text-[--bad] tracking-tight tabular-nums">
               <AnimatedNumber value={vibeBugsCount} />
             </span>
-            <span className="text-[10px] text-amber-400 font-medium px-2 py-0.5 rounded-full bg-amber-500/10">
+            <span className="text-[10px] text-[--bad] font-medium px-2 py-0.5 rounded-full bg-[--bad-soft] border border-[--bad]/20">
               Kritik
             </span>
           </div>
@@ -371,86 +378,86 @@ export default function SupportTicketsPage() {
       </div>
 
       {/* Filter Options */}
-      <div className="rounded-[20px] border border-white/[0.06] bg-[#111513]/90 p-5 shadow-xs space-y-4">
-        <div className="flex items-center gap-2 text-sm font-semibold text-white border-b border-white/[0.06] pb-3">
-          <Filter size={16} className="text-emerald-400" />
+      <div className="rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl p-5 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[--text] border-b border-[--line-soft] pb-3">
+          <Filter size={16} className="text-[--brand]" />
           Talepleri Filtrele
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
           {/* Status filter */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-400 font-medium">Durum</span>
+            <span className="text-xs text-[--text-muted] font-medium">Durum</span>
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1) }}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+              className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
             >
-              <option value="" className="bg-[#111513] text-white">Tümü</option>
+              <option value="">Tümü</option>
               {Object.entries(STATUS_LABELS).map(([k, v]) => (
-                <option key={k} value={k} className="bg-[#111513] text-white">{v}</option>
+                <option key={k} value={k}>{v}</option>
               ))}
             </select>
           </div>
 
           {/* Priority filter */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-400 font-medium">Öncelik</span>
+            <span className="text-xs text-[--text-muted] font-medium">Öncelik</span>
             <select
               value={priorityFilter}
               onChange={(e) => { setPriorityFilter(e.target.value); setPage(1) }}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+              className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
             >
-              <option value="" className="bg-[#111513] text-white">Tümü</option>
+              <option value="">Tümü</option>
               {Object.entries(PRIORITY_LABELS).map(([k, v]) => (
-                <option key={k} value={k} className="bg-[#111513] text-white">{v}</option>
+                <option key={k} value={k}>{v}</option>
               ))}
             </select>
           </div>
 
           {/* Category filter */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-400 font-medium">Kategori</span>
+            <span className="text-xs text-[--text-muted] font-medium">Kategori</span>
             <select
               value={categoryFilter}
               onChange={(e) => { setCategoryFilter(e.target.value); setPage(1) }}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+              className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
             >
-              <option value="" className="bg-[#111513] text-white">Tümü</option>
+              <option value="">Tümü</option>
               {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
-                <option key={k} value={k} className="bg-[#111513] text-white">{v}</option>
+                <option key={k} value={k}>{v}</option>
               ))}
             </select>
           </div>
 
           {/* Date range filters */}
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-400 font-medium">Başlangıç Tarihi</span>
+            <span className="text-xs text-[--text-muted] font-medium">Başlangıç Tarihi</span>
             <input
               type="date"
               value={dateStart}
               onChange={(e) => { setDateStart(e.target.value); setPage(1) }}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer [color-scheme:dark]"
+              className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-zinc-400 font-medium">Bitiş Tarihi</span>
+            <span className="text-xs text-[--text-muted] font-medium">Bitiş Tarihi</span>
             <input
               type="date"
               value={dateEnd}
               onChange={(e) => { setDateEnd(e.target.value); setPage(1) }}
-              className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer [color-scheme:dark]"
+              className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
             />
           </div>
         </div>
       </div>
 
       {/* Ticket List Table */}
-      <div className="rounded-[20px] border border-white/[0.06] bg-[#111513]/90 shadow-xs overflow-hidden">
+      <div className="rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="border-b border-white/[0.06] bg-white/[0.02] text-zinc-400 font-medium text-xs">
+              <tr className="border-b border-[--line] bg-[--page] text-[--text-muted] font-medium text-xs">
                 <th className="p-4 w-32">Tarih</th>
                 <th className="p-4">Bildiren</th>
                 <th className="p-4">Hata Başlığı</th>
@@ -461,44 +468,44 @@ export default function SupportTicketsPage() {
                 <th className="p-4 w-16 text-center">İncele</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[--line-soft]">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="p-12 text-center text-zinc-500">
-                    <Loader2 className="animate-spin text-emerald-400 size-8 mx-auto mb-2" />
+                  <td colSpan={8} className="p-12 text-center text-[--text-muted]">
+                    <Loader2 className="animate-spin text-[--brand] size-8 mx-auto mb-2" />
                     Talepler yükleniyor...
                   </td>
                 </tr>
               ) : tickets.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="p-12 text-center text-zinc-500">
+                  <td colSpan={8} className="p-12 text-center text-[--text-muted]">
                     Eşleşen teknik destek talebi bulunamadı.
                   </td>
                 </tr>
               ) : (
                 tickets.map((ticket) => {
                   const priorityColors: Record<string, string> = {
-                    low: "bg-zinc-800 text-zinc-300 border border-zinc-700/50",
-                    medium: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
-                    high: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-                    critical: "bg-red-500/10 text-red-400 border border-red-500/20 animate-pulse font-semibold"
+                    low: "bg-[--muted-bg] text-[--text-muted] border border-[--line]",
+                    medium: "bg-[--brand-soft] text-[--brand] border border-[--brand-line]",
+                    high: "bg-[--warn-soft] text-[--warn] border border-[--warn]/20",
+                    critical: "bg-[--bad-soft] text-[--bad] border border-[--bad]/20 font-semibold"
                   }
 
                   const statusColors: Record<string, string> = {
-                    open: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
-                    in_progress: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
-                    needs_info: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
-                    resolved: "bg-zinc-800 text-zinc-300 border border-zinc-700/50",
-                    wont_fix: "bg-zinc-800/60 text-zinc-500 border border-zinc-700/30",
-                    closed: "bg-zinc-800/40 text-zinc-500 line-through border border-zinc-700/20"
+                    open: "bg-[--brand-soft] text-[--brand] border border-[--brand-line]",
+                    in_progress: "bg-[--brand-soft] text-[--sky] border border-[--brand-line]",
+                    needs_info: "bg-[--warn-soft] text-[--warn] border border-[--warn]/20",
+                    resolved: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
+                    wont_fix: "bg-[--muted-bg] text-[--text-muted] border border-[--line]",
+                    closed: "bg-[--muted-bg] text-[--text-muted] line-through border border-[--line]"
                   }
 
                   return (
                     <tr
                       key={ticket.id}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
+                      className="hover:bg-[--muted-bg]/50 transition-colors"
                     >
-                      <td className="p-4 text-xs text-zinc-400 whitespace-nowrap">
+                      <td className="p-4 text-xs text-[--text-muted] whitespace-nowrap font-mono">
                         {new Date(ticket.createdAt).toLocaleDateString("tr-TR")} {new Date(ticket.createdAt).toLocaleTimeString("tr-TR", { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="p-4">
@@ -507,30 +514,30 @@ export default function SupportTicketsPage() {
                             <img
                               src={ticket.reporter.avatarUrl}
                               alt=""
-                              className="size-7 rounded-full object-cover border border-white/10"
+                              className="size-7 rounded-full object-cover border border-[--line]"
                             />
                           ) : (
-                            <div className="size-7 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] font-bold border border-emerald-500/20">
+                            <div className="size-7 rounded-full bg-[--brand-soft] text-[--brand] flex items-center justify-center text-[10px] font-bold border border-[--brand-line]">
                               {ticket.reporter?.fullName?.substring(0, 2).toUpperCase() || "US"}
                             </div>
                           )}
-                          <span className="font-medium text-white truncate max-w-[130px]">
+                          <span className="font-medium text-[--text] truncate max-w-[130px]">
                             {ticket.reporter?.fullName}
                           </span>
                         </div>
                       </td>
-                      <td className="p-4 font-medium text-white truncate max-w-[200px]" title={ticket.title}>
+                      <td className="p-4 font-medium text-[--text] truncate max-w-[200px]" title={ticket.title}>
                         {ticket.title}
                       </td>
                       <td className="p-4">
                         <div className="text-xs leading-normal">
-                          <span className="font-semibold text-zinc-200">{ticket.moduleName}</span>
-                          <span className="block text-zinc-500 truncate max-w-[200px]" title={ticket.pageUrl}>
+                          <span className="font-semibold text-[--text]">{ticket.moduleName}</span>
+                          <span className="block text-[--text-muted] truncate max-w-[200px]" title={ticket.pageUrl}>
                             {ticket.pageUrl}
                           </span>
                         </div>
                       </td>
-                      <td className="p-4 text-xs font-medium text-zinc-400">
+                      <td className="p-4 text-xs font-medium text-[--text-muted]">
                         {CATEGORY_LABELS[ticket.category] || ticket.category}
                       </td>
                       <td className="p-4">
@@ -546,7 +553,7 @@ export default function SupportTicketsPage() {
                       <td className="p-4 text-center">
                         <button
                           onClick={() => handleOpenDetail(ticket)}
-                          className="text-emerald-400 hover:text-emerald-300 p-2 rounded-lg hover:bg-emerald-500/10 transition-all cursor-pointer"
+                          className="text-[--brand] hover:text-[--brand-hover] p-2 rounded-lg hover:bg-[--brand-soft] transition-all cursor-pointer"
                           title="Detayları İncele"
                         >
                           <Eye size={16} />
@@ -562,23 +569,23 @@ export default function SupportTicketsPage() {
 
         {/* Table Pagination */}
         {totalPages > 1 && (
-          <div className="border-t border-white/[0.06] px-5 py-3.5 flex items-center justify-between bg-white/[0.01]">
-            <span className="text-xs text-zinc-400">
-              Toplam <span className="font-semibold text-white">{totalCount}</span> kayıttan {(page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} arası gösteriliyor.
+          <div className="border-t border-[--line] px-5 py-3.5 flex items-center justify-between bg-[--page]">
+            <span className="text-xs text-[--text-muted]">
+              Toplam <span className="font-semibold text-[--text]">{totalCount}</span> kayıttan {(page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} arası gösteriliyor.
             </span>
             <div className="flex items-center gap-2">
               <button
                 disabled={page === 1}
                 onClick={() => setPage(p => Math.max(p - 1, 1))}
-                className="p-1.5 rounded-lg border border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+                className="p-1.5 rounded-lg border border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] disabled:opacity-30 cursor-pointer"
               >
                 <ChevronLeft size={16} />
               </button>
-              <span className="text-xs font-semibold px-2 text-zinc-300">{page} / {totalPages}</span>
+              <span className="text-xs font-semibold px-2 text-[--text]">{page} / {totalPages}</span>
               <button
                 disabled={page === totalPages}
                 onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-                className="p-1.5 rounded-lg border border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white disabled:opacity-30 cursor-pointer"
+                className="p-1.5 rounded-lg border border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] disabled:opacity-30 cursor-pointer"
               >
                 <ChevronRight size={16} />
               </button>
@@ -589,30 +596,30 @@ export default function SupportTicketsPage() {
 
       {/* Ticket Details Inspector Drawer Modal */}
       {detailModalOpen && selectedTicket && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-5xl bg-[#111513] border border-white/10 rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm overflow-y-auto">
+          <div className="relative w-full max-w-5xl bg-white border border-[--line] rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-white/[0.02]">
+            <div className="flex items-center justify-between border-b border-[--line] px-6 py-4 bg-[--page]">
               <div className="flex items-center gap-3">
-                <LifeBuoy className="text-emerald-400 size-5" />
+                <LifeBuoy className="text-[--brand] size-5" />
                 <div>
-                  <h3 className="text-base font-bold text-white">Talep Detayı: {selectedTicket.title}</h3>
-                  <p className="text-xs text-zinc-400">ID: {selectedTicket.id}</p>
+                  <h3 className="text-base font-bold text-[--navy]">Talep Detayı: {selectedTicket.title}</h3>
+                  <p className="text-xs text-[--text-muted]">ID: {selectedTicket.id}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleDeleteTicket}
-                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition-colors cursor-pointer mr-2"
+                  className="text-[--bad] hover:text-[--bad] hover:bg-[--bad-soft] p-2 rounded-lg transition-colors cursor-pointer mr-2"
                   title="Talebi Sil"
                 >
                   <Trash2 size={16} />
                 </button>
                 <button
                   onClick={() => setDetailModalOpen(false)}
-                  className="text-zinc-400 hover:text-white hover:bg-white/[0.06] p-2 rounded-lg transition-colors cursor-pointer"
+                  className="text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] p-2 rounded-lg transition-colors cursor-pointer"
                 >
-                  <X size={18} />
+                  <ChevronLeft size={18} />
                 </button>
               </div>
             </div>
@@ -625,8 +632,8 @@ export default function SupportTicketsPage() {
                 
                 {/* Description Box */}
                 <div className="space-y-1.5">
-                  <span className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">Hata Açıklaması</span>
-                  <div className="border border-white/10 rounded-xl p-4 bg-white/[0.02] text-sm text-zinc-200 whitespace-pre-wrap leading-relaxed">
+                  <span className="text-xs text-[--text-muted] font-semibold uppercase tracking-wider">Hata Açıklaması</span>
+                  <div className="border border-[--line] rounded-xl p-4 bg-[--page] text-sm text-[--text] whitespace-pre-wrap leading-relaxed">
                     {selectedTicket.description}
                   </div>
                 </div>
@@ -634,8 +641,8 @@ export default function SupportTicketsPage() {
                 {/* Screenshot Box */}
                 {selectedTicket.screenshotUrl && (
                   <div className="space-y-1.5">
-                    <span className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">Hata Ekran Görüntüsü</span>
-                    <div className="border border-white/10 rounded-xl overflow-hidden bg-black/40 group relative max-h-[360px] flex items-center justify-center">
+                    <span className="text-xs text-[--text-muted] font-semibold uppercase tracking-wider">Hata Ekran Görüntüsü</span>
+                    <div className="border border-[--line] rounded-xl overflow-hidden bg-black/5 group relative max-h-[360px] flex items-center justify-center">
                       <img
                         src={selectedTicket.screenshotUrl}
                         alt="Screenshot"
@@ -645,7 +652,7 @@ export default function SupportTicketsPage() {
                         href={selectedTicket.screenshotUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="absolute bottom-3 right-3 rounded-lg bg-black/80 border border-white/20 text-white px-3 py-1.5 hover:bg-black transition-colors flex items-center gap-1.5 text-xs font-medium cursor-pointer"
+                        className="absolute bottom-3 right-3 rounded-lg bg-white/90 border border-[--line] text-[--text] px-3 py-1.5 hover:bg-white transition-colors flex items-center gap-1.5 text-xs font-medium cursor-pointer shadow-sm"
                       >
                         <ExternalLink size={12} />
                         Tam Boyut Gör
@@ -657,7 +664,7 @@ export default function SupportTicketsPage() {
                 {/* Additional Attachments */}
                 {selectedTicket.attachments && selectedTicket.attachments.length > 0 && (
                   <div className="space-y-2">
-                    <span className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">Ekler ({selectedTicket.attachments.length})</span>
+                    <span className="text-xs text-[--text-muted] font-semibold uppercase tracking-wider">Ekler ({selectedTicket.attachments.length})</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {selectedTicket.attachments.map((att) => (
                         <a
@@ -665,14 +672,14 @@ export default function SupportTicketsPage() {
                           href={att.fileUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center gap-2 p-3 border border-white/10 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-xs text-white cursor-pointer"
+                          className="flex items-center gap-2 p-3 border border-[--line] rounded-xl bg-white hover:bg-[--muted-bg] transition-colors text-xs text-[--text] cursor-pointer"
                         >
-                          <Laptop size={14} className="text-emerald-400" />
+                          <Laptop size={14} className="text-[--brand]" />
                           <div className="flex-1 truncate">
                             <p className="font-medium truncate">{att.fileName}</p>
-                            <p className="text-[10px] text-zinc-400">{(att.fileSize / 1024).toFixed(1)} KB</p>
+                            <p className="text-[10px] text-[--text-muted]">{(att.fileSize / 1024).toFixed(1)} KB</p>
                           </div>
-                          <ExternalLink size={12} className="text-zinc-500" />
+                          <ExternalLink size={12} className="text-[--text-muted]" />
                         </a>
                       ))}
                     </div>
@@ -680,25 +687,25 @@ export default function SupportTicketsPage() {
                 )}
 
                 {/* Log Section - Console & Network */}
-                <div className="space-y-4 pt-3 border-t border-white/[0.08]">
-                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Terminal size={16} className="text-emerald-400" />
+                <div className="space-y-4 pt-3 border-t border-[--line]">
+                  <h4 className="text-sm font-bold text-[--text] flex items-center gap-2">
+                    <Terminal size={16} className="text-[--brand]" />
                     Otomatik Toplanan Teknik Veriler (Log Raporları)
                   </h4>
 
                   {/* Console Logs */}
                   <div className="space-y-1.5">
-                    <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-[--text-2] flex items-center gap-1">
                       🖥️ Console Hataları ({selectedTicket.consoleLogs?.length || 0})
                     </span>
-                    <div className="rounded-xl border border-white/10 bg-[#080A09] font-mono text-[11px] text-zinc-300 p-3.5 overflow-x-auto max-h-[160px] space-y-1 scrollbar-thin">
+                    <div className="rounded-xl border border-[--line] bg-[--page] font-mono text-[11px] text-[--text-2] p-3.5 overflow-x-auto max-h-[160px] space-y-1">
                       {(!selectedTicket.consoleLogs || selectedTicket.consoleLogs.length === 0) ? (
-                        <p className="text-zinc-600 italic">Konsol hata veya uyarı kaydı bulunmuyor.</p>
+                        <p className="text-[--text-muted] italic">Konsol hata veya uyarı kaydı bulunmuyor.</p>
                       ) : (
                         selectedTicket.consoleLogs.map((log, idx) => (
                           <div key={idx} className="flex gap-2 leading-tight">
-                            <span className="text-zinc-600 select-none">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
-                            <span className={log.type === "error" ? "text-red-400 font-semibold" : "text-amber-400"}>
+                            <span className="text-[--text-muted] select-none">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
+                            <span className={log.type === "error" ? "text-[--bad] font-semibold" : "text-[--warn]"}>
                               [{log.type.toUpperCase()}]
                             </span>
                             <span className="flex-1 break-all">{log.message}</span>
@@ -710,19 +717,19 @@ export default function SupportTicketsPage() {
 
                   {/* Network Logs */}
                   <div className="space-y-1.5">
-                    <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-[--text-2] flex items-center gap-1">
                       🌐 Başarısız API İstekleri ({selectedTicket.networkLogs?.length || 0})
                     </span>
-                    <div className="rounded-xl border border-white/10 bg-[#080A09] font-mono text-[11px] text-zinc-300 p-3.5 overflow-x-auto max-h-[160px] space-y-1 scrollbar-thin">
+                    <div className="rounded-xl border border-[--line] bg-[--page] font-mono text-[11px] text-[--text-2] p-3.5 overflow-x-auto max-h-[160px] space-y-1">
                       {(!selectedTicket.networkLogs || selectedTicket.networkLogs.length === 0) ? (
-                        <p className="text-zinc-600 italic">Başarısız (4xx/5xx) API isteği bulunmuyor.</p>
+                        <p className="text-[--text-muted] italic">Başarısız (4xx/5xx) API isteği bulunmuyor.</p>
                       ) : (
                         selectedTicket.networkLogs.map((log, idx) => (
                           <div key={idx} className="flex gap-2 leading-tight">
-                            <span className="text-zinc-600 select-none">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
-                            <span className="text-red-400 font-semibold">{log.method}</span>
-                            <span className="text-zinc-500 font-semibold">({log.status === 0 ? "AĞ HATASI" : log.status})</span>
-                            <span className="flex-1 break-all text-zinc-200">{log.url}</span>
+                            <span className="text-[--text-muted] select-none">[{new Date(log.timestamp).toLocaleTimeString()}]</span>
+                            <span className="text-[--bad] font-semibold">{log.method}</span>
+                            <span className="text-[--text-muted] font-semibold">({log.status === 0 ? "AĞ HATASI" : log.status})</span>
+                            <span className="flex-1 break-all text-[--text]">{log.url}</span>
                           </div>
                         ))
                       )}
@@ -731,25 +738,25 @@ export default function SupportTicketsPage() {
 
                   {/* Browser Details */}
                   <div className="space-y-1.5">
-                    <span className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-[--text-2] flex items-center gap-1">
                       💻 Tarayıcı ve Sistem Bilgisi
                     </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 bg-white/[0.02] border border-white/10 rounded-xl text-xs">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-3.5 bg-[--page] border border-[--line] rounded-xl text-xs">
                       <div>
-                        <span className="text-zinc-500 block">Ekran Çözünürlüğü</span>
-                        <span className="font-semibold text-zinc-200">{selectedTicket.browserInfo?.screenResolution || "Bilinmiyor"}</span>
+                        <span className="text-[--text-muted] block">Ekran Çözünürlüğü</span>
+                        <span className="font-semibold text-[--text]">{selectedTicket.browserInfo?.screenResolution || "Bilinmiyor"}</span>
                       </div>
                       <div>
-                        <span className="text-zinc-500 block">Pencere Viewport</span>
-                        <span className="font-semibold text-zinc-200">{selectedTicket.browserInfo?.viewportSize || "Bilinmiyor"}</span>
+                        <span className="text-[--text-muted] block">Pencere Viewport</span>
+                        <span className="font-semibold text-[--text]">{selectedTicket.browserInfo?.viewportSize || "Bilinmiyor"}</span>
                       </div>
                       <div>
-                        <span className="text-zinc-500 block">Device Pixel Ratio</span>
-                        <span className="font-semibold text-zinc-200">{selectedTicket.browserInfo?.devicePixelRatio || 1}</span>
+                        <span className="text-[--text-muted] block">Device Pixel Ratio</span>
+                        <span className="font-semibold text-[--text]">{selectedTicket.browserInfo?.devicePixelRatio || 1}</span>
                       </div>
                       <div className="col-span-2 sm:col-span-3">
-                        <span className="text-zinc-500 block">User Agent</span>
-                        <span className="font-semibold text-zinc-200 break-all">{selectedTicket.browserInfo?.userAgent || "Bilinmiyor"}</span>
+                        <span className="text-[--text-muted] block">User Agent</span>
+                        <span className="font-semibold text-[--text] break-all">{selectedTicket.browserInfo?.userAgent || "Bilinmiyor"}</span>
                       </div>
                     </div>
                   </div>
@@ -759,27 +766,27 @@ export default function SupportTicketsPage() {
               </div>
 
               {/* Right Column (1/3 width): Actions update & comments */}
-              <div className="space-y-6 lg:border-l lg:border-white/[0.08] lg:pl-6">
+              <div className="space-y-6 lg:border-l lg:border-[--line] lg:pl-6">
                 
                 {/* Meta details */}
-                <div className="space-y-2.5 text-xs border-b border-white/[0.08] pb-4">
+                <div className="space-y-2.5 text-xs border-b border-[--line] pb-4">
                   <div>
-                    <span className="text-zinc-500 block">Bildiren Kullanıcı</span>
-                    <span className="font-bold text-sm text-white">{selectedTicket.reporter?.fullName}</span>
+                    <span className="text-[--text-muted] block">Bildiren Kullanıcı</span>
+                    <span className="font-bold text-sm text-[--navy]">{selectedTicket.reporter?.fullName}</span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block">Oluşturulma Tarihi</span>
-                    <span className="font-medium text-zinc-300">
+                    <span className="text-[--text-muted] block">Oluşturulma Tarihi</span>
+                    <span className="font-medium text-[--text-2]">
                       {new Date(selectedTicket.createdAt).toLocaleString("tr-TR")}
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-500 block">Hata Sayfa URL</span>
+                    <span className="text-[--text-muted] block">Hata Sayfa URL</span>
                     <a
                       href={selectedTicket.pageUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-emerald-400 font-semibold hover:underline truncate block max-w-[260px] flex items-center gap-1"
+                      className="text-[--brand] font-semibold hover:underline truncate block max-w-[260px] flex items-center gap-1"
                     >
                       {new URL(selectedTicket.pageUrl, typeof window !== "undefined" ? window.location.origin : undefined).pathname}
                       <ExternalLink size={10} />
@@ -789,59 +796,59 @@ export default function SupportTicketsPage() {
 
                 {/* Developer Updates Form */}
                 <form onSubmit={handleUpdateTicket} className="space-y-4">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Geliştirici Güncelleme</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[--text-muted]">Geliştirici Güncelleme</h4>
 
                   {/* Status */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-zinc-300">Durum</label>
+                    <label className="text-xs font-medium text-[--text]">Durum</label>
                     <select
                       value={ticketStatus}
                       onChange={(e) => setTicketStatus(e.target.value)}
-                      className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+                      className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
                     >
                       {Object.entries(STATUS_LABELS).map(([k, v]) => (
-                        <option key={k} value={k} className="bg-[#111513] text-white">{v}</option>
+                        <option key={k} value={k}>{v}</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Priority */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-zinc-300">Öncelik</label>
+                    <label className="text-xs font-medium text-[--text]">Öncelik</label>
                     <select
                       value={ticketPriority}
                       onChange={(e) => setTicketPriority(e.target.value)}
-                      className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+                      className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
                     >
                       {Object.entries(PRIORITY_LABELS).map(([k, v]) => (
-                        <option key={k} value={k} className="bg-[#111513] text-white">{v}</option>
+                        <option key={k} value={k}>{v}</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Assign to developer */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-zinc-300">Atanan Geliştirici</label>
+                    <label className="text-xs font-medium text-[--text]">Atanan Geliştirici</label>
                     <select
                       value={assigneeId}
                       onChange={(e) => setAssigneeId(e.target.value)}
-                      className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-xs text-white focus:outline-none focus:border-emerald-500/50 cursor-pointer"
+                      className="h-10 w-full rounded-xl border border-[--line] bg-white px-3 text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] cursor-pointer shadow-xs"
                     >
-                      <option value="" className="bg-[#111513] text-white">Atanmamış</option>
+                      <option value="">Atanmamış</option>
                       {users.map((u) => (
-                        <option key={u.id} value={u.id} className="bg-[#111513] text-white">{u.fullName} ({u.username})</option>
+                        <option key={u.id} value={u.id}>{u.fullName} ({u.username})</option>
                       ))}
                     </select>
                   </div>
 
                   {/* Resolution note */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-zinc-300">Çözüm Notu</label>
+                    <label className="text-xs font-medium text-[--text]">Çözüm Notu</label>
                     <textarea
                       rows={2}
                       value={resolutionNoteText}
                       onChange={(e) => setResolutionNoteText(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                      className="w-full rounded-xl border border-[--line] bg-white px-3 py-2 text-xs text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] shadow-xs"
                       placeholder="Hatanın nasıl giderildiğini yazın..."
                     />
                   </div>
@@ -849,7 +856,7 @@ export default function SupportTicketsPage() {
                   <button
                     type="submit"
                     disabled={updating}
-                    className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-colors cursor-pointer shadow-[0_0_20px_rgba(52,211,153,0.3)] disabled:opacity-50"
+                    className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-medium text-xs transition-all cursor-pointer shadow-sm disabled:opacity-50"
                   >
                     {updating ? (
                       <>
@@ -863,26 +870,26 @@ export default function SupportTicketsPage() {
                 </form>
 
                 {/* Internal comments / Developer notes */}
-                <div className="border-t border-white/[0.08] pt-4 space-y-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
-                    <MessageSquare size={13} className="text-emerald-400" />
+                <div className="border-t border-[--line] pt-4 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[--text-muted] flex items-center gap-1.5">
+                    <MessageSquare size={13} className="text-[--brand]" />
                     Geliştirici Notları / Yorumlar ({selectedTicket.internalComments?.length || 0})
                   </h4>
 
                   {/* Yorumlar Listesi */}
                   <div className="space-y-2 max-h-[180px] overflow-y-auto text-[11px] pr-1">
                     {(!selectedTicket.internalComments || selectedTicket.internalComments.length === 0) ? (
-                      <p className="text-zinc-600 italic text-center py-2">Dahili yorum henüz eklenmemiş.</p>
+                      <p className="text-[--text-muted] italic text-center py-2">Dahili yorum henüz eklenmemiş.</p>
                     ) : (
                       selectedTicket.internalComments.map((comment) => (
-                        <div key={comment.id} className="p-3 bg-white/[0.02] border border-white/10 rounded-xl leading-normal">
-                          <div className="flex justify-between font-bold text-white mb-1">
+                        <div key={comment.id} className="p-3 bg-[--page] border border-[--line] rounded-xl leading-normal">
+                          <div className="flex justify-between font-bold text-[--text] mb-1">
                             <span>{comment.fullName}</span>
-                            <span className="font-normal text-[9px] text-zinc-500">
+                            <span className="font-normal text-[9px] text-[--text-muted]">
                               {new Date(comment.createdAt).toLocaleDateString()} {new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
-                          <p className="text-zinc-400 break-all">{comment.comment}</p>
+                          <p className="text-[--text-2] break-all">{comment.comment}</p>
                         </div>
                       ))
                     )}
@@ -895,12 +902,12 @@ export default function SupportTicketsPage() {
                       placeholder="Yalnızca geliştiricilerin göreceği not..."
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      className="flex-1 h-9 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                      className="flex-1 h-9 rounded-xl border border-[--line] bg-white px-3 py-1 text-xs text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] shadow-xs"
                     />
                     <button
                       type="submit"
                       disabled={!newComment.trim()}
-                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black disabled:opacity-50 cursor-pointer shrink-0 transition-colors shadow-[0_0_12px_rgba(52,211,153,0.3)]"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white disabled:opacity-50 cursor-pointer shrink-0 transition-all shadow-xs"
                       title="Yorum Gönder"
                     >
                       <Send size={13} />

@@ -240,16 +240,16 @@ export function RmaCreateModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#111513] border border-white/[0.08] rounded-[24px] w-full max-w-3xl shadow-2xl overflow-hidden my-6">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-white/[0.02]">
+    <div className="fixed inset-0 z-50 bg-[#0B1B33]/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white border border-[--line] rounded-[24px] w-full max-w-3xl shadow-2xl overflow-hidden my-6 text-[--text]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[--line] bg-[--page]">
           <div className="flex items-center gap-2.5">
-            <RotateCcw className="w-5 h-5 text-[#34D399]" />
+            <RotateCcw className="w-5 h-5 text-[--brand]" />
             <div>
-              <h2 className="text-base font-semibold text-white">
+              <h2 className="text-base font-semibold text-[--text]">
                 Yeni İade Talebi (RMA) Oluştur
               </h2>
-              <p className="text-[11px] text-zinc-400">
+              <p className="text-[11px] text-[--text-muted]">
                 Omnichannel veya Çekirdek ERP siparişlerinden çok kalemli iade &amp; 14 gün süre kontrolü
               </p>
             </div>
@@ -257,7 +257,7 @@ export function RmaCreateModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-white/[0.06] cursor-pointer"
+            className="p-2 text-[--text-muted] hover:text-[--text] rounded-xl hover:bg-[--muted-bg] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -266,25 +266,25 @@ export function RmaCreateModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-5 max-h-[78vh] overflow-y-auto">
           {/* Sipariş Seçimi / Arama */}
           <div className="space-y-2.5">
-            <label className="text-xs font-medium text-zinc-300 block">
+            <label className="text-xs font-medium text-[--text-2] block">
               1. Kaynak Sipariş Seçin (E-Ticaret / ERP)
             </label>
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[--text-muted] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Sipariş No ara (ör. OMN-2026-9041 veya ORD-2026-0101)"
-                  className="w-full bg-black/40 border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-[#34D399]"
+                  className="w-full bg-[--muted-bg] border border-[--line] rounded-xl pl-9 pr-3 py-2 text-xs text-[--text] focus:outline-none focus:border-[--brand]"
                 />
               </div>
               <button
                 type="button"
                 onClick={handleLookupOrder}
                 disabled={lookupLoading}
-                className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] text-xs font-medium text-white cursor-pointer disabled:opacity-50"
+                className="px-4 py-2 rounded-xl bg-white hover:bg-[--brand-soft] border border-[--line] text-xs font-medium text-[--text] cursor-pointer disabled:opacity-50"
               >
                 {lookupLoading ? 'Aranıyor...' : 'Sipariş Bul'}
               </button>
@@ -301,19 +301,19 @@ export function RmaCreateModal({
                       onClick={() => selectOrder(ord)}
                       className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${
                         isSel
-                          ? 'bg-emerald-500/15 border-[#34D399]/50 text-white'
-                          : 'bg-black/30 border-white/[0.06] text-zinc-300 hover:bg-white/[0.05]'
+                          ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-medium'
+                          : 'bg-white border-[--line] text-[--text-2] hover:bg-[--brand-soft]/50'
                       }`}
                     >
                       <div className="flex items-center gap-1.5">
-                        <span className="font-mono font-semibold text-[#34D399]">
+                        <span className="font-mono font-semibold text-[--brand]">
                           {ord.orderNumber}
                         </span>
-                        <span className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[9px] text-zinc-300">
+                        <span className="px-1.5 py-0.5 rounded bg-[--muted-bg] text-[9px] text-[--text-muted]">
                           {ord.orderSourceType === 'ERP_ORDER' ? 'ERP' : ord.channelCode}
                         </span>
                       </div>
-                      <div className="text-zinc-400 truncate max-w-[160px] mt-0.5">
+                      <div className="text-[--text-muted] truncate max-w-[160px] mt-0.5">
                         {ord.customerName}
                       </div>
                     </button>
@@ -325,20 +325,20 @@ export function RmaCreateModal({
 
           {/* Seçilen Sipariş Kalemleri */}
           {selectedOrder && (
-            <div className="space-y-3 bg-black/30 border border-white/[0.06] rounded-2xl p-4">
+            <div className="space-y-3 bg-[--page] border border-[--line] rounded-2xl p-4">
               <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div>
-                  <span className="text-zinc-400">Müşteri: </span>
-                  <strong className="text-white">{selectedOrder.customerName}</strong>
+                  <span className="text-[--text-muted]">Müşteri: </span>
+                  <strong className="text-[--text]">{selectedOrder.customerName}</strong>
                   {selectedOrder.invoiceNo && (
-                    <span className="ml-2 text-[11px] font-mono text-zinc-400">
+                    <span className="ml-2 text-[11px] font-mono text-[--text-muted]">
                       (Fatura: {selectedOrder.invoiceNo})
                     </span>
                   )}
                 </div>
-                <span className="text-[11px] text-zinc-400">
+                <span className="text-[11px] text-[--text-muted]">
                   Teslimat:{' '}
-                  <strong className="text-zinc-200">
+                  <strong className="text-[--text]">
                     {new Date(selectedOrder.deliveredAt).toLocaleDateString('tr-TR')}
                   </strong>
                 </span>
@@ -347,7 +347,7 @@ export function RmaCreateModal({
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-left">
                   <thead>
-                    <tr className="border-b border-white/[0.06] text-[10px] uppercase text-zinc-400">
+                    <tr className="border-b border-[--line] text-[10px] uppercase text-[--text-muted]">
                       <th className="py-2 pr-3">Ürün / SKU</th>
                       <th className="py-2 px-2 text-right">Satılan</th>
                       <th className="py-2 px-2 text-right">Kalan Hak</th>
@@ -355,22 +355,22 @@ export function RmaCreateModal({
                       <th className="py-2 pl-2 text-right">İade Adedi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/[0.04]">
+                  <tbody className="divide-y divide-[--line]">
                     {selectedOrder.lines.map((line) => {
                       const elig = line.eligibility;
                       const currentQty = selectedQtyBySku[line.sku] ?? 0;
                       return (
-                        <tr key={line.sku}>
+                        <tr key={line.sku} className="hover:bg-white/60">
                           <td className="py-2.5 pr-3">
-                            <div className="font-medium text-white">{line.itemName}</div>
-                            <div className="font-mono text-[10px] text-zinc-500">
+                            <div className="font-medium text-[--text]">{line.itemName}</div>
+                            <div className="font-mono text-[10px] text-[--text-muted]">
                               {line.sku} · ₺{line.unitPrice}
                             </div>
                           </td>
-                          <td className="py-2.5 px-2 text-right font-mono text-zinc-300">
+                          <td className="py-2.5 px-2 text-right font-mono text-[--text]">
                             {line.soldQty}
                           </td>
-                          <td className="py-2.5 px-2 text-right font-mono text-[#34D399]">
+                          <td className="py-2.5 px-2 text-right font-mono text-[--brand] font-semibold">
                             {line.maxReturnableQty}
                           </td>
                           <td className="py-2.5 px-2">
@@ -378,20 +378,20 @@ export function RmaCreateModal({
                               <span
                                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${
                                   elig.isExpiringSoon
-                                    ? 'bg-amber-500/10 text-amber-300 border-amber-500/25'
-                                    : 'bg-emerald-500/10 text-[#34D399] border-emerald-500/25'
+                                    ? 'bg-[--warn-soft] text-[--warn] border-[--warn-soft]'
+                                    : 'bg-[--ok-soft] text-[--ok] border-[--ok-soft]'
                                 }`}
                               >
                                 <Clock className="w-3 h-3" />
                                 {elig.remainingDays} gün kaldı
                               </span>
                             ) : elig?.isWithinWarranty ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-sky-500/10 text-sky-300 border border-sky-500/25">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                                 <ShieldCheck className="w-3 h-3" />
                                 Garanti Kapsamında
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-rose-500/10 text-rose-300 border border-rose-500/25">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-[--bad-soft] text-[--bad] border border-[--bad-soft]">
                                 <AlertTriangle className="w-3 h-3" />
                                 Süre Dolmuş ({elig?.effectiveWindowDays || 14}g)
                               </span>
@@ -415,7 +415,7 @@ export function RmaCreateModal({
                                   [line.sku]: val,
                                 }));
                               }}
-                              className="w-20 bg-black/50 border border-white/[0.1] rounded-lg px-2 py-1 text-right font-mono text-white disabled:opacity-40"
+                              className="w-20 bg-white border border-[--line] rounded-lg px-2 py-1 text-right font-mono text-[--text] disabled:opacity-40"
                             />
                           </td>
                         </tr>
@@ -430,71 +430,71 @@ export function RmaCreateModal({
           {/* Neden Kodu, Kargo & Takip */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div className="space-y-1">
-              <label className="text-zinc-400">Standart İade Nedeni *</label>
+              <label className="text-[--text-muted]">Standart İade Nedeni *</label>
               <select
                 value={reasonCode}
                 onChange={(e) => setReasonCode(e.target.value as RmaReasonCode)}
-                className="w-full bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
               >
                 {RMA_REASON_CODES.map((code) => (
-                  <option key={code} value={code} className="bg-[#111513]">
+                  <option key={code} value={code}>
                     {RMA_REASON_LABELS[code]}
                   </option>
                 ))}
               </select>
             </div>
             <div className="space-y-1">
-              <label className="text-zinc-400">İade Kargo Firması</label>
+              <label className="text-[--text-muted]">İade Kargo Firması</label>
               <select
                 value={carrierCode}
                 onChange={(e) => setCarrierCode(e.target.value)}
-                className="w-full bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
               >
-                <option value="YURTICI" className="bg-[#111513]">Yurtiçi Kargo</option>
-                <option value="ARAS" className="bg-[#111513]">Aras Kargo</option>
-                <option value="UPS" className="bg-[#111513]">UPS Express</option>
-                <option value="MNG" className="bg-[#111513]">MNG / DHL eCommerce</option>
-                <option value="TRENDYOL_EXPRESS" className="bg-[#111513]">Trendyol Express</option>
+                <option value="YURTICI">Yurtiçi Kargo</option>
+                <option value="ARAS">Aras Kargo</option>
+                <option value="UPS">UPS Express</option>
+                <option value="MNG">MNG / DHL eCommerce</option>
+                <option value="TRENDYOL_EXPRESS">Trendyol Express</option>
               </select>
             </div>
             <div className="space-y-1">
-              <label className="text-zinc-400">İade Takip Kodu (Opsiyonel)</label>
+              <label className="text-[--text-muted]">İade Takip Kodu (Opsiyonel)</label>
               <input
                 type="text"
                 value={trackingNo}
                 onChange={(e) => setTrackingNo(e.target.value)}
                 placeholder="Örn: YK-RMA-998811"
-                className="w-full bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white font-mono"
+                className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text] font-mono"
               />
             </div>
           </div>
 
           <div className="space-y-1 text-xs">
-            <label className="text-zinc-400">Detaylı Açıklama / Müşteri Notu</label>
+            <label className="text-[--text-muted]">Detaylı Açıklama / Müşteri Notu</label>
             <input
               type="text"
               value={reasonNote}
               onChange={(e) => setReasonNote(e.target.value)}
               placeholder="Hasar durumu, eksik parça veya müşteri beyanı..."
-              className="w-full bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+              className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
             />
           </div>
 
           {/* Süre İstisna Onayı */}
           {anyLineExpiredWithoutWarranty && (
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 space-y-2.5 text-xs">
-              <div className="flex items-start gap-2 text-amber-200">
-                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="bg-[--warn-soft] border border-[--warn-soft] rounded-2xl p-4 space-y-2.5 text-xs">
+              <div className="flex items-start gap-2 text-[--warn]">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
                   <strong>Yasal / Politika İade Süresi Dolmuş:</strong> Bu sipariş için RMA açabilmek için yetkili istisna onayı ve gerekçesi zorunludur.
                 </div>
               </div>
-              <label className="flex items-center gap-2 text-white cursor-pointer">
+              <label className="flex items-center gap-2 text-[--text] cursor-pointer">
                 <input
                   type="checkbox"
                   checked={deadlineOverrideApproved}
                   onChange={(e) => setDeadlineOverrideApproved(e.target.checked)}
-                  className="rounded border-white/20"
+                  className="rounded border-[--line]"
                 />
                 Yetkili Süre İstisna Onayı Veriyorum
               </label>
@@ -505,24 +505,24 @@ export function RmaCreateModal({
                   value={deadlineOverrideReason}
                   onChange={(e) => setDeadlineOverrideReason(e.target.value)}
                   placeholder="İstisna onay gerekçesi (ör. VIP müşteri memnuniyeti / geç teslimat kanıtı)..."
-                  className="w-full bg-black/50 border border-amber-500/30 rounded-xl px-3 py-2 text-white"
+                  className="w-full bg-white border border-[--warn] rounded-xl px-3 py-2 text-[--text]"
                 />
               )}
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-white/[0.06]">
+          <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-[--line]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-zinc-300 hover:text-white cursor-pointer"
+              className="px-4 py-2 rounded-full bg-white border border-[--line] text-xs font-medium text-[--text-2] hover:bg-[--muted-bg] cursor-pointer"
             >
               Vazgeç
             </button>
             <button
               type="submit"
               disabled={submitting || selectedLinesPayload.length === 0}
-              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold cursor-pointer shadow-sm hover:opacity-95 disabled:opacity-50"
             >
               <Plus className="w-3.5 h-3.5" />
               {submitting ? 'Oluşturuluyor...' : 'RMA Belgesi Oluştur'}

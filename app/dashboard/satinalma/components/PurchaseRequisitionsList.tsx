@@ -11,6 +11,7 @@ import {
   Layers
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { safeText, safeCurrency, safeDate, safeNumber } from '@/lib/utils/safe-display';
 
 interface RequisitionLine {
   id: string;
@@ -54,7 +55,7 @@ export function PurchaseRequisitionsList({ requisitions, onUpdated }: Props) {
   const [submittingId, setSubmittingId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
 
-  const filteredRequisitions = requisitions.filter((pr) => {
+  const filteredRequisitions = (requisitions || []).filter((pr) => {
     if (filterStatus === 'ALL') return true;
     return pr.status === filterStatus;
   });
@@ -90,26 +91,26 @@ export function PurchaseRequisitionsList({ requisitions, onUpdated }: Props) {
     switch (status) {
       case 'PENDING_APPROVAL':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <Clock className="w-3 h-3 text-amber-400" /> Onay Bekliyor
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--warn-soft] text-[--warn] border border-[--warn]/20">
+            <Clock className="w-3 h-3 text-[--warn]" /> Onay Bekliyor
           </span>
         );
       case 'APPROVED_PO_SENT':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
-            <Send className="w-3 h-3 text-[#34D399]" /> Sipariş Gönderildi (PO)
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
+            <Send className="w-3 h-3 text-[--brand]" /> Sipariş Gönderildi (PO)
           </span>
         );
       case 'RECEIVED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-[#34D399] border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-[#34D399]" /> Teslim Alındı
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--ok-soft] text-[--ok] border border-[--ok]/20">
+            <CheckCircle2 className="w-3 h-3 text-[--ok]" /> Teslim Alındı
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/[0.04] text-zinc-400 border border-white/[0.06]">
-            {status}
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--muted-bg] text-[--text-muted] border border-[--line]">
+            {safeText(status)}
           </span>
         );
     }
@@ -117,13 +118,13 @@ export function PurchaseRequisitionsList({ requisitions, onUpdated }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] p-4 rounded-[20px]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white/80 backdrop-blur-xl border border-[--line] p-4 rounded-[20px] shadow-sm">
         <div>
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <FileCheck2 className="w-4 h-4 text-[#34D399]" />
+          <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+            <FileCheck2 className="w-4 h-4 text-[--brand]" />
             Satın Alma Talepleri & Sipariş Emirleri (PO)
           </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-[--text-muted] mt-0.5">
             Otomatik ROP veya manuel oluşturulan tedarikçi satın alma onayları
           </p>
         </div>
@@ -132,109 +133,126 @@ export function PurchaseRequisitionsList({ requisitions, onUpdated }: Props) {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="text-xs bg-white/[0.03] border border-white/[0.08] text-zinc-300 rounded-xl p-2 focus:outline-none"
+            className="text-xs bg-white border border-[--line] text-[--text] rounded-xl px-3 py-1.5 focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
           >
-            <option value="ALL" className="bg-[#111513] text-white">Tüm Talepler</option>
-            <option value="PENDING_APPROVAL" className="bg-[#111513] text-white">Onay Bekleyenler</option>
-            <option value="APPROVED_PO_SENT" className="bg-[#111513] text-white">Siparişe Dönüşenler</option>
+            <option value="ALL">Tüm Talepler</option>
+            <option value="PENDING_APPROVAL">Onay Bekleyenler</option>
+            <option value="APPROVED_PO_SENT">Siparişe Dönüşenler</option>
           </select>
         </div>
       </div>
 
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] overflow-hidden shadow-2xl">
+      <div className="bg-white border border-[--line] rounded-[20px] overflow-hidden shadow-sm">
         {filteredRequisitions.length === 0 ? (
-          <div className="text-center py-10 text-zinc-500 text-xs">
+          <div className="text-center py-12 text-[--text-muted] text-xs">
             Kayıtlı satın alma talebi bulunamadı.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] font-medium">
-                  <th className="py-4 px-5">Talep No / Tarih</th>
-                  <th className="py-4 px-3">Tedarikçi & Depo</th>
-                  <th className="py-4 px-3">Kalemler</th>
-                  <th className="py-4 px-3 text-center">Durum</th>
-                  <th className="py-4 px-3 text-right">Toplam Tutar</th>
-                  <th className="py-4 px-5 text-right">İşlem</th>
+                <tr className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
+                  <th className="py-3 px-4">Talep No</th>
+                  <th className="py-3 px-3">Tedarikçi Firma</th>
+                  <th className="py-3 px-3">İçerik / Kalemler</th>
+                  <th className="py-3 px-3 text-right">Tahmini Tutar</th>
+                  <th className="py-3 px-3">Kaynak & Öncelik</th>
+                  <th className="py-3 px-3">Tarih</th>
+                  <th className="py-3 px-3">Durum</th>
+                  <th className="py-3 px-4 text-right">Aksiyon</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-[--line]">
                 {filteredRequisitions.map((pr) => (
                   <tr
                     key={pr.id}
-                    className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
+                    className="hover:bg-[--brand-soft]/40 transition group"
                   >
-                    <td className="py-4 px-5">
-                      <div className="font-semibold text-white text-sm">
-                        {pr.reqNumber}
-                      </div>
-                      <div className="text-[11px] text-zinc-500 flex items-center gap-1 mt-0.5">
-                        <Calendar className="w-3 h-3 text-zinc-500" />
-                        {new Date(pr.createdAt).toLocaleDateString('tr-TR')}
-                      </div>
+                    <td className="py-3.5 px-4">
+                      <span className="font-mono font-medium text-[--brand]">
+                        {safeText(pr.reqNumber)}
+                      </span>
                     </td>
 
-                    <td className="py-4 px-3">
-                      <div className="flex items-center gap-1.5 text-white font-medium">
-                        <Building className="w-3.5 h-3.5 text-zinc-500" />
-                        <span>{pr.supplierName}</span>
+                    <td className="py-3.5 px-3">
+                      <div className="flex items-center gap-1.5 font-medium text-[--text]">
+                        <Building className="w-3.5 h-3.5 text-[--text-muted]" />
+                        {safeText(pr.supplierName, 'Tedarikçi')}
                       </div>
-                      {pr.warehouse?.name && (
-                        <div className="text-[11px] text-zinc-400 mt-0.5">
-                          {pr.warehouse.name}
-                        </div>
-                      )}
-                      {pr.notes && (
-                        <div className="text-[11px] text-zinc-500 mt-0.5 truncate max-w-xs">
-                          {pr.notes}
+                      {pr.warehouse && (
+                        <div className="text-[11px] text-[--text-muted] mt-0.5">
+                          Depo: {safeText(pr.warehouse.name)}
                         </div>
                       )}
                     </td>
 
-                    <td className="py-4 px-3">
+                    <td className="py-3.5 px-3 text-[--text-2]">
                       {pr.lines && pr.lines.length > 0 ? (
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="space-y-0.5">
                           {pr.lines.map((l) => (
-                            <span
-                              key={l.id}
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-lg text-xs font-medium text-zinc-300"
-                            >
-                              <Layers className="w-3 h-3 text-zinc-500" />
-                              <span>{l.itemName || l.item?.name || 'Ürün'}</span>
-                              <strong className="text-[#34D399] font-mono">
-                                {l.quantity} {l.unit || 'Adet'}
-                              </strong>
-                            </span>
+                            <div key={l.id} className="flex items-center gap-1.5">
+                              <span className="font-medium text-[--text]">
+                                {safeText(l.item?.name || l.itemName)}
+                              </span>
+                              <span className="text-[--text-muted] font-mono tabular-nums">
+                                ({safeNumber(l.quantity)} {safeText(l.unit, 'Adet')})
+                              </span>
+                            </div>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-zinc-600">-</span>
+                        <span className="text-[--text-muted]">—</span>
                       )}
                     </td>
 
-                    <td className="py-4 px-3 text-center">
-                      {getStatusBadge(pr.status)}
+                    <td className="py-3.5 px-3 text-right font-mono font-semibold tabular-nums text-[--text]">
+                      {safeCurrency(pr.totalAmount, pr.currency || 'TRY')}
                     </td>
 
-                    <td className="py-4 px-3 text-right">
-                      <div className="text-sm font-semibold text-white font-mono">
-                        ₺{Number(pr.totalAmount || 0).toLocaleString('tr-TR')}
+                    <td className="py-3.5 px-3">
+                      <div className="flex flex-col gap-1 items-start">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--muted-bg] text-[--text-muted] border border-[--line]">
+                          {safeText(pr.triggerSource)}
+                        </span>
+                        {pr.priority === 'CRITICAL' ? (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--bad-soft] text-[--bad] border border-[--bad]/20 font-semibold">
+                            Acil (Kritik)
+                          </span>
+                        ) : pr.priority === 'HIGH' ? (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--warn-soft] text-[--warn] border border-[--warn]/20 font-medium">
+                            Yüksek
+                          </span>
+                        ) : (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--muted-bg] text-[--text-muted]">
+                            Normal
+                          </span>
+                        )}
                       </div>
                     </td>
 
-                    <td className="py-4 px-5 text-right">
+                    <td className="py-3.5 px-3 text-[--text-muted] tabular-nums">
+                      <div className="flex items-center gap-1 text-[11px]">
+                        <Calendar className="w-3 h-3 text-[--text-muted]" />
+                        {safeDate(pr.createdAt)}
+                      </div>
+                    </td>
+
+                    <td className="py-3.5 px-3">
+                      {getStatusBadge(pr.status)}
+                    </td>
+
+                    <td className="py-3.5 px-4 text-right">
                       {pr.status === 'PENDING_APPROVAL' ? (
                         <button
                           onClick={() => handleApprove(pr.id)}
                           disabled={submittingId === pr.id}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] rounded-full text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white rounded-full text-xs font-semibold shadow-sm shadow-[--brand]/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          {submittingId === pr.id ? 'Onaylanıyor...' : 'Onayla (PO Gönder)'}
+                          {submittingId === pr.id ? 'Onaylanıyor...' : 'PO Onayla'}
                         </button>
                       ) : (
-                        <span className="text-xs text-zinc-500">Onaylandı</span>
+                        <span className="text-[11px] text-[--text-muted]">İşlem Tamam</span>
                       )}
                     </td>
                   </tr>

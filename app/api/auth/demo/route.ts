@@ -55,7 +55,7 @@ export async function POST(req: Request) {
         phone: "+90 312 440 20 00",
         email: "ankara@sunumerp.com",
         managerFullName: "Volkan Koç",
-        themeColor: "#10B981",
+        themeColor: "#1267E6",
         isActive: true
       },
       {

@@ -126,7 +126,7 @@ export function TourBookingsAndManifestoTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={tour?.id || ''}
@@ -145,7 +145,7 @@ export function TourBookingsAndManifestoTab({
               href={`/api/tur?section=manifesto_pdf&tourId=${encodeURIComponent(
                 tour.id
               )}&demoCompanyId=${encodeURIComponent(demoCompanyId)}`}
-              className="flex items-center gap-1.5 rounded-lg border border-emerald-500/35 bg-emerald-500/15 px-3 py-2 text-xs font-medium text-[#34D399] hover:bg-emerald-500/25"
+              className="flex items-center gap-1.5 rounded-lg border border-[--brand]/35 bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/25"
             >
               <Download className="h-3.5 w-3.5" /> İmzalı Manifesto PDF İndir
             </a>
@@ -171,7 +171,7 @@ export function TourBookingsAndManifestoTab({
         <button
           type="button"
           onClick={() => setShowBookingForm((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+          className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
         >
           <Plus className="h-3.5 w-3.5" /> Yeni Yolcu Rezervasyonu
         </button>
@@ -180,10 +180,10 @@ export function TourBookingsAndManifestoTab({
       {showBookingForm && tour && (
         <form
           onSubmit={handleCreateBooking}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-emerald-500/35 bg-[#111513] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[white] p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#34D399]">
+            <h4 className="text-sm font-semibold text-[#1267E6]">
               Yeni Rezervasyon ({tour.code}) — Koltuk & Kontenjan Kilitli
             </h4>
             <button type="button" onClick={() => setShowBookingForm(false)} className="text-zinc-400">
@@ -318,7 +318,7 @@ export function TourBookingsAndManifestoTab({
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-[#34D399] px-4 py-2 text-xs font-semibold text-[#080A09]"
+              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB]"
             >
               Rezervasyonu Oluştur
             </button>
@@ -329,12 +329,12 @@ export function TourBookingsAndManifestoTab({
       {/* Rezervasyonlar Tablosu */}
       {tour && (
         <>
-          <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
-            <div className="border-b border-white/[0.08] px-4 py-3 text-xs font-semibold text-zinc-200">
+          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-zinc-200">
               Rezervasyonlar & Kısmi Ödeme / Komisyon Takibi ({tour.bookings?.length || 0})
             </div>
             <table className="w-full min-w-[840px] text-left text-xs">
-              <thead className="border-b border-white/[0.06] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
                 <tr>
                   <th className="px-3 py-2">Rez No / Grup</th>
                   <th className="px-3 py-2">Acenta / Kanal</th>
@@ -347,7 +347,7 @@ export function TourBookingsAndManifestoTab({
               </thead>
               <tbody className="divide-y divide-white/[0.05]">
                 {(tour.bookings || []).map((b: any) => (
-                  <tr key={b.id} className="hover:bg-white/[0.02]">
+                  <tr key={b.id} className="hover:bg-[--page]">
                     <td className="px-3 py-2.5">
                       <div className="font-mono font-semibold text-zinc-100">{b.bookingNo}</div>
                       <div className="text-[10px] text-zinc-400">
@@ -361,7 +361,7 @@ export function TourBookingsAndManifestoTab({
                     <td className="px-3 py-2.5 text-right font-mono">
                       <div>{Number(b.totalPriceTry).toLocaleString('tr-TR')} ₺</div>
                       <div className="text-[10px]">
-                        <span className="text-[#34D399]">
+                        <span className="text-[#1267E6]">
                           Öd: {Number(b.paidAmountTry).toLocaleString('tr-TR')} ₺
                         </span>{' '}
                         ·{' '}
@@ -399,7 +399,7 @@ export function TourBookingsAndManifestoTab({
                                 `${b.bookingNo} kalan bakiyesi tahsil edildi ve Finansa işlendi.`
                               )
                             }
-                            className="rounded bg-emerald-500/20 px-2 py-1 text-[10px] text-[#34D399]"
+                            className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[#1267E6]"
                           >
                             Bakiye Kapat
                           </button>
@@ -443,12 +443,12 @@ export function TourBookingsAndManifestoTab({
           </div>
 
           {/* Yolcu Manifesto & Yoklama Tablosu */}
-          <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
-            <div className="border-b border-white/[0.08] px-4 py-3 text-xs font-semibold text-zinc-200">
+          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-zinc-200">
               Yolcu Manifestosu & Biniş Check-In Listesi ({tour.passengers?.length || 0} Yolcu · KVKK Maskeli)
             </div>
             <table className="w-full min-w-[800px] text-left text-xs">
-              <thead className="border-b border-white/[0.06] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
                 <tr>
                   <th className="px-3 py-2">Koltuk</th>
                   <th className="px-3 py-2">Yolcu Ad Soyad</th>
@@ -461,8 +461,8 @@ export function TourBookingsAndManifestoTab({
               </thead>
               <tbody className="divide-y divide-white/[0.05]">
                 {(tour.passengers || []).slice(0, 40).map((p: any) => (
-                  <tr key={p.id} className="hover:bg-white/[0.02]">
-                    <td className="px-3 py-2 font-mono font-bold text-[#34D399]">
+                  <tr key={p.id} className="hover:bg-[--page]">
+                    <td className="px-3 py-2 font-mono font-bold text-[#1267E6]">
                       {p.seatNumber || '-'}
                     </td>
                     <td className="px-3 py-2 font-medium text-zinc-100">
@@ -479,7 +479,7 @@ export function TourBookingsAndManifestoTab({
                     </td>
                     <td className="px-3 py-2 text-[10px]">
                       {p.kbsRecordId ? (
-                        <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 text-[#34D399]">
+                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[#1267E6]">
                           KBS Hazır
                         </span>
                       ) : p.hotelRoomId ? (
@@ -493,7 +493,7 @@ export function TourBookingsAndManifestoTab({
                     <td className="px-3 py-2">
                       <span
                         className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                          TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-white/10'
+                          TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]'
                         }`}
                       >
                         {TOUR_BOARDING_STATUS_LABELS[p.boardingStatus] || p.boardingStatus}
@@ -513,7 +513,7 @@ export function TourBookingsAndManifestoTab({
                             `${p.fullName} biniş durumu güncellendi.`
                           )
                         }
-                        className="rounded bg-emerald-500/20 px-2 py-1 text-[10px] text-[#34D399]"
+                        className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[#1267E6]"
                       >
                         {p.boardingStatus === 'BOARDED' ? 'Geri Al' : 'Bindi İşaretle'}
                       </button>
@@ -574,9 +574,9 @@ export function TourResourceGanttAndConflictsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-[#34D399]" />
+          <CalendarDays className="h-4 w-4 text-[#1267E6]" />
           <div>
             <h3 className="text-sm font-semibold text-zinc-100">
               Araç, Şoför & Rehber Çapraz Kaynak Çakışma Takvimi (Gantt)
@@ -596,10 +596,10 @@ export function TourResourceGanttAndConflictsTab({
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
         <table className="w-full min-w-[920px] border-collapse text-xs">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+            <tr className="border-b border-[--line] bg-[#161B18] text-zinc-400">
               <th className="sticky left-0 z-10 bg-[#161B18] px-3 py-2 text-left">Kaynak</th>
               {(resourceGantt?.dateHeaders || []).map((dk) => (
                 <th key={dk} className="px-1.5 py-2 text-center font-mono text-[10px]">
@@ -611,7 +611,7 @@ export function TourResourceGanttAndConflictsTab({
           <tbody className="divide-y divide-white/[0.05]">
             {(resourceGantt?.rows || []).map((row) => (
               <tr key={`${row.resourceType}-${row.resourceId}`}>
-                <td className="sticky left-0 z-10 border-r border-white/[0.06] bg-[#111513] px-3 py-2">
+                <td className="sticky left-0 z-10 border-r border-[--line] bg-[white] px-3 py-2">
                   <div className="font-semibold text-zinc-100">{row.label}</div>
                   <div className="text-[10px] text-zinc-500">{row.subLabel}</div>
                 </td>
@@ -636,7 +636,7 @@ export function TourResourceGanttAndConflictsTab({
                         BAKIM
                       </div>
                     ) : (
-                      <div className="rounded bg-emerald-500/10 py-1.5 text-center text-[9px] text-[#34D399]/60">
+                      <div className="rounded bg-[--brand]/10 py-1.5 text-center text-[9px] text-[#1267E6]/60">
                         Boş
                       </div>
                     )}
@@ -649,9 +649,9 @@ export function TourResourceGanttAndConflictsTab({
       </div>
 
       {/* Çakışma Günlüğü & Manuel Çözüm */}
-      <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="rounded-xl border border-[--line] bg-[white] p-4">
         <div className="mb-3 flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-[#34D399]" />
+          <ShieldCheck className="h-4 w-4 text-[#1267E6]" />
           <h4 className="text-sm font-semibold text-zinc-100">
             Engellenen Kaynak / Koltuk / Kontenjan Çakışmaları ({conflictLogs.length})
           </h4>
@@ -662,13 +662,13 @@ export function TourResourceGanttAndConflictsTab({
               key={c.id}
               className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-xs ${
                 c.resolved
-                  ? 'border-emerald-500/25 bg-emerald-500/5'
+                  ? 'border-[--brand]/25 bg-[--brand]/5'
                   : 'border-rose-500/30 bg-rose-500/10'
               }`}
             >
               <div className="flex items-center gap-2">
                 {c.resolved ? (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-[#34D399]" />
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-[#1267E6]" />
                 ) : (
                   <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
                 )}
@@ -678,7 +678,7 @@ export function TourResourceGanttAndConflictsTab({
                   </span>{' '}
                   <span className="text-zinc-200">{c.rejectionMessage}</span>
                   {c.resolutionNote && (
-                    <div className="text-[10px] text-[#34D399]">Çözüm: {c.resolutionNote}</div>
+                    <div className="text-[10px] text-[#1267E6]">Çözüm: {c.resolutionNote}</div>
                   )}
                 </div>
               </div>
@@ -687,7 +687,7 @@ export function TourResourceGanttAndConflictsTab({
                   type="button"
                   disabled={busy}
                   onClick={() => handleResolve(c.id)}
-                  className="rounded bg-emerald-500/20 px-2.5 py-1 text-[11px] font-medium text-[#34D399]"
+                  className="rounded bg-[--brand]/20 px-2.5 py-1 text-[11px] font-medium text-[#1267E6]"
                 >
                   Çözüldü İşaretle
                 </button>

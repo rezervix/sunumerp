@@ -133,7 +133,7 @@ function getStatusBadge(status: ScheduledPost["status"]) {
     case "scheduled":
       return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-500/10 text-sky-400 border border-sky-500/20">Planlandı</span>
     case "published":
-      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Yayınlandı</span>
+      return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[--brand]/10 text-[--brand] border border-[--brand-line]">Yayınlandı</span>
     case "failed":
       return <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">Başarısız</span>
     case "draft":
@@ -184,18 +184,18 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
   return (
     <div className="space-y-6">
       {/* Calendar nav & grid card */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
-            className="p-2 rounded-xl border border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-colors"
+            className="p-2 rounded-xl border border-[--line] bg-[--page] text-zinc-400 hover:text-white hover:border-[--brand-line] transition-colors"
           >
             <ChevronLeft className="size-4" />
           </button>
           <h3 className="text-lg font-light tracking-wide text-white capitalize">{monthName}</h3>
           <button
             onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
-            className="p-2 rounded-xl border border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-colors"
+            className="p-2 rounded-xl border border-[--line] bg-[--page] text-zinc-400 hover:text-white hover:border-[--brand-line] transition-colors"
           >
             <ChevronRight className="size-4" />
           </button>
@@ -226,21 +226,21 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
                     key={day}
                     className={`min-h-[84px] p-2 rounded-xl border transition-all cursor-pointer ${
                       isToday
-                        ? "border-emerald-500/40 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.12)]"
-                        : "border-white/[0.05] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12]"
+                        ? "border-[--brand-line] bg-[--brand]/10 shadow-[0_0_15px_rgba(16,185,129,0.12)]"
+                        : "border-white/[0.05] bg-[--page] hover:bg-[--muted-bg] hover:border-white/[0.12]"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className={`text-xs font-semibold ${isToday ? "text-emerald-400" : "text-zinc-400"}`}>
+                      <span className={`text-xs font-semibold ${isToday ? "text-[--brand]" : "text-zinc-400"}`}>
                         {day}
                       </span>
                       {dayPosts.length > 0 && (
-                        <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]" />
+                        <span className="size-1.5 rounded-full bg-[--brand] shadow-[0_0_6px_#1267E6]" />
                       )}
                     </div>
                     <div className="space-y-1">
                       {dayPosts.slice(0, 2).map(p => (
-                        <div key={p.id} className="text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/20 rounded px-1.5 py-0.5 truncate">
+                        <div key={p.id} className="text-[10px] bg-[--brand]/15 text-[--brand] border border-[--brand-line] rounded px-1.5 py-0.5 truncate">
                           {p.content}
                         </div>
                       ))}
@@ -257,17 +257,17 @@ function TabCalendar({ posts }: { posts: ScheduledPost[] }) {
       </div>
 
       {/* Upcoming posts card */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
-        <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="p-5 border-b border-[--line] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Clock className="size-4 text-emerald-400" />
+            <Clock className="size-4 text-[--brand]" />
             <h3 className="font-medium text-white text-sm">Yaklaşan Planlanmış Gönderiler</h3>
           </div>
           <span className="text-xs text-zinc-400">{posts.filter(p => p.status === "scheduled").length} gönderi</span>
         </div>
         <div className="divide-y divide-white/[0.04]">
           {posts.filter(p => p.status === "scheduled").map(p => (
-            <div key={p.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-white/[0.02] transition-colors">
+            <div key={p.id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-[--page] transition-colors">
               <div className="flex -space-x-1 shrink-0">
                 {p.platforms.map(pid => (
                   <PlatformIcon key={pid} platformId={pid} />
@@ -365,7 +365,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
   return (
     <div className="space-y-6">
       {/* Sub tab switcher */}
-      <div className="flex gap-1 bg-[#111513] border border-white/[0.06] p-1 rounded-xl w-fit">
+      <div className="flex gap-1 bg-[white] border border-[--line] p-1 rounded-xl w-fit">
         {(["compose", "list"] as const).map(t => (
           <button
             key={t}
@@ -384,10 +384,10 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
           {/* Left 2 Cols: Compose */}
           <div className="lg:col-span-2 space-y-4">
             {/* AI Assistant Box */}
-            <div className="bg-[#111513]/90 backdrop-blur-xl border border-emerald-500/25 rounded-[20px] p-5 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="bg-[white]/90 backdrop-blur-xl border border-[--brand]/25 rounded-[20px] p-5 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[--brand]/5 rounded-full blur-2xl pointer-events-none" />
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="size-4 text-emerald-400" />
+                <Sparkles className="size-4 text-[--brand]" />
                 <h3 className="font-medium text-white text-sm">Gemini AI ile İçerik Oluştur</h3>
               </div>
               <div className="flex gap-2">
@@ -397,12 +397,12 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                   onChange={e => setAiPrompt(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && generateWithAI()}
                   placeholder="Konu veya açıklama girin (örn: Sonbahar koleksiyonu lansmanı)..."
-                  className="flex-1 px-4 py-2.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-all"
+                  className="flex-1 px-4 py-2.5 bg-white border border-[--line] rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] transition-all"
                 />
                 <button
                   onClick={generateWithAI}
                   disabled={aiLoading}
-                  className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-medium rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                  className="px-4 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm text-sm font-medium rounded-xl transition-all disabled:opacity-50 flex items-center gap-2 shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
                 >
                   {aiLoading ? (
                     <RefreshCw className="size-4 animate-spin" />
@@ -415,7 +415,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
             </div>
 
             {/* Content Editor */}
-            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-3">
+            <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 shadow-2xl space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-white text-sm">Gönderi Metni</h3>
                 <span className={`text-xs font-mono ${charCount > 280 ? "text-rose-400" : "text-zinc-500"}`}>
@@ -427,13 +427,13 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                 onChange={e => handleContentChange(e.target.value)}
                 rows={7}
                 placeholder="Gönderi içeriğinizi buraya yazın veya AI ile oluşturun…"
-                className="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-all resize-none leading-relaxed"
+                className="w-full px-4 py-3 bg-[--page] border border-[--line] rounded-xl text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] transition-all resize-none leading-relaxed"
               />
               <div className="flex items-center gap-3 pt-1">
                 <button
                   type="button"
                   onClick={() => toast.info("Hashtag önerisi yakında eklenecek.")}
-                  className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
+                  className="text-xs text-zinc-400 hover:text-[--brand] flex items-center gap-1.5 transition-colors"
                 >
                   <Tag className="size-3.5" />
                   Hashtag Öner
@@ -441,7 +441,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                 <button
                   type="button"
                   onClick={() => toast.info("Emoji paneli yakında eklenecek.")}
-                  className="text-xs text-zinc-400 hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
+                  className="text-xs text-zinc-400 hover:text-[--brand] flex items-center gap-1.5 transition-colors"
                 >
                   <Smile className="size-3.5" />
                   Emoji Ekle
@@ -450,9 +450,9 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
             </div>
 
             {/* Schedule & Actions */}
-            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-4">
+            <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 shadow-2xl space-y-4">
               <h3 className="font-medium text-white text-sm flex items-center gap-2">
-                <Clock className="size-4 text-emerald-400" />
+                <Clock className="size-4 text-[--brand]" />
                 Zamanlama Ayarı
               </h3>
               <div className="grid grid-cols-2 gap-4">
@@ -462,7 +462,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                     type="date"
                     value={scheduleDate}
                     onChange={e => setScheduleDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3 py-2 bg-white border border-[--line] rounded-xl text-sm text-white focus:outline-none focus:border-[--brand-line]"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -471,20 +471,20 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                     type="time"
                     value={scheduleTime}
                     onChange={e => setScheduleTime(e.target.value)}
-                    className="w-full px-3 py-2 bg-white/[0.03] border border-white/[0.08] rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3 py-2 bg-white border border-[--line] rounded-xl text-sm text-white focus:outline-none focus:border-[--brand-line]"
                   />
                 </div>
               </div>
               <div className="flex gap-3 pt-2">
                 <button
                   onClick={() => { setScheduleDate(""); setScheduleTime(""); handleSchedule(); }}
-                  className="flex-1 px-4 py-2.5 border border-white/[0.08] hover:bg-white/[0.04] text-zinc-300 rounded-xl text-sm font-medium transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-[--line] hover:bg-[--muted-bg] text-zinc-300 rounded-xl text-sm font-medium transition-colors"
                 >
                   Taslak Olarak Kaydet
                 </button>
                 <button
                   onClick={handleSchedule}
-                  className="flex-1 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)] flex items-center justify-center gap-2"
                 >
                   <Send className="size-4" />
                   {scheduleDate ? "Planla ve Sıraya Al" : "Hemen Paylaş"}
@@ -495,7 +495,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
 
           {/* Right Col: Platform Picker & Live Preview */}
           <div className="space-y-4">
-            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl">
+            <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 shadow-2xl">
               <h3 className="font-medium text-white text-sm mb-4">Paylaşılacak Platformlar</h3>
               <div className="space-y-2">
                 {PLATFORMS.map(p => {
@@ -505,8 +505,8 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                       key={p.id}
                       className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer border transition-all ${
                         isChecked
-                          ? "bg-emerald-500/10 border-emerald-500/30 text-white"
-                          : "bg-white/[0.02] border-white/[0.05] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          ? "bg-[--brand]/10 border-[--brand-line] text-white"
+                          : "bg-[--page] border-white/[0.05] text-zinc-400 hover:text-zinc-200 hover:bg-[--muted-bg]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -514,7 +514,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => togglePlatform(p.id)}
-                          className="rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-0"
+                          className="rounded border-zinc-700 bg-zinc-900 text-[--brand] focus:ring-0"
                         />
                         <span className="text-sm font-medium">{p.name}</span>
                       </div>
@@ -527,14 +527,14 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
 
             {/* Live Preview Card */}
             {content && (
-              <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl space-y-3">
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 shadow-2xl space-y-3">
+                <div className="flex items-center justify-between border-b border-[--line] pb-3">
                   <h3 className="font-medium text-white text-xs uppercase tracking-wider">Canlı Önizleme</h3>
                   <Eye className="size-3.5 text-zinc-500" />
                 </div>
                 <div className="bg-black/40 rounded-xl p-4 border border-white/[0.04]">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="size-8 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
+                    <div className="size-8 rounded-full bg-[--brand]/15 text-[--brand] border border-[--brand-line] flex items-center justify-center text-xs font-bold">
                       SE
                     </div>
                     <div>
@@ -552,14 +552,14 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
         </div>
       ) : (
         /* Post List Table */
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
-          <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+        <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl overflow-hidden">
+          <div className="p-5 border-b border-[--line] flex items-center justify-between">
             <h3 className="font-medium text-white text-sm">Tüm Sosyal Medya Gönderileri</h3>
             <span className="text-xs text-zinc-400">{posts.length} kayıt</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="bg-white/[0.02] text-zinc-400 text-xs font-medium border-b border-white/[0.06]">
+              <thead className="bg-[--page] text-zinc-400 text-xs font-medium border-b border-[--line]">
                 <tr>
                   <th className="px-5 py-3">İçerik</th>
                   <th className="px-5 py-3">Platformlar</th>
@@ -570,7 +570,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
               </thead>
               <tbody className="divide-y divide-white/[0.04]">
                 {posts.map(p => (
-                  <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                  <tr key={p.id} className="hover:bg-[--page] transition-colors group">
                     <td className="px-5 py-4 max-w-sm">
                       <p className="truncate text-zinc-200">{p.content}</p>
                     </td>
@@ -586,7 +586,7 @@ function TabGonderiler({ posts }: { posts: ScheduledPost[] }) {
                     <td className="px-5 py-4 text-right">
                       <button
                         onClick={() => toast.info("Düzenleme paneli hazırlanıyor.")}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-[--muted-bg] transition-all"
                       >
                         <Edit className="size-3.5" />
                       </button>
@@ -618,15 +618,15 @@ function TabAnalitik() {
   return (
     <div className="space-y-6">
       {/* Spline Chart: Haftalık Trend */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="font-medium text-white text-base">Haftalık Erişim ve Etkileşim Eğilimi</h3>
             <p className="text-xs text-zinc-400 mt-0.5">Parlayan Zümrüt spline analitiği</p>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono">
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+            <span className="flex items-center gap-1.5 text-[--brand]">
+              <span className="size-2 rounded-full bg-[--brand] shadow-[0_0_8px_#1267E6]" />
               Erişim
             </span>
             <span className="flex items-center gap-1.5 text-sky-400">
@@ -640,8 +640,8 @@ function TabAnalitik() {
             <AreaChart data={MOCK_WEEKLY_TRENDS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="emeraldGlow" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.35}/>
-                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#1267E6" stopOpacity={0.35}/>
+                  <stop offset="95%" stopColor="#1267E6" stopOpacity={0}/>
                 </linearGradient>
                 <linearGradient id="skyGlow" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.25}/>
@@ -653,7 +653,7 @@ function TabAnalitik() {
               <YAxis stroke="#71717A" tick={{ fill: "#71717A", fontSize: 11 }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "#111513",
+                  backgroundColor: "white",
                   borderColor: "rgba(255,255,255,0.1)",
                   borderRadius: "12px",
                   color: "#fff",
@@ -663,7 +663,7 @@ function TabAnalitik() {
               <Area
                 type="monotone"
                 dataKey="erisim"
-                stroke="#34D399"
+                stroke="#1267E6"
                 strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#emeraldGlow)"
@@ -682,13 +682,13 @@ function TabAnalitik() {
       </div>
 
       {/* Per-Platform Table */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
-        <div className="p-5 border-b border-white/[0.06]">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="p-5 border-b border-[--line]">
           <h3 className="font-medium text-white text-sm">Platform Bazlı Dağılım ve Başarı Skoru</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-white/[0.02] text-zinc-400 text-xs font-medium border-b border-white/[0.06]">
+            <thead className="bg-[--page] text-zinc-400 text-xs font-medium border-b border-[--line]">
               <tr>
                 <th className="px-5 py-3">Platform</th>
                 <th className="px-5 py-3 text-right">Takipçi</th>
@@ -700,7 +700,7 @@ function TabAnalitik() {
             </thead>
             <tbody className="divide-y divide-white/[0.04]">
               {MOCK_ANALYTICS.map(a => (
-                <tr key={a.platform} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={a.platform} className="hover:bg-[--page] transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
                       <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: a.color }} />
@@ -709,13 +709,13 @@ function TabAnalitik() {
                   </td>
                   <td className="px-5 py-3.5 text-right font-mono text-zinc-300">{a.followers.toLocaleString("tr-TR")}</td>
                   <td className="px-5 py-3.5 text-right font-mono text-zinc-300">{a.reach.toLocaleString("tr-TR")}</td>
-                  <td className="px-5 py-3.5 text-right font-mono text-emerald-400">%{a.engagement}</td>
+                  <td className="px-5 py-3.5 text-right font-mono text-[--brand]">%{a.engagement}</td>
                   <td className="px-5 py-3.5 text-right font-mono text-zinc-400">{a.posts}</td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div className="w-24 h-1.5 bg-[--muted-bg] rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full rounded-full bg-emerald-400"
+                          className="h-full rounded-full bg-[--brand]"
                           initial={{ width: 0 }}
                           animate={{ width: `${Math.min(a.engagement * 10, 100)}%` }}
                           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -791,7 +791,7 @@ function TabPlatformlar() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {connected.map(p => (
-              <div key={p.id} className="bg-[#111513]/90 backdrop-blur-xl border border-emerald-500/30 rounded-[20px] p-5 shadow-2xl">
+              <div key={p.id} className="bg-[white]/90 backdrop-blur-xl border border-[--brand-line] rounded-[20px] p-5 shadow-2xl">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="size-10 rounded-xl flex items-center justify-center bg-white/[0.05]">
@@ -802,7 +802,7 @@ function TabPlatformlar() {
                       {p.handle && <p className="text-xs text-zinc-400">{p.handle}</p>}
                     </div>
                   </div>
-                  <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+                  <span className="size-2 rounded-full bg-[--brand] shadow-[0_0_8px_#1267E6]" />
                 </div>
                 <button
                   onClick={() => handleDisconnect(p.id)}
@@ -822,9 +822,9 @@ function TabPlatformlar() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {disconnected.map(p => (
-            <div key={p.id} className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] hover:border-white/[0.12] rounded-[20px] p-5 shadow-2xl transition-all">
+            <div key={p.id} className="bg-[white]/90 backdrop-blur-xl border border-[--line] hover:border-white/[0.12] rounded-[20px] p-5 shadow-2xl transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <div className="size-10 rounded-xl flex items-center justify-center bg-white/[0.03]">
+                <div className="size-10 rounded-xl flex items-center justify-center bg-white">
                   <span className="font-bold text-xs uppercase" style={{ color: p.color }}>{p.name.slice(0, 2)}</span>
                 </div>
                 <div>
@@ -835,7 +835,7 @@ function TabPlatformlar() {
               <button
                 onClick={() => handleConnect(p.id)}
                 disabled={connecting === p.id}
-                className="w-full py-2 text-xs font-medium text-zinc-200 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                className="w-full py-2 text-xs font-medium text-zinc-200 hover:text-white bg-[--muted-bg] hover:bg-white/[0.08] border border-[--line] rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
               >
                 {connecting === p.id ? (
                   <><RefreshCw className="size-3.5 animate-spin" /> Bağlanıyor…</>
@@ -865,7 +865,7 @@ function TabEkip() {
         </div>
         <button
           onClick={() => toast.info("Ekip üyesi davet paneli yakında aktif edilecek.")}
-          className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm text-xs font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)]"
         >
           <Plus className="size-3.5" />
           Üye Davet Et
@@ -874,15 +874,15 @@ function TabEkip() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {MOCK_TEAM.map(member => (
-          <div key={member.id} className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 shadow-2xl">
+          <div key={member.id} className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 shadow-2xl">
             <div className="flex items-start gap-3.5">
-              <div className="size-10 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-sm shrink-0">
+              <div className="size-10 rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line] flex items-center justify-center font-bold text-sm shrink-0">
                 {member.fullName.substring(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-medium text-white text-sm truncate">{member.fullName}</p>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line] shrink-0">
                     {member.role}
                   </span>
                 </div>
@@ -903,15 +903,15 @@ function TabEkip() {
       </div>
 
       {/* Activity Bar Chart */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl space-y-4">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl space-y-4">
         <h3 className="font-medium text-white text-sm">Ekip Üretim Performansı (Bu Ay)</h3>
         <div className="space-y-3">
           {MOCK_TEAM.sort((a, b) => b.postsThisMonth - a.postsThisMonth).map(m => (
             <div key={m.id} className="flex items-center gap-3">
               <span className="text-xs text-zinc-300 w-36 truncate">{m.fullName}</span>
-              <div className="flex-1 h-2 bg-white/[0.04] rounded-full overflow-hidden">
+              <div className="flex-1 h-2 bg-[--muted-bg] rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]"
+                  className="h-full rounded-full bg-[--brand] shadow-[0_0_8px_#1267E6]"
                   initial={{ width: 0 }}
                   animate={{ width: `${(m.postsThisMonth / maxPosts) * 100}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
@@ -986,9 +986,9 @@ export default function SosyalMedyaClient() {
 
         <div className="flex items-center gap-3">
           {/* Backend Status */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border border-white/[0.08] bg-white/[0.02]">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono border border-[--line] bg-[--page]">
             <span className={`size-2 rounded-full ${
-              backendStatus === "online" ? "bg-emerald-400 shadow-[0_0_8px_#34D399]" : backendStatus === "offline" ? "bg-rose-500" : "bg-amber-400 animate-pulse"
+              backendStatus === "online" ? "bg-[--brand] shadow-[0_0_8px_#1267E6]" : backendStatus === "offline" ? "bg-rose-500" : "bg-amber-400 animate-pulse"
             }`} />
             <span className="text-zinc-300">
               {backendStatus === "online" ? "Postiz Bağlı" : backendStatus === "offline" ? "Postiz Çevrimdışı" : "Kontrol ediliyor"}
@@ -997,7 +997,7 @@ export default function SosyalMedyaClient() {
 
           <button
             onClick={() => setActiveTab("gonderiler")}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
+            className="bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
           >
             <Plus className="size-4" />
             Yeni Gönderi
@@ -1006,7 +1006,7 @@ export default function SosyalMedyaClient() {
       </div>
 
       {/* Kutusuz (Borderless) Üst KPI Şeridi */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
             <Clock className="size-3.5 text-zinc-400" />
@@ -1031,7 +1031,7 @@ export default function SosyalMedyaClient() {
             <span className="text-3xl font-light text-white">
               <AnimatedNumber value={totalPublished} />
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
               Canlıda
             </span>
           </div>
@@ -1046,7 +1046,7 @@ export default function SosyalMedyaClient() {
             <span className="text-3xl font-light text-white">
               <AnimatedNumber value={PLATFORMS.length} />
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
               Kanal
             </span>
           </div>
@@ -1061,7 +1061,7 @@ export default function SosyalMedyaClient() {
             <span className="text-3xl font-light text-white">
               <AnimatedNumber value={MOCK_TEAM.length} />
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
               Aktif
             </span>
           </div>
@@ -1069,7 +1069,7 @@ export default function SosyalMedyaClient() {
       </div>
 
       {/* Sliding Pill Tab Switcher */}
-      <div className="flex gap-1 border-b border-white/[0.06] pb-2 overflow-x-auto scrollbar-none">
+      <div className="flex gap-1 border-b border-[--line] pb-2 overflow-x-auto scrollbar-none">
         {tabs.map(t => {
           const isActive = activeTab === t.id
           return (
@@ -1083,7 +1083,7 @@ export default function SosyalMedyaClient() {
               {isActive && (
                 <motion.div
                   layoutId="socialMediaActiveTab"
-                  className="absolute inset-0 bg-white/[0.08] border border-white/[0.08] rounded-xl"
+                  className="absolute inset-0 bg-white/[0.08] border border-[--line] rounded-xl"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}

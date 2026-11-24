@@ -1,21 +1,20 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Link from 'next/link';
 import {
   Layers,
   MapPin,
   ClipboardCheck,
   Truck,
-  RotateCcw,
-  RefreshCw,
   Boxes,
   Split,
   Lock,
   Activity,
-  Warehouse
+  Warehouse,
+  RotateCcw
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { WmsPackagingAndSsccTab } from './components/WmsPackagingAndSsccTab';
 import { WmsCrossDockAndKitTab } from './components/WmsCrossDockAndKitTab';
 import { WmsReservationAndLedgerTab } from './components/WmsReservationAndLedgerTab';
@@ -30,6 +29,8 @@ import { InterWarehouseTransfers } from './components/InterWarehouseTransfers';
 import { CreateWmsTaskModal } from './components/CreateWmsTaskModal';
 import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 import { mockDatabase } from '@/lib/data/mockDatabase';
+import { IconLoader, IconRefresh } from '@/components/ui/app-icons';
+import { safeText } from '@/lib/utils/safe-display';
 
 const EMPTY_WMS_STATS = {
   totalPendingTasks: 0,
@@ -49,7 +50,7 @@ export default function WmsDashboardPage() {
   const [demoMode, setDemoMode] = useState(false);
   const demoModeRef = useRef<boolean | null>(null);
 
-  // WMS Data States — gerçek DB verisi gelene kadar sıfır/boş başlar (non-demo veri sızıntısı önlenir)
+  // WMS Data States
   const [stats, setStats] = useState(EMPTY_WMS_STATS);
   const [tasks, setTasks] = useState<any[]>([]);
   const [bins, setBins] = useState<any[]>([]);
@@ -74,13 +75,13 @@ export default function WmsDashboardPage() {
         return isDemo;
       }
     } catch {
-      // Demo durumu çözülemezse güvenli varsayılan kapalı
+      // Demo durumu çözülemezse varsayılan kapalı
     }
     demoModeRef.current = false;
     return false;
   }, []);
 
-  // Canlı Reaktif Mock DB Dinleyicisi (yalnızca demo modunda)
+  // Canlı Reaktif Mock DB Dinleyicisi
   useEffect(() => {
     const handleDbChange = () => {
       if (demoModeRef.current !== true) return;
@@ -98,7 +99,7 @@ export default function WmsDashboardPage() {
     return () => window.removeEventListener('sunum-mockdb-change', handleDbChange);
   }, []);
 
-  // Fetch WMS data from real Prisma API (Demo fallback yalnız demo modunda geçerlidir)
+  // Fetch WMS data
   const fetchWmsData = useCallback(async (isSilent = false) => {
     try {
       if (!isSilent) setRefreshing(true);
@@ -189,9 +190,9 @@ export default function WmsDashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] m-6">
-        <RefreshCw className="w-8 h-8 text-[#34D399] animate-spin" />
-        <p className="text-sm font-medium text-zinc-400">
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-3 bg-white/80 border border-[--line] rounded-[20px]">
+        <IconLoader size={28} className="text-[--brand] animate-spin" />
+        <p className="text-xs font-medium text-[--text-muted]">
           WMS Depo ve Raf Veritabanı Yükleniyor...
         </p>
       </div>
@@ -199,7 +200,7 @@ export default function WmsDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
@@ -211,52 +212,58 @@ export default function WmsDashboardPage() {
         onNewCountClick={() => setActiveTab('counts')}
       />
 
-      {/* Yenile & Test Verisi Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-zinc-400 bg-[#111513]/90 border border-white/[0.06] px-4 py-2.5 rounded-xl">
+      {/* Yenile & Test Verisi Araç Çubuğu (Açık Cam Panel) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs bg-white/80 backdrop-blur-xl border border-[--line] px-4 py-2.5 rounded-2xl shadow-xs">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-[#34D399] animate-ping" />
-          <span className="text-zinc-300">Prisma / PostgreSQL Canlı WMS Hattı Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[--brand] animate-ping" />
+          <span className="text-[--text] font-medium">Canlı WMS Hattı Aktif</span>
           {refreshing && (
-            <span className="text-[#34D399] font-medium flex items-center gap-1">
-              <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
+            <span className="text-[--brand] font-medium flex items-center gap-1 ml-2">
+              <IconLoader size={12} className="animate-spin" /> Güncelleniyor...
             </span>
           )}
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-black/40 border border-white/[0.08] rounded-lg px-2.5 py-1">
-            <Warehouse className="w-3.5 h-3.5 text-[#34D399]" />
+          <div className="flex items-center gap-1.5 bg-[--page] border border-[--line] rounded-xl px-2.5 py-1">
+            <Warehouse className="w-3.5 h-3.5 text-[--brand]" />
             <select
               value={selectedWarehouseId}
               onChange={(e) => setSelectedWarehouseId(e.target.value)}
               aria-label="Global Depo Seçimi"
-              className="bg-transparent text-xs text-zinc-200 focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs text-[--text] focus:outline-none cursor-pointer"
             >
-              <option value="ALL" className="bg-[#111513]">Tüm Depolar</option>
+              <option value="ALL">Tüm Depolar</option>
               {warehouses.map((w: any) => (
-                <option key={w.id} value={w.id} className="bg-[#111513]">
-                  {w.name} ({w.code})
+                <option key={w.id} value={w.id}>
+                  {safeText(w.name)} ({safeText(w.code)})
                 </option>
               ))}
             </select>
           </div>
-          <button
+
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => fetchWmsData()}
-            className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition cursor-pointer"
+            className="h-8 px-2.5 text-xs text-[--text-muted] hover:text-[--text] gap-1.5 rounded-xl cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <IconRefresh size={13} />
             Yenile
-          </button>
+          </Button>
+
           {demoMode && (
             <>
-              <span className="text-white/20">•</span>
-              <button
+              <span className="text-[--line]">•</span>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={handleResetSeed}
-                className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
+                className="h-8 px-2.5 text-xs text-[--text-muted] hover:text-[--warn] gap-1.5 rounded-xl cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Örnek Verileri Sıfırla
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -264,69 +271,69 @@ export default function WmsDashboardPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-1 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
+        <TabsList className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-1 bg-[--muted-bg] border border-[--line] p-1 rounded-2xl h-auto">
           <TabsTrigger
             value="wizard-flow"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Layers className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+            <Layers className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">İş Akışları</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="bin-map"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <MapPin className="w-3.5 h-3.5 text-[#34D399] shrink-0" />
-            <span className="truncate">Depo & Raf Yapısı</span>
+            <MapPin className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Depo & Raf</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="counts"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <ClipboardCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span className="truncate">Dönemsel Sayım</span>
+            <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Sayım</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="transfers"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Truck className="w-3.5 h-3.5 text-zinc-300 shrink-0" />
+            <Truck className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">Transferler</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="packaging-sscc"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Boxes className="w-3.5 h-3.5 text-[#34D399] shrink-0" />
-            <span className="truncate">Ambalaj & SSCC</span>
+            <Boxes className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Ambalaj/SSCC</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="crossdock-kit"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Split className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-            <span className="truncate">Cross-Dock & Kit</span>
+            <Split className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Cross-Dock</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="reservations-ledger"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Lock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-            <span className="truncate">Rezervasyon & Defter</span>
+            <Lock className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Rezervasyon</span>
           </TabsTrigger>
 
           <TabsTrigger
             value="kpi-rfid"
-            className="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl text-xs font-medium transition data-[state=active]:bg-white data-[state=active]:text-[--brand] data-[state=active]:shadow-xs"
           >
-            <Activity className="w-3.5 h-3.5 text-violet-400 shrink-0" />
-            <span className="truncate">Depo KPI & RFID</span>
+            <Activity className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">KPI & RFID</span>
           </TabsTrigger>
         </TabsList>
 

@@ -16,6 +16,7 @@ import {
   PO_STATUS_LABELS,
   SUPPLIER_RESPONSE_LABELS,
 } from "@/lib/logistics/procurement/constantsAndHelpers"
+import { safeText, safeNumber, safeCurrency, safeDate } from "@/lib/utils/safe-display"
 
 interface MultiTierPoTabProps {
   purchaseOrders: any[]
@@ -47,8 +48,8 @@ export function MultiTierPoTab({
     notes: "",
   })
 
-  const activeSuppliers = suppliers.filter((s) => s.approvalStatus === "ONAYLI" && s.isActive)
-  const filteredPos = purchaseOrders.filter(
+  const activeSuppliers = (suppliers || []).filter((s) => s.approvalStatus === "ONAYLI" && s.isActive)
+  const filteredPos = (purchaseOrders || []).filter(
     (p) => statusFilter === "ALL" || p.status === statusFilter
   )
 
@@ -132,16 +133,16 @@ export function MultiTierPoTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-3.5">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[--line] bg-white/80 backdrop-blur-xl p-3.5 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
-          <ClipboardCheck className="size-4 text-[#34D399]" />
-          <span className="text-sm font-semibold text-white">
+          <ClipboardCheck className="size-4 text-[--brand]" />
+          <span className="text-sm font-semibold text-[--text]">
             Çok Kademeli Satın Alma Emirleri (PO) & Tedarikçi Yanıtları
           </span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-8 rounded-xl border border-white/10 bg-[#0A0D0C] px-2.5 text-xs text-zinc-200"
+            className="h-8 rounded-xl border border-[--line] bg-white px-2.5 text-xs text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
           >
             <option value="ALL">Tüm Durumlar ({purchaseOrders.length})</option>
             <option value="ONAY_BEKLIYOR">Onay Bekliyor</option>
@@ -156,7 +157,7 @@ export function MultiTierPoTab({
           type="button"
           onClick={() => setCreateOpen((v) => !v)}
           data-testid="new-po-btn"
-          className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-xl bg-[#34D399] text-[#061811] text-xs font-semibold"
+          className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold shadow-sm shadow-[--brand]/20 transition cursor-pointer"
         >
           <Plus className="size-3.5" />
           Yeni PO Oluştur
@@ -166,59 +167,59 @@ export function MultiTierPoTab({
       {createOpen && (
         <form
           onSubmit={handleCreatePo}
-          className="rounded-2xl border border-emerald-500/25 bg-[#121614] p-4 grid grid-cols-1 sm:grid-cols-6 gap-3 text-xs items-end"
+          className="rounded-2xl border border-[--brand-line] bg-white p-4 grid grid-cols-1 sm:grid-cols-6 gap-3 text-xs items-end shadow-md"
         >
           <div className="sm:col-span-2">
-            <label className="text-zinc-400">Onaylı Tedarikçi</label>
+            <label className="text-[--text-muted]">Onaylı Tedarikçi</label>
             <select
               value={form.supplierId}
               onChange={(e) => setForm((f) => ({ ...f, supplierId: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             >
               {activeSuppliers.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name} ({s.code})
+                  {safeText(s.name)} ({safeText(s.code)})
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-zinc-400">Teslim Depo</label>
+            <label className="text-[--text-muted]">Teslim Depo</label>
             <select
               value={form.warehouseId}
               onChange={(e) => setForm((f) => ({ ...f, warehouseId: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             >
               {warehouses.map((w) => (
                 <option key={w.id} value={w.id}>
-                  {w.name}
+                  {safeText(w.name)}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-zinc-400">Ürün</label>
+            <label className="text-[--text-muted]">Ürün</label>
             <select
               value={form.itemId}
               onChange={(e) => setForm((f) => ({ ...f, itemId: e.target.value }))}
-              className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+              className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
             >
               {items.map((it) => (
                 <option key={it.id} value={it.id}>
-                  {it.sku} — {it.name}
+                  {safeText(it.sku)} — {safeText(it.name)}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-zinc-400">Miktar / Birim (₺)</label>
+            <label className="text-[--text-muted]">Miktar / Birim (₺)</label>
             <div className="mt-1 flex gap-1.5">
               <input
                 type="number"
                 min={1}
                 value={form.orderedQty}
                 onChange={(e) => setForm((f) => ({ ...f, orderedQty: e.target.value }))}
-                className="w-1/2 h-9 px-2 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                className="w-1/2 h-9 px-2 rounded-xl border border-[--line] bg-white text-[--text] font-bold focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
               <input
                 type="number"
@@ -226,13 +227,13 @@ export function MultiTierPoTab({
                 placeholder="Oto ₺"
                 value={form.agreedUnitPrice}
                 onChange={(e) => setForm((f) => ({ ...f, agreedUnitPrice: e.target.value }))}
-                className="w-1/2 h-9 px-2 rounded-xl border border-white/10 bg-[#0A0D0C] text-white"
+                className="w-1/2 h-9 px-2 rounded-xl border border-[--line] bg-white text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
             </div>
           </div>
           <button
             type="submit"
-            className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             PO Onaya Gönder
           </button>
@@ -246,81 +247,81 @@ export function MultiTierPoTab({
             <div
               key={po.id}
               data-testid={`po-card-${po.poNumber}`}
-              className={`rounded-2xl border p-4 space-y-3 ${
+              className={`rounded-2xl border p-4 space-y-3 shadow-sm transition ${
                 isRedFlag
-                  ? "border-rose-500/40 bg-rose-500/[0.05]"
-                  : "border-white/[0.07] bg-[#121614]/85"
+                  ? "border-[--bad]/30 bg-[--bad-soft]/30"
+                  : "border-[--line] bg-white hover:border-[--brand-line]"
               }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono text-sm font-bold text-[#34D399]">{po.poNumber}</span>
-                    <span className="text-sm font-semibold text-white">{po.supplierName}</span>
+                    <span className="font-mono text-sm font-bold text-[--brand]">{safeText(po.poNumber)}</span>
+                    <span className="text-sm font-semibold text-[--text]">{safeText(po.supplierName)}</span>
                     <span
                       className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
                         isRedFlag
-                          ? "bg-rose-500/15 text-rose-300 border-rose-500/30"
+                          ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
                           : po.status === "TESLIM_ALINDI" || po.status === "TEDARIKCI_ONAYLADI"
-                            ? "bg-emerald-500/15 text-[#34D399] border-emerald-500/30"
+                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
                             : po.status === "ONAY_BEKLIYOR"
-                              ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-                              : "bg-sky-500/15 text-sky-300 border-sky-500/30"
+                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
+                              : "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
                       }`}
                     >
-                      {PO_STATUS_LABELS[po.status] || po.status}
+                      {PO_STATUS_LABELS[po.status] || safeText(po.status)}
                     </span>
-                    <span className="text-[11px] text-zinc-400">
-                      Kaynak: {po.sourceType} · Depo: {po.warehouseName}
+                    <span className="text-[11px] text-[--text-muted]">
+                      Kaynak: {safeText(po.sourceType)} · Depo: {safeText(po.warehouseName)}
                     </span>
                   </div>
-                  <div className="text-[11px] text-zinc-400 mt-1">
+                  <div className="text-[11px] text-[--text-muted] mt-1">
                     Beklenen Teslim:{" "}
-                    <span className="text-zinc-200 font-mono">
-                      {new Date(po.expectedDeliveryDate).toLocaleDateString("tr-TR")}
+                    <span className="text-[--text] font-mono">
+                      {safeDate(po.expectedDeliveryDate)}
                     </span>{" "}
                     · Tedarikçi Yanıtı:{" "}
-                    <span className="text-zinc-200">
-                      {SUPPLIER_RESPONSE_LABELS[po.supplierResponseStatus] || po.supplierResponseStatus}
+                    <span className="text-[--text]">
+                      {SUPPLIER_RESPONSE_LABELS[po.supplierResponseStatus] || safeText(po.supplierResponseStatus)}
                     </span>
                     {po.dispatchedChannel ? ` · Kanal: ${po.dispatchedChannel}` : ""}
                   </div>
                   {po.redFlagReason && (
-                    <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-rose-300 bg-rose-500/10 border border-rose-500/25 px-2.5 py-1 rounded-lg">
+                    <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-[--bad] bg-[--bad-soft] border border-[--bad]/25 px-2.5 py-1 rounded-lg">
                       <AlertTriangle className="size-3.5" />
-                      <span>Kırmızı Bayrak: {po.redFlagReason}</span>
+                      <span>Kırmızı Bayrak: {safeText(po.redFlagReason)}</span>
                     </div>
                   )}
                 </div>
 
                 <div className="text-right">
-                  <div className="text-base font-bold font-mono text-white">
-                    ₺{Number(po.agreedTotalAmount || 0).toLocaleString("tr-TR")}
+                  <div className="text-base font-bold font-mono text-[--text] tabular-nums">
+                    {safeCurrency(po.agreedTotalAmount)}
                   </div>
-                  <div className="text-[11px] text-zinc-400 font-mono">
-                    {po.totalReceivedQty}/{po.totalOrderedQty} Teslim · {po.asnCount} ASN
+                  <div className="text-[11px] text-[--text-muted] font-mono tabular-nums">
+                    {safeNumber(po.totalReceivedQty)}/{safeNumber(po.totalOrderedQty)} Teslim · {safeNumber(po.asnCount)} ASN
                   </div>
                 </div>
               </div>
 
               {/* Çok Kademeli Onay Şeridi */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.06]">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[--line]">
                 <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
                   {(po.approvals || []).map((st: any) => (
                     <span
                       key={st.id}
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border ${
                         st.status === "ONAYLANDI"
-                          ? "bg-emerald-500/10 text-[#34D399] border-emerald-500/25"
+                          ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
                           : st.status === "REDDEDILDI"
-                            ? "bg-rose-500/10 text-rose-300 border-rose-500/25"
+                            ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
                             : po.currentApprovalStep === st.stepOrder
-                              ? "bg-amber-500/10 text-amber-300 border-amber-500/30"
-                              : "bg-white/[0.03] text-zinc-500 border-white/[0.06]"
+                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25 font-semibold"
+                              : "bg-[--muted-bg] text-[--text-muted] border-[--line]"
                       }`}
                     >
                       <span>
-                        Kademe {st.stepOrder}: {st.approverRole}
+                        Kademe {safeNumber(st.stepOrder)}: {safeText(st.approverRole)}
                       </span>
                       {st.approvedBy ? ` (${st.approvedBy})` : ""}
                     </span>
@@ -335,16 +336,16 @@ export function MultiTierPoTab({
                         disabled={busyId === po.id}
                         onClick={() => handleApproveStep(po.id, "ONAYLA")}
                         data-testid={`approve-po-${po.poNumber}`}
-                        className="inline-flex items-center gap-1 h-7 px-3 rounded-lg bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold disabled:opacity-50"
+                        className="inline-flex items-center gap-1 h-7 px-3 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold disabled:opacity-50 transition cursor-pointer"
                       >
                         <CheckCircle2 className="size-3.5" />
-                        Kademe {po.currentApprovalStep}/{po.requiredApprovalSteps} Onayla
+                        Kademe {safeNumber(po.currentApprovalStep)}/{safeNumber(po.requiredApprovalSteps)} Onayla
                       </button>
                       <button
                         type="button"
                         disabled={busyId === po.id}
                         onClick={() => handleApproveStep(po.id, "REDDET")}
-                        className="h-7 px-2.5 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs"
+                        className="h-7 px-2.5 rounded-full border border-[--bad]/30 bg-[--bad-soft] text-[--bad] text-xs font-medium hover:bg-[--bad-soft]/80 transition cursor-pointer"
                       >
                         Reddet
                       </button>
@@ -355,7 +356,7 @@ export function MultiTierPoTab({
                       type="button"
                       disabled={busyId === po.id}
                       onClick={() => handleDispatch(po.id, "EDI")}
-                      className="inline-flex items-center gap-1 h-7 px-2.5 rounded-lg border border-white/15 bg-white/[0.04] text-zinc-200 text-xs"
+                      className="inline-flex items-center gap-1 h-7 px-2.5 rounded-full border border-[--line] bg-white text-[--text-2] text-xs font-medium hover:bg-[--muted-bg] transition cursor-pointer"
                     >
                       <Send className="size-3" />
                       EDI / Tekrar İlet
@@ -428,14 +429,14 @@ export function EoqSuggestionsPanel({
   }
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#121614]/85 p-4 space-y-3">
+    <div className="rounded-2xl border border-[--line] bg-white/80 backdrop-blur-xl p-4 space-y-3 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-white">
-            <Calculator className="size-4 text-[#34D399]" />
+          <div className="flex items-center gap-2 text-sm font-semibold text-[--text]">
+            <Calculator className="size-4 text-[--brand]" />
             <span>EOQ (Ekonomik Sipariş Miktarı) & ROP Otomatik İkmal Motoru</span>
           </div>
-          <p className="text-[11px] text-zinc-400 mt-0.5">
+          <p className="text-[11px] text-[--text-muted] mt-0.5">
             Net stok pozisyonu (Mevcut + Yoldaki PO) yeniden sipariş noktasının (ROP) altına düştüğünde EOQ formülüyle otomatik PO önerir.
           </p>
         </div>
@@ -443,7 +444,7 @@ export function EoqSuggestionsPanel({
           type="button"
           disabled={recalcBusy}
           onClick={handleRecalculate}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-white/10 bg-white/[0.05] hover:bg-white/[0.08] text-xs text-zinc-200"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-[--line] bg-white hover:bg-[--muted-bg] text-xs text-[--text-2] font-medium transition cursor-pointer"
         >
           <RefreshCw className={`size-3.5 ${recalcBusy ? "animate-spin" : ""}`} />
           EOQ / ROP Canlı Hesapla
@@ -451,62 +452,61 @@ export function EoqSuggestionsPanel({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead className="border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+        <table className="w-full text-left text-xs border-collapse">
+          <thead className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
             <tr>
-              <th className="py-2.5 pr-3">Ürün / Depo</th>
+              <th className="py-2.5 pr-3 pl-3">Ürün / Depo</th>
               <th className="py-2.5 px-2">Tedarikçi</th>
               <th className="py-2.5 px-2 text-right">Net Pozisyon (Mevcut+PO)</th>
               <th className="py-2.5 px-2 text-right">Güvenlik / ROP</th>
               <th className="py-2.5 px-2 text-right">EOQ</th>
               <th className="py-2.5 px-2 text-right">Önerilen Sipariş</th>
-              <th className="py-2.5 pl-3 text-right">PO Dönüşüm</th>
+              <th className="py-2.5 pl-3 pr-3 text-right">PO Dönüşüm</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.04]">
-            {eoqPolicies.map((pol) => (
-              <tr key={pol.id} className="hover:bg-white/[0.02]">
-                <td className="py-2.5 pr-3">
-                  <div className="font-medium text-zinc-100">{pol.itemName}</div>
-                  <div className="text-[11px] font-mono text-zinc-500">
-                    {pol.sku} · {pol.warehouseName}
+          <tbody className="divide-y divide-[--line]">
+            {(eoqPolicies || []).map((pol) => (
+              <tr key={pol.id} className="hover:bg-[--brand-soft]/30 transition">
+                <td className="py-2.5 pr-3 pl-3">
+                  <div className="font-medium text-[--text]">{safeText(pol.itemName)}</div>
+                  <div className="text-[11px] font-mono text-[--brand]">
+                    {safeText(pol.sku)} · {safeText(pol.warehouseName)}
                   </div>
                 </td>
-                <td className="py-2.5 px-2 text-zinc-300">{pol.supplierName}</td>
-                <td className="py-2.5 px-2 text-right font-mono">
-                  <span className={pol.needsReorder ? "text-amber-300 font-semibold" : "text-zinc-200"}>
-                    {pol.netPosition}
+                <td className="py-2.5 px-2 text-[--text-2]">{safeText(pol.supplierName)}</td>
+                <td className="py-2.5 px-2 text-right font-mono tabular-nums">
+                  <span className={pol.needsReorder ? "text-[--warn] font-semibold" : "text-[--text]"}>
+                    {safeNumber(pol.netPosition)}
                   </span>{" "}
-                  <span className="text-[10px] text-zinc-500">
-                    ({pol.availableQty}+{pol.onOrderQty})
+                  <span className="text-[10px] text-[--text-muted]">
+                    ({safeNumber(pol.availableQty)}+{safeNumber(pol.onOrderQty)})
                   </span>
                 </td>
-                <td className="py-2.5 px-2 text-right font-mono text-zinc-300">
-                  {pol.safetyStock} / <strong className="text-white">{pol.rop}</strong>
+                <td className="py-2.5 px-2 text-right font-mono tabular-nums text-[--text-2]">
+                  {safeNumber(pol.safetyStock)} / <strong className="text-[--text]">{safeNumber(pol.rop)}</strong>
                 </td>
-                <td className="py-2.5 px-2 text-right font-mono text-[#34D399] font-semibold">
-                  {pol.eoq}
+                <td className="py-2.5 px-2 text-right font-mono tabular-nums text-[--brand] font-semibold">
+                  {safeNumber(pol.eoq)}
                 </td>
-                <td className="py-2.5 px-2 text-right font-mono">
+                <td className="py-2.5 px-2 text-right font-mono tabular-nums">
                   {pol.needsReorder ? (
-                    <span className="px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 font-semibold">
-                      {pol.suggestedOrderQty} {pol.baseUnit} (₺
-                      {Number(pol.estimatedOrderCostTry).toLocaleString("tr-TR")})
+                    <span className="px-2 py-0.5 rounded-full bg-[--warn-soft] text-[--warn] font-semibold border border-[--warn]/25">
+                      {safeNumber(pol.suggestedOrderQty)} {safeText(pol.baseUnit)} ({safeCurrency(pol.estimatedOrderCostTry)})
                     </span>
                   ) : (
-                    <span className="text-zinc-500">Yeterli</span>
+                    <span className="text-[--text-muted]">Yeterli</span>
                   )}
                 </td>
-                <td className="py-2.5 pl-3 text-right">
+                <td className="py-2.5 pl-3 pr-3 text-right">
                   <button
                     type="button"
                     disabled={convertingId === pol.id}
                     onClick={() => handleConvertPo(pol)}
                     data-testid={`eoq-convert-po-${pol.sku}`}
-                    className={`inline-flex items-center gap-1 h-7 px-2.5 rounded-lg text-[11px] font-semibold ${
+                    className={`inline-flex items-center gap-1 h-7 px-3 rounded-full text-[11px] font-semibold transition cursor-pointer ${
                       pol.needsReorder
-                        ? "bg-[#34D399] text-[#061811]"
-                        : "border border-white/10 bg-white/[0.04] text-zinc-300"
+                        ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white shadow-sm hover:opacity-95"
+                        : "border border-[--line] bg-white text-[--text-muted] hover:bg-[--muted-bg]"
                     }`}
                   >
                     <ShoppingCart className="size-3" />

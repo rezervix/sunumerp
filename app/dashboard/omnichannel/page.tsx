@@ -235,9 +235,9 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] m-6">
-        <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin" />
-        <p className="text-sm font-medium text-zinc-400">
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] m-6">
+        <RefreshCw className="w-8 h-8 text-[--brand] animate-spin" />
+        <p className="text-sm font-medium text-[--text-muted]">
           Omnichannel Satış ve Lojistik Motoru Yükleniyor...
         </p>
       </div>
@@ -245,7 +245,7 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
+    <div className="space-y-6">
       {/* 0. STOK VE DEPO YÖNETİMİ BİRLEŞİK ÜST SEKME / NAVİGASYON */}
       <InventoryModuleNav />
 
@@ -258,12 +258,12 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
       />
 
       {/* Durum & Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-zinc-400 bg-[#111513]/90 border border-white/[0.06] px-4 py-2.5 rounded-[20px]">
+      <div className="flex items-center justify-between text-xs text-[--text-muted] bg-white/80 backdrop-blur-xl border border-[--line] px-4 py-2.5 rounded-[20px] shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-zinc-300">Prisma / PostgreSQL Bağlantısı Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[--ok] animate-ping" />
+          <span className="text-[--text]">Prisma / PostgreSQL Bağlantısı Aktif</span>
           {refreshing && (
-            <span className="text-emerald-400 font-medium flex items-center gap-1">
+            <span className="text-[--brand] font-medium flex items-center gap-1">
               <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
             </span>
           )}
@@ -272,15 +272,15 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchOmnichannelData()}
-            className="flex items-center gap-1.5 text-zinc-400 hover:text-emerald-400 transition"
+            className="flex items-center gap-1.5 text-[--text-muted] hover:text-[--text] transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
           </button>
-          <span className="text-white/10">•</span>
+          <span className="text-[--line]">•</span>
           <button
             onClick={handleResetSeed}
-            className="flex items-center gap-1.5 text-zinc-400 hover:text-rose-400 transition"
+            className="flex items-center gap-1.5 text-[--text-muted] hover:text-[--bad] transition cursor-pointer"
           >
             <ResetIcon className="w-3.5 h-3.5" />
             Örnek Verileri Sıfırla
@@ -290,36 +290,36 @@ export default function OmnichannelLogisticsAndEDocumentPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 lg:grid-cols-4 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-[20px] h-auto">
+        <TabsList className="grid grid-cols-2 lg:grid-cols-4 bg-white/80 backdrop-blur-xl border border-[--line] p-1.5 rounded-[20px] h-auto shadow-sm">
           <TabsTrigger
             value="orders"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <ShoppingBag className="w-4 h-4 text-emerald-400" />
+            <ShoppingBag className="w-4 h-4 text-[--brand]" />
             Sipariş Karşılama ({orders.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="rma"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <RotateCcw className="w-4 h-4 text-emerald-400" />
+            <RotateCcw className="w-4 h-4 text-[--brand]" />
             İade & RMA Muayenesi ({rmaReturns.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="channels"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <Globe className="w-4 h-4 text-emerald-400" />
+            <Globe className="w-4 h-4 text-[--brand]" />
             Pazaryerleri & Webhook ({channels.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="edoc"
-            className="flex items-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <FileText className="w-4 h-4 text-emerald-400" />
+            <FileText className="w-4 h-4 text-[--brand]" />
             GİB E-İrsaliye & Fatura ({eDocuments.length})
           </TabsTrigger>
         </TabsList>

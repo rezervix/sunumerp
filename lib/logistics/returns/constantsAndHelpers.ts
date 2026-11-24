@@ -72,7 +72,7 @@ export const RMA_STATUS_BADGE_CLASSES: Record<RmaWorkflowStatus, string> = {
   TESLIM_ALINDI: "bg-purple-500/10 text-purple-300 border-purple-500/25",
   INCELEMEDE: "bg-orange-500/10 text-orange-300 border-orange-500/25",
   KARARA_BAGLANDI: "bg-cyan-500/10 text-cyan-300 border-cyan-500/25",
-  KAPANDI: "bg-emerald-500/10 text-[#34D399] border-emerald-500/25",
+  KAPANDI: "bg-[--brand]/10 text-[#1267E6] border-[--brand]/25",
   REDDEDILDI: "bg-rose-500/10 text-rose-300 border-rose-500/25",
   IPTAL: "bg-zinc-500/10 text-zinc-400 border-white/10",
 }
@@ -96,7 +96,7 @@ export const RMA_DECISION_LABELS: Record<RmaQualityDecision, string> = {
 }
 
 export const RMA_DECISION_BADGE_CLASSES: Record<RmaQualityDecision, string> = {
-  RESTOCK_TO_BIN: "bg-emerald-500/10 text-[#34D399] border-emerald-500/25",
+  RESTOCK_TO_BIN: "bg-[--brand]/10 text-[#1267E6] border-[--brand]/25",
   REPAIR_REFURBISH: "bg-amber-500/10 text-amber-300 border-amber-500/25",
   RETURN_TO_VENDOR: "bg-indigo-500/10 text-indigo-300 border-indigo-500/25",
   SCRAP: "bg-rose-500/10 text-rose-300 border-rose-500/25",

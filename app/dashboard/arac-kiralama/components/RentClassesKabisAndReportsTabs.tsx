@@ -126,7 +126,7 @@ export function RentClassesTariffsAndPolicyTab({
   return (
     <div className="space-y-5 text-xs">
       {/* 1. Araç Sınıfları */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
         <h3 className="text-sm font-bold text-white">
           Araç Sınıfları &amp; Yaş / Ehliyet Yılı / Km Kuralları ({classes.length})
         </h3>
@@ -134,11 +134,11 @@ export function RentClassesTariffsAndPolicyTab({
           {classes.map((cls: any) => (
             <div
               key={cls.id}
-              className="bg-[#080A09] border border-white/[0.08] rounded-xl p-3.5 space-y-1.5"
+              className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3.5 space-y-1.5"
             >
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-white">{cls.name}</span>
-                <span className="font-mono text-[11px] text-[#34D399]">{cls.code}</span>
+                <span className="font-mono text-[11px] text-[#1267E6]">{cls.code}</span>
               </div>
               <div className="text-[11px] text-zinc-400">{cls.description}</div>
               <div className="grid grid-cols-2 gap-1 pt-1 text-[11px] font-mono text-zinc-300">
@@ -156,7 +156,7 @@ export function RentClassesTariffsAndPolicyTab({
 
       {/* 2. Fiyat Tarifeleri & Ek Hizmetler */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div className="lg:col-span-7 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+        <div className="lg:col-span-7 bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
           <h3 className="text-sm font-bold text-white">
             Fiyat Tarifeleri (Günlük / Haftalık / Aylık / Sezonluk — {tariffs.length})
           </h3>
@@ -167,12 +167,12 @@ export function RentClassesTariffsAndPolicyTab({
               value={newTariffName}
               onChange={(e) => setNewTariffName(e.target.value)}
               placeholder="Yeni tarife adı..."
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white"
             />
             <select
               value={newTariffClassId}
               onChange={(e) => setNewTariffClassId(e.target.value)}
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-2 py-1.5 text-white"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-2 py-1.5 text-white"
             >
               {classes.map((c: any) => (
                 <option key={c.id} value={c.id}>
@@ -185,12 +185,12 @@ export function RentClassesTariffsAndPolicyTab({
               value={newTariffDailyRate}
               onChange={(e) => setNewTariffDailyRate(Number(e.target.value))}
               placeholder="Günlük TRY"
-              className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white font-mono"
+              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-white font-mono"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="px-3 py-1.5 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
             >
               + Tarife Ekle
             </button>
@@ -199,7 +199,7 @@ export function RentClassesTariffsAndPolicyTab({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-white/[0.08] text-[10px] text-zinc-400">
+                <tr className="border-b border-[--line] text-[10px] text-zinc-400">
                   <th className="py-2 px-2">Kod / Tarife Adı</th>
                   <th className="py-2 px-2">Sezon</th>
                   <th className="py-2 px-2">Günlük</th>
@@ -218,7 +218,7 @@ export function RentClassesTariffsAndPolicyTab({
                     <td className="py-2 px-2 text-[11px] text-zinc-300">
                       {RENT_SEASON_LABELS[t.seasonType as RentSeasonType] || t.seasonType}
                     </td>
-                    <td className="py-2 px-2 font-mono text-[#34D399]">
+                    <td className="py-2 px-2 font-mono text-[#1267E6]">
                       ₺{Number(t.dailyRateTry).toLocaleString('tr-TR')}
                     </td>
                     <td className="py-2 px-2 font-mono text-zinc-200">
@@ -237,7 +237,7 @@ export function RentClassesTariffsAndPolicyTab({
           </div>
         </div>
 
-        <div className="lg:col-span-5 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+        <div className="lg:col-span-5 bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
           <h3 className="text-sm font-bold text-white">
             Ek Hizmetler &amp; Güvence Paketleri ({extraServices.length})
           </h3>
@@ -245,13 +245,13 @@ export function RentClassesTariffsAndPolicyTab({
             {extraServices.map((ex: any) => (
               <div
                 key={ex.id}
-                className="bg-[#080A09] border border-white/[0.08] rounded-xl p-3 flex items-center justify-between"
+                className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between"
               >
                 <div>
                   <div className="font-semibold text-white">{ex.name}</div>
                   <div className="text-[11px] text-zinc-400">{ex.description}</div>
                 </div>
-                <div className="font-mono font-semibold text-[#34D399]">
+                <div className="font-mono font-semibold text-[#1267E6]">
                   ₺{Number(ex.unitPriceTry).toLocaleString('tr-TR')}/
                   {ex.pricingType === 'DAILY' ? 'gün' : 'kira'}
                 </div>
@@ -262,7 +262,7 @@ export function RentClassesTariffsAndPolicyTab({
       </div>
 
       {/* 3. Ayarlanabilir Kurallar & Sözleşme Şablon Metni (Hukuki İnceleme Uyarılı) */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-4">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-white">
@@ -276,7 +276,7 @@ export function RentClassesTariffsAndPolicyTab({
             type="button"
             disabled={submitting}
             onClick={handleSavePolicy}
-            className="px-4 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
           >
             {submitting ? 'Kaydediliyor...' : 'Kuralları ve Şablonu Kaydet'}
           </button>
@@ -288,7 +288,7 @@ export function RentClassesTariffsAndPolicyTab({
             <select
               value={invoiceTimingMode}
               onChange={(e) => setInvoiceTimingMode(e.target.value)}
-              className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+              className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
             >
               {Object.entries(RENT_INVOICE_TIMING_LABELS).map(([k, lbl]) => (
                 <option key={k} value={k}>
@@ -304,7 +304,7 @@ export function RentClassesTariffsAndPolicyTab({
               type="number"
               value={gracePeriodMinutes}
               onChange={(e) => setGracePeriodMinutes(Number(e.target.value))}
-              className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+              className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
             />
           </div>
 
@@ -314,7 +314,7 @@ export function RentClassesTariffsAndPolicyTab({
               type="number"
               value={missingFuelRatePerPctTry}
               onChange={(e) => setMissingFuelRatePerPctTry(Number(e.target.value))}
-              className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+              className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
             />
           </div>
 
@@ -324,7 +324,7 @@ export function RentClassesTariffsAndPolicyTab({
               type="number"
               value={adminServiceFeeForPenaltyTry}
               onChange={(e) => setAdminServiceFeeForPenaltyTry(Number(e.target.value))}
-              className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+              className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
             />
           </div>
         </div>
@@ -338,7 +338,7 @@ export function RentClassesTariffsAndPolicyTab({
             rows={7}
             value={templateText}
             onChange={(e) => setTemplateText(e.target.value)}
-            className="w-full bg-[#080A09] border border-white/[0.1] rounded-xl p-3 text-zinc-200 font-mono text-[11px]"
+            className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl p-3 text-zinc-200 font-mono text-[11px]"
           />
         </div>
       </div>
@@ -410,7 +410,7 @@ export function RentCustomersKvkkTab({
 
   return (
     <div className="space-y-4 text-xs">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-bold text-white">
             Müşteri &amp; Sürücü Kayıtları (KVKK Maskeleme &amp; Ehliyet Doğrulama — {customers.length})
@@ -433,7 +433,7 @@ export function RentCustomersKvkkTab({
               </>
             ) : (
               <>
-                <Eye className="w-3.5 h-3.5 text-[#34D399]" />
+                <Eye className="w-3.5 h-3.5 text-[#1267E6]" />
                 KVKK Verilerini Göster (Loglanır)
               </>
             )}
@@ -444,14 +444,14 @@ export function RentCustomersKvkkTab({
       {/* Yeni Kiracı Ekleme Formu */}
       <form
         onSubmit={handleCreateCustomer}
-        className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-6 gap-2.5"
+        className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-6 gap-2.5"
       >
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Ad Soyad / Firma..."
-          className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+          className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
           required
         />
         <input
@@ -459,42 +459,42 @@ export function RentCustomersKvkkTab({
           value={tckn}
           onChange={(e) => setTckn(e.target.value)}
           placeholder="TCKN / Pasaport No"
-          className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+          className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
         />
         <input
           type="text"
           value={licenseNo}
           onChange={(e) => setLicenseNo(e.target.value)}
           placeholder="Ehliyet No (Örn: EHL-34-901)"
-          className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+          className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
         />
         <input
           type="date"
           value={birthDate}
           onChange={(e) => setBirthDate(e.target.value)}
           title="Doğum Tarihi"
-          className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+          className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
         />
         <input
           type="date"
           value={licenseExpiresAt}
           onChange={(e) => setLicenseExpiresAt(e.target.value)}
           title="Ehliyet Geçerlilik Tarihi"
-          className="bg-[#080A09] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+          className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
         />
         <button
           type="submit"
           disabled={submitting}
-          className="px-4 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+          className="px-4 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
         >
           + Kiracı / Sürücü Ekle
         </button>
       </form>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 overflow-x-auto">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[880px]">
           <thead>
-            <tr className="border-b border-white/[0.08] text-[11px] text-zinc-400">
+            <tr className="border-b border-[--line] text-[11px] text-zinc-400">
               <th className="py-2 px-3">Kiracı Ad Soyad / Firma</th>
               <th className="py-2 px-3">Uyruk</th>
               <th className="py-2 px-3">TCKN / Pasaport (KVKK)</th>
@@ -505,7 +505,7 @@ export function RentCustomersKvkkTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05]">
             {customers.map((c: any) => (
-              <tr key={c.id} className="hover:bg-white/[0.02]">
+              <tr key={c.id} className="hover:bg-[--page]">
                 <td className="py-2.5 px-3">
                   <div className="font-semibold text-white">{c.name}</div>
                   {c.company && <div className="text-[11px] text-zinc-400">{c.company}</div>}
@@ -527,7 +527,7 @@ export function RentCustomersKvkkTab({
                       Kara Liste
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-[#34D399]">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-[--brand]/15 text-[#1267E6]">
                       Uygun
                     </span>
                   )}
@@ -621,7 +621,7 @@ export function RentKabisPreparationTab({
 
   return (
     <div className="space-y-4 text-xs">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-bold text-white">
             KABİS Bildirim Hazırlık ve Dışa Aktarma Merkezi ({kabisRecords.length})
@@ -636,7 +636,7 @@ export function RentKabisPreparationTab({
             type="button"
             disabled={submitting}
             onClick={() => handleExportPackage('CSV')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             CSV Paketi Dışa Aktar
@@ -647,16 +647,16 @@ export function RentKabisPreparationTab({
             onClick={() => handleExportPackage('JSON_PAKET')}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white cursor-pointer"
           >
-            <FileText className="w-3.5 h-3.5 text-[#34D399]" />
+            <FileText className="w-3.5 h-3.5 text-[#1267E6]" />
             JSON Paketi İndir
           </button>
         </div>
       </div>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 overflow-x-auto">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[900px]">
           <thead>
-            <tr className="border-b border-white/[0.08] text-[11px] text-zinc-400">
+            <tr className="border-b border-[--line] text-[11px] text-zinc-400">
               <th className="py-2 px-3">KABİS Ref No / Tip</th>
               <th className="py-2 px-3">Plaka &amp; Şasi No (VIN)</th>
               <th className="py-2 px-3">Kiracı &amp; Kimlik / Ehliyet (Maskeli)</th>
@@ -667,7 +667,7 @@ export function RentKabisPreparationTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05]">
             {kabisRecords.map((k: any) => (
-              <tr key={k.id} className="hover:bg-white/[0.02]">
+              <tr key={k.id} className="hover:bg-[--page]">
                 <td className="py-2.5 px-3">
                   <div className="font-mono font-semibold text-white">{k.kabisRefNo}</div>
                   <div className="text-[11px] text-zinc-400">
@@ -718,7 +718,7 @@ export function RentKabisPreparationTab({
                         type="button"
                         disabled={submitting}
                         onClick={() => handleRetryOrUpdateStatus(k.id, 'HAZIRLANDI')}
-                        className="px-2.5 py-1 rounded-lg bg-amber-400 text-[#061811] font-semibold text-[11px] cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-amber-400 text-white font-semibold text-[11px] cursor-pointer"
                       >
                         Yeniden Hazırla
                       </button>
@@ -728,7 +728,7 @@ export function RentKabisPreparationTab({
                         type="button"
                         disabled={submitting}
                         onClick={() => handleRetryOrUpdateStatus(k.id, 'GONDERILDI_MANUEL')}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-[#34D399] border border-emerald-500/30 text-[11px] cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-[--brand]/20 text-[#1267E6] border border-[--brand-line] text-[11px] cursor-pointer"
                       >
                         Manuel İşlendi İşaretle
                       </button>
@@ -766,7 +766,7 @@ export function RentAnalyticsAndReportsTab({
   return (
     <div className="space-y-5 text-xs">
       {/* Üst KPI ve Excel / PDF Dışa Aktarma Butonları */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-bold text-white">
             Araç Doluluk, Gelir/Gider ve Filo TCO Entegre Kârlılık Raporları
@@ -780,7 +780,7 @@ export function RentAnalyticsAndReportsTab({
           <button
             type="button"
             onClick={() => handleDownloadReport('xlsx')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#34D399] text-[#061811] font-semibold cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1267E6] text-white font-semibold cursor-pointer"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
             Excel (.xlsx) İndir
@@ -790,20 +790,20 @@ export function RentAnalyticsAndReportsTab({
             onClick={() => handleDownloadReport('pdf')}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white cursor-pointer"
           >
-            <FileText className="w-3.5 h-3.5 text-[#34D399]" />
+            <FileText className="w-3.5 h-3.5 text-[#1267E6]" />
             PDF (.pdf) İndir
           </button>
         </div>
       </div>
 
       {/* Araç Başı Kârlılık Tablosu (Filo TCO ile) */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 overflow-x-auto">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 overflow-x-auto">
         <h4 className="text-xs font-bold text-white mb-3">
           1. Araç Başı Doluluk &amp; Net Kârlılık Tablosu (Kiralama Geliri – Filo TCO Gideri)
         </h4>
         <table className="w-full text-left border-collapse min-w-[880px]">
           <thead>
-            <tr className="border-b border-white/[0.08] text-[11px] text-zinc-400">
+            <tr className="border-b border-[--line] text-[11px] text-zinc-400">
               <th className="py-2 px-3">Plaka &amp; Araç</th>
               <th className="py-2 px-3">Sınıf</th>
               <th className="py-2 px-3">Kiralanan Gün / Doluluk</th>
@@ -816,7 +816,7 @@ export function RentAnalyticsAndReportsTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05] font-mono">
             {vehicleRows.map((row: any) => (
-              <tr key={row.vehicleId} className="hover:bg-white/[0.02]">
+              <tr key={row.vehicleId} className="hover:bg-[--page]">
                 <td className="py-2.5 px-3">
                   <div className="font-semibold text-white">{row.plate}</div>
                   <div className="text-[11px] font-sans text-zinc-400">{row.brandModel}</div>
@@ -831,7 +831,7 @@ export function RentAnalyticsAndReportsTab({
                 <td className="py-2.5 px-3 text-amber-300">
                   ₺{Number(row.extraChargesIncomeTry).toLocaleString('tr-TR')}
                 </td>
-                <td className="py-2.5 px-3 text-[#34D399] font-semibold">
+                <td className="py-2.5 px-3 text-[#1267E6] font-semibold">
                   ₺{Number(row.totalRevenueTry).toLocaleString('tr-TR')}
                 </td>
                 <td className="py-2.5 px-3 text-rose-300">
@@ -839,7 +839,7 @@ export function RentAnalyticsAndReportsTab({
                 </td>
                 <td
                   className={`py-2.5 px-3 text-right font-bold ${
-                    row.netProfitTry >= 0 ? 'text-[#34D399]' : 'text-rose-400'
+                    row.netProfitTry >= 0 ? 'text-[#1267E6]' : 'text-rose-400'
                   }`}
                 >
                   ₺{Number(row.netProfitTry).toLocaleString('tr-TR')}
@@ -852,11 +852,11 @@ export function RentAnalyticsAndReportsTab({
 
       {/* Sınıf Bazlı Gelir ve Ek Ücret Dökümü */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <h4 className="text-xs font-bold text-white mb-3">2. Sınıf Bazlı Gelir Dağılımı</h4>
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/[0.08] text-[10px] text-zinc-400">
+              <tr className="border-b border-[--line] text-[10px] text-zinc-400">
                 <th className="py-2 px-2">Sınıf</th>
                 <th className="py-2 px-2">Rezervasyon / Gün</th>
                 <th className="py-2 px-2">Ort. Günlük</th>
@@ -873,7 +873,7 @@ export function RentAnalyticsAndReportsTab({
                   <td className="py-2 px-2 font-mono text-zinc-300">
                     ₺{Number(c.avgDailyRevenueTry).toLocaleString('tr-TR')}
                   </td>
-                  <td className="py-2 px-2 text-right font-mono font-semibold text-[#34D399]">
+                  <td className="py-2 px-2 text-right font-mono font-semibold text-[#1267E6]">
                     ₺{Number(c.revenueTry).toLocaleString('tr-TR')}
                   </td>
                 </tr>
@@ -882,7 +882,7 @@ export function RentAnalyticsAndReportsTab({
           </table>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold text-white">
               3. Ek Ücret Dökümü &amp; İptal / No-Show Oranı
@@ -896,13 +896,13 @@ export function RentAnalyticsAndReportsTab({
             {extraRows.map((ex: any) => (
               <div
                 key={ex.entryType}
-                className="bg-[#080A09] border border-white/[0.06] rounded-xl p-2.5 flex items-center justify-between"
+                className="bg-[#F6F8FB] border border-[--line] rounded-xl p-2.5 flex items-center justify-between"
               >
                 <div>
                   <span className="text-white font-medium">{ex.label}</span>
                   <span className="text-[11px] text-zinc-400 ml-2">({ex.count} kayıt)</span>
                 </div>
-                <span className="font-mono font-semibold text-[#34D399]">
+                <span className="font-mono font-semibold text-[#1267E6]">
                   ₺{Number(ex.totalAmountTry).toLocaleString('tr-TR')}
                 </span>
               </div>

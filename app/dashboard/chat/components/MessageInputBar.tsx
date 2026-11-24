@@ -411,7 +411,7 @@ export function MessageInputBar({
                     Ses Dosyası
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={shareLocation} className="rounded-xl gap-3 cursor-pointer py-2">
-                    <span className="material-symbols-outlined text-emerald-500">location_on</span>
+                    <span className="material-symbols-outlined text-[--brand]">location_on</span>
                     Konum
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsPollOpen(true)} className="rounded-xl gap-3 cursor-pointer py-2">

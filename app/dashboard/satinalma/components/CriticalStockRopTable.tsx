@@ -10,6 +10,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { safeNumber, safeCurrency, safeText } from '@/lib/utils/safe-display';
 
 interface CriticalItem {
   id: string;
@@ -53,10 +54,11 @@ export function CriticalStockRopTable({
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
   const [submittingId, setSubmittingId] = useState<string | null>(null);
 
-  const filteredItems = items.filter((item) => {
-    const matchesSearch =
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.sku.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredItems = (items || []).filter((item) => {
+    const name = (item.name || '').toLowerCase();
+    const sku = (item.sku || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = name.includes(query) || sku.includes(query);
     const matchesStatus =
       selectedStatus === 'ALL' || item.status === selectedStatus;
     return matchesSearch && matchesStatus;
@@ -83,7 +85,7 @@ export function CriticalStockRopTable({
           unitCost: item.unitCost,
           priority: item.status === 'STOCKOUT' ? 'CRITICAL' : 'HIGH',
           triggerSource: 'AUTO_ROP_ENGINE',
-          notes: `Otomatik ROP Tetiklemesi: Stok (${item.availableQty} ${item.unit}) < ROP (${item.reorderPointRop}). Güvenlik Stoğu: ${item.safetyStock}`
+          notes: `Otomatik ROP Tetiklemesi: Stok (${safeNumber(item.availableQty)} ${safeText(item.unit)}) < ROP (${safeNumber(item.reorderPointRop)}). Güvenlik Stoğu: ${safeNumber(item.safetyStock)}`
         })
       });
 
@@ -110,29 +112,29 @@ export function CriticalStockRopTable({
     switch (status) {
       case 'STOCKOUT':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20">
-            <ShieldAlert className="w-3 h-3 text-rose-400" />
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-[--bad-soft] text-[--bad] border border-[--bad]/20">
+            <ShieldAlert className="w-3 h-3 text-[--bad]" />
             TÜKENDİ (0 STOK)
           </span>
         );
       case 'CRITICAL_SAFETY':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <AlertTriangle className="w-3 h-3 text-amber-400" />
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[--warn-soft] text-[--warn] border border-[--warn]/20">
+            <AlertTriangle className="w-3 h-3 text-[--warn]" />
             GÜVENLİK ALTI
           </span>
         );
       case 'BELOW_ROP':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <TrendingDown className="w-3 h-3 text-amber-400" />
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[--warn-soft] text-[--warn] border border-[--warn]/20">
+            <TrendingDown className="w-3 h-3 text-[--warn]" />
             ROP EŞİĞİ ALTI
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-emerald-500/10 text-[#34D399] border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-[#34D399]" />
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[--ok-soft] text-[--ok] border border-[--ok]/20">
+            <CheckCircle2 className="w-3 h-3 text-[--ok]" />
             NORMAL
           </span>
         );
@@ -142,161 +144,137 @@ export function CriticalStockRopTable({
   return (
     <div className="space-y-4">
       {/* Filtre ve Arama Barı */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] p-4 rounded-[20px]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white/80 backdrop-blur-xl border border-[--line] p-4 rounded-[20px] shadow-sm">
         <div>
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
+          <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-[--warn]" />
             Kritik Stok & Otomatik Yeniden Sipariş (ROP) Listesi
           </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Dinamik ROP = (Günlük Talep × Tedarik Süresi) + Güvenlik Stoğu formülü ile anlık tetiklenen ikmal önerileri
+          <p className="text-xs text-[--text-muted] mt-0.5">
+            Günlük talep hızı ve tedarik süresine göre dinamik hesaplanan sipariş önerileri
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Arama Kutusu */}
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-[--text-muted] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Ürün adı veya SKU ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl focus:border-[#34D399] focus:outline-none"
+              placeholder="Ürün adı veya SKU ara..."
+              className="pl-9 pr-3 py-1.5 text-xs bg-white border border-[--line] text-[--text] placeholder:text-[--text-muted] rounded-xl focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none w-full sm:w-60"
             />
           </div>
 
-          {/* Durum Filtresi */}
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="text-xs bg-white/[0.03] border border-white/[0.08] text-zinc-300 rounded-xl p-2 focus:outline-none"
+            className="text-xs bg-white border border-[--line] text-[--text] rounded-xl px-3 py-1.5 focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
           >
-            <option value="ALL" className="bg-[#111513] text-white">Tüm Kritik Seviyeler</option>
-            <option value="STOCKOUT" className="bg-[#111513] text-white">Tükenenler (0 Stok)</option>
-            <option value="CRITICAL_SAFETY" className="bg-[#111513] text-white">Güvenlik Stoğu Altı</option>
-            <option value="BELOW_ROP" className="bg-[#111513] text-white">ROP Eşiği Altı</option>
+            <option value="ALL">Tüm Durumlar</option>
+            <option value="STOCKOUT">Tükenenler (0 Stok)</option>
+            <option value="CRITICAL_SAFETY">Güvenlik Stoğu Altındakiler</option>
+            <option value="BELOW_ROP">ROP Altındakiler</option>
+            <option value="HEALTHY">Normal</option>
           </select>
         </div>
       </div>
 
       {/* Tablo */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] overflow-hidden shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="bg-white/[0.02] text-zinc-400 border-b border-white/[0.06] text-left uppercase text-[11px] font-medium">
-                <th className="py-4 px-5">Ürün / SKU</th>
-                <th className="py-4 px-3 text-center">Durum</th>
-                <th className="py-4 px-3 text-center">Stok / ROP Seviyesi (LED)</th>
-                <th className="py-4 px-3 text-right">Kullanılabilir</th>
-                <th className="py-4 px-3 text-right">Güvenlik (SS)</th>
-                <th className="py-4 px-3 text-right">Sipariş Eşiği (ROP)</th>
-                <th className="py-4 px-3 text-right">Önerilen Sipariş</th>
-                <th className="py-4 px-3 text-right">Tahmini Tutar</th>
-                <th className="py-4 px-5 text-right">Aksiyon</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredItems.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-10 text-center text-zinc-500">
-                    Kritik stoğa düşen ürün bulunmuyor. Tüm stoklar sağlıklı seviyede.
-                  </td>
+      <div className="bg-white border border-[--line] rounded-[20px] overflow-hidden shadow-sm">
+        {filteredItems.length === 0 ? (
+          <div className="text-center py-12 text-[--text-muted] text-xs">
+            Kritik stok eşiği altında kayıt bulunamadı.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="border-b border-[--line] bg-[--muted-bg]/50 text-[11px] uppercase tracking-wider text-[--text-muted] font-medium">
+                  <th className="py-3 px-4">Ürün & SKU</th>
+                  <th className="py-3 px-3">Depo</th>
+                  <th className="py-3 px-3 text-right">Eldeki / Rezerve</th>
+                  <th className="py-3 px-3 text-right">Kullanılabilir</th>
+                  <th className="py-3 px-3 text-right">ROP Eşiği</th>
+                  <th className="py-3 px-3 text-right">Güvenlik Stoğu</th>
+                  <th className="py-3 px-3 text-right">Önerilen Sipariş</th>
+                  <th className="py-3 px-3">Durum</th>
+                  <th className="py-3 px-4 text-right">Aksiyon</th>
                 </tr>
-              ) : (
-                filteredItems.map((it) => {
-                  const totalEstimated = (it.recommendedOrderQty || 0) * it.unitCost;
-                  const ropTarget = it.reorderPointRop || 10;
-                  const ratio = ropTarget > 0 ? it.availableQty / ropTarget : 0;
-                  const activeSegments = Math.min(8, Math.max(it.availableQty > 0 ? 1 : 0, Math.round(ratio * 8)));
+              </thead>
+              <tbody className="divide-y divide-[--line]">
+                {filteredItems.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-[--brand-soft]/40 transition group"
+                  >
+                    <td className="py-3.5 px-4">
+                      <div className="font-medium text-[--text] text-sm">
+                        {safeText(item.name)}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[--text-muted]">
+                        <span className="font-mono text-[--brand]">{safeText(item.sku)}</span>
+                        <span>•</span>
+                        <span>{safeText(item.category)}</span>
+                      </div>
+                    </td>
 
-                  return (
-                    <tr
-                      key={it.id}
-                      className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
-                    >
-                      <td className="py-4 px-5">
-                        <div className="font-medium text-white">
-                          {it.name}
-                        </div>
-                        <div className="flex items-center gap-2 text-zinc-500 font-mono text-[11px] mt-0.5">
-                          <span>{it.sku}</span>
-                          <span>•</span>
-                          <span className="text-zinc-400">{it.category}</span>
-                        </div>
-                      </td>
+                    <td className="py-3.5 px-3 text-[--text-2]">
+                      {safeText(item.warehouseName, 'Merkez Depo')}
+                    </td>
 
-                      <td className="py-4 px-3 text-center">
-                        {getStatusBadge(it.status)}
-                      </td>
+                    <td className="py-3.5 px-3 text-right font-mono tabular-nums text-[--text-2]">
+                      <div>{safeNumber(item.totalOnHand)} {safeText(item.unit)}</div>
+                      <div className="text-[10px] text-[--text-muted]">
+                        Rezerve: {safeNumber(item.totalReserved)}
+                      </div>
+                    </td>
 
-                      {/* 8-Segment LED Pipeline */}
-                      <td className="py-4 px-3 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          {[0, 1, 2, 3, 4, 5, 6, 7].map(idx => (
-                            <div
-                              key={idx}
-                              className={`h-1.5 w-2.5 rounded-full transition-colors ${
-                                idx < activeSegments
-                                  ? it.status === 'STOCKOUT'
-                                    ? "bg-rose-400 shadow-[0_0_6px_rgba(244,63,94,0.4)]"
-                                    : it.status === 'CRITICAL_SAFETY' || it.status === 'BELOW_ROP'
-                                    ? "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.35)]"
-                                    : "bg-[#34D399] shadow-[0_0_6px_rgba(52,211,153,0.35)]"
-                                  : "bg-white/[0.08]"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </td>
+                    <td className="py-3.5 px-3 text-right font-mono tabular-nums">
+                      <span className={`font-semibold ${
+                        safeNumber(item.availableQty) <= 0
+                          ? 'text-[--bad]'
+                          : safeNumber(item.availableQty) < safeNumber(item.reorderPointRop)
+                          ? 'text-[--warn]'
+                          : 'text-[--ok]'
+                      }`}>
+                        {safeNumber(item.availableQty)} {safeText(item.unit)}
+                      </span>
+                    </td>
 
-                      <td className="py-4 px-3 text-right">
-                        <div className={`font-semibold ${it.availableQty === 0 ? 'text-rose-400' : 'text-white'}`}>
-                          {it.availableQty} {it.unit}
-                        </div>
-                        {it.onOrderQty > 0 && (
-                          <div className="text-[11px] text-zinc-400 font-medium font-mono">
-                            +{it.onOrderQty} {it.unit} yolda
-                          </div>
-                        )}
-                      </td>
+                    <td className="py-3.5 px-3 text-right font-mono tabular-nums text-[--text-2]">
+                      {safeNumber(item.reorderPointRop)} {safeText(item.unit)}
+                    </td>
 
-                      <td className="py-4 px-3 text-right font-medium text-zinc-400 font-mono">
-                        {it.safetyStock} {it.unit}
-                      </td>
+                    <td className="py-3.5 px-3 text-right font-mono tabular-nums text-[--text-muted]">
+                      {safeNumber(item.safetyStock)} {safeText(item.unit)}
+                    </td>
 
-                      <td className="py-4 px-3 text-right font-semibold text-white font-mono">
-                        {it.reorderPointRop} {it.unit}
-                      </td>
+                    <td className="py-3.5 px-3 text-right font-mono tabular-nums font-semibold text-[--brand]">
+                      {safeNumber(item.recommendedOrderQty)} {safeText(item.unit)}
+                    </td>
 
-                      <td className="py-4 px-3 text-right">
-                        <span className="rounded-full px-2.5 py-0.5 text-xs bg-white/[0.05] text-[#34D399] font-semibold border border-white/[0.08] font-mono">
-                          {it.recommendedOrderQty} {it.unit}
-                        </span>
-                      </td>
+                    <td className="py-3.5 px-3">
+                      {getStatusBadge(item.status)}
+                    </td>
 
-                      <td className="py-4 px-3 text-right font-semibold text-white font-mono">
-                        ₺{totalEstimated.toLocaleString('tr-TR')}
-                      </td>
-
-                      <td className="py-4 px-5 text-right">
-                        <button
-                          onClick={() => handleQuickRequisition(it)}
-                          disabled={submittingId === it.id}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] rounded-full font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50 cursor-pointer text-xs"
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5" />
-                          {submittingId === it.id ? 'Açılıyor...' : 'Sipariş Aç'}
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                    <td className="py-3.5 px-4 text-right">
+                      <button
+                        onClick={() => handleQuickRequisition(item)}
+                        disabled={submittingId === item.id}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white rounded-full text-xs font-semibold shadow-sm shadow-[--brand]/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5" />
+                        {submittingId === item.id ? 'Açılıyor...' : 'Sipariş Aç'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

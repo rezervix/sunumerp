@@ -39,6 +39,7 @@ import {
   RmaPoliciesPanel,
   RmaWebhookLogsPanel,
 } from './RmaPoliciesAndAnalyticsPanels';
+import { safeText, safeNumber, safeCurrency, safeDate } from '@/lib/utils/safe-display';
 
 export interface RmaRecord {
   id: string;
@@ -147,7 +148,7 @@ export function RmaReturnManager({
 
   const filteredRmas = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return rmaReturns.filter((r) => {
+    return (rmaReturns || []).filter((r) => {
       const st = normalizeLegacyRmaStatus(r);
       if (statusFilter !== 'ALL' && st !== statusFilter) return false;
       if (reasonFilter !== 'ALL' && (r.reasonCode || 'CAYMA_HAKKI') !== reasonFilter) {
@@ -155,40 +156,40 @@ export function RmaReturnManager({
       }
       if (q) {
         const hay =
-          `${r.rmaNumber} ${r.orderNumber} ${r.customerName} ${r.sku} ${r.itemName} ${r.returnTrackingNo || ''}`.toLowerCase();
+          `${r.rmaNumber || ''} ${r.orderNumber || ''} ${r.customerName || ''} ${r.sku || ''} ${r.itemName || ''} ${r.returnTrackingNo || ''}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
   }, [rmaReturns, searchQuery, statusFilter, reasonFilter]);
 
-  const openCount = rmaReturns.filter(
+  const openCount = (rmaReturns || []).filter(
     (r) => !['KAPANDI', 'REDDEDILDI', 'IPTAL'].includes(normalizeLegacyRmaStatus(r))
   ).length;
-  const quarantineCount = rmaReturns.filter((r) =>
+  const quarantineCount = (rmaReturns || []).filter((r) =>
     ['TESLIM_ALINDI', 'INCELEMEDE'].includes(normalizeLegacyRmaStatus(r))
   ).length;
 
   return (
     <div className="space-y-4">
       {/* Üst Başlık & Alt Sekmeler */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] p-5 rounded-[20px] space-y-4">
+      <div className="bg-white/80 backdrop-blur-xl border border-[--line] p-5 rounded-[20px] space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-              <RotateCcw className="w-4 h-4 text-[#34D399]" />
+            <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-[--brand]" />
               Tersine Lojistik, İade (RMA), Kalite &amp; Kredi Notası Yönetimi
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-[--text-muted] mt-0.5">
               Omnichannel &amp; ERP sipariş iadeleri, 14 gün/garanti takibi, karantina kabulü, NCR/Skor Kartı ve mali kredi notası
             </p>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] text-zinc-300">
-              Açık: <strong className="text-white">{openCount}</strong>
+            <span className="px-2.5 py-1 rounded-full bg-[--muted-bg] border border-[--line] text-[11px] text-[--text-muted]">
+              Açık: <strong className="text-[--text]">{openCount}</strong>
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300">
+            <span className="px-2.5 py-1 rounded-full bg-[--warn-soft] border border-[--warn]/25 text-[11px] text-[--warn] font-semibold">
               Karantinada: <strong>{quarantineCount}</strong>
             </span>
             {lojistikIadeEnabled && (
@@ -196,7 +197,7 @@ export function RmaReturnManager({
                 type="button"
                 onClick={() => setIsCreateOpen(true)}
                 data-testid="open-create-rma-btn"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white text-xs font-semibold cursor-pointer shadow-sm shadow-[--brand]/20 transition"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Yeni RMA Talebi
@@ -205,12 +206,12 @@ export function RmaReturnManager({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-1.5 border-t border-white/[0.06] pt-3">
+        <div className="flex flex-wrap gap-1.5 border-t border-[--line] pt-3">
           {[
-            { id: 'list', label: `RMA Kayıtları (${rmaReturns.length})`, icon: RotateCcw },
-            { id: 'credit-notes', label: `Kredi Notaları (${returnCreditNotes.length})`, icon: CreditCard },
-            { id: 'policies', label: `İade Politikaları (${returnPolicies.length})`, icon: ShieldCheck },
-            { id: 'webhooks', label: `Webhook Günlüğü (${returnWebhookLogs.length})`, icon: Activity },
+            { id: 'list', label: `RMA Kayıtları (${(rmaReturns || []).length})`, icon: RotateCcw },
+            { id: 'credit-notes', label: `Kredi Notaları (${(returnCreditNotes || []).length})`, icon: CreditCard },
+            { id: 'policies', label: `İade Politikaları (${(returnPolicies || []).length})`, icon: ShieldCheck },
+            { id: 'webhooks', label: `Webhook Günlüğü (${(returnWebhookLogs || []).length})`, icon: Activity },
             { id: 'analytics', label: 'İade Analizi', icon: BarChart3 },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -222,8 +223,8 @@ export function RmaReturnManager({
                 onClick={() => setSubTab(tab.id as RmaSubTab)}
                 className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                   active
-                    ? 'bg-emerald-500/15 text-[#34D399] border border-emerald-500/30'
-                    : 'bg-white/[0.03] text-zinc-400 hover:text-white border border-white/[0.06]'
+                    ? 'bg-[--brand-soft] text-[--brand] border border-[--brand-line]'
+                    : 'bg-white text-[--text-muted] hover:text-[--text] border border-[--line] hover:bg-[--muted-bg]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -236,28 +237,28 @@ export function RmaReturnManager({
 
       {/* Alt Sekme İçerikleri */}
       {subTab === 'list' && (
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+        <div className="bg-white border border-[--line] rounded-[20px] overflow-hidden shadow-sm">
           {/* Arama & Filtreler */}
-          <div className="p-4 border-b border-white/[0.06] flex flex-wrap gap-2.5 items-center justify-between bg-white/[0.01]">
+          <div className="p-4 border-b border-[--line] flex flex-wrap gap-2.5 items-center justify-between bg-[--muted-bg]/40">
             <div className="relative flex-1 min-w-[220px] max-w-sm">
-              <Search className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[--text-muted] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="RMA no, sipariş no, müşteri, SKU, takip ara..."
-                className="w-full bg-black/40 border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white"
+                className="w-full bg-white border border-[--line] rounded-xl pl-9 pr-3 py-2 text-xs text-[--text] placeholder:text-[--text-muted] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               />
             </div>
             <div className="flex flex-wrap gap-2 text-xs">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+                className="bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               >
-                <option value="ALL" className="bg-[#111513]">Tüm RMA Durumları</option>
+                <option value="ALL">Tüm RMA Durumları</option>
                 {RMA_STATUS_VALUES.map((st) => (
-                  <option key={st} value={st} className="bg-[#111513]">
+                  <option key={st} value={st}>
                     {RMA_STATUS_LABELS[st]}
                   </option>
                 ))}
@@ -265,11 +266,11 @@ export function RmaReturnManager({
               <select
                 value={reasonFilter}
                 onChange={(e) => setReasonFilter(e.target.value)}
-                className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-2 text-white"
+                className="bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] focus:outline-none"
               >
-                <option value="ALL" className="bg-[#111513]">Tüm Nedenler</option>
+                <option value="ALL">Tüm Nedenler</option>
                 {RMA_REASON_CODES.map((code) => (
-                  <option key={code} value={code} className="bg-[#111513]">
+                  <option key={code} value={code}>
                     {RMA_REASON_LABELS[code]}
                   </option>
                 ))}
@@ -278,14 +279,14 @@ export function RmaReturnManager({
           </div>
 
           {filteredRmas.length === 0 ? (
-            <div className="text-center py-10 text-zinc-500 text-xs">
+            <div className="text-center py-12 text-[--text-muted] text-xs">
               Filtreye uygun iade (RMA) kaydı bulunmuyor.
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
+              <table className="w-full text-xs text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] tracking-wider">
+                  <tr className="bg-[--muted-bg]/50 border-b border-[--line] text-[--text-muted] uppercase text-[11px] tracking-wider font-medium">
                     <th className="py-3.5 px-4 font-medium">RMA / Sipariş</th>
                     <th className="py-3.5 px-3 font-medium">Müşteri &amp; Kanal</th>
                     <th className="py-3.5 px-3 font-medium">Ürün / Neden</th>
@@ -294,7 +295,7 @@ export function RmaReturnManager({
                     <th className="py-3.5 px-4 font-medium text-right">Aksiyonlar</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-[--line]">
                   {filteredRmas.map((rma) => {
                     const wfStatus = normalizeLegacyRmaStatus(rma);
                     const elig = rma.deliveredAt
@@ -309,16 +310,16 @@ export function RmaReturnManager({
                     return (
                       <tr
                         key={rma.id}
-                        className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors"
+                        className="hover:bg-[--brand-soft]/30 transition-colors text-[--text-2]"
                       >
                         <td className="py-3.5 px-4">
-                          <div className="font-mono font-semibold text-white text-sm">
-                            {rma.rmaNumber}
+                          <div className="font-mono font-semibold text-[--brand] text-sm">
+                            {safeText(rma.rmaNumber)}
                           </div>
-                          <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
-                            {rma.orderNumber}
+                          <div className="text-[11px] text-[--text-muted] font-mono mt-0.5">
+                            {safeText(rma.orderNumber)}
                             {rma.orderSourceType && (
-                              <span className="ml-1.5 px-1.5 py-0.5 rounded bg-white/[0.05] text-[9px] text-zinc-300">
+                              <span className="ml-1.5 px-1.5 py-0.5 rounded bg-[--muted-bg] text-[9px] text-[--text] font-medium border border-[--line]">
                                 {rma.orderSourceType === 'ERP_ORDER' ? 'ERP' : 'OMNI'}
                               </span>
                             )}
@@ -326,14 +327,14 @@ export function RmaReturnManager({
                         </td>
 
                         <td className="py-3.5 px-3">
-                          <div className="font-medium text-white">{rma.customerName}</div>
+                          <div className="font-medium text-[--text]">{safeText(rma.customerName)}</div>
                           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                            <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2 py-0.5 text-[10px] font-mono">
-                              {rma.channelCode}
+                            <span className="bg-[--muted-bg] text-[--text-2] border border-[--line] rounded-full px-2 py-0.5 text-[10px] font-mono">
+                              {safeText(rma.channelCode)}
                             </span>
                             {rma.returnTrackingNo && (
-                              <span className="text-[10px] text-zinc-400 font-mono">
-                                {rma.returnTrackingNo}
+                              <span className="text-[10px] text-[--text-muted] font-mono">
+                                {safeText(rma.returnTrackingNo)}
                               </span>
                             )}
                           </div>
@@ -341,28 +342,28 @@ export function RmaReturnManager({
 
                         <td className="py-3.5 px-3">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-medium text-white">{rma.itemName}</span>
-                            <span className="font-mono text-zinc-500">({rma.sku})</span>
-                            <strong className="text-[#34D399]">x {rma.returnQty}</strong>
+                            <span className="font-medium text-[--text]">{safeText(rma.itemName)}</span>
+                            <span className="font-mono text-[--brand]">({safeText(rma.sku)})</span>
+                            <strong className="text-[--brand]">x {safeNumber(rma.returnQty)}</strong>
                             {lineCount > 1 && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-zinc-300">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[--muted-bg] text-[--text-2] border border-[--line]">
                                 {lineCount} kalem
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-1.5 mt-1">
-                            <span className="text-[10px] px-2 py-0.5 rounded bg-white/[0.05] text-zinc-300">
-                              {RMA_REASON_LABELS[rCode] || rma.reasonCode || 'İade'}
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-[--muted-bg] text-[--text-2] border border-[--line]">
+                              {RMA_REASON_LABELS[rCode] || safeText(rma.reasonCode) || 'İade'}
                             </span>
-                            <span className="text-[11px] text-zinc-500 truncate max-w-[200px]">
-                              {rma.returnReason}
+                            <span className="text-[11px] text-[--text-muted] truncate max-w-[200px]">
+                              {safeText(rma.returnReason)}
                             </span>
                           </div>
                         </td>
 
                         <td className="py-3.5 px-3">
                           {rma.deadlineOverrideApproved ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                               <FileCheck2 className="w-3 h-3" /> İstisna Onaylı
                             </span>
                           ) : elig ? (
@@ -370,25 +371,25 @@ export function RmaReturnManager({
                               <span
                                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${
                                   elig.isExpiringSoon
-                                    ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                                    : 'bg-emerald-500/10 text-[#34D399] border-emerald-500/25'
+                                    ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
+                                    : 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
                                 }`}
                               >
                                 <Clock className="w-3 h-3" />
                                 {elig.remainingDays} gün kaldı
                               </span>
                             ) : rma.isWithinWarranty ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-sky-500/10 text-sky-300 border border-sky-500/25">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                                 <ShieldCheck className="w-3 h-3" /> Garanti
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-rose-500/10 text-rose-300 border border-rose-500/25">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-[--bad-soft] text-[--bad] border border-[--bad]/25">
                                 <AlertTriangle className="w-3 h-3" /> Süre Doldu
                               </span>
                             )
                           ) : (
-                            <span className="text-zinc-500 text-[11px]">
-                              {rma.returnWindowDays || 14} gün
+                            <span className="text-[--text-muted] text-[11px]">
+                              {safeNumber(rma.returnWindowDays, 14)} gün
                             </span>
                           )}
                         </td>
@@ -397,24 +398,22 @@ export function RmaReturnManager({
                           <div>
                             <span
                               className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
-                                RMA_STATUS_BADGE_CLASSES[wfStatus]
+                                wfStatus === 'KAPANDI' || wfStatus === 'ONAYLANDI'
+                                  ? 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
+                                  : wfStatus === 'REDDEDILDI'
+                                    ? 'bg-[--bad-soft] text-[--bad] border-[--bad]/25'
+                                    : 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
                               }`}
                             >
-                              {RMA_STATUS_LABELS[wfStatus]}
+                              {RMA_STATUS_LABELS[wfStatus] || wfStatus}
                             </span>
                           </div>
                           {rma.qualityDecision && (
                             <div>
-                              <span
-                                className={`inline-flex px-2 py-0.5 rounded-full text-[10px] border ${
-                                  RMA_DECISION_BADGE_CLASSES[
-                                    rma.qualityDecision as RmaQualityDecision
-                                  ] || 'bg-white/5 text-zinc-300 border-white/10'
-                                }`}
-                              >
+                              <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] border bg-[--brand-soft] text-[--brand] border-[--brand-line]">
                                 {RMA_DECISION_LABELS[
                                   rma.qualityDecision as RmaQualityDecision
-                                ] || rma.qualityDecision}
+                                ] || safeText(rma.qualityDecision)}
                               </span>
                             </div>
                           )}
@@ -425,15 +424,15 @@ export function RmaReturnManager({
                             <button
                               type="button"
                               onClick={() => setSelectedRma(rma)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-[11px] font-semibold text-white cursor-pointer"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[11px] font-semibold text-[--text] cursor-pointer shadow-sm transition"
                             >
-                              <SlidersHorizontal className="w-3 h-3 text-[#34D399]" />
+                              <SlidersHorizontal className="w-3 h-3 text-[--brand]" />
                               Yönet
                             </button>
                             <Link
                               href={`/dashboard/omnichannel/rma/${rma.id}/print`}
                               target="_blank"
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] text-zinc-300"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[11px] text-[--text-2] transition shadow-sm"
                               title="İade Etiketi / Fişi Yazdır"
                             >
                               <QrCode className="w-3 h-3" />
@@ -443,7 +442,7 @@ export function RmaReturnManager({
                                 type="button"
                                 onClick={() => handleLegacyDisposition(rma.id, 'RESTOCK_TO_BIN')}
                                 disabled={submittingId === rma.id}
-                                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-400 text-black hover:bg-emerald-300 rounded-full text-[11px] font-semibold cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-[--brand] to-[--blue] text-white hover:opacity-95 rounded-full text-[11px] font-semibold cursor-pointer shadow-sm transition"
                               >
                                 <CheckCircle2 className="w-3 h-3" />
                                 Rafa Al

@@ -29,6 +29,7 @@ import {
   type WmsCrossDockStatus,
   type WmsKitStatus,
 } from "@/lib/logistics/wms/constantsAndHelpers"
+import { safeNumber, safeText } from "@/lib/utils/safe-display"
 
 interface WmsCrossDockAndKitTabProps {
   warehouses: any[]
@@ -210,16 +211,16 @@ export function WmsCrossDockAndKitTab({
     <div className="space-y-8">
       {/* BÖLÜM 1: CROSS-DOCKING */}
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/80 backdrop-blur-xl border border-[--line] rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-300">
+            <div className="w-10 h-10 rounded-xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
               <Split className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold text-[--text]">
                 Cross-Docking (Rafa Kaldırmadan Doğrudan Aktarma)
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[--text-muted]">
                 Mal kabul rampasına gelen ürünleri depolama rafına çıkarmadan açık sipariş çıkış rampasına yönlendirin.
               </p>
             </div>
@@ -229,7 +230,7 @@ export function WmsCrossDockAndKitTab({
               variant="outline"
               size="sm"
               onClick={loadAll}
-              className="h-9 px-3 text-xs border-white/[0.08] bg-white/[0.04] text-zinc-300 rounded-full gap-1.5"
+              className="h-9 px-3 text-xs border-[--line] bg-white hover:bg-[--muted-bg] text-[--text-2] rounded-full gap-1.5 cursor-pointer"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               <span>Yenile</span>
@@ -237,7 +238,7 @@ export function WmsCrossDockAndKitTab({
             <Button
               size="sm"
               onClick={() => setIsXdOpen(true)}
-              className="h-9 px-4 text-xs bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full shadow-lg shadow-emerald-500/20 gap-1.5 cursor-pointer"
+              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full shadow-sm gap-1.5 cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Yeni Cross-Dock Emri</span>
@@ -247,36 +248,36 @@ export function WmsCrossDockAndKitTab({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {crossDockOrders.length === 0 ? (
-            <div className="md:col-span-2 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-8 text-center text-xs text-zinc-500">
+            <div className="md:col-span-2 bg-white border border-[--line] rounded-2xl p-8 text-center text-xs text-[--text-muted] shadow-sm">
               Henüz Cross-Dock aktarma emri yok.
             </div>
           ) : (
             crossDockOrders.map((cd) => (
               <div
                 key={cd.id}
-                className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-3"
+                className="bg-white border border-[--line] rounded-2xl p-5 space-y-3 shadow-sm hover:border-[--brand-line] transition"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-white font-mono">{cd.crossDockNo}</div>
-                    <div className="text-[11px] text-zinc-400">
+                    <div className="text-sm font-bold text-[--text] font-mono">{cd.crossDockNo}</div>
+                    <div className="text-[11px] text-[--text-muted]">
                       {cd.warehouseName} · PO: {cd.inboundPoNo || "-"} → Sipariş: {cd.outboundOrderRef}
                     </div>
                   </div>
-                  <span className="rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                  <span className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                     {WMS_CROSS_DOCK_STATUS_LABELS[cd.status as WmsCrossDockStatus] || cd.status}
                   </span>
                 </div>
 
-                <div className="bg-black/30 border border-white/[0.06] rounded-xl p-3 flex items-center justify-between text-xs">
+                <div className="bg-[--page] border border-[--line] rounded-xl p-3 flex items-center justify-between text-xs">
                   <div>
-                    <div className="font-semibold text-white">{cd.itemName}</div>
-                    <div className="font-mono text-[11px] text-zinc-400">
+                    <div className="font-semibold text-[--text]">{cd.itemName}</div>
+                    <div className="font-mono text-[11px] text-[--text-muted]">
                       {cd.inboundBinCode} → {cd.outboundRampCode}
                     </div>
                   </div>
-                  <div className="font-mono font-bold text-[#34D399]">
-                    {cd.plannedQty} {cd.unit}
+                  <div className="font-mono font-bold text-[--brand]">
+                    {safeNumber(cd.plannedQty, 0)} {cd.unit}
                   </div>
                 </div>
 
@@ -286,7 +287,7 @@ export function WmsCrossDockAndKitTab({
                       size="sm"
                       disabled={submitting}
                       onClick={() => handleAdvanceCrossDock(cd.id, "RECEIVING_DOCK")}
-                      className="h-8 px-3 text-xs bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 rounded-full cursor-pointer"
+                      className="h-8 px-3 text-xs bg-[--warn-soft] hover:bg-[--warn-soft]/80 text-[--warn] border border-[--warn-fill]/30 rounded-full cursor-pointer font-medium"
                     >
                       Kabul Rampasına Al
                     </Button>
@@ -296,16 +297,16 @@ export function WmsCrossDockAndKitTab({
                       size="sm"
                       disabled={submitting}
                       onClick={() => handleAdvanceCrossDock(cd.id, "DISPATCHED")}
-                      className="h-8 px-3.5 text-xs bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full gap-1 cursor-pointer"
+                      className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1 cursor-pointer shadow-sm"
                     >
                       <Truck className="h-3.5 w-3.5" />
                       <span>Doğrudan Sevk Et</span>
                     </Button>
                   )}
                   {cd.status === "DISPATCHED" && (
-                    <span className="inline-flex items-center gap-1 text-xs text-[#34D399] font-medium">
+                    <span className="inline-flex items-center gap-1 text-xs text-[--ok] font-semibold">
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      Sevk Tamamlandı ({cd.dispatchedQty} {cd.unit})
+                      Sevk Tamamlandı ({safeNumber(cd.dispatchedQty, 0)} {cd.unit})
                     </span>
                   )}
                 </div>
@@ -317,16 +318,16 @@ export function WmsCrossDockAndKitTab({
 
       {/* BÖLÜM 2: DEPO KITTING (SET BİRLEŞTİRME & BOZMA) */}
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/80 backdrop-blur-xl border border-[--line] rounded-2xl p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[#34D399]">
+            <div className="w-10 h-10 rounded-xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
               <Boxes className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold text-[--text]">
                 Kitting (Depo İçi Set Birleştirme &amp; Set Bozma Emirleri)
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[--text-muted]">
                 Bileşen stoklarını otomatik tüketip paketli set stoğu üretin veya setleri tekrar bileşenlerine ayırın.
               </p>
             </div>
@@ -334,18 +335,18 @@ export function WmsCrossDockAndKitTab({
           <Button
             size="sm"
             onClick={() => setIsKitOpen(true)}
-            className="h-9 px-4 text-xs bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white font-medium rounded-full gap-1.5 cursor-pointer"
+            className="h-9 px-4 text-xs bg-white hover:bg-[--brand-soft] border border-[--line] hover:border-[--brand-line] text-[--text-2] hover:text-[--brand] font-medium rounded-full gap-1.5 cursor-pointer"
           >
-            <Plus className="h-3.5 w-3.5 text-[#34D399]" />
+            <Plus className="h-3.5 w-3.5 text-[--brand]" />
             <span>Yeni Kitting Emri</span>
           </Button>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden shadow-2xl">
+        <div className="bg-white border border-[--line] rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] text-zinc-400 uppercase font-medium">
+                <tr className="bg-[--page] border-b border-[--line] text-[11px] text-[--text-muted] uppercase font-semibold">
                   <th className="py-3.5 px-5">Kitting No</th>
                   <th className="py-3.5 px-3">İşlem Türü</th>
                   <th className="py-3.5 px-3">Hedef Set Ürünü</th>
@@ -358,7 +359,7 @@ export function WmsCrossDockAndKitTab({
               <tbody>
                 {kitOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-10 text-center text-zinc-500">
+                    <td colSpan={7} className="py-10 text-center text-[--text-muted]">
                       Kitting emri bulunmuyor.
                     </td>
                   </tr>
@@ -366,36 +367,36 @@ export function WmsCrossDockAndKitTab({
                   kitOrders.map((ko) => (
                     <tr
                       key={ko.id}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
+                      className="border-b border-[--line-soft] hover:bg-[--brand-soft]/30 transition-colors"
                     >
-                      <td className="py-3.5 px-5 font-mono font-semibold text-white">{ko.kitOrderNo}</td>
+                      <td className="py-3.5 px-5 font-mono font-semibold text-[--text]">{ko.kitOrderNo}</td>
                       <td className="py-3.5 px-3">
                         <span
-                          className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium border ${
+                          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
                             ko.operationType === "ASSEMBLE"
-                              ? "bg-emerald-500/10 text-[#34D399] border-emerald-500/20"
-                              : "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                              ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
+                              : "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/20"
                           }`}
                         >
                           {ko.operationType === "ASSEMBLE" ? "Set Birleştirme" : "Set Bozma"}
                         </span>
                       </td>
                       <td className="py-3.5 px-3">
-                        <div className="text-white font-medium">{ko.kitItemName}</div>
-                        <div className="text-[11px] font-mono text-zinc-500">{ko.kitSku} · {ko.warehouseName}</div>
+                        <div className="text-[--text] font-semibold">{ko.kitItemName}</div>
+                        <div className="text-[11px] font-mono text-[--text-muted]">{ko.kitSku} · {ko.warehouseName}</div>
                       </td>
-                      <td className="py-3.5 px-3 text-zinc-300">
+                      <td className="py-3.5 px-3 text-[--text-2]">
                         {(ko.components || []).map((c: any) => (
                           <div key={c.id} className="text-[11px]">
-                            {c.componentName}: <span className="font-mono text-[#34D399]">{c.totalRequiredQty} {c.unit}</span>
+                            {c.componentName}: <span className="font-mono text-[--brand] font-semibold">{safeNumber(c.totalRequiredQty, 0)} {c.unit}</span>
                           </div>
                         ))}
                       </td>
-                      <td className="py-3.5 px-3 text-right font-mono font-bold text-white">
-                        {ko.plannedQty} {ko.unit}
+                      <td className="py-3.5 px-3 text-right font-mono font-bold text-[--text]">
+                        {safeNumber(ko.plannedQty, 0)} {ko.unit}
                       </td>
                       <td className="py-3.5 px-3 text-center">
-                        <span className="rounded-full px-2.5 py-0.5 text-[11px] bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
+                        <span className="rounded-full px-2.5 py-0.5 text-[11px] bg-[--page] text-[--text-muted] border border-[--line]">
                           {WMS_KIT_STATUS_LABELS[ko.status as WmsKitStatus] || ko.status}
                         </span>
                       </td>
@@ -405,13 +406,13 @@ export function WmsCrossDockAndKitTab({
                             size="sm"
                             disabled={submitting}
                             onClick={() => handleExecuteKit(ko.id)}
-                            className="h-8 px-3.5 text-xs bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full gap-1 cursor-pointer"
+                            className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1 cursor-pointer shadow-sm disabled:opacity-50"
                           >
                             <Play className="h-3 w-3" />
                             <span>Stokla Eşitle</span>
                           </Button>
                         ) : (
-                          <span className="text-xs text-[#34D399] font-medium">Tamamlandı</span>
+                          <span className="text-xs text-[--ok] font-semibold">Tamamlandı</span>
                         )}
                       </td>
                     </tr>
@@ -425,70 +426,70 @@ export function WmsCrossDockAndKitTab({
 
       {/* Cross-Dock Modal */}
       <Dialog open={isXdOpen} onOpenChange={setIsXdOpen}>
-        <DialogContent className="sm:max-w-md backdrop-blur-xl bg-[#111513] border border-white/[0.08] rounded-2xl text-white">
+        <DialogContent className="sm:max-w-md bg-white border border-[--line] rounded-2xl text-[--text] p-6 shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold">Yeni Cross-Dock Emri</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogTitle className="text-base font-semibold text-[--text]">Yeni Cross-Dock Emri</DialogTitle>
+            <DialogDescription className="text-xs text-[--text-muted]">
               Gelen malı rafa almadan çıkış rampasına bağlayın.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateCrossDock} className="space-y-3 text-xs">
             <div className="space-y-1">
-              <Label className="text-xs text-zinc-300">Depo</Label>
+              <Label className="text-xs text-[--text-muted]">Depo</Label>
               <select
                 value={xdWhId}
                 onChange={(e) => setXdWhId(e.target.value)}
-                className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5"
+                className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5"
               >
                 {warehouses.map((w) => (
-                  <option key={w.id} value={w.id} className="bg-[#111513]">{w.name}</option>
+                  <option key={w.id} value={w.id} className="bg-white text-[--text]">{w.name}</option>
                 ))}
               </select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Gelen Satınalma (PO)</Label>
-                <Input value={xdPoNo} onChange={(e) => setXdPoNo(e.target.value)} className="h-9 text-xs font-mono bg-white/[0.03] border-white/[0.08]" />
+                <Label className="text-xs text-[--text-muted]">Gelen Satınalma (PO)</Label>
+                <Input value={xdPoNo} onChange={(e) => setXdPoNo(e.target.value)} className="h-9 text-xs font-mono bg-[--page] border-[--line] text-[--text]" />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Hedef Sipariş Ref</Label>
-                <Input value={xdOutboundRef} onChange={(e) => setXdOutboundRef(e.target.value)} required className="h-9 text-xs font-mono bg-white/[0.03] border-white/[0.08]" />
+                <Label className="text-xs text-[--text-muted]">Hedef Sipariş Ref</Label>
+                <Input value={xdOutboundRef} onChange={(e) => setXdOutboundRef(e.target.value)} required className="h-9 text-xs font-mono bg-[--page] border-[--line] text-[--text]" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 space-y-1">
-                <Label className="text-xs text-zinc-300">Ürün</Label>
+                <Label className="text-xs text-[--text-muted]">Ürün</Label>
                 <select
                   value={xdItemId}
                   onChange={(e) => setXdItemId(e.target.value)}
-                  className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5"
+                  className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5"
                 >
                   {items.map((it) => (
-                    <option key={it.id} value={it.id} className="bg-[#111513]">{it.sku} — {it.name}</option>
+                    <option key={it.id} value={it.id} className="bg-white text-[--text]">{it.sku} — {it.name}</option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Miktar</Label>
-                <Input type="number" min="1" value={xdQty} onChange={(e) => setXdQty(e.target.value)} className="h-9 text-xs font-mono bg-white/[0.03] border-white/[0.08]" />
+                <Label className="text-xs text-[--text-muted]">Miktar</Label>
+                <Input type="number" min="1" value={xdQty} onChange={(e) => setXdQty(e.target.value)} className="h-9 text-xs font-mono bg-[--page] border-[--line] text-[--text] font-semibold" />
               </div>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs text-zinc-300">Çıkış Rampası</Label>
+              <Label className="text-xs text-[--text-muted]">Çıkış Rampası</Label>
               <select
                 value={xdRampBinId}
                 onChange={(e) => setXdRampBinId(e.target.value)}
-                className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5"
+                className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5"
               >
-                <option value="" className="bg-[#111513]">Otomatik Sevkiyat Rampası</option>
+                <option value="" className="bg-white text-[--text]">Otomatik Sevkiyat Rampası</option>
                 {rampBins.map((b) => (
-                  <option key={b.id} value={b.id} className="bg-[#111513]">{b.code}</option>
+                  <option key={b.id} value={b.id} className="bg-white text-[--text]">{b.code}</option>
                 ))}
               </select>
             </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsXdOpen(false)} className="text-xs border-white/[0.08] bg-white/[0.04] rounded-full h-9 px-4">Vazgeç</Button>
-              <Button type="submit" disabled={submitting} className="text-xs bg-[#34D399] text-[#061811] font-semibold rounded-full h-9 px-4 cursor-pointer">
+            <DialogFooter className="gap-2 pt-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => setIsXdOpen(false)} className="text-xs border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full h-9 px-4 cursor-pointer">Vazgeç</Button>
+              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">
                 Planla <ArrowRight className="h-3.5 w-3.5 ml-1" />
               </Button>
             </DialogFooter>
@@ -498,62 +499,62 @@ export function WmsCrossDockAndKitTab({
 
       {/* Kitting Modal */}
       <Dialog open={isKitOpen} onOpenChange={setIsKitOpen}>
-        <DialogContent className="sm:max-w-md backdrop-blur-xl bg-[#111513] border border-white/[0.08] rounded-2xl text-white">
+        <DialogContent className="sm:max-w-md bg-white border border-[--line] rounded-2xl text-[--text] p-6 shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold">Yeni Kitting / Set İş Emri</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogTitle className="text-base font-semibold text-[--text]">Yeni Kitting / Set İş Emri</DialogTitle>
+            <DialogDescription className="text-xs text-[--text-muted]">
               Set birleştirme veya mevcut seti bileşenlerine bozma emri açın.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateKit} className="space-y-3 text-xs">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">İşlem</Label>
-                <select value={kitOpType} onChange={(e) => setKitOpType(e.target.value as any)} className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5">
-                  <option value="ASSEMBLE" className="bg-[#111513]">Set Birleştir (Assemble)</option>
-                  <option value="DISASSEMBLE" className="bg-[#111513]">Set Boz (Disassemble)</option>
+                <Label className="text-xs text-[--text-muted]">İşlem</Label>
+                <select value={kitOpType} onChange={(e) => setKitOpType(e.target.value as any)} className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5">
+                  <option value="ASSEMBLE" className="bg-white text-[--text]">Set Birleştir (Assemble)</option>
+                  <option value="DISASSEMBLE" className="bg-white text-[--text]">Set Boz (Disassemble)</option>
                 </select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Depo</Label>
-                <select value={kitWhId} onChange={(e) => setKitWhId(e.target.value)} className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5">
+                <Label className="text-xs text-[--text-muted]">Depo</Label>
+                <select value={kitWhId} onChange={(e) => setKitWhId(e.target.value)} className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5">
                   {warehouses.map((w) => (
-                    <option key={w.id} value={w.id} className="bg-[#111513]">{w.name}</option>
+                    <option key={w.id} value={w.id} className="bg-white text-[--text]">{w.name}</option>
                   ))}
                 </select>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 space-y-1">
-                <Label className="text-xs text-zinc-300">Ana Set Ürünü</Label>
-                <select value={kitItemId} onChange={(e) => setKitItemId(e.target.value)} className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5">
+                <Label className="text-xs text-[--text-muted]">Ana Set Ürünü</Label>
+                <select value={kitItemId} onChange={(e) => setKitItemId(e.target.value)} className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5">
                   {items.map((it) => (
-                    <option key={it.id} value={it.id} className="bg-[#111513]">{it.sku} — {it.name}</option>
+                    <option key={it.id} value={it.id} className="bg-white text-[--text]">{it.sku} — {it.name}</option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Set Adedi</Label>
-                <Input type="number" min="1" value={kitQty} onChange={(e) => setKitQty(e.target.value)} className="h-9 text-xs font-mono bg-white/[0.03] border-white/[0.08]" />
+                <Label className="text-xs text-[--text-muted]">Set Adedi</Label>
+                <Input type="number" min="1" value={kitQty} onChange={(e) => setKitQty(e.target.value)} className="h-9 text-xs font-mono bg-[--page] border-[--line] text-[--text] font-semibold" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 space-y-1">
-                <Label className="text-xs text-zinc-300">Bileşen Ürünü</Label>
-                <select value={kitCompId} onChange={(e) => setKitCompId(e.target.value)} className="w-full h-9 text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl px-2.5">
+                <Label className="text-xs text-[--text-muted]">Bileşen Ürünü</Label>
+                <select value={kitCompId} onChange={(e) => setKitCompId(e.target.value)} className="w-full h-9 text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl px-2.5">
                   {items.map((it) => (
-                    <option key={it.id} value={it.id} className="bg-[#111513]">{it.sku} — {it.name}</option>
+                    <option key={it.id} value={it.id} className="bg-white text-[--text]">{it.sku} — {it.name}</option>
                   ))}
                 </select>
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-zinc-300">Set Başı Adet</Label>
-                <Input type="number" min="1" value={kitCompPerSet} onChange={(e) => setKitCompPerSet(e.target.value)} className="h-9 text-xs font-mono bg-white/[0.03] border-white/[0.08]" />
+                <Label className="text-xs text-[--text-muted]">Set Başı Adet</Label>
+                <Input type="number" min="1" value={kitCompPerSet} onChange={(e) => setKitCompPerSet(e.target.value)} className="h-9 text-xs font-mono bg-[--page] border-[--line] text-[--text]" />
               </div>
             </div>
-            <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" size="sm" onClick={() => setIsKitOpen(false)} className="text-xs border-white/[0.08] bg-white/[0.04] rounded-full h-9 px-4">Vazgeç</Button>
-              <Button type="submit" disabled={submitting} className="text-xs bg-[#34D399] text-[#061811] font-semibold rounded-full h-9 px-4 cursor-pointer">Kitting Emri Aç</Button>
+            <DialogFooter className="gap-2 pt-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => setIsKitOpen(false)} className="text-xs border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full h-9 px-4 cursor-pointer">Vazgeç</Button>
+              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">Kitting Emri Aç</Button>
             </DialogFooter>
           </form>
         </DialogContent>

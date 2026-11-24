@@ -118,10 +118,10 @@ export default function MusteriTakipPage() {
 
   return (
     <div className="min-h-screen bg-[#070B09] text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-xl bg-[#111513]/95 border border-white/[0.08] rounded-[24px] p-6 sm:p-8 shadow-2xl space-y-6">
-        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+      <div className="w-full max-w-xl bg-[white]/95 border border-[--line] rounded-[24px] p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="flex items-center justify-between border-b border-[--line] pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-[#34D399]">
+            <div className="w-10 h-10 rounded-xl bg-[--brand]/15 border border-[--brand-line] flex items-center justify-center text-[#1267E6]">
               <Truck className="w-5 h-5" />
             </div>
             <div>
@@ -130,7 +130,7 @@ export default function MusteriTakipPage() {
             </div>
           </div>
           <span className="inline-flex items-center gap-1 text-[11px] text-zinc-400">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#34D399]" /> Süreli Güvenli Bağlantı
+            <ShieldCheck className="w-3.5 h-3.5 text-[#1267E6]" /> Süreli Güvenli Bağlantı
           </span>
         </div>
 
@@ -154,14 +154,14 @@ export default function MusteriTakipPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-[--line] rounded-2xl p-4">
               <div>
                 <div className="text-xs text-zinc-400">Sipariş / Referans</div>
                 <div className="text-base font-bold text-white">{state.tracking.orderRef}</div>
                 <div className="text-xs text-zinc-300 mt-0.5">{state.tracking.customerName}</div>
               </div>
               <div className="text-right">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[#34D399] text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[--brand]/15 border border-[--brand-line] text-[#1267E6] text-xs font-semibold">
                   {state.tracking.status === 'TESLIM_EDILDI' ? (
                     <CheckCircle2 className="w-3.5 h-3.5" />
                   ) : (
@@ -177,7 +177,7 @@ export default function MusteriTakipPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div className="p-3.5 rounded-xl bg-white border border-[--line]">
                 <div className="text-zinc-400">Tahmini Teslim Zamanı (ETA)</div>
                 <div className="text-sm font-semibold text-white mt-1">
                   {state.tracking.plannedEtaAt
@@ -195,7 +195,7 @@ export default function MusteriTakipPage() {
                   </div>
                 )}
               </div>
-              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+              <div className="p-3.5 rounded-xl bg-white border border-[--line]">
                 <div className="text-zinc-400">Araç &amp; Sıra Durumu</div>
                 <div className="text-sm font-semibold text-white mt-1">
                   {state.tracking.vehiclePlate || 'Planlanıyor'} ·{' '}
@@ -217,8 +217,8 @@ export default function MusteriTakipPage() {
             )}
 
             {state.tracking.podSummary && (
-              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs space-y-1">
-                <div className="font-semibold text-[#34D399]">Teslimat Onayı Kaydedildi</div>
+              <div className="p-4 rounded-xl bg-[--brand]/10 border border-[--brand-line] text-xs space-y-1">
+                <div className="font-semibold text-[#1267E6]">Teslimat Onayı Kaydedildi</div>
                 <div className="text-zinc-300">
                   Teslim Alan: <strong>{state.tracking.podSummary.recipientName}</strong> ·{' '}
                   {new Date(state.tracking.podSummary.capturedAt).toLocaleString('tr-TR')}
@@ -233,7 +233,7 @@ export default function MusteriTakipPage() {
                   {state.tracking.timeline.map((ev: any, idx: number) => (
                     <div
                       key={idx}
-                      className="flex items-start justify-between gap-2 text-xs p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05]"
+                      className="flex items-start justify-between gap-2 text-xs p-2.5 rounded-xl bg-[--page] border border-white/[0.05]"
                     >
                       <span className="text-zinc-300">{ev.message}</span>
                       <span className="text-[11px] text-zinc-500 shrink-0">

@@ -211,11 +211,10 @@ export function ItemProductionProfileTab({
           </div>
         </div>
         <span
-          className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border ${
-            isConfiguredInDb
-              ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-              : "bg-[--muted-bg]/40 text-[--text-muted] border-[--line]"
-          }`}
+          className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border ${isConfiguredInDb
+            ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
+            : "bg-[--muted-bg]/40 text-[--text-muted] border-[--line]"
+            }`}
         >
           {isConfiguredInDb ? (
             <span className="inline-flex items-center gap-1">

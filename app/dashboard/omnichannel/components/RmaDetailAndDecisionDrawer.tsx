@@ -266,13 +266,13 @@ export function RmaDetailAndDecisionDrawer({
   const stepIndex = LIFECYCLE_STEPS.indexOf(status);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex justify-end">
-      <div className="bg-[#0d110f] border-l border-white/[0.08] w-full max-w-3xl h-full flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-[#0B1B33]/40 backdrop-blur-sm flex justify-end">
+      <div className="bg-white border-l border-[--line] w-full max-w-3xl h-full flex flex-col shadow-2xl text-[--text]">
         {/* Başlık */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06] bg-[#111513]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[--line] bg-[--page]">
           <div>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h2 className="text-lg font-semibold font-mono text-white">
+              <h2 className="text-lg font-semibold font-mono text-[--text]">
                 {detail.rmaNumber}
               </h2>
               <span
@@ -286,7 +286,7 @@ export function RmaDetailAndDecisionDrawer({
                 <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${
                     RMA_DECISION_BADGE_CLASSES[detail.qualityDecision as RmaQualityDecision] ||
-                    'bg-white/5 text-zinc-300 border-white/10'
+                    'bg-[--muted-bg] text-[--text-muted] border-[--line]'
                   }`}
                 >
                   {RMA_DECISION_LABELS[detail.qualityDecision as RmaQualityDecision] ||
@@ -294,8 +294,8 @@ export function RmaDetailAndDecisionDrawer({
                 </span>
               )}
             </div>
-            <p className="text-xs text-zinc-400 mt-1">
-              Sipariş: <span className="font-mono text-zinc-200">{detail.orderNumber}</span> ·{' '}
+            <p className="text-xs text-[--text-muted] mt-1">
+              Sipariş: <span className="font-mono text-[--text]">{detail.orderNumber}</span> ·{' '}
               {detail.customerName} ({detail.channelCode})
             </p>
           </div>
@@ -304,15 +304,15 @@ export function RmaDetailAndDecisionDrawer({
             <Link
               href={`/dashboard/omnichannel/rma/${detail.id}/print`}
               target="_blank"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-xs font-medium text-[--text]"
             >
-              <QrCode className="w-3.5 h-3.5 text-[#34D399]" />
+              <QrCode className="w-3.5 h-3.5 text-[--brand]" />
               Etiket / Fiş
             </Link>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.06] cursor-pointer"
+              className="p-2 rounded-xl text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -322,9 +322,9 @@ export function RmaDetailAndDecisionDrawer({
         {/* Gövde */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* 7 Adımlı Yaşam Döngüsü Çubuğu */}
-          <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-4 space-y-3">
+          <div className="bg-[--page] border border-[--line] rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-zinc-300">RMA Yaşam Döngüsü</span>
+              <span className="font-semibold text-[--text]">RMA Yaşam Döngüsü</span>
               {detail.channelCode !== 'ERP' && (
                 <button
                   type="button"
@@ -332,9 +332,9 @@ export function RmaDetailAndDecisionDrawer({
                   onClick={() =>
                     callAction({ action: 'push_rma_channel_status', rmaId: detail.id })
                   }
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-[11px] text-zinc-200 cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-[11px] text-[--text-2] cursor-pointer"
                 >
-                  <Send className="w-3 h-3 text-[#34D399]" />
+                  <Send className="w-3 h-3 text-[--brand]" />
                   Kanala Durum Bildir
                 </button>
               )}
@@ -347,8 +347,8 @@ export function RmaDetailAndDecisionDrawer({
                     key={st}
                     className={`rounded-xl px-2 py-2 text-center border text-[10px] ${
                       done
-                        ? 'bg-emerald-500/15 border-emerald-500/30 text-[#34D399] font-semibold'
-                        : 'bg-black/30 border-white/[0.05] text-zinc-500'
+                        ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold'
+                        : 'bg-white border-[--line] text-[--text-muted]'
                     }`}
                   >
                     <div className="truncate">{RMA_STATUS_LABELS[st].split(' ')[0]}</div>
@@ -359,31 +359,31 @@ export function RmaDetailAndDecisionDrawer({
 
             {/* Süre & Neden Özeti */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[11px]">
-              <div className="bg-black/30 rounded-xl p-2.5 border border-white/[0.04]">
-                <div className="text-zinc-500">Neden Kodu</div>
-                <div className="text-white font-medium mt-0.5">
+              <div className="bg-white rounded-xl p-2.5 border border-[--line]">
+                <div className="text-[--text-muted]">Neden Kodu</div>
+                <div className="text-[--text] font-medium mt-0.5">
                   {RMA_REASON_LABELS[(detail.reasonCode || 'CAYMA_HAKKI') as RmaReasonCode] ||
                     detail.reasonCode}
                 </div>
               </div>
-              <div className="bg-black/30 rounded-xl p-2.5 border border-white/[0.04]">
-                <div className="text-zinc-500">İade Süresi / Son Tarih</div>
-                <div className="text-white font-mono mt-0.5">
+              <div className="bg-white rounded-xl p-2.5 border border-[--line]">
+                <div className="text-[--text-muted]">İade Süresi / Son Tarih</div>
+                <div className="text-[--text] font-mono mt-0.5">
                   {detail.returnWindowDays || 14} gün ·{' '}
                   {detail.returnDeadlineAt
                     ? new Date(detail.returnDeadlineAt).toLocaleDateString('tr-TR')
                     : '-'}
                 </div>
               </div>
-              <div className="bg-black/30 rounded-xl p-2.5 border border-white/[0.04]">
-                <div className="text-zinc-500">Hedef Depo / Hücre</div>
-                <div className="text-[#34D399] font-mono mt-0.5">
+              <div className="bg-white rounded-xl p-2.5 border border-[--line]">
+                <div className="text-[--text-muted]">Hedef Depo / Hücre</div>
+                <div className="text-[--brand] font-mono mt-0.5 font-semibold">
                   {detail.receivedBinCode || detail.targetBinCode || 'Q-01-01'}
                 </div>
               </div>
-              <div className="bg-black/30 rounded-xl p-2.5 border border-white/[0.04]">
-                <div className="text-zinc-500">Takip / Çevrim</div>
-                <div className="text-white font-mono mt-0.5">
+              <div className="bg-white rounded-xl p-2.5 border border-[--line]">
+                <div className="text-[--text-muted]">Takip / Çevrim</div>
+                <div className="text-[--text] font-mono mt-0.5">
                   {detail.returnTrackingNo || '-'}
                   {detail.cycleHours ? ` (${detail.cycleHours}s)` : ''}
                 </div>
@@ -392,21 +392,21 @@ export function RmaDetailAndDecisionDrawer({
 
             {/* Durum Geçiş Aksiyonları */}
             {allowedNext.length > 0 && (
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
+              <div className="pt-2 border-t border-[--line] space-y-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   <input
                     type="text"
                     value={transitionNote}
                     onChange={(e) => setTransitionNote(e.target.value)}
                     placeholder="Durum geçiş veya red gerekçesi notu..."
-                    className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-1.5 text-white"
+                    className="bg-white border border-[--line] rounded-xl px-3 py-1.5 text-[--text]"
                   />
                   <input
                     type="text"
                     value={trackingInput}
                     onChange={(e) => setTrackingInput(e.target.value)}
                     placeholder="Kargo takip no (opsiyonel)"
-                    className="bg-black/40 border border-white/[0.08] rounded-xl px-3 py-1.5 text-white font-mono"
+                    className="bg-white border border-[--line] rounded-xl px-3 py-1.5 text-[--text] font-mono"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -420,8 +420,8 @@ export function RmaDetailAndDecisionDrawer({
                         onClick={() => handleTransition(st)}
                         className={`px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer disabled:opacity-50 ${
                           st === 'REDDEDILDI' || st === 'IPTAL'
-                            ? 'bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30'
-                            : 'bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/[0.1]'
+                            ? 'bg-[--bad-soft] hover:bg-[--bad-soft]/80 text-[--bad] border border-[--bad-soft]'
+                            : 'bg-white hover:bg-[--brand-soft] text-[--text] border border-[--line]'
                         }`}
                       >
                         → {RMA_STATUS_LABELS[st]}
@@ -434,25 +434,25 @@ export function RmaDetailAndDecisionDrawer({
 
           {/* Mal Kabul / Karantina Paneli */}
           {['TALEP', 'ONAYLANDI', 'YOLDA'].includes(status) && (
-            <div className="bg-[#111513] border border-amber-500/25 rounded-2xl p-4 space-y-3">
+            <div className="bg-[--page] border border-[--warn-soft] rounded-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm font-semibold text-amber-300">
+                <div className="flex items-center gap-2 text-sm font-semibold text-[--warn]">
                   <Truck className="w-4 h-4" />
                   Fiziksel Mal Kabul &amp; Karantina Girişi
                 </div>
                 <select
                   value={quarantineBinCode}
                   onChange={(e) => setQuarantineBinCode(e.target.value)}
-                  className="bg-black/50 border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs font-mono text-white"
+                  className="bg-white border border-[--line] rounded-xl px-3 py-1.5 text-xs font-mono text-[--text]"
                 >
                   {quarantineBins.length === 0 ? (
                     <>
-                      <option value="Q-01-01" className="bg-[#111513]">Q-01-01 (Karantina)</option>
-                      <option value="RMA-01-01" className="bg-[#111513]">RMA-01-01 (İade Kabul)</option>
+                      <option value="Q-01-01">Q-01-01 (Karantina)</option>
+                      <option value="RMA-01-01">RMA-01-01 (İade Kabul)</option>
                     </>
                   ) : (
                     quarantineBins.map((b) => (
-                      <option key={b.id} value={b.code} className="bg-[#111513]">
+                      <option key={b.id} value={b.code}>
                         {b.code} ({b.binRole || b.binType || 'Karantina'})
                       </option>
                     ))
@@ -474,16 +474,16 @@ export function RmaDetailAndDecisionDrawer({
                   return (
                     <div
                       key={key}
-                      className="grid grid-cols-12 gap-2 items-center bg-black/30 p-2.5 rounded-xl border border-white/[0.05] text-xs"
+                      className="grid grid-cols-12 gap-2 items-center bg-white p-2.5 rounded-xl border border-[--line] text-xs"
                     >
                       <div className="col-span-5">
-                        <div className="text-white font-medium truncate">{l.itemName}</div>
-                        <div className="text-[10px] font-mono text-zinc-500">
+                        <div className="text-[--text] font-medium truncate">{l.itemName}</div>
+                        <div className="text-[10px] font-mono text-[--text-muted]">
                           {l.sku} · Talep: {l.requestedQty}
                         </div>
                       </div>
                       <div className="col-span-2">
-                        <label className="text-[10px] text-zinc-400 block">Sağlam</label>
+                        <label className="text-[10px] text-[--text-muted] block">Sağlam</label>
                         <input
                           type="number"
                           min={0}
@@ -494,11 +494,11 @@ export function RmaDetailAndDecisionDrawer({
                               [key]: { ...cur, receivedQty: Number(e.target.value || 0) },
                             }))
                           }
-                          className="w-full bg-black/50 border border-white/[0.1] rounded-lg px-2 py-1 text-white font-mono"
+                          className="w-full bg-[--muted-bg] border border-[--line] rounded-lg px-2 py-1 text-[--text] font-mono"
                         />
                       </div>
                       <div className="col-span-2">
-                        <label className="text-[10px] text-amber-300 block">Hasarlı</label>
+                        <label className="text-[10px] text-[--warn] block">Hasarlı</label>
                         <input
                           type="number"
                           min={0}
@@ -509,11 +509,11 @@ export function RmaDetailAndDecisionDrawer({
                               [key]: { ...cur, damagedQty: Number(e.target.value || 0) },
                             }))
                           }
-                          className="w-full bg-black/50 border border-amber-500/30 rounded-lg px-2 py-1 text-amber-200 font-mono"
+                          className="w-full bg-[--warn-soft] border border-[--warn] rounded-lg px-2 py-1 text-[--warn] font-mono"
                         />
                       </div>
                       <div className="col-span-3">
-                        <label className="text-[10px] text-zinc-400 block">Lot No</label>
+                        <label className="text-[10px] text-[--text-muted] block">Lot No</label>
                         <input
                           type="text"
                           value={cur.lotNumber}
@@ -524,7 +524,7 @@ export function RmaDetailAndDecisionDrawer({
                             }))
                           }
                           placeholder="LOT-..."
-                          className="w-full bg-black/50 border border-white/[0.1] rounded-lg px-2 py-1 text-white font-mono"
+                          className="w-full bg-[--muted-bg] border border-[--line] rounded-lg px-2 py-1 text-[--text] font-mono"
                         />
                       </div>
                     </div>
@@ -537,7 +537,7 @@ export function RmaDetailAndDecisionDrawer({
                   type="button"
                   disabled={busy}
                   onClick={handleReceiveQuarantine}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-amber-400 hover:bg-amber-300 text-[#061811] text-xs font-semibold cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold cursor-pointer disabled:opacity-50 shadow-sm"
                 >
                   <PackageCheck className="w-4 h-4" />
                   Mal Kabulü Onayla (Karantinaya Al)
@@ -548,22 +548,22 @@ export function RmaDetailAndDecisionDrawer({
 
           {/* Kalite Muayene & Karar Paneli */}
           {['TESLIM_ALINDI', 'INCELEMEDE'].includes(status) && (
-            <div className="bg-[#111513] border border-emerald-500/25 rounded-2xl p-4 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#34D399]">
+            <div className="bg-[--page] border border-[--brand-line] rounded-2xl p-4 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[--brand]">
                 <ClipboardCheck className="w-4 h-4" />
                 Kalite Muayene &amp; Nihai Karar (`UretimQualityInspection` + `NCR`)
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div className="space-y-1">
-                  <label className="text-zinc-400">Muayene Kararı *</label>
+                  <label className="text-[--text-muted]">Muayene Kararı *</label>
                   <select
                     value={decision}
                     onChange={(e) => setDecision(e.target.value as RmaQualityDecision)}
-                    className="w-full bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                   >
                     {RMA_QUALITY_DECISIONS.map((d) => (
-                      <option key={d} value={d} className="bg-[#111513]">
+                      <option key={d} value={d}>
                         {RMA_DECISION_LABELS[d]}
                       </option>
                     ))}
@@ -572,17 +572,17 @@ export function RmaDetailAndDecisionDrawer({
 
                 {decision === 'RESTOCK_TO_BIN' && (
                   <div className="space-y-1">
-                    <label className="text-zinc-400">Satılabilir Hedef Raf</label>
+                    <label className="text-[--text-muted]">Satılabilir Hedef Raf</label>
                     <select
                       value={sellableBinCode}
                       onChange={(e) => setSellableBinCode(e.target.value)}
-                      className="w-full bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+                      className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text] font-mono"
                     >
                       {sellableBins.length === 0 ? (
-                        <option value="A-01-01" className="bg-[#111513]">A-01-01</option>
+                        <option value="A-01-01">A-01-01</option>
                       ) : (
                         sellableBins.map((b) => (
-                          <option key={b.id} value={b.code} className="bg-[#111513]">
+                          <option key={b.id} value={b.code}>
                             {b.code} ({b.binRole || 'Satılabilir'})
                           </option>
                         ))
@@ -593,28 +593,28 @@ export function RmaDetailAndDecisionDrawer({
 
                 {decision === 'RESTOCK_TO_BIN' && (
                   <div className="space-y-1">
-                    <label className="text-zinc-400">FEFO / SKT Yeniden Değerleme (Opsiyonel)</label>
+                    <label className="text-[--text-muted]">FEFO / SKT Yeniden Değerleme (Opsiyonel)</label>
                     <input
                       type="date"
                       value={newExpiryDate}
                       onChange={(e) => setNewExpiryDate(e.target.value)}
-                      className="w-full bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                      className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                     />
                   </div>
                 )}
 
                 <div className="space-y-1">
-                  <label className="text-zinc-400">
+                  <label className="text-[--text-muted]">
                     Tedarikçi {decision === 'RETURN_TO_VENDOR' ? '*' : '(Skor Kartı Bağlantısı)'}
                   </label>
                   <select
                     value={supplierId}
                     onChange={(e) => setSupplierId(e.target.value)}
-                    className="w-full bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                   >
-                    <option value="" className="bg-[#111513]">Tedarikçi Seçiniz...</option>
+                    <option value="">Tedarikçi Seçiniz...</option>
                     {suppliers.map((s) => (
-                      <option key={s.id} value={s.id} className="bg-[#111513]">
+                      <option key={s.id} value={s.id}>
                         {s.name} ({s.code || s.id})
                       </option>
                     ))}
@@ -623,15 +623,15 @@ export function RmaDetailAndDecisionDrawer({
 
                 {decision !== 'RESTOCK_TO_BIN' && (
                   <div className="space-y-1">
-                    <label className="text-zinc-400">NCR Önem Derecesi</label>
+                    <label className="text-[--text-muted]">NCR Önem Derecesi</label>
                     <select
                       value={severity}
                       onChange={(e) => setSeverity(e.target.value as any)}
-                      className="w-full bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                      className="w-full bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                     >
-                      <option value="MINOR" className="bg-[#111513]">MINOR (Düşük)</option>
-                      <option value="MAJOR" className="bg-[#111513]">MAJOR (Orta / RTV)</option>
-                      <option value="CRITICAL" className="bg-[#111513]">CRITICAL (Kritik / Hurda)</option>
+                      <option value="MINOR">MINOR (Düşük)</option>
+                      <option value="MAJOR">MAJOR (Orta / RTV)</option>
+                      <option value="CRITICAL">CRITICAL (Kritik / Hurda)</option>
                     </select>
                   </div>
                 )}
@@ -643,14 +643,14 @@ export function RmaDetailAndDecisionDrawer({
                   value={defectCategory}
                   onChange={(e) => setDefectCategory(e.target.value)}
                   placeholder="Kusur Kategorisi (ör. MATERIAL)"
-                  className="bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                  className="bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                 />
                 <input
                   type="text"
                   value={inspectorNote}
                   onChange={(e) => setInspectorNote(e.target.value)}
                   placeholder="Kalite uzmanı muayene notu..."
-                  className="sm:col-span-2 bg-black/50 border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                  className="sm:col-span-2 bg-white border border-[--line] rounded-xl px-3 py-2 text-[--text]"
                 />
               </div>
 
@@ -659,7 +659,7 @@ export function RmaDetailAndDecisionDrawer({
                   type="button"
                   disabled={busy}
                   onClick={handleQualityDecision}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold cursor-pointer disabled:opacity-50 shadow-sm"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   Kalite Kararını Kaydet
@@ -672,38 +672,38 @@ export function RmaDetailAndDecisionDrawer({
           {(inspection || ncr || linkedSupplier) && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
               {inspection && (
-                <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-3.5">
-                  <div className="text-zinc-400 flex items-center gap-1.5">
-                    <FileCheck2 className="w-3.5 h-3.5 text-[#34D399]" />
+                <div className="bg-white border border-[--line] rounded-2xl p-3.5">
+                  <div className="text-[--text-muted] flex items-center gap-1.5">
+                    <FileCheck2 className="w-3.5 h-3.5 text-[--brand]" />
                     Kalite Muayenesi
                   </div>
-                  <div className="font-mono font-semibold text-white mt-1">
+                  <div className="font-mono font-semibold text-[--text] mt-1">
                     {inspection.inspectionNumber}
                   </div>
-                  <div className="text-[11px] text-[#34D399] mt-0.5">
+                  <div className="text-[11px] text-[--ok] font-medium mt-0.5">
                     Karar: {inspection.decision}
                   </div>
                 </div>
               )}
               {ncr && (
-                <div className="bg-[#111513] border border-rose-500/20 rounded-2xl p-3.5">
-                  <div className="text-rose-300 flex items-center gap-1.5">
+                <div className="bg-white border border-[--bad-soft] rounded-2xl p-3.5">
+                  <div className="text-[--bad] flex items-center gap-1.5 font-medium">
                     <ShieldAlert className="w-3.5 h-3.5" />
                     NCR Uygunsuzluk
                   </div>
-                  <div className="font-mono font-semibold text-white mt-1">
+                  <div className="font-mono font-semibold text-[--text] mt-1">
                     {ncr.ncrNumber}
                   </div>
-                  <div className="text-[11px] text-zinc-400 mt-0.5">
+                  <div className="text-[11px] text-[--text-muted] mt-0.5">
                     {ncr.severity} · Etki: ₺{ncr.costImpact}
                   </div>
                 </div>
               )}
               {linkedSupplier && (
-                <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-3.5">
-                  <div className="text-zinc-400">Bağlı Tedarikçi (Skor Kartı)</div>
-                  <div className="font-semibold text-white mt-1">{linkedSupplier.name}</div>
-                  <div className="text-[11px] text-indigo-300 mt-0.5">
+                <div className="bg-white border border-[--line] rounded-2xl p-3.5">
+                  <div className="text-[--text-muted]">Bağlı Tedarikçi (Skor Kartı)</div>
+                  <div className="font-semibold text-[--text] mt-1">{linkedSupplier.name}</div>
+                  <div className="text-[11px] text-[--brand] mt-0.5">
                     Skor: {linkedSupplier.scorecardScore ?? '-'} ({linkedSupplier.scorecardTier || '-'})
                   </div>
                 </div>
@@ -712,43 +712,43 @@ export function RmaDetailAndDecisionDrawer({
           )}
 
           {/* Mali Bağlantı & Kredi Notası */}
-          <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-4 space-y-3">
+          <div className="bg-[--page] border border-[--line] rounded-2xl p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                <CreditCard className="w-4 h-4 text-[#34D399]" />
+              <div className="flex items-center gap-2 text-sm font-semibold text-[--text]">
+                <CreditCard className="w-4 h-4 text-[--brand]" />
                 Mali Bağlantı &amp; Kredi Notası / Ödeme İadesi
               </div>
-              <span className="font-mono text-sm font-bold text-[#34D399]">
+              <span className="font-mono text-sm font-bold text-[--brand]">
                 ₺{Number(detail.refundAmount || 0).toLocaleString('tr-TR')}
               </span>
             </div>
 
             {!refundEligible ? (
-              <div className="bg-rose-500/10 border border-rose-500/25 rounded-xl p-3 text-xs text-rose-200 flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <div className="bg-[--bad-soft] border border-[--bad-soft] rounded-xl p-3 text-xs text-[--bad] flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
                   <strong>Sunucu Sert Bloğu Aktif:</strong> Fiziksel mal kabul (<code>TESLIM_ALINDI</code>) ve kalite muayene kararı (<code>KARARA_BAGLANDI</code>) tamamlanmadan kredi notası veya ödeme iadesi tetiklenemez.
                 </div>
               </div>
             ) : activeCreditNote ? (
-              <div className="bg-black/30 border border-white/[0.06] rounded-xl p-3.5 space-y-2 text-xs">
+              <div className="bg-white border border-[--line] rounded-xl p-3.5 space-y-2 text-xs">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <span className="font-mono font-semibold text-white">
+                    <span className="font-mono font-semibold text-[--text]">
                       {activeCreditNote.creditNoteNo}
                     </span>
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-200 text-[10px]">
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-[--muted-bg] text-[--text-2] text-[10px]">
                       {RMA_CREDIT_STATUS_LABELS[activeCreditNote.status as RmaCreditNoteStatus] ||
                         activeCreditNote.status}
                     </span>
                   </div>
-                  <div className="font-mono text-zinc-300">
+                  <div className="font-mono text-[--text-muted]">
                     Net: ₺{activeCreditNote.netAmount} + KDV: ₺{activeCreditNote.vatAmount} ={' '}
-                    <strong className="text-[#34D399]">₺{activeCreditNote.grossAmount}</strong>
+                    <strong className="text-[--brand]">₺{activeCreditNote.grossAmount}</strong>
                   </div>
                 </div>
                 {(activeCreditNote.eDocumentNo || activeCreditNote.financeId) && (
-                  <div className="text-[11px] font-mono text-zinc-400">
+                  <div className="text-[11px] font-mono text-[--text-muted]">
                     E-Belge: {activeCreditNote.eDocumentNo || '-'} · Finans Kaydı:{' '}
                     {activeCreditNote.financeId || '-'}
                   </div>
@@ -759,7 +759,7 @@ export function RmaDetailAndDecisionDrawer({
                       type="button"
                       disabled={busy}
                       onClick={() => handleCreditAction('APPROVE')}
-                      className="px-3.5 py-1.5 rounded-full bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/30 text-sky-200 font-semibold cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-full bg-[--brand-soft] hover:bg-[--brand-soft]/80 border border-[--brand-line] text-[--brand] font-semibold cursor-pointer"
                     >
                       Mali Onay Ver (E-Belge + Finans)
                     </button>
@@ -770,7 +770,7 @@ export function RmaDetailAndDecisionDrawer({
                       type="button"
                       disabled={busy}
                       onClick={() => handleCreditAction('ISSUE_AND_PAY')}
-                      className="px-3.5 py-1.5 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold cursor-pointer shadow-sm hover:opacity-95"
                     >
                       İade Ödemesini Tamamla &amp; RMA Kapat
                     </button>
@@ -780,7 +780,7 @@ export function RmaDetailAndDecisionDrawer({
                       type="button"
                       disabled={busy}
                       onClick={() => handleCreditAction('REJECT')}
-                      className="px-3.5 py-1.5 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 font-semibold cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-full bg-[--bad-soft] hover:bg-[--bad-soft]/80 border border-[--bad-soft] text-[--bad] font-semibold cursor-pointer"
                     >
                       Reddet
                     </button>
@@ -788,15 +788,15 @@ export function RmaDetailAndDecisionDrawer({
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between bg-black/30 border border-white/[0.06] rounded-xl p-3 text-xs">
-                <span className="text-zinc-300">
+              <div className="flex items-center justify-between bg-white border border-[--line] rounded-xl p-3 text-xs">
+                <span className="text-[--text-2]">
                   Fiziksel kabul ve kalite kararı tamamlandı. Mali kredi notası taslağı oluşturabilirsiniz.
                 </span>
                 <button
                   type="button"
                   disabled={busy}
                   onClick={() => handleCreditAction('REQUEST_DRAFT')}
-                  className="px-4 py-1.5 rounded-full bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold cursor-pointer shrink-0"
+                  className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold cursor-pointer shrink-0 shadow-sm hover:opacity-95"
                 >
                   Kredi Notası Taslağı Aç
                 </button>
@@ -805,9 +805,9 @@ export function RmaDetailAndDecisionDrawer({
           </div>
 
           {/* Kronolojik Olay Günlüğü */}
-          <div className="bg-[#111513] border border-white/[0.06] rounded-2xl p-4 space-y-2.5">
-            <div className="flex items-center gap-2 text-xs font-semibold text-zinc-300">
-              <Clock className="w-3.5 h-3.5 text-[#34D399]" />
+          <div className="bg-[--page] border border-[--line] rounded-2xl p-4 space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[--text]">
+              <Clock className="w-3.5 h-3.5 text-[--brand]" />
               RMA Olay &amp; Denetim Günlüğü
             </div>
             {Array.isArray(detail.events) && detail.events.length > 0 ? (
@@ -815,28 +815,28 @@ export function RmaDetailAndDecisionDrawer({
                 {detail.events.map((ev: any) => (
                   <div
                     key={ev.id}
-                    className="bg-black/30 border border-white/[0.04] rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-3"
+                    className="bg-white border border-[--line] rounded-xl px-3 py-2 text-xs flex items-start justify-between gap-3"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-[#34D399]">
+                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[--brand-soft] text-[--brand] font-semibold">
                           {ev.eventType}
                         </span>
-                        <span className="text-zinc-300 font-medium">
+                        <span className="text-[--text] font-medium">
                           {ev.actorName || 'Sistem'}
                         </span>
-                        <span className="text-[10px] text-zinc-500">({ev.method})</span>
+                        <span className="text-[10px] text-[--text-muted]">({ev.method})</span>
                       </div>
-                      <div className="text-zinc-300 mt-1">{ev.note}</div>
+                      <div className="text-[--text-2] mt-1">{ev.note}</div>
                     </div>
-                    <div className="text-[10px] font-mono text-zinc-500 shrink-0">
+                    <div className="text-[10px] font-mono text-[--text-muted] shrink-0">
                       {new Date(ev.createdAt).toLocaleString('tr-TR')}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-zinc-500">Bu kayıt için henüz olay günlüğü yok.</p>
+              <p className="text-xs text-[--text-muted]">Bu kayıt için henüz olay günlüğü yok.</p>
             )}
           </div>
         </div>

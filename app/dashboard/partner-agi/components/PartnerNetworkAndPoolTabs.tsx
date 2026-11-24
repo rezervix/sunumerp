@@ -96,7 +96,7 @@ export function PartnerNetworkAndPoolTabs({
           <div>
             <h2 className="text-base font-semibold text-zinc-100">Partner Firma Ağı ve Karşılıklı Onay</h2>
             <p className="text-xs text-zinc-400">
-              Kaynak paylaşımı yalnızca <span className="text-emerald-400 font-medium">Onaylı Partner (APPROVED)</span> firmalar arasında çalışır.
+              Kaynak paylaşımı yalnızca <span className="text-[--brand] font-medium">Onaylı Partner (APPROVED)</span> firmalar arasında çalışır.
             </p>
           </div>
           <button
@@ -106,14 +106,14 @@ export function PartnerNetworkAndPoolTabs({
               setInviteTargetId(invitable[0]?.id || "")
               setInviteOpen(true)
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[--brand] px-3 py-2 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" /> Partnerlik Daveti Gönder
           </button>
         </div>
 
         {inviteOpen && (
-          <div className="rounded-xl border border-emerald-500/30 bg-zinc-900/90 p-4 space-y-3">
+          <div className="rounded-xl border border-[--brand-line] bg-zinc-900/90 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-zinc-100">Yeni B2B Partnerlik Daveti</h3>
               <button type="button" onClick={() => setInviteOpen(false)} className="text-zinc-400 hover:text-zinc-200">
@@ -191,7 +191,7 @@ export function PartnerNetworkAndPoolTabs({
                     setInviteNotes("")
                   }
                 }}
-                className="rounded-lg bg-emerald-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
               >
                 Daveti Gönder
               </button>
@@ -230,7 +230,7 @@ export function PartnerNetworkAndPoolTabs({
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block">Komisyon</span>
-                    <span className="text-emerald-300 font-medium">%{ps.commissionRatePct}</span>
+                    <span className="text-[--brand] font-medium">%{ps.commissionRatePct}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block">Vade</span>
@@ -255,7 +255,7 @@ export function PartnerNetworkAndPoolTabs({
                               reason: "Firma yetkilisi onayı ile kabul edildi.",
                             })
                           }
-                          className="rounded-md bg-emerald-600/90 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-emerald-500"
+                          className="rounded-md bg-[--brand]/90 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-[--brand]"
                         >
                           Yetkili Onayıyla Kabul Et
                         </button>
@@ -304,7 +304,7 @@ export function PartnerNetworkAndPoolTabs({
                             reason: "Partnerlik yeniden aktifleştirildi.",
                           })
                         }
-                        className="rounded-md bg-emerald-600/80 px-2.5 py-1 text-[11px] text-white hover:bg-emerald-500"
+                        className="rounded-md bg-[--brand]/80 px-2.5 py-1 text-[11px] text-white hover:bg-[--brand]"
                       >
                         Yeniden Aktifleştir
                       </button>
@@ -379,7 +379,7 @@ export function PartnerNetworkAndPoolTabs({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-              <Globe className="h-4 w-4 text-emerald-400" /> Onaylı Partnerlerin Ortak Kaynak Havuzu
+              <Globe className="h-4 w-4 text-[--brand]" /> Onaylı Partnerlerin Ortak Kaynak Havuzu
             </h2>
             <p className="text-xs text-zinc-400">
               Yalnızca onaylı partnerlerinizin bu firmaya açtığı kaynaklar veri minimizasyonu uygulanarak listelenir.
@@ -452,7 +452,7 @@ export function PartnerNetworkAndPoolTabs({
                     <span
                       className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${
                         res.isAvailableForRange
-                          ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"
+                          ? "bg-[--brand]/15 text-[--brand] border-[--brand-line]"
                           : "bg-rose-500/15 text-rose-300 border-rose-500/30"
                       }`}
                     >
@@ -463,7 +463,7 @@ export function PartnerNetworkAndPoolTabs({
                   <div className="grid grid-cols-3 gap-2 rounded-lg bg-zinc-950/60 p-2 text-xs">
                     <div>
                       <span className="text-[10px] text-zinc-500 block">Partner Fiyatı</span>
-                      <span className="text-emerald-300 font-semibold">
+                      <span className="text-[--brand] font-semibold">
                         {formatTryB2b(res.netPartnerRateTry)}/{typeMeta.unitLabel}
                       </span>
                     </div>
@@ -508,7 +508,7 @@ export function PartnerNetworkAndPoolTabs({
                     setBookGuest("")
                     setBookNotes("")
                   }}
-                  className="w-full rounded-lg bg-emerald-600/90 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+                  className="w-full rounded-lg bg-[--brand]/90 px-3 py-2 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
                 >
                   White-Label Çapraz Rezervasyon Aç
                 </button>
@@ -572,7 +572,7 @@ export function PartnerNetworkAndPoolTabs({
                       <div className="text-[11px] text-zinc-500">{r.city || "—"}</div>
                     </td>
                     <td className="px-3 py-2.5">
-                      <span className="text-emerald-300 font-medium">{formatTryB2b(r.netPartnerRateTry)}</span>
+                      <span className="text-[--brand] font-medium">{formatTryB2b(r.netPartnerRateTry)}</span>
                       <div className="text-[11px] text-zinc-500">%{r.commissionRatePct} komisyon</div>
                     </td>
                     <td className="px-3 py-2.5 text-zinc-300">
@@ -613,7 +613,7 @@ export function PartnerNetworkAndPoolTabs({
                               reason: "Kaynak yeniden paylaşıma açıldı.",
                             })
                           }
-                          className="rounded-md bg-emerald-600/80 px-2.5 py-1 text-[11px] text-white hover:bg-emerald-500"
+                          className="rounded-md bg-[--brand]/80 px-2.5 py-1 text-[11px] text-white hover:bg-[--brand]"
                         >
                           Paylaşıma Aç
                         </button>
@@ -746,7 +746,7 @@ export function PartnerNetworkAndPoolTabs({
       {/* WHITE-LABEL ÇAPRAZ REZERVASYON MODALI */}
       {bookingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-lg rounded-xl border border-emerald-500/40 bg-zinc-900 p-5 space-y-4">
+          <div className="w-full max-w-lg rounded-xl border border-[--brand-line] bg-zinc-900 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-semibold text-zinc-100">Atomik Çapraz Rezervasyon Oluştur</h3>
@@ -785,7 +785,7 @@ export function PartnerNetworkAndPoolTabs({
               </label>
             </div>
             <div className="rounded-lg bg-zinc-950/70 border border-zinc-800 p-2.5 text-[11px] text-zinc-400 flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+              <ShieldCheck className="h-4 w-4 text-[--brand] shrink-0" />
               <span>
                 Sunucu çakışma kilidi aktif: Tarih çakışması varsa HTTP 409 ile reddedilir ve alternatif kaynaklar önerilir; hata durumunda iki taraf da geri alınır.
               </span>
@@ -809,7 +809,7 @@ export function PartnerNetworkAndPoolTabs({
                   })
                   if (ok) setBookingTarget(null)
                 }}
-                className="rounded-lg bg-emerald-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
               >
                 Rezervasyonu Oluştur
               </button>

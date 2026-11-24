@@ -239,9 +239,9 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
 
       {isDragging && (
         <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-[#080A09]/80 backdrop-blur-md transition-all" />
-          <div className="relative flex flex-col items-center gap-4 bg-[#111513] rounded-[24px] p-12 shadow-[0_0_50px_rgba(16,185,129,0.15)] border-2 border-dashed border-emerald-500/50 bg-emerald-500/5">
-            <div className="size-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.25)] animate-pulse">
+          <div className="absolute inset-0 bg-[#F6F8FB]/80 backdrop-blur-md transition-all" />
+          <div className="relative flex flex-col items-center gap-4 bg-[white] rounded-[24px] p-12 shadow-[0_0_50px_rgba(16,185,129,0.15)] border-2 border-dashed border-[--brand-line] bg-[--brand]/5">
+            <div className="size-16 rounded-2xl bg-[--brand]/15 border border-[--brand-line] flex items-center justify-center text-[--brand] shadow-[0_0_20px_rgba(16,185,129,0.25)] animate-pulse">
               <Upload size={32} />
             </div>
             <div className="text-center space-y-1">
@@ -258,7 +258,7 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
           <select
             value={selectedCalendarId}
             onChange={(e) => setSelectedCalendarId(e.target.value)}
-            className="rounded-xl border border-white/[0.08] bg-[#111513] px-3 py-1.5 text-xs outline-none focus:border-emerald-500/50 max-w-[200px] truncate text-zinc-200"
+            className="rounded-xl border border-[--line] bg-[white] px-3 py-1.5 text-xs outline-none focus:border-[--brand-line] max-w-[200px] truncate text-zinc-200"
           >
             <option value="">İçerik Takvimi İlişkisi (Yok)</option>
             {contentCalendars.map((item) => (
@@ -279,7 +279,7 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
           id="library-upload-btn"
           size="sm"
           onClick={() => fileInputRef.current?.click()}
-          className="gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
+          className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-semibold rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all"
         >
           <Upload size={14} />
           Dosya Yükle
@@ -288,16 +288,16 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
 
       {/* Upload panel */}
       {isOpen && uploads.length > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 bg-[#111513]/95 backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed bottom-6 right-6 z-50 w-96 bg-[white]/95 backdrop-blur-xl border border-[--line] rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[--line] bg-[--page]">
             <div className="flex items-center gap-2">
               {allDone && !hasErrors ? (
-                <CheckCircle size={16} className="text-emerald-400" />
+                <CheckCircle size={16} className="text-[--brand]" />
               ) : hasErrors ? (
                 <AlertCircle size={16} className="text-rose-400" />
               ) : (
-                <Loader2 size={16} className="text-emerald-400 animate-spin" />
+                <Loader2 size={16} className="text-[--brand] animate-spin" />
               )}
               <span className="text-xs font-semibold text-white">
                 {allDone

@@ -250,7 +250,7 @@ export function ProductionConsolidatedWorkspace() {
   return (
     <div className="space-y-6">
       {/* Üst Konsolide Başlık & Rol Seçimi */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-md">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 rounded-2xl bg-[--page] border border-[--line] backdrop-blur-md">
         <div>
           <div className="flex items-center gap-2">
             <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
@@ -266,13 +266,13 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-white/[0.03] p-1 rounded-xl border border-white/10">
+          <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-[--line]">
             <span className="text-xs text-zinc-400 pl-2 pr-1">Rol Görünümü:</span>
             <Select value={roleView} onValueChange={(val: any) => setRoleView(val)}>
               <SelectTrigger className="h-8 border-none bg-transparent text-xs font-semibold text-purple-300">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-white/10 text-zinc-200">
+              <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
                 <SelectItem value="FABRIKA_MUDURU">Fabrika Müdürü (Finansal & Genel)</SelectItem>
                 <SelectItem value="PLANLAMA_MUDURU">Planlama Müdürü (MRP & Kapasite)</SelectItem>
                 <SelectItem value="ATOLYE_SEFI">Atölye Şefi (İş Emirleri & İcra)</SelectItem>
@@ -286,7 +286,7 @@ export function ProductionConsolidatedWorkspace() {
             size="sm"
             onClick={fetchDashboardData}
             disabled={loading}
-            className="border-white/10 hover:bg-white/5 text-zinc-300 h-9"
+            className="border-[--line] hover:bg-white/5 text-zinc-300 h-9"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -306,10 +306,10 @@ export function ProductionConsolidatedWorkspace() {
       {/* Ana KPI Kartları (Rol Duyarlı) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* OTD */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Zamanında Teslim (OTD)</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-[--brand]" />
           </div>
           <div className="text-2xl font-bold text-white">
             %{dashboardData?.kpis?.onTimeDeliveryPct ?? "95.5"}
@@ -320,7 +320,7 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         {/* Schedule Adherence */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Çizelge Uyumu</span>
             <Clock className="w-4 h-4 text-blue-400" />
@@ -334,7 +334,7 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         {/* OEE */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Fabrika OEE</span>
             <Activity className="w-4 h-4 text-purple-400" />
@@ -348,7 +348,7 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         {/* Ret / Fire */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Ret / Fire Oranı</span>
             <AlertOctagon className="w-4 h-4 text-red-400" />
@@ -362,7 +362,7 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         {/* Kapasite Doluluk */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Kapasite Doluluk</span>
             <Layers className="w-4 h-4 text-cyan-400" />
@@ -376,7 +376,7 @@ export function ProductionConsolidatedWorkspace() {
         </div>
 
         {/* Kritik Malzeme Açığı */}
-        <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+        <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
           <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
             <span>Kritik Stok Açığı</span>
             <Package className="w-4 h-4 text-amber-400" />
@@ -391,7 +391,7 @@ export function ProductionConsolidatedWorkspace() {
       </div>
 
       {/* Sekmeler */}
-      <div className="flex border-b border-white/[0.08] overflow-x-auto gap-2">
+      <div className="flex border-b border-[--line] overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab("dashboard")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
@@ -448,7 +448,7 @@ export function ProductionConsolidatedWorkspace() {
               : "border-transparent text-zinc-400 hover:text-zinc-200"
           }`}
         >
-          <Play className="w-4 h-4 text-emerald-400" />
+          <Play className="w-4 h-4 text-[--brand]" />
           Uçtan Uca Entegrasyon Senaryoları
         </button>
       </div>
@@ -458,13 +458,13 @@ export function ProductionConsolidatedWorkspace() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Süreç Entegrasyon Akışı */}
-            <div className="p-5 rounded-xl border border-white/[0.08] bg-white/[0.01] space-y-4">
+            <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-4">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                 <Layers className="w-4 h-4 text-purple-400" />
                 Uçtan Uca Üretim Akış Durumu
               </h3>
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
                   <span className="text-zinc-400">Aktif İş Emirleri:</span>
                   <div className="text-lg font-bold text-white mt-1">
                     {dashboardData?.counts?.activeWorkOrders ?? 0} Adet
@@ -472,7 +472,7 @@ export function ProductionConsolidatedWorkspace() {
                   <span className="text-[11px] text-cyan-400">Atölyede İcrada</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
                   <span className="text-zinc-400">Geciken İşler:</span>
                   <div className="text-lg font-bold text-red-400 mt-1">
                     {dashboardData?.counts?.delayedWorkOrders ?? 0} Adet
@@ -480,7 +480,7 @@ export function ProductionConsolidatedWorkspace() {
                   <span className="text-[11px] text-red-400/80">Termin Aşımı</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
                   <span className="text-zinc-400">Arızalı Ekipman:</span>
                   <div className="text-lg font-bold text-amber-400 mt-1">
                     {dashboardData?.counts?.downMachines ?? 0} Tezgah
@@ -488,12 +488,12 @@ export function ProductionConsolidatedWorkspace() {
                   <span className="text-[11px] text-amber-400/80">Duruş Halinde</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
+                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
                   <span className="text-zinc-400">Muayene Sayısı:</span>
-                  <div className="text-lg font-bold text-emerald-400 mt-1">
+                  <div className="text-lg font-bold text-[--brand] mt-1">
                     {dashboardData?.counts?.totalInspections ?? 0} Muayene
                   </div>
-                  <span className="text-[11px] text-emerald-400/80">Kalite Kontrolü</span>
+                  <span className="text-[11px] text-[--brand]/80">Kalite Kontrolü</span>
                 </div>
               </div>
 
@@ -504,7 +504,7 @@ export function ProductionConsolidatedWorkspace() {
             </div>
 
             {/* Son Olaylar ve Alarmlar */}
-            <div className="p-5 rounded-xl border border-white/[0.08] bg-white/[0.01] space-y-3">
+            <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                 <Bell className="w-4 h-4 text-amber-400" />
                 Son Üretim Alarmları ve Bildirimler
@@ -518,7 +518,7 @@ export function ProductionConsolidatedWorkspace() {
                   dashboardData.recentAlerts.map((n: any) => (
                     <div
                       key={n.id}
-                      className="p-3 rounded-lg border border-white/[0.05] bg-white/[0.02] flex items-start gap-2.5 text-xs"
+                      className="p-3 rounded-lg border border-white/[0.05] bg-[--page] flex items-start gap-2.5 text-xs"
                     >
                       {n.type === "error" ? (
                         <AlertOctagon className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
@@ -544,13 +544,13 @@ export function ProductionConsolidatedWorkspace() {
       {/* SEKME 2: RAPOR SETİ */}
       {activeTab === "reports" && (
         <div className="space-y-5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-[--page] border border-[--line]">
             <div className="flex items-center gap-3">
               <Select value={selectedReport} onValueChange={setSelectedReport}>
-                <SelectTrigger className="w-[260px] bg-white/[0.03] border-white/10 text-white text-xs">
+                <SelectTrigger className="w-[260px] bg-white border-[--line] text-white text-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-zinc-200">
+                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
                   <SelectItem value="work_order_cost">İş Emri Maliyet Analizi Raporu</SelectItem>
                   <SelectItem value="material_variance">Malzeme Tüketim & Sapma Raporu</SelectItem>
                   <SelectItem value="machine_efficiency">Makine Verimlilik & OEE Raporu</SelectItem>
@@ -562,7 +562,7 @@ export function ProductionConsolidatedWorkspace() {
                 size="sm"
                 onClick={() => fetchReportData(selectedReport)}
                 disabled={reportLoading}
-                className="border-white/10 text-zinc-300"
+                className="border-[--line] text-zinc-300"
               >
                 <RefreshCw className={`w-3 h-3 mr-1 ${reportLoading ? "animate-spin" : ""}`} />
                 Yenile
@@ -572,17 +572,17 @@ export function ProductionConsolidatedWorkspace() {
             <Button
               size="sm"
               onClick={handleExportCsv}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+              className="bg-[--brand] hover:bg-[--brand] text-white"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
               Excel / CSV Olarak İndir
             </Button>
           </div>
 
-          <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-white/[0.01]">
+          <div className="rounded-xl border border-[--line] overflow-hidden bg-white/[0.01]">
             <Table>
-              <TableHeader className="bg-white/[0.03]">
-                <TableRow className="border-white/[0.08]">
+              <TableHeader className="bg-white">
+                <TableRow className="border-[--line]">
                   {selectedReport === "work_order_cost" && (
                     <>
                       <TableHead className="text-zinc-400">İş Emri No</TableHead>
@@ -639,13 +639,13 @@ export function ProductionConsolidatedWorkspace() {
                   </TableRow>
                 ) : (
                   reportData.map((row: any, idx: number) => (
-                    <TableRow key={idx} className="border-white/[0.05] hover:bg-white/[0.02]">
+                    <TableRow key={idx} className="border-white/[0.05] hover:bg-[--page]">
                       {selectedReport === "work_order_cost" && (
                         <>
                           <TableCell className="font-mono text-xs font-semibold text-purple-400">{row.workOrderNumber}</TableCell>
                           <TableCell className="font-mono text-xs text-zinc-300">₺{(row.totalPlannedCost || 0).toLocaleString("tr-TR")}</TableCell>
                           <TableCell className="font-mono text-xs text-zinc-200">₺{(row.totalActualCost || 0).toLocaleString("tr-TR")}</TableCell>
-                          <TableCell className={`font-mono text-xs font-bold ${row.varianceAmount > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                          <TableCell className={`font-mono text-xs font-bold ${row.varianceAmount > 0 ? "text-red-400" : "text-[--brand]"}`}>
                             {row.varianceAmount > 0 ? `+₺${row.varianceAmount}` : `₺${row.varianceAmount}`}
                           </TableCell>
                           <TableCell className="font-mono text-xs text-zinc-300">%{row.variancePercentage}</TableCell>
@@ -659,7 +659,7 @@ export function ProductionConsolidatedWorkspace() {
                           <TableCell className="text-sm text-zinc-200">{row.itemName}</TableCell>
                           <TableCell className="font-mono text-xs text-zinc-400">{row.plannedQuantity} {row.unit}</TableCell>
                           <TableCell className="font-mono text-xs text-zinc-200 font-semibold">{row.actualQuantity} {row.unit}</TableCell>
-                          <TableCell className={`font-mono text-xs ${row.varianceQuantity > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                          <TableCell className={`font-mono text-xs ${row.varianceQuantity > 0 ? "text-red-400" : "text-[--brand]"}`}>
                             {row.varianceQuantity > 0 ? `+${row.varianceQuantity}` : row.varianceQuantity}
                           </TableCell>
                           <TableCell className="font-mono text-xs text-zinc-300">%{row.variancePercentage}</TableCell>
@@ -671,7 +671,7 @@ export function ProductionConsolidatedWorkspace() {
                           <TableCell className="font-mono text-xs text-cyan-400">{row.machineCode}</TableCell>
                           <TableCell className="text-sm text-white font-medium">{row.machineName}</TableCell>
                           <TableCell>
-                            <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-white/10 font-bold">
+                            <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-[--line] font-bold">
                               {row.criticality}
                             </span>
                           </TableCell>
@@ -679,7 +679,7 @@ export function ProductionConsolidatedWorkspace() {
                           <TableCell className="font-mono text-xs text-red-400">{row.totalDowntimeMinutes} dk</TableCell>
                           <TableCell className="font-mono text-xs text-blue-400">{row.mtbfHours} saat</TableCell>
                           <TableCell className="font-mono text-xs text-amber-400">{row.mttrMinutes} dk</TableCell>
-                          <TableCell className="font-mono text-xs font-bold text-emerald-400">%{row.oeePct}</TableCell>
+                          <TableCell className="font-mono text-xs font-bold text-[--brand]">%{row.oeePct}</TableCell>
                         </>
                       )}
                       {selectedReport === "maintenance_cost" && (
@@ -722,10 +722,10 @@ export function ProductionConsolidatedWorkspace() {
             </Button>
           </div>
 
-          <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-white/[0.01]">
+          <div className="rounded-xl border border-[--line] overflow-hidden bg-white/[0.01]">
             <Table>
-              <TableHeader className="bg-white/[0.03]">
-                <TableRow className="border-white/[0.08]">
+              <TableHeader className="bg-white">
+                <TableRow className="border-[--line]">
                   <TableHead className="text-zinc-400">Kural Adı</TableHead>
                   <TableHead className="text-zinc-400">Olay Türü</TableHead>
                   <TableHead className="text-zinc-400">Önem Derecesi</TableHead>
@@ -743,7 +743,7 @@ export function ProductionConsolidatedWorkspace() {
                   </TableRow>
                 ) : (
                   notificationRules.map((rule) => (
-                    <TableRow key={rule.id} className="border-white/[0.05] hover:bg-white/[0.02]">
+                    <TableRow key={rule.id} className="border-white/[0.05] hover:bg-[--page]">
                       <TableCell className="text-sm font-semibold text-white">{rule.name}</TableCell>
                       <TableCell className="font-mono text-xs text-purple-300">{rule.eventType}</TableCell>
                       <TableCell>
@@ -765,7 +765,7 @@ export function ProductionConsolidatedWorkspace() {
                       </TableCell>
                       <TableCell>
                         {rule.isActive ? (
-                          <span className="text-xs text-emerald-400 font-medium">Aktif</span>
+                          <span className="text-xs text-[--brand] font-medium">Aktif</span>
                         ) : (
                           <span className="text-xs text-zinc-500">Pasif</span>
                         )}
@@ -789,24 +789,24 @@ export function ProductionConsolidatedWorkspace() {
                 placeholder="İşlem, kaynak veya detay ara..."
                 value={auditSearch}
                 onChange={(e) => setAuditSearch(e.target.value)}
-                className="pl-9 bg-white/[0.02] border-white/10 text-white placeholder:text-zinc-500"
+                className="pl-9 bg-[--page] border-[--line] text-white placeholder:text-zinc-500"
               />
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={fetchAuditLogs}
-              className="border-white/10 text-zinc-300"
+              className="border-[--line] text-zinc-300"
             >
               <RefreshCw className="w-3.5 h-3.5 mr-1" />
               Yenile
             </Button>
           </div>
 
-          <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-white/[0.01]">
+          <div className="rounded-xl border border-[--line] overflow-hidden bg-white/[0.01]">
             <Table>
-              <TableHeader className="bg-white/[0.03]">
-                <TableRow className="border-white/[0.08]">
+              <TableHeader className="bg-white">
+                <TableRow className="border-[--line]">
                   <TableHead className="text-zinc-400">Tarih</TableHead>
                   <TableHead className="text-zinc-400">Kullanıcı</TableHead>
                   <TableHead className="text-zinc-400">Kaynak (Resource)</TableHead>
@@ -823,7 +823,7 @@ export function ProductionConsolidatedWorkspace() {
                   </TableRow>
                 ) : (
                   auditLogs.map((log) => (
-                    <TableRow key={log.id} className="border-white/[0.05] hover:bg-white/[0.02]">
+                    <TableRow key={log.id} className="border-white/[0.05] hover:bg-[--page]">
                       <TableCell className="font-mono text-xs text-zinc-400">
                         {new Date(log.createdAt).toLocaleString("tr-TR")}
                       </TableCell>
@@ -834,7 +834,7 @@ export function ProductionConsolidatedWorkspace() {
                         {log.resource}
                       </TableCell>
                       <TableCell>
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-white/10 text-zinc-200">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-[--line] text-zinc-200">
                           {log.action}
                         </span>
                       </TableCell>
@@ -855,7 +855,7 @@ export function ProductionConsolidatedWorkspace() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* SENARYO A */}
-            <div className="p-5 rounded-xl border border-white/[0.08] bg-white/[0.01] space-y-3">
+            <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
               <div className="flex items-center justify-between">
                 <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
                   Senaryo A
@@ -879,7 +879,7 @@ export function ProductionConsolidatedWorkspace() {
             </div>
 
             {/* SENARYO B */}
-            <div className="p-5 rounded-xl border border-white/[0.08] bg-white/[0.01] space-y-3">
+            <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
               <div className="flex items-center justify-between">
                 <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                   Senaryo B
@@ -908,9 +908,9 @@ export function ProductionConsolidatedWorkspace() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 rounded-xl border border-emerald-500/30 bg-emerald-500/[0.03] space-y-3"
+              className="p-5 rounded-xl border border-[--brand-line] bg-[--brand]/[0.03] space-y-3"
             >
-              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <div className="flex items-center gap-2 text-[--brand] font-bold text-sm">
                 <CheckCircle2 className="w-5 h-5" />
                 Uçtan Uca Senaryo {lastScenarioResult.scenario} Başarıyla Tamamlandı!
               </div>
@@ -927,11 +927,11 @@ export function ProductionConsolidatedWorkspace() {
                     </div>
                     <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                       <span className="text-zinc-400">Kalite Muayenesi:</span>
-                      <div className="font-mono font-bold text-emerald-400 mt-0.5">KABUL (#{lastScenarioResult.inspectionNumber})</div>
+                      <div className="font-mono font-bold text-[--brand] mt-0.5">KABUL (#{lastScenarioResult.inspectionNumber})</div>
                     </div>
                     <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                       <span className="text-zinc-400">Zamanında Teslim:</span>
-                      <div className="font-mono font-bold text-emerald-400 mt-0.5">%{lastScenarioResult.otdPercentage} OTD</div>
+                      <div className="font-mono font-bold text-[--brand] mt-0.5">%{lastScenarioResult.otdPercentage} OTD</div>
                     </div>
                   </>
                 )}
@@ -951,7 +951,7 @@ export function ProductionConsolidatedWorkspace() {
                     </div>
                     <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                       <span className="text-zinc-400">Yeni Makine Durumu:</span>
-                      <div className="font-mono font-bold text-emerald-400 mt-0.5">{lastScenarioResult.finalMachineStatus}</div>
+                      <div className="font-mono font-bold text-[--brand] mt-0.5">{lastScenarioResult.finalMachineStatus}</div>
                     </div>
                   </>
                 )}
@@ -963,7 +963,7 @@ export function ProductionConsolidatedWorkspace() {
 
       {/* MODAL: YENİ BİLDİRİM KURALI */}
       <Dialog open={isRuleModalOpen} onOpenChange={setIsRuleModalOpen}>
-        <DialogContent className="bg-zinc-950 border border-white/10 text-white max-w-md">
+        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5 text-purple-400" />
@@ -981,7 +981,7 @@ export function ProductionConsolidatedWorkspace() {
                 placeholder="Örn: 24 Saati Aşan İş Emri Gecikme Uyarısı"
                 value={ruleForm.name}
                 onChange={(e) => setRuleForm({ ...ruleForm, name: e.target.value })}
-                className="mt-1 bg-white/[0.02] border-white/10 text-white"
+                className="mt-1 bg-[--page] border-[--line] text-white"
               />
             </div>
 
@@ -992,10 +992,10 @@ export function ProductionConsolidatedWorkspace() {
                   value={ruleForm.eventType}
                   onValueChange={(val) => setRuleForm({ ...ruleForm, eventType: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-white/[0.02] border-white/10 text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-zinc-200">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
                     <SelectItem value="WORK_ORDER_DELAY">İş Emri Gecikmesi</SelectItem>
                     <SelectItem value="CAPACITY_OVERLOAD">Kapasite Aşımı</SelectItem>
                     <SelectItem value="QUALITY_REJECTION">Kalite Muayene Ret / NCR</SelectItem>
@@ -1012,10 +1012,10 @@ export function ProductionConsolidatedWorkspace() {
                   value={ruleForm.severity}
                   onValueChange={(val: any) => setRuleForm({ ...ruleForm, severity: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-white/[0.02] border-white/10 text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-zinc-200">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
                     <SelectItem value="INFO">Bilgi (Info)</SelectItem>
                     <SelectItem value="WARNING">Uyarı (Warning)</SelectItem>
                     <SelectItem value="CRITICAL">Kritik (Critical)</SelectItem>
@@ -1030,10 +1030,10 @@ export function ProductionConsolidatedWorkspace() {
                 value={ruleForm.channel}
                 onValueChange={(val: any) => setRuleForm({ ...ruleForm, channel: val })}
               >
-                <SelectTrigger className="mt-1 bg-white/[0.02] border-white/10 text-zinc-200">
+                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-zinc-200">
+                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
                   <SelectItem value="IN_APP">Uygulama İçi (In-App)</SelectItem>
                   <SelectItem value="EMAIL">E-Posta</SelectItem>
                   <SelectItem value="SMS">SMS</SelectItem>
@@ -1048,7 +1048,7 @@ export function ProductionConsolidatedWorkspace() {
                 placeholder="Kural tetiklenme şartları..."
                 value={ruleForm.description}
                 onChange={(e) => setRuleForm({ ...ruleForm, description: e.target.value })}
-                className="mt-1 bg-white/[0.02] border-white/10 text-white"
+                className="mt-1 bg-[--page] border-[--line] text-white"
               />
             </div>
 
@@ -1057,7 +1057,7 @@ export function ProductionConsolidatedWorkspace() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsRuleModalOpen(false)}
-                className="border-white/10 text-zinc-300"
+                className="border-[--line] text-zinc-300"
               >
                 İptal
               </Button>

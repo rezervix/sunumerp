@@ -9,13 +9,13 @@ import { TrendingUp, Download, Eye, Package, Loader2, CheckCircle2, Clock, XCirc
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
 
 const STATUS_COLORS: Record<string, string> = {
-  approved: "#34D399",
+  approved: "#1267E6",
   pending_approval: "#FBBF24",
   rejected: "#F43F5E",
   draft: "#71717A",
 }
 
-const CHART_COLORS = ["#34D399", "#38BDF8", "#FBBF24", "#F43F5E", "#A78BFA", "#2DD4BF"]
+const CHART_COLORS = ["#1267E6", "#38BDF8", "#FBBF24", "#F43F5E", "#A78BFA", "#2DD4BF"]
 
 interface AnalyticsData {
   topViewed: { id: string; originalName: string; viewCount: number; downloadCount: number; type: string; niche: { name: string } }[]
@@ -39,7 +39,7 @@ export function ContentAnalyticsPanel() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <Loader2 size={28} className="animate-spin text-emerald-400" />
+      <Loader2 size={28} className="animate-spin text-[--brand]" />
     </div>
   )
 
@@ -52,7 +52,7 @@ export function ContentAnalyticsPanel() {
   return (
     <div className="space-y-6 py-2">
       {/* Kutusuz Üst KPI Şeridi */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-white/[0.06]">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
             <Package size={13} className="text-zinc-400" />
@@ -62,7 +62,7 @@ export function ContentAnalyticsPanel() {
             <span className="text-3xl font-light text-white">
               <AnimatedNumber value={data.totals.totalContent} />
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
               Varlık
             </span>
           </div>
@@ -92,7 +92,7 @@ export function ContentAnalyticsPanel() {
             <span className="text-3xl font-light text-white">
               <AnimatedNumber value={data.totals.totalDownloads} />
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
               İndirildi
             </span>
           </div>
@@ -102,9 +102,9 @@ export function ContentAnalyticsPanel() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Günlük Yükleme */}
         {data.dailyUploads.length > 0 && (
-          <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+          <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
             <h3 className="font-medium text-white text-sm mb-4 flex items-center gap-2">
-              <TrendingUp size={16} className="text-emerald-400" />
+              <TrendingUp size={16} className="text-[--brand]" />
               Son 30 Gün Yükleme & Onay Eğilimi
             </h3>
             <div className="h-52">
@@ -116,8 +116,8 @@ export function ContentAnalyticsPanel() {
                       <stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="approvedDaily" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#34D399" stopOpacity={0.35}/>
-                      <stop offset="95%" stopColor="#34D399" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#1267E6" stopOpacity={0.35}/>
+                      <stop offset="95%" stopColor="#1267E6" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
@@ -125,7 +125,7 @@ export function ContentAnalyticsPanel() {
                   <YAxis stroke="#71717A" tick={{ fill: "#71717A", fontSize: 10 }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
+                      backgroundColor: "white",
                       borderColor: "rgba(255,255,255,0.1)",
                       borderRadius: "12px",
                       color: "#fff",
@@ -134,7 +134,7 @@ export function ContentAnalyticsPanel() {
                     labelFormatter={v => `Tarih: ${v}`}
                   />
                   <Area type="monotone" dataKey="uploads" stroke="#38BDF8" strokeWidth={2} fill="url(#uploadsDaily)" />
-                  <Area type="monotone" dataKey="approved" stroke="#34D399" strokeWidth={2.5} fill="url(#approvedDaily)" />
+                  <Area type="monotone" dataKey="approved" stroke="#1267E6" strokeWidth={2.5} fill="url(#approvedDaily)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -143,9 +143,9 @@ export function ContentAnalyticsPanel() {
 
         {/* Niş Dağılımı */}
         {data.nicheStats.length > 0 && (
-          <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+          <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
             <h3 className="font-medium text-white text-sm mb-4 flex items-center gap-2">
-              <Package size={16} className="text-emerald-400" />
+              <Package size={16} className="text-[--brand]" />
               Niş Bazlı Dağılım
             </h3>
             <div className="h-52">
@@ -156,7 +156,7 @@ export function ContentAnalyticsPanel() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
+                      backgroundColor: "white",
                       borderColor: "rgba(255,255,255,0.1)",
                       borderRadius: "12px",
                       color: "#fff",

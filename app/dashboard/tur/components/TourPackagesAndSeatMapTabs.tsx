@@ -166,13 +166,13 @@ export function TourPackagesAndCalendarTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex flex-wrap gap-1.5">
           <button
             type="button"
             onClick={() => setStatusFilter('ALL')}
             className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-              statusFilter === 'ALL' ? 'bg-[#34D399] text-[#080A09]' : 'bg-[#161B18] text-zinc-300'
+              statusFilter === 'ALL' ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc-300'
             }`}
           >
             Tümü ({tours.length})
@@ -183,7 +183,7 @@ export function TourPackagesAndCalendarTab({
               type="button"
               onClick={() => setStatusFilter(st)}
               className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-                statusFilter === st ? 'bg-[#34D399] text-[#080A09]' : 'bg-[#161B18] text-zinc-300'
+                statusFilter === st ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc-300'
               }`}
             >
               {TOUR_STATUS_LABELS[st]}
@@ -213,7 +213,7 @@ export function TourPackagesAndCalendarTab({
           <button
             type="button"
             onClick={() => setShowForm((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-1.5 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             <Plus className="h-3.5 w-3.5" /> Yeni Tur Planla
           </button>
@@ -223,10 +223,10 @@ export function TourPackagesAndCalendarTab({
       {showForm && (
         <form
           onSubmit={handleSaveTour}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-emerald-500/35 bg-[#111513] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[white] p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#34D399]">
+            <h4 className="text-sm font-semibold text-[#1267E6]">
               Yeni Tur Paketi (Araç / Şoför / Rehber Çakışma Kontrolü Aktif)
             </h4>
             <button type="button" onClick={() => setShowForm(false)} className="text-zinc-400">
@@ -382,13 +382,13 @@ export function TourPackagesAndCalendarTab({
 
           {tourType === 'MULTI_DAY' && (
             <div className="md:col-span-2">
-              <label className="mb-1 block text-[11px] text-[#34D399]">
+              <label className="mb-1 block text-[11px] text-[#1267E6]">
                 Bağlı Otel Kontenjanı (Otel PMS)
               </label>
               <select
                 value={hotelAllotmentId}
                 onChange={(e) => setHotelAllotmentId(e.target.value)}
-                className="w-full rounded-lg border border-emerald-500/35 bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[--brand]/35 bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
               >
                 <option value="">Otel kontenjanı seç (opsiyonel)...</option>
                 {hotelAllotments.map((al) => (
@@ -411,7 +411,7 @@ export function TourPackagesAndCalendarTab({
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-[#34D399] px-4 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
             >
               {busy ? 'Çakışmalar Kontrol Ediliyor...' : 'Turu Kaydet'}
             </button>
@@ -432,16 +432,16 @@ export function TourPackagesAndCalendarTab({
           return (
             <div
               key={t.id}
-              className="flex flex-col justify-between rounded-xl border border-white/[0.08] bg-[#111513] p-4"
+              className="flex flex-col justify-between rounded-xl border border-[--line] bg-[white] p-4"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-xs font-semibold text-[#34D399]">
+                      <span className="font-mono text-xs font-semibold text-[#1267E6]">
                         {t.code}
                       </span>
-                      <span className="rounded bg-white/[0.06] px-1.5 py-0.5 text-[10px] text-zinc-300">
+                      <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-zinc-300">
                         {TOUR_TYPE_LABELS[t.tourType as TourType] || t.tourType} ({t.durationDays} Gün)
                       </span>
                       {t.hotelAllotmentId && (
@@ -459,7 +459,7 @@ export function TourPackagesAndCalendarTab({
 
                   <span
                     className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${
-                      TOUR_STATUS_BADGES[t.status as TourStatus] || 'border-white/10 text-zinc-300'
+                      TOUR_STATUS_BADGES[t.status as TourStatus] || 'border-[--line] text-zinc-300'
                     }`}
                   >
                     {TOUR_STATUS_LABELS[t.status as TourStatus] || t.status}
@@ -475,7 +475,7 @@ export function TourPackagesAndCalendarTab({
                         · Min: {t.minParticipants}
                       </span>
                     </span>
-                    <span className="font-mono font-semibold text-[#34D399]">
+                    <span className="font-mono font-semibold text-[#1267E6]">
                       {Number(t.adultPriceTry).toLocaleString('tr-TR')} ₺
                     </span>
                   </div>
@@ -486,7 +486,7 @@ export function TourPackagesAndCalendarTab({
                           ? 'bg-amber-400'
                           : belowMin
                             ? 'bg-rose-400'
-                            : 'bg-[#34D399]'
+                            : 'bg-[#1267E6]'
                       }`}
                       style={{ width: `${occPct}%` }}
                     />
@@ -518,7 +518,7 @@ export function TourPackagesAndCalendarTab({
                   <div className="mt-2.5 space-y-1 text-[11px] text-zinc-400">
                     {t.itinerary.slice(0, 2).map((it: any, i: number) => (
                       <div key={i} className="truncate">
-                        <span className="font-mono text-[#34D399]">
+                        <span className="font-mono text-[#1267E6]">
                           Gün {it.day} {it.time}
                         </span>{' '}
                         · {it.location} — {it.activity}
@@ -528,12 +528,12 @@ export function TourPackagesAndCalendarTab({
                 )}
               </div>
 
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] pt-3">
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[--line] pt-3">
                 <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
                     onClick={() => onFocusTour(t.id, 'seat_map')}
-                    className="rounded-md bg-emerald-500/15 px-2.5 py-1 text-[11px] font-medium text-[#34D399] hover:bg-emerald-500/30"
+                    className="rounded-md bg-[--brand]/15 px-2.5 py-1 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/30"
                   >
                     Koltuk & Duraklar
                   </button>
@@ -697,9 +697,9 @@ export function TourSeatMapAndStopsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <Compass className="h-4 w-4 text-[#34D399]" />
+          <Compass className="h-4 w-4 text-[#1267E6]" />
           <h3 className="text-sm font-semibold text-zinc-100">
             Dinamik Araç Koltuk Planı & Biniş Noktaları Rotası
           </h3>
@@ -720,7 +720,7 @@ export function TourSeatMapAndStopsTab({
       {tour && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Sol: Dinamik Koltuk Haritası */}
-          <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+          <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h4 className="text-sm font-semibold text-zinc-100">
@@ -732,18 +732,18 @@ export function TourSeatMapAndStopsTab({
                 </p>
               </div>
               <div className="flex gap-1.5 text-[10px]">
-                <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[#34D399]">Boş</span>
+                <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[#1267E6]">Boş</span>
                 <span className="rounded bg-sky-500/20 px-2 py-0.5 text-sky-300">Erkek (E)</span>
                 <span className="rounded bg-pink-500/20 px-2 py-0.5 text-pink-300">Kadın (K)</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 rounded-lg bg-[#0B0E0D] p-2.5 text-xs">
-              <Users className="h-4 w-4 text-[#34D399]" />
+              <Users className="h-4 w-4 text-[#1267E6]" />
               <select
                 value={selectedPaxId}
                 onChange={(e) => setSelectedPaxId(e.target.value)}
-                className="flex-1 rounded border border-white/[0.1] bg-[#111513] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="flex-1 rounded border border-white/[0.1] bg-[white] px-2.5 py-1.5 text-xs text-zinc-100"
               >
                 <option value="">Koltuk atanacak / taşınacak yolcuyu seçin...</option>
                 {(tour.passengers || []).map((p: any) => (
@@ -757,8 +757,8 @@ export function TourSeatMapAndStopsTab({
             </div>
 
             {/* Koltuk Sıraları */}
-            <div className="space-y-2 rounded-xl border border-white/[0.06] bg-[#0B0E0D] p-3">
-              <div className="mb-2 flex justify-between border-b border-white/[0.06] pb-1.5 text-[10px] text-zinc-500">
+            <div className="space-y-2 rounded-xl border border-[--line] bg-[#0B0E0D] p-3">
+              <div className="mb-2 flex justify-between border-b border-[--line] pb-1.5 text-[10px] text-zinc-500">
                 <span>ŞOFÖR / KAPTAN</span>
                 <span>ÖN KAPI / REHBER</span>
               </div>
@@ -772,7 +772,7 @@ export function TourSeatMapAndStopsTab({
                       {leftSeats.map((slot) => {
                         const pax = paxBySeat.get(slot.seatNumber);
                         const cls = !pax
-                          ? 'border-emerald-500/30 bg-emerald-500/10 text-[#34D399] hover:bg-emerald-500/25'
+                          ? 'border-[--brand-line] bg-[--brand]/10 text-[#1267E6] hover:bg-[--brand]/25'
                           : pax.gender === 'F'
                             ? 'border-pink-500/40 bg-pink-500/20 text-pink-200'
                             : 'border-sky-500/40 bg-sky-500/20 text-sky-200';
@@ -800,7 +800,7 @@ export function TourSeatMapAndStopsTab({
                       {rightSeats.map((slot) => {
                         const pax = paxBySeat.get(slot.seatNumber);
                         const cls = !pax
-                          ? 'border-emerald-500/30 bg-emerald-500/10 text-[#34D399] hover:bg-emerald-500/25'
+                          ? 'border-[--brand-line] bg-[--brand]/10 text-[#1267E6] hover:bg-[--brand]/25'
                           : pax.gender === 'F'
                             ? 'border-pink-500/40 bg-pink-500/20 text-pink-200'
                             : 'border-sky-500/40 bg-sky-500/20 text-sky-200';
@@ -828,7 +828,7 @@ export function TourSeatMapAndStopsTab({
           </div>
 
           {/* Sağ: Biniş Noktaları & Mevcut Lojistik Harita Bileşeni */}
-          <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+          <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-semibold text-zinc-100">
@@ -836,7 +836,7 @@ export function TourSeatMapAndStopsTab({
                 </h4>
                 <p className="text-[11px] text-zinc-400">
                   Tahmini Mesafe:{' '}
-                  <strong className="text-[#34D399]">
+                  <strong className="text-[#1267E6]">
                     {tour.estimatedDistanceKm || tour.routeEstimate?.estimatedDistanceKm || 0} km (tahmini)
                   </strong>{' '}
                   · Tahmini Süre:{' '}
@@ -867,10 +867,10 @@ export function TourSeatMapAndStopsTab({
                 return (
                   <div
                     key={s.id}
-                    className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-[#0B0E0D] px-3 py-2 text-xs"
+                    className="flex items-center justify-between rounded-lg border border-[--line] bg-[#0B0E0D] px-3 py-2 text-xs"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/20 font-mono text-[10px] font-bold text-[#34D399]">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[--brand]/20 font-mono text-[10px] font-bold text-[#1267E6]">
                         {s.sequenceNo}
                       </span>
                       <div>
@@ -879,7 +879,7 @@ export function TourSeatMapAndStopsTab({
                         <span className="text-zinc-500">({s.district || '-'})</span>
                       </div>
                     </div>
-                    <span className="rounded bg-white/[0.06] px-2 py-0.5 text-[10px] text-zinc-300">
+                    <span className="rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-zinc-300">
                       {paxAtStop} yolcu
                     </span>
                   </div>
@@ -887,7 +887,7 @@ export function TourSeatMapAndStopsTab({
               })}
             </div>
 
-            <form onSubmit={handleAddStop} className="grid grid-cols-2 gap-2 border-t border-white/[0.06] pt-3">
+            <form onSubmit={handleAddStop} className="grid grid-cols-2 gap-2 border-t border-[--line] pt-3">
               <input
                 required
                 value={stopName}
@@ -926,7 +926,7 @@ export function TourSeatMapAndStopsTab({
               <button
                 type="submit"
                 disabled={busy}
-                className="col-span-2 flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/20 py-1.5 text-xs font-medium text-[#34D399] hover:bg-emerald-500/30"
+                className="col-span-2 flex items-center justify-center gap-1.5 rounded-lg bg-[--brand]/20 py-1.5 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/30"
               >
                 <MapPin className="h-3.5 w-3.5" /> Biniş Durağı Ekle & Tahmini Rotayı Güncelle
               </button>

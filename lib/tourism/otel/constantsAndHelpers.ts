@@ -34,7 +34,7 @@ export const HOTEL_ROOM_STATUS_LABELS: Record<HotelRoomStatus, string> = {
 }
 
 export const HOTEL_ROOM_STATUS_BADGES: Record<HotelRoomStatus, string> = {
-  CLEAN_VACANT: "bg-emerald-500/15 text-[#34D399] border-emerald-500/35",
+  CLEAN_VACANT: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   OCCUPIED: "bg-sky-500/20 text-sky-300 border-sky-500/40",
   DIRTY_VACANT: "bg-amber-500/20 text-amber-300 border-amber-500/40",
   CLEANING_IN_PROGRESS: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
@@ -97,7 +97,7 @@ export const HOTEL_RESERVATION_STATUS_LABELS: Record<HotelReservationStatus, str
 export const HOTEL_RESERVATION_STATUS_BADGES: Record<HotelReservationStatus, string> = {
   PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   CONFIRMED: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  CHECKED_IN: "bg-emerald-500/20 text-[#34D399] border-emerald-500/40",
+  CHECKED_IN: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   CHECKED_OUT: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
   CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/30",
   NO_SHOW: "bg-purple-500/15 text-purple-300 border-purple-500/30",
@@ -165,7 +165,7 @@ export const HOTEL_HK_STATUS_BADGES: Record<string, string> = {
   PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   IN_PROGRESS: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   COMPLETED: "bg-purple-500/15 text-purple-300 border-purple-500/30",
-  INSPECTED: "bg-emerald-500/20 text-[#34D399] border-emerald-500/40",
+  INSPECTED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   CANCELLED: "bg-zinc-500/15 text-zinc-400 border-white/[0.1]",
 }
 
@@ -184,7 +184,7 @@ export const HOTEL_KBS_STATUS_LABELS: Record<string, string> = {
 
 export const HOTEL_KBS_STATUS_BADGES: Record<string, string> = {
   HAZIRLANDI: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  GONDERILDI_MANUEL: "bg-emerald-500/15 text-[#34D399] border-emerald-500/30",
+  GONDERILDI_MANUEL: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   HATALI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
   EKSIK_VERI: "bg-amber-500/15 text-amber-300 border-amber-500/30",
 }

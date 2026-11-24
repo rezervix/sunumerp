@@ -77,9 +77,9 @@ export function HotelHousekeepingSupervisionTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <ClipboardCheck className="h-4 w-4 text-[#34D399]" />
+          <ClipboardCheck className="h-4 w-4 text-[#1267E6]" />
           <div>
             <h3 className="text-sm font-semibold text-zinc-100">
               Housekeeping Görevleri, Kat Şefi Denetimi & Teknik Arıza Yönetimi
@@ -91,7 +91,7 @@ export function HotelHousekeepingSupervisionTab({
         </div>
         <Link
           href="/dashboard/otel/housekeeping"
-          className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+          className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
         >
           <Smartphone className="h-3.5 w-3.5" /> Mobil Housekeeping Ekranını Aç
         </Link>
@@ -99,7 +99,7 @@ export function HotelHousekeepingSupervisionTab({
 
       {/* Yeni Görev & Teknik Arıza Formları */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
             Temizlik Görevi Aç & Ata
           </h4>
@@ -150,13 +150,13 @@ export function HotelHousekeepingSupervisionTab({
                 'Temizlik görevi oluşturuldu ve atandı.'
               )
             }
-            className="flex items-center gap-1.5 rounded-lg bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-[#34D399] hover:bg-emerald-500/30"
+            className="flex items-center gap-1.5 rounded-lg bg-[--brand]/20 px-3 py-1.5 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/30"
           >
             <Plus className="h-3.5 w-3.5" /> Görevi Oluştur
           </button>
         </div>
 
-        <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-orange-300">
             Teknik Arıza / Bakım Kaydı Bildir
           </h4>
@@ -223,9 +223,9 @@ export function HotelHousekeepingSupervisionTab({
       </div>
 
       {/* Görev Listesi */}
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
         <table className="w-full min-w-[840px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
             <tr>
               <th className="px-3 py-2.5">Görev No / Oda</th>
               <th className="px-3 py-2.5">Tür / Öncelik</th>
@@ -237,7 +237,7 @@ export function HotelHousekeepingSupervisionTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05]">
             {tasks.map((t) => (
-              <tr key={t.id} className="hover:bg-white/[0.02]">
+              <tr key={t.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5">
                   <div className="font-mono font-semibold text-zinc-100">
                     Oda {t.roomNumber} · {t.taskNo}
@@ -254,7 +254,7 @@ export function HotelHousekeepingSupervisionTab({
                 <td className="px-3 py-2.5">
                   <span
                     className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                      HOTEL_HK_STATUS_BADGES[t.status] || 'border-white/10 text-zinc-300'
+                      HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-zinc-300'
                     }`}
                   >
                     {HOTEL_HK_STATUS_LABELS[t.status] || t.status}
@@ -305,7 +305,7 @@ export function HotelHousekeepingSupervisionTab({
                             `Oda ${t.roomNumber} denetlendi ve Satışa Hazır oldu.`
                           )
                         }
-                        className="rounded bg-emerald-500/25 px-2 py-1 text-[10px] font-semibold text-[#34D399] hover:bg-emerald-500/40"
+                        className="rounded bg-[--brand]/25 px-2 py-1 text-[10px] font-semibold text-[#1267E6] hover:bg-[--brand]/40"
                       >
                         Denetim Onayla
                       </button>
@@ -374,7 +374,7 @@ export function HotelAllotmentsTab({
     <div className="space-y-4">
       <form
         onSubmit={handleSave}
-        className="grid grid-cols-1 gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4 md:grid-cols-6"
+        className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-6"
       >
         <div className="md:col-span-2">
           <label className="mb-1 block text-[11px] text-zinc-400">Acenta / Tur Operatörü Adı</label>
@@ -433,7 +433,7 @@ export function HotelAllotmentsTab({
           <button
             type="submit"
             disabled={busy}
-            className="w-full rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="w-full rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             Kontenjan Ekle
           </button>
@@ -449,12 +449,12 @@ export function HotelAllotmentsTab({
                 ? 'border-rose-500/40 bg-rose-500/5'
                 : al.isNearLimit || al.status === 'NEAR_LIMIT'
                   ? 'border-amber-500/40 bg-amber-500/5'
-                  : 'border-white/[0.08] bg-[#111513]'
+                  : 'border-[--line] bg-[white]'
             }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
-                <div className="font-mono text-xs text-[#34D399]">{al.code}</div>
+                <div className="font-mono text-xs text-[#1267E6]">{al.code}</div>
                 <h4 className="text-sm font-semibold text-zinc-100">{al.agencyName}</h4>
                 <p className="text-xs text-zinc-400">
                   {al.roomType?.name || 'Oda Tipi'} · Gecelik {al.allocatedRoomsPerNight} oda · Net:{' '}
@@ -467,7 +467,7 @@ export function HotelAllotmentsTab({
                     ? 'bg-rose-500/20 text-rose-300'
                     : al.isNearLimit || al.status === 'NEAR_LIMIT'
                       ? 'bg-amber-500/20 text-amber-300'
-                      : 'bg-emerald-500/15 text-[#34D399]'
+                      : 'bg-[--brand]/15 text-[#1267E6]'
                 }`}
               >
                 {al.status} (%{al.usagePct})
@@ -488,14 +488,14 @@ export function HotelAllotmentsTab({
                       ? 'bg-rose-500'
                       : al.usagePct >= 80
                         ? 'bg-amber-400'
-                        : 'bg-[#34D399]'
+                        : 'bg-[#1267E6]'
                   }`}
                   style={{ width: `${Math.min(100, al.usagePct)}%` }}
                 />
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap justify-between gap-2 border-t border-white/[0.06] pt-2 text-[11px] text-zinc-400">
+            <div className="mt-3 flex flex-wrap justify-between gap-2 border-t border-[--line] pt-2 text-[11px] text-zinc-400">
               <span>
                 Dönem: {String(al.validFrom).slice(0, 10)} → {String(al.validTo).slice(0, 10)}
               </span>
@@ -608,7 +608,7 @@ export function HotelKbsPreparationTab({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.08] bg-[#111513] p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[--line] bg-[white] p-3">
         <span className="text-xs text-zinc-400">
           Toplam <strong className="text-zinc-100">{kbsRecords.length}</strong> KBS hazırlık kaydı
         </span>
@@ -625,7 +625,7 @@ export function HotelKbsPreparationTab({
             type="button"
             disabled={busy}
             onClick={() => handleExport('XML_SABLON')}
-            className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-1.5 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             <Download className="h-3.5 w-3.5" /> XML Şablon İndir
           </button>
@@ -648,9 +648,9 @@ export function HotelKbsPreparationTab({
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
         <table className="w-full min-w-[840px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
             <tr>
               <th className="px-3 py-2.5">KBS Ref / Oda</th>
               <th className="px-3 py-2.5">Bildirim Tipi</th>
@@ -661,7 +661,7 @@ export function HotelKbsPreparationTab({
           </thead>
           <tbody className="divide-y divide-white/[0.05]">
             {kbsRecords.map((k) => (
-              <tr key={k.id} className="hover:bg-white/[0.02]">
+              <tr key={k.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5 font-mono text-[11px]">
                   <div className="font-semibold text-zinc-100">{k.kbsRefNo}</div>
                   <div className="text-zinc-500">Oda {k.roomNumber}</div>
@@ -679,7 +679,7 @@ export function HotelKbsPreparationTab({
                 <td className="px-3 py-2.5">
                   <span
                     className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                      HOTEL_KBS_STATUS_BADGES[k.preparationStatus] || 'border-white/10 text-zinc-300'
+                      HOTEL_KBS_STATUS_BADGES[k.preparationStatus] || 'border-[--line] text-zinc-300'
                     }`}
                   >
                     {HOTEL_KBS_STATUS_LABELS[k.preparationStatus] || k.preparationStatus}
@@ -754,15 +754,15 @@ export function HotelRoomTypesTariffsPolicyTab({
   return (
     <div className="space-y-4">
       {/* Oda Tipleri */}
-      <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="rounded-xl border border-[--line] bg-[white] p-4">
         <h3 className="mb-3 text-sm font-semibold text-zinc-100">
           Oda Tipleri ({roomTypes.length})
         </h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {roomTypes.map((rt) => (
-            <div key={rt.id} className="rounded-lg border border-white/[0.08] bg-[#161B18] p-3">
+            <div key={rt.id} className="rounded-lg border border-[--line] bg-[#161B18] p-3">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-[#34D399]">{rt.code}</span>
+                <span className="font-mono text-xs text-[#1267E6]">{rt.code}</span>
                 <span className="font-mono text-xs font-semibold text-zinc-100">
                   {Number(rt.baseRateTry).toLocaleString('tr-TR')} ₺ / gece
                 </span>
@@ -778,12 +778,12 @@ export function HotelRoomTypesTariffsPolicyTab({
       </div>
 
       {/* Fiyat Tarifeleri */}
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white] p-4">
         <h3 className="mb-3 text-sm font-semibold text-zinc-100">
           Sezon × Oda Tipi × Pansiyon Fiyat Tarifeleri ({tariffs.length})
         </h3>
         <table className="w-full min-w-[740px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] text-zinc-400">
+          <thead className="border-b border-[--line] text-zinc-400">
             <tr>
               <th className="py-2">Tarife Kodu / Adı</th>
               <th className="py-2">Sezon</th>
@@ -796,7 +796,7 @@ export function HotelRoomTypesTariffsPolicyTab({
             {tariffs.map((trf) => (
               <tr key={trf.id}>
                 <td className="py-2">
-                  <span className="font-mono text-[#34D399]">{trf.code}</span> — {trf.name}
+                  <span className="font-mono text-[#1267E6]">{trf.code}</span> — {trf.name}
                 </td>
                 <td className="py-2 text-zinc-300">
                   {HOTEL_SEASON_LABELS[trf.seasonType] || trf.seasonType}
@@ -820,10 +820,10 @@ export function HotelRoomTypesTariffsPolicyTab({
       {/* Ayarlanabilir Politika & Oranlar */}
       <form
         onSubmit={handleSavePolicy}
-        className="grid grid-cols-1 gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4 md:grid-cols-4"
+        className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-4"
       >
         <div className="md:col-span-4 flex items-center gap-2">
-          <Settings className="h-4 w-4 text-[#34D399]" />
+          <Settings className="h-4 w-4 text-[#1267E6]" />
           <h3 className="text-sm font-semibold text-zinc-100">
             Ayarlanabilir Tesis Politika, Faturalama ve Oran Ayarları
           </h3>
@@ -878,7 +878,7 @@ export function HotelRoomTypesTariffsPolicyTab({
           <button
             type="submit"
             disabled={busy}
-            className="rounded-lg bg-[#34D399] px-4 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             Politika Ayarlarını Kaydet
           </button>
@@ -910,9 +910,9 @@ export function HotelAnalyticsAndReportsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-[#34D399]" />
+          <BarChart3 className="h-4 w-4 text-[#1267E6]" />
           <div>
             <h3 className="text-sm font-semibold text-zinc-100">
               Doluluk %, ADR, RevPAR, Kanal & Anonim Uyruk Raporları
@@ -925,7 +925,7 @@ export function HotelAnalyticsAndReportsTab({
         <div className="flex gap-2">
           <a
             href={exportUrl('xlsx')}
-            className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> Excel (.xlsx) İndir
           </a>
@@ -940,9 +940,9 @@ export function HotelAnalyticsAndReportsTab({
 
       {/* Formül Açıklaması ve Ana KPI Kartları */}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">Dönem Doluluk Oranı (%)</div>
-          <div className="mt-1 text-2xl font-bold text-[#34D399]">%{kpis.occupancyPct ?? 0}</div>
+          <div className="mt-1 text-2xl font-bold text-[#1267E6]">%{kpis.occupancyPct ?? 0}</div>
           <div className="mt-1 text-[11px] text-zinc-400">
             {kpis.soldRoomNights ?? 0} / {kpis.sellableRoomNights ?? 0} oda-gece
           </div>
@@ -950,7 +950,7 @@ export function HotelAnalyticsAndReportsTab({
             Formül: {kpis.formulas?.occupancyFormula}
           </div>
         </div>
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">ADR (Ortalama Günlük Oda Fiyatı)</div>
           <div className="mt-1 text-2xl font-bold text-sky-300">
             {Number(kpis.adrTry || 0).toLocaleString('tr-TR')} ₺
@@ -962,7 +962,7 @@ export function HotelAnalyticsAndReportsTab({
             Formül: {kpis.formulas?.adrFormula}
           </div>
         </div>
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">RevPAR (Mevcut Oda Başı Gelir)</div>
           <div className="mt-1 text-2xl font-bold text-amber-300">
             {Number(kpis.revParTry || 0).toLocaleString('tr-TR')} ₺
@@ -978,7 +978,7 @@ export function HotelAnalyticsAndReportsTab({
 
       {/* Kanal Dağılımı & Anonimleştirilmiş Uyruk İstatistikleri */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <h4 className="mb-3 text-sm font-semibold text-zinc-100">
             Kanal / Acenta Bazlı Gelir Dağılımı
           </h4>
@@ -987,13 +987,13 @@ export function HotelAnalyticsAndReportsTab({
               <div key={ch.channelSource} className="space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-zinc-200">{ch.label}</span>
-                  <span className="font-mono text-[#34D399]">
+                  <span className="font-mono text-[#1267E6]">
                     {Number(ch.revenueTry).toLocaleString('tr-TR')} ₺ ({ch.roomNights} gece)
                   </span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-white/[0.08]">
                   <div
-                    className="h-full rounded-full bg-[#34D399]"
+                    className="h-full rounded-full bg-[#1267E6]"
                     style={{
                       width: `${Math.min(
                         100,
@@ -1007,12 +1007,12 @@ export function HotelAnalyticsAndReportsTab({
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="mb-3 flex items-center justify-between">
             <h4 className="text-sm font-semibold text-zinc-100">
               Anonimleştirilmiş Misafir Uyruk İstatistikleri
             </h4>
-            <span className="rounded bg-emerald-500/15 px-2 py-0.5 text-[10px] text-[#34D399]">
+            <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[10px] text-[#1267E6]">
               KVKK · Kişisel Veri İçermez
             </span>
           </div>
@@ -1020,13 +1020,13 @@ export function HotelAnalyticsAndReportsTab({
             {nationalities.map((n: any) => (
               <div
                 key={n.nationalityCode}
-                className="rounded-lg border border-white/[0.08] bg-[#161B18] p-2.5 text-xs"
+                className="rounded-lg border border-[--line] bg-[#161B18] p-2.5 text-xs"
               >
                 <div className="font-mono text-sm font-bold text-white">{n.nationalityCode}</div>
                 <div className="text-[11px] text-zinc-400">
                   {n.guestCount} misafir · {n.staysCount} konaklama
                 </div>
-                <div className="mt-1 font-mono text-[11px] text-[#34D399]">%{n.sharePct}</div>
+                <div className="mt-1 font-mono text-[11px] text-[#1267E6]">%{n.sharePct}</div>
               </div>
             ))}
           </div>
@@ -1035,18 +1035,18 @@ export function HotelAnalyticsAndReportsTab({
             <strong className="text-zinc-200">{daily.inHouseCount}</strong> konaklayan ·{' '}
             <strong className="text-sky-300">{daily.arrivalsToday}</strong> bugün giriş ·{' '}
             <strong className="text-amber-300">{daily.departuresToday}</strong> bugün çıkış ·{' '}
-            <strong className="text-[#34D399]">{daily.cleanVacantCount}</strong> temiz boş
+            <strong className="text-[#1267E6]">{daily.cleanVacantCount}</strong> temiz boş
           </div>
         </div>
       </div>
 
       {/* Oda Tipi Bazlı Performans Tablosu */}
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white] p-4">
         <h4 className="mb-3 text-sm font-semibold text-zinc-100">
           Oda Tipi Bazlı Doluluk, ADR ve RevPAR Tablosu
         </h4>
         <table className="w-full min-w-[700px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] text-zinc-400">
+          <thead className="border-b border-[--line] text-zinc-400">
             <tr>
               <th className="py-2">Oda Tipi</th>
               <th className="py-2 text-right">Oda Adedi</th>
@@ -1065,7 +1065,7 @@ export function HotelAnalyticsAndReportsTab({
                 </td>
                 <td className="py-2 text-right font-mono">{rt.roomCount}</td>
                 <td className="py-2 text-right font-mono">{rt.soldRoomNights}</td>
-                <td className="py-2 text-right font-mono text-[#34D399]">%{rt.occupancyPct}</td>
+                <td className="py-2 text-right font-mono text-[#1267E6]">%{rt.occupancyPct}</td>
                 <td className="py-2 text-right font-mono">
                   {Number(rt.adrTry).toLocaleString('tr-TR')}
                 </td>

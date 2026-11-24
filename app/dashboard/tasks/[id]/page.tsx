@@ -77,70 +77,70 @@ export default function TaskDetailPage() {
 
   const statusTone = useMemo(() => {
     const status = task?.status || ""
-    if (status.includes("Tamamlandı")) return "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-    if (status.includes("Bekliyor") || status.includes("Aşamasında")) return "bg-amber-500/10 text-amber-300 border border-amber-500/20"
-    return "bg-white/5 text-zinc-300 border border-white/10"
+    if (status.includes("Tamamlandı")) return "bg-[--ok-soft] text-[--ok] border border-[--ok]/20"
+    if (status.includes("Bekliyor") || status.includes("Aşamasında")) return "bg-[--warn-soft] text-[--warn] border border-[--warn]/20"
+    return "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
   }, [task?.status])
 
   if (loading) {
-    return <div className="p-8 text-xs text-zinc-500">Yükleniyor...</div>
+    return <div className="p-8 text-xs text-[--text-muted]">Yükleniyor...</div>
   }
 
   if (!task) {
-    return <div className="p-8 text-xs text-zinc-500">Görev bulunamadı.</div>
+    return <div className="p-8 text-xs text-[--text-muted]">Görev bulunamadı.</div>
   }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1200px] mx-auto">
-      <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-emerald-400 transition">
+      <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-xs font-semibold text-[--text-muted] hover:text-[--brand] transition cursor-pointer">
         <ArrowLeft size={16} /> Geri dön
       </button>
 
-      <div className="rounded-[20px] border border-white/[0.06] bg-[#111513]/90 p-6 shadow-xl text-white">
+      <div className="rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl p-6 shadow-sm text-[--text]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-400">Görev Detayı</p>
-            <h1 className="text-xl sm:text-2xl font-semibold text-white mt-1">{task.title}</h1>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[--brand]">Görev Detayı</p>
+            <h1 className="text-xl sm:text-2xl font-semibold text-[--text] mt-1">{task.title}</h1>
           </div>
           <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusTone}`}>{task.status || "Belirsiz"}</span>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-3 text-xs text-zinc-400">
-          <div className="rounded-xl bg-[#0d100e] border border-white/[0.06] p-3.5">
-            <p className="text-[11px] uppercase tracking-wide text-zinc-500 font-medium">Öncelik</p>
-            <p className="mt-1 font-medium text-white">{task.priority || "Normal"}</p>
+        <div className="mt-5 grid gap-3 md:grid-cols-3 text-xs text-[--text-muted]">
+          <div className="rounded-xl bg-[--page] border border-[--line] p-3.5">
+            <p className="text-[11px] uppercase tracking-wide text-[--text-muted] font-medium">Öncelik</p>
+            <p className="mt-1 font-medium text-[--text]">{task.priority || "Normal"}</p>
           </div>
-          <div className="rounded-xl bg-[#0d100e] border border-white/[0.06] p-3.5">
-            <p className="text-[11px] uppercase tracking-wide text-zinc-500 font-medium">Son Tarih</p>
-            <p className="mt-1 font-medium text-white font-mono">{task.dueDate ? new Date(task.dueDate).toLocaleDateString("tr-TR") : "Belirtilmedi"}</p>
+          <div className="rounded-xl bg-[--page] border border-[--line] p-3.5">
+            <p className="text-[11px] uppercase tracking-wide text-[--text-muted] font-medium">Son Tarih</p>
+            <p className="mt-1 font-medium text-[--text] font-mono">{task.dueDate ? new Date(task.dueDate).toLocaleDateString("tr-TR") : "Belirtilmedi"}</p>
           </div>
-          <div className="rounded-xl bg-[#0d100e] border border-white/[0.06] p-3.5">
-            <p className="text-[11px] uppercase tracking-wide text-zinc-500 font-medium">Müşteri</p>
-            <p className="mt-1 font-medium text-white">{task.customer?.name || "—"}</p>
+          <div className="rounded-xl bg-[--page] border border-[--line] p-3.5">
+            <p className="text-[11px] uppercase tracking-wide text-[--text-muted] font-medium">Müşteri</p>
+            <p className="mt-1 font-medium text-[--text]">{task.customer?.name || "—"}</p>
           </div>
         </div>
 
         {task.description && (
-          <div className="mt-6 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
-            <h2 className="text-xs font-semibold text-zinc-300">Açıklama</h2>
-            <p className="mt-2 whitespace-pre-wrap text-xs text-zinc-400 leading-relaxed">{task.description}</p>
+          <div className="mt-6 rounded-xl border border-[--line] bg-[--page] p-4">
+            <h2 className="text-xs font-semibold text-[--text]">Açıklama</h2>
+            <p className="mt-2 whitespace-pre-wrap text-xs text-[--text-2] leading-relaxed">{task.description}</p>
           </div>
         )}
       </div>
 
-      <div className="rounded-[20px] border border-white/[0.06] bg-[#111513]/90 p-6 shadow-xl text-white">
+      <div className="rounded-[20px] border border-[--line] bg-white/80 backdrop-blur-xl p-6 shadow-sm text-[--text]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-emerald-400">
+            <div className="flex items-center gap-2 text-[--brand]">
               <Bot size={18} />
-              <h2 className="text-base font-semibold text-white">Müşteri Vizyonu & Geçmiş Revizeler</h2>
+              <h2 className="text-base font-semibold text-[--text]">Müşteri Vizyonu & Geçmiş Revizeler</h2>
             </div>
-            <p className="mt-1 text-xs text-zinc-400">AI asistanı görev bağlamını kullanarak müşteri vizyonu, riskler ve bir sonraki adımları özetler.</p>
+            <p className="mt-1 text-xs text-[--text-muted]">AI asistanı görev bağlamını kullanarak müşteri vizyonu, riskler ve bir sonraki adımları özetler.</p>
           </div>
           <button
             onClick={handleCustomerVision}
             disabled={aiLoading}
-            className="rounded-full bg-emerald-400 hover:bg-emerald-300 px-5 py-2 text-xs font-semibold text-black transition shadow-[0_0_15px_rgba(52,211,153,0.2)] shrink-0 disabled:opacity-50"
+            className="rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] px-5 py-2 text-xs font-medium text-white transition shadow-sm shrink-0 disabled:opacity-50 cursor-pointer"
           >
             {aiLoading ? "Çalışıyor..." : "AI Analizi Oluştur"}
           </button>
@@ -148,47 +148,47 @@ export default function TaskDetailPage() {
 
         {aiInsight ? (
           <div className="mt-5 space-y-4">
-            <div className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                <Sparkles size={16} className="text-emerald-400" />
+            <div className="rounded-xl border border-[--line] bg-[--page] p-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[--text]">
+                <Sparkles size={16} className="text-[--brand]" />
                 Özet
               </div>
-              <p className="mt-2 text-xs text-zinc-300 leading-relaxed">{aiInsight.summary}</p>
+              <p className="mt-2 text-xs text-[--text-2] leading-relaxed">{aiInsight.summary}</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                  <CheckCircle2 size={16} className="text-emerald-400" />
+              <div className="rounded-xl border border-[--line] bg-[--page] p-4">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[--text]">
+                  <CheckCircle2 size={16} className="text-[--ok]" />
                   Tercihler
                 </div>
-                <ul className="mt-2 space-y-1.5 text-xs text-zinc-400">
+                <ul className="mt-2 space-y-1.5 text-xs text-[--text-2]">
                   {(aiInsight.preferences || []).map((item: string, index: number) => <li key={index}>• {item}</li>)}
                 </ul>
               </div>
-              <div className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                  <AlertCircle size={16} className="text-amber-400" />
+              <div className="rounded-xl border border-[--line] bg-[--page] p-4">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[--text]">
+                  <AlertCircle size={16} className="text-[--warn]" />
                   Riskler
                 </div>
-                <ul className="mt-2 space-y-1.5 text-xs text-zinc-400">
+                <ul className="mt-2 space-y-1.5 text-xs text-[--text-2]">
                   {(aiInsight.redFlags || []).map((item: string, index: number) => <li key={index}>• {item}</li>)}
                 </ul>
               </div>
             </div>
-            <div className="rounded-xl border border-white/[0.06] bg-[#0d100e] p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold text-white">
-                <MessageSquareText size={16} className="text-emerald-400" />
+            <div className="rounded-xl border border-[--line] bg-[--page] p-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[--text]">
+                <MessageSquareText size={16} className="text-[--brand]" />
                 Bir sonraki adım
               </div>
-              <ul className="mt-2 space-y-1.5 text-xs text-zinc-400">
+              <ul className="mt-2 space-y-1.5 text-xs text-[--text-2]">
                 {(aiInsight.nextActions || []).map((item: string, index: number) => <li key={index}>• {item}</li>)}
               </ul>
             </div>
           </div>
         ) : (
-          <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[#0d100e]/50 p-4 text-xs text-zinc-500">
+          <div className="mt-5 rounded-xl border border-dashed border-[--line] bg-[--page]/50 p-4 text-xs text-[--text-muted]">
             <div className="flex items-center gap-2">
-              <Clock size={16} className="text-zinc-400" />
+              <Clock size={16} className="text-[--text-muted]" />
               Henüz analiz yok. Butona basarak AI asistanı ile özet ve sonraki adımlar oluşturabilirsiniz.
             </div>
           </div>

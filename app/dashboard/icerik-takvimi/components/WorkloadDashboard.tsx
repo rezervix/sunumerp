@@ -12,7 +12,7 @@ interface WorkloadDashboardProps {
   branchId: string
 }
 
-const GLOW_COLORS = ["#34D399", "#38BDF8", "#FBBF24", "#F43F5E", "#A78BFA", "#2DD4BF", "#FB923C"]
+const GLOW_COLORS = ["#1267E6", "#38BDF8", "#FBBF24", "#F43F5E", "#A78BFA", "#2DD4BF", "#FB923C"]
 
 const STATUS_LABELS: Record<string, string> = {
   draft: "Taslak",
@@ -60,7 +60,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-80">
-        <Loader2 size={28} className="animate-spin text-emerald-400" />
+        <Loader2 size={28} className="animate-spin text-[--brand]" />
       </div>
     )
   }
@@ -92,7 +92,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
   return (
     <div className="space-y-6">
       {/* ── KUTUSUZ ÜST KPI ŞERİDİ ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-white/[0.06]">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
             <Sparkles className="size-3.5 text-zinc-400" />
@@ -104,7 +104,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
             </span>
             <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
               (comparison?.changePercentage ?? 0) >= 0
-                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                ? "bg-[--brand]/10 text-[--brand] border-[--brand-line]"
                 : "bg-rose-500/10 text-rose-400 border-rose-500/20"
             }`}>
               {comparison?.changePercentage >= 0 ? "+" : ""}{comparison?.changePercentage ?? 0}% vs geçen ay
@@ -136,7 +136,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
             <span className="text-2xl font-light text-white uppercase tracking-wide">
               {topPlatform}
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
               En Çok Dağıtılan
             </span>
           </div>
@@ -146,7 +146,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
       {/* ── GRAFİKLER SATIRI 1 ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Durum Dağılımı (Pie Chart) */}
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+        <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
           <h3 className="text-sm font-medium text-white mb-4">İçerik Tamamlanma & Durum Dağılımı</h3>
           <div className="h-64">
             {statusData.length > 0 ? (
@@ -167,7 +167,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
+                      backgroundColor: "white",
                       borderColor: "rgba(255,255,255,0.1)",
                       borderRadius: "12px",
                       color: "#fff",
@@ -184,7 +184,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
         </div>
 
         {/* Platform Dağılımı (Bar Chart) */}
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+        <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
           <h3 className="text-sm font-medium text-white mb-4">Platformlara Göre İçerik Hacmi</h3>
           <div className="h-64">
             {platformData.length > 0 ? (
@@ -195,13 +195,13 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                   <YAxis stroke="#71717A" tick={{ fill: "#71717A", fontSize: 10 }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
+                      backgroundColor: "white",
                       borderColor: "rgba(255,255,255,0.1)",
                       borderRadius: "12px",
                       color: "#fff",
                     }}
                   />
-                  <Bar dataKey="Değer" fill="#34D399" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="Değer" fill="#1267E6" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -212,9 +212,9 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
       </div>
 
       {/* ── GRAFİKLER SATIRI 2: EKİP İŞ YÜKÜ ── */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl space-y-6">
-        <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
-          <Award size={16} className="text-emerald-400" />
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl space-y-6">
+        <div className="flex items-center gap-2 border-b border-[--line] pb-3">
+          <Award size={16} className="text-[--brand]" />
           <h3 className="text-sm font-medium text-white">Ekip İş Yükü ve Görev Dağılımı</h3>
         </div>
 
@@ -234,7 +234,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                     <YAxis dataKey="name" type="category" stroke="#71717A" tick={{ fill: "#71717A", fontSize: 10 }} width={80} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#111513",
+                        backgroundColor: "white",
                         borderColor: "rgba(255,255,255,0.1)",
                         borderRadius: "12px",
                         color: "#fff",
@@ -252,7 +252,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
           {/* Editörler */}
           <div>
             <h4 className="text-xs font-medium text-zinc-400 mb-3 flex items-center gap-1.5">
-              <CheckCircle2 className="size-3.5 text-emerald-400" />
+              <CheckCircle2 className="size-3.5 text-[--brand]" />
               Kurgu & Editörler
             </h4>
             <div className="h-44">
@@ -264,13 +264,13 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                     <YAxis dataKey="name" type="category" stroke="#71717A" tick={{ fill: "#71717A", fontSize: 10 }} width={80} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#111513",
+                        backgroundColor: "white",
                         borderColor: "rgba(255,255,255,0.1)",
                         borderRadius: "12px",
                         color: "#fff",
                       }}
                     />
-                    <Bar dataKey="count" fill="#34D399" name="Edit Görevi" radius={[0, 4, 4, 0]} />
+                    <Bar dataKey="count" fill="#1267E6" name="Edit Görevi" radius={[0, 4, 4, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (

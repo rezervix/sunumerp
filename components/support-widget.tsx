@@ -405,7 +405,7 @@ export function SupportWidget() {
                       {consoleLogsCount > 0 ? (
                         <span className="text-red-500 font-semibold ml-1">({consoleLogsCount} hata tespit edildi)</span>
                       ) : (
-                        <span className="text-emerald-500 font-semibold ml-1">(Temiz)</span>
+                        <span className="text-[--brand] font-semibold ml-1">(Temiz)</span>
                       )}
                     </li>
                     <li>
@@ -413,7 +413,7 @@ export function SupportWidget() {
                       {failedRequestsCount > 0 ? (
                         <span className="text-red-500 font-semibold ml-1">({failedRequestsCount} başarısız çağrı tespit edildi)</span>
                       ) : (
-                        <span className="text-emerald-500 font-semibold ml-1">(Temiz)</span>
+                        <span className="text-[--brand] font-semibold ml-1">(Temiz)</span>
                       )}
                     </li>
                   </ul>

@@ -105,7 +105,7 @@ export const RENT_RESERVATION_STATUS_LABELS: Record<RentReservationStatus, strin
 export const RENT_RESERVATION_STATUS_BADGES: Record<RentReservationStatus, string> = {
   PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   CONFIRMED: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  ACTIVE: "bg-emerald-500/15 text-[#34D399] border-emerald-500/30",
+  ACTIVE: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   COMPLETED: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
   CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/30",
   NO_SHOW: "bg-purple-500/15 text-purple-300 border-purple-500/30",
@@ -179,7 +179,7 @@ export const RENT_KABIS_STATUS_LABELS: Record<string, string> = {
 
 export const RENT_KABIS_STATUS_BADGES: Record<string, string> = {
   HAZIRLANDI: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  GONDERILDI_MANUEL: "bg-emerald-500/15 text-[#34D399] border-emerald-500/30",
+  GONDERILDI_MANUEL: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   HATALI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
   EKSIK_VERI: "bg-amber-500/15 text-amber-300 border-amber-500/30",
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function RaporlarPage() {
   return (
     <div className="space-y-6">
-      <div className="pb-2 border-b border-white/[0.06]">
+      <div className="pb-2 border-b border-[--line]">
         <h1 className="text-2xl font-light tracking-wide text-white">İçerik Takvimi Analiz ve Raporları</h1>
         <p className="text-xs text-zinc-400 mt-1">Platform dağılımları, iş yükü metrikleri ve ekip performans analizi</p>
       </div>

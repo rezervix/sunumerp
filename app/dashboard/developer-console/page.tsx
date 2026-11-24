@@ -259,14 +259,14 @@ export default function DeveloperConsolePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#111513]/90 p-6 rounded-[20px] border border-white/[0.06] shadow-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[white]/90 p-6 rounded-[20px] border border-[--line] shadow-2xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <div className="p-2 rounded-xl bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
               <Terminal className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-light text-white tracking-tight">Geliştirici Konsolu</h1>
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <h1 className="text-xl font-light text-[--text] tracking-tight">Geliştirici Konsolu</h1>
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
               PLATFORM DEVELOPER ONLY
             </span>
           </div>
@@ -279,7 +279,7 @@ export default function DeveloperConsolePage() {
           <button
             onClick={() => handleClearCache()}
             disabled={saving}
-            className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-zinc-300 hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${saving ? "animate-spin" : ""}`} />
             Cache Temizle
@@ -303,10 +303,10 @@ export default function DeveloperConsolePage() {
                     isActive
                       ? tab.danger
                         ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-sm"
-                        : "bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-sm"
+                        : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-sm"
                       : tab.danger
                       ? "border-transparent text-rose-400/80 hover:bg-rose-500/10"
-                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-white"
+                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-[--text]"
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -317,18 +317,18 @@ export default function DeveloperConsolePage() {
           </nav>
 
           {/* Dev Info Box */}
-          <div className="p-4 bg-[#111513]/90 rounded-[20px] border border-white/[0.06] space-y-2 text-xs">
+          <div className="p-4 bg-[white]/90 rounded-[20px] border border-[--line] space-y-2 text-xs">
             <div className="flex items-center justify-between text-zinc-400">
               <span>Ortam:</span>
-              <span className="font-mono font-medium text-white">{devInfo?.environment || "production"}</span>
+              <span className="font-mono font-medium text-[--text]">{devInfo?.environment || "production"}</span>
             </div>
             <div className="flex items-center justify-between text-zinc-400">
               <span>Sürüm:</span>
-              <span className="font-mono text-white">{devInfo?.version || "v1.0 Kurumsal"}</span>
+              <span className="font-mono text-[--text]">{devInfo?.version || "v1.0 Kurumsal"}</span>
             </div>
             <div className="flex items-center justify-between text-zinc-400">
               <span>Geliştirici:</span>
-              <span className="font-medium text-emerald-400">{session?.user?.fullName}</span>
+              <span className="font-medium text-[--brand]">{session?.user?.fullName}</span>
             </div>
           </div>
         </div>
@@ -341,10 +341,10 @@ export default function DeveloperConsolePage() {
             <>
               {/* TAB 1: Ortam & Sürüm */}
               {activeTab === "environment" && (
-                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
+                <div className="bg-[white]/90 rounded-[20px] border border-[--line] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-light text-white flex items-center gap-2">
-                      <Server className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-base font-light text-[--text] flex items-center gap-2">
+                      <Server className="w-5 h-5 text-[--brand]" />
                       Ortam & Çalışma Sürümü Yapılandırması
                     </h3>
                     <p className="text-xs text-zinc-400 mt-1">
@@ -353,10 +353,10 @@ export default function DeveloperConsolePage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
+                    <div className="p-4 rounded-xl bg-[#F6F8FB]/60 border border-[--line] space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-medium text-white">Local Debug Branch Seçeneği</h4>
+                          <h4 className="text-xs font-medium text-[--text]">Local Debug Branch Seçeneği</h4>
                           <p className="text-[11px] text-zinc-400 mt-0.5">
                             Etkinleştirildiğinde şube seçicide yalnızca yetkili geliştiricilere özel "Local Debug Branch" gösterilir.
                           </p>
@@ -370,7 +370,7 @@ export default function DeveloperConsolePage() {
                           }}
                           className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
                             config.securityDisabled
-                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              ? "bg-[--brand] shadow-xs justify-end"
                               : "bg-zinc-800 justify-start"
                           }`}
                         >
@@ -379,15 +379,15 @@ export default function DeveloperConsolePage() {
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
-                      <h4 className="text-xs font-medium text-white">Sunucu & Çalışma Zamanı Detayları</h4>
+                    <div className="p-4 rounded-xl bg-[#F6F8FB]/60 border border-[--line] space-y-3">
+                      <h4 className="text-xs font-medium text-[--text]">Sunucu & Çalışma Zamanı Detayları</h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div className="p-3 rounded-lg bg-[#111513] border border-white/[0.06] font-mono text-[11px]">
-                          <span className="text-zinc-500">Node Environment:</span> <span className="text-emerald-400">{devInfo?.environment}</span>
+                        <div className="p-3 rounded-lg bg-[white] border border-[--line] font-mono text-[11px]">
+                          <span className="text-zinc-500">Node Environment:</span> <span className="text-[--brand]">{devInfo?.environment}</span>
                         </div>
-                        <div className="p-3 rounded-lg bg-[#111513] border border-white/[0.06] font-mono text-[11px]">
+                        <div className="p-3 rounded-lg bg-[white] border border-[--line] font-mono text-[11px]">
                           <span className="text-zinc-500">Tamper Protection:</span>{" "}
-                          <span className={config.tamperDetected ? "text-rose-400 font-bold" : "text-emerald-400"}>
+                          <span className={config.tamperDetected ? "text-rose-400 font-bold" : "text-[--brand]"}>
                             {config.tamperDetected ? "İHLAL TESPİT EDİLDİ" : "Normal (Aktif)"}
                           </span>
                         </div>
@@ -399,23 +399,23 @@ export default function DeveloperConsolePage() {
 
               {/* TAB 2: Diagnostik — Radial Gauge Göstergeleri */}
               {activeTab === "diagnostics" && (
-                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
+                <div className="bg-[white]/90 rounded-[20px] border border-[--line] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-light text-white flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-base font-light text-[--text] flex items-center gap-2">
+                      <Activity className="w-5 h-5 text-[--brand]" />
                       Sistem Diagnostiği — Canlı Performans Kadranları
                     </h3>
                     <p className="text-xs text-zinc-400 mt-1">
                       requestAnimationFrame ile anlık UI FPS, frame jank süresi ve API ping ölçümü.
-                      {diagnosticsLoading && <span className="ml-2 text-emerald-400 animate-pulse">Ölçülüyor...</span>}
+                      {diagnosticsLoading && <span className="ml-2 text-[--brand] animate-pulse">Ölçülüyor...</span>}
                     </p>
                   </div>
 
                   {/* 3 Animasyonlu Radial Gauge / Gösterge Kartı */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* UI FPS Radial Gauge */}
-                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden group">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400 mb-2">Canlı UI FPS</p>
+                    <div className="p-5 rounded-[20px] bg-[#F6F8FB]/80 border border-[--line] flex flex-col items-center text-center relative overflow-hidden group">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--brand] mb-2">Canlı UI FPS</p>
                       
                       {/* SVG Radial Gauge */}
                       <div className="relative size-28 flex items-center justify-center my-1">
@@ -426,7 +426,7 @@ export default function DeveloperConsolePage() {
                             cy="50"
                             r="40"
                             fill="transparent"
-                            stroke="#34D399"
+                            stroke="#1267E6"
                             strokeWidth="8"
                             strokeDasharray="251.2"
                             strokeDashoffset={
@@ -440,7 +440,7 @@ export default function DeveloperConsolePage() {
                           />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                          <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {diagnosticsLoading ? "..." : realFps !== null ? realFps : "—"}
                           </span>
                           <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">FPS</span>
@@ -451,7 +451,7 @@ export default function DeveloperConsolePage() {
                     </div>
 
                     {/* Maks Frame Jank Radial Gauge */}
-                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden">
+                    <div className="p-5 rounded-[20px] bg-[#F6F8FB]/80 border border-[--line] flex flex-col items-center text-center relative overflow-hidden">
                       <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-amber-400 mb-2">Frame Gecikmesi</p>
                       
                       {/* SVG Gauge */}
@@ -477,7 +477,7 @@ export default function DeveloperConsolePage() {
                           />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                          <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {diagnosticsLoading ? "..." : jankMs !== null ? `${jankMs}` : "—"}
                           </span>
                           <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
@@ -488,8 +488,8 @@ export default function DeveloperConsolePage() {
                     </div>
 
                     {/* API Ping Süresi Radial Gauge */}
-                    <div className="p-5 rounded-[20px] bg-[#080A09]/80 border border-white/[0.06] flex flex-col items-center text-center relative overflow-hidden">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400 mb-2">API Ping</p>
+                    <div className="p-5 rounded-[20px] bg-[#F6F8FB]/80 border border-[--line] flex flex-col items-center text-center relative overflow-hidden">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--brand] mb-2">API Ping</p>
                       
                       {/* SVG Gauge */}
                       <div className="relative size-28 flex items-center justify-center my-1">
@@ -500,7 +500,7 @@ export default function DeveloperConsolePage() {
                             cy="50"
                             r="40"
                             fill="transparent"
-                            stroke="#34D399"
+                            stroke="#1267E6"
                             strokeWidth="8"
                             strokeDasharray="251.2"
                             strokeDashoffset={
@@ -514,7 +514,7 @@ export default function DeveloperConsolePage() {
                           />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <span className="text-2xl font-light text-white tracking-tight tabular-nums">
+                          <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {apiPingMs === null ? (diagnosticsLoading ? "..." : "—") : apiPingMs === -1 ? "Err" : `${apiPingMs}`}
                           </span>
                           <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
@@ -525,8 +525,8 @@ export default function DeveloperConsolePage() {
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-zinc-400 flex items-start gap-2">
-                    <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-400" />
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-[--line] text-[11px] text-zinc-400 flex items-start gap-2">
+                    <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[--brand]" />
                     <span>
                       GPU donanım ivmesi Electron ana süreci üzerinden aktiftir. Tarayıcı ve masaüstü uygulamasında 60 FPS akıcı render garantisi sağlanır.
                     </span>
@@ -537,7 +537,7 @@ export default function DeveloperConsolePage() {
                       setActiveTab("environment")
                       setTimeout(() => setActiveTab("diagnostics"), 50)
                     }}
-                    className="px-4 py-2 text-xs font-medium rounded-full border border-white/[0.08] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-zinc-300 hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     Yeniden Ölç
@@ -547,10 +547,10 @@ export default function DeveloperConsolePage() {
 
               {/* TAB 3: Bakım & Banner */}
               {activeTab === "maintenance" && (
-                <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] p-6 space-y-6 shadow-2xl">
+                <div className="bg-[white]/90 rounded-[20px] border border-[--line] p-6 space-y-6 shadow-2xl">
                   <div>
-                    <h3 className="text-base font-light text-white flex items-center gap-2">
-                      <Wrench className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-base font-light text-[--text] flex items-center gap-2">
+                      <Wrench className="w-5 h-5 text-[--brand]" />
                       Sistem Bakımı ve Platform Duyuru Bannerı
                     </h3>
                     <p className="text-xs text-zinc-400 mt-1">
@@ -559,10 +559,10 @@ export default function DeveloperConsolePage() {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
+                    <div className="p-4 rounded-xl bg-[#F6F8FB]/60 border border-[--line] space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-xs font-medium text-white">Sistem Bakım Modu</h4>
+                          <h4 className="text-xs font-medium text-[--text]">Sistem Bakım Modu</h4>
                           <p className="text-[11px] text-zinc-400 mt-0.5">
                             Aktif edildiğinde geliştirici dışındaki kullanıcılar bakım ekranına yönlendirilir.
                           </p>
@@ -585,7 +585,7 @@ export default function DeveloperConsolePage() {
                           }}
                           className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
                             config.systemMaintenance?.maintenanceMode
-                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              ? "bg-[--brand] shadow-xs justify-end"
                               : "bg-zinc-800 justify-start"
                           }`}
                         >
@@ -594,9 +594,9 @@ export default function DeveloperConsolePage() {
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#080A09]/60 border border-white/[0.06] space-y-3">
+                    <div className="p-4 rounded-xl bg-[#F6F8FB]/60 border border-[--line] space-y-3">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-medium text-white">Duyuru Bandını Göster</h4>
+                        <h4 className="text-xs font-medium text-[--text]">Duyuru Bandını Göster</h4>
                         {/* Akıcı Zümrüt Switch/Toggle */}
                         <button
                           type="button"
@@ -614,7 +614,7 @@ export default function DeveloperConsolePage() {
                           }}
                           className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
                             config.systemMaintenance?.showAnnouncementBanner
-                              ? "bg-emerald-500 shadow-[0_0_12px_rgba(52,211,153,0.5)] justify-end"
+                              ? "bg-[--brand] shadow-xs justify-end"
                               : "bg-zinc-800 justify-start"
                           }`}
                         >
@@ -636,14 +636,14 @@ export default function DeveloperConsolePage() {
                               }
                             })
                           }}
-                          className="w-full px-3.5 py-2 bg-white/[0.03] border border-white/[0.08] focus:border-emerald-500/30 rounded-xl text-xs text-white placeholder:text-zinc-500 outline-none"
+                          className="w-full px-3.5 py-2 bg-white border border-[--line] focus:border-[--brand-line] rounded-xl text-xs text-[--text] placeholder:text-zinc-500 outline-none"
                           placeholder="Örn: 24 Temmuz 23:00'da planlı sistem güncellemesi yapılacaktır."
                         />
                       </div>
                       <button
                         onClick={() => handleSaveDevConfig(config)}
                         disabled={saving}
-                        className="px-4 py-2 bg-[#34D399] text-[#061811] hover:bg-emerald-400 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 bg-[#1267E6] text-white hover:from-[--brand-hover] hover:to-[--brand] rounded-full text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer"
                       >
                         {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                         Kaydet

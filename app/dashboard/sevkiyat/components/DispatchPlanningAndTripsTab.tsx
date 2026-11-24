@@ -210,21 +210,21 @@ export function DispatchPlanningAndTripsTab({
       {/* BÖLÜM A: SEFER & YÜK PLANLAMA */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
         {/* Sol: Hazır Sipariş Havuzu */}
-        <div className="xl:col-span-7 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-4">
+        <div className="xl:col-span-7 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 space-y-4 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                <Boxes className="w-4 h-4 text-[#34D399]" />
+              <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+                <Boxes className="w-4 h-4 text-[--brand]" />
                 Sevk Bekleyen Sipariş & Dalga Havuzu ({readyPool.length})
               </h3>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[--text-muted]">
                 Omnichannel, Şube Siparişleri ve WMS PACK-STAGING-01 çıkışlarını araca gruplayın
               </p>
             </div>
             <select
               value={poolFilter}
               onChange={(e) => setPoolFilter(e.target.value)}
-              className="bg-[#0B0F0D] border border-white/[0.1] text-zinc-200 text-xs rounded-xl px-3 py-1.5"
+              className="bg-white border border-[--line] text-[--text] text-xs rounded-xl px-3 py-1.5 focus:border-[--brand]"
             >
               <option value="ALL">Tüm Kaynaklar</option>
               <option value="OMNICHANNEL_ORDER">Omnichannel Siparişler</option>
@@ -235,7 +235,7 @@ export function DispatchPlanningAndTripsTab({
           </div>
 
           {filteredPool.length === 0 ? (
-            <div className="py-10 text-center text-xs text-zinc-500 border border-dashed border-white/[0.08] rounded-2xl">
+            <div className="py-10 text-center text-xs text-[--text-muted] border border-dashed border-[--line] rounded-2xl bg-[--page]">
               Şu anda sefere atanmayı bekleyen açık sipariş bulunmuyor (tümü aktif seferlere atanmış).
             </div>
           ) : (
@@ -248,35 +248,35 @@ export function DispatchPlanningAndTripsTab({
                     key={key}
                     className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
                       checked
-                        ? 'bg-emerald-500/[0.08] border-[#34D399]/50'
-                        : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.15]'
+                        ? 'bg-[--brand-soft] border-[--brand-line]'
+                        : 'bg-white border-[--line] hover:border-[--brand-line]'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleSourceKey(key)}
-                      className="mt-1 accent-[#34D399]"
+                      className="mt-1 accent-[--brand]"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-xs font-semibold text-white">{item.sourceRefNo}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300">
+                        <span className="text-xs font-semibold text-[--text]">{item.sourceRefNo}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--muted-bg] text-[--text-muted]">
                           {item.channelCode}
                         </span>
                         {item.requiresColdChain && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/25">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                             +2/+6°C Frigo
                           </span>
                         )}
-                        <span className="text-[10px] text-zinc-400 ml-auto">
+                        <span className="text-[10px] text-[--text-muted] ml-auto">
                           Pencere: {item.timeWindowStart}–{item.timeWindowEnd}
                         </span>
                       </div>
-                      <div className="text-xs text-zinc-300 mt-0.5 truncate">
-                        {item.customerName} — <span className="text-zinc-400">{item.cityDistrict}</span>
+                      <div className="text-xs text-[--text-2] mt-0.5 truncate">
+                        {item.customerName} — <span className="text-[--text-muted]">{item.cityDistrict}</span>
                       </div>
-                      <div className="text-[11px] text-zinc-500 flex flex-wrap gap-3 mt-1">
+                      <div className="text-[11px] text-[--text-muted] flex flex-wrap gap-3 mt-1 tabular-nums">
                         <span>{item.weightKg} kg</span>
                         <span>{item.volumeM3} m³</span>
                         <span>{item.palletCount} palet</span>
@@ -290,19 +290,19 @@ export function DispatchPlanningAndTripsTab({
         </div>
 
         {/* Sağ: Araç / Şoför Atama, Kapasite Göstergesi & Otomatik Öneri */}
-        <div className="xl:col-span-5 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-4">
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <Truck className="w-4 h-4 text-[#34D399]" />
+        <div className="xl:col-span-5 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 space-y-4 shadow-sm">
+          <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+            <Truck className="w-4 h-4 text-[--brand]" />
             Sefer Oluştur & Kapasite / Vardiya Kontrolü
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label className="text-zinc-400 block mb-1">Çıkış Deposu</label>
+              <label className="text-[--text-muted] block mb-1">Çıkış Deposu</label>
               <select
                 value={originWarehouseId}
                 onChange={(e) => setOriginWarehouseId(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               >
                 {warehouses.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -312,20 +312,20 @@ export function DispatchPlanningAndTripsTab({
               </select>
             </div>
             <div>
-              <label className="text-zinc-400 block mb-1">Planlanan Hareket</label>
+              <label className="text-[--text-muted] block mb-1">Planlanan Hareket</label>
               <input
                 type="datetime-local"
                 value={departureInput}
                 onChange={(e) => setDepartureInput(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               />
             </div>
             <div>
-              <label className="text-zinc-400 block mb-1">Araç Seçimi</label>
+              <label className="text-[--text-muted] block mb-1">Araç Seçimi</label>
               <select
                 value={vehicleId}
                 onChange={(e) => handleVehicleChange(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               >
                 {vehicles.map((v) => (
                   <option key={v.id} value={v.id}>
@@ -335,11 +335,11 @@ export function DispatchPlanningAndTripsTab({
               </select>
             </div>
             <div>
-              <label className="text-zinc-400 block mb-1">Şoför (Vardiya & Ehliyet)</label>
+              <label className="text-[--text-muted] block mb-1">Şoför (Vardiya & Ehliyet)</label>
               <select
                 value={driverId}
                 onChange={(e) => setDriverId(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               >
                 <option value="">Şoför Seçin</option>
                 {drivers.map((d) => (
@@ -356,35 +356,35 @@ export function DispatchPlanningAndTripsTab({
             placeholder="Sefer başlığı (isteğe bağlı, ör. Anadolu Yakası Sabah Dağıtımı)"
             value={tripTitle}
             onChange={(e) => setTripTitle(e.target.value)}
-            className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white text-xs rounded-xl px-3 py-2"
+            className="w-full bg-white border border-[--line] text-[--text] text-xs rounded-xl px-3 py-2 focus:border-[--brand]"
           />
 
           {/* Canlı Kapasite Çubuğu */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3 space-y-2 text-xs">
+          <div className="bg-[--page] border border-[--line] rounded-xl p-3 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-zinc-400 flex items-center gap-1.5">
-                <Scale className="w-3.5 h-3.5 text-[#34D399]" />
+              <span className="text-[--text-muted] flex items-center gap-1.5">
+                <Scale className="w-3.5 h-3.5 text-[--brand]" />
                 Seçili Yük ({selectedItems.length} durak):
               </span>
-              <span className={liveCapacity.isValid ? 'text-[#34D399] font-semibold' : 'text-rose-400 font-semibold'}>
+              <span className={liveCapacity.isValid ? 'text-[--brand] font-semibold' : 'text-[--bad] font-semibold'}>
                 {liveCapacity.totalWeightKg} kg · {liveCapacity.totalVolumeM3} m³ · {liveCapacity.totalPallets} palet (%{liveCapacity.capacityLoadPct})
               </span>
             </div>
-            <div className="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+            <div className="h-2 bg-[--muted-bg] rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all ${liveCapacity.isValid ? 'bg-[#34D399]' : 'bg-rose-500'}`}
+                className={`h-full transition-all ${liveCapacity.isValid ? 'bg-[--brand]' : 'bg-[--bad]'}`}
                 style={{ width: `${Math.min(100, liveCapacity.capacityLoadPct)}%` }}
               />
             </div>
             {(!liveCapacity.isValid || !liveDriverCheck.compatible) && (
-              <div className="text-[11px] text-rose-300 space-y-0.5 pt-1">
+              <div className="text-[11px] text-[--bad] space-y-0.5 pt-1">
                 {liveCapacity.warnings.map((w, i) => (
                   <div key={i} className="flex items-center gap-1">
                     <AlertTriangle className="w-3.5 h-3.5 shrink-0" /> {w}
                   </div>
                 ))}
                 {liveDriverCheck.reasons.map((r, i) => (
-                  <div key={`drv-${i}`} className="flex items-center gap-1 text-amber-300">
+                  <div key={`drv-${i}`} className="flex items-center gap-1 text-[--warn]">
                     <UserCheck className="w-3.5 h-3.5 shrink-0" /> {r}
                   </div>
                 ))}
@@ -393,7 +393,7 @@ export function DispatchPlanningAndTripsTab({
           </div>
 
           {optProgressMsg && (
-            <div className="text-xs text-[#34D399] bg-emerald-500/10 border border-emerald-500/25 rounded-xl px-3 py-2 flex items-center gap-2">
+            <div className="text-xs text-[--brand] bg-[--brand-soft] border border-[--brand-line] rounded-xl px-3 py-2 flex items-center gap-2">
               <RefreshCw className="w-3.5 h-3.5 animate-spin" /> {optProgressMsg}
             </div>
           )}
@@ -403,7 +403,7 @@ export function DispatchPlanningAndTripsTab({
               type="button"
               disabled={submitting || selectedItems.length === 0 || !liveCapacity.isValid}
               onClick={handleCreateTrip}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-[#34D399] hover:bg-[#10B981] text-[#061811] text-xs font-semibold transition disabled:opacity-50"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold transition shadow-sm hover:opacity-95 disabled:opacity-50"
             >
               <Plus className="w-4 h-4" /> Seçilenlerden Sefer Oluştur & Optimize Et
             </button>
@@ -411,9 +411,9 @@ export function DispatchPlanningAndTripsTab({
               type="button"
               disabled={submitting || readyPool.length === 0}
               onClick={handleAutoPlanBatch}
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-white text-xs font-medium transition disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text] text-xs font-medium transition shadow-sm disabled:opacity-50"
             >
-              <Zap className="w-4 h-4 text-amber-300" /> Otomatik Öner (Çoklu Araç)
+              <Zap className="w-4 h-4 text-[--warn]" /> Otomatik Öner (Çoklu Araç)
             </button>
           </div>
         </div>
@@ -422,8 +422,8 @@ export function DispatchPlanningAndTripsTab({
       {/* BÖLÜM B & C: AKTİF SEFERLER, SÜRÜKLE-BIRAK DURAK SIRALAMA, HARİTA & E-İRSALİYE */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
         {/* Sefer Listesi */}
-        <div className="xl:col-span-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-white">Planlı & Aktif Seferler ({trips.length})</h3>
+        <div className="xl:col-span-4 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 space-y-3 shadow-sm">
+          <h3 className="text-sm font-semibold text-[--text]">Planlı & Aktif Seferler ({trips.length})</h3>
           <div className="space-y-2 max-h-[540px] overflow-y-auto pr-1">
             {trips.map((t) => {
               const active = selectedTrip?.id === t.id;
@@ -434,37 +434,37 @@ export function DispatchPlanningAndTripsTab({
                   onClick={() => setSelectedTripId(t.id)}
                   className={`w-full text-left p-3 rounded-xl border transition space-y-1.5 ${
                     active
-                      ? 'bg-emerald-500/[0.08] border-[#34D399]/60'
-                      : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.15]'
+                      ? 'bg-[--brand-soft] border-[--brand-line]'
+                      : 'bg-white border-[--line] hover:border-[--brand-line]'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-white text-xs">{t.tripNumber}</span>
+                    <span className="font-semibold text-[--text] text-xs">{t.tripNumber}</span>
                     <span
                       className={`text-[10px] px-2 py-0.5 rounded-full border ${
                         DISPATCH_TRIP_STATUS_BADGES[t.status as DispatchTripStatus] ||
-                        'bg-white/[0.05] text-zinc-300'
+                        'bg-[--muted-bg] text-[--text-muted]'
                       }`}
                     >
                       {DISPATCH_TRIP_STATUS_LABELS[t.status as DispatchTripStatus] || t.status}
                     </span>
                   </div>
-                  <div className="text-xs text-zinc-300 truncate">{t.title}</div>
-                  <div className="flex flex-wrap items-center justify-between text-[11px] text-zinc-400">
+                  <div className="text-xs text-[--text-2] truncate">{t.title}</div>
+                  <div className="flex flex-wrap items-center justify-between text-[11px] text-[--text-muted]">
                     <span>
                       {t.vehiclePlate || 'Araçsız'} · {t.driverName || 'Şoförsüz'}
                     </span>
-                    <span>
+                    <span className="tabular-nums">
                       {(t.stops || []).length} durak · {t.plannedDistanceKm} km
                     </span>
                   </div>
                   {t.eWaybillNo && (
-                    <div className="text-[10px] text-[#34D399] font-mono">
+                    <div className="text-[10px] text-[--brand] font-mono font-medium">
                       e-İrsaliye: {t.eWaybillNo}
                     </div>
                   )}
                   {t.maintenanceImpactWarning && (
-                    <div className="text-[10px] text-amber-300 flex items-center gap-1 font-medium">
+                    <div className="text-[10px] text-[--warn] flex items-center gap-1 font-medium">
                       <AlertTriangle className="w-3 h-3 shrink-0" /> Bakım/Arıza Uyarısı
                     </div>
                   )}
@@ -490,29 +490,29 @@ export function DispatchPlanningAndTripsTab({
                 tripNumber={selectedTrip.tripNumber}
               />
 
-              <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-5 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/[0.06]">
+              <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 space-y-4 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[--line]">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-base font-semibold text-white">
+                      <h3 className="text-base font-semibold text-[--text]">
                         {selectedTrip.tripNumber} — {selectedTrip.title}
                       </h3>
                       {selectedTrip.baselineUnoptimizedDistanceKm > selectedTrip.plannedDistanceKm && (
-                        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-[#34D399] border border-emerald-500/30">
+                        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-[--brand-soft] text-[--brand] border border-[--brand-line] font-medium">
                           Optimizasyon: {selectedTrip.baselineUnoptimizedDistanceKm} km →{' '}
                           {selectedTrip.plannedDistanceKm} km
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-400 mt-1">
-                      Araç: <strong className="text-zinc-200">{selectedTrip.vehiclePlate || '-'}</strong> ·
-                      Şoför: <strong className="text-zinc-200">{selectedTrip.driverName || '-'}</strong> ·
-                      Doluluk: <strong className="text-zinc-200">%{selectedTrip.capacityLoadPct}</strong> ·
-                      Plan Km: <strong className="text-zinc-200">{selectedTrip.plannedDistanceKm} km</strong>
+                    <p className="text-xs text-[--text-muted] mt-1">
+                      Araç: <strong className="text-[--text]">{selectedTrip.vehiclePlate || '-'}</strong> ·
+                      Şoför: <strong className="text-[--text]">{selectedTrip.driverName || '-'}</strong> ·
+                      Doluluk: <strong className="text-[--text]">%{selectedTrip.capacityLoadPct}</strong> ·
+                      Plan Km: <strong className="text-[--text]">{selectedTrip.plannedDistanceKm} km</strong>
                       {selectedTrip.actualDistanceKm > 0 && (
                         <>
                           {' '}
-                          · Gerçek: <strong className="text-white">{selectedTrip.actualDistanceKm} km</strong>
+                          · Gerçek: <strong className="text-[--text]">{selectedTrip.actualDistanceKm} km</strong>
                         </>
                       )}
                     </p>
@@ -523,9 +523,9 @@ export function DispatchPlanningAndTripsTab({
                       type="button"
                       disabled={submitting || selectedTrip.status === 'TAMAMLANDI'}
                       onClick={() => handleOptimizeTrip(selectedTrip.id)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white transition disabled:opacity-40"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-xs text-[--text] transition disabled:opacity-40 shadow-sm"
                     >
-                      <Zap className="w-3.5 h-3.5 text-[#34D399]" /> Yeniden Optimize Et
+                      <Zap className="w-3.5 h-3.5 text-[--brand]" /> Yeniden Optimize Et
                     </button>
 
                     {!selectedTrip.eWaybillNo ? (
@@ -535,14 +535,14 @@ export function DispatchPlanningAndTripsTab({
                         onClick={() =>
                           onAction('approve_and_issue_ewaybill', { tripId: selectedTrip.id })
                         }
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#34D399] hover:bg-[#10B981] text-[#061811] text-xs font-semibold transition disabled:opacity-50"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold transition shadow-sm hover:opacity-95 disabled:opacity-50"
                       >
                         <FileText className="w-3.5 h-3.5" /> Seferi Onayla & E-İrsaliye Kes
                       </button>
                     ) : (
                       <Link
                         href="/dashboard/omnichannel?tab=edoc"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs text-[#34D399]"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[--brand-soft] border border-[--brand-line] text-xs text-[--brand] font-semibold"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" /> {selectedTrip.eWaybillNo}
                       </Link>
@@ -555,7 +555,7 @@ export function DispatchPlanningAndTripsTab({
                           setReplanModalTrip(selectedTrip);
                           setReplanTargetVehicleId('');
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-xs text-amber-200 transition"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[--warn-soft] hover:bg-[--warn-soft]/80 border border-[--warn-soft] text-xs text-[--warn] font-medium transition"
                       >
                         <Send className="w-3.5 h-3.5" /> Dinamik Yeniden Planla
                       </button>
@@ -564,7 +564,7 @@ export function DispatchPlanningAndTripsTab({
                 </div>
 
                 {selectedTrip.maintenanceImpactWarning && (
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-200">
+                  <div className="p-3 rounded-xl bg-[--warn-soft] border border-[--warn-soft] flex flex-wrap items-center justify-between gap-2 text-xs text-[--warn]">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" />
                       <span>
@@ -578,14 +578,14 @@ export function DispatchPlanningAndTripsTab({
                         setReplanTargetVehicleId('');
                         setReplanReason(`Araç arızası/bakımı sebebiyle devir: ${selectedTrip.maintenanceImpactWarning}`);
                       }}
-                      className="px-3 py-1 rounded-full bg-amber-400/20 hover:bg-amber-400/30 border border-amber-400/40 text-[11px] font-semibold text-amber-100 cursor-pointer"
+                      className="px-3 py-1 rounded-full bg-white border border-[--warn] text-[11px] font-semibold text-[--warn] hover:bg-[--warn-soft] cursor-pointer shadow-sm"
                     >
                       Başka Araca Devret →
                     </button>
                   </div>
                 )}
 
-                <div className="text-[11px] text-zinc-400">
+                <div className="text-[11px] text-[--text-muted]">
                   Sürükle-bırak yaparak veya ok düğmeleriyle durak sırasını değiştirdiğinizde mesafe ve ETA otomatik yeniden hesaplanır.
                 </div>
 
@@ -613,43 +613,43 @@ export function DispatchPlanningAndTripsTab({
                         }}
                         className={`p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition ${
                           dragStopId === stop.id
-                            ? 'opacity-60 border-[#34D399]'
-                            : 'bg-white/[0.02] border-white/[0.06] hover:border-white/[0.16]'
+                            ? 'opacity-60 border-[--brand]'
+                            : 'bg-white border-[--line] hover:border-[--brand-line]'
                         }`}
                       >
                         <div className="flex items-start gap-3 min-w-0">
-                          <div className="w-7 h-7 rounded-full bg-[#34D399]/15 border border-[#34D399]/35 text-[#34D399] font-bold text-xs flex items-center justify-center shrink-0">
+                          <div className="w-7 h-7 rounded-full bg-[--brand-soft] border border-[--brand-line] text-[--brand] font-bold text-xs flex items-center justify-center shrink-0">
                             {stop.sequenceNo}
                           </div>
                           <div className="min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-semibold text-white text-xs">
+                              <span className="font-semibold text-[--text] text-xs">
                                 {stop.customerName}
                               </span>
-                              <span className="text-[10px] font-mono text-zinc-400">
+                              <span className="text-[10px] font-mono text-[--text-muted]">
                                 {stop.sourceRefNo || stop.sourceType}
                               </span>
                               <span
                                 className={`text-[10px] px-2 py-0.5 rounded-full border ${
                                   DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] ||
-                                  'bg-white/[0.05] text-zinc-300'
+                                  'bg-[--muted-bg] text-[--text-muted]'
                                 }`}
                               >
                                 {DISPATCH_STOP_STATUS_LABELS[stop.status as DispatchStopStatus] ||
                                   stop.status}
                               </span>
                               {isLate && (
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--bad-soft] text-[--bad] border border-[--bad-soft]">
                                   +{stop.delayMinutes} dk gecikme
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] text-zinc-400 mt-0.5 truncate">
+                            <p className="text-[11px] text-[--text-muted] mt-0.5 truncate">
                               {stop.addressText} ({stop.cityDistrict})
                             </p>
-                            <div className="flex flex-wrap items-center gap-3 text-[11px] text-zinc-500 mt-1">
+                            <div className="flex flex-wrap items-center gap-3 text-[11px] text-[--text-muted] mt-1 tabular-nums">
                               <span className="inline-flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <Clock className="w-3 h-3 text-[--brand]" />
                                 Plan ETA:{' '}
                                 {stop.plannedEtaAt
                                   ? new Date(stop.plannedEtaAt).toLocaleTimeString('tr-TR', {
@@ -658,7 +658,7 @@ export function DispatchPlanningAndTripsTab({
                                     })
                                   : '-'}
                                 {stop.actualArrivalAt && (
-                                  <span className="text-zinc-300 ml-1">
+                                  <span className="text-[--text] ml-1 font-medium">
                                     (Gerçek:{' '}
                                     {new Date(stop.actualArrivalAt).toLocaleTimeString('tr-TR', {
                                       hour: '2-digit',
@@ -678,7 +678,7 @@ export function DispatchPlanningAndTripsTab({
                           <button
                             type="button"
                             onClick={() => handleCopyTracking(stop.trackingToken)}
-                            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-zinc-300 text-xs"
+                            className="p-1.5 rounded-lg bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] text-xs"
                             title="Müşteri Takip Linkini Kopyala"
                           >
                             <Copy className="w-3.5 h-3.5" />
@@ -686,7 +686,7 @@ export function DispatchPlanningAndTripsTab({
                           <Link
                             href={`/takip/${stop.trackingToken}`}
                             target="_blank"
-                            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-[#34D399] text-xs"
+                            className="p-1.5 rounded-lg bg-[--brand-soft] hover:bg-[--brand-soft]/80 text-[--brand] text-xs"
                             title="Müşteri Takip Ekranını Aç"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
@@ -695,7 +695,7 @@ export function DispatchPlanningAndTripsTab({
                             type="button"
                             disabled={idx === 0 || submitting}
                             onClick={() => moveStopStep(selectedTrip, idx, -1)}
-                            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-zinc-300 disabled:opacity-30"
+                            className="p-1.5 rounded-lg bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] disabled:opacity-30"
                             title="Yukarı Taşı"
                           >
                             <ChevronUp className="w-3.5 h-3.5" />
@@ -704,7 +704,7 @@ export function DispatchPlanningAndTripsTab({
                             type="button"
                             disabled={idx === (selectedTrip.stops?.length || 1) - 1 || submitting}
                             onClick={() => moveStopStep(selectedTrip, idx, 1)}
-                            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.1] text-zinc-300 disabled:opacity-30"
+                            className="p-1.5 rounded-lg bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] disabled:opacity-30"
                             title="Aşağı Taşı"
                           >
                             <ChevronDown className="w-3.5 h-3.5" />
@@ -717,7 +717,7 @@ export function DispatchPlanningAndTripsTab({
               </div>
             </>
           ) : (
-            <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center text-sm text-zinc-400">
+            <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-12 text-center text-sm text-[--text-muted] shadow-sm">
               İncelemek için soldan bir sefer seçin veya yukarıdaki havuzdan yeni sefer oluşturun.
             </div>
           )}
@@ -726,21 +726,21 @@ export function DispatchPlanningAndTripsTab({
 
       {/* Dinamik Yeniden Planlama Modalı */}
       {replanModalTrip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
-          <div className="bg-[#111513] border border-white/[0.08] rounded-[20px] w-full max-w-md p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-md p-6 space-y-4 shadow-2xl text-[--text]">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">
+                <h3 className="text-base font-semibold text-[--text]">
                   Dinamik Yeniden Planlama — {replanModalTrip.tripNumber}
                 </h3>
-                <p className="text-xs text-zinc-400 mt-1">
+                <p className="text-xs text-[--text-muted] mt-1">
                   Teslim edilmemiş durakları başka bir araca devredin veya gecikmeye göre yeniden optimize edin.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setReplanModalTrip(null)}
-                className="text-zinc-400 hover:text-white"
+                className="text-[--text-muted] hover:text-[--text] p-1 rounded-lg hover:bg-[--muted-bg]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -748,22 +748,22 @@ export function DispatchPlanningAndTripsTab({
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-zinc-400 block mb-1">Yeniden Planlama Nedeni</label>
+                <label className="text-[--text-muted] block mb-1">Yeniden Planlama Nedeni</label>
                 <input
                   type="text"
                   value={replanReason}
                   onChange={(e) => setReplanReason(e.target.value)}
-                  className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                  className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
                 />
               </div>
               <div>
-                <label className="text-zinc-400 block mb-1">
+                <label className="text-[--text-muted] block mb-1">
                   Yedek Araç (Boş bırakılırsa mevcut araçta gecikme yeniden sıralanır)
                 </label>
                 <select
                   value={replanTargetVehicleId}
                   onChange={(e) => setReplanTargetVehicleId(e.target.value)}
-                  className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                  className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
                 >
                   <option value="">Aynı Araçta ETA & Sıra Güncelle</option>
                   {vehicles
@@ -777,12 +777,12 @@ export function DispatchPlanningAndTripsTab({
               </div>
               {!replanTargetVehicleId && (
                 <div>
-                  <label className="text-zinc-400 block mb-1">Gecikme Kaydırması (Dakika)</label>
+                  <label className="text-[--text-muted] block mb-1">Gecikme Kaydırması (Dakika)</label>
                   <input
                     type="number"
                     value={replanDelayMin}
                     onChange={(e) => setReplanDelayMin(e.target.value)}
-                    className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                    className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
                   />
                 </div>
               )}
@@ -792,7 +792,7 @@ export function DispatchPlanningAndTripsTab({
               <button
                 type="button"
                 onClick={() => setReplanModalTrip(null)}
-                className="px-4 py-2 rounded-full bg-white/[0.05] text-zinc-300 text-xs"
+                className="px-4 py-2 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2] text-xs"
               >
                 İptal
               </button>
@@ -808,7 +808,7 @@ export function DispatchPlanningAndTripsTab({
                   });
                   setReplanModalTrip(null);
                 }}
-                className="px-4 py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold"
+                className="px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95"
               >
                 Uygula & Yeniden Hesapla
               </button>

@@ -519,7 +519,7 @@ export default function ContentDetailPanel({
                 </div>
                 
                 {item.status === "yayinlandi" ? (
-                  <div className="text-xs bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 p-2.5 rounded-lg border border-emerald-100 dark:border-emerald-900/50">
+                  <div className="text-xs bg-[--brand-soft] text-[--brand] p-2.5 rounded-lg border border-[--brand-line]">
                     Bu içerik yayınlandığı için durumu değiştirilemez.
                   </div>
                 ) : (
@@ -613,7 +613,7 @@ export default function ContentDetailPanel({
                           />
                           <Button
                             size="sm"
-                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                            className="w-full bg-[--brand] hover:bg-[--brand-hover] text-white gap-1.5"
                             onClick={() => revFileInputRef.current?.click()}
                             disabled={completingRevision}
                           >
@@ -697,7 +697,7 @@ export default function ContentDetailPanel({
                             <strong>Açan:</strong> {rev.createdBy?.fullName || "Bilinmeyen"} ({new Date(rev.createdAt).toLocaleString("tr-TR")})
                           </div>
                           {rev.status === "tamamlandi" && (
-                            <div className="text-emerald-600 dark:text-emerald-400 mt-1">
+                            <div className="text-[--brand] dark:text-[--brand] mt-1">
                               <strong>Edildi:</strong> {rev.completedBy?.fullName || "Bilinmeyen"} ({new Date(rev.completedAt).toLocaleString("tr-TR")})
                             </div>
                           )}
@@ -770,7 +770,7 @@ export default function ContentDetailPanel({
                       className={[
                         "flex items-center gap-3 p-3 rounded-xl border transition-all",
                         m.isFinal
-                          ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-900/10"
+                          ? "border-[--brand] bg-[--brand-soft]"
                           : "border-border bg-card",
                       ].join(" ")}
                     >
@@ -793,7 +793,7 @@ export default function ContentDetailPanel({
                         <div className="flex items-center gap-1.5">
                           <span className="text-xs font-medium">v{m.version}</span>
                           {m.isFinal && (
-                            <Badge className="text-[9px] bg-emerald-500 text-white border-0">
+                            <Badge className="text-[9px] bg-[--brand] text-white border-0">
                               FINAL
                             </Badge>
                           )}
@@ -812,7 +812,7 @@ export default function ContentDetailPanel({
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-7 text-[10px] text-emerald-600"
+                            className="h-7 text-[10px] text-[--brand]"
                             onClick={() => handleSetFinal(m.id)}
                           >
                             <Star size={10} className="mr-0.5" /> Final

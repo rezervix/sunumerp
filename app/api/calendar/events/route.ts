@@ -128,7 +128,7 @@ export async function GET(req: Request) {
         title: `${isIncome ? "📥 Alınacak" : "📤 Yapılacak"}: ${f.category}`,
         date: f.date.toISOString(),
         type: isIncome ? "income_payment" : "expense_payment",
-        color: isIncome ? "#10b981" : "#ef4444",
+        color: isIncome ? "#1267E6" : "#ef4444",
         description: f.description || undefined,
         amount: f.amount,
         allDay: true,

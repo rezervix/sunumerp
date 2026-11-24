@@ -301,8 +301,8 @@ export default function SupplierPortalPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="rounded-2xl border border-white/10 bg-[#121614] p-6 text-center space-y-2">
-          <RefreshCw className="size-6 text-[#34D399] animate-spin mx-auto" />
+        <div className="rounded-2xl border border-[--line] bg-[#121614] p-6 text-center space-y-2">
+          <RefreshCw className="size-6 text-[#1267E6] animate-spin mx-auto" />
           <p className="text-xs text-zinc-400">Tedarikçi Portalı hazırlanıyor...</p>
         </div>
       </div>
@@ -315,7 +315,7 @@ export default function SupplierPortalPage() {
       <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-md space-y-5">
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#34D399]/30 bg-[#34D399]/10 text-[#34D399] text-xs font-medium">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#1267E6]/30 bg-[#1267E6]/10 text-[#1267E6] text-xs font-medium">
               <Lock className="size-3.5" />
               <span>İzole Harici Erişim · Sunum ERP Tedarikçi Portalı</span>
             </div>
@@ -327,7 +327,7 @@ export default function SupplierPortalPage() {
 
           <form
             onSubmit={handleLogin}
-            className="rounded-2xl border border-white/10 bg-[#111513] p-5 space-y-4 shadow-2xl"
+            className="rounded-2xl border border-[--line] bg-[white] p-5 space-y-4 shadow-2xl"
           >
             <div>
               <label className="text-xs text-zinc-400">Tedarikçi Kullanıcı Adı veya E-Posta</label>
@@ -337,7 +337,7 @@ export default function SupplierPortalPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Örn: tedarikci.royal"
                 data-testid="portal-login-username"
-                className="mt-1 w-full h-10 px-3 rounded-xl border border-white/10 bg-[#080A09] text-sm text-white focus:outline-none focus:border-[#34D399]"
+                className="mt-1 w-full h-10 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-sm text-white focus:outline-none focus:border-[#1267E6]"
               />
             </div>
             <div>
@@ -349,7 +349,7 @@ export default function SupplierPortalPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 data-testid="portal-login-password"
-                className="mt-1 w-full h-10 px-3 rounded-xl border border-white/10 bg-[#080A09] text-sm text-white focus:outline-none focus:border-[#34D399]"
+                className="mt-1 w-full h-10 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-sm text-white focus:outline-none focus:border-[#1267E6]"
               />
             </div>
             {loginError && (
@@ -361,7 +361,7 @@ export default function SupplierPortalPage() {
               type="submit"
               disabled={loginBusy}
               data-testid="portal-login-submit"
-              className="w-full h-10 rounded-xl bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+              className="w-full h-10 rounded-xl bg-[#1267E6] hover:bg-[#1267E6]/90 text-white text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
             >
               <KeyRound className="size-4" />
               {loginBusy ? "Doğrulanıyor..." : "Tedarikçi Portalına Giriş Yap"}
@@ -373,7 +373,7 @@ export default function SupplierPortalPage() {
 
           <div className="text-center text-[11px] text-zinc-500">
             Şirket içi personelseniz{" "}
-            <a href="/" className="text-[#34D399] hover:underline">
+            <a href="/" className="text-[#1267E6] hover:underline">
               ana ERP girişine
             </a>{" "}
             dönebilirsiniz.
@@ -396,10 +396,10 @@ export default function SupplierPortalPage() {
       />
 
       {/* Portal Üst Çubuk */}
-      <header className="border-b border-white/[0.08] bg-[#0D100F]/95 px-4 sm:px-6 py-3.5">
+      <header className="border-b border-[--line] bg-[#0D100F]/95 px-4 sm:px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="size-10 rounded-xl bg-[#34D399]/15 border border-[#34D399]/30 flex items-center justify-center text-[#34D399]">
+            <div className="size-10 rounded-xl bg-[#1267E6]/15 border border-[#1267E6]/30 flex items-center justify-center text-[#1267E6]">
               <Building2 className="size-5" />
             </div>
             <div>
@@ -407,10 +407,10 @@ export default function SupplierPortalPage() {
                 <h1 className="text-base font-bold text-white" data-testid="portal-supplier-name">
                   {supplier.name}
                 </h1>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono border border-white/10 bg-white/[0.04] text-zinc-300">
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-mono border border-[--line] bg-[--muted-bg] text-zinc-300">
                   {supplier.code}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[11px] border border-[#34D399]/30 bg-[#34D399]/10 text-[#34D399]">
+                <span className="px-2 py-0.5 rounded-full text-[11px] border border-[#1267E6]/30 bg-[#1267E6]/10 text-[#1267E6]">
                   <ShieldCheck className="size-3 inline mr-1" />
                   Tedarikçi Portalı
                 </span>
@@ -426,7 +426,7 @@ export default function SupplierPortalPage() {
             <button
               type="button"
               onClick={loadPortal}
-              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-white/10 bg-white/[0.04] text-xs text-zinc-200 hover:bg-white/[0.08]"
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-[--line] bg-[--muted-bg] text-xs text-zinc-200 hover:bg-white/[0.08]"
             >
               <RefreshCw className="size-3.5" />
               Yenile
@@ -462,11 +462,11 @@ export default function SupplierPortalPage() {
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-[#121614] p-3.5">
             <div className="text-[11px] text-zinc-400">Yoldaki ASN Sevkiyatı</div>
-            <div className="text-xl font-bold text-[#34D399] mt-1">{stats.activeAsnCount}</div>
+            <div className="text-xl font-bold text-[#1267E6] mt-1">{stats.activeAsnCount}</div>
           </div>
           <div className="rounded-2xl border border-white/[0.07] bg-[#121614] p-3.5">
             <div className="text-[11px] text-zinc-400">Performans Skorum</div>
-            <div className="text-xl font-bold text-[#34D399] mt-1">
+            <div className="text-xl font-bold text-[#1267E6] mt-1">
               {scorecard?.live?.compositeScore ?? 100}{" "}
               <span className="text-xs font-mono text-zinc-400">
                 ({scorecard?.live?.tier || "A"} Sınıfı)
@@ -476,7 +476,7 @@ export default function SupplierPortalPage() {
         </div>
 
         {/* Portal Sekmeleri */}
-        <div className="flex flex-wrap gap-1.5 rounded-2xl border border-white/[0.07] bg-[#111513] p-1.5">
+        <div className="flex flex-wrap gap-1.5 rounded-2xl border border-white/[0.07] bg-[white] p-1.5">
           {[
             { id: "pos", label: `Satın Alma Emirleri (${purchaseOrders.length})`, icon: ClipboardCheck },
             { id: "rfqs", label: `Teklif Talepleri (${rfqs.length})`, icon: Scale },
@@ -493,7 +493,7 @@ export default function SupplierPortalPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-colors ${
                   active
-                    ? "bg-[#34D399]/15 text-[#34D399] border border-[#34D399]/30"
+                    ? "bg-[#1267E6]/15 text-[#1267E6] border border-[#1267E6]/30"
                     : "text-zinc-400 hover:text-zinc-200 border border-transparent"
                 }`}
               >
@@ -508,7 +508,7 @@ export default function SupplierPortalPage() {
         {activeTab === "pos" && (
           <div className="space-y-3">
             {purchaseOrders.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-[#121614] p-8 text-center text-xs text-zinc-500">
+              <div className="rounded-2xl border border-[--line] bg-[#121614] p-8 text-center text-xs text-zinc-500">
                 Tarafınıza iletilmiş satın alma emri bulunmuyor.
               </div>
             ) : (
@@ -516,13 +516,13 @@ export default function SupplierPortalPage() {
                 <div
                   key={po.id}
                   data-testid={`portal-po-${po.poNumber}`}
-                  className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4 space-y-3"
+                  className="rounded-2xl border border-[--line] bg-[#121614] p-4 space-y-3"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-sm font-bold text-[#34D399]">{po.poNumber}</span>
-                        <span className="px-2 py-0.5 rounded-full text-[11px] border border-white/10 bg-white/[0.04] text-zinc-200">
+                        <span className="font-mono text-sm font-bold text-[#1267E6]">{po.poNumber}</span>
+                        <span className="px-2 py-0.5 rounded-full text-[11px] border border-[--line] bg-[--muted-bg] text-zinc-200">
                           {PO_STATUS_LABELS[po.status] || po.status}
                         </span>
                       </div>
@@ -548,14 +548,14 @@ export default function SupplierPortalPage() {
                     {(po.lines || []).map((l: any) => (
                       <div
                         key={l.id}
-                        className="rounded-xl border border-white/[0.06] bg-[#0B0E0D] px-3 py-2 flex items-center justify-between text-xs"
+                        className="rounded-xl border border-[--line] bg-[#0B0E0D] px-3 py-2 flex items-center justify-between text-xs"
                       >
                         <div>
                           <div className="text-zinc-200 font-medium">{l.itemName}</div>
                           <div className="text-[11px] font-mono text-zinc-500">{l.sku}</div>
                         </div>
                         <div className="text-right font-mono">
-                          <div className="text-[#34D399] font-semibold">
+                          <div className="text-[#1267E6] font-semibold">
                             {l.orderedQty} {l.unit}
                           </div>
                           <div className="text-[11px] text-zinc-400">
@@ -566,7 +566,7 @@ export default function SupplierPortalPage() {
                     ))}
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-white/[0.06]">
+                  <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-[--line]">
                     {!["TESLIM_ALINDI", "TAMAMLANDI", "IPTAL"].includes(po.status) && (
                       <>
                         <button
@@ -577,7 +577,7 @@ export default function SupplierPortalPage() {
                             setPoNote("")
                           }}
                           data-testid={`portal-confirm-po-${po.poNumber}`}
-                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#34D399] text-[#061811] text-xs font-semibold"
+                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl bg-[#1267E6] text-white text-xs font-semibold"
                         >
                           <CheckCircle2 className="size-3.5" />
                           Siparişi Onayla
@@ -598,9 +598,9 @@ export default function SupplierPortalPage() {
                           type="button"
                           onClick={() => openAsnModal(po)}
                           data-testid={`portal-create-asn-${po.poNumber}`}
-                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-white/15 bg-white/[0.05] text-white text-xs font-medium"
+                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-xl border border-[--line] bg-white/[0.05] text-white text-xs font-medium"
                         >
-                          <Truck className="size-3.5 text-[#34D399]" />
+                          <Truck className="size-3.5 text-[#1267E6]" />
                           ASN Ön Sevkiyat Gönder
                         </button>
                       </>
@@ -618,11 +618,11 @@ export default function SupplierPortalPage() {
             {rfqs.map((rfq: any) => (
               <div
                 key={rfq.id}
-                className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4 flex flex-wrap items-center justify-between gap-4"
+                className="rounded-2xl border border-[--line] bg-[#121614] p-4 flex flex-wrap items-center justify-between gap-4"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-[#34D399]">{rfq.rfqNumber}</span>
+                    <span className="font-mono text-xs font-bold text-[#1267E6]">{rfq.rfqNumber}</span>
                     <span className="text-sm font-semibold text-white">{rfq.title}</span>
                   </div>
                   <div className="text-xs text-zinc-400 mt-1">
@@ -630,7 +630,7 @@ export default function SupplierPortalPage() {
                     {new Date(rfq.dueDate).toLocaleDateString("tr-TR")} · {rfq.items?.length || 0} Kalem
                   </div>
                   {rfq.myQuote && (
-                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#34D399]/10 border border-[#34D399]/25 text-xs text-[#34D399]">
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#1267E6]/10 border border-[#1267E6]/25 text-xs text-[#1267E6]">
                       Teklifiniz: {rfq.myQuote.quoteNumber} · TCO ₺
                       {Number(rfq.myQuote.tcoTotal).toLocaleString("tr-TR")} · {rfq.myQuote.status}
                     </div>
@@ -641,7 +641,7 @@ export default function SupplierPortalPage() {
                     type="button"
                     onClick={() => openRfqModal(rfq)}
                     data-testid={`portal-quote-rfq-${rfq.rfqNumber}`}
-                    className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl bg-[#34D399] text-[#061811] text-xs font-semibold"
+                    className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl bg-[#1267E6] text-white text-xs font-semibold"
                   >
                     <Send className="size-3.5" />
                     {rfq.myQuote ? "Teklifi Güncelle" : "Fiyat & Termin Teklifi Ver"}
@@ -654,9 +654,9 @@ export default function SupplierPortalPage() {
 
         {/* 3. GÖNDERİLEN ASN'LER */}
         {activeTab === "asns" && (
-          <div className="overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#121614]">
+          <div className="overflow-x-auto rounded-2xl border border-[--line] bg-[#121614]">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+              <thead className="border-b border-[--line] text-[11px] uppercase text-zinc-400">
                 <tr>
                   <th className="py-3 px-4">ASN / PO</th>
                   <th className="py-3 px-3">İrsaliye & Araç</th>
@@ -669,7 +669,7 @@ export default function SupplierPortalPage() {
                 {asns.map((a: any) => (
                   <tr key={a.id}>
                     <td className="py-3 px-4 font-mono">
-                      <div className="text-[#34D399] font-bold">{a.asnNumber}</div>
+                      <div className="text-[#1267E6] font-bold">{a.asnNumber}</div>
                       <div className="text-zinc-500">PO: {a.poNumber}</div>
                     </td>
                     <td className="py-3 px-3">
@@ -685,7 +685,7 @@ export default function SupplierPortalPage() {
                       {new Date(a.expectedArrivalAt).toLocaleDateString("tr-TR")}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded-full text-[11px] border border-white/10 bg-white/[0.04]">
+                      <span className="px-2 py-0.5 rounded-full text-[11px] border border-[--line] bg-[--muted-bg]">
                         {a.status}
                       </span>
                     </td>
@@ -701,14 +701,14 @@ export default function SupplierPortalPage() {
           <div className="space-y-4">
             <form
               onSubmit={handleUploadDoc}
-              className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs items-end"
+              className="rounded-2xl border border-[--line] bg-[#121614] p-4 grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs items-end"
             >
               <div>
                 <label className="text-zinc-400">Belge Türü</label>
                 <select
                   value={docType}
                   onChange={(e) => setDocType(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 >
                   {Object.entries(DOC_TYPE_LABELS).map(([k, v]) => (
                     <option key={k} value={k}>
@@ -724,7 +724,7 @@ export default function SupplierPortalPage() {
                   value={docTitle}
                   onChange={(e) => setDocTitle(e.target.value)}
                   placeholder="Örn: Güncel Bitki Sağlığı Belgesi"
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -733,7 +733,7 @@ export default function SupplierPortalPage() {
                   type="date"
                   value={docExpires}
                   onChange={(e) => setDocExpires(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -747,7 +747,7 @@ export default function SupplierPortalPage() {
               <button
                 type="submit"
                 disabled={docBusy}
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold inline-flex items-center justify-center gap-1.5"
+                className="h-9 px-4 rounded-xl bg-[#1267E6] text-white font-semibold inline-flex items-center justify-center gap-1.5"
               >
                 <Upload className="size-3.5" />
                 {docBusy ? "Yükleniyor..." : "Belge Yükle"}
@@ -758,11 +758,11 @@ export default function SupplierPortalPage() {
               {documents.map((doc: any) => (
                 <div
                   key={doc.id}
-                  className="rounded-2xl border border-white/[0.08] bg-[#121614] p-3.5 text-xs space-y-1.5"
+                  className="rounded-2xl border border-[--line] bg-[#121614] p-3.5 text-xs space-y-1.5"
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-white">{doc.title}</span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] border border-white/10 text-[#34D399]">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] border border-[--line] text-[#1267E6]">
                       {DOC_STATUS_LABELS[doc.status] || doc.status}
                     </span>
                   </div>
@@ -782,16 +782,16 @@ export default function SupplierPortalPage() {
           <div className="space-y-4">
             {scorecard?.live ? (
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4">
+                <div className="rounded-2xl border border-[--line] bg-[#121614] p-4">
                   <div className="text-xs text-zinc-400">Zamanında Teslim (OTD)</div>
-                  <div className="text-2xl font-bold text-[#34D399] mt-1">
+                  <div className="text-2xl font-bold text-[#1267E6] mt-1">
                     %{scorecard.live.otdRate}
                   </div>
                   <div className="text-[11px] text-zinc-500 mt-1">
                     Ağırlık: %{scorecard.weights?.otdWeight}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4">
+                <div className="rounded-2xl border border-[--line] bg-[#121614] p-4">
                   <div className="text-xs text-zinc-400">Miktar Uyumu</div>
                   <div className="text-2xl font-bold text-white mt-1">
                     %{scorecard.live.qtyComplianceRate}
@@ -800,7 +800,7 @@ export default function SupplierPortalPage() {
                     Ağırlık: %{scorecard.weights?.qtyWeight}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/[0.08] bg-[#121614] p-4">
+                <div className="rounded-2xl border border-[--line] bg-[#121614] p-4">
                   <div className="text-xs text-zinc-400">Kalite Kabul</div>
                   <div className="text-2xl font-bold text-white mt-1">
                     %{scorecard.live.qualityAcceptanceRate}
@@ -809,8 +809,8 @@ export default function SupplierPortalPage() {
                     Ağırlık: %{scorecard.weights?.qualityWeight}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-[#34D399]/30 bg-[#34D399]/[0.06] p-4">
-                  <div className="text-xs text-[#34D399]">Genel Skor & Sınıf</div>
+                <div className="rounded-2xl border border-[#1267E6]/30 bg-[#1267E6]/[0.06] p-4">
+                  <div className="text-xs text-[#1267E6]">Genel Skor & Sınıf</div>
                   <div className="text-2xl font-bold text-white mt-1">
                     {scorecard.live.compositeScore} ({scorecard.live.tier})
                   </div>
@@ -820,7 +820,7 @@ export default function SupplierPortalPage() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-white/10 bg-[#121614] p-6 text-xs text-zinc-400">
+              <div className="rounded-2xl border border-[--line] bg-[#121614] p-6 text-xs text-zinc-400">
                 Henüz kapanmış teslimatınız olmadığı için baz skor uygulanmaktadır.
               </div>
             )}
@@ -833,7 +833,7 @@ export default function SupplierPortalPage() {
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={submitPoDecision}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#101412] p-5 space-y-4 text-xs"
+            className="w-full max-w-md rounded-2xl border border-[--line] bg-[#101412] p-5 space-y-4 text-xs"
           >
             <div className="font-semibold text-white text-sm">
               {poActionTarget.poNumber} — Tedarikçi Yanıtı
@@ -841,7 +841,7 @@ export default function SupplierPortalPage() {
             <select
               value={poDecision}
               onChange={(e) => setPoDecision(e.target.value as any)}
-              className="w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+              className="w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
             >
               <option value="ONAYLANDI">Tam Onay — Belirtilen Tarihte Teslim Edeceğiz</option>
               <option value="KISMI_ONAY">Kısmi Onay / Revize Termin Bildir</option>
@@ -853,7 +853,7 @@ export default function SupplierPortalPage() {
                 type="date"
                 value={poPromisedDate}
                 onChange={(e) => setPoPromisedDate(e.target.value)}
-                className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
               />
             </div>
             <div>
@@ -866,21 +866,21 @@ export default function SupplierPortalPage() {
                 value={poNote}
                 onChange={(e) => setPoNote(e.target.value)}
                 placeholder="Örn: Gümrük uçak kargo gecikmesi veya sevkiyat teyidi..."
-                className="mt-1 w-full p-2.5 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                className="mt-1 w-full p-2.5 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setPoActionTarget(null)}
-                className="h-9 px-3 rounded-xl border border-white/10 text-zinc-300"
+                className="h-9 px-3 rounded-xl border border-[--line] text-zinc-300"
               >
                 Vazgeç
               </button>
               <button
                 type="submit"
                 disabled={poBusy}
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+                className="h-9 px-4 rounded-xl bg-[#1267E6] text-white font-semibold"
               >
                 {poBusy ? "Gönderiliyor..." : "Yanıtı Gönder"}
               </button>
@@ -894,7 +894,7 @@ export default function SupplierPortalPage() {
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={submitAsn}
-            className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#101412] p-5 space-y-4 text-xs"
+            className="w-full max-w-lg rounded-2xl border border-[--line] bg-[#101412] p-5 space-y-4 text-xs"
           >
             <div className="font-semibold text-white text-sm">
               ASN Ön Sevkiyat İhbarı ({asnModalPo.poNumber})
@@ -906,7 +906,7 @@ export default function SupplierPortalPage() {
                   required
                   value={asnWaybill}
                   onChange={(e) => setAsnWaybill(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -916,7 +916,7 @@ export default function SupplierPortalPage() {
                   type="date"
                   value={asnArrival}
                   onChange={(e) => setAsnArrival(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -924,7 +924,7 @@ export default function SupplierPortalPage() {
                 <input
                   value={asnCarrier}
                   onChange={(e) => setAsnCarrier(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -932,7 +932,7 @@ export default function SupplierPortalPage() {
                 <input
                   value={asnPlate}
                   onChange={(e) => setAsnPlate(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
             </div>
@@ -940,7 +940,7 @@ export default function SupplierPortalPage() {
               {(asnModalPo.lines || []).map((l: any) => (
                 <div
                   key={l.id}
-                  className="grid grid-cols-12 gap-2 items-center rounded-xl border border-white/10 bg-white/[0.02] p-2"
+                  className="grid grid-cols-12 gap-2 items-center rounded-xl border border-[--line] bg-[--page] p-2"
                 >
                   <div className="col-span-5">
                     <div className="text-zinc-200 font-medium">{l.itemName}</div>
@@ -954,7 +954,7 @@ export default function SupplierPortalPage() {
                       onChange={(e) =>
                         setAsnLineQty((p) => ({ ...p, [l.itemId]: e.target.value }))
                       }
-                      className="w-full h-8 px-2 rounded-lg border border-white/10 bg-[#080A09] text-white font-mono"
+                      className="w-full h-8 px-2 rounded-lg border border-[--line] bg-[#F6F8FB] text-white font-mono"
                     />
                   </div>
                   <div className="col-span-4">
@@ -964,7 +964,7 @@ export default function SupplierPortalPage() {
                       onChange={(e) =>
                         setAsnLineLot((p) => ({ ...p, [l.itemId]: e.target.value }))
                       }
-                      className="w-full h-8 px-2 rounded-lg border border-white/10 bg-[#080A09] text-white font-mono"
+                      className="w-full h-8 px-2 rounded-lg border border-[--line] bg-[#F6F8FB] text-white font-mono"
                     />
                   </div>
                 </div>
@@ -974,14 +974,14 @@ export default function SupplierPortalPage() {
               <button
                 type="button"
                 onClick={() => setAsnModalPo(null)}
-                className="h-9 px-3 rounded-xl border border-white/10 text-zinc-300"
+                className="h-9 px-3 rounded-xl border border-[--line] text-zinc-300"
               >
                 Vazgeç
               </button>
               <button
                 type="submit"
                 disabled={asnBusy}
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+                className="h-9 px-4 rounded-xl bg-[#1267E6] text-white font-semibold"
               >
                 {asnBusy ? "Gönderiliyor..." : "ASN İhbarını Gönder"}
               </button>
@@ -995,7 +995,7 @@ export default function SupplierPortalPage() {
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
           <form
             onSubmit={submitRfq}
-            className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#101412] p-5 space-y-4 text-xs"
+            className="w-full max-w-lg rounded-2xl border border-[--line] bg-[#101412] p-5 space-y-4 text-xs"
           >
             <div className="font-semibold text-white text-sm">
               RFQ Teklifi Gönder ({rfqTarget.rfqNumber})
@@ -1008,7 +1008,7 @@ export default function SupplierPortalPage() {
                   min={1}
                   value={rfqLeadDays}
                   onChange={(e) => setRfqLeadDays(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -1018,7 +1018,7 @@ export default function SupplierPortalPage() {
                   min={0}
                   value={rfqShipping}
                   onChange={(e) => setRfqShipping(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
               <div>
@@ -1026,7 +1026,7 @@ export default function SupplierPortalPage() {
                 <input
                   value={rfqPayment}
                   onChange={(e) => setRfqPayment(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 rounded-xl border border-white/10 bg-[#080A09] text-white"
+                  className="mt-1 w-full h-9 px-3 rounded-xl border border-[--line] bg-[#F6F8FB] text-white"
                 />
               </div>
             </div>
@@ -1034,7 +1034,7 @@ export default function SupplierPortalPage() {
               {(rfqTarget.items || []).map((it: any) => (
                 <div
                   key={it.id}
-                  className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.02] p-2.5"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-[--line] bg-[--page] p-2.5"
                 >
                   <div>
                     <div className="text-zinc-200 font-medium">{it.itemName}</div>
@@ -1050,7 +1050,7 @@ export default function SupplierPortalPage() {
                     onChange={(e) =>
                       setRfqPrices((p) => ({ ...p, [it.id]: e.target.value }))
                     }
-                    className="w-28 h-8 px-2 rounded-lg border border-white/10 bg-[#080A09] text-white text-right font-mono"
+                    className="w-28 h-8 px-2 rounded-lg border border-[--line] bg-[#F6F8FB] text-white text-right font-mono"
                   />
                 </div>
               ))}
@@ -1059,14 +1059,14 @@ export default function SupplierPortalPage() {
               <button
                 type="button"
                 onClick={() => setRfqTarget(null)}
-                className="h-9 px-3 rounded-xl border border-white/10 text-zinc-300"
+                className="h-9 px-3 rounded-xl border border-[--line] text-zinc-300"
               >
                 Vazgeç
               </button>
               <button
                 type="submit"
                 disabled={rfqBusy}
-                className="h-9 px-4 rounded-xl bg-[#34D399] text-[#061811] font-semibold"
+                className="h-9 px-4 rounded-xl bg-[#1267E6] text-white font-semibold"
               >
                 {rfqBusy ? "Gönderiliyor..." : "Teklifi Gönder"}
               </button>

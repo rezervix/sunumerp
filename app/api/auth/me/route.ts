@@ -18,7 +18,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key-change-this"
 function getDemoSuperAdminResponse(token?: string) {
     const defaultBranches = [
         { id: "local-debug-branch", name: "Merkez Şube (İstanbul Levent)", code: "HQ", themeColor: "#2563EB", isActive: true },
-        { id: "branch-ankara", name: "Ankara Çankaya Şubesi", code: "ANK-001", themeColor: "#10B981", isActive: true },
+        { id: "branch-ankara", name: "Ankara Çankaya Şubesi", code: "ANK-001", themeColor: "#1267E6", isActive: true },
         { id: "branch-izmir", name: "İzmir Alsancak Şubesi", code: "IZM-001", themeColor: "#8B5CF6", isActive: true },
         { id: "branch-bursa", name: "Bursa Nilüfer Şubesi", code: "BUR-001", themeColor: "#F59E0B", isActive: true }
     ]
@@ -173,7 +173,7 @@ export async function GET() {
             if (payload.isDemo || userId === "user-admin" || userId === "demo-user" || username === "demo" || username === "admin") {
                 const defaultBranches = [
                     { id: "local-debug-branch", name: "Merkez Şube (İstanbul Levent)", code: "HQ", themeColor: "#2563EB", isActive: true },
-                    { id: "branch-ankara", name: "Ankara Çankaya Şubesi", code: "ANK-001", themeColor: "#10B981", isActive: true },
+                    { id: "branch-ankara", name: "Ankara Çankaya Şubesi", code: "ANK-001", themeColor: "#1267E6", isActive: true },
                     { id: "branch-izmir", name: "İzmir Alsancak Şubesi", code: "IZM-001", themeColor: "#8B5CF6", isActive: true },
                     { id: "branch-bursa", name: "Bursa Nilüfer Şubesi", code: "BUR-001", themeColor: "#F59E0B", isActive: true }
                 ]

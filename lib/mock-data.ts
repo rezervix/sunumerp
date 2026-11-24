@@ -790,7 +790,7 @@ export const mockCalendarEvents: MockCalendarEvent[] = [
     title: "Alacak Tahsilatı: Ziraat Bankası",
     date: new Date(Date.now() + 86400000).toISOString().split('T')[0] + "T09:00:00Z",
     type: "income_payment",
-    color: "#10b981",
+    color: "#1267E6",
     description: "Temmuz ayı sosyal medya yönetim danışmanlığı hakediş tahsilatı.",
     amount: 75000,
     status: "paid"

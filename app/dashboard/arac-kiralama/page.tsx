@@ -161,12 +161,12 @@ export default function RentACarDashboardPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#080A09] text-zinc-100 p-4 md:p-6 space-y-5">
+    <div className="min-h-screen bg-[#F6F8FB] text-zinc-100 p-4 md:p-6 space-y-5">
       {/* Üst Başlık & Aksiyon Çubuğu */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-5 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-            <Truck className="w-5 h-5 text-[#34D399]" />
+          <div className="w-10 h-10 rounded-2xl bg-[--brand]/15 border border-[--brand-line] flex items-center justify-center">
+            <Truck className="w-5 h-5 text-[#1267E6]" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-white">
@@ -181,7 +181,7 @@ export default function RentACarDashboardPage() {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/dashboard/arac-kiralama/teslim-iade"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-xs font-medium text-[#34D399]"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--brand]/15 hover:bg-[--brand]/25 border border-[--brand-line] text-xs font-medium text-[#1267E6]"
           >
             <Smartphone className="w-3.5 h-3.5" />
             Mobil Teslim &amp; İade Ekranı
@@ -190,7 +190,7 @@ export default function RentACarDashboardPage() {
           <button
             type="button"
             onClick={handleDispatchAlerts}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
           >
             <Bell className="w-3.5 h-3.5 text-amber-300" />
             Uyarıları Tara ({alerts.totalAlerts || 0})
@@ -200,9 +200,9 @@ export default function RentACarDashboardPage() {
             type="button"
             onClick={() => loadSnapshot()}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-[#34D399] ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-[#1267E6] ${loading ? 'animate-spin' : ''}`} />
             Verileri Güncelle
           </button>
         </div>
@@ -210,10 +210,10 @@ export default function RentACarDashboardPage() {
 
       {/* DEMO KOLAYLIĞI ŞERİDİ (Yalnızca Demo Modu Açıkken Render Edilir; DISABLE_DEMO_MODE=true İken Kaybolur) */}
       {isDemoMode && (
-        <div className="bg-[#111513]/95 border border-emerald-500/25 rounded-[20px] p-4 space-y-3">
+        <div className="bg-[white]/95 border border-[--brand]/25 rounded-[20px] p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-[#34D399] border border-emerald-500/30">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[--brand]/15 text-[#1267E6] border border-[--brand-line]">
                 <Building2 className="w-3.5 h-3.5" />
                 Firma Perspektifi (Çok Firmalı İzolasyon Önizlemesi):
               </span>
@@ -229,8 +229,8 @@ export default function RentACarDashboardPage() {
                     }}
                     className={`px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer ${
                       active
-                        ? 'bg-[#34D399] text-[#061811] font-semibold'
-                        : 'bg-white/[0.06] text-zinc-300 hover:text-white'
+                        ? 'bg-[#1267E6] text-white font-semibold'
+                        : 'bg-[--muted-bg] text-zinc-300 hover:text-white'
                     }`}
                   >
                     {comp.name}
@@ -272,14 +272,14 @@ export default function RentACarDashboardPage() {
                 onClick={() => setShowDemoGuide((prev) => !prev)}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.08] text-zinc-200 text-[11px] cursor-pointer"
               >
-                <HelpCircle className="w-3.5 h-3.5 text-[#34D399]" />
+                <HelpCircle className="w-3.5 h-3.5 text-[#1267E6]" />
                 Bu ekranda neler yapabilirsiniz?
               </button>
             </div>
           </div>
 
           {showDemoGuide && (
-            <div className="bg-[#080A09] border border-white/[0.08] rounded-xl p-3.5 text-xs text-zinc-300 grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3.5 text-xs text-zinc-300 grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
                 <strong className="text-white block mb-0.5">1. Gantt &amp; Çakışma Kilidi</strong>
                 Araç satırlarında kirada, rezerve ve bakımdaki (`34 RNT 913`) günleri görebilir; boş güne tıklayarak atomik çakışma korumalı rezervasyon açabilirsiniz.
@@ -303,20 +303,20 @@ export default function RentACarDashboardPage() {
 
       {/* Üst KPI Kartları (Veritabanı Kayıtlarından Canlı Hesaplanan) */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Kiralama Filosu / Kirada</div>
           <div className="text-2xl font-bold text-white font-mono mt-1">
             {rentalVehicles.length}{' '}
-            <span className="text-sm text-[#34D399]">/ {rentedCount} kirada</span>
+            <span className="text-sm text-[#1267E6]">/ {rentedCount} kirada</span>
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
             {availableCount} müsait · {maintenanceCount} bakımda
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Ortalama Doluluk &amp; Rezervasyon</div>
-          <div className="text-2xl font-bold text-[#34D399] font-mono mt-1">
+          <div className="text-2xl font-bold text-[#1267E6] font-mono mt-1">
             %{analytics?.summary?.avgUtilizationPct ?? 0}
           </div>
           <div className="text-[11px] text-zinc-400 mt-0.5">
@@ -324,18 +324,18 @@ export default function RentACarDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Kiralama &amp; Ek Ücret Geliri</div>
           <div className="text-2xl font-bold text-white font-mono mt-1">
             ₺{Number(analytics?.summary?.totalRevenueTry || 0).toLocaleString('tr-TR')}
           </div>
-          <div className="text-[11px] text-[#34D399] mt-0.5">
+          <div className="text-[11px] text-[#1267E6] mt-0.5">
             Net Katkı (TCO Sonrası): ₺
             {Number(analytics?.summary?.totalNetProfitTry || 0).toLocaleString('tr-TR')}
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Eşleşen HGS &amp; Trafik Cezası</div>
           <div className="text-2xl font-bold text-amber-300 font-mono mt-1">
             {tollPasses.length + trafficPenalties.length}
@@ -345,11 +345,11 @@ export default function RentACarDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Aktif Operasyon Uyarısı</div>
           <div
             className={`text-2xl font-bold font-mono mt-1 ${
-              (alerts.totalAlerts || 0) > 0 ? 'text-rose-300' : 'text-[#34D399]'
+              (alerts.totalAlerts || 0) > 0 ? 'text-rose-300' : 'text-[#1267E6]'
             }`}
           >
             {alerts.totalAlerts || 0}
@@ -361,7 +361,7 @@ export default function RentACarDashboardPage() {
       </div>
 
       {/* Sekme Çubuğu */}
-      <div className="bg-[#111513] p-1.5 rounded-2xl border border-white/[0.06] flex flex-wrap gap-1.5">
+      <div className="bg-[white] p-1.5 rounded-2xl border border-[--line] flex flex-wrap gap-1.5">
         {[
           { id: 'gantt', label: `Müsaitlik Takvimi (Gantt)`, icon: Calendar },
           {
@@ -409,8 +409,8 @@ export default function RentACarDashboardPage() {
               onClick={() => setActiveTab(tab.id as RentTabId)}
               className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
                 active
-                  ? 'bg-[#34D399] text-[#061811] font-semibold'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-[#1267E6] text-white font-semibold'
+                  : 'text-zinc-400 hover:text-white hover:bg-[--muted-bg]'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -428,8 +428,8 @@ export default function RentACarDashboardPage() {
       )}
 
       {loading && !data ? (
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-12 text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
-          <Activity className="w-4 h-4 text-[#34D399] animate-pulse" />
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-12 text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
+          <Activity className="w-4 h-4 text-[#1267E6] animate-pulse" />
           Araç kiralama veritabanı yükleniyor...
         </div>
       ) : (

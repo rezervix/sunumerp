@@ -74,7 +74,7 @@ export const FLEET_VEHICLE_STATUS_LABELS: Record<FleetVehicleStatus, string> = {
 }
 
 export const FLEET_VEHICLE_STATUS_BADGES: Record<FleetVehicleStatus, string> = {
-  ACTIVE: "bg-emerald-500/15 text-[#34D399] border-emerald-500/30",
+  ACTIVE: "bg-[--brand]/15 text-[#1267E6] border-[--brand]/30",
   IN_TRANSIT: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   MAINTENANCE: "bg-amber-500/15 text-amber-300 border-amber-500/30",
   FAULT: "bg-rose-500/15 text-rose-300 border-rose-500/30",

@@ -15,12 +15,12 @@ const STATUS_META_LOCAL: Record<string, { label: string; color: string; bg: stri
   in_editing:       { label: "Editleniyor",       color: "text-blue-600 dark:text-blue-350",    bg: "bg-blue-100 dark:bg-blue-900/30" },
   pending_approval: { label: "Onay Bekliyor",     color: "text-violet-600 dark:text-violet-300",  bg: "bg-violet-100 dark:bg-violet-900/30" },
   scheduled:        { label: "Planlandı",         color: "text-sky-600 dark:text-sky-300",     bg: "bg-sky-100 dark:bg-sky-900/30" },
-  published:        { label: "Yayınlandı",        color: "text-emerald-600 dark:text-emerald-300", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
+  published:        { label: "Yayınlandı",        color: "text-[--ok]", bg: "bg-[--ok-soft]" },
   cancelled:        { label: "İptal Edildi",      color: "text-red-600 dark:text-red-300",     bg: "bg-red-100 dark:bg-red-900/30" },
   missed:           { label: "Kaçırıldı",         color: "text-orange-650 dark:text-orange-300",  bg: "bg-orange-100 dark:bg-orange-900/30" },
   planned:          { label: "Planlandı",         color: "text-sky-600 dark:text-sky-300",     bg: "bg-sky-100 dark:bg-sky-900/30" },
-  shot:             { label: "Çekildi",           color: "text-emerald-600 dark:text-emerald-300", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
-  completed:        { label: "Tamamlandı",        color: "text-emerald-650 dark:text-emerald-300", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
+  shot:             { label: "Çekildi",           color: "text-[--ok]", bg: "bg-[--ok-soft]" },
+  completed:        { label: "Tamamlandı",        color: "text-[--ok]", bg: "bg-[--ok-soft]" },
   postponed:        { label: "Ertelendi",         color: "text-amber-600 dark:text-amber-300",   bg: "bg-amber-100 dark:bg-amber-900/30" },
 }
 
@@ -292,10 +292,10 @@ export function MessageBubble({
         <button
           onClick={() => onSelectRepliedMessage(msg.replyToMessageId)}
           className={`flex flex-col text-left px-3 py-2 rounded-t-2xl border-l-2 bg-white/[0.04] text-xs text-zinc-400 max-w-full truncate transition-all hover:bg-white/[0.08] ${
-            isMe ? "border-emerald-400" : "border-zinc-600"
+            isMe ? "border-[--brand]" : "border-zinc-600"
           }`}
         >
-          <span className="font-semibold text-[10px] text-emerald-400">
+          <span className="font-semibold text-[10px] text-[--brand]">
             {msg.replyFromUserId === currentUserId ? "Sen" : msg.replyToMessage?.fromUser?.fullName || "Kullanıcı"}
           </span>
           <span className="truncate opacity-80">
@@ -318,7 +318,7 @@ export function MessageBubble({
                   <span className="material-symbols-outlined text-[20px]">more_vert</span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-[#111513] border border-white/[0.08] text-white rounded-xl p-1 shadow-2xl">
+              <DropdownMenuContent className="bg-white border border-[--line] text-[--text] rounded-xl p-1 shadow-2xl">
                 <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
                   <span className="material-symbols-outlined text-[18px]">reply</span> Yanıtla
                 </DropdownMenuItem>
@@ -355,8 +355,8 @@ export function MessageBubble({
         <div
           className={`relative rounded-3xl shadow-sm overflow-hidden flex flex-col p-3.5 border ${
             isMe
-              ? "bg-[#34D399] text-[#061811] font-normal border-emerald-300/30 rounded-tr-none shadow-emerald-500/10"
-              : "bg-[#111513] text-zinc-200 border-white/[0.08] rounded-tl-none shadow-xl"
+              ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white font-normal border-[--brand-line] rounded-tr-none shadow-xs"
+              : "bg-white text-[--text] border-[--line] rounded-tl-none shadow-xl"
           }`}
           style={{ minWidth: "120px" }}
         >
@@ -727,7 +727,7 @@ export function MessageBubble({
           {/* Balloon Footer (Time, Edit Status, Single/Double Ticks) */}
           <div className="flex items-center justify-end gap-1 px-1 mt-1 opacity-70 select-none">
             {msg.importedFrom === "whatsapp" && (
-              <span className="text-[9px] text-emerald-500 font-bold flex items-center gap-0.5 mr-1" title="WhatsApp'tan içe aktarıldı">
+              <span className="text-[9px] text-[--brand] font-bold flex items-center gap-0.5 mr-1" title="WhatsApp'tan içe aktarıldı">
                 <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
                   <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.62.962 3.21 1.493 4.904 1.496 5.55.003 10.067-4.509 10.07-10.066.002-2.693-1.041-5.225-2.939-7.126-1.898-1.9-4.426-2.946-7.124-2.947-5.557 0-10.069 4.512-10.072 10.07-.001 1.761.461 3.48 1.337 5.008l-.998 3.645 3.73-.978zm11.235-7.67c-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.15-.173.198-.297.298-.495.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.568-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347z"/>
                 </svg>
@@ -817,7 +817,7 @@ export function MessageBubble({
       {/* Floating Reactions display at balloon bottom */}
       {(msg.reactions || []).length > 0 && (
         <div
-          className={`flex items-center gap-1 mt-[-6px] bg-[#111513] border border-white/[0.08] rounded-full px-2 py-0.5 shadow-lg z-10 select-none ${
+          className={`flex items-center gap-1 mt-[-6px] bg-white border border-[--line] rounded-full px-2 py-0.5 shadow-lg z-10 select-none ${
             isMe ? "mr-3" : "ml-3"
           }`}
         >

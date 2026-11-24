@@ -131,13 +131,13 @@ function LojistikRaporlarContent() {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
       {/* Üst Başlık & Dışa Aktarma Aksiyonları */}
-      <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-6 flex flex-wrap items-start justify-between gap-4">
+      <div className="bg-[white] border border-[--line] rounded-[20px] p-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
             Lojistik &amp; Tedarik Zinciri Analitiği
           </p>
-          <h1 className="text-2xl font-light text-white tracking-tight mt-1 flex items-center gap-2.5">
-            <BarChart3 className="w-6 h-6 text-emerald-400" />
+          <h1 className="text-2xl font-light text-[--text] tracking-tight mt-1 flex items-center gap-2.5">
+            <BarChart3 className="w-6 h-6 text-[--brand]" />
             Lojistik Raporları
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
@@ -150,7 +150,7 @@ function LojistikRaporlarContent() {
             type="button"
             onClick={() => fetchReport()}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-200 transition-colors cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-zinc-200 transition-colors cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -164,7 +164,7 @@ function LojistikRaporlarContent() {
               downloadLogisticsReportExcel(report)
               toast.success("Excel (.xlsx) raporu indirildi.")
             }}
-            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-xs font-medium text-emerald-300 transition-colors cursor-pointer disabled:opacity-40"
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-[--brand-soft] hover:bg-[--brand-soft] border border-[--brand-line] text-xs font-medium text-[--brand] transition-colors cursor-pointer disabled:opacity-40"
           >
             <FileSpreadsheet className="w-3.5 h-3.5" />
             Excel (.xlsx)
@@ -203,8 +203,8 @@ function LojistikRaporlarContent() {
                 aria-selected={isSelected}
                 onClick={() => handleModuleSwitch(mod.key)}
                 className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${isSelected
-                  ? "bg-emerald-400/20 text-emerald-300 border-emerald-500/40"
-                  : "bg-[#111513] text-zinc-400 hover:text-white border-white/[0.06]"
+                  ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
+                  : "bg-[white] text-zinc-400 hover:text-[--text] border-[--line]"
                   }`}
               >
                 {mod.shortTitle}
@@ -215,7 +215,7 @@ function LojistikRaporlarContent() {
           {activeDef && (
             <Link
               href={activeDef.primaryHref}
-              className="ml-auto inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-emerald-300 transition-colors"
+              className="ml-auto inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-[--brand] transition-colors"
             >
               Modüle Git
               <ArrowRight className="w-3.5 h-3.5" />
@@ -226,9 +226,9 @@ function LojistikRaporlarContent() {
 
       {/* Erişim Yetkisi Bilgilendirmesi */}
       {errorMessage && (
-        <div className="bg-[#111513] border border-amber-500/30 rounded-[20px] p-8 flex flex-col items-center text-center gap-3">
+        <div className="bg-[white] border border-amber-500/30 rounded-[20px] p-8 flex flex-col items-center text-center gap-3">
           <ShieldAlert className="w-8 h-8 text-amber-400" />
-          <p className="text-sm font-medium text-white">{errorMessage}</p>
+          <p className="text-sm font-medium text-[--text]">{errorMessage}</p>
           <p className="text-xs text-zinc-400 max-w-md">
             Bu raporları görüntülemek için hesabınızda en az bir lojistik okuma yetkisi bulunduğundan emin olun.
           </p>
@@ -239,14 +239,14 @@ function LojistikRaporlarContent() {
       {report && (
         <div className="space-y-6">
           {/* Filtre Çubuğu */}
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-end gap-3">
+          <div className="bg-[white] border border-[--line] rounded-[20px] p-4 flex flex-wrap items-end gap-3">
             <div className="space-y-1">
               <label className="block text-[11px] text-zinc-400">Başlangıç Tarihi</label>
               <input
                 type="date"
                 value={filters.dateFrom || ""}
                 onChange={(e) => handleFilterChange({ dateFrom: e.target.value || undefined })}
-                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text]"
               />
             </div>
 
@@ -256,7 +256,7 @@ function LojistikRaporlarContent() {
                 type="date"
                 value={filters.dateTo || ""}
                 onChange={(e) => handleFilterChange({ dateTo: e.target.value || undefined })}
-                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white"
+                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text]"
               />
             </div>
 
@@ -266,7 +266,7 @@ function LojistikRaporlarContent() {
                 <select
                   value={filters.warehouseId || ""}
                   onChange={(e) => handleFilterChange({ warehouseId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white min-w-[180px]"
+                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Depolar</option>
                   {report.filterOptions.warehouses.map((w) => (
@@ -284,7 +284,7 @@ function LojistikRaporlarContent() {
                 <select
                   value={filters.vehicleId || ""}
                   onChange={(e) => handleFilterChange({ vehicleId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white min-w-[180px]"
+                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Araçlar</option>
                   {report.filterOptions.vehicles.map((v) => (
@@ -302,7 +302,7 @@ function LojistikRaporlarContent() {
                 <select
                   value={filters.supplierId || ""}
                   onChange={(e) => handleFilterChange({ supplierId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white min-w-[180px]"
+                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Tedarikçiler</option>
                   {report.filterOptions.suppliers.map((s) => (
@@ -320,7 +320,7 @@ function LojistikRaporlarContent() {
                 <select
                   value={filters.channelCode || ""}
                   onChange={(e) => handleFilterChange({ channelCode: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white min-w-[160px]"
+                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[160px]"
                 >
                   <option value="">Tüm Kanallar</option>
                   {report.filterOptions.channels.map((ch) => (
@@ -335,7 +335,7 @@ function LojistikRaporlarContent() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="ml-auto h-8 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs text-zinc-300 cursor-pointer"
+              className="ml-auto h-8 px-3 rounded-xl bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-zinc-300 cursor-pointer"
             >
               Filtreleri Sıfırla
             </button>
@@ -346,10 +346,10 @@ function LojistikRaporlarContent() {
             {report.summaryCards.map((card, i) => (
               <div
                 key={i}
-                className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-4 space-y-1"
+                className="bg-[white] border border-[--line] rounded-[20px] p-4 space-y-1"
               >
                 <p className="text-[11px] text-zinc-400">{card.label}</p>
-                <p className="text-xl font-light text-white tabular-nums">{card.value}</p>
+                <p className="text-xl font-light text-[--text] tabular-nums">{card.value}</p>
                 {card.hint && <p className="text-[11px] text-zinc-500">{card.hint}</p>}
               </div>
             ))}
@@ -357,9 +357,9 @@ function LojistikRaporlarContent() {
 
           {/* Grafik Önizlemesi (Recharts) */}
           {report.chartData.length > 0 && (
-            <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-5 space-y-3">
+            <div className="bg-[white] border border-[--line] rounded-[20px] p-5 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-sm font-medium text-white">{report.chartTitle}</h2>
+                <h2 className="text-sm font-medium text-[--text]">{report.chartTitle}</h2>
                 <span className="text-[11px] text-zinc-500">
                   Oluşturulma: {formatReportDateTr(report.generatedAt)}
                 </span>
@@ -382,7 +382,7 @@ function LojistikRaporlarContent() {
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "#111513",
+                        backgroundColor: "white",
                         borderColor: "rgba(255,255,255,0.12)",
                         borderRadius: "12px",
                         color: "#fff",
@@ -393,7 +393,7 @@ function LojistikRaporlarContent() {
                     <Bar
                       dataKey="primaryValue"
                       name={report.chartData[0]?.primaryLabel || "Değer"}
-                      fill="#34D399"
+                      fill="#1267E6"
                       radius={[6, 6, 0, 0]}
                     />
                     {report.chartData.some((d) => d.secondaryValue !== undefined) && (
@@ -411,10 +411,10 @@ function LojistikRaporlarContent() {
           )}
 
           {/* Veri Önizleme Tablosu */}
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] overflow-hidden">
-            <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-medium text-white">
-                <FileText className="w-4 h-4 text-emerald-400" />
+          <div className="bg-[white] border border-[--line] rounded-[20px] overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-[--line] flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-medium text-[--text]">
+                <FileText className="w-4 h-4 text-[--brand]" />
                 <span>
                   {report.title} ({report.rows.length} kayıt)
                 </span>
@@ -430,7 +430,7 @@ function LojistikRaporlarContent() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] text-zinc-400">
+                    <tr className="bg-white/[0.02] border-b border-[--line] text-[11px] text-zinc-400">
                       {report.columns.map((col) => (
                         <th key={col.key} className="py-3 px-4 font-medium whitespace-nowrap">
                           {col.label}

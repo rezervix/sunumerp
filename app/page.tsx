@@ -108,16 +108,16 @@ function LoginPageContent() {
   ]
 
   return (
-    <div className="min-h-screen flex bg-[#080A09] text-white selection:bg-emerald-500/30 relative overflow-hidden">
+    <div className="min-h-screen flex bg-[#F6F8FB] text-white selection:bg-[--brand]/30 relative overflow-hidden">
       {/* Ambient background glow */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
-      <div className="fixed -bottom-40 -left-40 size-[500px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
+      <div className="fixed -bottom-40 -left-40 size-[500px] rounded-full bg-[--brand]/5 blur-[120px] pointer-events-none" />
 
       {/* ── Sol Marka Paneli (Masaüstü Hero) ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 bg-[#0C100E] border-r border-white/[0.06] relative overflow-hidden p-12 text-white z-10">
+      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 bg-[#0C100E] border-r border-[--line] relative overflow-hidden p-12 text-white z-10">
         {/* Dekoratif Glow Daireler */}
-        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-[--brand]/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-[--brand]/10 blur-3xl pointer-events-none" />
 
         {/* Logo & Marka Başlığı */}
         <div className="relative z-10 flex items-center gap-3">
@@ -125,7 +125,7 @@ function LoginPageContent() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-white font-bold text-lg leading-tight tracking-tight">Sunum ERP</h1>
-              <span className="px-2.5 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full uppercase tracking-wider border border-emerald-500/20">
+              <span className="px-2.5 py-0.5 text-[10px] font-semibold bg-[--brand]/10 text-[--brand] rounded-full uppercase tracking-wider border border-[--brand-line]">
                 Canlı Demo
               </span>
             </div>
@@ -135,14 +135,14 @@ function LoginPageContent() {
 
         {/* Hero Metinleri */}
         <div className="relative z-10 my-auto py-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] text-zinc-300 text-xs font-medium mb-6 border border-white/10 backdrop-blur-sm">
-            <Sparkles className="size-3.5 text-emerald-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[--muted-bg] text-zinc-300 text-xs font-medium mb-6 border border-[--line] backdrop-blur-sm">
+            <Sparkles className="size-3.5 text-[--brand]" />
             <span>İnteraktif Sunum &amp; İnceleme Ortamı</span>
           </div>
 
-          <h2 className="text-3xl xl:text-4xl font-light text-white leading-tight tracking-tight">
+          <h2 className="text-3xl xl:text-4xl font-light text-[--text] leading-tight tracking-tight">
             Tüm İşletmenizi <br />
-            <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+            <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[--brand] to-[--sky]">
               Tek Merkezden
             </span> Yönetin.
           </h2>
@@ -156,8 +156,8 @@ function LoginPageContent() {
             {features.slice(0, 4).map(f => {
               const Icon = f.icon
               return (
-                <div key={f.label} className="flex items-start gap-3 bg-white/[0.02] border border-white/[0.06] rounded-2xl p-3.5 backdrop-blur-xs">
-                  <div className="size-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400 mt-0.5">
+                <div key={f.label} className="flex items-start gap-3 bg-[--page] border border-[--line] rounded-2xl p-3.5 backdrop-blur-xs">
+                  <div className="size-8 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0 text-[--brand] mt-0.5">
                     <Icon className="size-4" />
                   </div>
                   <div>
@@ -171,10 +171,10 @@ function LoginPageContent() {
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-zinc-500 pt-4 border-t border-white/[0.06]">
+        <div className="relative z-10 flex items-center justify-between text-xs text-zinc-500 pt-4 border-t border-[--line]">
           <span>{BRAND_CONFIG.copyright}</span>
-          <span className="flex items-center gap-1.5 text-emerald-400/80">
-            <ShieldCheck className="size-3.5 text-emerald-400" /> Canlı Demo Sürümü
+          <span className="flex items-center gap-1.5 text-[--brand]/80">
+            <ShieldCheck className="size-3.5 text-[--brand]" /> Canlı Demo Sürümü
           </span>
         </div>
       </div>
@@ -195,19 +195,19 @@ function LoginPageContent() {
 
           {/* Çıkış Bildirimi */}
           {fromLogout && (
-            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2.5">
-              <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="p-3.5 rounded-2xl bg-[--brand]/10 border border-[--brand-line] text-[--brand] text-xs flex items-center gap-2.5">
+              <span className="size-2 rounded-full bg-[--brand] animate-ping" />
               <span>Oturumunuz kapatıldı. Demoyu incelemeye devam etmek için aşağıdaki butona tıklayabilirsiniz.</span>
             </div>
           )}
 
           {/* Demo Giriş Kartı */}
-          <div className="bg-[#111513]/90 backdrop-blur-2xl rounded-[24px] border border-white/10 shadow-2xl p-8 sm:p-10 space-y-6 relative overflow-hidden">
+          <div className="bg-[white]/90 backdrop-blur-2xl rounded-[24px] border border-[--line] shadow-2xl p-8 sm:p-10 space-y-6 relative overflow-hidden">
             {/* Üst Vurgu Çizgisi */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[--brand] via-[--blue] to-[--sky]" />
 
             <div className="text-center space-y-2.5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[--brand]/10 text-[--brand] text-xs font-semibold border border-[--brand-line]">
                 <Sparkles className="size-3.5 animate-pulse" />
                 <span>Tek Tıkla Canlı İnceleme</span>
               </div>
@@ -231,7 +231,7 @@ function LoginPageContent() {
               <button
                 onClick={handleStartDemo}
                 disabled={startingDemo}
-                className="w-full group relative overflow-hidden py-4 px-6 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-base shadow-[0_0_25px_rgba(52,211,153,0.3)] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:opacity-75 disabled:cursor-wait"
+                className="w-full group relative overflow-hidden py-4 px-6 rounded-2xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-bold text-base shadow-[0_0_25px_rgba(52,211,153,0.3)] transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer disabled:opacity-75 disabled:cursor-wait"
               >
                 {startingDemo ? (
                   <>
@@ -251,11 +251,11 @@ function LoginPageContent() {
               {autoLaunchCountdown !== null && autoLaunchCountdown > 0 && !startingDemo && (
                 <div className="text-center pt-1">
                   <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 font-medium">
-                    <span className="size-1.5 rounded-full bg-emerald-400 animate-ping" />
+                    <span className="size-1.5 rounded-full bg-[--brand] animate-ping" />
                     <span>{autoLaunchCountdown} saniye içinde otomatik yönlendiriliyorsunuz...</span>
                     <button
                       onClick={() => setAutoLaunchCountdown(null)}
-                      className="text-emerald-400 hover:underline ml-1 font-semibold cursor-pointer"
+                      className="text-[--brand] hover:underline ml-1 font-semibold cursor-pointer"
                     >
                       Durdur
                     </button>
@@ -263,7 +263,7 @@ function LoginPageContent() {
                   {/* İnce İlerleme Çubuğu */}
                   <div className="w-32 h-1 bg-white/10 rounded-full mx-auto mt-2 overflow-hidden">
                     <div
-                      className="h-full bg-emerald-500 transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+                      className="h-full bg-[--brand] transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                       style={{ width: `${((2 - autoLaunchCountdown) / 2) * 100}%` }}
                     />
                   </div>
@@ -272,9 +272,9 @@ function LoginPageContent() {
             </div>
 
             {/* Demo Özellikleri & Rozetler */}
-            <div className="pt-3 border-t border-white/[0.08] space-y-2.5">
+            <div className="pt-3 border-t border-[--line] space-y-2.5">
               <div className="flex items-center gap-2.5 text-xs text-zinc-400">
-                <ShieldCheck className="size-4 text-emerald-400 shrink-0" />
+                <ShieldCheck className="size-4 text-[--brand] shrink-0" />
                 <span><strong className="text-zinc-200">Süper Yönetici Yetkileri:</strong> Tüm modüller ve ayarlar açık.</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-zinc-400">
@@ -282,7 +282,7 @@ function LoginPageContent() {
                 <span><strong className="text-zinc-200">Zengin Örnek Veriler:</strong> CRM, siparişler ve finans tabloları dolu.</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-zinc-400">
-                <Building2 className="size-4 text-emerald-400 shrink-0" />
+                <Building2 className="size-4 text-[--brand] shrink-0" />
                 <span><strong className="text-zinc-200">4 Farklı Şube:</strong> İstanbul HQ, Ankara, İzmir ve Bursa hazır.</span>
               </div>
             </div>
@@ -300,7 +300,7 @@ function LoginPageContent() {
             </button>
 
             {showManualLogin && (
-              <form onSubmit={handleManualLogin} className="mt-4 bg-[#111513]/90 backdrop-blur-xl border border-white/10 rounded-[20px] p-6 space-y-4 text-left">
+              <form onSubmit={handleManualLogin} className="mt-4 bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 space-y-4 text-left">
                 {manualError && (
                   <div className="p-3 rounded-xl bg-red-500/10 text-red-400 text-xs flex items-center gap-2 border border-red-500/20">
                     <AlertCircle className="size-3.5 shrink-0" />
@@ -316,7 +316,7 @@ function LoginPageContent() {
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       placeholder="admin veya demo"
-                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white/[0.03] border border-white/10 rounded-xl outline-none focus:border-emerald-500/50 text-white placeholder:text-zinc-600"
+                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
                     />
                   </div>
                 </div>
@@ -330,7 +330,7 @@ function LoginPageContent() {
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white/[0.03] border border-white/10 rounded-xl outline-none focus:border-emerald-500/50 text-white placeholder:text-zinc-600"
+                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
                     />
                   </div>
                 </div>
@@ -338,7 +338,7 @@ function LoginPageContent() {
                 <button
                   type="submit"
                   disabled={manualLoading}
-                  className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(52,211,153,0.3)] disabled:opacity-50"
+                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(52,211,153,0.3)] disabled:opacity-50"
                 >
                   {manualLoading ? (
                     <span className="size-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -365,10 +365,10 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#080A09]">
+        <div className="min-h-screen flex items-center justify-center bg-[#F6F8FB]">
           <div className="flex flex-col items-center gap-4">
             <SunumLogo className="size-12 shadow-lg" />
-            <div className="size-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <div className="size-6 border-2 border-[--brand] border-t-transparent rounded-full animate-spin" />
           </div>
         </div>
       }

@@ -141,8 +141,8 @@ export function ContentCard({
   return (
     <>
       <div
-        className={`group relative flex flex-col rounded-[20px] border bg-[#111513]/90 text-card-foreground shadow-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden ${
-          isSelected ? "border-emerald-500/60 ring-2 ring-emerald-500/20" : "border-white/[0.06] hover:border-white/[0.15]"
+        className={`group relative flex flex-col rounded-[20px] border bg-[white]/90 text-card-foreground shadow-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden ${
+          isSelected ? "border-[--brand]/60 ring-2 ring-[--brand-line]" : "border-[--line] hover:border-white/[0.15]"
         }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
@@ -205,7 +205,7 @@ export function ContentCard({
           )}
 
           {/* Niche Badge */}
-          <span className="absolute top-2 right-2 inline-flex items-center rounded-full bg-black/60 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-white border border-white/10">
+          <span className="absolute top-2 right-2 inline-flex items-center rounded-full bg-black/60 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-white border border-[--line]">
             {item.niche.name}
           </span>
 
@@ -233,7 +233,7 @@ export function ContentCard({
           {/* Duplicate Indicator */}
           {item.duplicateOfContentId && (
             <span
-              className="absolute bottom-2 left-2 z-10 size-6 bg-amber-500 text-white border border-white/20 rounded-full flex items-center justify-center shadow"
+              className="absolute bottom-2 left-2 z-10 size-6 bg-amber-500 text-white border border-[--line] rounded-full flex items-center justify-center shadow"
               title="Mükerrer dosya (Yeni kayıt olarak yüklendi)"
             >
               <AlertTriangle size={12} />
@@ -261,7 +261,7 @@ export function ContentCard({
                 href={previewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-black/60 hover:bg-black/80 text-white border border-white/20 rounded-lg p-2.5 shadow-lg flex items-center justify-center transition-all hover:scale-105"
+                className="bg-black/60 hover:bg-black/80 text-white border border-[--line] rounded-lg p-2.5 shadow-lg flex items-center justify-center transition-all hover:scale-105"
                 title="Yeni Sekmede Aç"
               >
                 <ExternalLink size={15} />
@@ -322,7 +322,7 @@ export function ContentCard({
                     <>
                       <button
                         onClick={handleApprove}
-                        className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-emerald-500/10 text-emerald-600 text-left transition-colors font-semibold"
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-[--brand]/10 text-[--brand] text-left transition-colors font-semibold"
                       >
                         <CheckCircle size={13} />
                         Onayla

@@ -140,7 +140,7 @@ export function FleetVehiclesTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative">
             <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
@@ -148,13 +148,13 @@ export function FleetVehiclesTab({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Plaka, şasi (VIN) veya marka ara..."
-              className="bg-[#0B0F0D] border border-white/[0.08] rounded-full pl-8 pr-3 py-1.5 text-xs text-white w-60"
+              className="bg-[#0B0F0D] border border-[--line] rounded-full pl-8 pr-3 py-1.5 text-xs text-white w-60"
             />
           </div>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-[#0B0F0D] border border-white/[0.08] rounded-full px-3 py-1.5 text-xs text-zinc-200"
+            className="bg-[#0B0F0D] border border-[--line] rounded-full px-3 py-1.5 text-xs text-zinc-200"
           >
             <option value="ALL">Tüm Araç Tipleri</option>
             {FLEET_VEHICLE_TYPES.map((t) => (
@@ -166,7 +166,7 @@ export function FleetVehiclesTab({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#0B0F0D] border border-white/[0.08] rounded-full px-3 py-1.5 text-xs text-zinc-200"
+            className="bg-[#0B0F0D] border border-[--line] rounded-full px-3 py-1.5 text-xs text-zinc-200"
           >
             <option value="ALL">Tüm Durumlar</option>
             {FLEET_VEHICLE_STATUSES.map((s) => (
@@ -180,7 +180,7 @@ export function FleetVehiclesTab({
         <button
           type="button"
           onClick={() => setShowForm((s) => !s)}
-          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#34D399] hover:bg-emerald-300 text-[#061811] text-xs font-semibold cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1267E6] hover:bg-[--brand-hover] text-white text-xs font-semibold cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           Yeni Araç Ekle
@@ -190,7 +190,7 @@ export function FleetVehiclesTab({
       {showForm && (
         <form
           onSubmit={handleSave}
-          className="bg-[#111513]/90 border border-emerald-500/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-4 gap-3"
+          className="bg-[white]/90 border border-[--brand]/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-4 gap-3"
         >
           <input required placeholder="Plaka (örn. 34 ABC 123)" value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
           <input placeholder="Şasi No (VIN)" value={form.vin} onChange={(e) => setForm({ ...form, vin: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
@@ -228,19 +228,19 @@ export function FleetVehiclesTab({
           )}
 
           <div className="md:col-span-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-1.5 rounded-full bg-white/[0.06] text-xs text-zinc-300 cursor-pointer">İptal</button>
-            <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-zinc-300 cursor-pointer">İptal</button>
+            <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">
               {saving ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>
         </form>
       )}
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase tracking-wider text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-zinc-400">
                 <th className="py-3 px-4">Plaka / Kod</th>
                 <th className="py-3 px-4">Araç &amp; Şasi (VIN)</th>
                 <th className="py-3 px-4">Kapasite &amp; Yakıt</th>
@@ -252,10 +252,10 @@ export function FleetVehiclesTab({
             </thead>
             <tbody className="divide-y divide-white/[0.05] text-xs">
               {filtered.map((v) => (
-                <tr key={v.id} className="hover:bg-white/[0.02] border-l-2 border-l-transparent hover:border-l-emerald-400">
+                <tr key={v.id} className="hover:bg-[--page] border-l-2 border-l-transparent hover:border-l-[--brand]">
                   <td className="py-3 px-4">
                     <div className="font-bold text-white flex items-center gap-1.5">
-                      <Truck className="w-3.5 h-3.5 text-[#34D399]" />
+                      <Truck className="w-3.5 h-3.5 text-[#1267E6]" />
                       {v.plate}
                     </div>
                     <div className="text-[11px] text-zinc-500 font-mono">{v.code}</div>
@@ -289,7 +289,7 @@ export function FleetVehiclesTab({
                     {v.expiringDocumentCount > 0 ? (
                       <span className="text-[10px] text-rose-300 font-medium">{v.expiringDocumentCount} belge/vade uyarısı</span>
                     ) : (
-                      <span className="text-[10px] text-emerald-400">Belgeler güncel</span>
+                      <span className="text-[10px] text-[--brand]">Belgeler güncel</span>
                     )}
                   </td>
                   <td className="py-3 px-4">
@@ -362,12 +362,12 @@ export function FleetDriversKvkkTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 text-xs text-zinc-300">
-          <Users className="w-4 h-4 text-[#34D399]" />
+          <Users className="w-4 h-4 text-[#1267E6]" />
           <span className="font-semibold text-white">Şoför Kadrosu ({drivers.length})</span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] text-zinc-400">
-            {isKvkkRevealed ? <Unlock className="w-3 h-3 text-amber-300" /> : <Lock className="w-3 h-3 text-[#34D399]" />}
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[--muted-bg] border border-[--line] text-[11px] text-zinc-400">
+            {isKvkkRevealed ? <Unlock className="w-3 h-3 text-amber-300" /> : <Lock className="w-3 h-3 text-[#1267E6]" />}
             KVKK: {isKvkkRevealed ? 'Açık (Erişim Denetim Günlüğüne Loglandı)' : 'Maskeli Görünüm'}
           </span>
         </div>
@@ -377,16 +377,16 @@ export function FleetDriversKvkkTab({
             <button
               type="button"
               onClick={onToggleRevealKvkk}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
             >
-              {isKvkkRevealed ? <EyeOff className="w-3.5 h-3.5 text-amber-300" /> : <Eye className="w-3.5 h-3.5 text-[#34D399]" />}
+              {isKvkkRevealed ? <EyeOff className="w-3.5 h-3.5 text-amber-300" /> : <Eye className="w-3.5 h-3.5 text-[#1267E6]" />}
               {isKvkkRevealed ? 'KVKK Alanlarını Maskele' : 'KVKK Alanlarını Aç (Logla)'}
             </button>
           )}
           <button
             type="button"
             onClick={() => setShowAdd((p) => !p)}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             Yeni Şoför
@@ -395,7 +395,7 @@ export function FleetDriversKvkkTab({
       </div>
 
       {showAdd && (
-        <form onSubmit={handleSave} className="bg-[#111513]/90 border border-emerald-500/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <form onSubmit={handleSave} className="bg-[white]/90 border border-[--brand]/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-3 gap-3">
           <input required placeholder="Ad Soyad" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
           <input placeholder="TCKN (KVKK maskelenir)" value={form.tckn} onChange={(e) => setForm({ ...form, tckn: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
           <input placeholder="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
@@ -409,17 +409,17 @@ export function FleetDriversKvkkTab({
           <input placeholder="Ehliyet Seri No" value={form.licenseNumber} onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
           <input type="date" title="Ehliyet Geçerlilik" value={form.licenseExpiresAt} onChange={(e) => setForm({ ...form, licenseExpiresAt: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
           <div className="md:col-span-3 flex justify-end gap-2">
-            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-1.5 rounded-full bg-white/[0.06] text-xs text-zinc-300 cursor-pointer">İptal</button>
-            <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">Kaydet</button>
+            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-zinc-300 cursor-pointer">İptal</button>
+            <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Kaydet</button>
           </div>
         </form>
       )}
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase tracking-wider text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-zinc-400">
                 <th className="py-3 px-4">Şoför</th>
                 <th className="py-3 px-4">TCKN &amp; Telefon (KVKK)</th>
                 <th className="py-3 px-4">Ehliyet &amp; Geçerlilik</th>
@@ -430,7 +430,7 @@ export function FleetDriversKvkkTab({
             </thead>
             <tbody className="divide-y divide-white/[0.05] text-xs">
               {drivers.map((d) => (
-                <tr key={d.id} className="hover:bg-white/[0.02]">
+                <tr key={d.id} className="hover:bg-[--page]">
                   <td className="py-3 px-4">
                     <div className="font-semibold text-white">{d.fullName}</div>
                     <div className="text-[11px] text-zinc-500 font-mono">{d.code}</div>
@@ -461,7 +461,7 @@ export function FleetDriversKvkkTab({
                         <ShieldAlert className="w-3 h-3" /> Belge Yenileme Uyarısı
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-[#34D399] border border-emerald-500/30">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[--brand]/15 text-[#1267E6] border border-[--brand-line]">
                         <ShieldCheck className="w-3 h-3" /> Geçerli
                       </span>
                     )}
@@ -551,7 +551,7 @@ export function FleetDocsAndPenaltiesTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 text-xs">
           <AlertTriangle className="w-4 h-4 text-amber-400" />
           <span className="text-white font-semibold">
@@ -570,9 +570,9 @@ export function FleetDocsAndPenaltiesTab({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <form onSubmit={handleAddDoc} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+        <form onSubmit={handleAddDoc} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
           <div className="text-sm font-semibold text-white flex items-center gap-2">
-            <FileCheck2 className="w-4 h-4 text-[#34D399]" /> Yeni Belge / Sigorta / Muayene
+            <FileCheck2 className="w-4 h-4 text-[#1267E6]" /> Yeni Belge / Sigorta / Muayene
           </div>
           <div className="grid grid-cols-2 gap-2">
             <select required value={docForm.vehicleId} onChange={(e) => setDocForm({ ...docForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
@@ -585,11 +585,11 @@ export function FleetDocsAndPenaltiesTab({
             <input placeholder="Poliçe / Belge No" value={docForm.documentNo} onChange={(e) => setDocForm({ ...docForm, documentNo: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
             <input required type="date" value={docForm.expiresAt} onChange={(e) => setDocForm({ ...docForm, expiresAt: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
             <input type="number" placeholder="Tutar (₺)" value={docForm.costTry} onChange={(e) => setDocForm({ ...docForm, costTry: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <button type="submit" className="rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold py-2 cursor-pointer">Belge Ekle</button>
+            <button type="submit" className="rounded-full bg-[#1267E6] text-white text-xs font-semibold py-2 cursor-pointer">Belge Ekle</button>
           </div>
         </form>
 
-        <form onSubmit={handleAddPenalty} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+        <form onSubmit={handleAddPenalty} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
           <div className="text-sm font-semibold text-white flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-rose-400" /> Trafik Cezası Kaydet
           </div>
@@ -611,11 +611,11 @@ export function FleetDocsAndPenaltiesTab({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
-          <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-[#34D399]" /> Araç Belgeleri ({documents.length})</h4>
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
+          <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-[#1267E6]" /> Araç Belgeleri ({documents.length})</h4>
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {documents.map((doc) => (
-              <div key={doc.id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
+              <div key={doc.id} className="bg-[--page] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
                 <div>
                   <div className="font-semibold text-white">{doc.plate} · {FLEET_DOCUMENT_TYPE_LABELS[doc.docType as FleetDocumentType] || doc.docType}</div>
                   <div className="text-[11px] text-zinc-400">
@@ -627,7 +627,7 @@ export function FleetDocsAndPenaltiesTab({
                     ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
                     : doc.expiryStatus === 'EXPIRING_SOON'
                       ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                      : 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
+                      : 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
                 }`}>
                   {doc.expiryStatus === 'EXPIRED' ? `${Math.abs(doc.daysRemaining)}g geçti` : doc.expiryStatus === 'EXPIRING_SOON' ? `${doc.daysRemaining}g kaldı` : 'Geçerli'}
                 </span>
@@ -636,11 +636,11 @@ export function FleetDocsAndPenaltiesTab({
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-rose-400" /> Trafik Cezaları ({penalties.length})</h4>
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {penalties.map((p) => (
-              <div key={p.id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
+              <div key={p.id} className="bg-[--page] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
                 <div>
                   <div className="font-semibold text-white">{p.plate} · <span className="font-mono text-zinc-400">{p.penaltyNo}</span></div>
                   <div className="text-[11px] text-zinc-400">{p.reason} {p.driverName ? `· ${p.driverName}` : ''}</div>

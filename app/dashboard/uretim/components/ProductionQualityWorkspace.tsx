@@ -293,7 +293,7 @@ export function ProductionQualityWorkspace() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-border/40">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-6 w-6 text-emerald-500" />
+            <ShieldCheck className="h-6 w-6 text-[--brand]" />
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Kalite Kontrol, Muayene & Uygunsuzluk (NCR)
             </h1>
@@ -318,7 +318,7 @@ export function ProductionQualityWorkspace() {
           <Button
             size="sm"
             onClick={() => setIsNewInspectionModalOpen(true)}
-            className="h-9 gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="h-9 gap-1.5 bg-[--brand] hover:bg-[--brand-hover] text-white"
           >
             <Plus className="h-4 w-4" />
             Yeni Muayene Kaydı
@@ -338,7 +338,7 @@ export function ProductionQualityWorkspace() {
               {stats?.passedCount ?? 0} kabul / {stats?.totalInspections ?? 0} muayene
             </p>
           </div>
-          <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+          <div className="h-10 w-10 rounded-lg bg-[--brand]/10 flex items-center justify-center text-[--brand]">
             <CheckCircle2 className="h-5 w-5" />
           </div>
         </div>
@@ -378,7 +378,7 @@ export function ProductionQualityWorkspace() {
               {stats?.expiredDevicesCount ?? 0 > 0 ? (
                 <span className="text-rose-500">{stats?.expiredDevicesCount} Geçmiş</span>
               ) : (
-                <span className="text-emerald-500">Aktif</span>
+                <span className="text-[--brand]">Aktif</span>
               )}
             </h3>
             <p className="text-xs text-muted-foreground mt-1">
@@ -409,7 +409,7 @@ export function ProductionQualityWorkspace() {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
                 isActive
-                  ? "border-emerald-500 text-emerald-500 font-semibold"
+                  ? "border-[--brand] text-[--brand] font-semibold"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30"
               }`}
             >
@@ -485,12 +485,12 @@ export function ProductionQualityWorkspace() {
                             {ins.totalDefects} Hata
                           </span>
                         ) : (
-                          <span className="text-emerald-500 font-medium">0</span>
+                          <span className="text-[--brand] font-medium">0</span>
                         )}
                       </TableCell>
                       <TableCell>
                         {ins.status === "PASSED" ? (
-                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
                             KABUL
                           </span>
                         ) : ins.status === "CONDITIONAL_PASSED" ? (
@@ -546,11 +546,11 @@ export function ProductionQualityWorkspace() {
             {plans.map((p) => (
               <div
                 key={p.id}
-                className="p-4 rounded-xl border border-border/50 bg-card hover:border-emerald-500/40 transition-all flex flex-col justify-between"
+                className="p-4 rounded-xl border border-border/50 bg-card hover:border-[--brand-line] transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="font-mono text-xs font-bold text-emerald-500 px-2 py-0.5 bg-emerald-500/10 rounded">
+                    <span className="font-mono text-xs font-bold text-[--brand] px-2 py-0.5 bg-[--brand]/10 rounded">
                       {p.code}
                     </span>
                     <span className="text-xs text-muted-foreground">
@@ -739,7 +739,7 @@ export function ProductionQualityWorkspace() {
                       <AlertTriangle className="h-3 w-3" /> YAKLAŞTI ({dev.daysRemaining} gün)
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-500 flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-[--brand]/20 text-[--brand] flex items-center gap-1">
                       <CheckCircle2 className="h-3 w-3" /> GEÇERLİ
                     </span>
                   )}
@@ -911,7 +911,7 @@ export function ProductionQualityWorkspace() {
             {/* Pareto Analizi */}
             <div className="p-5 rounded-xl border border-border/50 bg-card space-y-4">
               <div className="flex items-center gap-2">
-                <BarChart2 className="h-5 w-5 text-emerald-500" />
+                <BarChart2 className="h-5 w-5 text-[--brand]" />
                 <h3 className="font-bold text-foreground">Hata & Fire Pareto Analizi (80/20)</h3>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -996,7 +996,7 @@ export function ProductionQualityWorkspace() {
                           <span
                             className={`px-2 py-0.5 rounded text-xs font-bold ${
                               s.ratingBadge === "EXCELLENT"
-                                ? "bg-emerald-500/20 text-emerald-500"
+                                ? "bg-[--brand]/20 text-[--brand]"
                                 : s.ratingBadge === "GOOD"
                                 ? "bg-blue-500/20 text-blue-500"
                                 : "bg-rose-500/20 text-rose-500"
@@ -1134,7 +1134,7 @@ export function ProductionQualityWorkspace() {
                             size="sm"
                             variant={m.isAttributePassed ? "default" : "outline"}
                             className={`h-7 px-3 text-xs ${
-                              m.isAttributePassed ? "bg-emerald-600 text-white" : ""
+                              m.isAttributePassed ? "bg-[--brand] text-white" : ""
                             }`}
                             onClick={() => {
                               const updated = [...inspectionForm.measurements]
@@ -1179,7 +1179,7 @@ export function ProductionQualityWorkspace() {
               >
                 İptal
               </Button>
-              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button type="submit" className="bg-[--brand] hover:bg-[--brand-hover] text-white">
                 Muayeneyi Tamamla ve Değerlendir
               </Button>
             </DialogFooter>

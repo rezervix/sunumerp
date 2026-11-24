@@ -60,14 +60,14 @@ export function PartnerLedgerSettlementsAndReportsTabs({
               setStlCounterpartyId(approvedPartners[0]?.counterpartyCompanyId || "")
               setNewStlOpen(true)
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[--brand] px-3 py-2 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" /> Yeni Mutabakat Dönemi Oluştur
           </button>
         </div>
 
         {newStlOpen && (
-          <div className="rounded-xl border border-emerald-500/30 bg-zinc-900/90 p-4 space-y-3 text-xs">
+          <div className="rounded-xl border border-[--brand-line] bg-zinc-900/90 p-4 space-y-3 text-xs">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
                 <label className="block text-[11px] text-zinc-400 mb-1">Partner Firma</label>
@@ -112,7 +112,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                   })
                   if (ok) setNewStlOpen(false)
                 }}
-                className="rounded-lg bg-emerald-600 px-4 py-1.5 font-medium text-white hover:bg-emerald-500"
+                className="rounded-lg bg-[--brand] px-4 py-1.5 font-medium text-white hover:bg-[--brand]"
               >
                 Mutabakatı Oluştur
               </button>
@@ -155,16 +155,16 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                     </div>
                     <div>
                       <span className="text-[10px] text-zinc-500 block">Net Hakediş</span>
-                      <span className="text-emerald-300 font-semibold">{formatTryB2b(s.ownerNetPayableTry)}</span>
+                      <span className="text-[--brand] font-semibold">{formatTryB2b(s.ownerNetPayableTry)}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 text-[11px] text-zinc-400">
-                  <span className={s.ownerApprovedAt ? "text-emerald-400" : "text-zinc-500"}>
+                  <span className={s.ownerApprovedAt ? "text-[--brand]" : "text-zinc-500"}>
                     {s.ownerApprovedAt ? "✓" : "○"} Sahip Onayı ({s.ownerApprovedBy || "Bekliyor"})
                   </span>
-                  <span className={s.bookerApprovedAt ? "text-emerald-400" : "text-zinc-500"}>
+                  <span className={s.bookerApprovedAt ? "text-[--brand]" : "text-zinc-500"}>
                     {s.bookerApprovedAt ? "✓" : "○"} Rezerve Eden Onayı ({s.bookerApprovedBy || "Bekliyor"})
                   </span>
                   {s.eDocumentRefNo && <span className="text-sky-300">e-Belge: {s.eDocumentRefNo}</span>}
@@ -183,7 +183,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                       type="button"
                       disabled={busy}
                       onClick={() => onAction("respond_settlement", { settlementId: s.id, decision: "APPROVE" })}
-                      className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-emerald-500"
+                      className="rounded-md bg-[--brand] px-3 py-1.5 text-xs font-medium text-white hover:bg-[--brand]"
                     >
                       Mutabakatı Onayla
                     </button>
@@ -281,7 +281,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-emerald-400" /> Karşılıklı Partner Cari Hareketleri (Kendi Tarafınız)
+              <CreditCard className="h-4 w-4 text-[--brand]" /> Karşılıklı Partner Cari Hareketleri (Kendi Tarafınız)
             </h2>
             <p className="text-xs text-zinc-400">
               İzolasyon kuralı gereği yalnızca <strong className="text-zinc-200">{data.activeCompany?.name}</strong> tarafındaki alacak ve borç kayıtları gösterilir.
@@ -291,7 +291,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
             <div
               className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs ${
                 balanceAudit.isBalanced
-                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                  ? "border-[--brand-line] bg-[--brand]/10 text-[--brand]"
                   : "border-rose-500/30 bg-rose-500/10 text-rose-300"
               }`}
             >
@@ -326,7 +326,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                     <span
                       className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                         l.entryType === "RECEIVABLE"
-                          ? "bg-emerald-500/15 text-emerald-300"
+                          ? "bg-[--brand]/15 text-[--brand]"
                           : "bg-rose-500/15 text-rose-300"
                       }`}
                     >
@@ -335,7 +335,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                   </td>
                   <td className="px-3 py-2.5 text-zinc-400">{l.description}</td>
                   <td className="px-3 py-2.5 text-zinc-400">{formatDateTrB2b(l.dueDate)}</td>
-                  <td className={`px-3 py-2.5 text-right font-semibold ${l.entryType === "RECEIVABLE" ? "text-emerald-300" : "text-rose-300"}`}>
+                  <td className={`px-3 py-2.5 text-right font-semibold ${l.entryType === "RECEIVABLE" ? "text-[--brand]" : "text-rose-300"}`}>
                     {l.entryType === "RECEIVABLE" ? "+" : "-"}
                     {formatTryB2b(l.amountTry)}
                   </td>
@@ -373,7 +373,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
         <div className="flex items-center gap-2">
           <a
             href={`/api/partner-agi?section=export_report&format=xlsx${qs}`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 px-3 py-2 text-xs font-medium text-[--brand] hover:bg-[--brand]/20"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> Excel (.xlsx) İndir
           </a>
@@ -389,7 +389,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
           <div className="text-[11px] text-zinc-400">Paylaşım Geliri (Net)</div>
-          <div className="text-lg font-bold text-emerald-300 mt-1">{formatTryB2b(analytics.ownerRevenueTry)}</div>
+          <div className="text-lg font-bold text-[--brand] mt-1">{formatTryB2b(analytics.ownerRevenueTry)}</div>
         </div>
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
           <div className="text-[11px] text-zinc-400">White-Label Kullanım</div>
@@ -425,7 +425,7 @@ export function PartnerLedgerSettlementsAndReportsTabs({
                 <td className="px-3 py-2.5 text-right text-zinc-300">{row.reservationCount}</td>
                 <td className="px-3 py-2.5 text-right text-zinc-200">{formatTryB2b(row.grossVolumeTry)}</td>
                 <td className="px-3 py-2.5 text-right text-amber-300">{formatTryB2b(row.commissionTry)}</td>
-                <td className={`px-3 py-2.5 text-right font-semibold ${row.netBalanceTry >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                <td className={`px-3 py-2.5 text-right font-semibold ${row.netBalanceTry >= 0 ? "text-[--brand]" : "text-rose-300"}`}>
                   {formatTryB2b(row.netBalanceTry)}
                 </td>
               </tr>

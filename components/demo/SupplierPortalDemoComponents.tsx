@@ -242,7 +242,7 @@ export function DemoPortalLoginBox({
           >
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-100">
-                <Building2 className="size-3.5 text-[#34D399]" />
+                <Building2 className="size-3.5 text-[#1267E6]" />
                 <span className="truncate">{acc.supplierName}</span>
               </div>
               <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
@@ -255,7 +255,7 @@ export function DemoPortalLoginBox({
               disabled={busyUser !== null}
               onClick={() => handleDemoLogin(acc.username)}
               data-testid={`demo-supplier-login-${acc.username}`}
-              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#34D399] hover:bg-[#2ec18b] text-[#06120D] text-xs font-semibold transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1267E6] hover:bg-[#2ec18b] text-[#06120D] text-xs font-semibold transition-colors disabled:opacity-50"
             >
               <KeyRound className="size-3.5" />
               {busyUser === acc.username ? "Giriş Yapılıyor..." : "Demo Tedarikçi ile Dene"}
@@ -343,12 +343,12 @@ export function DemoPortalGuideCard({ demoModeEnabled }: { demoModeEnabled: bool
   if (!demoModeEnabled || !open) return null
 
   return (
-    <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] px-4 py-3 text-xs text-zinc-300">
+    <div className="rounded-2xl border border-[--brand-line] bg-[--brand]/[0.04] px-4 py-3 text-xs text-zinc-300">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2.5">
-          <Info className="size-4 text-[#34D399] shrink-0 mt-0.5" />
+          <Info className="size-4 text-[#1267E6] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <div className="font-semibold text-[#34D399]">
+            <div className="font-semibold text-[#1267E6]">
               Bu Ekranda Ne Yapabilirsiniz? (Tedarikçi Self-Servis Demo Rehberi)
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] text-zinc-400">
@@ -362,7 +362,7 @@ export function DemoPortalGuideCard({ demoModeEnabled }: { demoModeEnabled: bool
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-[11px] text-zinc-400 hover:text-zinc-200 px-2 py-0.5 rounded border border-white/10"
+          className="text-[11px] text-zinc-400 hover:text-zinc-200 px-2 py-0.5 rounded border border-[--line]"
         >
           Gizle
         </button>

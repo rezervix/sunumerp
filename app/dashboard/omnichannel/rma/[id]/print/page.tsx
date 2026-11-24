@@ -105,13 +105,13 @@ export default function PrintRmaLabelPage() {
 
   if (error || !label) {
     return (
-      <div className="flex flex-col justify-center items-center gap-4 h-screen bg-[#f7f9fb] text-[#191c1e] px-4 text-center">
-        <p className="text-base font-semibold text-[#93000a]">
+      <div className="flex flex-col justify-center items-center gap-4 h-screen bg-[--page] text-[--text] px-4 text-center">
+        <p className="text-base font-semibold text-[--bad]">
           {error || "İade (RMA) kaydı bulunamadı."}
         </p>
         <Link
           href="/dashboard/omnichannel"
-          className="px-4 py-2 rounded-lg bg-[#004ac6] text-white text-sm font-medium"
+          className="px-4 py-2 rounded-lg bg-gradient-to-r from-[--brand] to-[--blue] text-white text-sm font-medium"
         >
           Omnichannel Ekranına Dön
         </Link>
@@ -120,7 +120,7 @@ export default function PrintRmaLabelPage() {
   }
 
   return (
-    <div className="bg-[#f7f9fb] text-[#191c1e] antialiased overflow-x-hidden min-h-screen font-sans">
+    <div className="bg-[--page] text-[--text] antialiased overflow-x-hidden min-h-screen font-sans">
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -133,20 +133,20 @@ export default function PrintRmaLabelPage() {
         }}
       />
 
-      <main className="py-8 px-4 flex justify-center items-start w-full bg-[#f7f9fb] min-h-screen">
-        <div className="w-full max-w-[820px] bg-[#ffffff] rounded-xl shadow-lg border border-[#e6e8ea] flex flex-col overflow-hidden">
+      <main className="py-8 px-4 flex justify-center items-start w-full bg-[--page] min-h-screen">
+        <div className="w-full max-w-[820px] bg-white rounded-2xl shadow-lg border border-[--line] flex flex-col overflow-hidden">
           {/* Üst Başlık & QR Kodu */}
-          <div className="p-6 md:p-8 border-b border-[#e6e8ea] bg-[#f7f9fb] flex justify-between items-start gap-6 flex-wrap">
+          <div className="p-6 md:p-8 border-b border-[--line] bg-[--page] flex justify-between items-start gap-6 flex-wrap">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-lg bg-[#047857] flex items-center justify-center text-[#ffffff] text-xl font-bold shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-[--navy] flex items-center justify-center text-white text-xl font-bold shadow-sm">
                 RMA
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#191c1e]">
+                <h1 className="text-2xl md:text-3xl font-bold text-[--text]">
                   İade Etiketi &amp; RMA Fişi
                 </h1>
-                <p className="text-[#434655] text-sm mt-0.5">{BRAND_CONFIG.companyName}</p>
-                <p className="text-xs text-[#434655] font-mono mt-1">
+                <p className="text-[--text-muted] text-sm mt-0.5">{BRAND_CONFIG.companyName}</p>
+                <p className="text-xs text-[--text-muted] font-mono mt-1">
                   Kanal: {label.channelCode} · Kargo: {label.carrierCode}
                 </p>
               </div>
@@ -154,23 +154,23 @@ export default function PrintRmaLabelPage() {
 
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-xs text-[#434655] uppercase tracking-wider mb-1">RMA Belge No</p>
-                <p className="text-xl font-bold font-mono text-[#047857]">{label.rmaNumber}</p>
-                <p className="text-xs font-mono text-[#434655] mt-0.5">
+                <p className="text-xs text-[--text-muted] uppercase tracking-wider mb-1">RMA Belge No</p>
+                <p className="text-xl font-bold font-mono text-[--navy]">{label.rmaNumber}</p>
+                <p className="text-xs font-mono text-[--text-muted] mt-0.5">
                   Takip: {label.trackingNo}
                 </p>
               </div>
               <div
-                className="w-24 h-24 rounded-lg border border-[#d1d5db] bg-white p-1 shrink-0 [&>svg]:w-full [&>svg]:h-full"
+                className="w-24 h-24 rounded-lg border border-[--line] bg-white p-1 shrink-0 [&>svg]:w-full [&>svg]:h-full"
                 dangerouslySetInnerHTML={{ __html: label.qrSvg }}
               />
             </div>
           </div>
 
           {/* Barkod Şeridi */}
-          <div className="px-6 md:px-8 py-4 border-b border-dashed border-[#cbd5e1] bg-white flex flex-col items-center justify-center">
+          <div className="px-6 md:px-8 py-4 border-b border-dashed border-[--line] bg-white flex flex-col items-center justify-center">
             <svg ref={barcodeRef} className="max-w-full" />
-            <div className="font-mono text-xs font-bold tracking-widest text-[#0f172a] mt-1">
+            <div className="font-mono text-xs font-bold tracking-widest text-[--text] mt-1">
               {label.barcodeValue}
             </div>
           </div>
@@ -178,53 +178,53 @@ export default function PrintRmaLabelPage() {
           {/* Gönderici & Karantina Depo Bilgisi */}
           <div className="p-6 md:p-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="bg-[#f7f9fb] p-5 rounded-lg border border-[#e6e8ea] space-y-2.5">
-                <h2 className="text-xs font-semibold text-[#434655] uppercase tracking-wider">
+              <div className="bg-[--page] p-5 rounded-xl border border-[--line] space-y-2.5">
+                <h2 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wider">
                   Müşteri &amp; Sipariş Referansı
                 </h2>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Müşteri:</span>
-                  <span className="font-semibold text-[#191c1e]">{label.customerName}</span>
+                  <span className="text-[--text-muted]">Müşteri:</span>
+                  <span className="font-semibold text-[--text]">{label.customerName}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Sipariş No:</span>
-                  <span className="font-mono font-semibold text-[#004ac6]">{label.orderNumber}</span>
+                  <span className="text-[--text-muted]">Sipariş No:</span>
+                  <span className="font-mono font-semibold text-[--brand]">{label.orderNumber}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Fatura / İrsaliye:</span>
-                  <span className="font-mono font-semibold text-[#191c1e]">
+                  <span className="text-[--text-muted]">Fatura / İrsaliye:</span>
+                  <span className="font-mono font-semibold text-[--text]">
                     {label.invoiceNo || "-"}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">İade Nedeni:</span>
-                  <span className="font-semibold text-[#191c1e]">{label.reasonLabel}</span>
+                  <span className="text-[--text-muted]">İade Nedeni:</span>
+                  <span className="font-semibold text-[--text]">{label.reasonLabel}</span>
                 </div>
               </div>
 
-              <div className="bg-[#f7f9fb] p-5 rounded-lg border border-[#e6e8ea] space-y-2.5">
-                <h2 className="text-xs font-semibold text-[#434655] uppercase tracking-wider">
+              <div className="bg-[--page] p-5 rounded-xl border border-[--line] space-y-2.5">
+                <h2 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wider">
                   Teslim Alacak Depo &amp; Karantina Hücresi
                 </h2>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Depo:</span>
-                  <span className="font-semibold text-[#191c1e]">
+                  <span className="text-[--text-muted]">Depo:</span>
+                  <span className="font-semibold text-[--text]">
                     {label.targetWarehouse.name} ({label.targetWarehouse.code})
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Adres:</span>
-                  <span className="text-right font-medium text-[#191c1e]">
+                  <span className="text-[--text-muted]">Adres:</span>
+                  <span className="text-right font-medium text-[--text]">
                     {label.targetWarehouse.address}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Hedef Raf (Karantina):</span>
-                  <span className="font-mono font-bold text-[#b45309]">{label.targetBinCode}</span>
+                  <span className="text-[--text-muted]">Hedef Raf (Karantina):</span>
+                  <span className="font-mono font-bold text-[--warn]">{label.targetBinCode}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#434655]">Son İade Tarihi:</span>
-                  <span className="font-semibold text-[#191c1e]">
+                  <span className="text-[--text-muted]">Son İade Tarihi:</span>
+                  <span className="font-semibold text-[--text]">
                     {label.returnDeadlineAt
                       ? new Date(label.returnDeadlineAt).toLocaleDateString("tr-TR")
                       : "-"}
@@ -235,28 +235,28 @@ export default function PrintRmaLabelPage() {
 
             {/* İade Edilen Kalemler */}
             <div>
-              <h2 className="text-xs font-semibold text-[#434655] uppercase tracking-wider mb-3">
+              <h2 className="text-xs font-semibold text-[--text-muted] uppercase tracking-wider mb-3">
                 İade Kalemleri
               </h2>
-              <div className="overflow-x-auto print:overflow-visible rounded-lg border border-[#e6e8ea]">
+              <div className="overflow-x-auto print:overflow-visible rounded-xl border border-[--line]">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[#f2f4f6] text-xs text-[#434655] uppercase tracking-wider">
+                    <tr className="bg-[--muted-bg] text-xs text-[--text-muted] uppercase tracking-wider">
                       <th className="p-3.5 font-semibold">SKU</th>
                       <th className="p-3.5 font-semibold">Ürün Adı</th>
                       <th className="p-3.5 font-semibold">Lot / Seri</th>
                       <th className="p-3.5 font-semibold text-right">İade Miktarı</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#e6e8ea] text-sm text-[#191c1e]">
+                  <tbody className="divide-y divide-[--line] text-sm text-[--text]">
                     {label.lines.map((line, idx) => (
                       <tr key={`${line.sku}-${idx}`}>
                         <td className="p-3.5 font-mono font-semibold">{line.sku}</td>
                         <td className="p-3.5 font-medium">{line.itemName}</td>
-                        <td className="p-3.5 font-mono text-xs text-[#434655]">
+                        <td className="p-3.5 font-mono text-xs text-[--text-muted]">
                           {line.lotNumber || line.serialNumber || "-"}
                         </td>
-                        <td className="p-3.5 text-right font-bold">{line.requestedQty} Adet</td>
+                        <td className="p-3.5 text-right font-bold tabular-nums">{line.requestedQty} Adet</td>
                       </tr>
                     ))}
                   </tbody>
@@ -268,22 +268,22 @@ export default function PrintRmaLabelPage() {
             <div className="flex items-center justify-center gap-3 pt-2 print-hidden">
               <Link
                 href="/dashboard/omnichannel"
-                className="px-5 py-2.5 rounded-lg border border-[#d1d5db] bg-white text-[#191c1e] text-sm font-medium hover:bg-[#f2f4f6] transition-colors"
+                className="px-5 py-2.5 rounded-full border border-[--line] bg-white text-[--text] text-sm font-medium hover:bg-[--muted-bg] transition-colors"
               >
                 Omnichannel&apos;a Dön
               </Link>
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="px-6 py-2.5 bg-[#047857] text-white rounded-lg text-sm font-semibold hover:bg-[#065f46] transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] text-white rounded-full text-sm font-semibold hover:opacity-95 shadow-sm transition-colors cursor-pointer"
               >
                 İade Etiketini Yazdır / PDF
               </button>
             </div>
           </div>
 
-          <div className="p-5 border-t border-[#e6e8ea] bg-[#f2f4f6] text-center text-xs text-[#434655]">
-            El terminali mal kabul taramasında üstteki QR veya <span className="font-mono font-semibold">{label.barcodeValue}</span> barkodunu okutunuz.
+          <div className="p-5 border-t border-[--line] bg-[--muted-bg] text-center text-xs text-[--text-muted]">
+            El terminali mal kabul taramasında üstteki QR veya <span className="font-mono font-semibold text-[--text]">{label.barcodeValue}</span> barkodunu okutunuz.
           </div>
         </div>
       </main>

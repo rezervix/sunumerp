@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { FleetPickerSelect } from '@/components/logistics/FleetPickerSelect';
+import { safeNumber, safeText } from '@/lib/utils/safe-display';
 
 interface TransferLine {
   id: string;
@@ -213,38 +214,38 @@ export function InterWarehouseTransfers({
     switch (status) {
       case 'DRAFT':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/[0.05] text-zinc-400 border border-white/[0.08]">
-            <Clock className="w-3 h-3 text-zinc-500" /> Taslak
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--page] text-[--text-muted] border border-[--line]">
+            <Clock className="w-3 h-3 text-[--text-muted]" /> Taslak
           </span>
         );
       case 'APPROVED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/[0.06] text-zinc-300 border border-white/[0.08]">
-            <Clock className="w-3 h-3 text-[#34D399]" /> Onaylı
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
+            <Clock className="w-3 h-3 text-[--brand]" /> Onaylı
           </span>
         );
       case 'IN_TRANSIT':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <Truck className="w-3 h-3 text-amber-400" /> Yolda / Sevkiyatta
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-[--warn-soft] text-[--warn] border border-[--warn-fill]/20">
+            <Truck className="w-3 h-3 text-[--warn]" /> Yolda / Sevkiyatta
           </span>
         );
       case 'DISCREPANCY':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
-            <AlertCircle className="w-3 h-3 text-rose-400" /> Farklı Teslimat (Discrepancy)
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-[--bad-soft] text-[--bad] border border-[--bad-fill]/20">
+            <AlertCircle className="w-3 h-3 text-[--bad]" /> Farklı Teslimat
           </span>
         );
       case 'RECEIVED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-500/10 text-[#34D399] border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-[#34D399]" /> Teslim Alındı
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--ok-soft] text-[--ok] border border-[--ok-fill]/20">
+            <CheckCircle2 className="w-3 h-3 text-[--ok]" /> Teslim Alındı
           </span>
         );
       case 'CANCELLED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-rose-500/10 text-rose-300 border border-rose-500/20">
-            <AlertCircle className="w-3 h-3 text-rose-400" /> İptal
+          <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium bg-[--bad-soft] text-[--bad] border border-[--bad-fill]/20">
+            <AlertCircle className="w-3 h-3 text-[--bad]" /> İptal
           </span>
         );
     }
@@ -253,18 +254,19 @@ export function InterWarehouseTransfers({
   return (
     <div className="space-y-6">
       {/* Header bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] p-5 rounded-[20px]">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white/80 backdrop-blur-xl border border-[--line] p-5 rounded-2xl shadow-sm">
         <div>
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <Truck className="w-4 h-4 text-[#34D399]" />
+          <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+            <Truck className="w-4 h-4 text-[--brand]" />
             Depolar Arası Transferler (İç Sevkiyat)
           </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-[--text-muted] mt-0.5">
             Merkez depo, şubeler ve mağazalar arası stok sevk hareketleri ve nakliye takip ekranı
           </p>
         </div>
 
         <button
+          type="button"
           onClick={() => {
             if (warehouses.length >= 2) {
               setFromWhId(warehouses[0].id);
@@ -275,7 +277,7 @@ export function InterWarehouseTransfers({
             }
             setIsNewModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full shadow-lg shadow-emerald-500/20 transition active:scale-95 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[--brand] hover:bg-[--brand-hover] text-white text-xs font-semibold rounded-full shadow-sm transition active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Yeni Transfer Emri
@@ -285,12 +287,12 @@ export function InterWarehouseTransfers({
       {/* Transfer Orders List */}
       <div className="space-y-4">
         {transfers.length === 0 ? (
-          <div className="text-center py-12 bg-[#111513]/90 border border-white/[0.06] rounded-[20px]">
-            <Truck className="w-10 h-10 text-zinc-600 mx-auto mb-2.5" />
-            <h4 className="text-sm font-medium text-white">
+          <div className="text-center py-12 bg-white border border-[--line] rounded-2xl shadow-sm">
+            <Truck className="w-10 h-10 text-[--text-muted] mx-auto mb-2.5 opacity-40" />
+            <h4 className="text-sm font-semibold text-[--text]">
               Kayıtlı Depo Transfer Emri Yok
             </h4>
-            <p className="text-xs text-zinc-500 mt-1 max-w-md mx-auto">
+            <p className="text-xs text-[--text-muted] mt-1 max-w-md mx-auto">
               Depolarınız arasında ürün sevk etmek için yukarıdaki &quot;Yeni Transfer Emri&quot; butonuna tıklayın.
             </p>
           </div>
@@ -298,38 +300,38 @@ export function InterWarehouseTransfers({
           transfers.map((tr) => (
             <div
               key={tr.id}
-              className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 space-y-4 shadow-xl"
+              className="bg-white border border-[--line] rounded-2xl p-6 space-y-4 shadow-sm"
             >
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-white/[0.06]">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-4 border-b border-[--line]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-[#34D399]">
+                  <div className="w-10 h-10 rounded-xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2.5">
-                      <span className="text-base font-semibold text-white">
+                      <span className="text-base font-semibold text-[--text]">
                         {tr.orderNumber || tr.transferNumber}
                       </span>
                       {getStatusBadge(tr.status)}
                     </div>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-[--text-muted]">
                       Tarih: {new Date(tr.createdAt).toLocaleDateString('tr-TR')}
                     </span>
                   </div>
                 </div>
 
                 {/* Warehouse Route */}
-                <div className="flex items-center gap-3 bg-black/30 px-4 py-2 rounded-xl text-xs border border-white/[0.06]">
+                <div className="flex items-center gap-3 bg-[--page] px-4 py-2 rounded-xl text-xs border border-[--line]">
                   <div className="text-right">
-                    <div className="text-[10px] text-zinc-500">Çıkış Deposu</div>
-                    <div className="font-medium text-white">
+                    <div className="text-[10px] text-[--text-muted]">Çıkış Deposu</div>
+                    <div className="font-semibold text-[--text]">
                       {tr.fromWarehouse?.name || 'Kaynak Depo'}
                     </div>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[--text-muted]" />
                   <div>
-                    <div className="text-[10px] text-zinc-500">Hedef Depo</div>
-                    <div className="font-medium text-white">
+                    <div className="text-[10px] text-[--text-muted]">Hedef Depo</div>
+                    <div className="font-semibold text-[--text]">
                       {tr.toWarehouse?.name || 'Hedef Depo'}
                     </div>
                   </div>
@@ -337,15 +339,15 @@ export function InterWarehouseTransfers({
 
                 {/* Driver / Plate */}
                 {(tr.vehiclePlate || tr.driverName) && (
-                  <div className="flex items-center gap-3 text-xs text-zinc-400">
+                  <div className="flex items-center gap-3 text-xs text-[--text-muted]">
                     {tr.vehiclePlate && (
-                      <span className="px-2.5 py-1 bg-white/[0.04] font-mono font-medium rounded-lg border border-white/[0.06] text-white">
+                      <span className="px-2.5 py-1 bg-[--page] font-mono font-semibold rounded-lg border border-[--line] text-[--text]">
                         {tr.vehiclePlate}
                       </span>
                     )}
                     {tr.driverName && (
                       <span className="flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-zinc-500" />
+                        <User className="w-3.5 h-3.5 text-[--text-muted]" />
                         {tr.driverName}
                       </span>
                     )}
@@ -356,20 +358,22 @@ export function InterWarehouseTransfers({
                 <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto justify-end">
                   {tr.status === 'DRAFT' && (
                     <button
+                      type="button"
                       disabled={submitting}
                       onClick={() => handleAdvanceStatus(tr.id, 'APPROVED')}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] text-white text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2] text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#34D399]" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[--brand]" />
                       Onayla
                     </button>
                   )}
 
                   {tr.status === 'APPROVED' && (
                     <button
+                      type="button"
                       disabled={submitting}
                       onClick={() => handleAdvanceStatus(tr.id, 'IN_TRANSIT')}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[--warn-soft] hover:bg-[--warn-soft]/80 border border-[--warn-fill]/30 text-[--warn] text-xs font-semibold rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       Sevk Et (Yola Çıkar)
@@ -379,17 +383,19 @@ export function InterWarehouseTransfers({
                   {tr.status === 'IN_TRANSIT' && (
                     <>
                       <button
+                        type="button"
                         disabled={submitting}
                         onClick={() => openDiscrepancyModal(tr)}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-medium rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[--bad-soft] hover:bg-[--bad-soft]/80 border border-[--bad-fill]/30 text-[--bad] text-xs font-semibold rounded-full transition active:scale-95 disabled:opacity-50 cursor-pointer"
                       >
                         <AlertCircle className="w-3.5 h-3.5" />
                         Farklı / Eksik Teslim Al
                       </button>
                       <button
+                        type="button"
                         disabled={submitting}
                         onClick={() => handleAdvanceStatus(tr.id, 'RECEIVED')}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full shadow-lg shadow-emerald-500/20 transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-[--brand] hover:bg-[--brand-hover] text-white text-xs font-semibold rounded-full shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
                       >
                         <PackageCheck className="w-3.5 h-3.5" />
                         Tam Teslim Al
@@ -398,14 +404,14 @@ export function InterWarehouseTransfers({
                   )}
 
                   {tr.status === 'DISCREPANCY' && (
-                    <span className="text-xs text-rose-300 font-medium flex items-center gap-1">
+                    <span className="text-xs text-[--bad] font-semibold flex items-center gap-1">
                       <AlertCircle className="w-4 h-4" />
                       Eksik / Farklı Teslimat Kaydedildi
                     </span>
                   )}
 
                   {tr.status === 'RECEIVED' && (
-                    <span className="text-xs text-[#34D399] font-medium flex items-center gap-1">
+                    <span className="text-xs text-[--ok] font-semibold flex items-center gap-1">
                       <CheckCircle2 className="w-4 h-4" />
                       Depoya İşlendi
                     </span>
@@ -415,14 +421,14 @@ export function InterWarehouseTransfers({
 
               {/* Items Line Table */}
               <div>
-                <div className="text-[11px] font-medium text-zinc-500 uppercase tracking-wider mb-2">
+                <div className="text-[11px] font-semibold text-[--text-muted] uppercase tracking-wider mb-2">
                   Transfer Edilen Ürünler
                 </div>
-                <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl overflow-hidden">
+                <div className="bg-[--page] border border-[--line] rounded-xl overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="text-left text-zinc-500 bg-white/[0.02] border-b border-white/[0.06]">
+                        <tr className="text-left text-[--text-muted] bg-white border-b border-[--line]">
                           <th className="py-2.5 px-4">Ürün Adı</th>
                           <th className="py-2.5 px-3">SKU</th>
                           <th className="py-2.5 px-3 text-right">Talep</th>
@@ -434,36 +440,36 @@ export function InterWarehouseTransfers({
                       <tbody>
                         {tr.lines && tr.lines.length > 0 ? (
                           tr.lines.map((line) => (
-                            <tr key={line.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors text-zinc-300">
-                              <td className="py-2.5 px-4 font-medium text-white">
+                            <tr key={line.id} className="border-b border-[--line-soft] hover:bg-[--brand-soft]/30 transition-colors text-[--text-2]">
+                              <td className="py-2.5 px-4 font-medium text-[--text]">
                                 <div>{line.itemName || line.item?.name || 'Ürün'}</div>
                                 {line.discrepancyReason && (
-                                  <div className="text-[10px] text-rose-300 mt-0.5">Fark Nedeni: {line.discrepancyReason}</div>
+                                  <div className="text-[10px] text-[--bad] font-medium mt-0.5">Fark Nedeni: {line.discrepancyReason}</div>
                                 )}
                               </td>
-                              <td className="py-2.5 px-3 font-mono text-zinc-500">
-                                {line.item?.sku || '-'}
+                              <td className="py-2.5 px-3 font-mono text-[--text-muted]">
+                                {safeText(line.item?.sku)}
                               </td>
-                              <td className="py-2.5 px-3 text-right font-medium text-white">
-                                {line.requestedQty} {line.unit || line.item?.unit || 'Adet'}
+                              <td className="py-2.5 px-3 text-right font-medium text-[--text]">
+                                {safeNumber(line.requestedQty, 0)} {line.unit || line.item?.unit || 'Adet'}
                               </td>
-                              <td className="py-2.5 px-3 text-right font-medium text-amber-300">
-                                {line.shippedQty || line.requestedQty} {line.unit || line.item?.unit || 'Adet'}
+                              <td className="py-2.5 px-3 text-right font-medium text-[--warn]">
+                                {safeNumber(line.shippedQty || line.requestedQty, 0)} {line.unit || line.item?.unit || 'Adet'}
                               </td>
-                              <td className="py-2.5 px-3 text-right font-mono text-cyan-300">
-                                {Number(line.inTransitQty || 0)} {line.unit || line.item?.unit || 'Adet'}
+                              <td className="py-2.5 px-3 text-right font-mono text-[--brand]">
+                                {safeNumber(Number(line.inTransitQty || 0), 0)} {line.unit || line.item?.unit || 'Adet'}
                               </td>
-                              <td className="py-2.5 px-4 text-right font-semibold text-[#34D399]">
-                                {tr.status === 'RECEIVED'
+                              <td className="py-2.5 px-4 text-right font-semibold text-[--ok]">
+                                {safeNumber(tr.status === 'RECEIVED'
                                   ? line.receivedQty || line.shippedQty || line.requestedQty
-                                  : line.receivedQty || 0}{' '}
+                                  : line.receivedQty || 0, 0)}{' '}
                                 {line.unit || line.item?.unit || 'Adet'}
                               </td>
                             </tr>
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={6} className="py-3 px-4 text-zinc-500 italic">
+                            <td colSpan={6} className="py-3 px-4 text-[--text-muted] italic">
                               Kalem bilgisi bulunamadı.
                             </td>
                           </tr>
@@ -480,17 +486,17 @@ export function InterWarehouseTransfers({
 
       {/* New Transfer Modal */}
       {isNewModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] rounded-2xl w-full max-w-xl p-6 shadow-2xl relative text-white">
-            <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-              <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                <Truck className="w-5 h-5 text-[#34D399]" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[--navy]/40 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white border border-[--line] rounded-2xl w-full max-w-xl p-6 shadow-2xl relative text-[--text]">
+            <div className="flex items-center justify-between pb-3 border-b border-[--line]">
+              <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+                <Truck className="w-5 h-5 text-[--brand]" />
                 Yeni Depo Transfer Emri
               </h3>
               <button
                 type="button"
                 onClick={() => setIsNewModalOpen(false)}
-                className="text-zinc-500 hover:text-white text-xl font-bold leading-none p-1 cursor-pointer"
+                className="text-[--text-muted] hover:text-[--text] text-xl font-bold leading-none p-1 cursor-pointer"
               >
                 &times;
               </button>
@@ -499,18 +505,18 @@ export function InterWarehouseTransfers({
             <form onSubmit={handleCreateTransfer} className="mt-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Kaynak Depo (Çıkış) *
                   </label>
                   <select
                     value={fromWhId}
                     onChange={(e) => setFromWhId(e.target.value)}
                     required
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
-                    <option value="" className="bg-[#111513] text-white">Seçiniz...</option>
+                    <option value="" className="bg-white text-[--text]">Seçiniz...</option>
                     {warehouses.map((wh) => (
-                      <option key={wh.id} value={wh.id} className="bg-[#111513] text-white">
+                      <option key={wh.id} value={wh.id} className="bg-white text-[--text]">
                         {wh.name} ({wh.code})
                       </option>
                     ))}
@@ -518,20 +524,20 @@ export function InterWarehouseTransfers({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Hedef Depo (Varış) *
                   </label>
                   <select
                     value={toWhId}
                     onChange={(e) => setToWhId(e.target.value)}
                     required
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
-                    <option value="" className="bg-[#111513] text-white">Seçiniz...</option>
+                    <option value="" className="bg-white text-[--text]">Seçiniz...</option>
                     {warehouses
                       .filter((wh) => wh.id !== fromWhId)
                       .map((wh) => (
-                        <option key={wh.id} value={wh.id} className="bg-[#111513] text-white">
+                        <option key={wh.id} value={wh.id} className="bg-white text-[--text]">
                           {wh.name} ({wh.code})
                         </option>
                       ))}
@@ -542,18 +548,18 @@ export function InterWarehouseTransfers({
               {/* Item selection */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Transfer Edilecek Ürün *
                   </label>
                   <select
                     value={selectedItemId}
                     onChange={(e) => setSelectedItemId(e.target.value)}
                     required
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
-                    <option value="" className="bg-[#111513] text-white">Ürün Seçiniz...</option>
+                    <option value="" className="bg-white text-[--text]">Ürün Seçiniz...</option>
                     {items.map((it) => (
-                      <option key={it.id} value={it.id} className="bg-[#111513] text-white">
+                      <option key={it.id} value={it.id} className="bg-white text-[--text]">
                         {it.name} ({it.sku})
                       </option>
                     ))}
@@ -561,7 +567,7 @@ export function InterWarehouseTransfers({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Miktar *
                   </label>
                   <input
@@ -571,7 +577,7 @@ export function InterWarehouseTransfers({
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                     required
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none font-bold"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] font-semibold"
                   />
                 </div>
               </div>
@@ -592,42 +598,42 @@ export function InterWarehouseTransfers({
               />
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Araç Plakası
                   </label>
                   <input
                     type="text"
                     value={vehiclePlate}
                     onChange={(e) => setVehiclePlate(e.target.value)}
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none font-mono"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     Sürücü / Kurye
                   </label>
                   <input
                     type="text"
                     value={driverName}
                     onChange={(e) => setDriverName(e.target.value)}
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                  <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                     İletişim Tel
                   </label>
                   <input
                     type="text"
                     value={driverPhone}
                     onChange={(e) => setDriverPhone(e.target.value)}
-                    className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                    className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                <label className="block text-xs font-medium text-[--text-muted] mb-1.5">
                   Sevkiyat Notu
                 </label>
                 <input
@@ -635,22 +641,22 @@ export function InterWarehouseTransfers({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Örn: Saat 15:00'e kadar teslim edilmeli"
-                  className="w-full text-xs bg-white/[0.03] border border-white/[0.08] text-white rounded-xl p-2.5 focus:outline-none"
+                  className="w-full text-xs bg-[--page] border border-[--line] text-[--text] rounded-xl p-2.5 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 />
               </div>
 
-              <div className="pt-3 border-t border-white/[0.08] flex justify-end gap-2.5">
+              <div className="pt-3 border-t border-[--line] flex justify-end gap-2.5">
                 <button
                   type="button"
                   onClick={() => setIsNewModalOpen(false)}
-                  className="px-4 py-2 border border-white/[0.08] bg-white/[0.04] text-zinc-300 hover:text-white text-xs font-medium rounded-full hover:bg-white/[0.08] transition cursor-pointer"
+                  className="px-4 py-2 border border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] text-xs font-medium rounded-full transition cursor-pointer"
                 >
                   Vazgeç
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] text-xs font-semibold rounded-full transition shadow-lg shadow-emerald-500/20 disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[--brand] hover:bg-[--brand-hover] text-white text-xs font-semibold rounded-full transition shadow-sm disabled:opacity-50 cursor-pointer"
                 >
                   {submitting ? 'Kaydediliyor...' : 'Transfer Emrini Oluştur'}
                 </button>
@@ -659,46 +665,47 @@ export function InterWarehouseTransfers({
           </div>
         </div>
       )}
+
       {/* Farklı / Eksik Teslimat Modalı */}
       {discrepancyModalTransfer && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#111513] border border-white/[0.08] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden text-white p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+        <div className="fixed inset-0 bg-[--navy]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-[--line] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden text-[--text] p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-[--line] pb-3">
               <div>
-                <h4 className="text-sm font-semibold text-white">
+                <h4 className="text-sm font-semibold text-[--text]">
                   Kısmi / Farklı Teslim Alma — {discrepancyModalTransfer.orderNumber || discrepancyModalTransfer.transferNumber}
                 </h4>
-                <p className="text-xs text-zinc-400">Fiilen sağlam ulaşan miktarları ve varsa eksik/hasar nedenini girin.</p>
+                <p className="text-xs text-[--text-muted]">Fiilen sağlam ulaşan miktarları ve varsa eksik/hasar nedenini girin.</p>
               </div>
-              <button type="button" onClick={() => setDiscrepancyModalTransfer(null)} className="text-zinc-400 hover:text-white">✕</button>
+              <button type="button" onClick={() => setDiscrepancyModalTransfer(null)} className="text-[--text-muted] hover:text-[--text] p-1">&times;</button>
             </div>
 
             <div className="space-y-3 max-h-80 overflow-y-auto text-xs">
               {(discrepancyModalTransfer.lines || []).map((ln) => (
-                <div key={ln.id} className="p-3 bg-white/[0.03] border border-white/[0.06] rounded-xl space-y-2">
+                <div key={ln.id} className="p-3 bg-[--page] border border-[--line] rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">{ln.itemName || ln.item?.name || ln.itemId}</span>
-                    <span className="font-mono text-amber-300">Sevk: {ln.shippedQty || ln.requestedQty}</span>
+                    <span className="font-semibold text-[--text]">{ln.itemName || ln.item?.name || ln.itemId}</span>
+                    <span className="font-mono text-[--warn] font-semibold">Sevk: {ln.shippedQty || ln.requestedQty}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[11px] text-zinc-400 block mb-1">Teslim Alınan Miktar</label>
+                      <label className="text-[11px] text-[--text-muted] block mb-1">Teslim Alınan Miktar</label>
                       <input
                         type="number"
                         min="0"
                         value={discrepancyQtys[ln.id] ?? '0'}
                         onChange={(e) => setDiscrepancyQtys({ ...discrepancyQtys, [ln.id]: e.target.value })}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.08] text-white font-mono"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[--line] text-[--text] font-mono"
                       />
                     </div>
                     <div>
-                      <label className="text-[11px] text-zinc-400 block mb-1">Fark / Hasar Nedeni</label>
+                      <label className="text-[11px] text-[--text-muted] block mb-1">Fark / Hasar Nedeni</label>
                       <input
                         type="text"
                         placeholder="Örn. 2 adet kırık sap"
                         value={discrepancyReasons[ln.id] ?? ''}
                         onChange={(e) => setDiscrepancyReasons({ ...discrepancyReasons, [ln.id]: e.target.value })}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.08] text-white"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[--line] text-[--text]"
                       />
                     </div>
                   </div>
@@ -706,11 +713,11 @@ export function InterWarehouseTransfers({
               ))}
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-white/[0.08]">
+            <div className="flex justify-end gap-2 pt-2 border-t border-[--line]">
               <button
                 type="button"
                 onClick={() => setDiscrepancyModalTransfer(null)}
-                className="px-4 py-2 rounded-full text-xs border border-white/[0.08] text-zinc-300 hover:text-white"
+                className="px-4 py-2 rounded-full text-xs border border-[--line] text-[--text-2] bg-white hover:bg-[--muted-bg] cursor-pointer"
               >
                 Vazgeç
               </button>
@@ -728,7 +735,7 @@ export function InterWarehouseTransfers({
                     }))
                   )
                 }
-                className="px-4 py-2 rounded-full text-xs bg-rose-500 hover:bg-rose-400 text-white font-semibold cursor-pointer"
+                className="px-4 py-2 rounded-full text-xs bg-[--bad] hover:bg-[--bad]/90 text-white font-semibold cursor-pointer shadow-sm disabled:opacity-50"
               >
                 {submitting ? 'Kaydediliyor...' : 'Farklı Teslimatı Onayla'}
               </button>

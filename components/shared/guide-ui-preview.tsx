@@ -49,7 +49,7 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
             <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700/50 space-y-1">
               <p className="text-[10px] text-slate-400 font-medium">Aktif Müşteriler</p>
               <p className="text-base font-extrabold text-blue-400">142 Kayıt</p>
-              <div className="flex items-center text-[9px] text-emerald-400 gap-0.5">
+              <div className="flex items-center text-[9px] text-[--brand] gap-0.5">
                 <TrendingUp size={10} /> +12% bu ay
               </div>
             </div>
@@ -62,8 +62,8 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
             </div>
             <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700/50 space-y-1">
               <p className="text-[10px] text-slate-400 font-medium">Destek SLA</p>
-              <p className="text-base font-extrabold text-emerald-400">%99.4</p>
-              <div className="flex items-center text-[9px] text-emerald-400 gap-0.5">
+              <p className="text-base font-extrabold text-[--brand]">%99.4</p>
+              <div className="flex items-center text-[9px] text-[--brand] gap-0.5">
                 <CheckCircle2 size={10} /> Çözüldü
               </div>
             </div>
@@ -90,7 +90,7 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
             <div className="flex gap-1">
               <span className="size-2 rounded-full bg-red-500" />
               <span className="size-2 rounded-full bg-amber-500" />
-              <span className="size-2 rounded-full bg-emerald-500" />
+              <span className="size-2 rounded-full bg-[--brand]" />
             </div>
           </div>
 
@@ -100,7 +100,7 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
                 <p className="text-[10px] text-slate-400">Gün Sonu Operasyon Raporu</p>
                 <p className="text-xs font-semibold text-slate-100">8 Personel Tamamlandı</p>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">%100 Uyum</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[--brand]/20 text-[--brand] font-bold">%100 Uyum</span>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -133,10 +133,10 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
         <div className="w-full h-full bg-slate-900 text-white p-4 rounded-xl flex flex-col justify-between border border-slate-800 shadow-inner select-none font-sans">
           <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
             <div className="flex items-center gap-2">
-              <FolderKanban size={16} className="text-emerald-400" />
+              <FolderKanban size={16} className="text-[--brand]" />
               <span className="text-xs font-bold text-slate-200">Görev Tahtası (Kanban)</span>
             </div>
-            <span className="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded-full font-bold">24 Görev</span>
+            <span className="text-[10px] bg-[--brand-soft] text-[--brand] border border-[--brand-line] px-2 py-0.5 rounded-full font-bold">24 Görev</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2 my-auto">
@@ -155,17 +155,17 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
               </div>
             </div>
             <div className="bg-slate-800/60 p-2 rounded-lg border border-slate-700/40 space-y-1.5">
-              <p className="text-[9px] font-bold text-emerald-400 uppercase">Tamamlandı</p>
-              <div className="bg-slate-900/80 p-2 rounded border border-emerald-500/40 text-[10px] font-medium space-y-1">
+              <p className="text-[9px] font-bold text-[--brand] uppercase">Tamamlandı</p>
+              <div className="bg-slate-900/80 p-2 rounded border border-[--brand-line] text-[10px] font-medium space-y-1">
                 <p className="text-slate-200">Sosyal Medya Kiti</p>
-                <span className="text-[8px] bg-emerald-500/20 text-emerald-300 px-1 py-0.5 rounded font-bold">B2B Kurumsal</span>
+                <span className="text-[8px] bg-[--brand]/20 text-[--brand] px-1 py-0.5 rounded font-bold">B2B Kurumsal</span>
               </div>
             </div>
           </div>
 
           <div className="text-[10px] text-slate-400 flex justify-between items-center pt-1 border-t border-slate-800">
             <span>Sürükle &amp; Bırak Aktif</span>
-            <span className="text-emerald-400 font-medium">Kanban Board</span>
+            <span className="text-[--brand] font-medium">Kanban Board</span>
           </div>
         </div>
       )
@@ -232,7 +232,7 @@ export function GuideUIPreview({ guideId, stepId, title }: GuideUIPreviewProps) 
                 <p className="font-bold text-slate-200 text-[11px]">#BİLET-2026-039 — E-posta Entegrasyon Kontrolü</p>
                 <p className="text-[9px] text-slate-400">Departman: IT Destek • Çözüm sağlandı</p>
               </div>
-              <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold">Çözüldü</span>
+              <span className="text-[9px] bg-[--brand]/20 text-[--brand] px-2 py-0.5 rounded font-bold">Çözüldü</span>
             </div>
           </div>
 

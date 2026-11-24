@@ -279,7 +279,7 @@ export function OnboardingModal() {
               <ul className="space-y-2 pt-1 border-t border-border/50">
                 {currentStep.bullets.map((bullet, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-xs md:text-sm text-foreground/90 font-medium">
-                    <CheckCircle size={15} className="text-emerald-500 shrink-0 mt-0.5" />
+                    <CheckCircle size={15} className="text-[--brand] shrink-0 mt-0.5" />
                     <span>{bullet}</span>
                   </li>
                 ))}
@@ -324,7 +324,7 @@ export function OnboardingModal() {
                 <Button
                   size="sm"
                   onClick={() => handleClose("completed")}
-                  className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white h-9 px-4 font-semibold hover:shadow-md transition-shadow flex items-center gap-1"
+                  className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white h-9 px-4 font-semibold hover:shadow-md transition-shadow flex items-center gap-1"
                 >
                   <CheckCircle size={14} />
                   Rehberi Tamamla

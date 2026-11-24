@@ -2,8 +2,6 @@
 
 import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/context/LanguageContext"
-
-
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { useAuth } from "@/lib/auth/context"
@@ -12,6 +10,7 @@ import { NotesTab, TasksTab, ChatsTab, DocumentsTab, ContactsTab } from "./relat
 import { ContextualHelp } from "@/components/shared/contextual-help"
 import { mockDatabase } from "@/lib/data/mockDatabase"
 import { AnimatedNumber } from "@/components/ui/motion-primitives"
+import { safeNumber, safeText, safeCurrency } from "@/lib/utils/safe-display"
 
 // Interfaces
 interface Customer {
@@ -38,7 +37,7 @@ interface Customer {
 }
 
 export default function CustomersPage() {
-  const { t, tText } = useLanguage()
+  const { tText } = useLanguage()
   const { hasPermission, isSuperAdmin, loading: authLoading, currentBranch } = useAuth()
   const router = useRouter()
 
@@ -132,7 +131,7 @@ export default function CustomersPage() {
       } else {
         toast.error("İçe aktarma başarısız oldu.")
       }
-    } catch (err) {
+    } catch {
       toast.error("Dosya okunurken bir hata oluştu.")
     } finally {
       setLoading(false)
@@ -167,26 +166,25 @@ export default function CustomersPage() {
   const handleSaveCustomer = async () => {
     if (!currentBranch) return
     setLoading(true)
-    const method = selectedCustomer ? "PUT" : "POST"
-    
     try {
+      const isEdit = Boolean(formData.id)
       const res = await fetch("/api/customers", {
-        method,
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...formData,
           branchId: currentBranch.id,
-          id: selectedCustomer?.id,
-          ...formData
+          name: formData.name || "İsimsiz Müşteri"
         })
       })
 
       if (res.ok) {
-        toast.success(selectedCustomer ? "Müşteri güncellendi" : "Müşteri eklendi")
-        await loadCustomers()
+        toast.success(isEdit ? "Müşteri güncellendi" : "Müşteri eklendi")
         setIsCreateDialogOpen(false)
-        setSelectedCustomer(null)
+        setFormData({})
+        loadCustomers()
       } else {
-        toast.error("İşlem başarısız")
+        toast.error("Kaydetme başarısız")
       }
     } catch {
       toast.error("Bir hata oluştu")
@@ -196,15 +194,15 @@ export default function CustomersPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Bu müşteriyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")) return
+    if (!confirm("Bu müşteriyi silmek istediğinize emin misiniz?")) return
     try {
       const res = await fetch(`/api/customers?id=${id}`, { method: "DELETE" })
       if (res.ok) {
         toast.success("Müşteri silindi")
-        loadCustomers()
         setSelectedCustomer(null)
+        loadCustomers()
       } else {
-        toast.error("Silme işlemi başarısız")
+        toast.error("Silinemedi")
       }
     } catch {
       toast.error("Bir hata oluştu")
@@ -212,70 +210,51 @@ export default function CustomersPage() {
   }
 
   const handleToggleBlacklist = async (customer: Customer) => {
-    if (!currentBranch) return
     const newStatus = customer.status === "blacklist" ? "active" : "blacklist"
-    if (!confirm(`Müşteriyi ${newStatus === "blacklist" ? "Kara Listeye eklemek" : "Kara Listeden çıkarmak"} istediğinize emin misiniz?`)) return
-    
-    setLoading(true)
     try {
       const res = await fetch("/api/customers", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: customer.id,
-          branchId: currentBranch.id,
           status: newStatus
         })
       })
       if (res.ok) {
         toast.success(newStatus === "blacklist" ? "Kara listeye eklendi" : "Kara listeden çıkarıldı")
-        await loadCustomers()
-        setSelectedCustomer(null)
+        loadCustomers()
+        if (selectedCustomer?.id === customer.id) {
+          setSelectedCustomer({ ...selectedCustomer, status: newStatus })
+        }
       }
     } catch {
       toast.error("İşlem başarısız")
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleSyncLeads = async () => {
-    if (!confirm("Sıcak ve VIP hariç tüm aktif müşteriler Adaylar (Leads) ekranına eklenecektir. Emin misiniz?")) return
     setSyncingLeads(true)
     try {
-      const res = await fetch("/api/customers/sync-leads", { method: "POST" })
+      const res = await fetch("/api/customers/sync-leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ branchId: currentBranch?.id })
+      })
       if (res.ok) {
         const data = await res.json()
-        toast.success(`${data.count} müşteri başarıyla senkronize edildi.`)
+        toast.success(`${data.count || 0} müşteri aday havuzuna aktarıldı`)
       } else {
-        toast.error("Senkronizasyon başarısız oldu.")
+        toast.error("Senkronizasyon başarısız")
       }
     } catch {
-      toast.error("Senkronizasyon sırasında hata oluştu.")
+      toast.error("Senkronizasyon hatası")
     } finally {
       setSyncingLeads(false)
     }
   }
 
-  const handleRelationCrud = async (type: string, method: string, data: any, id?: string) => {
-      try {
-          const res = await fetch(`/api/customers/relations${id ? `?type=${type}&id=${id}` : ''}`, {
-              method,
-              headers: { "Content-Type": "application/json" },
-              body: method !== "DELETE" ? JSON.stringify({ type, id, customerId: selectedCustomer?.id, ...data }) : undefined
-          })
-          if(res.ok && selectedCustomer) {
-              const updated = await fetch(`/api/customers?id=${selectedCustomer.id}`).then(r => r.json())
-              setSelectedCustomer(updated)
-              loadCustomers() // Refresh list in background
-          }
-      } catch(e) {
-          toast.error("İşlem başarısız")
-      }
-  }
-
   const filteredCustomers = customers.filter(c => 
-    c.status !== "blacklist" &&
+    c.status !== "blacklist" && 
     ((c.name || "").toLowerCase().includes(searchTerm.toLowerCase()) || 
     (c.company || "").toLowerCase().includes(searchTerm.toLowerCase()))
   )
@@ -294,18 +273,18 @@ export default function CustomersPage() {
     ]
 
     return (
-      <div className="px-5 py-3 border-b border-white/[0.06] shrink-0 bg-white/[0.01] overflow-x-auto custom-scrollbar hide-scrollbar">
-        <div className="inline-flex items-center gap-1 bg-[#080A09] p-1 rounded-full border border-white/[0.06] min-w-max">
+      <div className="px-5 py-3 border-b border-[--line] shrink-0 bg-white/40 overflow-x-auto hide-scrollbar">
+        <div className="inline-flex items-center gap-1 bg-[--muted-bg] p-1 rounded-full border border-[--line] min-w-max">
           {tabs.map(t => (
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id)}
-              className={`relative flex items-center gap-2 px-3.5 py-2 text-xs lg:text-sm font-medium whitespace-nowrap rounded-full transition-colors ${activeTab === t.id ? "text-white" : "text-zinc-400 hover:text-white"}`}
+              className={`relative flex items-center gap-2 px-3.5 py-1.5 text-xs lg:text-sm font-medium whitespace-nowrap rounded-full transition-colors ${activeTab === t.id ? "text-[--navy]" : "text-[--text-muted] hover:text-[--text]"}`}
             >
               {activeTab === t.id && (
                 <motion.span
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-white/10 rounded-full border border-white/[0.08]"
+                  className="absolute inset-0 bg-white rounded-full border border-[--line] shadow-xs"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
@@ -325,11 +304,11 @@ export default function CustomersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between shrink-0 gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl lg:text-3xl font-semibold text-[--text] tracking-tight flex items-center gap-2">
             Müşteriler
             <ContextualHelp />
           </h1>
-          <p className="text-zinc-400 mt-1 text-sm">
+          <p className="text-[--text-muted] mt-1 text-sm">
             Detaylı müşteri, b2b ve firma yönetimi
           </p>
         </div>
@@ -344,7 +323,7 @@ export default function CustomersPage() {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={loading}
-            className="flex-1 sm:flex-none px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:text-white hover:bg-white/[0.08] rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2] rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all shadow-sm"
           >
             <span className="material-symbols-outlined text-[18px]">upload</span>
             <span className="hidden lg:inline">{tText("common.import", "İçe Aktar")}</span>
@@ -352,7 +331,7 @@ export default function CustomersPage() {
           <button
             onClick={handleSyncLeads}
             disabled={syncingLeads}
-            className="flex-1 sm:flex-none px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-[--brand-soft] border border-[--brand-line] text-[--brand] hover:bg-[--brand-soft]/80 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all shadow-sm"
             title="Sıcak ve VIP hariç müşterileri Leads paneline aktar"
           >
             <span className="material-symbols-outlined text-[18px]">sync</span>
@@ -360,7 +339,7 @@ export default function CustomersPage() {
           </button>
           <button
             onClick={() => setIsBlacklistOpen(true)}
-            className="flex-1 sm:flex-none px-4 py-2 bg-rose-500/10 text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-4 py-2 bg-[--bad-soft] text-[--bad] border border-[--bad-soft] hover:bg-[--bad-soft]/80 rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all shadow-sm"
           >
             <span className="material-symbols-outlined text-[18px]">block</span>
             <span className="hidden lg:inline">Kara Liste</span>
@@ -371,7 +350,7 @@ export default function CustomersPage() {
               setFormData({ status: "active", scoreTemp: "Ilık" })
               setIsCreateDialogOpen(true)
             }}
-            className="flex-1 sm:flex-none px-5 py-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all"
+            className="flex-1 sm:flex-none px-5 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full text-sm font-medium flex items-center justify-center gap-2 transition-all shadow-sm"
           >
             <span className="material-symbols-outlined text-[18px]">person_add</span>
             <span>Yeni</span>
@@ -380,62 +359,62 @@ export default function CustomersPage() {
       </div>
 
       {/* Borderless KPI Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-white/[0.06] shrink-0">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-3 border-b border-[--line] shrink-0">
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
-            <span className="material-symbols-outlined text-[15px] text-zinc-500">group</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-[--brand]">group</span>
             <span>AKTİF MÜŞTERİ</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-light text-white tracking-tight">
-              <AnimatedNumber value={filteredCustomers.length} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(filteredCustomers.length, 0)} />
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--brand-soft] text-[--brand] border border-[--brand-line] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Portföy
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
-            <span className="material-symbols-outlined text-[15px] text-emerald-400">local_fire_department</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-[--ok]">local_fire_department</span>
             <span>SICAK / VIP</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-light text-white tracking-tight">
-              <AnimatedNumber value={customers.filter(c => c.scoreTemp === "Sıcak" || c.scoreTemp === "VIP").length} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(customers.filter(c => c.scoreTemp === "Sıcak" || c.scoreTemp === "VIP").length, 0)} />
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--ok-soft] text-[--ok] border border-[--ok-soft] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Öncelikli
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
-            <span className="material-symbols-outlined text-[15px] text-zinc-500">block</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-[--bad]">block</span>
             <span>KARA LİSTE</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-light text-white tracking-tight">
-              <AnimatedNumber value={blacklistedCustomers.length} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(blacklistedCustomers.length, 0)} />
             </span>
-            <span className="bg-rose-500/10 text-rose-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--bad-soft] text-[--bad] border border-[--bad-soft] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Engelli
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1">
-            <span className="material-symbols-outlined text-[15px] text-zinc-500">database</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-1">
+            <span className="material-symbols-outlined text-[15px] text-[--text-muted]">database</span>
             <span>TOPLAM KAYIT</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-light text-white tracking-tight">
-              <AnimatedNumber value={customers.length} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(customers.length, 0)} />
             </span>
-            <span className="bg-white/[0.06] text-zinc-300 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--muted-bg] text-[--text-muted] border border-[--line] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               CRM
             </span>
           </div>
@@ -444,31 +423,31 @@ export default function CustomersPage() {
 
       <div className="flex flex-1 overflow-hidden gap-5">
         {/* Left List */}
-        <div className={`w-full lg:w-[340px] shrink-0 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl flex flex-col overflow-hidden ${selectedCustomer ? "hidden lg:flex" : "flex"}`}>
-          <div className="p-4 border-b border-white/[0.06] bg-white/[0.01]">
+        <div className={`w-full lg:w-[340px] shrink-0 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm flex flex-col overflow-hidden ${selectedCustomer ? "hidden lg:flex" : "flex"}`}>
+          <div className="p-4 border-b border-[--line] bg-white/40">
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center material-symbols-outlined text-zinc-500 text-[20px]">search</span>
+              <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center material-symbols-outlined text-[--text-muted] text-[20px]">search</span>
               <input
                 type="text"
                 placeholder={tText("common.search", "Ara...")}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="glass-input w-full pl-11 pr-4 py-2.5 text-sm outline-none transition-all"
+                className="w-full pl-11 pr-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] placeholder:text-[--text-muted] outline-none focus:border-[--brand] transition-all shadow-xs"
               />
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="flex-1 overflow-y-auto">
             {filteredCustomers.map((c) => (
               <div
                 key={c.id}
                 onClick={() => { setSelectedCustomer(c); setActiveTab("genel") }}
-                className={`p-4 cursor-pointer transition-all border-b border-white/[0.04] border-l-2 ${selectedCustomer?.id === c.id ? "bg-white/[0.06] border-l-emerald-400" : "hover:bg-white/[0.03] border-l-transparent hover:border-l-emerald-400/60"}`}
+                className={`p-4 cursor-pointer transition-all border-b border-[--line] border-l-2 ${selectedCustomer?.id === c.id ? "bg-[--brand-soft]/50 border-l-[--brand]" : "hover:bg-[--brand-soft]/20 border-l-transparent hover:border-l-[--brand-line]"}`}
               >
                 <div className="flex justify-between items-start mb-1 gap-2">
-                  <h4 className="font-semibold text-white text-sm line-clamp-1">{c.name || "İsimsiz"}</h4>
-                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium shrink-0 ${c.scoreTemp === 'Sıcak' || c.scoreTemp === 'VIP' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'}`}>{c.scoreTemp}</span>
+                  <h4 className="font-semibold text-[--navy] text-sm line-clamp-1">{safeText(c.name, "İsimsiz")}</h4>
+                  <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium shrink-0 ${c.scoreTemp === 'Sıcak' || c.scoreTemp === 'VIP' ? 'bg-[--ok-soft] text-[--ok] border border-[--ok-soft]' : 'bg-[--muted-bg] text-[--text-muted] border border-[--line]'}`}>{c.scoreTemp}</span>
                 </div>
-                <div className="text-xs text-zinc-400 flex items-center gap-1.5 mt-2">
+                <div className="text-xs text-[--text-muted] flex items-center gap-1.5 mt-2">
                   <span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "Belirtilmemiş"}
                 </div>
               </div>
@@ -478,65 +457,65 @@ export default function CustomersPage() {
 
         {/* Right Detail Panel */}
         {selectedCustomer ? (
-          <div className="flex-1 bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-200">
+          <div className="flex-1 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-200">
             {/* Detail Header */}
-            <div className="p-5 lg:p-6 border-b border-white/[0.06] shrink-0 bg-white/[0.01] flex justify-between items-start gap-4">
+            <div className="p-5 lg:p-6 border-b border-[--line] shrink-0 bg-white/40 flex justify-between items-start gap-4">
                <div className="flex gap-4 items-center min-w-0 flex-1">
-                 <button onClick={() => setSelectedCustomer(null)} className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white/[0.06] rounded-lg text-zinc-300 hover:bg-white/[0.1] transition-colors"><span className="material-symbols-outlined text-[18px]">arrow_back</span></button>
-                 <div className="size-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-300 text-lg font-semibold shadow-lg shrink-0">
+                 <button onClick={() => setSelectedCustomer(null)} className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[--muted-bg] rounded-lg text-[--text-2] hover:bg-[--line] transition-colors"><span className="material-symbols-outlined text-[18px]">arrow_back</span></button>
+                 <div className="size-14 rounded-2xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand] text-lg font-semibold shadow-xs shrink-0">
                     {selectedCustomer.name?.substring(0,2).toUpperCase() || "?"}
                  </div>
                  <div className="min-w-0 flex-1">
-                    <h2 className="text-xl lg:text-2xl font-semibold text-white tracking-tight truncate">
-                      {selectedCustomer.name || "İsimsiz Müşteri"}
+                    <h2 className="text-xl lg:text-2xl font-semibold text-[--navy] tracking-tight truncate">
+                      {safeText(selectedCustomer.name, "İsimsiz Müşteri")}
                     </h2>
-                    <div className="text-sm text-zinc-400 flex items-center gap-3 mt-1.5 flex-wrap">
-                      {selectedCustomer.company && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0">domain</span><span className="truncate">{selectedCustomer.company}</span></span>}
-                      {selectedCustomer.email && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0">mail</span><span className="truncate">{selectedCustomer.email}</span></span>}
+                    <div className="text-sm text-[--text-muted] flex items-center gap-3 mt-1.5 flex-wrap">
+                      {selectedCustomer.company && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0 text-[--brand]">domain</span><span className="truncate">{selectedCustomer.company}</span></span>}
+                      {selectedCustomer.email && <span className="flex items-center gap-1 truncate"><span className="material-symbols-outlined text-[14px] shrink-0 text-[--brand]">mail</span><span className="truncate">{selectedCustomer.email}</span></span>}
                     </div>
                  </div>
                </div>
                <div className="flex gap-2 shrink-0">
-                 <button onClick={() => handleToggleBlacklist(selectedCustomer)} className="p-2 border border-white/[0.08] bg-white/[0.04] text-zinc-300 rounded-xl hover:bg-rose-500/15 hover:text-rose-300 hover:border-rose-500/30 transition-colors" title="Kara Listeye Ekle"><span className="material-symbols-outlined">block</span></button>
+                 <button onClick={() => handleToggleBlacklist(selectedCustomer)} className="p-2 border border-[--line] bg-white text-[--text-muted] rounded-xl hover:bg-[--bad-soft] hover:text-[--bad] hover:border-[--bad-soft] transition-colors shadow-xs" title="Kara Listeye Ekle"><span className="material-symbols-outlined">block</span></button>
                  <button onClick={() => {
                    setFormData(selectedCustomer)
                    setIsCreateDialogOpen(true)
-                 }} className="p-2 border border-white/[0.08] bg-white/[0.04] rounded-xl text-zinc-300 hover:text-emerald-300 hover:bg-emerald-500/15 transition-colors" title="Düzenle"><span className="material-symbols-outlined">edit</span></button>
-                 <button onClick={() => handleDelete(selectedCustomer.id)} className="p-2 border border-rose-500/30 bg-rose-500/15 text-rose-300 rounded-xl hover:bg-rose-500/25 transition-colors" title="Sil"><span className="material-symbols-outlined">delete</span></button>
+                 }} className="p-2 border border-[--line] bg-white rounded-xl text-[--text-muted] hover:text-[--brand] hover:bg-[--brand-soft] transition-colors shadow-xs" title="Düzenle"><span className="material-symbols-outlined">edit</span></button>
+                 <button onClick={() => handleDelete(selectedCustomer.id)} className="p-2 border border-[--bad-soft] bg-[--bad-soft] text-[--bad] rounded-xl hover:opacity-80 transition-colors shadow-xs" title="Sil"><span className="material-symbols-outlined">delete</span></button>
                </div>
             </div>
 
             {renderTabs()}
 
             {/* Tab Content */}
-            <div className="flex-1 overflow-y-auto p-5 lg:p-6 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-5 lg:p-6">
                {activeTab === "genel" && (
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
                     {/* Contact Information */}
                     <div className="col-span-full md:col-span-2 space-y-5">
-                      <div className="bg-[#080A09]/60 border border-white/[0.06] p-6 rounded-[20px]">
-                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-400 text-[20px]">contact_page</span> İletişim Bilgileri</h4>
+                      <div className="bg-white border border-[--line] p-6 rounded-[20px] shadow-xs">
+                        <h4 className="font-semibold text-sm text-[--navy] mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-[--brand] text-[20px]">contact_page</span> İletişim Bilgileri</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-4 text-sm">
-                           <div><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">Telefon</span> <span className="font-medium text-white">{selectedCustomer.phone || "-"}</span></div>
-                           <div><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">E-posta</span> <span className="font-medium text-white">{selectedCustomer.email || "-"}</span></div>
-                           <div className="col-span-2"><span className="text-zinc-500 block mb-1.5 text-xs font-medium uppercase tracking-wide">Adres</span> <span className="font-medium text-white">{selectedCustomer.address || "-"}</span></div>
+                           <div><span className="text-[--text-muted] block mb-1 text-xs font-medium uppercase tracking-wide">Telefon</span> <span className="font-medium text-[--text]">{selectedCustomer.phone || "-"}</span></div>
+                           <div><span className="text-[--text-muted] block mb-1 text-xs font-medium uppercase tracking-wide">E-posta</span> <span className="font-medium text-[--text]">{selectedCustomer.email || "-"}</span></div>
+                           <div className="col-span-2"><span className="text-[--text-muted] block mb-1 text-xs font-medium uppercase tracking-wide">Adres</span> <span className="font-medium text-[--text]">{selectedCustomer.address || "-"}</span></div>
                         </div>
                       </div>
                     </div>
                     {/* Customer Score */}
                     <div className="space-y-5">
-                      <div className="bg-[#080A09]/60 border border-white/[0.06] p-6 rounded-[20px]">
-                        <h4 className="font-semibold text-sm text-white mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-400 text-[20px]">analytics</span> Müşteri Skoru</h4>
+                      <div className="bg-white border border-[--line] p-6 rounded-[20px] shadow-xs">
+                        <h4 className="font-semibold text-sm text-[--navy] mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-[--brand] text-[20px]">analytics</span> Müşteri Skoru</h4>
                         <div className="space-y-4">
                            <div>
-                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-zinc-400">Sıcaklık Skalası</span> <span className="text-emerald-300 font-semibold">{selectedCustomer.scoreTemp}</span></div>
+                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-[--text-muted]">Sıcaklık Skalası</span> <span className="text-[--brand] font-semibold">{selectedCustomer.scoreTemp}</span></div>
                            </div>
                            <div>
-                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-zinc-400">Alım İhtimali</span> <span className="text-white">%{selectedCustomer.purchaseProb || 0}</span></div>
-                             <div className="w-full bg-white/[0.08] rounded-full h-2 overflow-hidden"><div className="bg-[#34D399] h-2 rounded-full transition-all duration-500" style={{width: `${selectedCustomer.purchaseProb || 0}%`}}></div></div>
+                             <div className="flex justify-between mb-2 text-xs font-semibold"><span className="text-[--text-muted]">Alım İhtimali</span> <span className="text-[--text]">%{selectedCustomer.purchaseProb || 0}</span></div>
+                             <div className="w-full bg-[--page] rounded-full h-2 overflow-hidden border border-[--line]"><div className="bg-gradient-to-r from-[--brand] to-[--blue] h-2 rounded-full transition-all duration-500" style={{width: `${selectedCustomer.purchaseProb || 0}%`}}></div></div>
                            </div>
-                           <div className="pt-3 border-t border-white/[0.06]">
-                             <div className="text-xs font-medium text-zinc-400">Segment: <span className="text-white font-semibold">{selectedCustomer.segment || "-"}</span></div>
+                           <div className="pt-3 border-t border-[--line]">
+                             <div className="text-xs font-medium text-[--text-muted]">Segment: <span className="text-[--text] font-semibold">{selectedCustomer.segment || "-"}</span></div>
                            </div>
                         </div>
                       </div>
@@ -553,36 +532,36 @@ export default function CustomersPage() {
                {activeTab === "satis" && (
                  <div className="space-y-5">
                     <div className="flex justify-between items-center">
-                      <h4 className="text-sm font-semibold text-white">Sipariş Geçmişi</h4>
-                      <button onClick={() => router.push(`/dashboard/orders?customerId=${selectedCustomer.id}`)} className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1">
+                      <h4 className="text-sm font-semibold text-[--navy]">Sipariş Geçmişi</h4>
+                      <button onClick={() => router.push(`/dashboard/orders?customerId=${selectedCustomer.id}`)} className="text-xs font-semibold text-[--brand] hover:underline flex items-center gap-1">
                         Tüm Siparişleri Gör <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                       </button>
                     </div>
-                    <div className="bg-[#080A09]/60 border border-white/[0.06] rounded-[20px] overflow-hidden">
-                      <table className="w-full text-left text-sm">
-                        <thead className="bg-white/[0.02] border-b border-white/[0.06]">
+                    <div className="bg-white border border-[--line] rounded-[20px] overflow-hidden shadow-xs">
+                      <table className="w-full text-left text-sm border-collapse">
+                        <thead className="bg-[--muted-bg] border-b border-[--line]">
                           <tr>
-                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">No</th>
-                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Başlık</th>
-                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Tutar</th>
-                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-zinc-400">Durum</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-[--text-muted]">No</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-[--text-muted]">Başlık</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-[--text-muted]">Tutar</th>
+                            <th className="px-4 py-3 font-semibold text-[11px] uppercase tracking-wider text-[--text-muted]">Durum</th>
                           </tr>
                         </thead>
                         <tbody>
                           {selectedCustomer.orders?.map((o) => (
-                            <tr key={o.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.03] transition-all">
-                              <td className="px-4 py-3 font-mono font-medium text-xs text-zinc-300">{o.orderNumber || "#"+o.id.substring(0,6)}</td>
-                              <td className="px-4 py-3 font-medium text-white">{o.title}</td>
-                              <td className="px-4 py-3 font-semibold text-emerald-400">{o.totalAmount ? o.totalAmount.toLocaleString('tr-TR')+' ₺' : '-'}</td>
+                            <tr key={o.id} className="border-b border-[--line] hover:bg-[--brand-soft]/30 transition-all">
+                              <td className="px-4 py-3 font-mono font-medium text-xs text-[--navy]">{o.orderNumber || "#"+o.id.substring(0,6)}</td>
+                              <td className="px-4 py-3 font-medium text-[--text]">{o.title}</td>
+                              <td className="px-4 py-3 font-semibold text-[--text]">{o.totalAmount ? safeCurrency(o.totalAmount) : '-'}</td>
                               <td className="px-4 py-3">
-                                <span className={`px-3 py-0.5 rounded-full text-xs font-medium uppercase ${o.status === 'delivered' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'}`}>
+                                <span className={`px-3 py-0.5 rounded-full text-xs font-medium uppercase ${o.status === 'delivered' ? 'bg-[--ok-soft] text-[--ok] border border-[--ok-soft]' : 'bg-[--muted-bg] text-[--text-muted] border border-[--line]'}`}>
                                   {o.status}
                                 </span>
                               </td>
                             </tr>
                           ))}
                           {(!selectedCustomer.orders || selectedCustomer.orders.length === 0) && (
-                            <tr><td colSpan={4} className="px-4 py-8 text-center text-zinc-500 italic">Henüz sipariş kaydı yok.</td></tr>
+                            <tr><td colSpan={4} className="px-4 py-8 text-center text-[--text-muted] italic">Henüz sipariş kaydı yok.</td></tr>
                           )}
                         </tbody>
                       </table>
@@ -593,12 +572,12 @@ export default function CustomersPage() {
             </div>
           </div>
         ) : (
-          <div className="hidden lg:flex flex-1 items-center justify-center bg-[#111513]/90 backdrop-blur-xl border border-dashed border-white/[0.08] rounded-[20px]">
+          <div className="hidden lg:flex flex-1 items-center justify-center bg-white/80 backdrop-blur-xl border border-dashed border-[--line] rounded-[20px]">
              <div className="text-center p-8">
-                <div className="size-16 rounded-2xl bg-white/[0.04] border border-white/[0.06] mx-auto mb-4 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-zinc-500 text-4xl">person_search</span>
+                <div className="size-16 rounded-2xl bg-[--muted-bg] border border-[--line] mx-auto mb-4 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[--text-muted] text-4xl">person_search</span>
                 </div>
-                <p className="text-zinc-400 font-medium">Detayları görmek için soldan bir müşteri seçin.</p>
+                <p className="text-[--text-muted] font-medium">Detayları görmek için soldan bir müşteri seçin.</p>
              </div>
           </div>
         )}
@@ -606,55 +585,54 @@ export default function CustomersPage() {
 
        {/* Create/Edit Dialog */}
        {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
-              <h3 className="text-lg font-semibold text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between bg-[--page]">
+              <h3 className="text-lg font-semibold text-[--navy]">
                 {formData.id ? "Müşteri Düzenle" : "Yeni Müşteri Ekle"}
               </h3>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsCreateDialogOpen(false)} className="p-2 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
-            <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <div className="p-6 overflow-y-auto flex-1">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                 {/* No fields are strictly mandatory */}
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Müşteri / Firma Adı *</label>
-                    <input type="text" value={formData.name || ""} onChange={e => setFormData({...formData, name: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" placeholder="İsimsiz bırakılabilir" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Müşteri / Firma Adı *</label>
+                    <input type="text" value={formData.name || ""} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" placeholder="İsimsiz bırakılabilir" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Şirket Ünvanı</label>
-                    <input type="text" value={formData.company || ""} onChange={e => setFormData({...formData, company: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Şirket Ünvanı</label>
+                    <input type="text" value={formData.company || ""} onChange={e => setFormData({...formData, company: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Telefon</label>
-                    <input type="text" value={formData.phone || ""} onChange={e => setFormData({...formData, phone: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Telefon</label>
+                    <input type="text" value={formData.phone || ""} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">E-posta</label>
-                    <input type="email" value={formData.email || ""} onChange={e => setFormData({...formData, email: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">E-posta</label>
+                    <input type="email" value={formData.email || ""} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" />
                  </div>
                  <div className="space-y-2 col-span-full">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Adres</label>
-                    <input type="text" value={formData.address || ""} onChange={e => setFormData({...formData, address: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Adres</label>
+                    <input type="text" value={formData.address || ""} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Müşteri Sıcaklık Segmenti</label>
-                    <select value={formData.scoreTemp || "Ilık"} onChange={e => setFormData({...formData, scoreTemp: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none">
-                       <option value="Soğuk" className="bg-[#111513] text-white">Soğuk</option>
-                       <option value="Ilık" className="bg-[#111513] text-white">Ilık</option>
-                       <option value="Sıcak" className="bg-[#111513] text-white">Sıcak</option>
-                       <option value="VIP" className="bg-[#111513] text-white">VIP</option>
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Müşteri Sıcaklık Segmenti</label>
+                    <select value={formData.scoreTemp || "Ilık"} onChange={e => setFormData({...formData, scoreTemp: e.target.value})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]">
+                       <option value="Soğuk">Soğuk</option>
+                       <option value="Ilık">Ilık</option>
+                       <option value="Sıcak">Sıcak</option>
+                       <option value="VIP">VIP</option>
                     </select>
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-zinc-300 uppercase tracking-wide">Satış Olasılığı (%)</label>
-                    <input type="number" min="0" max="100" value={formData.purchaseProb || ""} onChange={e => setFormData({...formData, purchaseProb: Number(e.target.value)})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                    <label className="text-xs font-medium text-[--text-2] uppercase tracking-wide">Satış Olasılığı (%)</label>
+                    <input type="number" min="0" max="100" value={formData.purchaseProb || ""} onChange={e => setFormData({...formData, purchaseProb: Number(e.target.value)})} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand]" />
                  </div>
                </div>
             </div>
-            <div className="px-6 py-4 bg-white/[0.01] border-t border-white/[0.06] flex justify-end gap-3">
-               <button onClick={() => setIsCreateDialogOpen(false)} className="px-5 py-2 text-sm font-medium text-zinc-300 bg-white/[0.04] border border-white/[0.06] rounded-full hover:bg-white/[0.08] hover:text-white transition-colors">{tText("common.cancel", "İptal")}</button>
-               <button onClick={handleSaveCustomer} disabled={loading} className="px-6 py-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all disabled:opacity-50">
+            <div className="px-6 py-4 bg-[--page] border-t border-[--line] flex justify-end gap-3">
+               <button onClick={() => setIsCreateDialogOpen(false)} className="px-5 py-2 text-sm font-medium text-[--text-2] bg-white border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors shadow-xs">{tText("common.cancel", "İptal")}</button>
+               <button onClick={handleSaveCustomer} disabled={loading} className="px-6 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full text-sm font-medium transition-all disabled:opacity-50 shadow-sm">
                  {loading ? "Bekleyin..." : "Kaydet"}
                </button>
             </div>
@@ -664,42 +642,42 @@ export default function CustomersPage() {
 
        {/* Blacklist Dialog */}
        {isBlacklistOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="backdrop-blur-xl bg-[#111513] text-white rounded-[20px] w-full max-w-4xl overflow-hidden border border-white/[0.06] shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-5 border-b border-white/[0.06] flex items-center justify-between bg-white/[0.01]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm">
+          <div className="bg-white text-[--text] rounded-[20px] w-full max-w-4xl overflow-hidden border border-[--line] shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 py-5 border-b border-[--line] flex items-center justify-between bg-[--page]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400">
+                <div className="w-10 h-10 rounded-xl bg-[--bad-soft] border border-[--bad-soft] flex items-center justify-center text-[--bad]">
                   <span className="material-symbols-outlined text-2xl">warning</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white tracking-wider">KARA LİSTE</h3>
-                  <p className="text-zinc-400 text-xs">İşletmeye sorun çıkarmış müşteriler</p>
+                  <h3 className="text-xl font-semibold text-[--bad] tracking-wider">KARA LİSTE</h3>
+                  <p className="text-[--text-muted] text-xs">İşletmeye sorun çıkarmış müşteriler</p>
                 </div>
               </div>
-              <button onClick={() => setIsBlacklistOpen(false)} className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsBlacklistOpen(false)} className="p-2 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
-            <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
+            <div className="p-6 overflow-y-auto flex-1">
               {blacklistedCustomers.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {blacklistedCustomers.map(c => (
-                    <div key={c.id} className="bg-[#080A09]/60 border border-white/[0.06] p-5 rounded-[20px] flex flex-col relative group">
+                    <div key={c.id} className="bg-white border border-[--bad-soft] p-5 rounded-[20px] flex flex-col relative shadow-xs">
                       <div className="flex items-start justify-between mb-3 gap-2">
-                        <h4 className="font-semibold text-white line-clamp-1">{c.name}</h4>
-                        <span className="bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[10px] px-2.5 py-0.5 rounded-full font-semibold shrink-0">KARA LİSTE</span>
+                        <h4 className="font-semibold text-[--navy] line-clamp-1">{c.name}</h4>
+                        <span className="bg-[--bad-soft] text-[--bad] border border-[--bad-soft] text-[10px] px-2.5 py-0.5 rounded-full font-semibold shrink-0">KARA LİSTE</span>
                       </div>
-                      <p className="text-xs text-zinc-400 flex items-center gap-1.5 mb-2"><span className="material-symbols-outlined text-[14px]">phone</span> {c.phone || "-"}</p>
-                      <p className="text-xs text-zinc-400 flex items-center gap-1.5 mb-4"><span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "-"}</p>
+                      <p className="text-xs text-[--text-muted] flex items-center gap-1.5 mb-2"><span className="material-symbols-outlined text-[14px]">phone</span> {c.phone || "-"}</p>
+                      <p className="text-xs text-[--text-muted] flex items-center gap-1.5 mb-4"><span className="material-symbols-outlined text-[14px]">domain</span> {c.company || "-"}</p>
                       
-                      <div className="mt-auto pt-3 border-t border-white/[0.06] flex justify-end">
-                        <button onClick={() => handleToggleBlacklist(c)} className="text-xs px-3 py-1.5 bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-white rounded-full transition-colors">Listeden Çıkar</button>
+                      <div className="mt-auto pt-3 border-t border-[--line] flex justify-end">
+                        <button onClick={() => handleToggleBlacklist(c)} className="text-xs px-3 py-1.5 bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2] rounded-full transition-colors shadow-xs">Listeden Çıkar</button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-16 text-zinc-500">
-                  <span className="material-symbols-outlined text-6xl mb-4 opacity-50">gpp_good</span>
-                  <p className="text-lg">Kara listede kimse yok.</p>
+                <div className="flex flex-col items-center justify-center py-16 text-[--text-muted]">
+                  <span className="material-symbols-outlined text-6xl mb-4 text-[--ok]">gpp_good</span>
+                  <p className="text-lg font-medium text-[--text]">Kara listede kimse yok.</p>
                 </div>
               )}
             </div>

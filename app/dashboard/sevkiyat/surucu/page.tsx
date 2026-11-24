@@ -91,7 +91,7 @@ export default function SurucuMobilTeslimatPage() {
     if (!ctx) return;
     drawingRef.current = true;
     hasSignatureRef.current = true;
-    ctx.strokeStyle = '#34D399';
+    ctx.strokeStyle = '#1267E6';
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.beginPath();
@@ -227,27 +227,27 @@ export default function SurucuMobilTeslimatPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-5 pb-16">
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 shadow-sm">
         <div>
-          <h1 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Smartphone className="w-5 h-5 text-[#34D399]" />
+          <h1 className="text-lg font-semibold text-[--text] flex items-center gap-2">
+            <Smartphone className="w-5 h-5 text-[--brand]" />
             Sürücü Mobil Teslimat &amp; e-POD
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-[--text-muted]">
             Günün seferi, durak sırası, navigasyon ve anlık teslimat kanıtı kaydı
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/sevkiyat"
-            className="px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] text-xs text-white"
+            className="px-3.5 py-2 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-xs text-[--text] shadow-sm"
           >
             Sefer Planlama
           </Link>
           <button
             type="button"
             onClick={() => loadDriverDay(selectedDriverId || undefined)}
-            className="p-2 rounded-full bg-white/[0.06] text-zinc-300"
+            className="p-2 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2]"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -255,16 +255,16 @@ export default function SurucuMobilTeslimatPage() {
       </div>
 
       {/* Şoför & Sefer Seçici */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 text-xs">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 text-xs shadow-sm">
         <div>
-          <label className="text-zinc-400 block mb-1">Sürücü Filtresi</label>
+          <label className="text-[--text-muted] block mb-1">Sürücü Filtresi</label>
           <select
             value={selectedDriverId}
             onChange={(e) => {
               setSelectedDriverId(e.target.value);
               setSelectedTripId('');
             }}
-            className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+            className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
           >
             <option value="">Tüm Aktif Seferler</option>
             {drivers.map((d) => (
@@ -275,11 +275,11 @@ export default function SurucuMobilTeslimatPage() {
           </select>
         </div>
         <div>
-          <label className="text-zinc-400 block mb-1">Sefer Seçin ({trips.length})</label>
+          <label className="text-[--text-muted] block mb-1">Sefer Seçin ({trips.length})</label>
           <select
             value={activeTrip?.id || ''}
             onChange={(e) => setSelectedTripId(e.target.value)}
-            className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+            className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
           >
             {trips.map((t) => (
               <option key={t.id} value={t.id}>
@@ -293,13 +293,13 @@ export default function SurucuMobilTeslimatPage() {
       {activeTrip ? (
         <div className="space-y-3">
           {/* Sefer Özet Başlığı */}
-          <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
             <div>
-              <div className="text-sm font-semibold text-white flex items-center gap-2">
-                <Truck className="w-4 h-4 text-[#34D399]" />
+              <div className="text-sm font-semibold text-[--text] flex items-center gap-2">
+                <Truck className="w-4 h-4 text-[--brand]" />
                 {activeTrip.tripNumber} — {activeTrip.vehiclePlate || 'Araçsız'}
               </div>
-              <div className="text-xs text-zinc-400 mt-0.5">
+              <div className="text-xs text-[--text-muted] mt-0.5">
                 Şoför: {activeTrip.driverName || '-'} · Durum:{' '}
                 {DISPATCH_TRIP_STATUS_LABELS[activeTrip.status as DispatchTripStatus] || activeTrip.status}
                 {activeTrip.eWaybillNo ? ` · e-İrsaliye: ${activeTrip.eWaybillNo}` : ''}
@@ -311,7 +311,7 @@ export default function SurucuMobilTeslimatPage() {
                   type="button"
                   disabled={submitting}
                   onClick={() => handleStopStatus(activeTrip.stops[0].id, 'START_TRIP')}
-                  className="px-4 py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95"
                 >
                   Sefere Çık (Yola Başla)
                 </button>
@@ -325,24 +325,24 @@ export default function SurucuMobilTeslimatPage() {
             return (
               <div
                 key={stop.id}
-                className="bg-[#111513]/90 border border-white/[0.08] rounded-[20px] p-4 space-y-3"
+                className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-4 space-y-3 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#34D399]/15 border border-[#34D399]/35 text-[#34D399] font-bold text-sm flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[--brand-soft] border border-[--brand-line] text-[--brand] font-bold text-sm flex items-center justify-center shrink-0">
                       {stop.sequenceNo}
                     </div>
                     <div>
-                      <div className="font-semibold text-white text-sm">{stop.customerName}</div>
-                      <div className="text-xs text-zinc-400">
+                      <div className="font-semibold text-[--text] text-sm">{stop.customerName}</div>
+                      <div className="text-xs text-[--text-muted]">
                         {stop.addressText} ({stop.cityDistrict})
                       </div>
-                      <div className="flex flex-wrap items-center gap-3 text-[11px] text-zinc-500 mt-1">
+                      <div className="flex flex-wrap items-center gap-3 text-[11px] text-[--text-muted] mt-1 tabular-nums">
                         <span className="inline-flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> Pencere: {stop.timeWindowStart}–{stop.timeWindowEnd}
+                          <Clock className="w-3 h-3 text-[--brand]" /> Pencere: {stop.timeWindowStart}–{stop.timeWindowEnd}
                         </span>
                         {stop.contactPhone && (
-                          <span className="inline-flex items-center gap-1 text-zinc-300">
+                          <span className="inline-flex items-center gap-1 text-[--text]">
                             <Phone className="w-3 h-3" /> {stop.contactPhone}
                           </span>
                         )}
@@ -351,7 +351,7 @@ export default function SurucuMobilTeslimatPage() {
                   </div>
                   <span
                     className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${
-                      DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] || 'text-zinc-300'
+                      DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] || 'text-[--text-muted]'
                     }`}
                   >
                     {DISPATCH_STOP_STATUS_LABELS[stop.status as DispatchStopStatus] || stop.status}
@@ -364,23 +364,23 @@ export default function SurucuMobilTeslimatPage() {
                     href={nav.googleMaps}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08]"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] border border-[--line]"
                   >
-                    <Compass className="w-3.5 h-3.5 text-[#34D399]" /> Google Maps <ExternalLink className="w-3 h-3" />
+                    <Compass className="w-3.5 h-3.5 text-[--brand]" /> Google Maps <ExternalLink className="w-3 h-3" />
                   </a>
                   <a
                     href={nav.appleMaps}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08]"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] border border-[--line]"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-sky-400" /> Apple Maps <ExternalLink className="w-3 h-3" />
+                    <MapPin className="w-3.5 h-3.5 text-[--brand]" /> Apple Maps <ExternalLink className="w-3 h-3" />
                   </a>
                   <a
                     href={nav.yandexNavi}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08]"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[--muted-bg] hover:bg-[--brand-soft] text-[--text-2] border border-[--line]"
                   >
                     Yandex Navi <ExternalLink className="w-3 h-3" />
                   </a>
@@ -388,13 +388,13 @@ export default function SurucuMobilTeslimatPage() {
 
                 {/* Durak Aksiyonları */}
                 {!done ? (
-                  <div className="flex flex-wrap gap-2 pt-2 border-t border-white/[0.06]">
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-[--line]">
                     {stop.status !== 'VARISTA' && (
                       <button
                         type="button"
                         disabled={submitting}
                         onClick={() => handleStopStatus(stop.id, 'VARISTA', { lat: stop.lat, lng: stop.lng })}
-                        className="px-3.5 py-2 rounded-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/35 text-xs font-medium"
+                        className="px-3.5 py-2 rounded-full bg-[--warn-soft] hover:bg-[--warn-soft]/80 text-[--warn] border border-[--warn-soft] text-xs font-medium"
                       >
                         Vardım
                       </button>
@@ -409,7 +409,7 @@ export default function SurucuMobilTeslimatPage() {
                         setPodNote('');
                         hasSignatureRef.current = false;
                       }}
-                      className="flex-1 px-4 py-2 rounded-full bg-[#34D399] hover:bg-[#10B981] text-[#061811] text-xs font-semibold"
+                      className="flex-1 px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95"
                     >
                       Teslim Ettim (İmza / Fotoğraf / e-POD)
                     </button>
@@ -420,13 +420,13 @@ export default function SurucuMobilTeslimatPage() {
                         setFailStop(stop);
                         setFailureReasonNote('');
                       }}
-                      className="px-3.5 py-2 rounded-full bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-medium"
+                      className="px-3.5 py-2 rounded-full bg-[--bad-soft] hover:bg-[--bad-soft]/80 text-[--bad] border border-[--bad-soft] text-xs font-medium"
                     >
                       Teslim Edilemedi
                     </button>
                   </div>
                 ) : (
-                  <div className="text-xs text-zinc-400 pt-2 border-t border-white/[0.06] flex items-center justify-between">
+                  <div className="text-xs text-[--text-muted] pt-2 border-t border-[--line] flex items-center justify-between">
                     <span>
                       {stop.status === 'TESLIM_EDILEMEDI'
                         ? `Teslim Edilemedi: ${stop.failureReasonCode || ''}`
@@ -435,7 +435,7 @@ export default function SurucuMobilTeslimatPage() {
                     <Link
                       href={`/takip/${stop.trackingToken}`}
                       target="_blank"
-                      className="text-[#34D399] inline-flex items-center gap-1"
+                      className="text-[--brand] inline-flex items-center gap-1 font-medium"
                     >
                       Takip Sayfası <ExternalLink className="w-3 h-3" />
                     </Link>
@@ -446,43 +446,43 @@ export default function SurucuMobilTeslimatPage() {
           })}
         </div>
       ) : (
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-10 text-center text-xs text-zinc-400">
+        <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-10 text-center text-xs text-[--text-muted] shadow-sm">
           Seçili sürücü için atanmış sefer bulunamadı.
         </div>
       )}
 
       {/* e-POD Teslimat Kanıtı Modalı */}
       {podStop && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="bg-[#111513] border border-white/[0.08] rounded-[20px] w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-lg p-5 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl text-[--text]">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">
+                <h3 className="text-base font-semibold text-[--text]">
                   Teslimat Kanıtı (e-POD) — Durak #{podStop.sequenceNo}
                 </h3>
-                <p className="text-xs text-zinc-400">{podStop.customerName}</p>
+                <p className="text-xs text-[--text-muted]">{podStop.customerName}</p>
               </div>
-              <button type="button" onClick={() => setPodStop(null)} className="text-zinc-400">
+              <button type="button" onClick={() => setPodStop(null)} className="text-[--text-muted] hover:text-[--text]">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="text-zinc-400 block mb-1">Teslim Alan Ad Soyad *</label>
+                <label className="text-[--text-muted] block mb-1">Teslim Alan Ad Soyad *</label>
                 <input
                   type="text"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
-                  className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                  className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
                 />
               </div>
               <div>
-                <label className="text-zinc-400 block mb-1">Teslim Alan Yakınlığı</label>
+                <label className="text-[--text-muted] block mb-1">Teslim Alan Yakınlığı</label>
                 <select
                   value={recipientRelation}
                   onChange={(e) => setRecipientRelation(e.target.value)}
-                  className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                  className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
                 >
                   {Object.entries(POD_RELATION_LABELS).map(([k, lbl]) => (
                     <option key={k} value={k}>
@@ -497,10 +497,10 @@ export default function SurucuMobilTeslimatPage() {
               <button
                 type="button"
                 onClick={() => setDeliveryStatus('TESLIM_EDILDI')}
-                className={`flex-1 py-2 rounded-xl border ${
+                className={`flex-1 py-2 rounded-xl border transition ${
                   deliveryStatus === 'TESLIM_EDILDI'
-                    ? 'bg-emerald-500/20 border-[#34D399] text-white'
-                    : 'bg-white/[0.03] border-white/[0.08] text-zinc-400'
+                    ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold'
+                    : 'bg-white border-[--line] text-[--text-muted]'
                 }`}
               >
                 Tam Teslim
@@ -508,10 +508,10 @@ export default function SurucuMobilTeslimatPage() {
               <button
                 type="button"
                 onClick={() => setDeliveryStatus('KISMI_TESLIM')}
-                className={`flex-1 py-2 rounded-xl border ${
+                className={`flex-1 py-2 rounded-xl border transition ${
                   deliveryStatus === 'KISMI_TESLIM'
-                    ? 'bg-amber-500/20 border-amber-400 text-amber-200'
-                    : 'bg-white/[0.03] border-white/[0.08] text-zinc-400'
+                    ? 'bg-[--warn-soft] border-[--warn] text-[--warn] font-semibold'
+                    : 'bg-white border-[--line] text-[--text-muted]'
                 }`}
               >
                 Kısmi Teslim
@@ -521,11 +521,11 @@ export default function SurucuMobilTeslimatPage() {
             {/* HTML5 İmza Tuvali */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-zinc-400">Dijital İmza Çizimi</span>
+                <span className="text-[--text-muted]">Dijital İmza Çizimi</span>
                 <button
                   type="button"
                   onClick={clearCanvas}
-                  className="text-zinc-400 hover:text-white inline-flex items-center gap-1"
+                  className="text-[--text-muted] hover:text-[--text] inline-flex items-center gap-1"
                 >
                   <Trash2 className="w-3 h-3" /> Temizle
                 </button>
@@ -555,14 +555,14 @@ export default function SurucuMobilTeslimatPage() {
                   if (touch) moveDraw(touch.clientX - r.left, touch.clientY - r.top);
                 }}
                 onTouchEnd={endDraw}
-                className="w-full h-32 rounded-xl border border-white/[0.12] bg-[#0B100E] touch-none cursor-crosshair"
+                className="w-full h-32 rounded-xl border border-[--line] bg-[--page] touch-none cursor-crosshair"
               />
             </div>
 
             {/* Fotoğraf Yükleme (Mevcut /api/upload) */}
             <div className="space-y-2 text-xs">
-              <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] text-white cursor-pointer">
-                <Upload className="w-3.5 h-3.5 text-[#34D399]" />
+              <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white hover:bg-[--brand-soft] border border-[--line] text-[--text] cursor-pointer shadow-sm">
+                <Upload className="w-3.5 h-3.5 text-[--brand]" />
                 {uploadingPhoto ? 'Fotoğraf Yükleniyor...' : 'Teslimat Fotoğrafı Ekle'}
                 <input
                   type="file"
@@ -580,7 +580,7 @@ export default function SurucuMobilTeslimatPage() {
                       key={idx}
                       src={u}
                       alt={`Foto ${idx + 1}`}
-                      className="h-14 w-20 object-cover rounded-lg border border-white/[0.12]"
+                      className="h-14 w-20 object-cover rounded-lg border border-[--line]"
                     />
                   ))}
                 </div>
@@ -592,14 +592,14 @@ export default function SurucuMobilTeslimatPage() {
               placeholder="Sürücü teslimat notu (isteğe bağlı)"
               value={podNote}
               onChange={(e) => setPodNote(e.target.value)}
-              className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white text-xs rounded-xl px-3 py-2"
+              className="w-full bg-white border border-[--line] text-[--text] text-xs rounded-xl px-3 py-2 focus:border-[--brand]"
             />
 
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setPodStop(null)}
-                className="px-4 py-2 rounded-full bg-white/[0.05] text-zinc-300 text-xs"
+                className="px-4 py-2 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2] text-xs"
               >
                 İptal
               </button>
@@ -607,7 +607,7 @@ export default function SurucuMobilTeslimatPage() {
                 type="button"
                 disabled={submitting}
                 onClick={handleSubmitPod}
-                className="px-4 py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold"
+                className="px-4 py-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white text-xs font-semibold shadow-sm hover:opacity-95"
               >
                 Teslimatı Kaydet
               </button>
@@ -618,23 +618,23 @@ export default function SurucuMobilTeslimatPage() {
 
       {/* Teslim Edilemedi Modalı */}
       {failStop && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="bg-[#111513] border border-white/[0.08] rounded-[20px] w-full max-w-md p-5 space-y-4 text-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-md p-5 space-y-4 text-xs shadow-2xl text-[--text]">
             <div className="flex items-start justify-between">
-              <h3 className="text-base font-semibold text-white flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-rose-400" />
+              <h3 className="text-base font-semibold text-[--text] flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[--bad]" />
                 Teslim Edilemedi Bildirimi
               </h3>
-              <button type="button" onClick={() => setFailStop(null)} className="text-zinc-400">
+              <button type="button" onClick={() => setFailStop(null)} className="text-[--text-muted] hover:text-[--text]">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div>
-              <label className="text-zinc-400 block mb-1">Neden Kodu</label>
+              <label className="text-[--text-muted] block mb-1">Neden Kodu</label>
               <select
                 value={failureReasonCode}
                 onChange={(e) => setFailureReasonCode(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               >
                 {Object.entries(DISPATCH_FAILURE_REASON_LABELS).map(([k, lbl]) => (
                   <option key={k} value={k}>
@@ -644,19 +644,19 @@ export default function SurucuMobilTeslimatPage() {
               </select>
             </div>
             <div>
-              <label className="text-zinc-400 block mb-1">Açıklama</label>
+              <label className="text-[--text-muted] block mb-1">Açıklama</label>
               <textarea
                 rows={2}
                 value={failureReasonNote}
                 onChange={(e) => setFailureReasonNote(e.target.value)}
-                className="w-full bg-[#0B0F0D] border border-white/[0.1] text-white rounded-xl px-3 py-2"
+                className="w-full bg-white border border-[--line] text-[--text] rounded-xl px-3 py-2 focus:border-[--brand]"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setFailStop(null)}
-                className="px-4 py-2 rounded-full bg-white/[0.05] text-zinc-300"
+                className="px-4 py-2 rounded-full bg-white hover:bg-[--muted-bg] border border-[--line] text-[--text-2]"
               >
                 Vazgeç
               </button>
@@ -670,7 +670,7 @@ export default function SurucuMobilTeslimatPage() {
                   });
                   setFailStop(null);
                 }}
-                className="px-4 py-2 rounded-full bg-rose-500 text-white font-semibold"
+                className="px-4 py-2 rounded-full bg-[--bad] hover:bg-[--bad]/90 text-white font-semibold shadow-sm"
               >
                 Kaydet
               </button>

@@ -33,15 +33,15 @@ export function FleetTcoAndEfficiencyTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-white">
-          <BarChart3 className="w-4 h-4 text-[#34D399]" />
+          <BarChart3 className="w-4 h-4 text-[#1267E6]" />
           Araç Bazlı TCO (km Başı Maliyet), Sürüş Verimliliği &amp; Tahmini CO₂
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/lojistik-raporlar?module=filo"
-            className="text-xs text-[#34D399] hover:underline font-medium px-2.5 py-1.5 rounded-full bg-[#34D399]/10 border border-[#34D399]/20"
+            className="text-xs text-[#1267E6] hover:underline font-medium px-2.5 py-1.5 rounded-full bg-[#1267E6]/10 border border-[#1267E6]/20"
           >
             Raporlar&apos;a Git →
           </Link>
@@ -61,7 +61,7 @@ export function FleetTcoAndEfficiencyTab({
                 setMonthInput('');
                 onMonthChange('');
               }}
-              className="px-3 py-1.5 rounded-full bg-white/[0.06] text-xs text-zinc-300 cursor-pointer"
+              className="px-3 py-1.5 rounded-full bg-[--muted-bg] text-xs text-zinc-300 cursor-pointer"
             >
               Tüm Dönemler
             </button>
@@ -70,29 +70,29 @@ export function FleetTcoAndEfficiencyTab({
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Toplam Filo Maliyeti</div>
           <div className="text-xl font-bold font-mono text-white mt-1">₺{Number(summary.totalFleetCostTry || 0).toLocaleString('tr-TR')}</div>
         </div>
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Ortalama Km Başı Maliyet</div>
-          <div className="text-xl font-bold font-mono text-[#34D399] mt-1">₺{Number(summary.avgCostPerKmTry || 0).toLocaleString('tr-TR')} / km</div>
+          <div className="text-xl font-bold font-mono text-[#1267E6] mt-1">₺{Number(summary.avgCostPerKmTry || 0).toLocaleString('tr-TR')} / km</div>
         </div>
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Toplam Mesafe</div>
           <div className="text-xl font-bold font-mono text-sky-300 mt-1">{Number(summary.totalFleetDistanceKm || 0).toLocaleString('tr-TR')} km</div>
         </div>
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-[11px] text-zinc-400">Tahmini CO₂ Emisyonu *</div>
           <div className="text-xl font-bold font-mono text-amber-300 mt-1">{Number(summary.totalEstimatedCo2Kg || 0).toLocaleString('tr-TR')} kg CO₂e</div>
         </div>
       </div>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase text-zinc-400">
                 <th className="py-3 px-4">Araç / Şoför</th>
                 <th className="py-3 px-4">Yakıt + Bakım + Kira/Amort.</th>
                 <th className="py-3 px-4">Sürücü + Sigorta + Ceza</th>
@@ -116,7 +116,7 @@ export function FleetTcoAndEfficiencyTab({
                   </td>
                   <td className="py-3 px-4 font-mono">
                     <div className="font-bold text-white">₺{Number(r.totalCostTry).toLocaleString('tr-TR')}</div>
-                    <div className="text-[11px] text-[#34D399]">₺{r.costPerKmTry} / km</div>
+                    <div className="text-[11px] text-[#1267E6]">₺{r.costPerKmTry} / km</div>
                   </td>
                   <td className="py-3 px-4">
                     <div className="font-semibold text-white">{r.ecoScore}/100 ({r.ecoGrade})</div>
@@ -138,17 +138,17 @@ export function FleetTcoAndEfficiencyTab({
       </div>
 
       {/* Yapılandırılabilir CO2 Katsayıları ve Resmî Dipnot */}
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-3">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs font-semibold text-white flex items-center gap-2">
-            <Info className="w-4 h-4 text-[#34D399]" />
+            <Info className="w-4 h-4 text-[#1267E6]" />
             * {tcoReport?.co2DisclaimerNote || 'Tahmini CO₂ değerleridir. Katsayılar Birleşik Krallık (DESNZ/DEFRA) tablolarına dayanır, Türkiye\'ye özgü değildir.'}
           </div>
-          <button type="button" onClick={onRefresh} className="text-[11px] text-[#34D399] underline cursor-pointer">Katsayıları Yenile</button>
+          <button type="button" onClick={onRefresh} className="text-[11px] text-[#1267E6] underline cursor-pointer">Katsayıları Yenile</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-[11px]">
           {co2Factors.map((f: any) => (
-            <div key={f.id} className="bg-[#0B0F0D] border border-white/[0.06] rounded-xl p-2.5">
+            <div key={f.id} className="bg-[#0B0F0D] border border-[--line] rounded-xl p-2.5">
               <div className="font-semibold text-white">{f.fuelType} ({f.kgCo2ePerUnit} kg CO₂e/{f.unit})</div>
               <div className="text-zinc-400">{f.sourceName} · {f.sourceYear} {f.sourceVersion ? `(${f.sourceVersion})` : ''}</div>
             </div>
@@ -223,15 +223,15 @@ export function FleetTelematicsTab({
 
   return (
     <div className="space-y-4">
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-2">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-semibold text-white">
-          <Webhook className="w-4 h-4 text-[#34D399]" />
+          <Webhook className="w-4 h-4 text-[#1267E6]" />
           Telematik Entegrasyonları (Onaylı Sağlayıcı Profilleri)
         </div>
         <span className={`px-3 py-1 rounded-full text-[11px] font-medium border ${
           isDemoMode
             ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-            : 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
+            : 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
         }`}>
           {telematics?.telemetryModeLabel || (isDemoMode ? 'Demo Veritabanı' : 'Üretim Webhook')}
         </span>
@@ -240,16 +240,16 @@ export function FleetTelematicsTab({
       {/* Desteklenen Sağlayıcılar (FİYAT BİLGİSİ YOK — Yalnız Erişim Şekli ve Resmî Doküman) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {providers.map((p: any) => (
-          <div key={p.providerCode} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2 text-xs">
+          <div key={p.providerCode} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2 text-xs">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <div className="font-bold text-white flex items-center gap-1.5">
-                  <Radio className="w-3.5 h-3.5 text-[#34D399]" />
+                  <Radio className="w-3.5 h-3.5 text-[#1267E6]" />
                   {p.displayName}
                 </div>
                 <div className="text-[11px] text-zinc-400 mt-0.5">{p.protocolSummary}</div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/[0.06] border border-white/[0.1] text-emerald-300">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[--muted-bg] border border-white/[0.1] text-[--brand]">
                 {p.connectionStatus === 'DEMO_DB' ? 'Demo Verisi' : p.connectionStatus}
               </span>
             </div>
@@ -264,7 +264,7 @@ export function FleetTelematicsTab({
             <div className="flex items-center justify-between text-[10px] text-zinc-500">
               <span className="font-mono">{p.authHeaderExample}</span>
               {String(p.docsUrl || '').startsWith('http') && (
-                <a href={p.docsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[#34D399] hover:underline">
+                <a href={p.docsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[#1267E6] hover:underline">
                   Resmî Doküman ({p.docsAccessDate}) <ExternalLink className="w-3 h-3" />
                 </a>
               )}
@@ -275,7 +275,7 @@ export function FleetTelematicsTab({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Araç <-> Cihaz ID Eşleme */}
-        <form onSubmit={handleSaveMap} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5">
+        <form onSubmit={handleSaveMap} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5">
           <div className="text-xs font-semibold text-white">Plaka / VIN ↔ Sağlayıcı Cihaz ID Eşleme</div>
           <div className="grid grid-cols-3 gap-2">
             <select required value={mapForm.vehicleId} onChange={(e) => setMapForm({ ...mapForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-white">
@@ -287,11 +287,11 @@ export function FleetTelematicsTab({
             </select>
             <input required placeholder="Cihaz ID / IMEI" value={mapForm.externalDeviceId} onChange={(e) => setMapForm({ ...mapForm, externalDeviceId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-2.5 py-1.5 text-xs text-white" />
           </div>
-          <button type="submit" className="w-full py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">Cihaz Eşlemesini Kaydet</button>
+          <button type="submit" className="w-full py-2 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Cihaz Eşlemesini Kaydet</button>
 
           <div className="space-y-1 max-h-40 overflow-y-auto pt-2 text-[11px]">
             {mappings.map((m: any) => (
-              <div key={m.id} className="bg-white/[0.02] rounded-lg px-2.5 py-1.5 flex items-center justify-between text-zinc-300">
+              <div key={m.id} className="bg-[--page] rounded-lg px-2.5 py-1.5 flex items-center justify-between text-zinc-300">
                 <span><strong>{m.plateSnapshot || m.vehicleId}</strong> · {m.providerCode}</span>
                 <span className="font-mono text-zinc-400">ID: {m.externalDeviceId}</span>
               </div>
@@ -300,9 +300,9 @@ export function FleetTelematicsTab({
         </form>
 
         {/* Genel Webhook / JSON İçe Aktarım */}
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5">
           <div className="flex items-center justify-between">
-            <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Upload className="w-3.5 h-3.5 text-[#34D399]" /> Telematik JSON İçe Aktar / Test Et</div>
+            <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Upload className="w-3.5 h-3.5 text-[#1267E6]" /> Telematik JSON İçe Aktar / Test Et</div>
             <select value={importProvider} onChange={(e) => setImportProvider(e.target.value)} className="bg-[#0B0F0D] border border-white/[0.1] rounded-full px-2.5 py-1 text-[11px] text-white">
               {providers.map((p: any) => <option key={p.providerCode} value={p.providerCode}>{p.providerCode}</option>)}
             </select>
@@ -321,11 +321,11 @@ export function FleetTelematicsTab({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
-          <div className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-[#34D399]" /> Son Telematik Olayları ({recentEvents.length})</div>
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
+          <div className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-[#1267E6]" /> Son Telematik Olayları ({recentEvents.length})</div>
           <div className="space-y-1.5 max-h-56 overflow-y-auto text-[11px]">
             {recentEvents.slice(0, 20).map((ev: any) => (
-              <div key={ev.id} className="bg-white/[0.02] rounded-lg px-2.5 py-1.5 flex items-center justify-between text-zinc-300">
+              <div key={ev.id} className="bg-[--page] rounded-lg px-2.5 py-1.5 flex items-center justify-between text-zinc-300">
                 <div>
                   <span className="font-semibold text-white">{ev.eventType}</span> · {ev.providerCode}
                   {ev.isBackfill && <span className="ml-1.5 text-[10px] text-amber-300">[Backfill]</span>}
@@ -339,7 +339,7 @@ export function FleetTelematicsTab({
           </div>
         </div>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
           <div className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5 text-rose-400" /> Telematik Hata Günlüğü ({errorLogs.length})</div>
           <div className="space-y-1.5 max-h-56 overflow-y-auto text-[11px]">
             {errorLogs.map((er: any) => (

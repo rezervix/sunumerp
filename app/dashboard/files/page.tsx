@@ -240,8 +240,8 @@ export default function FilesPage() {
     switch (status) {
       case "sent":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/5 text-zinc-300 border border-white/10">
-            <Send className="w-3 h-3 text-zinc-400" /> Gönderildi
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/5 text-[--text-2] border border-[--line]">
+            <Send className="w-3 h-3 text-[--text-muted]" /> Gönderildi
           </span>
         )
       case "received":
@@ -252,14 +252,14 @@ export default function FilesPage() {
         )
       case "acknowledged":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Clock className="w-3 h-3 text-emerald-400" /> Onaylandı
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
+            <Clock className="w-3 h-3 text-[--brand]" /> Onaylandı
           </span>
         )
       case "completed":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Tamamlandı
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
+            <CheckCircle2 className="w-3 h-3 text-[--brand]" /> Tamamlandı
           </span>
         )
     }
@@ -272,49 +272,49 @@ export default function FilesPage() {
       case "high":
         return <span className="text-[10px] font-medium text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full uppercase">Yüksek</span>
       case "normal":
-        return <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full uppercase">Normal</span>
+        return <span className="text-[10px] font-medium text-[--brand] bg-[--brand-soft] border border-[--brand-line] px-2 py-0.5 rounded-full uppercase">Normal</span>
       default:
-        return <span className="text-[10px] font-medium text-zinc-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full uppercase">Düşük</span>
+        return <span className="text-[10px] font-medium text-[--text-muted] bg-white/5 border border-[--line] px-2 py-0.5 rounded-full uppercase">Düşük</span>
     }
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto text-white">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto text-[--text]">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white flex items-center gap-2.5">
-            <FileText className="w-7 h-7 text-emerald-400" />
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[--text] flex items-center gap-2.5">
+            <FileText className="w-7 h-7 text-[--brand]" />
             Dosya Teslimatı
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1">Şubeler ve personeller arası güvenli dosya transferi ve takip sistemi</p>
+          <p className="text-xs sm:text-sm text-[--text-muted] mt-1">Şubeler ve personeller arası güvenli dosya transferi ve takip sistemi</p>
         </div>
       </div>
 
       {/* Kutusuz (Borderless) Üst KPI Şeridi */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-4 border-b border-white/[0.06]">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-4 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <Send className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <Send className="w-3.5 h-3.5 text-[--brand]" />
             Gönderilen Dosyalar
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1">
             <AnimatedNumber value={stats.sent} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
-            <Inbox className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
+            <Inbox className="w-3.5 h-3.5 text-[--brand]" />
             Alınan Dosyalar
           </div>
-          <div className="text-4xl font-light text-white tracking-tight mt-1">
+          <div className="text-4xl font-light text-[--text] tracking-tight mt-1">
             <AnimatedNumber value={stats.received} />
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
             Bekleyen Teslimatlar
           </div>
@@ -325,25 +325,25 @@ export default function FilesPage() {
       </div>
 
       {/* Tablo Konteyneri */}
-      <div className="bg-[#111513]/90 rounded-[20px] border border-white/[0.06] shadow-xl flex flex-col overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-xl flex flex-col overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[--line] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex gap-1 p-1 bg-white/5 border border-white/10 rounded-full">
+            <div className="flex gap-1 p-1 bg-white/5 border border-[--line] rounded-full">
               <button
                 onClick={() => setActiveTab("all")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'all' ? 'bg-white/10 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'all' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Tümü
               </button>
               <button
                 onClick={() => setActiveTab("sent")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'sent' ? 'bg-white/10 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'sent' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Gönderilen
               </button>
               <button
                 onClick={() => setActiveTab("received")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'received' ? 'bg-white/10 text-white shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'received' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Alınan
               </button>
@@ -351,18 +351,18 @@ export default function FilesPage() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[--text-muted] w-4 h-4" />
               <input
                 type="text"
                 placeholder="Dosya veya takip no ara..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full sm:w-64 pl-9 pr-4 py-2 bg-white/[0.03] border border-white/10 rounded-full text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-all"
+                className="w-full sm:w-64 pl-9 pr-4 py-2 bg-white border border-[--line] rounded-full text-xs text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] transition-all"
               />
             </div>
             <button
               onClick={() => setIsCreateDialogOpen(true)}
-              className="inline-flex items-center justify-center gap-1.5 bg-emerald-400 hover:bg-emerald-300 text-black font-semibold px-5 py-2 rounded-full text-xs transition shadow-[0_0_15px_rgba(52,211,153,0.2)] active:scale-95"
+              className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold px-5 py-2 rounded-full text-xs transition shadow-sm active:scale-95"
             >
               <Plus className="w-4 h-4" />
               Yeni Gönderim
@@ -373,7 +373,7 @@ export default function FilesPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 uppercase text-[11px] tracking-wider">
+              <tr className="bg-[--page] border-b border-[--line] text-[--text-muted] uppercase text-[11px] tracking-wider">
                 <th className="px-6 py-4 font-medium">Takip No</th>
                 <th className="px-6 py-4 font-medium">Başlık</th>
                 <th className="px-6 py-4 font-medium">Gönderen → Alan</th>
@@ -386,33 +386,33 @@ export default function FilesPage() {
             <tbody>
               {filteredDeliveries.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-zinc-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-[--text-muted]">
                     <FileText className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
                     Kayıtlı dosya transferi bulunamadı.
                   </td>
                 </tr>
               ) : (
                 filteredDeliveries.map((delivery) => (
-                  <tr key={delivery.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.02] transition-colors group">
+                  <tr key={delivery.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-[--brand] hover:bg-[--page] transition-colors group">
                     <td className="px-6 py-4">
-                      <div className="font-mono text-xs text-zinc-400 bg-white/5 py-1 px-2.5 rounded-lg border border-white/10 inline-block">{delivery.trackingNumber}</div>
+                      <div className="font-mono text-xs text-[--text-muted] bg-white/5 py-1 px-2.5 rounded-lg border border-[--line] inline-block">{delivery.trackingNumber}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-medium text-white">{delivery.title}</div>
+                      <div className="font-medium text-[--text]">{delivery.title}</div>
                       {delivery.description && (
-                        <div className="text-[11px] text-zinc-500 line-clamp-1 mt-0.5 italic">{delivery.description}</div>
+                        <div className="text-[11px] text-[--text-muted] line-clamp-1 mt-0.5 italic">{delivery.description}</div>
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-xs text-zinc-300">
+                      <div className="flex items-center gap-1.5 text-xs text-[--text-2]">
                         <span>{delivery.fromUserName || delivery.fromBranchName}</span>
                         <ArrowRight className="w-3 h-3 text-zinc-600" />
-                        <span className="text-emerald-400 font-medium">{delivery.toUserName || delivery.toBranchName}</span>
+                        <span className="text-[--brand] font-medium">{delivery.toUserName || delivery.toBranchName}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-                        <Paperclip className="w-3.5 h-3.5 text-zinc-500" />
+                      <div className="flex items-center gap-1.5 text-xs text-[--text-muted]">
+                        <Paperclip className="w-3.5 h-3.5 text-[--text-muted]" />
                         {delivery.fileUrls.length} Dosya
                       </div>
                     </td>
@@ -430,7 +430,7 @@ export default function FilesPage() {
                             setStatusUpdate({ status: delivery.status, notes: "" })
                             setIsStatusDialogOpen(true)
                           }}
-                          className="px-3 py-1 bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 rounded-full text-xs font-medium transition"
+                          className="px-3 py-1 bg-white/5 hover:bg-white/10 text-[--text-2] border border-[--line] rounded-full text-xs font-medium transition"
                         >
                           Durum
                         </button>
@@ -449,7 +449,7 @@ export default function FilesPage() {
                               }
                             }
                           }}
-                          className="p-1.5 text-zinc-500 hover:text-rose-400 rounded-full transition"
+                          className="p-1.5 text-[--text-muted] hover:text-rose-400 rounded-full transition"
                         >
                           <Trash className="w-3.5 h-3.5" />
                         </button>
@@ -466,31 +466,31 @@ export default function FilesPage() {
       {/* Create Delivery Modal */}
       {isCreateDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-white">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh] text-[--text]">
+            <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">Yeni Dosya Gönderimi</h3>
-                <p className="text-xs text-zinc-400">Şubeye veya personele güvenli dosya paylaşımı başlatın</p>
+                <h3 className="text-base font-semibold text-[--text]">Yeni Dosya Gönderimi</h3>
+                <p className="text-xs text-[--text-muted]">Şubeye veya personele güvenli dosya paylaşımı başlatın</p>
               </div>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+              <button onClick={() => setIsCreateDialogOpen(false)} className="text-[--text-muted] hover:text-[--text] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="space-y-2">
-                <label className="text-xs font-medium text-zinc-400">Alıcı Türü</label>
+                <label className="text-xs font-medium text-[--text-muted]">Alıcı Türü</label>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setTargetType("branch")}
-                    className={`flex-1 py-2 px-4 rounded-xl text-xs font-medium transition-all border ${targetType === 'branch' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/[0.02] border-white/10 text-zinc-400'}`}
+                    className={`flex-1 py-2 px-4 rounded-xl text-xs font-medium transition-all border ${targetType === 'branch' ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand]' : 'bg-[--page] border-[--line] text-[--text-muted]'}`}
                   >
                     <Building className="w-3.5 h-3.5 inline mr-1.5" />
                     Şube
                   </button>
                   <button
                     onClick={() => setTargetType("user")}
-                    className={`flex-1 py-2 px-4 rounded-xl text-xs font-medium transition-all border ${targetType === 'user' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/[0.02] border-white/10 text-zinc-400'}`}
+                    className={`flex-1 py-2 px-4 rounded-xl text-xs font-medium transition-all border ${targetType === 'user' ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand]' : 'bg-[--page] border-[--line] text-[--text-muted]'}`}
                   >
                     <User className="w-3.5 h-3.5 inline mr-1.5" />
                     Personel
@@ -500,11 +500,11 @@ export default function FilesPage() {
 
               {targetType === "branch" ? (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Hedef Şube *</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Hedef Şube *</label>
                   <select
                     value={formData.toBranchId}
                     onChange={(e) => setFormData({ ...formData, toBranchId: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     <option value="">Şube seçin</option>
                     {branches
@@ -518,11 +518,11 @@ export default function FilesPage() {
                 </div>
               ) : (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-400">Hedef Personel *</label>
+                  <label className="text-xs font-medium text-[--text-muted]">Hedef Personel *</label>
                   <select
                     value={formData.toUserId}
                     onChange={(e) => setFormData({ ...formData, toUserId: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     <option value="">Personel seçin</option>
                     {users.map((user) => (
@@ -535,24 +535,24 @@ export default function FilesPage() {
               )}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Başlık *</label>
+                <label className="text-xs font-medium text-[--text-muted]">Başlık *</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Gönderim konusu..."
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Açıklama</label>
+                <label className="text-xs font-medium text-[--text-muted]">Açıklama</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Ek detaylar ve talimatlar..."
                   rows={2}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
 
@@ -565,11 +565,11 @@ export default function FilesPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Öncelik</label>
+                <label className="text-xs font-medium text-[--text-muted]">Öncelik</label>
                 <select
                   value={formData.priority}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 >
                   <option value="low">Düşük</option>
                   <option value="normal">Normal</option>
@@ -579,17 +579,17 @@ export default function FilesPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-[--line] bg-[#0d100e] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white/5 rounded-full transition-colors"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.title || (!formData.toBranchId && !formData.toUserId) || formData.fileUrls.length === 0}
-                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Hazırlanıyor..." : "Gönderimi Başlat"}
               </button>
@@ -601,26 +601,26 @@ export default function FilesPage() {
       {/* Status Update Modal */}
       {isStatusDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="bg-[#111513] border border-white/[0.06] rounded-[20px] w-full max-w-md overflow-hidden shadow-2xl text-white">
-            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
+          <div className="bg-white border border-[--line] rounded-[20px] w-full max-w-md overflow-hidden shadow-2xl text-[--text]">
+            <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-white">Durum Güncelle</h3>
-                <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                <h3 className="text-base font-semibold text-[--text]">Durum Güncelle</h3>
+                <p className="text-xs text-[--text-muted] font-mono mt-0.5">
                   {selectedDelivery?.trackingNumber}
                 </p>
               </div>
-              <button onClick={() => setIsStatusDialogOpen(false)} className="text-zinc-500 hover:text-white p-1">
+              <button onClick={() => setIsStatusDialogOpen(false)} className="text-[--text-muted] hover:text-[--text] p-1">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">Yeni Durum</label>
+                <label className="text-xs font-medium text-[--text-muted]">Yeni Durum</label>
                 <select
                   value={statusUpdate.status}
                   onChange={(e) => setStatusUpdate({ ...statusUpdate, status: e.target.value as FileDelivery["status"] })}
-                  className="w-full px-3.5 py-2.5 bg-[#111513] border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                 >
                   <option value="sent">Gönderildi</option>
                   <option value="received">Alındı</option>
@@ -630,28 +630,28 @@ export default function FilesPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-zinc-400">İşlem Notu</label>
+                <label className="text-xs font-medium text-[--text-muted]">İşlem Notu</label>
                 <textarea
                   value={statusUpdate.notes}
                   onChange={(e) => setStatusUpdate({ ...statusUpdate, notes: e.target.value })}
                   placeholder="Değişiklik sebebi veya transfer notu..."
                   rows={3}
-                  className="w-full px-3.5 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[--line] rounded-xl text-xs text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] resize-none"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#0d100e] flex justify-end gap-3">
+            <div className="px-6 py-4 border-t border-[--line] bg-[#0d100e] flex justify-end gap-3">
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white border border-white/10 bg-white/5 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white/5 rounded-full transition-colors"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleStatusUpdate}
                 disabled={loading || !statusUpdate.status}
-                className="px-5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-full transition shadow-[0_0_15px_rgba(52,211,153,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Kaydediliyor..." : "Durumu Kaydet"}
               </button>

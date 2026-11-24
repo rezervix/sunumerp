@@ -517,10 +517,10 @@ export function ProductionMrpWorkspace() {
   return (
     <div className="space-y-6">
       {/* Üst Bar: Başlık, Plan Seçici, MRP Çalıştır Butonu */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-zinc-900/60 border border-[--line]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="p-1.5 rounded-lg bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
               <Cpu className="w-5 h-5" />
             </span>
             <h1 className="text-xl font-semibold text-white tracking-tight">
@@ -567,7 +567,7 @@ export function ProductionMrpWorkspace() {
               })
               setIsRunMrpModalOpen(true)
             }}
-            className="h-9 text-xs bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-900/30"
+            className="h-9 text-xs bg-[--brand] hover:bg-[--brand] text-white shadow-lg shadow-sm"
           >
             <Play className="w-3.5 h-3.5 mr-1.5 fill-current" /> MRP Çalıştır
           </Button>
@@ -575,12 +575,12 @@ export function ProductionMrpWorkspace() {
       </div>
 
       {/* Sekme Butonları */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-[--line] pb-3 overflow-x-auto">
         <button
           onClick={() => setActiveTab("mps")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === "mps"
-              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -591,7 +591,7 @@ export function ProductionMrpWorkspace() {
           onClick={() => setActiveTab("mrp_run")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === "mrp_run"
-              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -602,7 +602,7 @@ export function ProductionMrpWorkspace() {
           onClick={() => setActiveTab("planned_orders")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === "planned_orders"
-              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -613,7 +613,7 @@ export function ProductionMrpWorkspace() {
           onClick={() => setActiveTab("action_messages")}
           className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
             activeTab === "action_messages"
-              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
               : "text-zinc-400 hover:text-white hover:bg-white/5"
           }`}
         >
@@ -635,7 +635,7 @@ export function ProductionMrpWorkspace() {
                 <span
                   className={`px-2 py-0.5 rounded text-[11px] font-medium ${
                     selectedPlan.status === "APPROVED"
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                      ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
                       : selectedPlan.status === "OBSOLETE"
                       ? "bg-zinc-800 text-zinc-400"
                       : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
@@ -659,7 +659,7 @@ export function ProductionMrpWorkspace() {
                     size="sm"
                     variant="outline"
                     onClick={handleApprovePlan}
-                    className="h-8 text-xs border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                    className="h-8 text-xs border-[--brand-line] text-[--brand] hover:bg-[--brand]/10"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Planı Onayla
                   </Button>
@@ -689,7 +689,7 @@ export function ProductionMrpWorkspace() {
           {/* MPS Grid Matrisi */}
           {loadingMps ? (
             <div className="p-8 text-center text-sm text-zinc-400">
-              <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-emerald-400" />
+              <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[--brand]" />
               MPS Matrisi hesaplanıyor...
             </div>
           ) : mpsGridData?.grid?.length > 0 ? (
@@ -697,7 +697,7 @@ export function ProductionMrpWorkspace() {
               {mpsGridData.grid.map((entry: any) => (
                 <div
                   key={entry.item.id}
-                  className="rounded-xl border border-white/10 bg-zinc-900/60 overflow-hidden"
+                  className="rounded-xl border border-[--line] bg-zinc-900/60 overflow-hidden"
                 >
                   <div className="p-3.5 bg-zinc-800/40 border-b border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -708,7 +708,7 @@ export function ProductionMrpWorkspace() {
                       <span>Mevcut Stok: <strong className="text-white">{entry.item.currentOnHand}</strong></span>
                       <span>Emniyet Stoku: <strong className="text-amber-400">{entry.item.safetyStockQty}</strong></span>
                       <span>Temin Süresi: <strong className="text-white">{entry.item.leadTimeDays} Gün</strong></span>
-                      <span>Lot Kuralı: <strong className="text-emerald-400">{entry.item.lotSizingRule}</strong></span>
+                      <span>Lot Kuralı: <strong className="text-[--brand]">{entry.item.lotSizingRule}</strong></span>
                       <Button
                         size="sm"
                         variant="ghost"
@@ -744,7 +744,7 @@ export function ProductionMrpWorkspace() {
                       </thead>
                       <tbody className="divide-y divide-white/5 font-mono">
                         {/* Satış Tahmini */}
-                        <tr className="hover:bg-white/[0.02]">
+                        <tr className="hover:bg-[--page]">
                           <td className="p-2 pl-4 text-zinc-400 font-sans">Satış Tahmini (Forecast)</td>
                           {entry.matrix.map((c: any) => (
                             <td key={c.periodIndex} className="p-2 text-center text-zinc-300">
@@ -753,7 +753,7 @@ export function ProductionMrpWorkspace() {
                           ))}
                         </tr>
                         {/* Kesin Siparişler */}
-                        <tr className="hover:bg-white/[0.02]">
+                        <tr className="hover:bg-[--page]">
                           <td className="p-2 pl-4 text-zinc-400 font-sans">Müşteri Siparişleri (Sales)</td>
                           {entry.matrix.map((c: any) => (
                             <td key={c.periodIndex} className="p-2 text-center text-zinc-300">
@@ -771,7 +771,7 @@ export function ProductionMrpWorkspace() {
                           ))}
                         </tr>
                         {/* Beklenen Girişler */}
-                        <tr className="hover:bg-white/[0.02]">
+                        <tr className="hover:bg-[--page]">
                           <td className="p-2 pl-4 text-zinc-400 font-sans">Beklenen Girişler (Supply)</td>
                           {entry.matrix.map((c: any) => (
                             <td key={c.periodIndex} className="p-2 text-center text-blue-400">
@@ -780,9 +780,9 @@ export function ProductionMrpWorkspace() {
                           ))}
                         </tr>
                         {/* MPS Üretim Planı */}
-                        <tr className="bg-emerald-500/[0.04] font-semibold border-y border-emerald-500/20">
-                          <td className="p-2 pl-4 text-emerald-400 font-sans flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <tr className="bg-[--brand]/[0.04] font-semibold border-y border-[--brand-line]">
+                          <td className="p-2 pl-4 text-[--brand] font-sans flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[--brand]" />
                             MPS Üretim Kararı
                           </td>
                           {entry.matrix.map((c: any) => (
@@ -790,7 +790,7 @@ export function ProductionMrpWorkspace() {
                               key={c.periodIndex}
                               className={`p-2 text-center ${
                                 c.plannedProductionQty > 0
-                                  ? "text-emerald-400 font-bold bg-emerald-500/10"
+                                  ? "text-[--brand] font-bold bg-[--brand]/10"
                                   : "text-zinc-500"
                               }`}
                             >
@@ -799,7 +799,7 @@ export function ProductionMrpWorkspace() {
                           ))}
                         </tr>
                         {/* Projeksiyon Stoku */}
-                        <tr className="hover:bg-white/[0.02]">
+                        <tr className="hover:bg-[--page]">
                           <td className="p-2 pl-4 text-zinc-400 font-sans">Projeksiyon Stoku (On Hand)</td>
                           {entry.matrix.map((c: any) => (
                             <td
@@ -815,7 +815,7 @@ export function ProductionMrpWorkspace() {
                           ))}
                         </tr>
                         {/* Kullanılabilir Stok (ATP) */}
-                        <tr className="bg-white/[0.02] font-semibold">
+                        <tr className="bg-[--page] font-semibold">
                           <td className="p-2 pl-4 text-cyan-400 font-sans">Kullanılabilir Stok (ATP)</td>
                           {entry.matrix.map((c: any) => (
                             <td key={c.periodIndex} className="p-2 text-center text-cyan-400">
@@ -830,7 +830,7 @@ export function ProductionMrpWorkspace() {
               ))}
             </div>
           ) : (
-            <div className="p-12 text-center border border-dashed border-white/10 rounded-xl">
+            <div className="p-12 text-center border border-dashed border-[--line] rounded-xl">
               <Calendar className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-white">Henüz MPS Verisi Bulunmuyor</p>
               <p className="text-xs text-zinc-400 mt-1">
@@ -847,23 +847,23 @@ export function ProductionMrpWorkspace() {
       {activeTab === "mrp_run" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line]">
               <div className="text-xs text-zinc-400">Toplam Koşu</div>
               <div className="text-2xl font-bold text-white mt-1">{mrpRuns.length}</div>
             </div>
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line]">
               <div className="text-xs text-zinc-400">Son Koşu Kodu</div>
-              <div className="text-sm font-mono font-bold text-emerald-400 mt-2">
+              <div className="text-sm font-mono font-bold text-[--brand] mt-2">
                 {mrpRuns[0]?.runCode || "Kayıt Yok"}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line]">
               <div className="text-xs text-zinc-400">Üretilen Sipariş Sayısı</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {mrpRuns[0]?.totalOrdersGenerated || 0}
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/10">
+            <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line]">
               <div className="text-xs text-zinc-400">Aksiyon Mesajı Sayısı</div>
               <div className="text-2xl font-bold text-amber-400 mt-1">
                 {mrpRuns[0]?.totalActionMessages || 0}
@@ -871,7 +871,7 @@ export function ProductionMrpWorkspace() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-zinc-900/60 overflow-hidden">
+          <div className="rounded-xl border border-[--line] bg-zinc-900/60 overflow-hidden">
             <Table>
               <TableHeader className="bg-zinc-800/40 text-xs">
                 <TableRow className="border-white/5">
@@ -890,8 +890,8 @@ export function ProductionMrpWorkspace() {
                   <TableRow
                     key={r.id}
                     onClick={() => setActiveRunId(r.id)}
-                    className={`cursor-pointer hover:bg-white/[0.02] border-white/5 ${
-                      activeRunId === r.id ? "bg-emerald-500/[0.04]" : ""
+                    className={`cursor-pointer hover:bg-[--page] border-white/5 ${
+                      activeRunId === r.id ? "bg-[--brand]/[0.04]" : ""
                     }`}
                   >
                     <TableCell className="font-semibold text-white">{r.runCode}</TableCell>
@@ -900,7 +900,7 @@ export function ProductionMrpWorkspace() {
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-sans font-medium ${
                           r.status === "COMPLETED"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
                             : r.status === "RUNNING"
                             ? "bg-blue-500/10 text-blue-400 border border-blue-500/20 animate-pulse"
                             : "bg-red-500/10 text-red-400 border border-red-500/20"
@@ -910,7 +910,7 @@ export function ProductionMrpWorkspace() {
                       </span>
                     </TableCell>
                     <TableCell className="text-zinc-300">{r.totalItemsPlanned}</TableCell>
-                    <TableCell className="text-emerald-400">{r.totalOrdersGenerated}</TableCell>
+                    <TableCell className="text-[--brand]">{r.totalOrdersGenerated}</TableCell>
                     <TableCell className="text-amber-400">{r.totalActionMessages}</TableCell>
                     <TableCell className="text-zinc-400">{r.executionTimeMs} ms</TableCell>
                     <TableCell className="text-zinc-500 font-sans">
@@ -968,7 +968,7 @@ export function ProductionMrpWorkspace() {
                 variant="outline"
                 disabled={selectedOrderIds.length === 0 || isConverting}
                 onClick={handleBulkConvert}
-                className="h-8 text-xs bg-emerald-600/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-600/20"
+                className="h-8 text-xs bg-[--brand]/10 border-[--brand-line] text-[--brand] hover:bg-[--brand]/20"
               >
                 <ShoppingCart className="w-3.5 h-3.5 mr-1" />
                 Seçilenleri Satınalma Talebine Dönüştür ({selectedOrderIds.length})
@@ -977,7 +977,7 @@ export function ProductionMrpWorkspace() {
           </div>
 
           {/* Tablo */}
-          <div className="rounded-xl border border-white/10 bg-zinc-900/60 overflow-hidden">
+          <div className="rounded-xl border border-[--line] bg-zinc-900/60 overflow-hidden">
             <Table>
               <TableHeader className="bg-zinc-800/40 text-xs">
                 <TableRow className="border-white/5">
@@ -1012,7 +1012,7 @@ export function ProductionMrpWorkspace() {
               </TableHeader>
               <TableBody className="text-xs">
                 {plannedOrders.map((o) => (
-                  <TableRow key={o.id} className="border-white/5 hover:bg-white/[0.02]">
+                  <TableRow key={o.id} className="border-white/5 hover:bg-[--page]">
                     <TableCell>
                       {o.orderType === "PURCHASE" && o.orderStatus === "PLANNED" && (
                         <Checkbox
@@ -1048,14 +1048,14 @@ export function ProductionMrpWorkspace() {
                     <TableCell className="font-mono text-zinc-300">
                       {new Date(o.releaseDate).toISOString().split("T")[0]}
                     </TableCell>
-                    <TableCell className="font-mono text-emerald-400 font-medium">
+                    <TableCell className="font-mono text-[--brand] font-medium">
                       {new Date(o.dueDate).toISOString().split("T")[0]}
                     </TableCell>
                     <TableCell>
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-medium ${
                           o.orderStatus === "CONVERTED"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]"
                             : "bg-zinc-800 text-zinc-300"
                         }`}
                       >
@@ -1069,7 +1069,7 @@ export function ProductionMrpWorkspace() {
                           variant="ghost"
                           disabled={isConverting}
                           onClick={() => handleConvertToPurchase(o.id)}
-                          className="h-7 text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                          className="h-7 text-xs text-[--brand] hover:text-[--brand] hover:bg-[--brand]/10"
                         >
                           Talebe Dönüştür
                         </Button>
@@ -1190,7 +1190,7 @@ export function ProductionMrpWorkspace() {
                     onClick={() => handleResolveActionMessage(msg.id)}
                     className="h-8 text-xs border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white shrink-0"
                   >
-                    <Check className="w-3.5 h-3.5 mr-1 text-emerald-400" /> Çözüldü
+                    <Check className="w-3.5 h-3.5 mr-1 text-[--brand]" /> Çözüldü
                   </Button>
                 )}
               </div>
@@ -1285,7 +1285,7 @@ export function ProductionMrpWorkspace() {
               >
                 İptal
               </Button>
-              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-xs">
+              <Button type="submit" className="bg-[--brand] hover:bg-[--brand] text-xs">
                 Planı Oluştur
               </Button>
             </DialogFooter>
@@ -1343,7 +1343,7 @@ export function ProductionMrpWorkspace() {
               >
                 İptal
               </Button>
-              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-500 text-xs">
+              <Button type="submit" className="bg-[--brand] hover:bg-[--brand] text-xs">
                 Senaryoyu Türet
               </Button>
             </DialogFooter>
@@ -1358,7 +1358,7 @@ export function ProductionMrpWorkspace() {
         <DialogContent className="bg-zinc-900 border-zinc-800 text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Play className="w-5 h-5 text-emerald-400 fill-current" /> MRP Motorunu Çalıştır
+              <Play className="w-5 h-5 text-[--brand] fill-current" /> MRP Motorunu Çalıştır
             </DialogTitle>
             <DialogDescription className="text-zinc-400 text-xs">
               Çok seviyeli BOM patlatımı, emniyet stoku kontrolü ve lot büyüklüğü optimizasyonu yapılacaktır.
@@ -1413,7 +1413,7 @@ export function ProductionMrpWorkspace() {
                 type="button"
                 disabled={isRunningMrp}
                 onClick={handleRunMrp}
-                className="bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white"
+                className="bg-[--brand] hover:bg-[--brand] text-xs font-semibold text-white"
               >
                 {isRunningMrp ? (
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin" />
@@ -1463,7 +1463,7 @@ export function ProductionMrpWorkspace() {
                 size="sm"
                 onClick={handleCompareScenarios}
                 disabled={loadingComparison || !compareTargetPlanId}
-                className="bg-emerald-600 hover:bg-emerald-500 text-xs"
+                className="bg-[--brand] hover:bg-[--brand] text-xs"
               >
                 Karşılaştır
               </Button>
@@ -1477,7 +1477,7 @@ export function ProductionMrpWorkspace() {
                     <div
                       className={`text-lg font-bold mt-1 ${
                         comparisonResult.totals.productionDelta >= 0
-                          ? "text-emerald-400"
+                          ? "text-[--brand]"
                           : "text-red-400"
                       }`}
                     >
@@ -1521,7 +1521,7 @@ export function ProductionMrpWorkspace() {
                           </TableCell>
                           <TableCell
                             className={
-                              row.plannedProdDelta >= 0 ? "text-emerald-400" : "text-red-400"
+                              row.plannedProdDelta >= 0 ? "text-[--brand]" : "text-red-400"
                             }
                           >
                             {row.plannedProdDelta >= 0 ? "+" : ""}
@@ -1573,7 +1573,7 @@ export function ProductionMrpWorkspace() {
               {/* Pegging Ağacı */}
               <div className="space-y-2">
                 <h4 className="font-semibold text-white text-xs flex items-center gap-1.5">
-                  <Sliders className="w-3.5 h-3.5 text-emerald-400" />
+                  <Sliders className="w-3.5 h-3.5 text-[--brand]" />
                   Pegging (Nihai Talep Kaynağı Takibi)
                 </h4>
                 {timePhasedData.peggingTree?.length > 0 ? (
@@ -1585,13 +1585,13 @@ export function ProductionMrpWorkspace() {
                       >
                         <div className="flex items-center justify-between font-mono">
                           <span className="font-semibold text-white">{peg.orderNumber}</span>
-                          <span className="text-emerald-400">{peg.quantity} Adet</span>
+                          <span className="text-[--brand]">{peg.quantity} Adet</span>
                         </div>
                         <div className="text-[11px] text-zinc-400">
                           Teslim Tarihi: {new Date(peg.dueDate).toISOString().split("T")[0]}
                         </div>
                         {peg.sources && peg.sources.length > 0 && (
-                          <div className="pl-3 mt-2 border-l border-emerald-500/30 space-y-1">
+                          <div className="pl-3 mt-2 border-l border-[--brand-line] space-y-1">
                             {peg.sources.map((s: any, sIdx: number) => (
                               <div key={sIdx} className="text-[11px] text-zinc-300 font-mono">
                                 <span className="text-zinc-500">└─</span> Kaynak: {s.demandType} (

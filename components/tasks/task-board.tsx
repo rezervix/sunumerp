@@ -37,8 +37,8 @@ const COLUMNS = [
 ]
 
 const PRIORITY_MAP: Record<string, { label: string, color: string, weight: number }> = {
-  LOW: { label: "Düşük", color: "bg-white/5 text-zinc-400 border border-white/10", weight: 1 },
-  MEDIUM: { label: "Orta", color: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20", weight: 2 },
+  LOW: { label: "Düşük", color: "bg-white/5 text-zinc-400 border border-[--line]", weight: 1 },
+  MEDIUM: { label: "Orta", color: "bg-[--brand]/10 text-[--brand] border border-[--brand-line]", weight: 2 },
   HIGH: { label: "Yüksek", color: "bg-amber-500/10 text-amber-300 border border-amber-500/20", weight: 3 },
   URGENT: { label: "Acil", color: "bg-rose-500/15 text-rose-300 border border-rose-500/30", weight: 4 },
 }
@@ -110,13 +110,13 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
         return (
           <div 
             key={column.id} 
-            className="flex-1 min-w-[300px] max-w-[400px] bg-[#111513]/60 border border-white/[0.05] rounded-[20px] p-4 flex flex-col shadow-xl"
+            className="flex-1 min-w-[300px] max-w-[400px] bg-[white]/60 border border-white/[0.05] rounded-[20px] p-4 flex flex-col shadow-xl"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, column.id)}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-medium text-sm text-white">{column.title}</h3>
-              <span className="bg-white/5 text-zinc-300 border border-white/10 rounded-full px-2.5 py-0.5 text-xs font-mono font-medium">
+              <span className="bg-white/5 text-zinc-300 border border-[--line] rounded-full px-2.5 py-0.5 text-xs font-mono font-medium">
                 {columnTasks.length}
               </span>
             </div>
@@ -134,8 +134,8 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
                     onDragStart={(e) => handleDragStart(e, task.id)}
                     onClick={() => setSelectedTask(task)}
                     whileHover={{ y: -3 }}
-                    className={`bg-[#0d100e] p-4 rounded-[16px] shadow-sm cursor-grab active:cursor-grabbing hover:border-emerald-500/30 transition-colors group text-white ${
-                      isOverdue ? "border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.15)]" : "border border-white/[0.06]"
+                    className={`bg-[#0d100e] p-4 rounded-[16px] shadow-sm cursor-grab active:cursor-grabbing hover:border-[--brand-line] transition-colors group text-white ${
+                      isOverdue ? "border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.15)]" : "border border-[--line]"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
@@ -156,11 +156,11 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
                       <p className="text-xs text-zinc-400 line-clamp-2 mb-3">{task.description}</p>
                     )}
                     
-                    <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                    <div className="mt-3 pt-3 border-t border-[--line] flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6 border border-white/10">
+                        <Avatar className="h-6 w-6 border border-[--line]">
                           <AvatarImage src={task.assignee.avatarUrl || undefined} />
-                          <AvatarFallback className="text-[10px] bg-emerald-500/10 text-emerald-400">
+                          <AvatarFallback className="text-[10px] bg-[--brand]/10 text-[--brand]">
                             {task.assignee.fullName.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
@@ -177,7 +177,7 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
                           </div>
                         )}
                         {task.dueDate && (
-                          <div className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-mono ${isOverdue ? "text-rose-300 bg-rose-500/15 border border-rose-500/30" : "text-zinc-400 bg-white/5 border border-white/10"}`}>
+                          <div className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-mono ${isOverdue ? "text-rose-300 bg-rose-500/15 border border-rose-500/30" : "text-zinc-400 bg-white/5 border border-[--line]"}`}>
                             <Calendar size={11} />
                             {format(new Date(task.dueDate), "d MMM", { locale: tr })}
                           </div>
@@ -189,7 +189,7 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
               })}
               
               {columnTasks.length === 0 && (
-                <div className="flex-1 border-2 border-dashed border-white/[0.06] rounded-xl flex items-center justify-center p-6 text-center text-xs text-zinc-600">
+                <div className="flex-1 border-2 border-dashed border-[--line] rounded-xl flex items-center justify-center p-6 text-center text-xs text-zinc-600">
                   Buraya sürükleyin
                 </div>
               )}

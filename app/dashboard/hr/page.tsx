@@ -19,12 +19,6 @@ import {
   Trash2,
   X,
   Search,
-  Mail,
-  Phone,
-  FileText,
-  CheckCircle2,
-  Sparkles,
-  Layers,
 } from "lucide-react"
 import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
 
@@ -177,15 +171,15 @@ export default function HRPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* ── Üst Başlık ve Navigasyon ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-white/[0.06]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[--line]">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-white">İnsan Kaynakları & Yetenek Havuzu</h1>
-          <p className="text-xs text-zinc-400 mt-1">Personel adayları, işe alım kanban panosu ve yetenek takip sistemi</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-[--text]">İnsan Kaynakları & Yetenek Havuzu</h1>
+          <p className="text-xs text-[--text-muted] mt-1">Personel adayları, işe alım kanban panosu ve yetenek takip sistemi</p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Görünüm Sekmeleri */}
-          <div className="flex bg-[#111513] p-1 rounded-xl border border-white/[0.06]">
+          <div className="flex bg-[--muted-bg] p-1 rounded-xl border border-[--line]">
             {[
               { id: "kanban", label: "Kanban" },
               { id: "list", label: "Aday Listesi" },
@@ -197,13 +191,13 @@ export default function HRPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`relative px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
-                    isActive ? "text-white" : "text-zinc-400 hover:text-white"
+                    isActive ? "text-[--brand]" : "text-[--text-muted] hover:text-[--text]"
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="hrActiveTab"
-                      className="absolute inset-0 bg-white/[0.08] border border-white/[0.08] rounded-lg"
+                      className="absolute inset-0 bg-white border border-[--line] rounded-lg shadow-xs"
                       transition={{ type: "spring", stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -218,7 +212,7 @@ export default function HRPage() {
               setFormData({ status: "Aday", kanbanStatus: "Basvurdu" })
               setIsDialogOpen(true)
             }}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all cursor-pointer"
+            className="bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
           >
             <Plus className="size-4" />
             Yeni Aday Ekle
@@ -227,62 +221,62 @@ export default function HRPage() {
       </div>
 
       {/* ── Kutusuz (Borderless) Üst KPI Şeridi ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 py-3 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 py-3 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <Users className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <Users className="size-3.5 text-[--brand]" />
             <span>Toplam Başvuru</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={stats.total} />
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+            <span className="text-[11px] font-mono text-[--text-muted] bg-[--muted-bg] px-2 py-0.5 rounded-full border border-[--line]">
               Aday
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <MessageSquare className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <MessageSquare className="size-3.5 text-[--brand]" />
             <span>Mülakat Aşamasında</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={stats.interviews} />
             </span>
-            <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+            <span className="text-[11px] font-mono text-[--sky] bg-[--brand-soft] px-2 py-0.5 rounded-full border border-[--brand-line]">
               Görüşme
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <UserCheck className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <UserCheck className="size-3.5 text-[--brand]" />
             <span>İşe Alınanlar</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-emerald-400 tracking-tight">
+            <span className="text-3xl font-light text-[--ok] tracking-tight tabular-nums">
               <AnimatedNumber value={stats.hired} />
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--ok] bg-[--ok-soft] px-2 py-0.5 rounded-full border border-[--ok]/20">
               Kabul
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <UserX className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <UserX className="size-3.5 text-[--brand]" />
             <span>Reddedilenler</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--bad] tracking-tight tabular-nums">
               <AnimatedNumber value={stats.rejected} />
             </span>
-            <span className="text-[11px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
+            <span className="text-[11px] font-mono text-[--bad] bg-[--bad-soft] px-2 py-0.5 rounded-full border border-[--bad]/20">
               Elendi
             </span>
           </div>
@@ -291,65 +285,65 @@ export default function HRPage() {
 
       {/* ── Arama Çubuğu ── */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[--text-muted]" />
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Aday adı, pozisyon veya yetenek ile filtrele..."
-          className="w-full bg-[#111513] border border-white/[0.06] focus:border-emerald-500/30 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-500 outline-none transition-colors"
+          className="w-full bg-white border border-[--line] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] rounded-xl pl-10 pr-4 py-2 text-xs text-[--text] placeholder-[--text-muted] outline-none transition-all shadow-xs"
         />
       </div>
 
       {/* ── 1. KANBAN GÖRÜNÜMÜ ── */}
       {activeTab === "kanban" && (
-        <div className="overflow-x-auto pb-4 custom-scrollbar">
+        <div className="overflow-x-auto pb-4">
           <div className="flex gap-4 min-w-max">
             {KANBAN_STAGES.map(stage => {
               const stageCandidates = filteredCandidates.filter(c => c.kanbanStatus === stage)
               return (
                 <div
                   key={stage}
-                  className="w-[300px] flex flex-col bg-[#111513]/60 backdrop-blur-xl border border-white/[0.06] rounded-[20px] overflow-hidden shrink-0"
+                  className="w-[300px] flex flex-col bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] overflow-hidden shrink-0 shadow-sm"
                 >
                   {/* Sütun Başlığı */}
-                  <div className="p-4 border-b border-white/[0.06] bg-white/[0.02] flex items-center justify-between">
-                    <h3 className="font-medium text-xs uppercase tracking-wider text-zinc-300">
+                  <div className="p-4 border-b border-[--line] bg-[--page] flex items-center justify-between">
+                    <h3 className="font-medium text-xs uppercase tracking-wider text-[--navy]">
                       {STAGE_LABELS[stage] || stage}
                     </h3>
-                    <span className="text-xs font-mono px-2 py-0.5 bg-white/[0.05] border border-white/[0.08] text-zinc-300 rounded-full">
+                    <span className="text-xs font-mono px-2 py-0.5 bg-white border border-[--line] text-[--text-muted] rounded-full">
                       {stageCandidates.length}
                     </span>
                   </div>
 
                   {/* Aday Kartları */}
-                  <div className="flex-1 p-3 overflow-y-auto max-h-[600px] space-y-3 custom-scrollbar">
+                  <div className="flex-1 p-3 overflow-y-auto max-h-[600px] space-y-3">
                     <StaggerContainer>
                       {stageCandidates.map(c => (
                         <StaggerItem key={c.id}>
                           <motion.div
                             whileHover={{ y: -3 }}
                             onClick={() => { setSelectedCandidate(c); setIsDialogOpen(true); setFormData(c) }}
-                            className="bg-[#111513]/90 p-4 rounded-2xl border border-white/[0.06] hover:border-emerald-500/30 shadow-sm cursor-pointer transition-all group"
+                            className="bg-white p-4 rounded-2xl border border-[--line] hover:border-[--brand-line] shadow-xs cursor-pointer transition-all group"
                           >
                             <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-medium text-sm text-white group-hover:text-emerald-400 transition-colors">
+                              <h4 className="font-medium text-sm text-[--text] group-hover:text-[--brand] transition-colors">
                                 {c.firstName} {c.lastName}
                               </h4>
                               {c.rating > 0 && (
-                                <span className="flex text-amber-400 text-xs items-center gap-1 font-mono">
-                                  <Star className="size-3 fill-amber-400" />
+                                <span className="flex text-[--warn] text-xs items-center gap-1 font-mono">
+                                  <Star className="size-3 fill-amber-400 text-amber-400" />
                                   {c.rating}
                                 </span>
                               )}
                             </div>
 
-                            <div className="text-xs text-zinc-400 space-y-1 mb-3">
+                            <div className="text-xs text-[--text-muted] space-y-1 mb-3">
                               <p className="flex items-center gap-1.5 truncate">
-                                <Briefcase className="size-3 text-zinc-500 shrink-0" />
+                                <Briefcase className="size-3 text-[--text-muted] shrink-0" />
                                 <span>{c.position || "Pozisyon Belirtilmedi"}</span>
                               </p>
                               <p className="flex items-center gap-1.5 truncate">
-                                <Building2 className="size-3 text-zinc-500 shrink-0" />
+                                <Building2 className="size-3 text-[--text-muted] shrink-0" />
                                 <span>{c.department || `${c.experienceYears || 0} Yıl Deneyim`}</span>
                               </p>
                             </div>
@@ -361,10 +355,10 @@ export default function HRPage() {
                                 updateKanbanStatus(c.id, e.target.value)
                               }}
                               onClick={e => e.stopPropagation()}
-                              className="w-full text-[11px] border border-white/[0.08] bg-black/40 text-zinc-300 rounded-lg p-1.5 focus:outline-none focus:border-emerald-500/50"
+                              className="w-full text-[11px] border border-[--line] bg-[--page] text-[--text-2] rounded-lg p-1.5 focus:outline-none focus:border-[--brand]"
                             >
                               {KANBAN_STAGES.map(s => (
-                                <option key={s} value={s} className="bg-[#111513] text-white">
+                                <option key={s} value={s}>
                                   {STAGE_LABELS[s] || s}
                                 </option>
                               ))}
@@ -374,7 +368,7 @@ export default function HRPage() {
                       ))}
                     </StaggerContainer>
                     {stageCandidates.length === 0 && (
-                      <div className="text-center py-8 text-[11px] text-zinc-600">Aday yok</div>
+                      <div className="text-center py-8 text-[11px] text-[--text-muted]">Aday yok</div>
                     )}
                   </div>
                 </div>
@@ -386,10 +380,10 @@ export default function HRPage() {
 
       {/* ── 2. LİSTE GÖRÜNÜMÜ ── */}
       {activeTab === "list" && (
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
+        <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="bg-white/[0.02] text-zinc-400 text-[11px] uppercase tracking-wider border-b border-white/[0.06]">
+              <thead className="bg-[--page] text-[--text-muted] text-[11px] uppercase tracking-wider border-b border-[--line]">
                 <tr>
                   <th className="px-5 py-3.5">Aday</th>
                   <th className="px-5 py-3.5">Pozisyon / Departman</th>
@@ -399,40 +393,40 @@ export default function HRPage() {
                   <th className="px-5 py-3.5 text-right">İşlem</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04]">
+              <tbody className="divide-y divide-[--line-soft]">
                 {filteredCandidates.map(c => (
-                  <tr key={c.id} className="hover:bg-white/[0.02] transition-colors group">
+                  <tr key={c.id} className="hover:bg-[--muted-bg]/50 transition-colors group">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="size-8 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-xs font-bold">
+                        <div className="size-8 rounded-full bg-[--brand-soft] text-[--brand] border border-[--brand-line] flex items-center justify-center text-xs font-bold">
                           {c.firstName[0]}{c.lastName[0]}
                         </div>
                         <div>
-                          <p className="font-medium text-white text-xs">{c.firstName} {c.lastName}</p>
-                          <p className="text-[10px] text-zinc-500 font-mono">{c.skills}</p>
+                          <p className="font-medium text-[--text] text-xs">{c.firstName} {c.lastName}</p>
+                          <p className="text-[10px] text-[--text-muted] font-mono">{c.skills}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-zinc-300">
+                    <td className="px-5 py-3.5 text-xs text-[--text-2]">
                       <p>{c.position || "Pozisyon Belirtilmedi"}</p>
-                      <p className="text-[10px] text-zinc-500">{c.department}</p>
+                      <p className="text-[10px] text-[--text-muted]">{c.department}</p>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                         {STAGE_LABELS[c.kanbanStatus] || c.kanbanStatus}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-xs font-mono text-zinc-400">
+                    <td className="px-5 py-3.5 text-xs font-mono text-[--text-2]">
                       {c.experienceYears} Yıl
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-zinc-400 font-mono">
+                    <td className="px-5 py-3.5 text-xs text-[--text-2] font-mono">
                       <p>{c.email}</p>
-                      <p className="text-[10px] text-zinc-500">{c.phone}</p>
+                      <p className="text-[10px] text-[--text-muted]">{c.phone}</p>
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <button
                         onClick={() => { setSelectedCandidate(c); setIsDialogOpen(true); setFormData(c) }}
-                        className="px-3 py-1 text-xs rounded-lg border border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors"
+                        className="px-3 py-1 text-xs rounded-lg border border-[--line] bg-white text-[--text-2] hover:text-[--text] hover:bg-[--muted-bg] transition-colors cursor-pointer"
                       >
                         İncele
                       </button>
@@ -448,49 +442,49 @@ export default function HRPage() {
       {/* ── 3. ANALİTİK GÖRÜNÜMÜ ── */}
       {activeTab === "analytics" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-[#111513]/90 border border-white/[0.06] p-6 rounded-[20px] shadow-2xl flex items-center gap-4">
-            <div className="size-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+          <div className="bg-white/80 backdrop-blur-xl border border-[--line] p-6 rounded-[20px] shadow-sm flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
               <Users size={22} />
             </div>
             <div>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider">Toplam Başvuru</p>
-              <h3 className="text-2xl font-light text-white mt-1">
+              <p className="text-xs text-[--text-muted] uppercase tracking-wider">Toplam Başvuru</p>
+              <h3 className="text-2xl font-light text-[--text] mt-1 tabular-nums">
                 <AnimatedNumber value={stats.total} />
               </h3>
             </div>
           </div>
 
-          <div className="bg-[#111513]/90 border border-white/[0.06] p-6 rounded-[20px] shadow-2xl flex items-center gap-4">
-            <div className="size-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <div className="bg-white/80 backdrop-blur-xl border border-[--line] p-6 rounded-[20px] shadow-sm flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-[--ok-soft] border border-[--ok]/20 flex items-center justify-center text-[--ok]">
               <UserCheck size={22} />
             </div>
             <div>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider">İşe Alınanlar</p>
-              <h3 className="text-2xl font-light text-emerald-400 mt-1">
+              <p className="text-xs text-[--text-muted] uppercase tracking-wider">İşe Alınanlar</p>
+              <h3 className="text-2xl font-light text-[--ok] mt-1 tabular-nums">
                 <AnimatedNumber value={stats.hired} />
               </h3>
             </div>
           </div>
 
-          <div className="bg-[#111513]/90 border border-white/[0.06] p-6 rounded-[20px] shadow-2xl flex items-center gap-4">
-            <div className="size-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+          <div className="bg-white/80 backdrop-blur-xl border border-[--line] p-6 rounded-[20px] shadow-sm flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-[--bad-soft] border border-[--bad]/20 flex items-center justify-center text-[--bad]">
               <UserX size={22} />
             </div>
             <div>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider">Reddedilenler</p>
-              <h3 className="text-2xl font-light text-white mt-1">
+              <p className="text-xs text-[--text-muted] uppercase tracking-wider">Reddedilenler</p>
+              <h3 className="text-2xl font-light text-[--bad] mt-1 tabular-nums">
                 <AnimatedNumber value={stats.rejected} />
               </h3>
             </div>
           </div>
 
-          <div className="bg-[#111513]/90 border border-white/[0.06] p-6 rounded-[20px] shadow-2xl flex items-center gap-4">
-            <div className="size-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-zinc-300">
+          <div className="bg-white/80 backdrop-blur-xl border border-[--line] p-6 rounded-[20px] shadow-sm flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-[--muted-bg] border border-[--line] flex items-center justify-center text-[--text-muted]">
               <MessageSquare size={22} />
             </div>
             <div>
-              <p className="text-xs text-zinc-400 uppercase tracking-wider">Mülakatlar</p>
-              <h3 className="text-2xl font-light text-white mt-1">
+              <p className="text-xs text-[--text-muted] uppercase tracking-wider">Mülakatlar</p>
+              <h3 className="text-2xl font-light text-[--text] mt-1 tabular-nums">
                 <AnimatedNumber value={stats.interviews} />
               </h3>
             </div>
@@ -501,22 +495,22 @@ export default function HRPage() {
       {/* ── ADAY PROFİL DİYALOĞU ── */}
       <AnimatePresence>
         {isDialogOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#111513] border border-white/[0.08] rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+              className="bg-white border border-[--line] rounded-[24px] w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             >
-              <div className="px-6 py-4 border-b border-white/[0.06] flex justify-between items-center">
-                <h3 className="text-base font-medium text-white">
+              <div className="px-6 py-4 border-b border-[--line] bg-[--page] flex justify-between items-center">
+                <h3 className="text-base font-medium text-[--navy]">
                   {formData.id ? "Aday Profili & Detayları" : "Yeni Aday Kaydı"}
                 </h3>
                 <div className="flex items-center gap-2">
                   {formData.id && (
                     <button
                       onClick={() => handleDelete(formData.id!)}
-                      className="p-1.5 text-zinc-500 hover:text-rose-400 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 text-[--text-muted] hover:text-[--bad] hover:bg-[--bad-soft] rounded-lg transition-colors cursor-pointer"
                       title="Adayı Sil"
                     >
                       <Trash2 className="size-4" />
@@ -524,7 +518,7 @@ export default function HRPage() {
                   )}
                   <button
                     onClick={() => setIsDialogOpen(false)}
-                    className="p-1.5 text-zinc-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors cursor-pointer"
                   >
                     <X className="size-4" />
                   </button>
@@ -534,76 +528,76 @@ export default function HRPage() {
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Ad</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Ad</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.firstName || ''}
                       onChange={e => setFormData({...formData, firstName: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Soyad</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Soyad</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.lastName || ''}
                       onChange={e => setFormData({...formData, lastName: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Pozisyon</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Pozisyon</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.position || ''}
                       onChange={e => setFormData({...formData, position: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Departman</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Departman</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.department || ''}
                       onChange={e => setFormData({...formData, department: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">E-posta</label>
+                    <label className="text-xs font-medium text-[--text-muted]">E-posta</label>
                     <input
                       type="email"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.email || ''}
                       onChange={e => setFormData({...formData, email: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Telefon</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Telefon</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.phone || ''}
                       onChange={e => setFormData({...formData, phone: e.target.value})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Değerlendirme (1-5 Puan)</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Değerlendirme (1-5 Puan)</label>
                     <input
                       type="number" min="1" max="5"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50 font-mono"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] font-mono"
                       value={formData.rating || ''}
                       onChange={e => setFormData({...formData, rating: Number(e.target.value)})}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-400">Deneyim (Yıl)</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Deneyim (Yıl)</label>
                     <input
                       type="number"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50 font-mono"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] font-mono"
                       value={formData.experienceYears || ''}
                       onChange={e => setFormData({...formData, experienceYears: Number(e.target.value)})}
                     />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
-                    <label className="text-xs font-medium text-zinc-400">Yetenekler (Virgülle ayırın)</label>
+                    <label className="text-xs font-medium text-[--text-muted]">Yetenekler (Virgülle ayırın)</label>
                     <input
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                       value={formData.skills || ''}
                       onChange={e => setFormData({...formData, skills: e.target.value})}
                     />
@@ -611,17 +605,17 @@ export default function HRPage() {
                 </div>
               </div>
 
-              <div className="px-6 py-4 bg-white/[0.02] border-t border-white/[0.06] flex justify-end gap-3">
+              <div className="px-6 py-4 bg-[--page] border-t border-[--line] flex justify-end gap-3">
                 <button
                   onClick={() => setIsDialogOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors cursor-pointer"
                 >
                   İptal
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-xs font-semibold shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white rounded-full text-xs font-medium shadow-sm transition-all disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Kaydediliyor..." : "Profili Kaydet"}
                 </button>

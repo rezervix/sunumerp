@@ -104,47 +104,44 @@
   --shadow-soft: var(--shadow-card);
 }
 
-/* ── Legacy "Obsidian Carbon & Emerald Mint" (.dark) — Faz 2-4 Geçişine Kadar Korunur ── */
+/* ── Berrak Cam & Kurumsal Mavi — Tutarlı Açık Tema (.dark da açık temaya yönlendirilir) ── */
 .dark {
-  --background: #080A09;
-  --foreground: #F4F4F5;
-  --card: rgba(17, 21, 19, 0.9);
-  --card-foreground: #F4F4F5;
-  --popover: #111513;
-  --popover-foreground: #F4F4F5;
-  --primary: #34D399;
-  --primary-foreground: #061811;
-  --secondary: rgba(255, 255, 255, 0.04);
-  --secondary-foreground: #E4E4E7;
-  --muted: rgba(255, 255, 255, 0.04);
-  --muted-foreground: #A1A1AA;
-  --accent: rgba(52, 211, 153, 0.15);
-  --accent-foreground: #6EE7B7;
-  --destructive: #F43F5E;
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--bg);
+  --card-foreground: var(--text);
+  --popover: var(--bg);
+  --popover-foreground: var(--text);
+  --primary: var(--brand);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--muted-bg);
+  --secondary-foreground: var(--text-2);
+  --muted: var(--muted-bg);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand);
+  --destructive: var(--bad-fill);
   --destructive-foreground: #FFFFFF;
-  --border: rgba(255, 255, 255, 0.06);
-  --input: rgba(255, 255, 255, 0.06);
-  --ring: #34D399;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--brand);
 
-  /* Sidebar */
-  --sidebar: rgba(17, 21, 19, 0.9);
-  --sidebar-foreground: #F4F4F5;
-  --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-muted: #A1A1AA;
-  --sidebar-accent: rgba(52, 211, 153, 0.15);
-  --sidebar-accent-foreground: #6EE7B7;
-  --sidebar-primary: #34D399;
+  --sidebar: var(--bg);
+  --sidebar-foreground: var(--text);
+  --sidebar-border: var(--line);
+  --sidebar-muted: var(--text-muted);
+  --sidebar-accent: var(--brand-soft);
+  --sidebar-accent-foreground: var(--brand);
+  --sidebar-primary: var(--brand);
 
-  /* Header */
-  --header: rgba(17, 21, 19, 0.9);
-  --header-border: rgba(255, 255, 255, 0.06);
+  --header: rgba(255, 255, 255, 0.8);
+  --header-border: var(--line);
 
-  /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.55);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.65);
-  --shadow-soft: var(--shadow-sm);
+  --shadow-xs: 0 1px 2px rgba(11, 27, 51, 0.04);
+  --shadow-sm: var(--shadow-card);
+  --shadow-md: 0 8px 24px -12px rgba(11, 27, 51, 0.14);
+  --shadow-lg: var(--shadow-modal);
+  --shadow-soft: var(--shadow-card);
 }
 
 /* ── Tailwind v4 Semantik Tema Yapılandırması ─────────────────────── */
@@ -504,10 +501,10 @@
   background: color-mix(in srgb, var(--brand) 38%, transparent);
 }
 
-/* ── Sparkline utilities (Legacy + Brand) ────────── */
+/* ── Sparkline utilities (Brand) ────────── */
 .sparkline {
   fill: none;
-  stroke: #34d399;
+  stroke: var(--brand);
   stroke-width: 2;
   stroke-linecap: round;
 }

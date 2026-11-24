@@ -181,7 +181,7 @@ export function ContentUploadModal({ open, onClose, onSuccess, niches }: Content
 
                       <div className="flex items-center gap-2 shrink-0">
                         {item.status === "uploading" && <div className="flex items-center gap-1.5 text-xs text-primary"><Loader2 size={14} className="animate-spin" /><span>{item.progress}%</span></div>}
-                        {item.status === "success" && <div className="flex items-center gap-1 text-xs text-emerald-600"><CheckCircle size={16} /><span className="hidden md:inline">{item.errorMsg || "Yüklendi"}</span></div>}
+                        {item.status === "success" && <div className="flex items-center gap-1 text-xs text-[--brand]"><CheckCircle size={16} /><span className="hidden md:inline">{item.errorMsg || "Yüklendi"}</span></div>}
                         {item.status === "error" && <div className="flex items-center gap-1 text-red-500" title={item.errorMsg}><AlertCircle size={16} /><span className="text-xs hidden md:inline">Hata</span></div>}
                         {item.status === "duplicate_warning" && <div className="flex items-center gap-1 text-amber-500"><AlertTriangle size={16} /></div>}
                         {!isUploading && item.status === "pending" && <button onClick={() => removeQueueItem(item.id)} className="size-7 rounded-lg flex items-center justify-center hover:bg-muted text-muted-foreground transition-all"><X size={14} /></button>}

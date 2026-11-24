@@ -557,8 +557,8 @@ export function ProductionMasterDataWorkspace({
       {/* ══════════════════════════════════════════════════════════
           1. 4'LÜ ÇERÇEVESİZ (BORDERLESS) ANA VERİ KPI ŞERİDİ
          ══════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl bg-[#111513]/60 border border-white/[0.05] p-3 backdrop-blur-md">
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl bg-[#FFFFFF]/60 border border-white/[0.05] p-3 backdrop-blur-md">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               İş Merkezi / İstasyon
@@ -568,18 +568,18 @@ export function ProductionMasterDataWorkspace({
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
               Günlük efektif kapasite:{" "}
-              <strong className="text-[#34D399] font-mono">
+              <strong className="text-[#1267E6] font-mono">
                 {Number(summary.totalEffectiveDailyCapacity || 0).toLocaleString("tr-TR")}
               </strong>{" "}
               adet
             </p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <Gauge className="w-4 h-4 text-emerald-400" />
+          <div className="w-9 h-9 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0">
+            <Gauge className="w-4 h-4 text-[--brand]" />
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Makine & Ekipman Varlığı
@@ -596,7 +596,7 @@ export function ProductionMasterDataWorkspace({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Takvim & Vardiya Yapısı
@@ -614,12 +614,12 @@ export function ProductionMasterDataWorkspace({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               1-1 Ürün Üretim Profili
             </span>
-            <div className="text-2xl md:text-3xl font-light tracking-tight text-emerald-400 tabular-nums mt-1">
+            <div className="text-2xl md:text-3xl font-light tracking-tight text-[--brand] tabular-nums mt-1">
               <AnimatedNumber value={summary.configuredItemProfileCount || 0} /> /{" "}
               {summary.totalCatalogItemCount || 0}
             </div>
@@ -627,8 +627,8 @@ export function ProductionMasterDataWorkspace({
               Planlama ufku: {paramsForm.planningHorizonDays} gün ({paramsForm.defaultLotSizingRule})
             </p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <Boxes className="w-4 h-4 text-emerald-400" />
+          <div className="w-9 h-9 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0">
+            <Boxes className="w-4 h-4 text-[--brand]" />
           </div>
         </div>
       </div>
@@ -636,7 +636,7 @@ export function ProductionMasterDataWorkspace({
       {/* ══════════════════════════════════════════════════════════
           2. 5 ANA VERİ SEKMESİ GEÇİŞ ÇUBUĞU
          ══════════════════════════════════════════════════════════ */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] p-2 rounded-2xl backdrop-blur-xl">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#FFFFFF]/90 border border-[--line] p-2 rounded-2xl backdrop-blur-xl">
         <div className="flex flex-wrap items-center gap-1.5">
           {[
             {
@@ -674,8 +674,8 @@ export function ProductionMasterDataWorkspace({
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all cursor-pointer ${
                   isAct
-                    ? "bg-[#34D399] text-[#061811] font-semibold shadow-lg shadow-emerald-500/20"
-                    : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                    ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-lg shadow-sm"
+                    : "text-zinc-400 hover:text-white hover:bg-[--muted-bg]"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -691,7 +691,7 @@ export function ProductionMasterDataWorkspace({
          ══════════════════════════════════════════════════════════ */}
       {activeTab === "work-centers" && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111513]/90 border border-white/[0.06] p-4 rounded-[20px]">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#FFFFFF]/90 border border-[--line] p-4 rounded-[20px]">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
               <Input
@@ -701,7 +701,7 @@ export function ProductionMasterDataWorkspace({
                   setWcSearch(e.target.value)
                   setWcPage(1)
                 }}
-                className="pl-10 text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                className="pl-10 text-xs bg-white border-[--line] text-white rounded-xl h-9.5"
               />
             </div>
 
@@ -713,10 +713,10 @@ export function ProductionMasterDataWorkspace({
                   setWcPage(1)
                 }}
               >
-                <SelectTrigger className="w-40 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                <SelectTrigger className="w-40 text-xs bg-white border-[--line] text-zinc-300 rounded-xl h-9.5">
                   <SelectValue placeholder="İstasyon Tipi" />
                 </SelectTrigger>
-                <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                   <SelectItem value="ALL" className="text-xs">
                     Tüm Tipler
                   </SelectItem>
@@ -739,10 +739,10 @@ export function ProductionMasterDataWorkspace({
                   setWcPage(1)
                 }}
               >
-                <SelectTrigger className="w-32 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                <SelectTrigger className="w-32 text-xs bg-white border-[--line] text-zinc-300 rounded-xl h-9.5">
                   <SelectValue placeholder="Durum" />
                 </SelectTrigger>
-                <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                   <SelectItem value="ALL" className="text-xs">
                     Tümü
                   </SelectItem>
@@ -759,7 +759,7 @@ export function ProductionMasterDataWorkspace({
                 <Button
                   size="sm"
                   onClick={() => handleOpenWcModal()}
-                  className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9.5 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-emerald-500/20"
+                  className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold text-xs h-9.5 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-sm"
                 >
                   <Plus className="h-4 w-4" />
                   Yeni İş Merkezi Tanımla
@@ -770,8 +770,8 @@ export function ProductionMasterDataWorkspace({
 
           <div className="glass-table-container overflow-hidden">
             <Table>
-              <TableHeader className="bg-white/[0.02]">
-                <TableRow className="border-b border-white/[0.06] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
+              <TableHeader className="bg-[--page]">
+                <TableRow className="border-b border-[--line] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
                   <TableHead className="py-3.5 pl-5">1. İstasyon Kodu & Adı</TableHead>
                   <TableHead>2. Tip & Alternatif Grup</TableHead>
                   <TableHead>3. Kapasite & Verimlilik</TableHead>
@@ -798,7 +798,7 @@ export function ProductionMasterDataWorkspace({
                             size="sm"
                             variant="outline"
                             onClick={() => handleOpenWcModal()}
-                            className="mt-1 text-xs h-8 bg-white/[0.04] border-white/[0.08] text-emerald-400 rounded-xl"
+                            className="mt-1 text-xs h-8 bg-[--muted-bg] border-[--line] text-[--brand] rounded-xl"
                           >
                             <Plus className="h-3.5 w-3.5 mr-1" />
                             İlk İş Merkezini Oluştur
@@ -812,17 +812,17 @@ export function ProductionMasterDataWorkspace({
                     <TableRow
                       key={wc.id}
                       onClick={() => setSelectedWcDrawer(wc)}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer"
+                      className="border-b border-white/[0.04] hover:bg-[--page] transition-colors cursor-pointer"
                     >
                       <TableCell className="relative py-3.5 pl-5">
                         <span
                           className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-full ${
-                            wc.isActive ? "bg-emerald-500" : "bg-zinc-600"
+                            wc.isActive ? "bg-[--brand]" : "bg-zinc-600"
                           }`}
                         />
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-semibold text-emerald-400">
+                            <span className="font-mono text-xs font-semibold text-[--brand]">
                               {wc.code}
                             </span>
                             <span className="text-sm font-medium text-white">
@@ -837,7 +837,7 @@ export function ProductionMasterDataWorkspace({
 
                       <TableCell>
                         <div className="space-y-1">
-                          <span className="inline-flex bg-white/[0.05] text-zinc-200 border border-white/[0.08] rounded-full px-2.5 py-0.5 text-[11px]">
+                          <span className="inline-flex bg-white/[0.05] text-zinc-200 border border-[--line] rounded-full px-2.5 py-0.5 text-[11px]">
                             {WORK_CENTER_TYPE_LABELS[wc.type as WorkCenterType] || wc.type}
                           </span>
                           {wc.alternativeGroupCode && (
@@ -853,7 +853,7 @@ export function ProductionMasterDataWorkspace({
                           <span className="text-xs font-semibold text-white font-mono">
                             {wc.capacityPerHour} adet/saat × %{wc.efficiencyPercent}
                           </span>
-                          <span className="text-[11px] text-[#34D399] block font-mono">
+                          <span className="text-[11px] text-[#1267E6] block font-mono">
                             Efektif: {wc.capacityMetrics?.effectiveUnitsPerHour} adet/sa (Günlük:{" "}
                             {wc.capacityMetrics?.effectiveDailyCapacityUnits})
                           </span>
@@ -903,7 +903,7 @@ export function ProductionMasterDataWorkspace({
                               size="sm"
                               variant="ghost"
                               onClick={() => handleOpenWcModal(wc)}
-                              className="h-8 w-8 p-0 text-emerald-400 hover:bg-emerald-500/10 rounded-lg"
+                              className="h-8 w-8 p-0 text-[--brand] hover:bg-[--brand]/10 rounded-lg"
                               title="Düzenle"
                             >
                               <Edit3 className="h-4 w-4" />
@@ -931,7 +931,7 @@ export function ProductionMasterDataWorkspace({
             </Table>
 
             {/* Sayfalama Şeridi */}
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+            <div className="px-5 py-3 border-t border-[--line] flex items-center justify-between text-xs text-zinc-400">
               <span>
                 Toplam <strong className="text-white">{wcPagination.totalCount}</strong> iş merkezi
               </span>
@@ -941,7 +941,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!wcPagination.hasPrevPage}
                   onClick={() => setWcPage((p) => Math.max(1, p - 1))}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
@@ -953,7 +953,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!wcPagination.hasNextPage}
                   onClick={() => setWcPage((p) => p + 1)}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
@@ -968,7 +968,7 @@ export function ProductionMasterDataWorkspace({
          ══════════════════════════════════════════════════════════ */}
       {activeTab === "machines" && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111513]/90 border border-white/[0.06] p-4 rounded-[20px]">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#FFFFFF]/90 border border-[--line] p-4 rounded-[20px]">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
               <Input
@@ -978,7 +978,7 @@ export function ProductionMasterDataWorkspace({
                   setMacSearch(e.target.value)
                   setMacPage(1)
                 }}
-                className="pl-10 text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                className="pl-10 text-xs bg-white border-[--line] text-white rounded-xl h-9.5"
               />
             </div>
 
@@ -990,10 +990,10 @@ export function ProductionMasterDataWorkspace({
                   setMacPage(1)
                 }}
               >
-                <SelectTrigger className="w-40 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                <SelectTrigger className="w-40 text-xs bg-white border-[--line] text-zinc-300 rounded-xl h-9.5">
                   <SelectValue placeholder="Ekipman Durumu" />
                 </SelectTrigger>
-                <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                   <SelectItem value="ALL" className="text-xs">
                     Tüm Durumlar
                   </SelectItem>
@@ -1011,7 +1011,7 @@ export function ProductionMasterDataWorkspace({
                 <Button
                   size="sm"
                   onClick={() => handleOpenMacModal()}
-                  className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9.5 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-emerald-500/20"
+                  className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold text-xs h-9.5 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-sm"
                 >
                   <Plus className="h-4 w-4" />
                   Yeni Makine / Ekipman Ekle
@@ -1022,8 +1022,8 @@ export function ProductionMasterDataWorkspace({
 
           <div className="glass-table-container overflow-hidden">
             <Table>
-              <TableHeader className="bg-white/[0.02]">
-                <TableRow className="border-b border-white/[0.06] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
+              <TableHeader className="bg-[--page]">
+                <TableRow className="border-b border-[--line] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
                   <TableHead className="py-3.5 pl-5">1. Varlık Kodu, Ad & Seri No</TableHead>
                   <TableHead>2. Marka / Model & Lokasyon</TableHead>
                   <TableHead>3. Bağlı İş Merkezi</TableHead>
@@ -1044,7 +1044,7 @@ export function ProductionMasterDataWorkspace({
                             size="sm"
                             variant="outline"
                             onClick={() => handleOpenMacModal()}
-                            className="mt-1 text-xs h-8 bg-white/[0.04] border-white/[0.08] text-emerald-400 rounded-xl"
+                            className="mt-1 text-xs h-8 bg-[--muted-bg] border-[--line] text-[--brand] rounded-xl"
                           >
                             <Plus className="h-3.5 w-3.5 mr-1" />
                             İlk Makineyi Tanımla
@@ -1057,13 +1057,13 @@ export function ProductionMasterDataWorkspace({
                   machines.map((mac) => (
                     <TableRow
                       key={mac.id}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
+                      className="border-b border-white/[0.04] hover:bg-[--page] transition-colors"
                     >
                       <TableCell className="relative py-3.5 pl-5">
                         <span
                           className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-full ${
                             mac.status === "ACTIVE"
-                              ? "bg-emerald-500"
+                              ? "bg-[--brand]"
                               : mac.status === "FAULT"
                               ? "bg-rose-500"
                               : "bg-amber-400"
@@ -1097,7 +1097,7 @@ export function ProductionMasterDataWorkspace({
 
                       <TableCell>
                         {mac.workCenter ? (
-                          <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-xs font-mono">
+                          <span className="inline-flex items-center gap-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full px-2.5 py-0.5 text-xs font-mono">
                             {mac.workCenter.code} · {mac.workCenter.name}
                           </span>
                         ) : (
@@ -1117,7 +1117,7 @@ export function ProductionMasterDataWorkspace({
                                   ? "text-rose-400"
                                   : mac.warrantyStatus === "EXPIRING_SOON"
                                   ? "text-amber-300"
-                                  : "text-emerald-400"
+                                  : "text-[--brand]"
                               }`}
                             >
                               {mac.warrantyStatus === "EXPIRED"
@@ -1177,7 +1177,7 @@ export function ProductionMasterDataWorkspace({
                               size="sm"
                               variant="ghost"
                               onClick={() => handleOpenMacModal(mac)}
-                              className="h-8 w-8 p-0 text-emerald-400 hover:bg-emerald-500/10 rounded-lg"
+                              className="h-8 w-8 p-0 text-[--brand] hover:bg-[--brand]/10 rounded-lg"
                               title="Düzenle"
                             >
                               <Edit3 className="h-4 w-4" />
@@ -1205,7 +1205,7 @@ export function ProductionMasterDataWorkspace({
               </TableBody>
             </Table>
 
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+            <div className="px-5 py-3 border-t border-[--line] flex items-center justify-between text-xs text-zinc-400">
               <span>
                 Toplam <strong className="text-white">{macPagination.totalCount}</strong> makine/ekipman
               </span>
@@ -1215,7 +1215,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!macPagination.hasPrevPage}
                   onClick={() => setMacPage((p) => Math.max(1, p - 1))}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
@@ -1227,7 +1227,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!macPagination.hasNextPage}
                   onClick={() => setMacPage((p) => p + 1)}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
@@ -1242,7 +1242,7 @@ export function ProductionMasterDataWorkspace({
          ══════════════════════════════════════════════════════════ */}
       {activeTab === "calendars" && (
         <div className="space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#111513]/90 border border-white/[0.06] p-4 rounded-[20px]">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#FFFFFF]/90 border border-[--line] p-4 rounded-[20px]">
             <div>
               <h3 className="text-sm font-medium text-white">
                 Çalışma Takvimleri, Vardiyalar, Tatil Günleri ve İş Merkezi İstisnaları
@@ -1267,7 +1267,7 @@ export function ProductionMasterDataWorkspace({
                     })
                     setCalModalOpen(true)
                   }}
-                  className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
+                  className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Yeni Takvim
@@ -1288,9 +1288,9 @@ export function ProductionMasterDataWorkspace({
                     })
                     setShiftModalOpen(true)
                   }}
-                  className="bg-white/[0.03] border-white/[0.08] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
+                  className="bg-white border-[--line] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
                 >
-                  <Clock className="h-3.5 w-3.5 text-emerald-400" />
+                  <Clock className="h-3.5 w-3.5 text-[--brand]" />
                   Vardiya Ekle
                 </Button>
                 <Button
@@ -1307,7 +1307,7 @@ export function ProductionMasterDataWorkspace({
                     })
                     setHolidayModalOpen(true)
                   }}
-                  className="bg-white/[0.03] border-white/[0.08] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
+                  className="bg-white border-[--line] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
                 >
                   <CalendarDays className="h-3.5 w-3.5 text-amber-400" />
                   Tatil Günü Ekle
@@ -1328,7 +1328,7 @@ export function ProductionMasterDataWorkspace({
                     })
                     setExcModalOpen(true)
                   }}
-                  className="bg-white/[0.03] border-white/[0.08] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
+                  className="bg-white border-[--line] text-zinc-200 text-xs h-9 px-3.5 gap-1.5 rounded-xl cursor-pointer"
                 >
                   <AlertTriangle className="h-3.5 w-3.5 text-cyan-400" />
                   İstasyon İstisnası Ekle
@@ -1338,7 +1338,7 @@ export function ProductionMasterDataWorkspace({
           </div>
 
           {calendars.length === 0 ? (
-            <div className="glass-panel rounded-2xl p-8 text-center space-y-3 border border-white/[0.06]">
+            <div className="glass-panel rounded-2xl p-8 text-center space-y-3 border border-[--line]">
               <CalendarDays className="h-8 w-8 text-zinc-600 mx-auto" />
               <p className="text-xs text-zinc-400">
                 Henüz çalışma takvimi tanımlanmadı. Vardiya, tatil ve istisna eklemek için önce bir çalışma takvimi oluşturun.
@@ -1349,12 +1349,12 @@ export function ProductionMasterDataWorkspace({
               {calendars.map((cal: any) => (
                 <div
                   key={cal.id}
-                  className="glass-panel rounded-2xl p-5 border border-white/[0.06] space-y-4"
+                  className="glass-panel rounded-2xl p-5 border border-[--line] space-y-4"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[--line] pb-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md">
+                        <span className="font-mono text-xs font-semibold text-[--brand] bg-[--brand]/10 border border-[--brand-line] px-2.5 py-0.5 rounded-md">
                           {cal.code}
                         </span>
                         <h4 className="text-sm font-semibold text-white">{cal.name}</h4>
@@ -1372,8 +1372,8 @@ export function ProductionMasterDataWorkspace({
                               key={day}
                               className={`text-[10px] px-2 py-0.5 rounded-md font-medium border ${
                                 active
-                                  ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                                  : "bg-white/[0.02] text-zinc-500 border-white/[0.05]"
+                                  ? "bg-[--brand]/10 text-[--brand] border-[--brand-line]"
+                                  : "bg-[--page] text-zinc-500 border-white/[0.05]"
                               }`}
                             >
                               {WEEKDAY_LABELS[day]}
@@ -1405,8 +1405,8 @@ export function ProductionMasterDataWorkspace({
                   {/* Vardiyalar, Tatiller ve İstisnalar 3 Sütunlu Grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {/* Vardiyalar */}
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] space-y-2">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 block">
+                    <div className="p-3.5 rounded-xl bg-[--page] border border-white/[0.05] space-y-2">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[--brand] block">
                         Vardiyalar ({(cal.shifts || []).length})
                       </span>
                       {(cal.shifts || []).length === 0 ? (
@@ -1416,10 +1416,10 @@ export function ProductionMasterDataWorkspace({
                           {cal.shifts.map((sh: any) => (
                             <div
                               key={sh.id}
-                              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between text-xs"
+                              className="p-2.5 rounded-lg bg-white border border-white/[0.05] flex items-center justify-between text-xs"
                             >
                               <div>
-                                <span className="font-mono text-emerald-300 font-medium">
+                                <span className="font-mono text-[--brand] font-medium">
                                   {sh.code}
                                 </span>{" "}
                                 <span className="text-white font-medium">{sh.name}</span>
@@ -1446,7 +1446,7 @@ export function ProductionMasterDataWorkspace({
                     </div>
 
                     {/* Tatil Günleri */}
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] space-y-2">
+                    <div className="p-3.5 rounded-xl bg-[--page] border border-white/[0.05] space-y-2">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-300 block">
                         Tatil Günleri ({(cal.holidays || []).length})
                       </span>
@@ -1457,7 +1457,7 @@ export function ProductionMasterDataWorkspace({
                           {cal.holidays.map((h: any) => (
                             <div
                               key={h.id}
-                              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between text-xs"
+                              className="p-2.5 rounded-lg bg-white border border-white/[0.05] flex items-center justify-between text-xs"
                             >
                               <div>
                                 <span className="font-mono text-amber-300 font-medium">
@@ -1487,7 +1487,7 @@ export function ProductionMasterDataWorkspace({
                     </div>
 
                     {/* İş Merkezi Bazlı İstisnalar */}
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.05] space-y-2">
+                    <div className="p-3.5 rounded-xl bg-[--page] border border-white/[0.05] space-y-2">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-cyan-300 block">
                         İş Merkezi İstisnaları ({(cal.exceptions || []).length})
                       </span>
@@ -1498,7 +1498,7 @@ export function ProductionMasterDataWorkspace({
                           {cal.exceptions.map((ex: any) => (
                             <div
                               key={ex.id}
-                              className="p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.05] flex items-center justify-between text-xs"
+                              className="p-2.5 rounded-lg bg-white border border-white/[0.05] flex items-center justify-between text-xs"
                             >
                               <div>
                                 <span className="font-mono text-cyan-300 font-medium">
@@ -1543,7 +1543,7 @@ export function ProductionMasterDataWorkspace({
          ══════════════════════════════════════════════════════════ */}
       {activeTab === "item-profiles" && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#111513]/90 border border-white/[0.06] p-4 rounded-[20px]">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-[#FFFFFF]/90 border border-[--line] p-4 rounded-[20px]">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
               <Input
@@ -1553,7 +1553,7 @@ export function ProductionMasterDataWorkspace({
                   setIpSearch(e.target.value)
                   setIpPage(1)
                 }}
-                className="pl-10 text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9.5"
+                className="pl-10 text-xs bg-white border-[--line] text-white rounded-xl h-9.5"
               />
             </div>
 
@@ -1565,10 +1565,10 @@ export function ProductionMasterDataWorkspace({
                   setIpPage(1)
                 }}
               >
-                <SelectTrigger className="w-40 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                <SelectTrigger className="w-40 text-xs bg-white border-[--line] text-zinc-300 rounded-xl h-9.5">
                   <SelectValue placeholder="Ürün Tipi" />
                 </SelectTrigger>
-                <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                   <SelectItem value="ALL" className="text-xs">
                     Tüm Ürün Tipleri
                   </SelectItem>
@@ -1592,10 +1592,10 @@ export function ProductionMasterDataWorkspace({
                   setIpPage(1)
                 }}
               >
-                <SelectTrigger className="w-44 text-xs bg-white/[0.03] border-white/[0.08] text-zinc-300 rounded-xl h-9.5">
+                <SelectTrigger className="w-44 text-xs bg-white border-[--line] text-zinc-300 rounded-xl h-9.5">
                   <SelectValue placeholder="Üretim Yöntemi" />
                 </SelectTrigger>
-                <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                   <SelectItem value="ALL" className="text-xs">
                     Tüm Üretim Yöntemleri
                   </SelectItem>
@@ -1616,8 +1616,8 @@ export function ProductionMasterDataWorkspace({
 
           <div className="glass-table-container overflow-hidden">
             <Table>
-              <TableHeader className="bg-white/[0.02]">
-                <TableRow className="border-b border-white/[0.06] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
+              <TableHeader className="bg-[--page]">
+                <TableRow className="border-b border-[--line] text-[11px] text-zinc-400 uppercase tracking-wider hover:bg-transparent">
                   <TableHead className="py-3.5 pl-5">1. Stok Kodu (SKU) & Ürün</TableHead>
                   <TableHead>2. Üretim Tipi & Yöntemi</TableHead>
                   <TableHead>3. Tedarik / Üretim Süresi</TableHead>
@@ -1637,12 +1637,12 @@ export function ProductionMasterDataWorkspace({
                   itemProfiles.map((row) => (
                     <TableRow
                       key={row.itemId}
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors"
+                      className="border-b border-white/[0.04] hover:bg-[--page] transition-colors"
                     >
                       <TableCell className="relative py-3.5 pl-5">
                         <span
                           className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-full ${
-                            row.isConfiguredInDb ? "bg-emerald-500" : "bg-zinc-600"
+                            row.isConfiguredInDb ? "bg-[--brand]" : "bg-zinc-600"
                           }`}
                         />
                         <div className="space-y-0.5">
@@ -1657,7 +1657,7 @@ export function ProductionMasterDataWorkspace({
 
                       <TableCell>
                         <div className="space-y-1">
-                          <span className="inline-flex bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-full px-2.5 py-0.5 text-[11px] font-medium">
+                          <span className="inline-flex bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full px-2.5 py-0.5 text-[11px] font-medium">
                             {PRODUCTION_ITEM_TYPE_LABELS[
                               row.productionItemType as ProductionItemType
                             ] || row.productionItemType}
@@ -1683,7 +1683,7 @@ export function ProductionMasterDataWorkspace({
                         <span className="text-white block">
                           Min: {row.minStockLevel} · Güv: {row.safetyStockQty} {row.baseUnit}
                         </span>
-                        <span className="text-[11px] text-emerald-400 block">
+                        <span className="text-[11px] text-[--brand] block">
                           {row.lotSizingRule} (Lot: {row.standardLotSize})
                         </span>
                       </TableCell>
@@ -1706,7 +1706,7 @@ export function ProductionMasterDataWorkspace({
                           size="sm"
                           variant="outline"
                           onClick={() => setSelectedProfileItem(row)}
-                          className="h-8 text-xs bg-white/[0.03] border-white/[0.08] text-emerald-400 hover:bg-emerald-500/10 rounded-xl cursor-pointer gap-1.5"
+                          className="h-8 text-xs bg-white border-[--line] text-[--brand] hover:bg-[--brand]/10 rounded-xl cursor-pointer gap-1.5"
                         >
                           <Edit3 className="h-3.5 w-3.5" />
                           1-1 Profili Düzenle
@@ -1718,7 +1718,7 @@ export function ProductionMasterDataWorkspace({
               </TableBody>
             </Table>
 
-            <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+            <div className="px-5 py-3 border-t border-[--line] flex items-center justify-between text-xs text-zinc-400">
               <span>
                 Toplam <strong className="text-white">{ipPagination.totalCount}</strong> stok kartı
               </span>
@@ -1728,7 +1728,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!ipPagination.hasPrevPage}
                   onClick={() => setIpPage((p) => Math.max(1, p - 1))}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
@@ -1740,7 +1740,7 @@ export function ProductionMasterDataWorkspace({
                   variant="outline"
                   disabled={!ipPagination.hasNextPage}
                   onClick={() => setIpPage((p) => p + 1)}
-                  className="h-7 px-2.5 bg-white/[0.03] border-white/[0.08] text-xs rounded-lg"
+                  className="h-7 px-2.5 bg-white border-[--line] text-xs rounded-lg"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
@@ -1754,8 +1754,8 @@ export function ProductionMasterDataWorkspace({
           SEKME 5: ÜRETİM PARAMETRELERİ
          ══════════════════════════════════════════════════════════ */}
       {activeTab === "parameters" && (
-        <div className="glass-panel rounded-2xl p-6 border border-white/[0.06] space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+        <div className="glass-panel rounded-2xl p-6 border border-[--line] space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[--line] pb-4">
             <div>
               <h3 className="text-base font-medium text-white">
                 Üretim Planlama, Lot, Güvenlik Stoğu ve Durum Akışı Parametreleri
@@ -1777,7 +1777,7 @@ export function ProductionMasterDataWorkspace({
                         : paramsForm.defaultManufacturingWarehouseId,
                   })
                 }
-                className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold text-xs h-9 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-emerald-500/20"
+                className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold text-xs h-9 px-4 gap-1.5 rounded-xl cursor-pointer shadow-lg shadow-sm"
               >
                 {submitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -1791,8 +1791,8 @@ export function ProductionMasterDataWorkspace({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* 1. Planlama Dönemi */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
-              <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">
+            <div className="p-4 rounded-xl bg-[--page] border border-[--line] space-y-3">
+              <span className="text-xs font-semibold text-[--brand] uppercase tracking-wider block">
                 1. Planlama Dönemi & Ufku
               </span>
               <div className="space-y-1.5">
@@ -1808,7 +1808,7 @@ export function ProductionMasterDataWorkspace({
                       planningHorizonDays: Number(e.target.value),
                     })
                   }
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                 />
               </div>
               <div className="space-y-1.5">
@@ -1819,10 +1819,10 @@ export function ProductionMasterDataWorkspace({
                     setParamsForm({ ...paramsForm, planningBucket: v as PlanningBucket })
                   }
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                     {(
                       Object.entries(PLANNING_BUCKET_LABELS) as [PlanningBucket, string][]
                     ).map(([k, lbl]) => (
@@ -1844,10 +1844,10 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                     <SelectItem value="none" className="text-xs text-zinc-400">
                       Otomatik Seç
                     </SelectItem>
@@ -1862,7 +1862,7 @@ export function ProductionMasterDataWorkspace({
             </div>
 
             {/* 2. Varsayılan Lot Kuralı */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+            <div className="p-4 rounded-xl bg-[--page] border border-[--line] space-y-3">
               <span className="text-xs font-semibold text-cyan-300 uppercase tracking-wider block">
                 2. Varsayılan Lot Kuralı
               </span>
@@ -1877,10 +1877,10 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                     {(
                       Object.entries(LOT_SIZING_RULE_LABELS) as [LotSizingRule, string][]
                     ).map(([k, lbl]) => (
@@ -1905,7 +1905,7 @@ export function ProductionMasterDataWorkspace({
                         defaultMinLotSize: Number(e.target.value),
                       })
                     }
-                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                    className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -1921,7 +1921,7 @@ export function ProductionMasterDataWorkspace({
                         defaultLotMultiple: Number(e.target.value),
                       })
                     }
-                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                    className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                   />
                 </div>
               </div>
@@ -1940,13 +1940,13 @@ export function ProductionMasterDataWorkspace({
                       allowOverProductionPercent: Number(e.target.value),
                     })
                   }
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                 />
               </div>
             </div>
 
             {/* 3. Güvenlik Stoğu Varsayılanı */}
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-3">
+            <div className="p-4 rounded-xl bg-[--page] border border-[--line] space-y-3">
               <span className="text-xs font-semibold text-amber-300 uppercase tracking-wider block">
                 3. Güvenlik Stoğu Varsayılanı
               </span>
@@ -1961,10 +1961,10 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="backdrop-blur-xl bg-[#FFFFFF] border border-[--line] text-white">
                     {(
                       Object.entries(SAFETY_STOCK_RULE_LABELS) as [
                         SafetyStockRule,
@@ -1991,7 +1991,7 @@ export function ProductionMasterDataWorkspace({
                         defaultSafetyStockValue: Number(e.target.value),
                       })
                     }
-                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                    className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -2006,7 +2006,7 @@ export function ProductionMasterDataWorkspace({
                         defaultSafetyStockDays: Number(e.target.value),
                       })
                     }
-                    className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9 font-mono"
+                    className="text-xs bg-white border-[--line] text-white rounded-xl h-9 font-mono"
                   />
                 </div>
               </div>
@@ -2014,7 +2014,7 @@ export function ProductionMasterDataWorkspace({
           </div>
 
           {/* 4. Durum Akışı Ayarları */}
-          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-4">
+          <div className="p-4 rounded-xl bg-[--page] border border-[--line] space-y-4">
             <span className="text-xs font-semibold text-white uppercase tracking-wider block">
               4. İş Emri Durum Akışı ve Operasyon Kuralları
             </span>
@@ -2101,7 +2101,7 @@ export function ProductionMasterDataWorkspace({
               <span className="text-[11px] text-zinc-400">Aktif Durum Akışı:</span>
               {(paramsForm.statusFlow || []).map((st: string, i: number) => (
                 <React.Fragment key={st}>
-                  <span className="text-[11px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2.5 py-0.5 rounded-md">
+                  <span className="text-[11px] font-mono bg-[--brand]/10 text-[--brand] border border-[--brand-line] px-2.5 py-0.5 rounded-md">
                     {WORK_ORDER_STATUS_LABELS[st] || st} ({st})
                   </span>
                   {i < (paramsForm.statusFlow || []).length - 1 && (
@@ -2120,7 +2120,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 1: İŞ MERKEZİ OLUŞTUR / DÜZENLE */}
       <Dialog open={wcModalOpen} onOpenChange={setWcModalOpen}>
-        <DialogContent className="sm:max-w-xl bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-xl bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               {editingWc ? `İş Merkezini Düzenle (${editingWc.code})` : "Yeni İş Merkezi / İstasyon Tanımla"}
@@ -2140,7 +2140,7 @@ export function ProductionMasterDataWorkspace({
                     setWcForm({ ...wcForm, code: e.target.value.toUpperCase() })
                   }
                   placeholder="IST-01"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2149,10 +2149,10 @@ export function ProductionMasterDataWorkspace({
                   value={wcForm.type}
                   onValueChange={(v) => setWcForm({ ...wcForm, type: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     <SelectItem value="MACHINE" className="text-xs">
                       Makine / Otomatik İstasyon
                     </SelectItem>
@@ -2173,7 +2173,7 @@ export function ProductionMasterDataWorkspace({
                 value={wcForm.name}
                 onChange={(e) => setWcForm({ ...wcForm, name: e.target.value })}
                 placeholder="Örn: Buket Tasarım & Paketleme Hattı 1"
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
 
@@ -2186,7 +2186,7 @@ export function ProductionMasterDataWorkspace({
                   step="any"
                   value={wcForm.hourlyCost}
                   onChange={(e) => setWcForm({ ...wcForm, hourlyCost: e.target.value })}
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2199,7 +2199,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setWcForm({ ...wcForm, capacityPerHour: e.target.value })
                   }
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2212,7 +2212,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setWcForm({ ...wcForm, efficiencyPercent: e.target.value })
                   }
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2224,10 +2224,10 @@ export function ProductionMasterDataWorkspace({
                   value={wcForm.calendarId}
                   onValueChange={(v) => setWcForm({ ...wcForm, calendarId: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     <SelectItem value="none" className="text-xs text-zinc-400">
                       Standart Fabrika Takvimi
                     </SelectItem>
@@ -2250,7 +2250,7 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                   placeholder="Örn: GRP-MONTAJ"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2272,7 +2272,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setWcModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2286,7 +2286,7 @@ export function ProductionMasterDataWorkspace({
                   () => setWcModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               {editingWc ? "Güncelle" : "İş Merkezini Kaydet"}
             </Button>
@@ -2296,7 +2296,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 2: MAKİNE / EKİPMAN OLUŞTUR / DÜZENLE */}
       <Dialog open={macModalOpen} onOpenChange={setMacModalOpen}>
-        <DialogContent className="sm:max-w-xl bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-xl bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               {editingMac
@@ -2318,7 +2318,7 @@ export function ProductionMasterDataWorkspace({
                     setMacForm({ ...macForm, code: e.target.value.toUpperCase() })
                   }
                   placeholder="MAK-01"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2332,7 +2332,7 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                   placeholder="SN-2026-001"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2343,7 +2343,7 @@ export function ProductionMasterDataWorkspace({
                 value={macForm.name}
                 onChange={(e) => setMacForm({ ...macForm, name: e.target.value })}
                 placeholder="Örn: Otomatik Buket Bağlama ve Kesim Makinesi"
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
 
@@ -2354,7 +2354,7 @@ export function ProductionMasterDataWorkspace({
                   value={macForm.brand}
                   onChange={(e) => setMacForm({ ...macForm, brand: e.target.value })}
                   placeholder="Örn: Bercomex"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2363,7 +2363,7 @@ export function ProductionMasterDataWorkspace({
                   value={macForm.model}
                   onChange={(e) => setMacForm({ ...macForm, model: e.target.value })}
                   placeholder="Örn: FloraLine X4"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2374,7 +2374,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setMacForm({ ...macForm, warrantyEndDate: e.target.value })
                   }
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2386,10 +2386,10 @@ export function ProductionMasterDataWorkspace({
                   value={macForm.workCenterId}
                   onValueChange={(v) => setMacForm({ ...macForm, workCenterId: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     <SelectItem value="none" className="text-xs text-zinc-400">
                       Bağlı Değil
                     </SelectItem>
@@ -2407,7 +2407,7 @@ export function ProductionMasterDataWorkspace({
                   value={macForm.location}
                   onChange={(e) => setMacForm({ ...macForm, location: e.target.value })}
                   placeholder="Atölye Hol A - Hat 1"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2419,10 +2419,10 @@ export function ProductionMasterDataWorkspace({
                   value={macForm.status}
                   onValueChange={(v) => setMacForm({ ...macForm, status: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     {(
                       Object.entries(MACHINE_STATUS_LABELS) as [MachineStatus, string][]
                     ).map(([code, label]) => (
@@ -2443,7 +2443,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setMacForm({ ...macForm, operatingHours: e.target.value })
                   }
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2456,7 +2456,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setMacForm({ ...macForm, productionCount: e.target.value })
                   }
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2467,7 +2467,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setMacModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2481,7 +2481,7 @@ export function ProductionMasterDataWorkspace({
                   () => setMacModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               {editingMac ? "Güncelle" : "Makineyi Kaydet"}
             </Button>
@@ -2494,7 +2494,7 @@ export function ProductionMasterDataWorkspace({
         open={Boolean(counterModalMac)}
         onOpenChange={(o) => !o && setCounterModalMac(null)}
       >
-        <DialogContent className="sm:max-w-md bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-md bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               Sayaç & Durum Güncelle ({counterModalMac?.code})
@@ -2513,7 +2513,7 @@ export function ProductionMasterDataWorkspace({
                 step="any"
                 value={counterHoursSet}
                 onChange={(e) => setCounterHoursSet(e.target.value)}
-                className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
             <div className="space-y-1">
@@ -2524,7 +2524,7 @@ export function ProductionMasterDataWorkspace({
                 step="any"
                 value={counterCountSet}
                 onChange={(e) => setCounterCountSet(e.target.value)}
-                className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
             <div className="space-y-1">
@@ -2533,10 +2533,10 @@ export function ProductionMasterDataWorkspace({
                 value={counterStatus}
                 onValueChange={(v) => setCounterStatus(v as MachineStatus)}
               >
-                <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                   {(
                     Object.entries(MACHINE_STATUS_LABELS) as [MachineStatus, string][]
                   ).map(([code, label]) => (
@@ -2554,7 +2554,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setCounterModalMac(null)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2573,7 +2573,7 @@ export function ProductionMasterDataWorkspace({
                   () => setCounterModalMac(null)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               Sayaçları Kaydet
             </Button>
@@ -2583,7 +2583,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 4: ÇALIŞMA TAKVİMİ OLUŞTUR */}
       <Dialog open={calModalOpen} onOpenChange={setCalModalOpen}>
-        <DialogContent className="sm:max-w-lg bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-lg bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               Yeni Çalışma Takvimi Oluştur
@@ -2603,7 +2603,7 @@ export function ProductionMasterDataWorkspace({
                     setCalForm({ ...calForm, code: e.target.value.toUpperCase() })
                   }
                   placeholder="TAK-STD"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2612,7 +2612,7 @@ export function ProductionMasterDataWorkspace({
                   value={calForm.name}
                   onChange={(e) => setCalForm({ ...calForm, name: e.target.value })}
                   placeholder="Merkez Atölye 6 Günlük Takvim"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2634,8 +2634,8 @@ export function ProductionMasterDataWorkspace({
                       }}
                       className={`text-xs px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
                         selected
-                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-medium"
-                          : "bg-white/[0.03] text-zinc-400 border-white/[0.08]"
+                          ? "bg-[--brand]/20 text-[--brand] border-[--brand-line] font-medium"
+                          : "bg-white text-zinc-400 border-[--line]"
                       }`}
                     >
                       {WEEKDAY_LABELS[day]}
@@ -2662,7 +2662,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setCalModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2674,7 +2674,7 @@ export function ProductionMasterDataWorkspace({
                   setCalModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               Takvimi Kaydet
             </Button>
@@ -2684,7 +2684,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 5: VARDİYA EKLE */}
       <Dialog open={shiftModalOpen} onOpenChange={setShiftModalOpen}>
-        <DialogContent className="sm:max-w-lg bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-lg bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               Çalışma Takvimine Vardiya Ekle
@@ -2701,10 +2701,10 @@ export function ProductionMasterDataWorkspace({
                 value={shiftForm.calendarId}
                 onValueChange={(v) => setShiftForm({ ...shiftForm, calendarId: v })}
               >
-                <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                   {calendars.map((c: any) => (
                     <SelectItem key={c.id} value={c.id} className="text-xs">
                       {c.code} — {c.name}
@@ -2723,7 +2723,7 @@ export function ProductionMasterDataWorkspace({
                     setShiftForm({ ...shiftForm, code: e.target.value.toUpperCase() })
                   }
                   placeholder="VRD-SABAH"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2732,7 +2732,7 @@ export function ProductionMasterDataWorkspace({
                   value={shiftForm.name}
                   onChange={(e) => setShiftForm({ ...shiftForm, name: e.target.value })}
                   placeholder="Gündüz Vardiyası"
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2746,7 +2746,7 @@ export function ProductionMasterDataWorkspace({
                     setShiftForm({ ...shiftForm, startTime: e.target.value })
                   }
                   placeholder="08:00"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2755,7 +2755,7 @@ export function ProductionMasterDataWorkspace({
                   value={shiftForm.endTime}
                   onChange={(e) => setShiftForm({ ...shiftForm, endTime: e.target.value })}
                   placeholder="17:00"
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2767,7 +2767,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setShiftForm({ ...shiftForm, breakMinutes: e.target.value })
                   }
-                  className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
             </div>
@@ -2778,7 +2778,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setShiftModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2790,7 +2790,7 @@ export function ProductionMasterDataWorkspace({
                   setShiftModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               Vardiyayı Kaydet
             </Button>
@@ -2800,7 +2800,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 6: TATİL GÜNÜ EKLE */}
       <Dialog open={holidayModalOpen} onOpenChange={setHolidayModalOpen}>
-        <DialogContent className="sm:max-w-md bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-md bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               Tatil Günü Tanımla
@@ -2817,10 +2817,10 @@ export function ProductionMasterDataWorkspace({
                 value={holidayForm.calendarId}
                 onValueChange={(v) => setHolidayForm({ ...holidayForm, calendarId: v })}
               >
-                <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                   {calendars.map((c: any) => (
                     <SelectItem key={c.id} value={c.id} className="text-xs">
                       {c.code} — {c.name}
@@ -2837,7 +2837,7 @@ export function ProductionMasterDataWorkspace({
                 onChange={(e) =>
                   setHolidayForm({ ...holidayForm, holidayDate: e.target.value })
                 }
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
             <div className="space-y-1">
@@ -2846,7 +2846,7 @@ export function ProductionMasterDataWorkspace({
                 value={holidayForm.name}
                 onChange={(e) => setHolidayForm({ ...holidayForm, name: e.target.value })}
                 placeholder="Örn: 29 Ekim Cumhuriyet Bayramı"
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
             <div className="flex items-center justify-between pt-1">
@@ -2882,7 +2882,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setHolidayModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -2894,7 +2894,7 @@ export function ProductionMasterDataWorkspace({
                   setHolidayModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               Tatil Gününü Kaydet
             </Button>
@@ -2904,7 +2904,7 @@ export function ProductionMasterDataWorkspace({
 
       {/* MODAL 7: İŞ MERKEZİ BAZLI TAKVİM İSTİSNASI EKLE */}
       <Dialog open={excModalOpen} onOpenChange={setExcModalOpen}>
-        <DialogContent className="sm:max-w-lg bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-lg bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               İş Merkezi Bazlı Takvim İstisnası Ekle
@@ -2922,10 +2922,10 @@ export function ProductionMasterDataWorkspace({
                   value={excForm.calendarId}
                   onValueChange={(v) => setExcForm({ ...excForm, calendarId: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     {calendars.map((c: any) => (
                       <SelectItem key={c.id} value={c.id} className="text-xs">
                         {c.code} — {c.name}
@@ -2940,10 +2940,10 @@ export function ProductionMasterDataWorkspace({
                   value={excForm.workCenterId}
                   onValueChange={(v) => setExcForm({ ...excForm, workCenterId: v })}
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     {workCenters.map((wc: any) => (
                       <SelectItem key={wc.id} value={wc.id} className="text-xs">
                         {wc.code} — {wc.name}
@@ -2963,7 +2963,7 @@ export function ProductionMasterDataWorkspace({
                   onChange={(e) =>
                     setExcForm({ ...excForm, exceptionDate: e.target.value })
                   }
-                  className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                  className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
                 />
               </div>
               <div className="space-y-1">
@@ -2979,10 +2979,10 @@ export function ProductionMasterDataWorkspace({
                     })
                   }
                 >
-                  <SelectTrigger className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9">
+                  <SelectTrigger className="text-xs bg-white border-[--line] text-white rounded-xl h-9">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#111513] border border-white/[0.08] text-white">
+                  <SelectContent className="bg-[#FFFFFF] border border-[--line] text-white">
                     {(
                       Object.entries(CALENDAR_EXCEPTION_TYPE_LABELS) as [
                         CalendarExceptionType,
@@ -3010,7 +3010,7 @@ export function ProductionMasterDataWorkspace({
                     onChange={(e) =>
                       setExcForm({ ...excForm, availableHours: e.target.value })
                     }
-                    className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                    className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                   />
                 </div>
                 <div className="space-y-1">
@@ -3023,7 +3023,7 @@ export function ProductionMasterDataWorkspace({
                     onChange={(e) =>
                       setExcForm({ ...excForm, capacityPercent: e.target.value })
                     }
-                    className="text-xs font-mono bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                    className="text-xs font-mono bg-white border-[--line] text-white rounded-xl h-9"
                   />
                 </div>
               </div>
@@ -3035,7 +3035,7 @@ export function ProductionMasterDataWorkspace({
                 value={excForm.reason}
                 onChange={(e) => setExcForm({ ...excForm, reason: e.target.value })}
                 placeholder="Örn: Sevgililer Günü Yoğunluğu +4 Saat Fazla Mesai"
-                className="text-xs bg-white/[0.03] border-white/[0.08] text-white rounded-xl h-9"
+                className="text-xs bg-white border-[--line] text-white rounded-xl h-9"
               />
             </div>
           </div>
@@ -3045,7 +3045,7 @@ export function ProductionMasterDataWorkspace({
               variant="outline"
               size="sm"
               onClick={() => setExcModalOpen(false)}
-              className="bg-white/[0.04] border-white/[0.08] text-zinc-300 rounded-xl text-xs"
+              className="bg-[--muted-bg] border-[--line] text-zinc-300 rounded-xl text-xs"
             >
               İptal
             </Button>
@@ -3057,7 +3057,7 @@ export function ProductionMasterDataWorkspace({
                   setExcModalOpen(false)
                 )
               }
-              className="bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-xl text-xs"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:bg-gradient-to-r from-[--brand] to-[--blue]/90 text-white font-semibold rounded-xl text-xs"
             >
               İstisnayı Kaydet
             </Button>
@@ -3070,7 +3070,7 @@ export function ProductionMasterDataWorkspace({
         open={Boolean(selectedProfileItem)}
         onOpenChange={(o) => !o && setSelectedProfileItem(null)}
       >
-        <DialogContent className="sm:max-w-xl bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+        <DialogContent className="sm:max-w-xl bg-[#FFFFFF] border border-[--line] text-white rounded-2xl">
           <DialogHeader>
             <DialogTitle className="text-base font-semibold">
               {selectedProfileItem?.name} ({selectedProfileItem?.sku})
@@ -3096,13 +3096,13 @@ export function ProductionMasterDataWorkspace({
       >
         <SheetContent
           side="right"
-          className="w-full sm:max-w-lg bg-[#111513] border-l border-white/[0.08] text-white p-6 overflow-y-auto space-y-5"
+          className="w-full sm:max-w-lg bg-[#FFFFFF] border-l border-[--line] text-white p-6 overflow-y-auto space-y-5"
         >
           {selectedWcDrawer && (
             <>
               <SheetHeader className="text-left space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 px-2.5 py-0.5 rounded-md">
+                  <span className="font-mono text-xs bg-[--brand]/10 text-[--brand] border border-[--brand-line] px-2.5 py-0.5 rounded-md">
                     {selectedWcDrawer.code}
                   </span>
                   <span className="text-xs text-zinc-400">
@@ -3120,15 +3120,15 @@ export function ProductionMasterDataWorkspace({
               </SheetHeader>
 
               <div className="grid grid-cols-3 gap-2.5">
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="p-3 rounded-xl bg-white border border-[--line]">
                   <span className="text-[10px] text-zinc-400 uppercase block">
                     Efektif Saatlik
                   </span>
-                  <span className="text-sm font-semibold text-[#34D399] font-mono mt-0.5 block">
+                  <span className="text-sm font-semibold text-[#1267E6] font-mono mt-0.5 block">
                     {selectedWcDrawer.capacityMetrics?.effectiveUnitsPerHour} adet/sa
                   </span>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="p-3 rounded-xl bg-white border border-[--line]">
                   <span className="text-[10px] text-zinc-400 uppercase block">
                     Günlük Kapasite
                   </span>
@@ -3136,7 +3136,7 @@ export function ProductionMasterDataWorkspace({
                     {selectedWcDrawer.capacityMetrics?.effectiveDailyCapacityUnits} adet
                   </span>
                 </div>
-                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="p-3 rounded-xl bg-white border border-[--line]">
                   <span className="text-[10px] text-zinc-400 uppercase block">
                     Saatlik Maliyet
                   </span>
@@ -3151,7 +3151,7 @@ export function ProductionMasterDataWorkspace({
                   Bağlı Makine ve Ekipmanlar ({(selectedWcDrawer.machines || []).length})
                 </h4>
                 {(selectedWcDrawer.machines || []).length === 0 ? (
-                  <div className="p-4 rounded-xl border border-dashed border-white/[0.08] text-xs text-zinc-500 text-center">
+                  <div className="p-4 rounded-xl border border-dashed border-[--line] text-xs text-zinc-500 text-center">
                     Bu iş merkezine bağlı makine/ekipman bulunmuyor.
                   </div>
                 ) : (
@@ -3159,7 +3159,7 @@ export function ProductionMasterDataWorkspace({
                     {selectedWcDrawer.machines.map((m: any) => (
                       <div
                         key={m.id}
-                        className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs"
+                        className="p-3 rounded-xl bg-white border border-[--line] flex items-center justify-between text-xs"
                       >
                         <div>
                           <span className="font-mono text-cyan-300 font-semibold">

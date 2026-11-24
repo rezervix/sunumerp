@@ -123,10 +123,10 @@ export function ProductionModuleReadinessView({
   }, [snapshot])
 
   return (
-    <div className="min-h-screen bg-[#080A09] text-zinc-100 p-4 md:p-6 lg:p-8 space-y-6">
+    <div className="min-h-screen bg-[#F6F8FB] text-zinc-100 p-4 md:p-6 lg:p-8 space-y-6">
       {/* Üst Modül Navigasyon Şeridi */}
       <div className="w-full overflow-x-auto no-scrollbar">
-        <div className="inline-flex items-center gap-1.5 p-1.5 rounded-2xl bg-[#111513]/90 border border-white/[0.06] backdrop-blur-xl min-w-max">
+        <div className="inline-flex items-center gap-1.5 p-1.5 rounded-2xl bg-[#FFFFFF]/90 border border-[--line] backdrop-blur-xl min-w-max">
           {/* Geliştirici/Altyapı sekmesi demo modunda gizlenir; müşteri odaklı kontrol paneli gösterilir */}
           {!isDemo && (
             <Link
@@ -134,13 +134,13 @@ export function ProductionModuleReadinessView({
               className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
                 !selectedModule
                   ? "text-zinc-950 font-semibold"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white"
               }`}
             >
               {!selectedModule && (
                 <motion.div
                   layoutId="productionModuleNavActive"
-                  className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
+                  className="absolute inset-0 rounded-xl bg-[--brand] shadow-[0_0_20px_rgba(52,211,153,0.3)]"
                   transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
                 />
               )}
@@ -155,13 +155,13 @@ export function ProductionModuleReadinessView({
               className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
                 !selectedModule
                   ? "text-zinc-950 font-semibold"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
+                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white"
               }`}
             >
               {!selectedModule && (
                 <motion.div
                   layoutId="productionModuleNavActive"
-                  className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
+                  className="absolute inset-0 rounded-xl bg-[--brand] shadow-[0_0_20px_rgba(52,211,153,0.3)]"
                   transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
                 />
               )}
@@ -182,13 +182,13 @@ export function ProductionModuleReadinessView({
                 className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? "text-zinc-950 font-semibold"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="productionModuleNavActive"
-                    className="absolute inset-0 rounded-xl bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.3)]"
+                    className="absolute inset-0 rounded-xl bg-[--brand] shadow-[0_0_20px_rgba(52,211,153,0.3)]"
                     transition={{ type: "spring", bounce: 0.18, duration: 0.45 }}
                   />
                 )}
@@ -200,7 +200,7 @@ export function ProductionModuleReadinessView({
                       isActive
                         ? "bg-zinc-950/20 text-zinc-950"
                         : isEnabled
-                        ? "bg-emerald-500/15 text-emerald-300"
+                        ? "bg-[--brand]/15 text-[--brand]"
                         : "bg-white/[0.05] text-zinc-500"
                     }`}
                   >
@@ -217,8 +217,8 @@ export function ProductionModuleReadinessView({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-              <Factory className="w-5 h-5 text-emerald-400" />
+            <div className="w-9 h-9 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center">
+              <Factory className="w-5 h-5 text-[--brand]" />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-light tracking-tight text-white">
@@ -243,7 +243,7 @@ export function ProductionModuleReadinessView({
           <button
             type="button"
             onClick={() => router.push("/dashboard/stok")}
-            className="rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-zinc-200 flex items-center gap-1.5 transition-all cursor-pointer"
+            className="rounded-xl border border-[--line] bg-white hover:bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-zinc-200 flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-zinc-400" />
             Stok & Envantere Dön
@@ -251,17 +251,17 @@ export function ProductionModuleReadinessView({
           <button
             type="button"
             onClick={fetchStatus}
-            className="rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-zinc-200 flex items-center gap-1.5 transition-all cursor-pointer"
+            className="rounded-xl border border-[--line] bg-white hover:bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-zinc-200 flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-emerald-400 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-[--brand] ${loading ? "animate-spin" : ""}`} />
             Durumu Yenile
           </button>
         </div>
       </div>
 
       {/* 4'lü Çerçevesiz KPI Şeridi */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl bg-[#111513]/60 border border-white/[0.05] p-3 backdrop-blur-md">
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl bg-[#FFFFFF]/60 border border-white/[0.05] p-3 backdrop-blur-md">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               {isDemo ? "Aktif Üretim Modülleri" : "Etkin Özellik Bayrağı"}
@@ -273,21 +273,21 @@ export function ProductionModuleReadinessView({
               {isDemo ? "Tüm üretim ve planlama modülleri devrede" : "Varsayılan tüm bayraklar kapalıdır"}
             </p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0">
             {isDemo ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-[--brand]" />
             ) : (
-              <Lock className="w-4 h-4 text-emerald-400" />
+              <Lock className="w-4 h-4 text-[--brand]" />
             )}
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Mevcut Ürün Reçetesi (BOM)
             </span>
-            <div className="text-2xl md:text-3xl font-light tracking-tight text-emerald-400 tabular-nums mt-1">
+            <div className="text-2xl md:text-3xl font-light tracking-tight text-[--brand] tabular-nums mt-1">
               <AnimatedNumber value={isDemo ? Math.max(3, snapshot?.databaseReadiness?.bomHeaderCount ?? 0) : (snapshot?.databaseReadiness?.bomHeaderCount ?? 0)} />
             </div>
             <p className="text-[11px] text-zinc-400 mt-1">
@@ -296,12 +296,12 @@ export function ProductionModuleReadinessView({
                 : `${snapshot?.databaseReadiness?.bomComponentCount ?? 0} reçete bileşen satırı`}
             </p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-            <GitBranch className="w-4 h-4 text-emerald-400" />
+          <div className="w-9 h-9 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center shrink-0">
+            <GitBranch className="w-4 h-4 text-[--brand]" />
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Üretim Atölyesi & Depo
@@ -320,7 +320,7 @@ export function ProductionModuleReadinessView({
           </div>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+        <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[--page] border border-white/[0.04]">
           <div>
             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
               Hammadde / Yarı Mamul / Mamul
@@ -342,10 +342,10 @@ export function ProductionModuleReadinessView({
 
       {/* Seçili Modül Bilgi Kartı */}
       {selectedModule && (
-        <div className="glass-panel rounded-2xl p-5 border border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="glass-panel rounded-2xl p-5 border border-[--line] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-white/[0.05] border border-white/[0.08] text-emerald-300">
+              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-white/[0.05] border border-[--line] text-[--brand]">
                 {selectedModule.slug.toUpperCase()}
               </span>
               <span
@@ -419,7 +419,7 @@ export function ProductionModuleReadinessView({
       {/* Üretim Modülleri Özellik Bayrağı ve RBAC İzin Matrisi Tablosu (Yalnızca Yönetici / Geliştirici Görünümünde) */}
       {!isDemo && (
       <div className="glass-table-container overflow-hidden">
-        <div className="px-5 py-4 border-b border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="px-5 py-4 border-b border-[--line] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-medium text-white">
               Üretim Modülleri Özellik Bayrağı & İzin Kodları Matrisi
@@ -436,7 +436,7 @@ export function ProductionModuleReadinessView({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/[0.06] bg-white/[0.01]">
+              <tr className="border-b border-[--line] bg-white/[0.01]">
                 <th className="py-3 pl-5 pr-3 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                   Modül & Açıklama
                 </th>
@@ -467,18 +467,18 @@ export function ProductionModuleReadinessView({
                   <tr
                     key={mod.key}
                     className={`transition-colors hover:bg-white/[0.025] ${
-                      isRowSelected ? "bg-emerald-500/[0.04]" : ""
+                      isRowSelected ? "bg-[--brand]/[0.04]" : ""
                     }`}
                   >
                     <td className="relative py-3.5 pl-5 pr-3">
                       <span
                         className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-full ${
-                          isFlagOn ? "bg-emerald-500" : "bg-amber-400/70"
+                          isFlagOn ? "bg-[--brand]" : "bg-amber-400/70"
                         }`}
                       />
                       <div className="flex items-start gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0 mt-0.5">
-                          <Icon className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 rounded-lg bg-[--muted-bg] border border-[--line] flex items-center justify-center shrink-0 mt-0.5">
+                          <Icon className="w-4 h-4 text-[--brand]" />
                         </div>
                         <div>
                           <div className="text-xs font-medium text-white">{mod.label}</div>
@@ -490,7 +490,7 @@ export function ProductionModuleReadinessView({
                     </td>
 
                     <td className="py-3.5 px-3">
-                      <span className="font-mono text-xs text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                      <span className="font-mono text-xs text-[--brand] bg-[--brand]/10 border border-[--brand-line] px-2 py-0.5 rounded-md">
                         {mod.key}
                       </span>
                     </td>
@@ -527,8 +527,8 @@ export function ProductionModuleReadinessView({
                               key={action}
                               className={`text-[10px] font-medium px-2 py-0.5 rounded-md border ${
                                 allowed
-                                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
-                                  : "bg-white/[0.03] text-zinc-500 border-white/[0.06]"
+                                    ? "bg-[--brand]/10 text-[--brand] border-[--brand-line]"
+                                  : "bg-white text-zinc-500 border-[--line]"
                               }`}
                               title={`${mod.key}:${action}`}
                             >
@@ -542,7 +542,7 @@ export function ProductionModuleReadinessView({
                     <td className="py-3.5 pl-3 pr-5 text-right">
                       <Link
                         href={mod.href}
-                        className="inline-flex items-center gap-1 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] px-2.5 py-1 text-xs font-medium text-zinc-200 transition-colors"
+                        className="inline-flex items-center gap-1 rounded-lg border border-[--line] bg-white hover:bg-white/[0.08] px-2.5 py-1 text-xs font-medium text-zinc-200 transition-colors"
                       >
                         İncele
                       </Link>

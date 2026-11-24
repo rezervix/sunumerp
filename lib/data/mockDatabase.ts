@@ -816,7 +816,7 @@ export const INITIAL_CALENDAR_EVENTS: MockCalendarEvent[] = [
     title: "Alacak Tahsilatı: Koç Holding ERP Lisans Bedeli",
     date: getRelativeDate(2, 9, 0),
     type: "income_payment",
-    color: "#10b981",
+    color: "#1267E6",
     description: "Koç Holding kurumsal ERP dönüşüm sözleşmesi hakediş tahsilatı.",
     amount: 350000,
     status: "pending"
@@ -826,7 +826,7 @@ export const INITIAL_CALENDAR_EVENTS: MockCalendarEvent[] = [
     title: "Alacak Tahsilatı: Ziraat Bankası B2B Hakedişi",
     date: getRelativeDate(-1, 11, 0),
     type: "income_payment",
-    color: "#10b981",
+    color: "#1267E6",
     description: "Açık bankacılık entegrasyonu onaylanan hakediş tutarı tahsilatı.",
     amount: 180000,
     status: "paid"

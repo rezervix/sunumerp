@@ -90,7 +90,7 @@ export function DiskUsageBar({ branchId, refreshTrigger }: DiskUsageBarProps) {
         <div className="bg-muted/50 rounded-lg p-2.5">
           <p className="text-label text-muted-foreground mb-1">Dosyalar</p>
           <div className="flex items-center gap-1.5">
-            <FileText size={13} className="text-emerald-400" />
+            <FileText size={13} className="text-[--brand]" />
             <span className="text-sm font-semibold">{stats.fileCount.toLocaleString("tr")}</span>
           </div>
         </div>
@@ -114,7 +114,7 @@ export function DiskUsageBar({ branchId, refreshTrigger }: DiskUsageBarProps) {
       {stats.typeBreakdown.length > 0 && totalSegments > 0 && (
         <div>
           {/* Renk çubuğu - Animasyonlu Dolum */}
-          <div className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-2.5 bg-white/[0.04] p-0.5 border border-white/[0.06]">
+          <div className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-2.5 bg-[--muted-bg] p-0.5 border border-[--line]">
             {stats.typeBreakdown
               .filter((t) => t.sizeBytes > 0)
               .map((t) => (

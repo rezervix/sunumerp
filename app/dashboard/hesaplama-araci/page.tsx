@@ -160,12 +160,12 @@ function CostRow({ dot, label, value, plus = true }: { dot: string; label: strin
   return (
     <div className="flex justify-between items-center relative pl-6">
       <div
-        className="absolute left-0 top-1/2 -translate-y-1/2 size-4 rounded-full border border-white/[0.08] flex items-center justify-center z-10"
+        className="absolute left-0 top-1/2 -translate-y-1/2 size-4 rounded-full border border-[--line] flex items-center justify-center z-10"
         style={{ backgroundColor: `${dot}22` }}
       >
         <div className="size-1.5 rounded-full" style={{ backgroundColor: dot }} />
       </div>
-      <span className="text-xs text-zinc-400">{label}</span>
+      <span className="text-xs text-[--text-muted]">{label}</span>
       <span className="text-xs font-mono font-medium text-zinc-200">
         {plus ? "+" : ""}{fmt(value)} ₺
       </span>
@@ -287,10 +287,10 @@ export default function HesaplamaAraciPage() {
   return (
     <div className="flex flex-col gap-6">
       {/* ── Sayfa Başlığı ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-white/[0.06]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[--line]">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-white">Fiyatlandırma & Kâr Hesaplama Motoru</h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <h1 className="text-2xl font-light tracking-wide text-[--text]">Fiyatlandırma & Kâr Hesaplama Motoru</h1>
+          <p className="text-xs text-[--text-muted] mt-1">
             Dinamik kâr marjı kurallarına göre anlık optimum satış fiyatı simülasyonu
           </p>
         </div>
@@ -299,15 +299,15 @@ export default function HesaplamaAraciPage() {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* ── Sol Panel: Parametreler ── */}
         <div className="xl:col-span-5 relative z-10">
-          <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl space-y-6">
-            <h2 className="text-sm font-medium text-white flex items-center gap-2">
-              <SlidersHorizontal className="size-4 text-emerald-400" />
+          <div className="bg-white/80 backdrop-blur-xl backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl space-y-6">
+            <h2 className="text-sm font-medium text-[--text] flex items-center gap-2">
+              <SlidersHorizontal className="size-4 text-[--brand]" />
               Hesaplama Parametreleri
             </h2>
 
             {/* ── Bölüm 1: Temel Maliyetler ── */}
             <div className="space-y-3">
-              <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Temel Maliyetler</p>
+              <p className="text-[10px] font-semibold text-[--text-muted] uppercase tracking-wider">Temel Maliyetler</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-zinc-300">Ürün Maliyeti (₺) *</label>
@@ -315,7 +315,7 @@ export default function HesaplamaAraciPage() {
                     type="number" step="0.01" min="0" required
                     value={productCost}
                     onChange={e => setProductCost(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                     placeholder="0.00"
                   />
                 </div>
@@ -325,7 +325,7 @@ export default function HesaplamaAraciPage() {
                     type="number" step="0.01" min="0"
                     value={shippingCost}
                     onChange={e => setShippingCost(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   />
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default function HesaplamaAraciPage() {
                     type="number" step="0.1" min="0" max="100"
                     value={commissionRate}
                     onChange={e => setCommissionRate(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -345,15 +345,15 @@ export default function HesaplamaAraciPage() {
                     type="number" step="0.1" min="0" max="100"
                     value={vatRate}
                     onChange={e => setVatRate(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   />
                 </div>
               </div>
             </div>
 
             {/* ── Bölüm 2: Varyant Ayarı ── */}
-            <div className="space-y-3 pt-3 border-t border-white/[0.06]">
-              <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Varyant Fiyat Farkı</p>
+            <div className="space-y-3 pt-3 border-t border-[--line]">
+              <p className="text-[10px] font-semibold text-[--text-muted] uppercase tracking-wider">Varyant Fiyat Farkı</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-zinc-300">Varyant Farkı (₺)</label>
@@ -361,7 +361,7 @@ export default function HesaplamaAraciPage() {
                     type="number" step="0.01" min="0"
                     value={variantPrice}
                     onChange={e => setVariantPrice(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   />
                 </div>
                 <div className="flex items-center gap-2 pt-6">
@@ -370,7 +370,7 @@ export default function HesaplamaAraciPage() {
                       type="checkbox"
                       checked={subtractVariant}
                       onChange={e => setSubtractVariant(e.target.checked)}
-                      className="rounded border-zinc-700 bg-zinc-900 text-emerald-500 focus:ring-0"
+                      className="rounded border-zinc-700 bg-zinc-900 text-[--brand] focus:ring-0"
                     />
                     Maliyetten Düş
                   </label>
@@ -379,8 +379,8 @@ export default function HesaplamaAraciPage() {
             </div>
 
             {/* ── Bölüm 3: Saha Satış & Reklam ── */}
-            <div className="space-y-3 pt-3 border-t border-white/[0.06]">
-              <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Saha Satış & Reklam Gideri</p>
+            <div className="space-y-3 pt-3 border-t border-[--line]">
+              <p className="text-[10px] font-semibold text-[--text-muted] uppercase tracking-wider">Saha Satış & Reklam Gideri</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-medium text-zinc-300">Saha Komisyonu</label>
@@ -390,12 +390,12 @@ export default function HesaplamaAraciPage() {
                       value={fieldSalesCommValue}
                       onChange={e => setFieldSalesCommValue(e.target.value)}
                       placeholder="Oran / Tutar"
-                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                     />
                     <button
                       type="button"
                       onClick={() => setFieldSalesCommType(prev => prev === "percent" ? "amount" : "percent")}
-                      className="px-2.5 py-2 text-xs rounded-xl bg-white/[0.05] border border-white/[0.08] text-zinc-300 hover:text-white"
+                      className="px-2.5 py-2 text-xs rounded-xl bg-white/[0.05] border border-[--line] text-zinc-300 hover:text-[--text]"
                     >
                       {fieldSalesCommType === "percent" ? "%" : "₺"}
                     </button>
@@ -408,15 +408,15 @@ export default function HesaplamaAraciPage() {
                     value={adCostPerMessage}
                     onChange={e => setAdCostPerMessage(e.target.value)}
                     placeholder="0.00"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   />
                 </div>
               </div>
             </div>
 
             {/* ── Bölüm 4: Taksit Komisyonu ── */}
-            <div className="space-y-2 pt-3 border-t border-white/[0.06]">
-              <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Taksit Komisyonu</p>
+            <div className="space-y-2 pt-3 border-t border-[--line]">
+              <p className="text-[10px] font-semibold text-[--text-muted] uppercase tracking-wider">Taksit Komisyonu</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {INSTALLMENT_OPTIONS.map(opt => (
                   <button
@@ -425,8 +425,8 @@ export default function HesaplamaAraciPage() {
                     onClick={() => setInstallmentCount(opt.value)}
                     className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
                       installmentCount === opt.value
-                        ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.15)]"
-                        : "bg-white/[0.02] border-white/[0.06] text-zinc-400 hover:text-white"
+                        ? "bg-[--brand]/15 border-[--brand-line] text-[--brand] shadow-xs"
+                        : "bg-white/[0.02] border-[--line] text-[--text-muted] hover:text-[--text]"
                     }`}
                   >
                     {opt.label}
@@ -436,13 +436,13 @@ export default function HesaplamaAraciPage() {
             </div>
 
             {/* ── Bölüm 5: Yuvarlama ve Manuel Mod ── */}
-            <div className="space-y-4 pt-3 border-t border-white/[0.06]">
+            <div className="space-y-4 pt-3 border-t border-[--line]">
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-300">Fiyat Yuvarlama Stratejisi</label>
                 <select
                   value={roundingStrategy}
                   onChange={e => setRoundingStrategy(e.target.value as RoundingStrategy)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-[#111513] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand-line]"
                 >
                   <option value="none">Yuvarlama Yapma (Ör: 1445.50)</option>
                   <option value="hundred">En Yakın Yüzlüğe Yuvarla (Ör: 1400 / 1500)</option>
@@ -455,13 +455,13 @@ export default function HesaplamaAraciPage() {
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-zinc-300 flex items-center justify-between">
                   <span>Manuel Kâr Oranı (%)</span>
-                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Opsiyonel</span>
+                  <span className="text-[10px] text-[--brand] font-mono bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">Opsiyonel</span>
                 </label>
                 <input
                   type="number" step="0.1" min="0"
                   value={manualProfitRate}
                   onChange={e => setManualProfitRate(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-[--line] text-[--text] placeholder-zinc-500 focus:outline-none focus:border-[--brand-line] font-mono"
                   placeholder="Otomatik kuralları ezmek için marj girin..."
                 />
               </div>
@@ -472,7 +472,7 @@ export default function HesaplamaAraciPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="flex-1 py-2.5 px-4 text-xs font-medium rounded-xl border border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-2.5 px-4 text-xs font-medium rounded-xl border border-[--line] bg-white/[0.02] text-zinc-300 hover:text-[--text] hover:bg-white/[0.06] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="size-3.5" />
                 Sıfırla
@@ -483,7 +483,7 @@ export default function HesaplamaAraciPage() {
                   type="button"
                   onClick={handleSaveHistory}
                   disabled={savingHistory}
-                  className="flex-1 py-2.5 px-4 text-xs font-semibold rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="flex-1 py-2.5 px-4 text-xs font-semibold rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[--text] shadow-sm shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   <Sparkles className="size-3.5" />
                   {savingHistory ? "Kaydediliyor..." : "Geçmişe Kaydet"}
@@ -496,11 +496,11 @@ export default function HesaplamaAraciPage() {
         {/* ── Sağ Panel: Sonuçlar ── */}
         <div className="xl:col-span-7 space-y-6">
           {result ? (
-            <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden animate-in fade-in duration-300">
+            <div className="bg-white/80 backdrop-blur-xl backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl overflow-hidden animate-in fade-in duration-300">
               {/* Sonuç Header */}
-              <div className="bg-white/[0.02] border-b border-white/[0.06] p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="bg-white/[0.02] border-b border-[--line] p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-medium text-emerald-400 mb-1 text-center sm:text-left flex items-center gap-1.5">
+                  <p className="text-xs font-medium text-[--brand] mb-1 text-center sm:text-left flex items-center gap-1.5">
                     <Sparkles className="size-3.5" />
                     Önerilen Nihai Satış Fiyatı
                     {installmentCount > 0 && (
@@ -510,15 +510,15 @@ export default function HesaplamaAraciPage() {
                     )}
                   </p>
                   <div className="flex items-baseline gap-2 justify-center sm:justify-start">
-                    <span className="text-4xl font-light text-white tracking-tight">
+                    <span className="text-4xl font-light text-[--text] tracking-tight">
                       <AnimatedNumber value={result.roundedPrice} decimals={2} />
                     </span>
-                    <span className="text-2xl font-light text-emerald-400">₺</span>
+                    <span className="text-2xl font-light text-[--brand]">₺</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full shrink-0">
-                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34D399]" />
+                <div className="flex items-center gap-2 text-xs font-mono text-[--brand] bg-[--brand]/10 border border-[--brand-line] px-3 py-1.5 rounded-full shrink-0">
+                  <span className="size-2 rounded-full bg-[--brand] animate-pulse " />
                   Anlık Dinamik Simülasyon
                 </div>
               </div>
@@ -526,7 +526,7 @@ export default function HesaplamaAraciPage() {
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Sol: Maliyet Dağılımı */}
                 <div className="space-y-4">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 border-b border-white/[0.06] pb-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-[--text-muted] border-b border-[--line] pb-2">
                     Maliyet Bileşenleri
                   </h3>
                   <div className="space-y-3 relative">
@@ -539,7 +539,7 @@ export default function HesaplamaAraciPage() {
                     <CostRow dot="#FB923C" label={`Taksit Komisyonu (%${INSTALLMENT_RATES[installmentCount] ?? 0})`} value={result.installmentFeeAmount} />
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/[0.08] border-dashed flex justify-between items-center pl-6">
+                  <div className="mt-4 pt-3 border-t border-[--line] border-dashed flex justify-between items-center pl-6">
                     <span className="text-xs font-medium text-zinc-300">Toplam Fiili Maliyet</span>
                     <span className="text-sm font-light text-sky-400 font-mono">
                       <AnimatedNumber value={result.totalCost} decimals={2} suffix=" ₺" />
@@ -549,63 +549,63 @@ export default function HesaplamaAraciPage() {
 
                 {/* Sağ: Kâr Analizi */}
                 <div className="space-y-4">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 border-b border-white/[0.06] pb-2">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-[--text-muted] border-b border-[--line] pb-2">
                     Kâr ve Marj Dağılımı
                   </h3>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/[0.02] border border-white/[0.06] p-4 rounded-2xl">
-                      <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1">Uygulanan Marj</p>
-                      <p className="text-2xl font-light text-emerald-400 font-mono">
+                    <div className="bg-white/[0.02] border border-[--line] p-4 rounded-2xl">
+                      <p className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider mb-1">Uygulanan Marj</p>
+                      <p className="text-2xl font-light text-[--brand] font-mono">
                         <AnimatedNumber value={result.appliedProfitRate} decimals={1} prefix="%" />
                       </p>
-                      {!manualProfitRate && <p className="text-[10px] text-zinc-500 mt-1 font-mono">Dinamik Kurallar</p>}
+                      {!manualProfitRate && <p className="text-[10px] text-[--text-muted] mt-1 font-mono">Dinamik Kurallar</p>}
                     </div>
-                    <div className="bg-white/[0.02] border border-white/[0.06] p-4 rounded-2xl">
-                      <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider mb-1">Kâr Tutarı</p>
-                      <p className="text-2xl font-light text-emerald-400 font-mono">
+                    <div className="bg-white/[0.02] border border-[--line] p-4 rounded-2xl">
+                      <p className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider mb-1">Kâr Tutarı</p>
+                      <p className="text-2xl font-light text-[--brand] font-mono">
                         <AnimatedNumber value={result.profitAmount} decimals={2} prefix="+" suffix=" ₺" />
                       </p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 mt-3">
-                    <div className="bg-emerald-500/5 border border-emerald-500/20 p-4 rounded-2xl">
-                      <p className="text-[10px] font-medium text-emerald-400 uppercase tracking-wider mb-1">Brüt Kâr</p>
-                      <p className="text-2xl font-light text-emerald-400 font-mono">
+                    <div className="bg-[--brand]/5 border border-[--brand-line] p-4 rounded-2xl">
+                      <p className="text-[10px] font-medium text-[--brand] uppercase tracking-wider mb-1">Brüt Kâr</p>
+                      <p className="text-2xl font-light text-[--brand] font-mono">
                         <AnimatedNumber value={result.grossProfit} decimals={2} suffix=" ₺" />
                       </p>
-                      <p className="text-[10px] text-emerald-400/60 mt-1">Satış − (Ürün+Kargo)</p>
+                      <p className="text-[10px] text-[--brand]/60 mt-1">Satış − (Ürün+Kargo)</p>
                     </div>
                     <div className="bg-sky-500/5 border border-sky-500/20 p-4 rounded-2xl relative overflow-hidden">
-                      <div className="absolute right-0 top-0 bottom-0 w-1 bg-emerald-400" />
+                      <div className="absolute right-0 top-0 bottom-0 w-1 bg-[--brand]" />
                       <p className="text-[10px] font-medium text-sky-400 uppercase tracking-wider mb-1">Net Kâr</p>
-                      <p className="text-2xl font-light text-white font-mono">
+                      <p className="text-2xl font-light text-[--text] font-mono">
                         <AnimatedNumber value={result.netProfit} decimals={2} suffix=" ₺" />
                       </p>
-                      <p className="text-[10px] font-mono text-emerald-400 mt-1">Marj: %{result.netProfitMargin}</p>
+                      <p className="text-[10px] font-mono text-[--brand] mt-1">Marj: %{result.netProfitMargin}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Ekstra Bilgi */}
-              <div className="bg-white/[0.01] px-6 py-3.5 border-t border-white/[0.06] text-xs text-zinc-400 flex items-center justify-between">
+              <div className="bg-white/[0.01] px-6 py-3.5 border-t border-[--line] text-xs text-[--text-muted] flex items-center justify-between">
                 <span>
-                  Ham Hesaplanan Fiyat: <strong className="text-white font-mono">{fmt(result.calculatedPrice)} ₺</strong>
+                  Ham Hesaplanan Fiyat: <strong className="text-[--text] font-mono">{fmt(result.calculatedPrice)} ₺</strong>
                 </span>
-                <span className="font-mono text-[11px] text-zinc-500">
+                <span className="font-mono text-[11px] text-[--text-muted]">
                   {roundingStrategy} yuvarlaması uygulandı
                 </span>
               </div>
             </div>
           ) : (
-            <div className="h-full bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl flex flex-col items-center justify-center p-12 text-center min-h-[360px]">
-              <div className="size-14 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center text-emerald-400 mb-4 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+            <div className="h-full bg-white/80 backdrop-blur-xl backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl flex flex-col items-center justify-center p-12 text-center min-h-[360px]">
+              <div className="size-14 rounded-2xl bg-white/[0.03] border border-[--line] flex items-center justify-center text-[--brand] mb-4 shadow-sm">
                 <Calculator className="size-7" />
               </div>
-              <h3 className="text-base font-medium text-white mb-1.5">Hesaplama Bekleniyor</h3>
-              <p className="text-xs text-zinc-400 max-w-xs leading-relaxed">
+              <h3 className="text-base font-medium text-[--text] mb-1.5">Hesaplama Bekleniyor</h3>
+              <p className="text-xs text-[--text-muted] max-w-xs leading-relaxed">
                 Sol taraftaki ürün ve operasyonel maliyet parametrelerini girin; kâr ve fiyat simülasyonu anlık olarak hesaplansın.
               </p>
             </div>
@@ -673,32 +673,32 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
   }
 
   return (
-    <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden p-6 space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-        <h2 className="text-sm font-medium text-white flex items-center gap-2">
-          <History className="size-4 text-emerald-400" />
+    <div className="bg-white/80 backdrop-blur-xl backdrop-blur-xl border border-[--line] rounded-[20px] shadow-2xl overflow-hidden p-6 space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[--line]">
+        <h2 className="text-sm font-medium text-[--text] flex items-center gap-2">
+          <History className="size-4 text-[--brand]" />
           Hesaplama Geçmişi
         </h2>
         <button
           onClick={() => loadHistory(1)}
           title="Yenile"
-          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+          className="p-1.5 rounded-lg text-[--text-muted] hover:text-[--text] hover:bg-white/[0.06] transition-colors cursor-pointer"
         >
           <RefreshCw className={`size-3.5 ${loading ? "animate-spin" : ""}`} />
         </button>
       </div>
 
       {loading && history.length === 0 ? (
-        <div className="flex justify-center p-8 text-zinc-500 text-xs">
+        <div className="flex justify-center p-8 text-[--text-muted] text-xs">
           Geçmiş kayıtlar yükleniyor...
         </div>
       ) : history.length === 0 ? (
-        <div className="text-center p-8 text-zinc-500 text-xs">Henüz kaydedilmiş hesaplama bulunmuyor.</div>
+        <div className="text-center p-8 text-[--text-muted] text-xs">Henüz kaydedilmiş hesaplama bulunmuyor.</div>
       ) : (
         <>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="text-[11px] text-zinc-400 uppercase tracking-wider bg-white/[0.02] border-b border-white/[0.06]">
+              <thead className="text-[11px] text-[--text-muted] uppercase tracking-wider bg-white/[0.02] border-b border-[--line]">
                 <tr>
                   <th className="px-4 py-3 font-medium">Tarih</th>
                   <th className="px-4 py-3 font-medium">Ürün Maliyeti</th>
@@ -710,23 +710,23 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
               <tbody className="divide-y divide-white/[0.04]">
                 {history.map((record) => (
                   <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs text-zinc-400 whitespace-nowrap">
+                    <td className="px-4 py-3 font-mono text-xs text-[--text-muted] whitespace-nowrap">
                       {new Date(record.createdAt).toLocaleDateString("tr-TR")} {new Date(record.createdAt).toLocaleTimeString("tr-TR", {hour: '2-digit', minute:'2-digit'})}
                     </td>
                     <td className="px-4 py-3 font-mono text-xs text-zinc-300">{fmt(record.productCost)} ₺</td>
                     <td className="px-4 py-3 font-mono text-xs text-zinc-300">{fmt(record.totalCost)} ₺</td>
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-emerald-400">{fmt(record.finalPrice)} ₺</td>
+                    <td className="px-4 py-3 font-mono text-xs font-semibold text-[--brand]">{fmt(record.finalPrice)} ₺</td>
                     <td className="px-4 py-3 flex gap-2 justify-end">
                       <button
                         onClick={() => onRestore(record)}
-                        className="px-3 py-1 text-xs rounded-lg border border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+                        className="px-3 py-1 text-xs rounded-lg border border-[--line] bg-white/[0.02] text-zinc-300 hover:text-[--text] hover:bg-white/[0.06] transition-colors cursor-pointer"
                       >
                         Geri Yükle
                       </button>
                       <button
                         onClick={() => handleDelete(record.id)}
                         disabled={deletingId === record.id}
-                        className="p-1 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                        className="p-1 rounded-lg text-[--text-muted] hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                         title="Sil"
                       >
                         <Trash2 className="size-3.5" />
@@ -739,21 +739,21 @@ function CalculationHistoryPanel({ onRestore }: { onRestore: (record: any) => vo
           </div>
           
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 pt-4 border-t border-white/[0.06]">
+            <div className="flex justify-center gap-2 pt-4 border-t border-[--line]">
               <button
                 disabled={page <= 1}
                 onClick={() => loadHistory(page - 1)}
-                className="px-3 py-1 text-xs rounded-lg border border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white disabled:opacity-40"
+                className="px-3 py-1 text-xs rounded-lg border border-[--line] bg-white/[0.02] text-zinc-300 hover:text-[--text] disabled:opacity-40"
               >
                 Önceki
               </button>
-              <span className="text-xs text-zinc-500 flex items-center px-2 font-mono">
+              <span className="text-xs text-[--text-muted] flex items-center px-2 font-mono">
                 Sayfa {page} / {totalPages}
               </span>
               <button
                 disabled={page >= totalPages}
                 onClick={() => loadHistory(page + 1)}
-                className="px-3 py-1 text-xs rounded-lg border border-white/[0.08] bg-white/[0.02] text-zinc-300 hover:text-white disabled:opacity-40"
+                className="px-3 py-1 text-xs rounded-lg border border-[--line] bg-white/[0.02] text-zinc-300 hover:text-[--text] disabled:opacity-40"
               >
                 Sonraki
               </button>

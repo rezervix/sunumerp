@@ -12,7 +12,7 @@ export default function SupplierPortalLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex-1 overflow-y-auto bg-[#080A09] text-zinc-100 min-h-0">
+    <div className="flex-1 overflow-y-auto bg-[#F6F8FB] text-zinc-100 min-h-0">
       {children}
     </div>
   )

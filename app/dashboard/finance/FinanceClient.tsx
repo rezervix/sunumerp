@@ -19,26 +19,21 @@ import {
   Trash2,
   X,
   FileText,
-  Filter,
 } from "lucide-react"
 import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  LineChart,
-  Line,
   AreaChart,
   Area,
 } from "recharts"
-import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
+import { AnimatedNumber } from "@/components/ui/motion-primitives"
 
 interface FinanceRecord {
   id: string
@@ -64,7 +59,7 @@ const EXPENSE_CATEGORIES = [
 const INCOME_CATEGORIES = ["Hizmet Satışı", "Proje Geliri", "Danışmanlık", "Diğer"]
 const OTHER_CATEGORIES = ["Genel Borç", "Kredi", "Beklenen Tahsilat", "Beklenen Gider", "Diğer"]
 
-const GLOW_COLORS = ["#34D399", "#38BDF8", "#FBBF24", "#F43F5E", "#A78BFA", "#2DD4BF", "#FB923C", "#818CF8", "#4ADE80", "#E879F9"]
+const CHART_PALETTE = ["#1267E6", "#1579F9", "#2A93F3", "#07254A", "#33445E", "#5B6B82", "#16A34A", "#F5A524", "#E5484D", "#94A3B8"]
 
 export default function FinanceClient() {
   const [records, setRecords] = useState<FinanceRecord[]>(() => mockDatabase.getFinances() as any)
@@ -261,21 +256,21 @@ export default function FinanceClient() {
 
   const getTypeStyles = (type: string) => {
     switch(type) {
-      case "INCOME": return "bg-emerald-500/10 text-emerald-400 border border-emerald-500/25"
-      case "EXPENSE": return "bg-rose-500/10 text-rose-400 border border-rose-500/25"
-      case "DEBT": return "bg-zinc-500/10 text-zinc-300 border border-zinc-500/25"
-      case "EXPECTED_PAYMENT": return "bg-sky-500/10 text-sky-400 border border-sky-500/25"
-      default: return "bg-white/5 text-zinc-400 border border-white/10"
+      case "INCOME": return "bg-[--ok-soft] text-[--ok] border border-[--ok]/20"
+      case "EXPENSE": return "bg-[--bad-soft] text-[--bad] border border-[--bad]/20"
+      case "DEBT": return "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
+      case "EXPECTED_PAYMENT": return "bg-[--brand-soft] text-[--brand] border border-[--brand-line]"
+      default: return "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
     }
   }
 
   return (
     <div className="space-y-6">
       {/* ── ÜST BAŞLIK VE AKSİYONLAR ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-white/[0.06]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[--line]">
         <div>
-          <h1 className="text-2xl font-light tracking-wide text-white">Kurumsal Finans</h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-[--text]">Kurumsal Finans</h1>
+          <p className="text-xs text-[--text-muted] mt-1">
             {currentBranch ? `${currentBranch.name} · Bilanço, Gelir-Gider Akışı ve Kasa Yönetimi` : "Finansal Yönetim Paneli"}
           </p>
         </div>
@@ -283,15 +278,15 @@ export default function FinanceClient() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as any)}
-            className="px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50 transition-all"
+            className="px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] transition-all shadow-xs"
           >
-            <option value="THIS_MONTH" className="bg-[#111513] text-white">Bu Ay</option>
-            <option value="LAST_6_MONTHS" className="bg-[#111513] text-white">Son 6 Ay</option>
-            <option value="FULL_YEAR" className="bg-[#111513] text-white">Tüm Yıl</option>
+            <option value="THIS_MONTH">Bu Ay</option>
+            <option value="LAST_6_MONTHS">Son 6 Ay</option>
+            <option value="FULL_YEAR">Tüm Yıl</option>
           </select>
           <button
             onClick={() => setIsDialogOpen(true)}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all cursor-pointer"
+            className="bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
           >
             <Plus className="size-4" />
             Yeni İşlem Ekle
@@ -300,18 +295,18 @@ export default function FinanceClient() {
       </div>
 
       {/* ── KUTUSUZ (BORDERLESS) ÜST KPI ŞERİDİ ── */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-3 border-b border-white/[0.06]">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-3 border-b border-[--line]">
         {/* Toplam Gelir */}
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <TrendingUp className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <TrendingUp className="size-3.5 text-[--text-muted]" />
             <span>Toplam Gelir</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={totalIncome} prefix="₺" />
             </span>
-            <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-[11px] font-mono text-[--ok] bg-[--ok-soft] px-2 py-0.5 rounded-full border border-[--ok]/20">
               Giriş
             </span>
           </div>
@@ -319,15 +314,15 @@ export default function FinanceClient() {
 
         {/* Toplam Gider */}
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <TrendingDown className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <TrendingDown className="size-3.5 text-[--text-muted]" />
             <span>Toplam Gider</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={totalExpense} prefix="₺" />
             </span>
-            <span className="text-[11px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
+            <span className="text-[11px] font-mono text-[--bad] bg-[--bad-soft] px-2 py-0.5 rounded-full border border-[--bad]/20">
               Çıkış
             </span>
           </div>
@@ -335,18 +330,18 @@ export default function FinanceClient() {
 
         {/* Net Bakiye */}
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <Scale className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <Scale className="size-3.5 text-[--text-muted]" />
             <span>Net Durum</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className={`text-3xl font-light tracking-tight ${netBalance >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+            <span className={`text-3xl font-light tracking-tight tabular-nums ${netBalance >= 0 ? "text-[--ok]" : "text-[--bad]"}`}>
               <AnimatedNumber value={netBalance} prefix={netBalance >= 0 ? "+₺" : "-₺"} />
             </span>
             <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
               netBalance >= 0 
-                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                ? "bg-[--ok-soft] text-[--ok] border-[--ok]/20" 
+                : "bg-[--bad-soft] text-[--bad] border-[--bad]/20"
             }`}>
               Kasa
             </span>
@@ -355,15 +350,15 @@ export default function FinanceClient() {
 
         {/* Toplam Borç */}
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <CreditCard className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <CreditCard className="size-3.5 text-[--text-muted]" />
             <span>Toplam Borç</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={totalDebt} prefix="₺" />
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-white/[0.08]">
+            <span className="text-[11px] font-mono text-[--text-muted] bg-[--muted-bg] px-2 py-0.5 rounded-full border border-[--line]">
               Yükümlülük
             </span>
           </div>
@@ -371,15 +366,15 @@ export default function FinanceClient() {
 
         {/* Beklenen Tahsilat */}
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider font-medium">
-            <Clock className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[--text-muted] text-[11px] uppercase tracking-wider font-medium">
+            <Clock className="size-3.5 text-[--text-muted]" />
             <span>Beklenen Tahsilat</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white tracking-tight">
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
               <AnimatedNumber value={totalExpected} prefix="₺" />
             </span>
-            <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+            <span className="text-[11px] font-mono text-[--brand] bg-[--brand-soft] px-2 py-0.5 rounded-full border border-[--brand-line]">
               Vadeli
             </span>
           </div>
@@ -388,20 +383,20 @@ export default function FinanceClient() {
 
       {/* ── GRAFİKLER BENTO ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Aylık Akış: Parlayan Spline Eğrileri */}
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl">
+        {/* Aylık Akış: Area Spline */}
+        <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-sm font-medium text-white">Nakit Akışı & Aylık Trendler</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">Gelir ve gider eğrisinin yumuşak spline analizi</p>
+              <h3 className="text-sm font-medium text-[--text]">Nakit Akışı & Aylık Trendler</h3>
+              <p className="text-xs text-[--text-muted] mt-0.5">Gelir ve gider eğrisinin yumuşak spline analizi</p>
             </div>
             <div className="flex items-center gap-4 text-xs font-mono">
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
+              <span className="flex items-center gap-1.5 text-[--brand]">
+                <span className="size-2 rounded-full bg-[--brand]" />
                 Gelir
               </span>
-              <span className="flex items-center gap-1.5 text-rose-400">
-                <span className="size-2 rounded-full bg-rose-400 shadow-[0_0_8px_#FB7185]" />
+              <span className="flex items-center gap-1.5 text-[--bad]">
+                <span className="size-2 rounded-full bg-[--bad]" />
                 Gider
               </span>
             </div>
@@ -412,24 +407,24 @@ export default function FinanceClient() {
                 <AreaChart data={monthlyChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="finIncomeGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#34D399" stopOpacity={0.35}/>
-                      <stop offset="95%" stopColor="#34D399" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#1267E6" stopOpacity={0.25}/>
+                      <stop offset="95%" stopColor="#1267E6" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="finExpenseGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FB7185" stopOpacity={0.25}/>
-                      <stop offset="95%" stopColor="#FB7185" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#E5484D" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#E5484D" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
-                  <XAxis dataKey="name" stroke="#71717A" tick={{ fill: "#71717A", fontSize: 11 }} />
-                  <YAxis stroke="#71717A" tick={{ fill: "#71717A", fontSize: 11 }} tickFormatter={(v) => `₺${v/1000}k`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#EDF1F6" vertical={false} />
+                  <XAxis dataKey="name" stroke="#5B6B82" tick={{ fill: "#5B6B82", fontSize: 11 }} />
+                  <YAxis stroke="#5B6B82" tick={{ fill: "#5B6B82", fontSize: 11 }} tickFormatter={(v) => `₺${v/1000}k`} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
-                      borderColor: "rgba(255,255,255,0.1)",
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      borderColor: "#E3E8F0",
                       borderRadius: "12px",
-                      color: "#fff",
-                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
+                      color: "#0B1B33",
+                      boxShadow: "0 10px 25px -5px rgba(11, 27, 51, 0.1)",
                     }}
                     formatter={(value) => [`₺${Number(value).toLocaleString("tr-TR")}`, ""]}
                   />
@@ -437,7 +432,7 @@ export default function FinanceClient() {
                     type="monotone"
                     dataKey="Income"
                     name="Gelir"
-                    stroke="#34D399"
+                    stroke="#1267E6"
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill="url(#finIncomeGrad)"
@@ -446,7 +441,7 @@ export default function FinanceClient() {
                     type="monotone"
                     dataKey="Expense"
                     name="Gider"
-                    stroke="#FB7185"
+                    stroke="#E5484D"
                     strokeWidth={2}
                     fillOpacity={1}
                     fill="url(#finExpenseGrad)"
@@ -454,21 +449,21 @@ export default function FinanceClient() {
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-zinc-500 text-xs">Trend verisi bulunamadı.</div>
+              <div className="flex items-center justify-center h-full text-[--text-muted] text-xs">Trend verisi bulunamadı.</div>
             )}
           </div>
         </div>
 
         {/* Harcama Dağılımı: İnce Halka (Donut) Grafiği */}
-        <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] p-6 shadow-2xl relative">
+        <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-sm relative">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-sm font-medium text-white">Kategori Bazlı Harcama Dağılımı</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">Maliyet ağırlık merkezleri</p>
+              <h3 className="text-sm font-medium text-[--text]">Kategori Bazlı Harcama Dağılımı</h3>
+              <p className="text-xs text-[--text-muted] mt-0.5">Maliyet ağırlık merkezleri</p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] uppercase font-mono text-zinc-500 block">En Sık Gider</span>
-              <span className="text-xs font-medium text-emerald-400 px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full mt-1 inline-block">
+              <span className="text-[10px] uppercase font-mono text-[--text-muted] block">En Sık Gider</span>
+              <span className="text-xs font-medium text-[--brand] px-2.5 py-0.5 bg-[--brand-soft] border border-[--brand-line] rounded-full mt-1 inline-block">
                 {mostFrequentCategory}
               </span>
             </div>
@@ -485,45 +480,45 @@ export default function FinanceClient() {
                     outerRadius={95}
                     paddingAngle={3}
                     dataKey="value"
-                    stroke="rgba(0,0,0,0.4)"
+                    stroke="#FFFFFF"
                     strokeWidth={2}
                   >
                     {expenseChartData.map((_entry, index) => (
-                      <Cell key={`cell-${index}`} fill={GLOW_COLORS[index % GLOW_COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={CHART_PALETTE[index % CHART_PALETTE.length]} />
                     ))}
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#111513",
-                      borderColor: "rgba(255,255,255,0.1)",
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      borderColor: "#E3E8F0",
                       borderRadius: "12px",
-                      color: "#fff",
-                      boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
+                      color: "#0B1B33",
+                      boxShadow: "0 10px 25px -5px rgba(11, 27, 51, 0.1)",
                     }}
                     formatter={(value) => [`₺${Number(value).toLocaleString("tr-TR")}`, "Tutar"]}
                   />
-                  <Legend verticalAlign="bottom" height={36} iconSize={8} iconType="circle" wrapperStyle={{ fontSize: 11, color: "#9CA3AF" }} />
+                  <Legend verticalAlign="bottom" height={36} iconSize={8} iconType="circle" wrapperStyle={{ fontSize: 11, color: "#5B6B82" }} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-zinc-500 text-xs">Harcama verisi bulunamadı.</div>
+              <div className="flex items-center justify-center h-full text-[--text-muted] text-xs">Harcama verisi bulunamadı.</div>
             )}
           </div>
         </div>
       </div>
 
       {/* ── İŞLEM TABLOSU ── */}
-      <div className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden flex flex-col">
-        <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+      <div className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden flex flex-col">
+        <div className="p-5 border-b border-[--line] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText className="size-4 text-emerald-400" />
-            <h3 className="font-medium text-white text-sm">Finansal İşlem Geçmişi</h3>
+            <FileText className="size-4 text-[--brand]" />
+            <h3 className="font-medium text-[--text] text-sm">Finansal İşlem Geçmişi</h3>
           </div>
-          <span className="text-xs text-zinc-400 font-mono">{records.length} işlem kaydı</span>
+          <span className="text-xs text-[--text-muted] font-mono">{records.length} işlem kaydı</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-white/[0.02] text-zinc-400 font-medium border-b border-white/[0.06] text-[11px] uppercase tracking-wider">
+            <thead className="bg-[--page] text-[--text-muted] font-medium border-b border-[--line] text-[11px] uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-3.5">Tarih</th>
                 <th className="px-6 py-3.5">Açıklama</th>
@@ -533,13 +528,13 @@ export default function FinanceClient() {
                 <th className="px-6 py-3.5 text-right">Tutar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.04]">
+            <tbody className="divide-y divide-[--line-soft]">
               {records.map((record) => (
-                <tr key={record.id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="px-6 py-3.5 font-mono text-xs text-zinc-300">
+                <tr key={record.id} className="hover:bg-[--muted-bg]/50 transition-colors group">
+                  <td className="px-6 py-3.5 font-mono text-xs text-[--text-muted]">
                     {new Date(record.date).toLocaleDateString("tr-TR")}
                   </td>
-                  <td className="px-6 py-3.5 text-zinc-200">
+                  <td className="px-6 py-3.5 text-[--text]">
                     <div className="flex items-center gap-2">
                       <span className="truncate max-w-xs">{record.description}</span>
                       {record.receiptUrl && (
@@ -547,7 +542,7 @@ export default function FinanceClient() {
                           href={record.receiptUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 text-sky-400 hover:bg-sky-500/10 rounded-lg transition-colors"
+                          className="p-1 text-[--brand] hover:bg-[--brand-soft] rounded-lg transition-colors"
                           title="Faturayı Görüntüle"
                         >
                           <Receipt className="size-3.5" />
@@ -556,7 +551,7 @@ export default function FinanceClient() {
                     </div>
                   </td>
                   <td className="px-6 py-3.5">
-                    <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-300 font-mono">
+                    <span className="px-2 py-0.5 rounded-full bg-[--muted-bg] border border-[--line] text-xs text-[--text-2] font-mono">
                       {record.category}
                     </span>
                   </td>
@@ -567,27 +562,27 @@ export default function FinanceClient() {
                   </td>
                   <td className="px-6 py-3.5">
                     {record.status === "pending" && (
-                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-[--warn-soft] text-[--warn] border border-[--warn]/20">
                         Bekliyor
                       </span>
                     )}
                     {record.status === "approved" && (
-                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-[--ok-soft] text-[--ok] border border-[--ok]/20">
                         Onaylandı
                       </span>
                     )}
                     {record.status === "rejected" && (
-                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                      <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium bg-[--bad-soft] text-[--bad] border border-[--bad]/20">
                         Reddedildi
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-3.5 text-right font-mono">
                     <div className="flex items-center justify-end gap-3">
-                      <span className={`font-semibold ${
-                        record.type === "INCOME" ? "text-emerald-400" : 
-                        record.type === "EXPENSE" ? "text-rose-400" :
-                        record.type === "DEBT" ? "text-zinc-300" : "text-sky-400"
+                      <span className={`font-semibold tabular-nums ${
+                        record.type === "INCOME" ? "text-[--ok]" : 
+                        record.type === "EXPENSE" ? "text-[--bad]" :
+                        record.type === "DEBT" ? "text-[--text-2]" : "text-[--brand]"
                       }`}>
                         {record.type === "INCOME" || record.type === "EXPECTED_PAYMENT" ? "+" : "-"}₺{record.amount.toLocaleString("tr-TR")}
                       </span>
@@ -598,7 +593,7 @@ export default function FinanceClient() {
                           <button
                             onClick={() => handleStatusChange(record.id, "approved")}
                             disabled={loading}
-                            className="p-1 rounded-lg text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+                            className="p-1 rounded-lg text-[--ok] hover:bg-[--ok-soft] transition-colors"
                             title="Onayla"
                           >
                             <CheckCircle2 className="size-4" />
@@ -606,7 +601,7 @@ export default function FinanceClient() {
                           <button
                             onClick={() => handleStatusChange(record.id, "rejected")}
                             disabled={loading}
-                            className="p-1 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors"
+                            className="p-1 rounded-lg text-[--bad] hover:bg-[--bad-soft] transition-colors"
                             title="Reddet"
                           >
                             <XCircle className="size-4" />
@@ -616,7 +611,7 @@ export default function FinanceClient() {
 
                       <button
                         onClick={() => handleDelete(record.id)}
-                        className="p-1 rounded-lg text-zinc-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors opacity-0 group-hover:opacity-100 max-lg:opacity-100"
+                        className="p-1 rounded-lg text-[--text-muted] hover:text-[--bad] hover:bg-[--bad-soft] transition-colors opacity-0 group-hover:opacity-100 max-lg:opacity-100"
                         title="Sil"
                       >
                         <Trash2 className="size-4" />
@@ -627,7 +622,7 @@ export default function FinanceClient() {
               ))}
               {records.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-zinc-500 text-xs">
+                  <td colSpan={6} className="px-6 py-8 text-center text-[--text-muted] text-xs">
                     Kayıtlı finansal işlem bulunamadı.
                   </td>
                 </tr>
@@ -640,18 +635,18 @@ export default function FinanceClient() {
       {/* ── YENİ İŞLEM MODALI ── */}
       <AnimatePresence>
         {isDialogOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/40 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#111513] border border-white/[0.08] rounded-[24px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+              className="bg-white border border-[--line] rounded-[24px] w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             >
-              <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
-                <h3 className="text-base font-medium text-white">Yeni Finansal İşlem Ekle</h3>
+              <div className="px-6 py-4 border-b border-[--line] bg-[--page] flex items-center justify-between">
+                <h3 className="text-base font-medium text-[--navy]">Yeni Finansal İşlem Ekle</h3>
                 <button
                   onClick={() => setIsDialogOpen(false)}
-                  className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors cursor-pointer"
+                  className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors cursor-pointer"
                 >
                   <X className="size-4" />
                 </button>
@@ -659,21 +654,21 @@ export default function FinanceClient() {
 
               <div className="p-6 overflow-y-auto space-y-4 flex-1">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">Tarih *</label>
+                  <label className="text-xs font-medium text-[--text-muted] uppercase tracking-wider">Tarih *</label>
                   <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">İşlem Türü *</label>
+                  <label className="text-xs font-medium text-[--text-muted] uppercase tracking-wider">İşlem Türü *</label>
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-[#111513] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     <option value="INCOME">Gelir</option>
                     <option value="EXPENSE">Gider</option>
@@ -683,11 +678,11 @@ export default function FinanceClient() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">Kategori *</label>
+                  <label className="text-xs font-medium text-[--text-muted] uppercase tracking-wider">Kategori *</label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-[#111513] border border-white/[0.08] text-white focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   >
                     {formData.type === "INCOME" && INCOME_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                     {formData.type === "EXPENSE" && EXPENSE_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -696,18 +691,18 @@ export default function FinanceClient() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">Açıklama *</label>
+                  <label className="text-xs font-medium text-[--text-muted] uppercase tracking-wider">Açıklama *</label>
                   <input
                     type="text"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Örn: Ofis internet altyapı faturası"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand]"
                   />
                 </div>
                 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">Tutar (₺) *</label>
+                  <label className="text-xs font-medium text-[--text-muted] uppercase tracking-wider">Tutar (₺) *</label>
                   <input
                     type="number"
                     min="0"
@@ -715,7 +710,7 @@ export default function FinanceClient() {
                     value={formData.amount || ""}
                     onChange={(e) => setFormData({ ...formData, amount: Number.parseFloat(e.target.value) || 0 })}
                     placeholder="0.00"
-                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white/[0.03] border border-white/[0.08] text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 font-mono"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-[--line] text-[--text] placeholder-[--text-muted] focus:outline-none focus:border-[--brand] focus:ring-1 focus:ring-[--brand] font-mono"
                   />
                 </div>
 
@@ -728,17 +723,17 @@ export default function FinanceClient() {
                 </div>
               </div>
 
-              <div className="px-6 py-4 border-t border-white/[0.06] flex justify-end gap-3 mt-auto">
+              <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-3 mt-auto">
                 <button
                   onClick={() => setIsDialogOpen(false)}
-                  className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors cursor-pointer"
                 >
                   İptal
                 </button>
                 <button
                   onClick={handleCreate}
                   disabled={loading || !formData.description || formData.amount <= 0}
-                  className="px-5 py-2 text-xs font-semibold text-black bg-emerald-500 hover:bg-emerald-400 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.25)] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? "Kaydediliyor..." : "Kaydet"}
                 </button>

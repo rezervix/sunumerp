@@ -635,7 +635,7 @@ export function ProductionBomWorkspace({
     switch (status) {
       case "APPROVED":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[--brand]/15 text-[--brand] border border-[--brand-line]">
             <CheckCircle2 className="w-3 h-3" />
             ONAYLI
           </span>
@@ -661,7 +661,7 @@ export function ProductionBomWorkspace({
   return (
     <div className="space-y-6">
       {/* ── Üst Sekmeler ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[--line] pb-3">
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
           <Button
             variant={activeTab === "boms" ? "default" : "outline"}
@@ -669,7 +669,7 @@ export function ProductionBomWorkspace({
             onClick={() => setActiveTab("boms")}
             className="gap-2"
           >
-            <GitBranch className="w-4 h-4 text-emerald-400" />
+            <GitBranch className="w-4 h-4 text-[--brand]" />
             Ürün Reçeteleri (BOM)
           </Button>
 
@@ -713,7 +713,7 @@ export function ProductionBomWorkspace({
             }}
             className="gap-1.5 text-xs text-zinc-300"
           >
-            <Download className="w-3.5 h-3.5 text-emerald-400" />
+            <Download className="w-3.5 h-3.5 text-[--brand]" />
             Excel/CSV İndir
           </Button>
 
@@ -747,7 +747,7 @@ export function ProductionBomWorkspace({
               })
               setCreateBomModalOpen(true)
             }}
-            className="gap-1.5 text-xs bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold"
+            className="gap-1.5 text-xs bg-[--brand] hover:bg-[--brand] text-zinc-950 font-semibold"
           >
             <Plus className="w-4 h-4" />
             Yeni Reçete
@@ -759,7 +759,7 @@ export function ProductionBomWorkspace({
       {activeTab === "boms" && (
         <div className="space-y-4">
           {/* Filtre ve Arama Çubuğu */}
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-500" />
@@ -767,12 +767,12 @@ export function ProductionBomWorkspace({
                   value={bomsSearch}
                   onChange={(e) => setBomsSearch(e.target.value)}
                   placeholder="Reçete kodu, reçete adı veya mamul ara..."
-                  className="pl-9 h-9 bg-zinc-950/60 border-white/[0.08] text-xs"
+                  className="pl-9 h-9 bg-zinc-950/60 border-[--line] text-xs"
                 />
               </div>
 
               <Select value={bomsStatusFilter} onValueChange={(val) => setBomsStatusFilter(val)}>
-                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-white/[0.08] text-xs">
+                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-[--line] text-xs">
                   <SelectValue placeholder="Statü" />
                 </SelectTrigger>
                 <SelectContent>
@@ -784,7 +784,7 @@ export function ProductionBomWorkspace({
               </Select>
 
               <Select value={bomsPhantomFilter} onValueChange={(val) => setBomsPhantomFilter(val)}>
-                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-white/[0.08] text-xs">
+                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-[--line] text-xs">
                   <SelectValue placeholder="Reçete Tipi" />
                 </SelectTrigger>
                 <SelectContent>
@@ -810,10 +810,10 @@ export function ProductionBomWorkspace({
           </div>
 
           {/* Reçeteler Tablosu */}
-          <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-zinc-950/40">
+          <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
             <Table>
               <TableHeader className="bg-zinc-900/60">
-                <TableRow className="border-white/[0.08]">
+                <TableRow className="border-[--line]">
                   <TableHead className="text-zinc-400 font-medium text-xs">Reçete Kodu</TableHead>
                   <TableHead className="text-zinc-400 font-medium text-xs">Reçete Adı</TableHead>
                   <TableHead className="text-zinc-400 font-medium text-xs">Mamul Kartı</TableHead>
@@ -840,8 +840,8 @@ export function ProductionBomWorkspace({
                   </TableRow>
                 ) : (
                   boms.map((bom) => (
-                    <TableRow key={bom.id} className="border-white/[0.05] hover:bg-white/[0.02] transition-colors">
-                      <TableCell className="font-mono text-xs font-semibold text-emerald-400">
+                    <TableRow key={bom.id} className="border-white/[0.05] hover:bg-[--page] transition-colors">
+                      <TableCell className="font-mono text-xs font-semibold text-[--brand]">
                         {bom.code}
                         {bom.isPhantom && (
                           <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30">
@@ -859,7 +859,7 @@ export function ProductionBomWorkspace({
                       <TableCell className="text-right text-xs font-mono text-zinc-300">
                         {bom.baseQuantity} {bom.baseUnit}
                       </TableCell>
-                      <TableCell className="text-right text-xs font-mono font-medium text-emerald-400">
+                      <TableCell className="text-right text-xs font-mono font-medium text-[--brand]">
                         {bom.totalTheoreticalCost > 0
                           ? formatCurrency(bom.totalTheoreticalCost / (bom.baseQuantity || 1))
                           : "—"}
@@ -876,7 +876,7 @@ export function ProductionBomWorkspace({
                               setSelectedBom(bom)
                               setBomDrawerOpen(true)
                             }}
-                            className="h-7 px-2 text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                            className="h-7 px-2 text-xs text-[--brand] hover:text-[--brand] hover:bg-[--brand]/10"
                           >
                             Detay / Ağaç
                           </Button>
@@ -962,14 +962,14 @@ export function ProductionBomWorkspace({
       {/* ── 2. BÖLÜM: OPERASYON ROTALARI LİSTESİ ── */}
       {activeTab === "routings" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-500" />
               <Input
                 value={routingsSearch}
                 onChange={(e) => setRoutingsSearch(e.target.value)}
                 placeholder="Rota kodu veya mamul ara..."
-                className="pl-9 h-9 bg-zinc-950/60 border-white/[0.08] text-xs"
+                className="pl-9 h-9 bg-zinc-950/60 border-[--line] text-xs"
               />
             </div>
             <Button
@@ -1003,7 +1003,7 @@ export function ProductionBomWorkspace({
               routings.map((rt) => (
                 <div
                   key={rt.id}
-                  className="p-4 rounded-xl border border-white/[0.08] bg-zinc-900/40 hover:border-white/[0.15] transition-all space-y-3"
+                  className="p-4 rounded-xl border border-[--line] bg-zinc-900/40 hover:border-white/[0.15] transition-all space-y-3"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -1015,7 +1015,7 @@ export function ProductionBomWorkspace({
                   </div>
 
                   {/* Operasyon Çizelgesi */}
-                  <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                  <div className="space-y-1.5 pt-2 border-t border-[--line]">
                     <div className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
                       Operasyon Adımları ({rt.operations?.length || 0})
                     </div>
@@ -1088,11 +1088,11 @@ export function ProductionBomWorkspace({
       {/* ── 3. BÖLÜM: NEREDE KULLANILIYOR (WHERE-USED) TERS AĞAÇ SORGUSU ── */}
       {activeTab === "where_used" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex-1">
               <Label className="text-xs text-zinc-400 mb-1 block">Sorgulanacak Malzeme (Hammadde / Yarı Mamul)</Label>
               <Select value={whereUsedItemId} onValueChange={(val) => setWhereUsedItemId(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-white/[0.08] text-xs">
+                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
                   <SelectValue placeholder="Bir hammadde veya bileşen seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1118,10 +1118,10 @@ export function ProductionBomWorkspace({
           </div>
 
           {whereUsedResults.length > 0 && (
-            <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-zinc-950/40">
+            <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
               <Table>
                 <TableHeader className="bg-zinc-900/60">
-                  <TableRow className="border-white/[0.08]">
+                  <TableRow className="border-[--line]">
                     <TableHead className="text-zinc-400 font-medium text-xs">Seviye (Derinlik)</TableHead>
                     <TableHead className="text-zinc-400 font-medium text-xs">Reçete Kodu</TableHead>
                     <TableHead className="text-zinc-400 font-medium text-xs">Üst Mamul / Ürün</TableHead>
@@ -1142,14 +1142,14 @@ export function ProductionBomWorkspace({
                         <div className="font-mono text-[11px] text-zinc-500">{res.finishedItemCode}</div>
                         <div>{res.finishedItemName}</div>
                       </TableCell>
-                      <TableCell className="text-right font-mono text-xs text-emerald-400 font-medium">
+                      <TableCell className="text-right font-mono text-xs text-[--brand] font-medium">
                         {res.quantityUsed} {res.unit}
                       </TableCell>
                       <TableCell className="text-center">
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-mono ${
                             res.isDirect
-                              ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
+                              ? "bg-[--brand]/15 text-[--brand] border border-[--brand-line]"
                               : "bg-zinc-800 text-zinc-400"
                           }`}
                         >
@@ -1168,11 +1168,11 @@ export function ProductionBomWorkspace({
       {/* ── 4. BÖLÜM: REVİZYON KARŞILAŞTIRMA (DIFF) ── */}
       {activeTab === "compare" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label className="text-xs text-zinc-400 mb-1 block">Referans Reçete (A - Eski Revizyon)</Label>
               <Select value={compareBomA} onValueChange={(val) => setCompareBomA(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-white/[0.08] text-xs">
+                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
                   <SelectValue placeholder="İlk reçeteyi seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1188,7 +1188,7 @@ export function ProductionBomWorkspace({
             <div>
               <Label className="text-xs text-zinc-400 mb-1 block">Hedef Reçete (B - Yeni Revizyon)</Label>
               <Select value={compareBomB} onValueChange={(val) => setCompareBomB(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-white/[0.08] text-xs">
+                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
                   <SelectValue placeholder="İkinci reçeteyi seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1214,7 +1214,7 @@ export function ProductionBomWorkspace({
           </div>
 
           {compareDiff && (
-            <div className="p-4 rounded-xl border border-white/[0.08] bg-zinc-900/40 space-y-4">
+            <div className="p-4 rounded-xl border border-[--line] bg-zinc-900/40 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-zinc-950/60 border border-white/[0.05]">
                 <div className="text-xs text-zinc-300">
                   Maliyet Değişimi:{" "}
@@ -1223,7 +1223,7 @@ export function ProductionBomWorkspace({
                       compareDiff.costDifference.totalCostDelta > 0
                         ? "text-rose-400"
                         : compareDiff.costDifference.totalCostDelta < 0
-                        ? "text-emerald-400"
+                        ? "text-[--brand]"
                         : "text-zinc-400"
                     }`}
                   >
@@ -1241,16 +1241,16 @@ export function ProductionBomWorkspace({
               {/* Eklenen Kalemler */}
               {compareDiff.addedComponents.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+                  <div className="text-xs font-semibold text-[--brand] flex items-center gap-1.5">
                     <Plus className="w-3.5 h-3.5" /> Eklenen Kalemler ({compareDiff.addedComponents.length})
                   </div>
-                  <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2 space-y-1">
+                  <div className="rounded-lg border border-[--brand-line] bg-[--brand]/5 p-2 space-y-1">
                     {compareDiff.addedComponents.map((c) => (
                       <div key={c.id} className="flex justify-between text-xs text-zinc-300">
                         <span>
                           [{c.componentItemCode}] {c.componentItemName}
                         </span>
-                        <span className="font-mono text-emerald-400">
+                        <span className="font-mono text-[--brand]">
                           +{c.quantity} {c.unit}
                         </span>
                       </div>
@@ -1297,7 +1297,7 @@ export function ProductionBomWorkspace({
                             {m.oldQuantity} {m.oldUnit} (Fire %{m.oldScrapPercent})
                           </span>
                           <ArrowRight className="w-3 h-3 text-zinc-500" />
-                          <span className="text-emerald-400 font-semibold">
+                          <span className="text-[--brand] font-semibold">
                             {m.newQuantity} {m.newUnit} (Fire %{m.newScrapPercent})
                           </span>
                         </div>
@@ -1313,15 +1313,15 @@ export function ProductionBomWorkspace({
 
       {/* ── DETAY ÇEKMECESİ (BOM DRAWER) ── */}
       <Sheet open={bomDrawerOpen} onOpenChange={setBomDrawerOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-2xl lg:max-w-4xl bg-[#0B0E0C] border-l border-white/[0.08] p-0 flex flex-col">
+        <SheetContent side="right" className="w-full sm:max-w-2xl lg:max-w-4xl bg-[#0B0E0C] border-l border-[--line] p-0 flex flex-col">
           {selectedBom && (
             <>
               {/* Çekmece Başlığı */}
-              <div className="p-6 border-b border-white/[0.08] bg-zinc-950/60">
+              <div className="p-6 border-b border-[--line] bg-zinc-950/60">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm font-bold text-emerald-400">{selectedBom.code}</span>
+                      <span className="font-mono text-sm font-bold text-[--brand]">{selectedBom.code}</span>
                       <span className="font-mono text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
                         Rev.{selectedBom.revision}
                       </span>
@@ -1335,14 +1335,14 @@ export function ProductionBomWorkspace({
 
                   <div className="text-right">
                     <div className="text-xs text-zinc-500">Teorik Birim Maliyet</div>
-                    <div className="text-lg font-mono font-bold text-emerald-400">
+                    <div className="text-lg font-mono font-bold text-[--brand]">
                       {formatCurrency(selectedBom.totalTheoreticalCost / (selectedBom.baseQuantity || 1))}
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRecalculateCost(selectedBom.id)}
-                      className="h-6 px-1.5 text-[10px] text-zinc-400 hover:text-emerald-300 mt-1"
+                      className="h-6 px-1.5 text-[10px] text-zinc-400 hover:text-[--brand] mt-1"
                     >
                       <RefreshCw className="w-2.5 h-2.5 mr-1" />
                       Maliyeti Güncelle
@@ -1351,7 +1351,7 @@ export function ProductionBomWorkspace({
                 </div>
 
                 {/* Çekmece İçi Alt Sekmeler */}
-                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/[0.06]">
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[--line]">
                   <Button
                     variant={selectedBomTab === "components" ? "default" : "outline"}
                     size="sm"
@@ -1412,17 +1412,17 @@ export function ProductionBomWorkspace({
                             })
                             setAddComponentModalOpen(true)
                           }}
-                          className="h-7 text-xs bg-emerald-500 text-zinc-950 font-semibold gap-1"
+                          className="h-7 text-xs bg-[--brand] text-zinc-950 font-semibold gap-1"
                         >
                           <Plus className="w-3 h-3" /> Bileşen Ekle
                         </Button>
                       )}
                     </div>
 
-                    <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-zinc-950/40">
+                    <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
                       <Table>
                         <TableHeader className="bg-zinc-900/60">
-                          <TableRow className="border-white/[0.08]">
+                          <TableRow className="border-[--line]">
                             <TableHead className="text-zinc-400 text-xs w-12">Sıra</TableHead>
                             <TableHead className="text-zinc-400 text-xs">Bileşen Malzeme</TableHead>
                             <TableHead className="text-zinc-400 text-xs text-right">Net Miktar</TableHead>
@@ -1449,7 +1449,7 @@ export function ProductionBomWorkspace({
                                 <TableRow key={comp.id} className="border-white/[0.04]">
                                   <TableCell className="font-mono text-xs text-zinc-500">{comp.lineNumber}</TableCell>
                                   <TableCell className="text-xs">
-                                    <div className="font-mono text-[11px] text-emerald-400">{comp.componentItemCode}</div>
+                                    <div className="font-mono text-[11px] text-[--brand]">{comp.componentItemCode}</div>
                                     <div className="text-zinc-200 font-medium">{comp.componentItemName}</div>
                                     {comp.isPhantom && (
                                       <span className="text-[10px] text-purple-400 font-mono">PHANTOM YARI MAMUL</span>
@@ -1464,7 +1464,7 @@ export function ProductionBomWorkspace({
                                   <TableCell className="text-right font-mono text-xs text-zinc-400">
                                     {formatCurrency(comp.unitCost || 0)}
                                   </TableCell>
-                                  <TableCell className="text-right font-mono text-xs text-emerald-400 font-semibold">
+                                  <TableCell className="text-right font-mono text-xs text-[--brand] font-semibold">
                                     {formatCurrency(lineCost)}
                                   </TableCell>
                                   <TableCell className="text-center">
@@ -1539,7 +1539,7 @@ export function ProductionBomWorkspace({
                 {/* 2. Alt Sekme: Çok Seviyeli Patlatma (Explosion) */}
                 {selectedBomTab === "exploded" && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-900/60 border border-white/[0.06]">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
                       <div className="flex items-center gap-2">
                         <Label className="text-xs text-zinc-400">Üretim Parti Miktarı:</Label>
                         <Input
@@ -1547,7 +1547,7 @@ export function ProductionBomWorkspace({
                           min={1}
                           value={simQty}
                           onChange={(e) => setSimQty(Number(e.target.value) || 1)}
-                          className="w-24 h-8 bg-zinc-950 border-white/[0.08] text-xs font-mono"
+                          className="w-24 h-8 bg-zinc-950 border-[--line] text-xs font-mono"
                         />
                         <span className="text-xs text-zinc-400">{selectedBom.baseUnit}</span>
                       </div>
@@ -1555,7 +1555,7 @@ export function ProductionBomWorkspace({
                         size="sm"
                         onClick={() => loadExplodedBom(selectedBom.id, simQty)}
                         disabled={explodedLoading}
-                        className="h-8 text-xs bg-emerald-500 text-zinc-950 font-semibold gap-1.5"
+                        className="h-8 text-xs bg-[--brand] text-zinc-950 font-semibold gap-1.5"
                       >
                         <RefreshCw className={`w-3 h-3 ${explodedLoading ? "animate-spin" : ""}`} />
                         Ağacı Patlat
@@ -1564,12 +1564,12 @@ export function ProductionBomWorkspace({
 
                     {explodedData && (
                       <div className="space-y-4">
-                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
-                          <div className="text-xs text-emerald-300">
+                        <div className="p-3 rounded-xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-between">
+                          <div className="text-xs text-[--brand]">
                             Maksimum Derinlik: <strong>{explodedData.maxDepthReached} Seviye</strong> | Toplam Hammadde:{" "}
                             <strong>{explodedData.flattenedSummary.length} Çeşit</strong>
                           </div>
-                          <div className="text-sm font-mono font-bold text-emerald-400">
+                          <div className="text-sm font-mono font-bold text-[--brand]">
                             Toplam Malzeme İhtiyacı: {formatCurrency(explodedData.totalEstimatedMaterialCost)}
                           </div>
                         </div>
@@ -1579,10 +1579,10 @@ export function ProductionBomWorkspace({
                           <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider">
                             Düzleştirilmiş Net / Brüt Malzeme İhtiyaçları
                           </span>
-                          <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-zinc-950/40">
+                          <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
                             <Table>
                               <TableHeader className="bg-zinc-900/60">
-                                <TableRow className="border-white/[0.08]">
+                                <TableRow className="border-[--line]">
                                   <TableHead className="text-zinc-400 text-xs">Hammadde Kodu</TableHead>
                                   <TableHead className="text-zinc-400 text-xs">Malzeme Adı</TableHead>
                                   <TableHead className="text-zinc-400 text-xs text-center">Seviyeler</TableHead>
@@ -1594,7 +1594,7 @@ export function ProductionBomWorkspace({
                               <TableBody>
                                 {explodedData.flattenedSummary.map((m) => (
                                   <TableRow key={m.itemId} className="border-white/[0.04]">
-                                    <TableCell className="font-mono text-xs text-emerald-400 font-medium">
+                                    <TableCell className="font-mono text-xs text-[--brand] font-medium">
                                       {m.itemCode}
                                     </TableCell>
                                     <TableCell className="text-xs text-zinc-200">{m.itemName}</TableCell>
@@ -1609,7 +1609,7 @@ export function ProductionBomWorkspace({
                                       {m.totalGrossQuantity.toLocaleString("tr-TR", { maximumFractionDigits: 3 })}{" "}
                                       {m.unit}
                                     </TableCell>
-                                    <TableCell className="text-right font-mono text-xs text-emerald-400 font-bold">
+                                    <TableCell className="text-right font-mono text-xs text-[--brand] font-bold">
                                       {formatCurrency(m.totalEstimatedCost)}
                                     </TableCell>
                                   </TableRow>
@@ -1627,27 +1627,27 @@ export function ProductionBomWorkspace({
                 {selectedBomTab === "cost" && (
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/[0.06]">
+                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
                         <div className="text-[11px] text-zinc-400">Malzeme Maliyeti</div>
                         <div className="text-base font-mono font-bold text-zinc-100 mt-1">
                           {formatCurrency(selectedBom.totalMaterialCost)}
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/[0.06]">
+                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
                         <div className="text-[11px] text-zinc-400">İşçilik / Makine</div>
                         <div className="text-base font-mono font-bold text-sky-400 mt-1">
                           {formatCurrency(selectedBom.totalLaborCost)}
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/[0.06]">
+                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
                         <div className="text-[11px] text-zinc-400">Hazırlık / Genel Gider</div>
                         <div className="text-base font-mono font-bold text-violet-400 mt-1">
                           {formatCurrency(selectedBom.totalOverheadCost)}
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
-                        <div className="text-[11px] text-emerald-300 font-semibold">Birim Teorik Maliyet</div>
-                        <div className="text-base font-mono font-bold text-emerald-400 mt-1">
+                      <div className="p-3 rounded-xl bg-[--brand]/10 border border-[--brand-line]">
+                        <div className="text-[11px] text-[--brand] font-semibold">Birim Teorik Maliyet</div>
+                        <div className="text-base font-mono font-bold text-[--brand] mt-1">
                           {formatCurrency(selectedBom.totalTheoreticalCost / (selectedBom.baseQuantity || 1))}
                         </div>
                       </div>
@@ -1766,7 +1766,7 @@ export function ProductionBomWorkspace({
             <Button
               size="sm"
               onClick={handleCreateBom}
-              className="bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold"
+              className="bg-[--brand] hover:bg-[--brand] text-zinc-950 font-semibold"
             >
               Reçeteyi Oluştur
             </Button>
@@ -1865,7 +1865,7 @@ export function ProductionBomWorkspace({
             <Button
               size="sm"
               onClick={handleAddComponent}
-              className="bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold"
+              className="bg-[--brand] hover:bg-[--brand] text-zinc-950 font-semibold"
             >
               Bileşeni Ekle
             </Button>
@@ -1970,7 +1970,7 @@ export function ProductionBomWorkspace({
           <div className="space-y-3 py-2">
             <div>
               <Label className="text-xs text-zinc-300">Kaynak Reçete</Label>
-              <div className="font-mono text-xs text-emerald-400 mt-1">
+              <div className="font-mono text-xs text-[--brand] mt-1">
                 {cloneTargetBom?.code} (Rev {cloneTargetBom?.revision})
               </div>
             </div>
@@ -2094,7 +2094,7 @@ export function ProductionBomWorkspace({
               </div>
             </div>
 
-            <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+            <div className="space-y-2 pt-2 border-t border-[--line]">
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="qcPointCb"
@@ -2181,15 +2181,15 @@ export function ProductionBomWorkspace({
                 value={csvText}
                 onChange={(e) => setCsvText(e.target.value)}
                 placeholder="ReçeteKodu;ReçeteAdı;Revizyon;MamulKodu;TemelMiktar;TemelBirim;HayaletReçete;KalemSıraNo;BileşenKodu;BileşenMiktarı;BileşenBirimi;FireYüzdesi"
-                className="w-full h-40 mt-1 p-3 rounded-lg bg-zinc-900 border border-white/[0.1] text-xs font-mono text-zinc-200 resize-none focus:outline-none focus:border-emerald-500"
+                className="w-full h-40 mt-1 p-3 rounded-lg bg-zinc-900 border border-white/[0.1] text-xs font-mono text-zinc-200 resize-none focus:outline-none focus:border-[--brand]"
               />
             </div>
 
             {importReport && (
-              <div className="p-3 rounded-lg bg-zinc-900/60 border border-white/[0.08] text-xs space-y-2">
+              <div className="p-3 rounded-lg bg-zinc-900/60 border border-[--line] text-xs space-y-2">
                 <div className="flex justify-between font-medium">
                   <span>Toplam Satır: {importReport.totalRows}</span>
-                  <span className="text-emerald-400">Geçerli: {importReport.validRowCount}</span>
+                  <span className="text-[--brand]">Geçerli: {importReport.validRowCount}</span>
                   <span className="text-rose-400">Hatalı: {importReport.errorRowCount}</span>
                 </div>
                 {importReport.errors?.length > 0 && (
@@ -2223,7 +2223,7 @@ export function ProductionBomWorkspace({
                 size="sm"
                 onClick={() => handleImportCsv(false)}
                 disabled={importSubmitting}
-                className="bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-semibold text-xs"
+                className="bg-[--brand] hover:bg-[--brand] text-zinc-950 font-semibold text-xs"
               >
                 Veritabanına Aktar
               </Button>

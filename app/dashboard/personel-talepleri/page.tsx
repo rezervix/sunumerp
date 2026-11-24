@@ -20,11 +20,11 @@ import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/m
 
 // Kategori Tanımları
 const CATEGORIES = [
-  { id: "finans", label: "Finans / Avans", icon: Wallet, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
-  { id: "it", label: "IT / Donanım", icon: Laptop, color: "text-emerald-300 bg-emerald-400/10 border-emerald-500/20" },
-  { id: "ik", label: "İzinler / İK", icon: Calendar, color: "text-amber-300 bg-amber-500/10 border-amber-500/20" },
-  { id: "ofis", label: "Ofis / Lojistik", icon: Building, color: "text-zinc-300 bg-white/[0.06] border-white/[0.08]" },
-  { id: "satinalma", label: "Satın Alma", icon: ShoppingCart, color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
+  { id: "finans", label: "Finans / Avans", icon: Wallet, color: "text-[--brand] bg-[--brand-soft] border-[--brand-line]" },
+  { id: "it", label: "IT / Donanım", icon: Laptop, color: "text-[--sky] bg-[--brand-soft] border-[--brand-line]" },
+  { id: "ik", label: "İzinler / İK", icon: Calendar, color: "text-[--warn] bg-[--warn-soft] border-[--warn]/20" },
+  { id: "ofis", label: "Ofis / Lojistik", icon: Building, color: "text-[--text-2] bg-[--muted-bg] border-[--line]" },
+  { id: "satinalma", label: "Satın Alma", icon: ShoppingCart, color: "text-[--brand] bg-[--brand-soft] border-[--brand-line]" },
 ]
 
 interface RequestItem {
@@ -359,10 +359,10 @@ export default function PersonelTalepleriPage() {
 
   // Bento Özet Kartları
   const carouselItems = [
-    { title: "Onay Bekleyen Taleplerim", val: pendingRequestsCount, suffix: " Adet", desc: "Yönetici onayı bekleyen işlemleriniz", badge: "Bekleyen", badgeClass: "bg-amber-500/10 text-amber-300 border border-amber-500/20" },
-    { title: "Bu Ayki Harcamalar", val: monthlyExpensesSum, prefix: "₺", desc: "Avans & Masraf onaylanan bütçe", badge: "Finans", badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
-    { title: "Toplam Açık Taleplerim", val: totalOpenRequests, suffix: " Adet", desc: "Aktif süreçleri devam eden talepler", badge: "Aktif", badgeClass: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
-    { title: "Toplam Talep Kaydı", val: requests.length, suffix: " Adet", desc: "Sistemdeki tüm dönem talepleri", badge: "Arşiv", badgeClass: "bg-white/[0.06] text-zinc-300 border border-white/[0.08]" },
+    { title: "Onay Bekleyen Taleplerim", val: pendingRequestsCount, suffix: " Adet", desc: "Yönetici onayı bekleyen işlemleriniz", badge: "Bekleyen", badgeClass: "bg-[--warn-soft] text-[--warn] border border-[--warn]/20" },
+    { title: "Bu Ayki Harcamalar", val: monthlyExpensesSum, prefix: "₺", desc: "Avans & Masraf onaylanan bütçe", badge: "Finans", badgeClass: "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" },
+    { title: "Toplam Açık Taleplerim", val: totalOpenRequests, suffix: " Adet", desc: "Aktif süreçleri devam eden talepler", badge: "Aktif", badgeClass: "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" },
+    { title: "Toplam Talep Kaydı", val: requests.length, suffix: " Adet", desc: "Sistemdeki tüm dönem talepleri", badge: "Arşiv", badgeClass: "bg-[--muted-bg] text-[--text-muted] border border-[--line]" },
   ]
 
   const nextCarousel = () => setCarouselIndex((prev) => (prev + 1) % carouselItems.length)
@@ -374,23 +374,23 @@ export default function PersonelTalepleriPage() {
       {/* ── Sayfa Başlığı & Arama / Aksiyon Barı ── */}
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-light text-white tracking-tight">Personel Talep Merkezi</h1>
-          <p className="text-xs text-zinc-400 mt-1">İzin, avans, IT donanım ve ofis lojistik taleplerinizi yönetin</p>
+          <h1 className="text-3xl font-semibold text-[--text] tracking-tight">Personel Talep Merkezi</h1>
+          <p className="text-xs text-[--text-muted] mt-1">İzin, avans, IT donanım ve ofis lojistik taleplerinizi yönetin</p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-3.5 top-2.5 size-4 text-zinc-500" />
+            <Search className="absolute left-3.5 top-2.5 size-4 text-[--text-muted]" />
             <input
               id="request-search"
               placeholder="Talep ara (#REQ, başlık...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#111513] border border-white/[0.06] focus:border-emerald-500/30 rounded-full pl-9 pr-4 py-1.5 text-sm text-white placeholder:text-zinc-500 outline-none transition-colors"
+              className="w-full bg-white border border-[--line] focus:border-[--brand] focus:ring-1 focus:ring-[--brand] rounded-full pl-9 pr-4 py-1.5 text-sm text-[--text] placeholder-[--text-muted] outline-none transition-all shadow-xs"
             />
           </div>
           <Button
             onClick={() => { resetForm(); setFormOpen(true) }}
-            className="bg-[#34D399] text-[#061811] font-medium rounded-full px-4 h-9 text-xs gap-1.5 shrink-0 cursor-pointer"
+            className="bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[--text] font-medium rounded-full px-4 h-9 text-xs gap-1.5 shrink-0 shadow-sm cursor-pointer"
           >
             <Plus size={15} />
             <span>Yeni Talep</span>
@@ -403,10 +403,10 @@ export default function PersonelTalepleriPage() {
         {carouselItems.map((item, idx) => (
           <div
             key={idx}
-            className="bg-[#111513] border border-white/[0.06] rounded-[20px] p-5 flex flex-col justify-between"
+            className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 flex flex-col justify-between shadow-sm"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium truncate">
+              <span className="text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium truncate">
                 {item.title}
               </span>
               <span className={cn("text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0", item.badgeClass)}>
@@ -414,10 +414,10 @@ export default function PersonelTalepleriPage() {
               </span>
             </div>
             <div className="mt-3">
-              <p className="text-3xl font-light text-white tracking-tight tabular-nums">
+              <p className="text-3xl font-semibold text-[--text] tracking-tight tabular-nums">
                 <AnimatedNumber value={item.val} prefix={item.prefix || ""} suffix={item.suffix || ""} />
               </p>
-              <p className="text-xs text-zinc-500 mt-1 truncate">
+              <p className="text-xs text-[--text-muted] mt-1 truncate">
                 {item.desc}
               </p>
             </div>
@@ -428,21 +428,21 @@ export default function PersonelTalepleriPage() {
       {/* ── Modern Yuvarlak Hap Filtre Barı (Sarı Sekmeler Kaldırıldı) ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Kategori Hap Filtreleri */}
-        <div className="bg-[#111513] p-1 rounded-full border border-white/[0.06] flex flex-wrap items-center gap-1">
+        <div className="bg-[--muted-bg] p-1 rounded-full border border-[--line] flex flex-wrap items-center gap-1">
           <button
             type="button"
             onClick={() => setSelectedCategoryFilter("all")}
             className={cn(
               "relative px-3.5 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               selectedCategoryFilter === "all"
-                ? "text-white font-medium"
-                : "text-zinc-400 hover:text-white"
+                ? "text-[--brand] font-medium"
+                : "text-[--text-muted] hover:text-[--text]"
             )}
           >
             {selectedCategoryFilter === "all" && (
               <motion.div
                 layoutId="categoryActivePill"
-                className="absolute inset-0 bg-white/10 rounded-full"
+                className="absolute inset-0 bg-white rounded-full shadow-xs"
                 transition={{ type: "spring", stiffness: 350, damping: 30 }}
               />
             )}
@@ -458,14 +458,14 @@ export default function PersonelTalepleriPage() {
                 className={cn(
                   "relative px-3.5 py-1.5 text-xs rounded-full transition-colors flex items-center gap-1.5 cursor-pointer",
                   isSelected
-                    ? "text-white font-medium"
-                    : "text-zinc-400 hover:text-white"
+                    ? "text-[--brand] font-medium"
+                    : "text-[--text-muted] hover:text-[--text]"
                 )}
               >
                 {isSelected && (
                   <motion.div
                     layoutId="categoryActivePill"
-                    className="absolute inset-0 bg-white/10 rounded-full"
+                    className="absolute inset-0 bg-white rounded-full shadow-xs"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
                 )}
@@ -477,21 +477,21 @@ export default function PersonelTalepleriPage() {
         </div>
 
         {/* Taleplerim / Onay Bekleyenler Hap Sekmeleri */}
-        <div className="bg-[#111513] p-1 rounded-full border border-white/[0.06] flex items-center gap-1">
+        <div className="bg-[--muted-bg] p-1 rounded-full border border-[--line] flex items-center gap-1">
           <button
             type="button"
             onClick={() => setActiveTab("my")}
             className={cn(
               "relative px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               activeTab === "my"
-                ? "text-white font-medium"
-                : "text-zinc-400 hover:text-white"
+                ? "text-[--brand] font-medium"
+                : "text-[--text-muted] hover:text-[--text]"
             )}
           >
             {activeTab === "my" && (
               <motion.div
                 layoutId="requestTabActivePill"
-                className="absolute inset-0 bg-white/10 rounded-full"
+                className="absolute inset-0 bg-white rounded-full shadow-xs"
                 transition={{ type: "spring", stiffness: 350, damping: 30 }}
               />
             )}
@@ -503,14 +503,14 @@ export default function PersonelTalepleriPage() {
             className={cn(
               "relative px-4 py-1.5 text-xs rounded-full transition-colors cursor-pointer",
               activeTab === "approved-by-me"
-                ? "text-white font-medium"
-                : "text-zinc-400 hover:text-white"
+                ? "text-[--brand] font-medium"
+                : "text-[--text-muted] hover:text-[--text]"
             )}
           >
             {activeTab === "approved-by-me" && (
               <motion.div
                 layoutId="requestTabActivePill"
-                className="absolute inset-0 bg-white/10 rounded-full"
+                className="absolute inset-0 bg-white rounded-full shadow-xs"
                 transition={{ type: "spring", stiffness: 350, damping: 30 }}
               />
             )}
@@ -520,11 +520,11 @@ export default function PersonelTalepleriPage() {
       </div>
 
       {/* ── Talep Listesi Tablosu (Data Table) ── */}
-      <main className="bg-[#111513] border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden flex flex-col">
+      <main className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden flex flex-col">
         <div className="flex-1 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/[0.06] bg-white/[0.02] text-zinc-400 text-[11px] uppercase tracking-[0.12em] font-medium">
+              <tr className="border-b border-[--line] bg-white text-[--text-muted] text-[11px] uppercase tracking-[0.12em] font-medium">
                 <th className="px-5 py-3.5 w-28">Talep ID</th>
                 <th className="px-5 py-3.5 w-44">Kategori</th>
                 <th className="px-5 py-3.5">Talep Başlığı / Özeti</th>
@@ -536,10 +536,10 @@ export default function PersonelTalepleriPage() {
             <tbody className="divide-y divide-white/[0.06] text-sm">
               {currentRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-16 text-center text-zinc-500">
+                  <td colSpan={6} className="px-4 py-16 text-center text-[--text-muted]">
                     <FolderClosed size={32} className="mx-auto text-zinc-600 mb-3" />
-                    <p className="font-medium text-zinc-300">Talep Bulunamadı</p>
-                    <p className="text-xs text-zinc-500 mt-1">Arama kriterlerinize veya filtrenize uygun talep bulunmamaktadır.</p>
+                    <p className="font-medium text-[--text-2]">Talep Bulunamadı</p>
+                    <p className="text-xs text-[--text-muted] mt-1">Arama kriterlerinize veya filtrenize uygun talep bulunmamaktadır.</p>
                   </td>
                 </tr>
               ) : (
@@ -553,9 +553,9 @@ export default function PersonelTalepleriPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.25, delay: idx * 0.04 }}
                       onClick={() => setDetailItem(req)}
-                      className="hover:bg-white/[0.03] transition-colors cursor-pointer group"
+                      className="hover:bg-white transition-colors cursor-pointer group"
                     >
-                      <td className="px-5 py-4 font-mono text-xs font-medium text-emerald-400 tabular-nums">
+                      <td className="px-5 py-4 font-mono text-xs font-medium text-[--brand] tabular-nums">
                         {req.id}
                       </td>
                       <td className="px-5 py-4">
@@ -563,14 +563,14 @@ export default function PersonelTalepleriPage() {
                           <div className={cn("size-7 rounded-lg flex items-center justify-center border shrink-0", cat?.color)}>
                             <CatIcon size={14} />
                           </div>
-                          <span className="font-normal text-xs text-zinc-300 truncate">{cat?.label}</span>
+                          <span className="font-normal text-xs text-[--text-2] truncate">{cat?.label}</span>
                         </div>
                       </td>
                       <td className="px-5 py-4 max-w-md">
-                        <p className="font-medium text-white truncate group-hover:text-emerald-300 transition-colors">
+                        <p className="font-medium text-[--text] truncate group-hover:text-[--brand] transition-colors">
                           {req.title}
                         </p>
-                        <p className="text-xs text-zinc-500 truncate mt-0.5">
+                        <p className="text-xs text-[--text-muted] truncate mt-0.5">
                           {req.summary}
                         </p>
                       </td>
@@ -579,9 +579,9 @@ export default function PersonelTalepleriPage() {
                           className={cn(
                             "inline-flex items-center text-[11px] font-medium px-2.5 py-0.5 rounded-full",
                             req.status === "pending" && "bg-amber-500/10 text-amber-300",
-                            req.status === "approved" && "bg-emerald-500/10 text-emerald-400",
+                            req.status === "approved" && "bg-[--brand-soft] text-[--brand]",
                             req.status === "rejected" && "bg-rose-500/10 text-rose-400",
-                            req.status === "completed" && "bg-emerald-500/10 text-emerald-400"
+                            req.status === "completed" && "bg-[--brand-soft] text-[--brand]"
                           )}
                         >
                           {req.status === "pending" && "Beklemede"}
@@ -590,7 +590,7 @@ export default function PersonelTalepleriPage() {
                           {req.status === "completed" && "Tamamlandı"}
                         </span>
                       </td>
-                      <td className="px-5 py-4 text-right font-mono text-xs text-zinc-400 tabular-nums">
+                      <td className="px-5 py-4 text-right font-mono text-xs text-[--text-muted] tabular-nums">
                         {new Date(req.updatedAt).toLocaleDateString("tr-TR", {
                           day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"
                         })}
@@ -600,7 +600,7 @@ export default function PersonelTalepleriPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="size-7 rounded-full hover:bg-white/[0.06] text-zinc-400 hover:text-white"
+                            className="size-7 rounded-full hover:bg-white/[0.06] text-[--text-muted] hover:text-[--text]"
                             onClick={() => setDetailItem(req)}
                           >
                             <Eye size={14} />
@@ -609,7 +609,7 @@ export default function PersonelTalepleriPage() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="size-7 rounded-full hover:bg-rose-500/10 text-zinc-400 hover:text-rose-400"
+                              className="size-7 rounded-full hover:bg-rose-500/10 text-[--text-muted] hover:text-rose-400"
                               onClick={(e) => handleCancelRequest(req.id, e)}
                             >
                               <Trash2 size={14} />
@@ -627,8 +627,8 @@ export default function PersonelTalepleriPage() {
 
         {/* Sayfalama (Pagination) */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between border-t border-white/[0.06] px-5 py-3 bg-white/[0.01] shrink-0">
-            <span className="text-xs text-zinc-500">
+          <div className="flex items-center justify-between border-t border-[--line] px-5 py-3 bg-white/[0.01] shrink-0">
+            <span className="text-xs text-[--text-muted]">
               Toplam {filteredRequests.length} talepten {indexOfFirstRequest + 1}-{Math.min(indexOfLastRequest, filteredRequests.length)} arası gösteriliyor
             </span>
             <div className="flex items-center gap-1.5">
@@ -671,15 +671,15 @@ export default function PersonelTalepleriPage() {
       {/* ── İkinci Ekran: Yeni Talep Oluştur Formu (Drawer) ── */}
       {formOpen && (
         <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+          className="fixed inset-0 z-50 flex justify-end bg-[#0B1B33]/40 backdrop-blur-sm transition-opacity duration-300"
           onClick={(e) => { if (e.target === e.currentTarget) setFormOpen(false) }}
         >
-          <div className="w-full max-w-xl bg-[#111513] border-l border-white/[0.06] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 text-white">
+          <div className="w-full max-w-xl bg-white text-[--text] border-l border-[--line] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 text-[--text]">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[--line]">
               <div>
-                <h2 className="text-lg font-light tracking-tight text-white">Yeni Talep Oluştur</h2>
-                <p className="text-xs text-zinc-400 mt-0.5">Talep detaylarını adım adım girin</p>
+                <h2 className="text-lg font-light tracking-tight text-[--text]">Yeni Talep Oluştur</h2>
+                <p className="text-xs text-[--text-muted] mt-0.5">Talep detaylarını adım adım girin</p>
               </div>
               <Button variant="ghost" size="icon" className="size-8 rounded-full" onClick={() => setFormOpen(false)}>
                 <X size={16} />
@@ -690,16 +690,16 @@ export default function PersonelTalepleriPage() {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
               {/* Adım Barı */}
-              <div className="flex items-center justify-between text-xs text-zinc-500 pb-3 border-b border-white/[0.06]">
-                <span className={cn("font-medium", formStep === 1 && "text-emerald-400")}>1. Kategori Seçimi</span>
+              <div className="flex items-center justify-between text-xs text-[--text-muted] pb-3 border-b border-[--line]">
+                <span className={cn("font-medium", formStep === 1 && "text-[--brand]")}>1. Kategori Seçimi</span>
                 <ArrowRight size={12} className="text-zinc-600" />
-                <span className={cn("font-medium", formStep === 2 && "text-emerald-400")}>2. Detaylı Form</span>
+                <span className={cn("font-medium", formStep === 2 && "text-[--brand]")}>2. Detaylı Form</span>
               </div>
 
               {/* ADIM 1: Kategori Seçimi */}
               {formStep === 1 && (
                 <div className="space-y-4">
-                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em] block">Bir Kategori Seçin</label>
+                  <label className="text-[11px] font-medium text-[--text-muted] uppercase tracking-[0.12em] block">Bir Kategori Seçin</label>
                   <div className="grid grid-cols-2 gap-3">
                     {CATEGORIES.map((cat) => {
                       const isSelected = selectedFormCategory === cat.id
@@ -713,8 +713,8 @@ export default function PersonelTalepleriPage() {
                           className={cn(
                             "flex flex-col items-center justify-center p-5 rounded-[20px] border text-center transition-all gap-3 cursor-pointer",
                             isSelected
-                              ? "border-emerald-500/30 bg-emerald-400/15 text-emerald-300"
-                              : "border-white/[0.06] hover:border-white/15 text-zinc-200 bg-[#080A09]/60"
+                              ? "border-[--brand-line] bg-[--brand-soft] text-[--brand]"
+                              : "border-[--line] hover:border-[--line] text-[--text] bg-[--page]"
                           )}
                         >
                           <div className={cn("size-11 rounded-xl flex items-center justify-center border", cat.color)}>
@@ -732,19 +732,19 @@ export default function PersonelTalepleriPage() {
               {formStep === 2 && selectedFormCategory && (
                 <div className="space-y-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-400">Form Detayları</span>
+                    <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--text-muted]">Form Detayları</span>
                     <button
                       onClick={() => setFormStep(1)}
-                      className="text-xs text-emerald-400 font-medium hover:underline cursor-pointer"
+                      className="text-xs text-[--brand] font-medium hover:underline cursor-pointer"
                     >
                       Kategoriyi Değiştir
                     </button>
                   </div>
 
                   {/* ORTAK ALANLAR */}
-                  <div className="space-y-4 border-b border-white/[0.06] pb-5">
+                  <div className="space-y-4 border-b border-[--line] pb-5">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-zinc-300">Talep Başlığı</label>
+                      <label className="text-xs font-medium text-[--text-2]">Talep Başlığı</label>
                       <Input
                         placeholder="Kısa ve açıklayıcı bir başlık girin"
                         value={formTitle}
@@ -754,7 +754,7 @@ export default function PersonelTalepleriPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-zinc-300">Açıklama</label>
+                      <label className="text-xs font-medium text-[--text-2]">Açıklama</label>
                       <textarea
                         placeholder="Talebin detaylarını ve gerekçesini buraya yazın..."
                         value={formDesc}
@@ -766,19 +766,19 @@ export default function PersonelTalepleriPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Öncelik Seviyesi</label>
+                        <label className="text-xs font-medium text-[--text-2]">Öncelik Seviyesi</label>
                         <select
                           value={formPriority}
                           onChange={(e) => setFormPriority(e.target.value as any)}
                           className="w-full glass-input h-10 px-3 text-sm outline-none"
                         >
-                          <option value="Normal" className="bg-[#111513]">Normal</option>
-                          <option value="Acil" className="bg-[#111513]">Acil</option>
-                          <option value="Kritik" className="bg-[#111513]">Kritik</option>
+                          <option value="Normal" className="bg-white text-[--text]">Normal</option>
+                          <option value="Acil" className="bg-white text-[--text]">Acil</option>
+                          <option value="Kritik" className="bg-white text-[--text]">Kritik</option>
                         </select>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Varsayılan Onaylayıcı</label>
+                        <label className="text-xs font-medium text-[--text-2]">Varsayılan Onaylayıcı</label>
                         <Input value="Hakan Yılmaz (Operasyon Direktörü)" disabled className="h-10 glass-input opacity-60 cursor-not-allowed" />
                       </div>
                     </div>
@@ -787,10 +787,10 @@ export default function PersonelTalepleriPage() {
                   {/* Finans Talebi */}
                   {selectedFormCategory === "finans" && (
                     <div className="space-y-4">
-                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400">Finansal Detaylar</h3>
+                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--brand]">Finansal Detaylar</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Tutar (TL)</label>
+                          <label className="text-xs font-medium text-[--text-2]">Tutar (TL)</label>
                           <Input
                             type="number"
                             placeholder="0.00"
@@ -800,21 +800,21 @@ export default function PersonelTalepleriPage() {
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Ödeme Neden Tipi</label>
+                          <label className="text-xs font-medium text-[--text-2]">Ödeme Neden Tipi</label>
                           <select
                             value={reason}
                             onChange={(e) => setReason(e.target.value)}
                             className="w-full glass-input h-10 px-3 text-sm outline-none"
                           >
-                            <option value="Proje Harcamaları" className="bg-[#111513]">Proje Harcamaları</option>
-                            <option value="Müşteri Ağırlama" className="bg-[#111513]">Müşteri Ağırlama</option>
-                            <option value="Ofis/Kırtasiye" className="bg-[#111513]">Ofis/Kırtasiye</option>
-                            <option value="Seyahat/Ulaşım" className="bg-[#111513]">Seyahat/Ulaşım</option>
+                            <option value="Proje Harcamaları" className="bg-white text-[--text]">Proje Harcamaları</option>
+                            <option value="Müşteri Ağırlama" className="bg-white text-[--text]">Müşteri Ağırlama</option>
+                            <option value="Ofis/Kırtasiye" className="bg-white text-[--text]">Ofis/Kırtasiye</option>
+                            <option value="Seyahat/Ulaşım" className="bg-white text-[--text]">Seyahat/Ulaşım</option>
                           </select>
                         </div>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Beklenen Ödeme Tarihi</label>
+                        <label className="text-xs font-medium text-[--text-2]">Beklenen Ödeme Tarihi</label>
                         <Input
                           type="date"
                           value={expectedDate}
@@ -828,23 +828,23 @@ export default function PersonelTalepleriPage() {
                   {/* IT Talebi */}
                   {selectedFormCategory === "it" && (
                     <div className="space-y-4">
-                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400">IT & Donanım Tercihleri</h3>
+                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--brand]">IT & Donanım Tercihleri</h3>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Cihaz / Yazılım Tipi</label>
+                        <label className="text-xs font-medium text-[--text-2]">Cihaz / Yazılım Tipi</label>
                         <select
                           value={hardwareType}
                           onChange={(e) => setHardwareType(e.target.value)}
                           className="w-full glass-input h-10 px-3 text-sm"
                         >
-                          <option value="Dizüstü Bilgisayar (Laptop)" className="bg-[#111513]">Dizüstü Bilgisayar (Laptop)</option>
-                          <option value="Masaüstü Bilgisayar (Workstation)" className="bg-[#111513]">Masaüstü Bilgisayar (Workstation)</option>
-                          <option value="Yedek Monitör / Ekran" className="bg-[#111513]">Yedek Monitör / Ekran</option>
-                          <option value="Kulaklık / Donanım Aksesuarı" className="bg-[#111513]">Kulaklık / Donanım Aksesuarı</option>
-                          <option value="Adobe / Figma Lisans Talebi" className="bg-[#111513]">Adobe / Figma Lisans Talebi</option>
+                          <option value="Dizüstü Bilgisayar (Laptop)" className="bg-white text-[--text]">Dizüstü Bilgisayar (Laptop)</option>
+                          <option value="Masaüstü Bilgisayar (Workstation)" className="bg-white text-[--text]">Masaüstü Bilgisayar (Workstation)</option>
+                          <option value="Yedek Monitör / Ekran" className="bg-white text-[--text]">Yedek Monitör / Ekran</option>
+                          <option value="Kulaklık / Donanım Aksesuarı" className="bg-white text-[--text]">Kulaklık / Donanım Aksesuarı</option>
+                          <option value="Adobe / Figma Lisans Talebi" className="bg-white text-[--text]">Adobe / Figma Lisans Talebi</option>
                         </select>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Tercih Edilen Marka / Model</label>
+                        <label className="text-xs font-medium text-[--text-2]">Tercih Edilen Marka / Model</label>
                         <Input
                           placeholder="Örn: Apple MacBook Pro 16 inç M3 Pro, 36GB RAM"
                           value={brandModel}
@@ -858,23 +858,23 @@ export default function PersonelTalepleriPage() {
                   {/* İzin Talebi */}
                   {selectedFormCategory === "ik" && (
                     <div className="space-y-4">
-                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-400">İzin Dönemi Planlaması</h3>
+                      <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-[--brand]">İzin Dönemi Planlaması</h3>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">İzin Türü</label>
+                        <label className="text-xs font-medium text-[--text-2]">İzin Türü</label>
                         <select
                           value={leaveType}
                           onChange={(e) => setLeaveType(e.target.value)}
                           className="w-full glass-input h-10 px-3 text-sm"
                         >
-                          <option value="Yıllık İzin" className="bg-[#111513]">Yıllık İzin</option>
-                          <option value="Mazeret İzni" className="bg-[#111513]">Mazeret İzni</option>
-                          <option value="Sağlık İzni / Rapor" className="bg-[#111513]">Sağlık İzni / Rapor</option>
-                          <option value="Ücretsiz İzin" className="bg-[#111513]">Ücretsiz İzin</option>
+                          <option value="Yıllık İzin" className="bg-white text-[--text]">Yıllık İzin</option>
+                          <option value="Mazeret İzni" className="bg-white text-[--text]">Mazeret İzni</option>
+                          <option value="Sağlık İzni / Rapor" className="bg-white text-[--text]">Sağlık İzni / Rapor</option>
+                          <option value="Ücretsiz İzin" className="bg-white text-[--text]">Ücretsiz İzin</option>
                         </select>
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Başlangıç Tarihi</label>
+                          <label className="text-xs font-medium text-[--text-2]">Başlangıç Tarihi</label>
                           <Input
                             type="date"
                             value={startDate}
@@ -883,7 +883,7 @@ export default function PersonelTalepleriPage() {
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Bitiş Tarihi</label>
+                          <label className="text-xs font-medium text-[--text-2]">Bitiş Tarihi</label>
                           <Input
                             type="date"
                             value={endDate}
@@ -894,20 +894,20 @@ export default function PersonelTalepleriPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Hesaplanan İzin Günü</label>
+                          <label className="text-xs font-medium text-[--text-2]">Hesaplanan İzin Günü</label>
                           <Input value={`${daysCount} Gün`} disabled className="h-10 glass-input font-medium" />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-xs font-medium text-zinc-300">Vekalet Edilecek Çalışan</label>
+                          <label className="text-xs font-medium text-[--text-2]">Vekalet Edilecek Çalışan</label>
                           <select
                             value={proxyEmployee}
                             onChange={(e) => setProxyEmployee(e.target.value)}
                             className="w-full glass-input h-10 px-3 text-sm"
                           >
-                            <option value="" className="bg-[#111513]">Seçin...</option>
-                            <option value="Melis Şen" className="bg-[#111513]">Melis Şen (Kreatif Yazar)</option>
-                            <option value="Hakan Kara" className="bg-[#111513]">Hakan Kara (Geliştirici)</option>
-                            <option value="Elif Yıldız" className="bg-[#111513]">Elif Yıldız (Hesap Yöneticisi)</option>
+                            <option value="" className="bg-white text-[--text]">Seçin...</option>
+                            <option value="Melis Şen" className="bg-white text-[--text]">Melis Şen (Kreatif Yazar)</option>
+                            <option value="Hakan Kara" className="bg-white text-[--text]">Hakan Kara (Geliştirici)</option>
+                            <option value="Elif Yıldız" className="bg-white text-[--text]">Elif Yıldız (Hesap Yöneticisi)</option>
                           </select>
                         </div>
                       </div>
@@ -916,7 +916,7 @@ export default function PersonelTalepleriPage() {
 
                   {/* DOSYA YÜKLEME ALANI */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-zinc-300">Dosya Ekle (Drag & Drop)</label>
+                    <label className="text-xs font-medium text-[--text-2]">Dosya Ekle (Drag & Drop)</label>
                     <div
                       onDragEnter={handleDrag}
                       onDragOver={handleDrag}
@@ -924,18 +924,18 @@ export default function PersonelTalepleriPage() {
                       onDrop={handleDrop}
                       className={cn(
                         "border border-dashed border-white/[0.12] rounded-[20px] p-6 text-center transition-all cursor-pointer",
-                        dragActive ? "border-emerald-500/40 bg-emerald-500/5" : "hover:bg-white/[0.02]"
+                        dragActive ? "border-[--brand-line] bg-[--brand-soft]" : "hover:bg-white"
                       )}
                     >
-                      <Paperclip className="mx-auto text-zinc-500 mb-2" size={18} />
-                      <p className="text-xs font-medium text-zinc-300">Dosyaları buraya sürükleyin veya göz atın</p>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">Maksimum dosya boyutu: 25MB</p>
+                      <Paperclip className="mx-auto text-[--text-muted] mb-2" size={18} />
+                      <p className="text-xs font-medium text-[--text-2]">Dosyaları buraya sürükleyin veya göz atın</p>
+                      <p className="text-[11px] text-[--text-muted] mt-0.5">Maksimum dosya boyutu: 25MB</p>
                     </div>
 
                     {formFiles.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {formFiles.map((file, idx) => (
-                          <Badge key={idx} variant="secondary" className="gap-1 pr-1.5 text-xs bg-white/[0.06] text-zinc-200 border-0">
+                          <Badge key={idx} variant="secondary" className="gap-1 pr-1.5 text-xs bg-white/[0.06] text-[--text] border-0">
                             <span className="truncate max-w-32">{file}</span>
                             <button
                               onClick={() => setFormFiles(prev => prev.filter((_, i) => i !== idx))}
@@ -954,14 +954,14 @@ export default function PersonelTalepleriPage() {
 
             {/* Footer Butonları */}
             {formStep === 2 && (
-              <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 flex justify-end gap-2.5 shrink-0">
+              <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 shrink-0">
                 <Button variant="outline" className="h-9 rounded-full" onClick={() => setFormOpen(false)}>
                   Taslağı Kaydet
                 </Button>
                 <Button
                   onClick={handleCreateRequest}
                   disabled={!formTitle.trim() || successAnimation}
-                  className="h-9 gap-2 bg-[#34D399] text-[#061811] font-medium rounded-full min-w-32"
+                  className="h-9 gap-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[--text] font-medium rounded-full min-w-32 shadow-sm"
                 >
                   {successAnimation ? (
                     <>
@@ -984,18 +984,18 @@ export default function PersonelTalepleriPage() {
       {/* ── Üçüncü Ekran: Talep Detayları ve Onay Akışı ── */}
       {detailItem && (
         <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+          className="fixed inset-0 z-50 flex justify-end bg-[#0B1B33]/40 backdrop-blur-sm transition-opacity duration-300"
           onClick={(e) => { if (e.target === e.currentTarget) setDetailItem(null) }}
         >
-          <div className="w-full max-w-xl bg-[#111513] border-l border-white/[0.06] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 text-white">
+          <div className="w-full max-w-xl bg-white text-[--text] border-l border-[--line] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-300 text-[--text]">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[--line]">
               <div>
-                <h2 className="text-lg font-light tracking-tight flex items-center gap-2 text-white">
+                <h2 className="text-lg font-light tracking-tight flex items-center gap-2 text-[--text]">
                   <span>Talep Detayı</span>
-                  <span className="font-mono text-xs bg-emerald-500/10 text-emerald-400 px-2.5 py-0.5 rounded-full">{detailItem.id}</span>
+                  <span className="font-mono text-xs bg-[--brand-soft] text-[--brand] px-2.5 py-0.5 rounded-full">{detailItem.id}</span>
                 </h2>
-                <p className="text-xs text-zinc-400 mt-0.5">Talebin detayları, ekleri ve onay geçmişi</p>
+                <p className="text-xs text-[--text-muted] mt-0.5">Talebin detayları, ekleri ve onay geçmişi</p>
               </div>
               <Button variant="ghost" size="icon" className="size-8 rounded-full" onClick={() => setDetailItem(null)}>
                 <X size={16} />
@@ -1006,30 +1006,30 @@ export default function PersonelTalepleriPage() {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
 
               {/* Temel Bilgi Kartı */}
-              <div className="bg-[#080A09]/60 border border-white/[0.06] p-4 rounded-[20px] space-y-3">
+              <div className="bg-[--page] border border-[--line] p-4 rounded-[20px] space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="size-9 rounded-full bg-emerald-400/15 border border-emerald-500/25 flex items-center justify-center text-emerald-300 font-medium text-xs">
+                  <div className="size-9 rounded-full bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand] font-medium text-xs">
                     {detailItem.requester.name.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{detailItem.requester.name}</p>
-                    <p className="text-xs text-zinc-400">{detailItem.requester.role}</p>
+                    <p className="text-sm font-medium text-[--text]">{detailItem.requester.name}</p>
+                    <p className="text-xs text-[--text-muted]">{detailItem.requester.role}</p>
                   </div>
-                  <span className="ml-auto text-xs px-2.5 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 font-medium">
+                  <span className="ml-auto text-xs px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[--text-2] font-medium">
                     {detailItem.priority}
                   </span>
                 </div>
                 <div className="h-px w-full bg-white/[0.06]" />
                 <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs">
                   <div>
-                    <span className="text-zinc-500">Kategori:</span>
-                    <span className="font-medium text-zinc-200 ml-1.5">
+                    <span className="text-[--text-muted]">Kategori:</span>
+                    <span className="font-medium text-[--text] ml-1.5">
                       {CATEGORIES.find(c => c.id === detailItem.category)?.label}
                     </span>
                   </div>
                   <div>
-                    <span className="text-zinc-500">Talep Tarihi:</span>
-                    <span className="font-medium text-zinc-200 ml-1.5 tabular-nums">
+                    <span className="text-[--text-muted]">Talep Tarihi:</span>
+                    <span className="font-medium text-[--text] ml-1.5 tabular-nums">
                       {new Date(detailItem.createdAt).toLocaleDateString("tr-TR")}
                     </span>
                   </div>
@@ -1038,51 +1038,51 @@ export default function PersonelTalepleriPage() {
 
               {/* Detay ve Açıklama */}
               <div className="space-y-2">
-                <h3 className="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Talep Başlığı & Açıklaması</h3>
-                <h4 className="text-base font-medium text-white">{detailItem.title}</h4>
-                <div className="text-sm text-zinc-300 leading-relaxed bg-[#080A09]/60 p-4 rounded-[20px] border border-white/[0.06] whitespace-pre-line">
+                <h3 className="text-[11px] font-medium text-[--text-muted] uppercase tracking-[0.12em]">Talep Başlığı & Açıklaması</h3>
+                <h4 className="text-base font-medium text-[--text]">{detailItem.title}</h4>
+                <div className="text-sm text-[--text-2] leading-relaxed bg-[--page] p-4 rounded-[20px] border border-[--line] whitespace-pre-line">
                   {detailItem.description}
                 </div>
               </div>
 
               {/* Dinamik Alanlar Gösterimi */}
               {(detailItem.amount || detailItem.hardwareType || detailItem.leaveType) && (
-                <div className="bg-emerald-500/[0.04] border border-emerald-500/15 p-4 rounded-[20px] space-y-3">
-                  <h3 className="text-[11px] font-medium text-emerald-400 uppercase tracking-[0.12em]">İşlem Detayları</h3>
+                <div className="bg-[--brand-soft] border border-[--brand-line] p-4 rounded-[20px] space-y-3">
+                  <h3 className="text-[11px] font-medium text-[--brand] uppercase tracking-[0.12em]">İşlem Detayları</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     {detailItem.amount && (
                       <>
                         <div>
-                          <span className="text-xs text-zinc-400 block">Talep Edilen Tutar</span>
-                          <span className="font-light text-xl text-white tabular-nums">₺{detailItem.amount.toLocaleString("tr-TR")}</span>
+                          <span className="text-xs text-[--text-muted] block">Talep Edilen Tutar</span>
+                          <span className="font-light text-xl text-[--text] tabular-nums">₺{detailItem.amount.toLocaleString("tr-TR")}</span>
                         </div>
                         <div>
-                          <span className="text-xs text-zinc-400 block">Beklenen Ödeme Tarihi</span>
-                          <span className="font-medium text-zinc-200 tabular-nums">{detailItem.expectedDate}</span>
+                          <span className="text-xs text-[--text-muted] block">Beklenen Ödeme Tarihi</span>
+                          <span className="font-medium text-[--text] tabular-nums">{detailItem.expectedDate}</span>
                         </div>
                       </>
                     )}
                     {detailItem.hardwareType && (
                       <>
                         <div>
-                          <span className="text-xs text-zinc-400 block">Donanım Türü</span>
-                          <span className="font-medium text-white">{detailItem.hardwareType}</span>
+                          <span className="text-xs text-[--text-muted] block">Donanım Türü</span>
+                          <span className="font-medium text-[--text]">{detailItem.hardwareType}</span>
                         </div>
                         <div>
-                          <span className="text-xs text-zinc-400 block">Marka / Model Tercihi</span>
-                          <span className="font-medium text-zinc-200">{detailItem.brandModel}</span>
+                          <span className="text-xs text-[--text-muted] block">Marka / Model Tercihi</span>
+                          <span className="font-medium text-[--text]">{detailItem.brandModel}</span>
                         </div>
                       </>
                     )}
                     {detailItem.leaveType && (
                       <>
                         <div>
-                          <span className="text-xs text-zinc-400 block">İzin Aralığı ({detailItem.daysCount} Gün)</span>
-                          <span className="font-medium text-white tabular-nums">{detailItem.startDate} / {detailItem.endDate}</span>
+                          <span className="text-xs text-[--text-muted] block">İzin Aralığı ({detailItem.daysCount} Gün)</span>
+                          <span className="font-medium text-[--text] tabular-nums">{detailItem.startDate} / {detailItem.endDate}</span>
                         </div>
                         <div>
-                          <span className="text-xs text-zinc-400 block">Vekil Çalışan</span>
-                          <span className="font-medium text-zinc-200">{detailItem.proxyEmployee || "Belirtilmemiş"}</span>
+                          <span className="text-xs text-[--text-muted] block">Vekil Çalışan</span>
+                          <span className="font-medium text-[--text]">{detailItem.proxyEmployee || "Belirtilmemiş"}</span>
                         </div>
                       </>
                     )}
@@ -1093,13 +1093,13 @@ export default function PersonelTalepleriPage() {
               {/* Ekli Dosyalar */}
               {detailItem.uploadedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <h3 className="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Ekli Dosyalar ({detailItem.uploadedFiles.length})</h3>
+                  <h3 className="text-[11px] font-medium text-[--text-muted] uppercase tracking-[0.12em]">Ekli Dosyalar ({detailItem.uploadedFiles.length})</h3>
                   <div className="flex flex-col gap-1.5">
                     {detailItem.uploadedFiles.map((file, idx) => (
-                      <div key={idx} className="flex items-center gap-2 p-2.5 bg-[#080A09]/60 border border-white/[0.06] rounded-xl text-xs">
-                        <Paperclip size={13} className="text-zinc-500" />
-                        <span className="font-medium text-zinc-200 flex-1 truncate">{file}</span>
-                        <button type="button" className="text-[11px] text-emerald-400 hover:underline px-2">
+                      <div key={idx} className="flex items-center gap-2 p-2.5 bg-[--page] border border-[--line] rounded-xl text-xs">
+                        <Paperclip size={13} className="text-[--text-muted]" />
+                        <span className="font-medium text-[--text] flex-1 truncate">{file}</span>
+                        <button type="button" className="text-[11px] text-[--brand] hover:underline px-2">
                           İndir
                         </button>
                       </div>
@@ -1110,20 +1110,20 @@ export default function PersonelTalepleriPage() {
 
               {/* ── Onay Akışı Görünümü (Workflow Stepper) ── */}
               <div className="space-y-4">
-                <h3 className="text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">Talep Onay Geçmişi & Akışı</h3>
-                <div className="relative pl-6 border-l border-white/[0.08] space-y-6">
+                <h3 className="text-[11px] font-medium text-[--text-muted] uppercase tracking-[0.12em]">Talep Onay Geçmişi & Akışı</h3>
+                <div className="relative pl-6 border-l border-[--line] space-y-6">
 
                   {/* Adım 1: Çalışan (Başlatıldı) */}
                   <div className="relative">
-                    <div className="absolute -left-[29px] top-1 size-3 rounded-full bg-emerald-400 ring-4 ring-[#111513]" />
+                    <div className="absolute -left-[29px] top-1 size-3 rounded-full bg-[--brand] ring-4 ring-white" />
                     <div>
-                      <div className="flex items-center gap-2 text-xs font-medium text-white">
+                      <div className="flex items-center gap-2 text-xs font-medium text-[--text]">
                         <span>Talep Oluşturuldu</span>
-                        <span className="text-[11px] font-normal text-zinc-500 tabular-nums">
+                        <span className="text-[11px] font-normal text-[--text-muted] tabular-nums">
                           {new Date(detailItem.createdAt).toLocaleDateString("tr-TR")}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400 mt-0.5">
+                      <p className="text-xs text-[--text-muted] mt-0.5">
                         {detailItem.requester.name} tarafından süreç başlatıldı.
                       </p>
                     </div>
@@ -1133,32 +1133,32 @@ export default function PersonelTalepleriPage() {
                   <div className="relative">
                     <div
                       className={cn(
-                        "absolute -left-[29px] top-1 size-3 rounded-full ring-4 ring-[#111513]",
+                        "absolute -left-[29px] top-1 size-3 rounded-full ring-4 ring-white",
                         detailItem.status === "pending" && "bg-amber-400",
-                        detailItem.status === "approved" && "bg-emerald-400",
+                        detailItem.status === "approved" && "bg-[--brand]",
                         detailItem.status === "rejected" && "bg-rose-400",
-                        detailItem.status === "completed" && "bg-emerald-400"
+                        detailItem.status === "completed" && "bg-[--brand]"
                       )}
                     />
                     <div>
-                      <div className="flex items-center gap-2 text-xs font-medium text-white">
+                      <div className="flex items-center gap-2 text-xs font-medium text-[--text]">
                         <span>Yönetici Onayı</span>
                         <span
                           className={cn(
                             "text-[10px] px-2 py-0.5 rounded-full font-medium",
                             detailItem.status === "pending" && "bg-amber-500/10 text-amber-300",
-                            (detailItem.status === "approved" || detailItem.status === "completed") && "bg-emerald-500/10 text-emerald-400",
+                            (detailItem.status === "approved" || detailItem.status === "completed") && "bg-[--brand-soft] text-[--brand]",
                             detailItem.status === "rejected" && "bg-rose-500/10 text-rose-400"
                           )}
                         >
                           {detailItem.status === "pending" ? "Onay Bekliyor" : detailItem.status === "rejected" ? "Reddedildi" : "Onaylandı"}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-400 mt-0.5">
+                      <p className="text-xs text-[--text-muted] mt-0.5">
                         {detailItem.approver}
                       </p>
                       {detailItem.managerComment && (
-                        <div className="mt-2 p-3 bg-[#080A09]/60 rounded-xl border border-white/[0.06] text-xs italic text-zinc-300">
+                        <div className="mt-2 p-3 bg-[--page] rounded-xl border border-[--line] text-xs italic text-[--text-2]">
                           &ldquo;{detailItem.managerComment}&rdquo;
                         </div>
                       )}
@@ -1169,20 +1169,20 @@ export default function PersonelTalepleriPage() {
                   <div className="relative">
                     <div
                       className={cn(
-                        "absolute -left-[29px] top-1 size-3 rounded-full ring-4 ring-[#111513]",
-                        detailItem.status === "completed" ? "bg-emerald-400" : "bg-zinc-700"
+                        "absolute -left-[29px] top-1 size-3 rounded-full ring-4 ring-white",
+                        detailItem.status === "completed" ? "bg-[--brand]" : "bg-zinc-700"
                       )}
                     />
                     <div>
-                      <div className="flex items-center gap-2 text-xs font-medium text-white">
+                      <div className="flex items-center gap-2 text-xs font-medium text-[--text]">
                         <span>Birim İşlemi & Kapatma</span>
                         {detailItem.status === "completed" && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[--brand-soft] text-[--brand]">
                             Tamamlandı
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-zinc-400 mt-0.5">
+                      <p className="text-xs text-[--text-muted] mt-0.5">
                         İlgili birim (IT/İK/Muhasebe) tarafından işlemin gerçekleştirilmesi ve kapatılması.
                       </p>
                     </div>
@@ -1193,12 +1193,12 @@ export default function PersonelTalepleriPage() {
             </div>
 
             {/* ── Yönetici Aksiyon Alanı ── */}
-            <div className="px-6 py-4 border-t border-white/[0.06] bg-[#080A09]/60 shrink-0 space-y-4">
+            <div className="px-6 py-4 border-t border-[--line] bg-[--page] shrink-0 space-y-4">
               {detailItem.status === "pending" && (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-[11px] font-medium text-zinc-400 uppercase tracking-[0.12em]">
+                  <div className="flex items-center justify-between text-[11px] font-medium text-[--text-muted] uppercase tracking-[0.12em]">
                     <span>Yönetici Karar Arayüzü</span>
-                    <span className="text-[11px] text-emerald-400 normal-case tracking-normal">Lütfen karar verin</span>
+                    <span className="text-[11px] text-[--brand] normal-case tracking-normal">Lütfen karar verin</span>
                   </div>
 
                   <div className="flex gap-2.5">
@@ -1211,7 +1211,7 @@ export default function PersonelTalepleriPage() {
                       Reddet
                     </Button>
                     <Button
-                      className="flex-1 gap-2 bg-[#34D399] text-[#061811] font-medium rounded-full h-9"
+                      className="flex-1 gap-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[--text] font-medium rounded-full h-9 shadow-sm"
                       onClick={() => setApproveOpen(true)}
                     >
                       <ThumbsUp size={14} />
@@ -1223,7 +1223,7 @@ export default function PersonelTalepleriPage() {
 
               {/* Dahili Notlar Alanı */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-medium text-zinc-400 uppercase tracking-[0.12em] block">
+                <label className="text-[10px] font-medium text-[--text-muted] uppercase tracking-[0.12em] block">
                   Dahili Notlar (Yalnızca Yönetim Görebilir)
                 </label>
                 <textarea
@@ -1242,7 +1242,7 @@ export default function PersonelTalepleriPage() {
 
       {/* Red Gerekçe Modalı */}
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent className="max-w-md glass-panel border-white/[0.06] text-white">
+        <DialogContent className="max-w-md glass-panel border-[--line] text-[--text]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-rose-400 font-medium">
               <XCircle size={18} />
@@ -1250,7 +1250,7 @@ export default function PersonelTalepleriPage() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[--text-muted]">
               Lütfen talebi reddetme gerekçenizi yazın. Gerekçe çalışana geri bildirim olarak iletilecektir.
             </p>
             <textarea
@@ -1277,15 +1277,15 @@ export default function PersonelTalepleriPage() {
 
       {/* Onay Açıklama Modalı */}
       <Dialog open={approveOpen} onOpenChange={setApproveOpen}>
-        <DialogContent className="max-w-md glass-panel border-white/[0.06] text-white">
+        <DialogContent className="max-w-md glass-panel border-[--line] text-[--text]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-emerald-400 font-medium">
+            <DialogTitle className="flex items-center gap-2 text-[--brand] font-medium">
               <CheckCircle2 size={18} />
               Talebi Onayla
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[--text-muted]">
               İsteğe bağlı olarak onay notu veya talimat ekleyebilirsiniz.
             </p>
             <textarea
@@ -1299,7 +1299,7 @@ export default function PersonelTalepleriPage() {
           <DialogFooter>
             <Button variant="outline" className="rounded-full" onClick={() => setApproveOpen(false)}>{tText("common.cancel", "İptal")}</Button>
             <Button
-              className="bg-[#34D399] text-[#061811] font-medium rounded-full"
+              className="bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[--text] font-medium rounded-full shadow-sm"
               onClick={handleApprove}
             >
               Onayla

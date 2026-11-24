@@ -33,7 +33,7 @@ export function SystemModal() {
           <div
             className={cn(
               'p-3 rounded-full shrink-0',
-              isSuccess && 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+              isSuccess && 'bg-[--brand]/10 text-[--brand] dark:text-[--brand]',
               isInfo && 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
               isWarning && 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
               isError && 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
@@ -83,7 +83,7 @@ export function SystemModal() {
             }}
             className={cn(
               'px-4 py-2 text-sm font-semibold rounded-md text-white shadow-sm transition-colors',
-              isSuccess && 'bg-emerald-600 hover:bg-emerald-700',
+              isSuccess && 'bg-[--brand] hover:bg-[--brand-hover]',
               isInfo && 'bg-blue-600 hover:bg-blue-700',
               isWarning && 'bg-amber-600 hover:bg-amber-700',
               isError && 'bg-rose-600 hover:bg-rose-700'

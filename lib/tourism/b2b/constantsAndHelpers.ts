@@ -21,7 +21,7 @@ export const B2B_PARTNERSHIP_STATUS_META: Record<
   },
   APPROVED: {
     label: "Onaylı Partner",
-    badgeClass: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   },
   REJECTED: {
     label: "Reddedildi",
@@ -54,7 +54,7 @@ export const B2B_RESOURCE_STATUS_META: Record<
 > = {
   ACTIVE: {
     label: "Paylaşımda",
-    badgeClass: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   },
   PAUSED: {
     label: "Duraklatıldı",
@@ -91,7 +91,7 @@ export const B2B_CROSS_RES_STATUS_META: Record<
   },
   CONFIRMED: {
     label: "Onaylandı",
-    badgeClass: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   },
   COMPLETED: {
     label: "Tamamlandı",
@@ -121,7 +121,7 @@ export const B2B_SETTLEMENT_STATUS_META: Record<
   },
   APPROVED_BOTH: {
     label: "Çift Taraflı Onaylandı",
-    badgeClass: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   },
   DISPUTED: {
     label: "İtiraz / İncelemede",

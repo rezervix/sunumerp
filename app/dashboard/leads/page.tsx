@@ -2,16 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import { useLanguage } from "@/lib/context/LanguageContext"
-
-
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "sonner"
 import { useAuth } from "@/lib/auth/context"
-import * as XLSX from "xlsx"
-import { FilePicker } from "@/components/shared/file-picker"
 import RichTextEditor from "@/components/shared/rich-text-editor"
 import { AnimatedNumber, StaggerContainer, StaggerItem } from "@/components/ui/motion-primitives"
+import { safeNumber, safeText } from "@/lib/utils/safe-display"
 
 interface Lead {
   id: string
@@ -32,7 +29,7 @@ interface Lead {
 }
 
 export default function LeadsPage() {
-  const { t, tText } = useLanguage()
+  const { tText } = useLanguage()
   const { hasPermission, isSuperAdmin, loading: authLoading, currentBranch } = useAuth()
   const router = useRouter()
 
@@ -51,7 +48,7 @@ export default function LeadsPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [generatedMessage, setGeneratedMessage] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
-  
+
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -67,7 +64,6 @@ export default function LeadsPage() {
     websiteUrl: "",
     googleMapsUrl: "",
   })
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (currentBranch) {
@@ -115,7 +111,7 @@ export default function LeadsPage() {
         const newLead = await res.json()
         loadLeads()
         setIsCreateDialogOpen(false)
-        
+
         if (formData.wantMarketing) {
           handleGenerateMessage(newLead)
         } else {
@@ -163,37 +159,19 @@ export default function LeadsPage() {
     }
   }
 
-  const handleSendWhatsApp = async () => {
-    if (!selectedLead || !generatedMessage) return
+  const handleSendWhatsApp = () => {
+    if (!selectedLead?.phone || !generatedMessage) return
 
-    const loadingToast = toast.loading("WhatsApp linki hazırlanıyor...")
-
-    try {
-      const sendRes = await fetch("/api/leads/send-whatsapp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId: selectedLead.id, message: generatedMessage }),
-      })
-
-      if (sendRes.ok) {
-        const { whatsappUrl } = await sendRes.json()
-        toast.success("WhatsApp'a yönlendiriliyorsunuz!")
-        
-        // Open WhatsApp in new tab
-        window.open(whatsappUrl, '_blank')
-        
-        setIsMessageApprovalOpen(false)
-        resetForm()
-        loadLeads() // Refresh to show updated status
-      } else {
-        toast.error("WhatsApp linki oluşturulamadı.")
-      }
-    } catch (error) {
-      console.error("Error sending WhatsApp:", error)
-      toast.error("Bir hata oluştu.")
-    } finally {
-      toast.dismiss(loadingToast)
+    let phone = selectedLead.phone.replace(/[^0-9]/g, "")
+    if (phone.startsWith("0")) {
+      phone = "90" + phone.substring(1)
+    } else if (phone.length === 10) {
+      phone = "90" + phone
     }
+
+    const encodedMessage = encodeURIComponent(generatedMessage)
+    window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`, "_blank")
+    setIsMessageApprovalOpen(false)
   }
 
   const handleEdit = async () => {
@@ -206,21 +184,38 @@ export default function LeadsPage() {
         body: JSON.stringify({
           id: selectedLead.id,
           ...formData,
-          email: formData.email || null,
         }),
       })
 
       if (res.ok) {
+        toast.success("Lead güncellendi.")
         loadLeads()
         setIsEditDialogOpen(false)
-        setSelectedLead(null)
-        resetForm()
-        toast.success("Lead güncellendi.")
       }
     } catch (error) {
       console.error("Failed to update lead:", error)
-      toast.error("Güncelleme başarısız.")
+      toast.error("Güncelleme başarısız oldu.")
     }
+  }
+
+  const openEditDialog = (lead: Lead) => {
+    setSelectedLead(lead)
+    setFormData({
+      name: lead.name,
+      company: lead.company || "",
+      email: lead.email || "",
+      phone: lead.phone || "",
+      status: lead.status,
+      notes: lead.notes || "",
+      serviceSelection: lead.serviceSelection ? JSON.parse(lead.serviceSelection) : [],
+      amount: lead.amount ? String(lead.amount) : "",
+      painPoint: lead.painPoint || "",
+      wantMarketing: false,
+      instagramUrl: lead.instagramUrl || "",
+      websiteUrl: lead.websiteUrl || "",
+      googleMapsUrl: lead.googleMapsUrl || "",
+    })
+    setIsEditDialogOpen(true)
   }
 
   const resetForm = () => {
@@ -242,40 +237,11 @@ export default function LeadsPage() {
     setCurrentStep(1)
   }
 
-  const openEditDialog = (lead: Lead) => {
-    setSelectedLead(lead)
-    let services: string[] = []
-    try {
-      if (lead.serviceSelection) {
-        services = JSON.parse(lead.serviceSelection)
-      }
-    } catch (e) {
-      console.error("Failed to parse serviceSelection:", e)
-    }
-
-    setFormData({
-      name: lead.name,
-      company: lead.company || "",
-      email: lead.email || "",
-      phone: lead.phone || "",
-      status: lead.status,
-      notes: lead.notes || "",
-      serviceSelection: services,
-      amount: lead.amount?.toString() || "",
-      painPoint: lead.painPoint || "",
-      wantMarketing: false,
-      instagramUrl: lead.instagramUrl || "",
-      websiteUrl: lead.websiteUrl || "",
-      googleMapsUrl: lead.googleMapsUrl || "",
-    })
-    setIsEditDialogOpen(true)
-  }
-
   const filteredLeads = leads.filter(
-    (lead) =>
-      lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (lead.company?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-      (lead.email?.toLowerCase() || "").includes(searchQuery.toLowerCase()),
+    (l) =>
+      l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (l.company && l.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (l.phone && l.phone.includes(searchQuery))
   )
 
   const hotLeads = leads.filter((l) => l.status === "hot").length
@@ -283,12 +249,12 @@ export default function LeadsPage() {
   const coldLeads = leads.filter((l) => l.status === "cold").length
 
   return (
-    <StaggerContainer className="space-y-6">
+    <StaggerContainer className="space-y-8">
       {/* Header */}
       <StaggerItem className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-semibold text-white tracking-tight">Potansiyel Müşteriler</h1>
-          <p className="text-sm text-zinc-400 mt-1">
+          <h1 className="text-2xl lg:text-3xl font-semibold text-[--text] tracking-tight">Potansiyel Müşteriler</h1>
+          <p className="text-sm text-[--text-muted] mt-1">
             {currentBranch ? `${currentBranch.name} - Yeni fırsatları takip edin` : "Yeni fırsatları takip edin"}
           </p>
         </div>
@@ -298,7 +264,7 @@ export default function LeadsPage() {
               resetForm()
               setIsCreateDialogOpen(true)
             }}
-            className="inline-flex items-center justify-center gap-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] px-5 py-2.5 rounded-full text-sm font-medium transition-all"
+            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white px-5 py-2.5 rounded-full text-sm font-medium transition-all shadow-sm"
           >
             <span className="material-symbols-outlined text-[20px]">add</span>
             Yeni Lead Ekle
@@ -307,62 +273,62 @@ export default function LeadsPage() {
       </StaggerItem>
 
       {/* Borderless KPI Strip */}
-      <StaggerItem className="grid grid-cols-2 md:grid-cols-4 gap-8 py-4 border-b border-white/[0.06]">
+      <StaggerItem className="grid grid-cols-2 md:grid-cols-4 gap-8 py-4 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-            <span className="material-symbols-outlined text-[15px] text-zinc-500">group_add</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-[--brand]">group_add</span>
             <span>TOPLAM LEAD</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-4xl font-light text-white tracking-tight">
-              <AnimatedNumber value={leads.length} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(leads.length, 0)} />
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--brand-soft] text-[--brand] border border-[--brand-line] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Aday Havuzu
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-            <span className="material-symbols-outlined text-[15px] text-emerald-400">local_fire_department</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-[--ok]">local_fire_department</span>
             <span>SICAK LEADS</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-4xl font-light text-white tracking-tight">
-              <AnimatedNumber value={hotLeads} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(hotLeads, 0)} />
             </span>
-            <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--ok-soft] text-[--ok] border border-[--ok-soft] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Yüksek Öncelikli
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-            <span className="material-symbols-outlined text-[15px] text-zinc-400">device_thermostat</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-[--warn]">device_thermostat</span>
             <span>ILIK LEADS</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-4xl font-light text-white tracking-tight">
-              <AnimatedNumber value={warmLeads} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(warmLeads, 0)} />
             </span>
-            <span className="bg-white/[0.06] text-zinc-300 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--warn-soft] text-[--warn] border border-[--warn-soft] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Orta Öncelikli
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-            <span className="material-symbols-outlined text-[15px] text-zinc-500">ac_unit</span>
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-[--text-muted] font-medium mb-2">
+            <span className="material-symbols-outlined text-[15px] text-[--text-muted]">ac_unit</span>
             <span>SOĞUK LEADS</span>
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-4xl font-light text-white tracking-tight">
-              <AnimatedNumber value={coldLeads} />
+            <span className="text-3xl font-light text-[--text] tracking-tight tabular-nums">
+              <AnimatedNumber value={safeNumber(coldLeads, 0)} />
             </span>
-            <span className="bg-white/[0.06] text-zinc-400 text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
+            <span className="bg-[--muted-bg] text-[--text-muted] border border-[--line] text-xs px-2 py-0.5 rounded-full whitespace-nowrap font-medium">
               Düşük Öncelikli
             </span>
           </div>
@@ -370,17 +336,17 @@ export default function LeadsPage() {
       </StaggerItem>
 
       {/* Main Table */}
-      <StaggerItem className="bg-[#111513]/90 backdrop-blur-xl border border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
-        <div className="p-5 border-b border-white/[0.06] bg-white/[0.01] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h2 className="text-lg font-semibold text-white">Tüm Potansiyel Müşteriler</h2>
+      <StaggerItem className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-[--line] bg-white/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-lg font-semibold text-[--navy]">Tüm Potansiyel Müşteriler</h2>
           <div className="relative sm:w-64">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-[20px]">search</span>
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[--text-muted] text-[20px]">search</span>
             <input
               type="text"
               placeholder="Lead ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="glass-input w-full pl-10 pr-4 py-2 text-sm focus:outline-none transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] placeholder:text-[--text-muted] focus:border-[--brand] outline-none transition-all shadow-xs"
             />
           </div>
         </div>
@@ -388,56 +354,55 @@ export default function LeadsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06]">
-                <th className="px-6 py-4 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">İsim / Şirket</th>
-                <th className="px-6 py-4 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">İletişim</th>
-                <th className="px-6 py-4 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">Durum</th>
-                <th className="px-6 py-4 text-right text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">İşlemler</th>
+              <tr className="bg-[--muted-bg] border-b border-[--line]">
+                <th className="px-6 py-4 text-[11px] font-semibold text-[--text-muted] uppercase tracking-wider">İsim / Şirket</th>
+                <th className="px-6 py-4 text-[11px] font-semibold text-[--text-muted] uppercase tracking-wider">İletişim</th>
+                <th className="px-6 py-4 text-[11px] font-semibold text-[--text-muted] uppercase tracking-wider">Durum</th>
+                <th className="px-6 py-4 text-right text-[11px] font-semibold text-[--text-muted] uppercase tracking-wider">İşlemler</th>
               </tr>
             </thead>
             <tbody>
               {filteredLeads.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">Kayıt bulunamadı.</td>
+                  <td colSpan={4} className="px-6 py-12 text-center text-[--text-muted]">Kayıt bulunamadı.</td>
                 </tr>
               ) : (
                 filteredLeads.map((lead) => (
-                  <tr key={lead.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-emerald-400 hover:bg-white/[0.03] transition-all group">
+                  <tr key={lead.id} className="border-b border-[--line] hover:bg-[--brand-soft]/30 transition-all group">
                     <td className="px-6 py-4">
-                      <div className="font-medium text-white">{lead.name}</div>
-                      <div className="text-xs text-zinc-500">{lead.company || "-"}</div>
+                      <div className="font-semibold text-[--navy]">{safeText(lead.name, "İsimsiz")}</div>
+                      <div className="text-xs text-[--text-muted]">{lead.company || "-"}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-zinc-300">{lead.phone || "-"}</div>
-                      <div className="text-xs text-zinc-500">{lead.email || "-"}</div>
+                      <div className="text-sm font-medium text-[--text]">{lead.phone || "-"}</div>
+                      <div className="text-xs text-[--text-muted]">{lead.email || "-"}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${
-                        lead.status === "hot" ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" :
-                        lead.status === "warm" ? "bg-teal-500/15 text-teal-300 border border-teal-500/25" :
-                        lead.status === "contacted" ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
-                        lead.status === "lost" ? "bg-rose-500/15 text-rose-300 border border-rose-500/30" :
-                        "bg-white/[0.06] text-zinc-300 border border-white/[0.08]"
-                      }`}>
-                        {lead.status === "hot" ? "Sıcak" : 
-                         lead.status === "warm" ? "Ilık" : 
-                         lead.status === "contacted" ? "İletişime Geçildi" : 
-                         lead.status === "cold" ? "Soğuk" : 
-                         lead.status === "lost" ? "Kaybedildi" : lead.status}
+                      <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${lead.status === "hot" ? "bg-[--ok-soft] text-[--ok] border border-[--ok-soft]" :
+                          lead.status === "warm" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" :
+                            lead.status === "contacted" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" :
+                              lead.status === "lost" ? "bg-[--bad-soft] text-[--bad] border border-[--bad-soft]" :
+                                "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
+                        }`}>
+                        {lead.status === "hot" ? "Sıcak" :
+                          lead.status === "warm" ? "Ilık" :
+                            lead.status === "contacted" ? "İletişime Geçildi" :
+                              lead.status === "cold" ? "Soğuk" :
+                                lead.status === "lost" ? "Kaybedildi" : lead.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                         <button
                           onClick={() => handleGenerateMessage(lead)}
-                          className="p-1.5 text-zinc-400 hover:text-emerald-300 hover:bg-emerald-500/15 rounded-lg transition-colors"
+                          className="p-1.5 text-[--text-muted] hover:text-[--brand] hover:bg-[--brand-soft] rounded-lg transition-colors"
                           title="WhatsApp Mesajı Hazırla"
                         >
                           <span className="material-symbols-outlined text-[20px]">send</span>
                         </button>
                         <button
                           onClick={() => openEditDialog(lead)}
-                          className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors"
+                          className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"
                           title="Düzenle"
                         >
                           <span className="material-symbols-outlined text-[20px]">edit</span>
@@ -454,16 +419,16 @@ export default function LeadsPage() {
 
       {/* Create Dialog (Multi-Step with AnimatePresence) */}
       {isCreateDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setIsCreateDialogOpen(false)}>
-          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-6 border-b border-white/[0.06] bg-white/[0.01]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4" onClick={() => setIsCreateDialogOpen(false)}>
+          <div className="bg-white border border-[--line] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-[--line] bg-[--page]">
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold text-white">Yeni Lead Ekle</h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <h2 className="text-xl font-semibold text-[--navy]">Yeni Lead Ekle</h2>
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[--brand-soft] text-[--brand] border border-[--brand-line]">
                   Adım {currentStep} / 3
                 </span>
               </div>
-              <button onClick={() => setIsCreateDialogOpen(false)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsCreateDialogOpen(false)} className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
 
             <div className="p-6 overflow-hidden">
@@ -478,50 +443,50 @@ export default function LeadsPage() {
                     className="space-y-4"
                   >
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Adı Soyadı</label>
+                      <label className="text-sm font-medium text-[--text-2]">Adı Soyadı</label>
                       <input
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Can Arslan"
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Firma Adı</label>
+                      <label className="text-sm font-medium text-[--text-2]">Firma Adı</label>
                       <input
                         type="text"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                         placeholder="Firma Ltd. Şti."
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Telefon Numarası *</label>
+                      <label className="text-sm font-medium text-[--text-2]">Telefon Numarası *</label>
                       <input
                         type="text"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="+90 5XX XXX XX XX"
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">E-posta</label>
+                      <label className="text-sm font-medium text-[--text-2]">E-posta</label>
                       <input
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="ornek@mail.com"
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="pt-4">
                       <button
                         onClick={() => setCurrentStep(2)}
                         disabled={!formData.phone}
-                        className="w-full py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full font-medium disabled:opacity-50 transition-all"
+                        className="w-full py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full font-medium disabled:opacity-50 transition-all shadow-sm"
                       >
                         Devam Et
                       </button>
@@ -541,18 +506,18 @@ export default function LeadsPage() {
                     <motion.div
                       animate={{ scale: [1, 1.08, 1] }}
                       transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                      className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_28px_rgba(52,211,153,0.22)]"
+                      className="w-16 h-16 rounded-full bg-[--brand-soft] border border-[--brand-line] text-[--brand] flex items-center justify-center mx-auto shadow-sm"
                     >
                       <span className="material-symbols-outlined text-3xl">auto_awesome</span>
                     </motion.div>
-                    <h3 className="text-lg font-semibold text-white">Pazarlama mesajı yollamak ister misiniz?</h3>
+                    <h3 className="text-lg font-semibold text-[--navy]">Pazarlama mesajı yollamak ister misiniz?</h3>
                     <div className="flex gap-4">
                       <button
                         onClick={() => {
                           setFormData({ ...formData, wantMarketing: true })
                           setCurrentStep(3)
                         }}
-                        className="flex-1 py-3 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full font-medium transition-colors"
+                        className="flex-1 py-3 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full font-medium transition-all shadow-sm"
                       >
                         Evet
                       </button>
@@ -561,12 +526,12 @@ export default function LeadsPage() {
                           setFormData({ ...formData, wantMarketing: false })
                           handleCreate()
                         }}
-                        className="flex-1 py-3 bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-full font-medium hover:bg-white/[0.1] hover:text-white transition-colors"
+                        className="flex-1 py-3 bg-white border border-[--line] text-[--text-2] rounded-full font-medium hover:bg-[--muted-bg] transition-colors shadow-xs"
                       >
                         Hayır
                       </button>
                     </div>
-                    <button onClick={() => setCurrentStep(1)} className="text-sm text-zinc-400 hover:text-white underline">Geri Dön</button>
+                    <button onClick={() => setCurrentStep(1)} className="text-sm text-[--brand] hover:underline font-medium">Geri Dön</button>
                   </motion.div>
                 )}
 
@@ -580,38 +545,38 @@ export default function LeadsPage() {
                     className="space-y-4"
                   >
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Instagram Sayfası Linki</label>
+                      <label className="text-sm font-medium text-[--text-2]">Instagram Sayfası Linki</label>
                       <input
                         type="text"
                         value={formData.instagramUrl}
                         onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
                         placeholder="https://instagram.com/..."
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Web Sitesi Linki</label>
+                      <label className="text-sm font-medium text-[--text-2]">Web Sitesi Linki</label>
                       <input
                         type="text"
                         value={formData.websiteUrl}
                         onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
                         placeholder="https://..."
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-zinc-300">Google Maps İşletme Linki</label>
+                      <label className="text-sm font-medium text-[--text-2]">Google Maps İşletme Linki</label>
                       <input
                         type="text"
                         value={formData.googleMapsUrl}
                         onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
                         placeholder="https://maps.google.com/..."
-                        className="glass-input w-full px-4 py-2.5 text-sm focus:outline-none"
+                        className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none shadow-xs"
                       />
                     </div>
                     <div className="pt-4 flex gap-3">
-                      <button onClick={() => setCurrentStep(2)} className="flex-1 py-2.5 bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:bg-white/[0.08] rounded-full font-medium transition-colors">Geri</button>
-                      <button onClick={handleCreate} className="flex-2 py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full font-medium px-8 transition-all">Lead Ekle ve Mesaj Üret</button>
+                      <button onClick={() => setCurrentStep(2)} className="flex-1 py-2.5 bg-white border border-[--line] text-[--text-2] hover:bg-[--muted-bg] rounded-full font-medium transition-colors shadow-xs">Geri</button>
+                      <button onClick={handleCreate} className="flex-2 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full font-medium px-8 transition-all shadow-sm">Lead Ekle ve Mesaj Üret</button>
                     </div>
                   </motion.div>
                 )}
@@ -621,22 +586,22 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* Message Approval Dialog (with Pulsing Emerald Orb) */}
+      {/* Message Approval Dialog */}
       {isMessageApprovalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] shadow-2xl w-full max-w-xl overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-white/[0.06] bg-white/[0.01]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4">
+          <div className="bg-white border border-[--line] rounded-[20px] shadow-2xl w-full max-w-xl overflow-hidden text-[--text]">
+            <div className="flex items-center justify-between p-6 border-b border-[--line] bg-[--page]">
               <div className="flex items-center gap-3">
                 <motion.div
                   animate={{ scale: [1, 1.08, 1] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-10 h-10 rounded-full bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shadow-[0_0_24px_rgba(52,211,153,0.25)]"
+                  className="w-10 h-10 rounded-full bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand] shadow-sm"
                 >
                   <span className="material-symbols-outlined text-[20px]">smart_toy</span>
                 </motion.div>
-                <h2 className="text-xl font-semibold text-white">AI Mesaj Düzenleme ve Onay</h2>
+                <h2 className="text-xl font-semibold text-[--navy]">AI Mesaj Düzenleme ve Onay</h2>
               </div>
-              <button onClick={() => setIsMessageApprovalOpen(false)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+              <button onClick={() => setIsMessageApprovalOpen(false)} className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
 
             <div className="p-6 space-y-4">
@@ -645,33 +610,33 @@ export default function LeadsPage() {
                   <motion.div
                     animate={{ scale: [1, 1.08, 1] }}
                     transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                    className="relative w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shadow-[0_0_32px_rgba(52,211,153,0.3)]"
+                    className="relative w-16 h-16 rounded-full bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand] shadow-sm"
                   >
                     <span className="material-symbols-outlined text-3xl">auto_awesome</span>
                   </motion.div>
-                  <p className="text-zinc-300 font-medium animate-pulse">Gemini AI mesaj hazırlıyor...</p>
+                  <p className="text-[--text-2] font-medium animate-pulse">Gemini AI mesaj hazırlıyor...</p>
                 </div>
               ) : (
                 <>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-zinc-300">Hazırlanan Pazarlama Mesajı</label>
+                    <label className="text-sm font-medium text-[--text-2]">Hazırlanan Pazarlama Mesajı</label>
                     <textarea
                       value={generatedMessage}
                       onChange={(e) => setGeneratedMessage(e.target.value)}
                       rows={8}
-                      className="glass-input w-full px-4 py-3 text-sm focus:outline-none resize-none leading-relaxed"
+                      className="w-full px-4 py-3 bg-white border border-[--line] rounded-xl text-sm text-[--text] focus:border-[--brand] outline-none resize-none leading-relaxed shadow-xs"
                       placeholder="Mesaj buraya gelecek..."
                     />
-                    <div className="flex items-center gap-2 mt-2 text-emerald-300 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
+                    <div className="flex items-center gap-2 mt-2 text-[--brand] bg-[--brand-soft] p-3 rounded-xl border border-[--brand-line]">
                       <span className="material-symbols-outlined text-[18px]">info</span>
-                      <p className="text-[11px] font-medium leading-tight">
+                      <p className="text-[11px] font-medium leading-tight text-[--text-2]">
                         Butona bastığınızda WhatsApp Web açılacaktır. Mesajın gönderilmesi için WhatsApp ekranında &quot;Gönder&quot; butonuna basmanız gerekmektedir.
                       </p>
                     </div>
                   </div>
                   <div className="pt-4 flex gap-3">
-                    <button onClick={() => setIsMessageApprovalOpen(false)} className="flex-1 py-2.5 bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:bg-white/[0.08] rounded-full font-medium transition-colors">{tText("common.cancel", "İptal")}</button>
-                    <button onClick={handleSendWhatsApp} className="flex-2 py-2.5 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full font-medium px-8 transition-colors flex items-center justify-center gap-2">
+                    <button onClick={() => setIsMessageApprovalOpen(false)} className="flex-1 py-2.5 bg-white border border-[--line] text-[--text-2] hover:bg-[--muted-bg] rounded-full font-medium transition-colors shadow-xs">{tText("common.cancel", "İptal")}</button>
+                    <button onClick={handleSendWhatsApp} className="flex-2 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full font-medium px-8 transition-colors flex items-center justify-center gap-2 shadow-sm">
                       <span className="material-symbols-outlined text-[20px]">open_in_new</span>
                       WhatsApp&apos;a Aktar ve Gönder
                     </button>
@@ -685,41 +650,41 @@ export default function LeadsPage() {
 
       {/* Edit Dialog */}
       {isEditDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4" onClick={() => setIsEditDialogOpen(false)}>
-          <div className="backdrop-blur-xl bg-[#111513] border border-white/[0.06] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between p-6 border-b border-white/[0.06] bg-white/[0.01]">
-              <h2 className="text-xl font-semibold text-white">Lead Düzenle</h2>
-              <button onClick={() => setIsEditDialogOpen(false)} className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B1B33]/40 backdrop-blur-sm p-4" onClick={() => setIsEditDialogOpen(false)}>
+          <div className="bg-white border border-[--line] rounded-[20px] shadow-2xl w-full max-w-lg overflow-hidden text-[--text]" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-[--line] bg-[--page]">
+              <h2 className="text-xl font-semibold text-[--navy]">Lead Düzenle</h2>
+              <button onClick={() => setIsEditDialogOpen(false)} className="p-1.5 text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg] rounded-lg transition-colors"><span className="material-symbols-outlined">close</span></button>
             </div>
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">İsim</label>
-                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                <label className="text-sm font-medium text-[--text-2]">İsim</label>
+                <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand] shadow-xs" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">Telefon</label>
-                <input type="text" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                <label className="text-sm font-medium text-[--text-2]">Telefon</label>
+                <input type="text" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand] shadow-xs" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">Instagram</label>
-                <input type="text" value={formData.instagramUrl} onChange={(e) => setFormData({...formData, instagramUrl: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                <label className="text-sm font-medium text-[--text-2]">Instagram</label>
+                <input type="text" value={formData.instagramUrl} onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand] shadow-xs" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">Web Sitesi</label>
-                <input type="text" value={formData.websiteUrl} onChange={(e) => setFormData({...formData, websiteUrl: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                <label className="text-sm font-medium text-[--text-2]">Web Sitesi</label>
+                <input type="text" value={formData.websiteUrl} onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand] shadow-xs" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">Google Maps</label>
-                <input type="text" value={formData.googleMapsUrl} onChange={(e) => setFormData({...formData, googleMapsUrl: e.target.value})} className="glass-input w-full px-4 py-2.5 text-sm outline-none" />
+                <label className="text-sm font-medium text-[--text-2]">Google Maps</label>
+                <input type="text" value={formData.googleMapsUrl} onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })} className="w-full px-4 py-2 bg-white border border-[--line] rounded-xl text-sm text-[--text] outline-none focus:border-[--brand] shadow-xs" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-zinc-300">Acı Noktası</label>
-                <RichTextEditor value={formData.painPoint} onChange={(val) => setFormData({...formData, painPoint: val})} />
+                <label className="text-sm font-medium text-[--text-2]">Acı Noktası</label>
+                <RichTextEditor value={formData.painPoint} onChange={(val) => setFormData({ ...formData, painPoint: val })} />
               </div>
             </div>
-            <div className="p-6 border-t border-white/[0.06] bg-white/[0.01] flex justify-end gap-3">
-              <button onClick={() => setIsEditDialogOpen(false)} className="px-4 py-2 bg-white/[0.04] border border-white/[0.06] text-zinc-300 hover:bg-white/[0.08] rounded-full text-sm font-medium transition-colors">Vazgeç</button>
-              <button onClick={handleEdit} className="px-5 py-2 bg-[#34D399] hover:bg-[#10B981] text-[#061811] rounded-full text-sm font-medium transition-all">Güncelle</button>
+            <div className="p-6 border-t border-[--line] bg-[--page] flex justify-end gap-3">
+              <button onClick={() => setIsEditDialogOpen(false)} className="px-4 py-2 bg-white border border-[--line] text-[--text-2] hover:bg-[--muted-bg] rounded-full text-sm font-medium transition-colors shadow-xs">Vazgeç</button>
+              <button onClick={handleEdit} className="px-5 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white rounded-full text-sm font-medium transition-all shadow-sm">Güncelle</button>
             </div>
           </div>
         </div>

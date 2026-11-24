@@ -274,19 +274,19 @@ export function ProductionShopFloorTerminal() {
   }
 
   return (
-    <div className="min-h-[85vh] flex flex-col bg-zinc-950 text-white rounded-3xl border border-white/10 p-4 md:p-6 select-none">
+    <div className="min-h-[85vh] flex flex-col bg-zinc-950 text-white rounded-3xl border border-[--line] p-4 md:p-6 select-none">
       {/* ── ÜST BAR: İSTASYON, OPERATÖR, SAAT & EYLEMLER ── */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[--line]">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+          <div className="w-12 h-12 rounded-2xl bg-[--brand]/20 border border-[--brand-line] flex items-center justify-center text-[--brand]">
             <Cpu className="w-6 h-6 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-wider font-semibold text-emerald-400">
+              <span className="text-xs uppercase tracking-wider font-semibold text-[--brand]">
                 Atölye İcra Terminali (SFC)
               </span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-[--brand]/10 text-[--brand] border border-[--brand-line]">
                 CANLI
               </span>
             </div>
@@ -303,10 +303,10 @@ export function ProductionShopFloorTerminal() {
               value={selectedWorkCenterId}
               onValueChange={(val) => setSelectedWorkCenterId(val)}
             >
-              <SelectTrigger className="bg-zinc-900 border-white/15 h-11 text-sm font-medium">
+              <SelectTrigger className="bg-zinc-900 border-[--line] h-11 text-sm font-medium">
                 <SelectValue placeholder="İş İstasyonu Seçin" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-white/10 text-white">
+              <SelectContent className="bg-zinc-900 border-[--line] text-white">
                 {workCenters.map((wc) => (
                   <SelectItem key={wc.id} value={wc.id}>
                     {wc.code} - {wc.name}
@@ -318,9 +318,9 @@ export function ProductionShopFloorTerminal() {
 
           <button
             onClick={() => setIsPinModalOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900 border border-white/10 hover:border-emerald-500/50 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900 border border-[--line] hover:border-[--brand-line] transition-colors"
           >
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <div className="w-7 h-7 rounded-lg bg-[--brand]/10 flex items-center justify-center text-[--brand]">
               <User className="w-4 h-4" />
             </div>
             <div className="text-left hidden sm:block">
@@ -334,16 +334,16 @@ export function ProductionShopFloorTerminal() {
             size="icon"
             onClick={fetchTerminalData}
             disabled={loading}
-            className="h-11 w-11 border-white/10 bg-zinc-900 hover:bg-zinc-800"
+            className="h-11 w-11 border-[--line] bg-zinc-900 hover:bg-zinc-800"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-emerald-400" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[--brand]" : ""}`} />
           </Button>
 
           <Button
             variant="outline"
             size="icon"
             onClick={toggleFullscreen}
-            className="h-11 w-11 border-white/10 bg-zinc-900 hover:bg-zinc-800"
+            className="h-11 w-11 border-[--line] bg-zinc-900 hover:bg-zinc-800"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
@@ -353,19 +353,19 @@ export function ProductionShopFloorTerminal() {
       {/* ── BARKOD / QR OKUYUCU HIZLI GİRİŞ ÇUBUĞU ── */}
       <form onSubmit={handleBarcodeSubmit} className="my-4 flex items-center gap-2">
         <div className="relative flex-1">
-          <Barcode className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-emerald-400" />
+          <Barcode className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-[--brand]" />
           <Input
             ref={barcodeInputRef}
             type="text"
             value={barcodeInput}
             onChange={(e) => setBarcodeInput(e.target.value)}
             placeholder="İş Emri veya Malzeme Barkodu Okutun (veya girip Enter'a basın)..."
-            className="pl-13 h-14 bg-zinc-900/90 border-emerald-500/30 text-base md:text-lg font-mono focus-visible:ring-emerald-500"
+            className="pl-13 h-14 bg-zinc-900/90 border-[--brand-line] text-base md:text-lg font-mono focus-visible:ring-[--brand]"
           />
         </div>
         <Button
           type="submit"
-          className="h-14 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-base rounded-xl"
+          className="h-14 px-6 bg-[--brand] hover:bg-[--brand] text-white font-semibold text-base rounded-xl"
         >
           <QrCode className="w-5 h-5 mr-2" />
           OKUT
@@ -378,7 +378,7 @@ export function ProductionShopFloorTerminal() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold tracking-wider uppercase text-zinc-400 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-emerald-400" />
+              <Layers className="w-4 h-4 text-[--brand]" />
               Aktif & Bekleyen Operasyonlar ({terminalData?.activeOperations?.length || 0})
             </h2>
             <span className="text-xs text-zinc-500">Öncelik & Sıraya Göre Sıralı</span>
@@ -404,10 +404,10 @@ export function ProductionShopFloorTerminal() {
                     layout
                     className={`p-5 rounded-2xl border transition-all ${
                       isRunning
-                        ? "bg-emerald-950/20 border-emerald-500/50 shadow-lg shadow-emerald-950/50"
+                        ? "bg-[--brand-soft] border-[--brand-line] shadow-lg shadow-sm"
                         : isPaused
                         ? "bg-amber-950/20 border-amber-500/40"
-                        : "bg-zinc-900/70 border-white/10"
+                        : "bg-zinc-900/70 border-[--line]"
                     }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -416,13 +416,13 @@ export function ProductionShopFloorTerminal() {
                           <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 font-bold text-white">
                             #{op.operationNumber}
                           </span>
-                          <span className="font-mono text-xs text-emerald-300">
+                          <span className="font-mono text-xs text-[--brand]">
                             {op.workOrder?.workOrderNumber}
                           </span>
                           <span
                             className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                               isRunning
-                                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                ? "bg-[--brand]/20 text-[--brand] border border-[--brand-line]"
                                 : isPaused
                                 ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
                                 : "bg-zinc-700/50 text-zinc-300"
@@ -444,7 +444,7 @@ export function ProductionShopFloorTerminal() {
                       <div className="text-right">
                         <p className="text-xs text-zinc-400">Üretilen / Planlanan</p>
                         <p className="text-xl font-mono font-bold text-white">
-                          <span className="text-emerald-400">{op.producedQuantity}</span> / {op.plannedQuantity} {op.workOrder?.unit || "ADET"}
+                          <span className="text-[--brand]">{op.producedQuantity}</span> / {op.plannedQuantity} {op.workOrder?.unit || "ADET"}
                         </p>
                         {op.scrapQuantity > 0 && (
                           <p className="text-xs text-red-400 flex items-center justify-end gap-1 font-mono">
@@ -463,11 +463,11 @@ export function ProductionShopFloorTerminal() {
                     )}
 
                     {/* EYLEM BUTONLARI - DOKUNMATİK DEV BOYUT */}
-                    <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap items-center gap-3">
+                    <div className="mt-4 pt-3 border-t border-[--line] flex flex-wrap items-center gap-3">
                       {isPending && (
                         <Button
                           onClick={() => handleStartOperation(op.id)}
-                          className="h-12 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl flex-1 shadow-md shadow-emerald-900/30"
+                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-white font-bold text-sm rounded-xl flex-1 shadow-md shadow-sm"
                         >
                           <Play className="w-5 h-5 mr-2" />
                           BAŞLAT
@@ -504,7 +504,7 @@ export function ProductionShopFloorTerminal() {
                       {isPaused && (
                         <Button
                           onClick={() => handleResumeOperation(op.id)}
-                          className="h-12 px-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl flex-1"
+                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-white font-bold text-sm rounded-xl flex-1"
                         >
                           <Play className="w-5 h-5 mr-2" />
                           DURUŞU BİTİR & DEVAM ET
@@ -520,7 +520,7 @@ export function ProductionShopFloorTerminal() {
 
         {/* Sağ Kolon: IoT Canlı Akışı & İstasyon Metrikleri */}
         <div className="space-y-4">
-          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-white/10 space-y-4">
+          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-[--line] space-y-4">
             <h3 className="text-xs uppercase tracking-wider font-semibold text-zinc-400 flex items-center gap-2">
               <Cpu className="w-4 h-4 text-cyan-400" />
               İstasyon Durumu & Canlı Veri (IoT)
@@ -533,7 +533,7 @@ export function ProductionShopFloorTerminal() {
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/5">
                 <p className="text-[10px] text-zinc-400 uppercase">Aktif Operatör</p>
-                <p className="text-sm font-semibold text-emerald-400 mt-1 truncate">{operatorName}</p>
+                <p className="text-sm font-semibold text-[--brand] mt-1 truncate">{operatorName}</p>
               </div>
             </div>
 
@@ -570,8 +570,8 @@ export function ProductionShopFloorTerminal() {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-emerald-950/20 border border-emerald-500/20 text-xs text-zinc-300 space-y-2">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+          <div className="p-4 rounded-2xl bg-[--brand-soft] border border-[--brand-line] text-xs text-zinc-300 space-y-2">
+            <div className="flex items-center gap-2 text-[--brand] font-semibold">
               <Boxes className="w-4 h-4" />
               <span>Geri Yıkama (Backflush) Entegrasyonu</span>
             </div>
@@ -584,7 +584,7 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: OPERATÖR PIN DOĞRULAMA ── */}
       <Dialog open={isPinModalOpen} onOpenChange={setIsPinModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-md">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Operatör Hızlı Girişi (PIN / Kart)</DialogTitle>
             <DialogDescription className="text-zinc-400">
@@ -599,7 +599,7 @@ export function ProductionShopFloorTerminal() {
               value={enteredPin}
               onChange={(e) => setEnteredPin(e.target.value)}
               placeholder="PIN Giriniz..."
-              className="h-14 text-center text-2xl font-mono tracking-widest bg-zinc-900 border-white/15"
+              className="h-14 text-center text-2xl font-mono tracking-widest bg-zinc-900 border-[--line]"
               autoFocus
             />
 
@@ -615,7 +615,7 @@ export function ProductionShopFloorTerminal() {
                     else if (key === "Giriş") handlePinSubmit()
                     else setEnteredPin((prev) => (prev.length < 6 ? prev + key : prev))
                   }}
-                  className="h-12 text-lg font-bold bg-zinc-900 border-white/10 hover:bg-zinc-800"
+                  className="h-12 text-lg font-bold bg-zinc-900 border-[--line] hover:bg-zinc-800"
                 >
                   {key}
                 </Button>
@@ -627,7 +627,7 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: DURUŞ BİLDİRİMİ ── */}
       <Dialog open={stoppageModalOpen} onOpenChange={setStoppageModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-lg">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-amber-400">
               <AlertTriangle className="w-5 h-5" />
@@ -642,10 +642,10 @@ export function ProductionShopFloorTerminal() {
             <div>
               <Label className="text-xs text-zinc-300">Duruş Nedeni Kodu</Label>
               <Select value={stoppageReason} onValueChange={setStoppageReason}>
-                <SelectTrigger className="bg-zinc-900 border-white/15 mt-1">
+                <SelectTrigger className="bg-zinc-900 border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                <SelectContent className="bg-zinc-900 border-[--line] text-white">
                   <SelectItem value="ARIZA">Makine / Ekipman Arızası</SelectItem>
                   <SelectItem value="AYAR">Ayar & Setup (Kalıp Değişimi)</SelectItem>
                   <SelectItem value="MALZEME_YOK">Hammadde / Malzeme Eksikliği</SelectItem>
@@ -664,7 +664,7 @@ export function ProductionShopFloorTerminal() {
                 value={stoppageNotes}
                 onChange={(e) => setStoppageNotes(e.target.value)}
                 placeholder="Örn: 2 no'lu enjeksiyon valfi sıkıştı..."
-                className="bg-zinc-900 border-white/15 mt-1"
+                className="bg-zinc-900 border-[--line] mt-1"
               />
             </div>
           </div>
@@ -673,7 +673,7 @@ export function ProductionShopFloorTerminal() {
             <Button
               variant="outline"
               onClick={() => setStoppageModalOpen(false)}
-              className="border-white/10"
+              className="border-[--line]"
             >
               Vazgeç
             </Button>
@@ -689,7 +689,7 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: İŞİ TAMAMLA & ÜRETİM ÇIKTISI ── */}
       <Dialog open={completeModalOpen} onOpenChange={setCompleteModalOpen}>
-        <DialogContent className="bg-zinc-950 border-white/10 text-white sm:max-w-lg">
+        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-blue-400">
               <CheckCircle2 className="w-5 h-5" />
@@ -710,7 +710,7 @@ export function ProductionShopFloorTerminal() {
                   step="any"
                   value={producedQty}
                   onChange={(e) => setProducedQty(e.target.value)}
-                  className="bg-zinc-900 border-white/15 mt-1 text-lg font-mono font-bold"
+                  className="bg-zinc-900 border-[--line] mt-1 text-lg font-mono font-bold"
                 />
               </div>
 
@@ -722,7 +722,7 @@ export function ProductionShopFloorTerminal() {
                   step="any"
                   value={scrapQty}
                   onChange={(e) => setScrapQty(e.target.value)}
-                  className="bg-zinc-900 border-white/15 mt-1 text-lg font-mono font-bold text-red-400"
+                  className="bg-zinc-900 border-[--line] mt-1 text-lg font-mono font-bold text-red-400"
                 />
               </div>
             </div>
@@ -731,10 +731,10 @@ export function ProductionShopFloorTerminal() {
               <div>
                 <Label className="text-xs text-zinc-300">Hurda Nedeni</Label>
                 <Select value={scrapReason} onValueChange={setScrapReason}>
-                  <SelectTrigger className="bg-zinc-900 border-white/15 mt-1">
+                  <SelectTrigger className="bg-zinc-900 border-[--line] mt-1">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-white/10 text-white">
+                  <SelectContent className="bg-zinc-900 border-[--line] text-white">
                     <SelectItem value="HAMMADDE_HATASI">Hammadde Bozuk / Kusurlu</SelectItem>
                     <SelectItem value="OPERATOR_HATASI">Operatör Hatası</SelectItem>
                     <SelectItem value="MAKINE_HATASI">Makine / Donanım Arızası</SelectItem>
@@ -746,7 +746,7 @@ export function ProductionShopFloorTerminal() {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[--line]">
               <div>
                 <Label className="text-xs text-zinc-300">Fiili Makine Süresi (Dakika)</Label>
                 <Input
@@ -755,7 +755,7 @@ export function ProductionShopFloorTerminal() {
                   value={actualMachineMinutes}
                   onChange={(e) => setActualMachineMinutes(e.target.value)}
                   placeholder="Boşsa tahmini alınır"
-                  className="bg-zinc-900 border-white/15 mt-1 font-mono"
+                  className="bg-zinc-900 border-[--line] mt-1 font-mono"
                 />
               </div>
 
@@ -767,7 +767,7 @@ export function ProductionShopFloorTerminal() {
                   value={actualLaborMinutes}
                   onChange={(e) => setActualLaborMinutes(e.target.value)}
                   placeholder="Boşsa tahmini alınır"
-                  className="bg-zinc-900 border-white/15 mt-1 font-mono"
+                  className="bg-zinc-900 border-[--line] mt-1 font-mono"
                 />
               </div>
             </div>
@@ -777,7 +777,7 @@ export function ProductionShopFloorTerminal() {
             <Button
               variant="outline"
               onClick={() => setCompleteModalOpen(false)}
-              className="border-white/10"
+              className="border-[--line]"
             >
               Vazgeç
             </Button>

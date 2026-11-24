@@ -75,9 +75,9 @@ export function TourProfitabilityAndExpensesTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <CreditCard className="h-4 w-4 text-[#34D399]" />
+          <CreditCard className="h-4 w-4 text-[#1267E6]" />
           <h3 className="text-sm font-semibold text-zinc-100">
             Tur Bazlı Maliyet-Kâr Analizi & Yolcu Başı Kârlılık
           </h3>
@@ -98,7 +98,7 @@ export function TourProfitabilityAndExpensesTab({
       {tour && prof && (
         <>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-            <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-3.5">
+            <div className="rounded-xl border border-[--line] bg-[white] p-3.5">
               <div className="text-[11px] text-zinc-400">Brüt Tur Geliri</div>
               <div className="mt-1 text-lg font-bold text-white">
                 {Number(prof.grossRevenueTry).toLocaleString('tr-TR')} ₺
@@ -107,32 +107,32 @@ export function TourProfitabilityAndExpensesTab({
                 Tahsil: {Number(prof.collectedRevenueTry).toLocaleString('tr-TR')} ₺
               </div>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-3.5">
+            <div className="rounded-xl border border-[--line] bg-[white] p-3.5">
               <div className="text-[11px] text-zinc-400">Doğrudan Giderler</div>
               <div className="mt-1 text-lg font-bold text-rose-300">
                 {Number(prof.directExpensesTotalTry).toLocaleString('tr-TR')} ₺
               </div>
               <div className="text-[10px] text-zinc-400">Yakıt / Rehber / Otel / Müze</div>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-3.5">
+            <div className="rounded-xl border border-[--line] bg-[white] p-3.5">
               <div className="text-[11px] text-zinc-400">Acenta Komisyonu</div>
               <div className="mt-1 text-lg font-bold text-amber-300">
                 {Number(prof.agencyCommissionTotalTry).toLocaleString('tr-TR')} ₺
               </div>
               <div className="text-[10px] text-zinc-400">Sözleşme oranından hesaplı</div>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-3.5">
+            <div className="rounded-xl border border-[--line] bg-[white] p-3.5">
               <div className="text-[11px] text-zinc-400">Tur Net Kârı</div>
               <div
                 className={`mt-1 text-lg font-bold ${
-                  prof.netProfitTry >= 0 ? 'text-[#34D399]' : 'text-rose-400'
+                  prof.netProfitTry >= 0 ? 'text-[#1267E6]' : 'text-rose-400'
                 }`}
               >
                 {Number(prof.netProfitTry).toLocaleString('tr-TR')} ₺
               </div>
               <div className="text-[10px] text-zinc-400">Kâr Marjı: %{prof.profitMarginPct}</div>
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-3.5">
+            <div className="rounded-xl border border-[--line] bg-[white] p-3.5">
               <div className="text-[11px] text-zinc-400">Yolcu Başı Net Kâr</div>
               <div className="mt-1 text-lg font-bold text-sky-300">
                 {Number(prof.profitPerPassengerTry).toLocaleString('tr-TR')} ₺
@@ -143,7 +143,7 @@ export function TourProfitabilityAndExpensesTab({
 
           <form
             onSubmit={handleAddExpense}
-            className="grid grid-cols-1 gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4 md:grid-cols-6"
+            className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-6"
           >
             <div>
               <label className="mb-1 block text-[11px] text-zinc-400">Gider Kategorisi</label>
@@ -193,16 +193,16 @@ export function TourProfitabilityAndExpensesTab({
               <button
                 type="submit"
                 disabled={busy}
-                className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#34D399] py-2 text-xs font-semibold text-[#080A09]"
+                className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#1267E6] py-2 text-xs font-semibold text-[#F6F8FB]"
               >
                 <Plus className="h-3.5 w-3.5" /> Gider Ekle
               </button>
             </div>
           </form>
 
-          <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513]">
+          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
             <table className="w-full min-w-[680px] text-left text-xs">
-              <thead className="border-b border-white/[0.08] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
                 <tr>
                   <th className="px-3 py-2">Kategori</th>
                   <th className="px-3 py-2">Açıklama</th>
@@ -285,7 +285,7 @@ export function TourAgenciesAndGuidesTab({
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Acenta Ekleme */}
-        <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
           <h4 className="text-sm font-semibold text-zinc-100">
             Acenta & Satış Kanalı Tanımları ({agencies.length})
           </h4>
@@ -325,7 +325,7 @@ export function TourAgenciesAndGuidesTab({
                 );
                 setAgName('');
               }}
-              className="rounded-lg bg-[#34D399] text-xs font-semibold text-[#080A09]"
+              className="rounded-lg bg-[#1267E6] text-xs font-semibold text-[#F6F8FB]"
             >
               Acenta Ekle
             </button>
@@ -334,10 +334,10 @@ export function TourAgenciesAndGuidesTab({
             {agencyPerformanceRows.map((ag) => (
               <div
                 key={ag.agencyId}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-[#161B18] p-3 text-xs"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[--line] bg-[#161B18] p-3 text-xs"
               >
                 <div>
-                  <span className="font-mono text-[#34D399]">{ag.code}</span>{' '}
+                  <span className="font-mono text-[#1267E6]">{ag.code}</span>{' '}
                   <strong className="text-zinc-100">{ag.name}</strong>
                   <div className="text-[11px] text-zinc-400">
                     Oran: %{ag.commissionRatePct} · {ag.passengersSold} yolcu ({ag.bookingCount} rez)
@@ -357,7 +357,7 @@ export function TourAgenciesAndGuidesTab({
         </div>
 
         {/* Rehber Ekleme */}
-        <div className="space-y-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
           <h4 className="text-sm font-semibold text-zinc-100">
             Kokartlı Tur Rehberleri ({guides.length})
           </h4>
@@ -397,7 +397,7 @@ export function TourAgenciesAndGuidesTab({
                 setGdName('');
                 setGdLicense('');
               }}
-              className="rounded-lg bg-[#34D399] text-xs font-semibold text-[#080A09]"
+              className="rounded-lg bg-[#1267E6] text-xs font-semibold text-[#F6F8FB]"
             >
               Rehber Ekle
             </button>
@@ -406,10 +406,10 @@ export function TourAgenciesAndGuidesTab({
             {guides.map((g) => (
               <div
                 key={g.id}
-                className="flex items-center justify-between rounded-lg border border-white/[0.06] bg-[#161B18] p-3 text-xs"
+                className="flex items-center justify-between rounded-lg border border-[--line] bg-[#161B18] p-3 text-xs"
               >
                 <div>
-                  <span className="font-mono text-[#34D399]">{g.code}</span>{' '}
+                  <span className="font-mono text-[#1267E6]">{g.code}</span>{' '}
                   <strong className="text-zinc-100">{g.fullName}</strong>
                   <div className="text-[11px] text-zinc-400">
                     Lisans: {g.licenseNo || '-'} · Diller: {(g.languages || []).join(', ')} ·{' '}
@@ -446,9 +446,9 @@ export function TourAnalyticsAndReportsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-[#34D399]" />
+          <BarChart3 className="h-4 w-4 text-[#1267E6]" />
           <div>
             <h3 className="text-sm font-semibold text-zinc-100">
               Tur Kârlılığı, Doluluk, İptal Oranı & Araç Kullanım Raporları
@@ -461,7 +461,7 @@ export function TourAnalyticsAndReportsTab({
         <div className="flex gap-2">
           <a
             href={exportUrl('xlsx')}
-            className="flex items-center gap-1.5 rounded-lg bg-[#34D399] px-3 py-2 text-xs font-semibold text-[#080A09] hover:bg-emerald-300"
+            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> Excel (.xlsx)
           </a>
@@ -475,28 +475,28 @@ export function TourAnalyticsAndReportsTab({
       </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">Ortalama Doluluk</div>
-          <div className="mt-1 text-2xl font-bold text-[#34D399]">%{s.avgOccupancyPct ?? 0}</div>
+          <div className="mt-1 text-2xl font-bold text-[#1267E6]">%{s.avgOccupancyPct ?? 0}</div>
           <div className="text-[11px] text-zinc-400">{s.totalPassengers ?? 0} toplam yolcu</div>
         </div>
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">Toplam Tur Geliri</div>
           <div className="mt-1 text-2xl font-bold text-white">
             {Number(s.totalGrossRevenueTry || 0).toLocaleString('tr-TR')} ₺
           </div>
           <div className="text-[11px] text-zinc-400">İptal oranı: %{s.cancellationRatePct ?? 0}</div>
         </div>
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">Toplam Net Kâr</div>
-          <div className="mt-1 text-2xl font-bold text-[#34D399]">
+          <div className="mt-1 text-2xl font-bold text-[#1267E6]">
             {Number(s.totalNetProfitTry || 0).toLocaleString('tr-TR')} ₺
           </div>
           <div className="text-[11px] text-zinc-400">
             Yolcu başı ort: {Number(s.avgProfitPerPassengerTry || 0).toLocaleString('tr-TR')} ₺
           </div>
         </div>
-        <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+        <div className="rounded-xl border border-[--line] bg-[white] p-4">
           <div className="text-xs text-zinc-400">Tamamlanan / İptal Tur</div>
           <div className="mt-1 text-2xl font-bold text-sky-300">
             {s.completedTours ?? 0} / {s.cancelledTours ?? 0}
@@ -506,12 +506,12 @@ export function TourAnalyticsAndReportsTab({
       </div>
 
       {/* Tur Bazlı Kârlılık Tablosu */}
-      <div className="overflow-x-auto rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white] p-4">
         <h4 className="mb-3 text-sm font-semibold text-zinc-100">
           Tur Bazlı Gelir, Gider, Komisyon & Net Kâr Karşılaştırması
         </h4>
         <table className="w-full min-w-[800px] text-left text-xs">
-          <thead className="border-b border-white/[0.08] text-zinc-400">
+          <thead className="border-b border-[--line] text-zinc-400">
             <tr>
               <th className="py-2">Tur</th>
               <th className="py-2 text-right">Yolcu / Doluluk</th>
@@ -525,7 +525,7 @@ export function TourAnalyticsAndReportsTab({
             {profRows.map((r: any) => (
               <tr key={r.tourId}>
                 <td className="py-2">
-                  <span className="font-mono text-[#34D399]">{r.tourCode}</span> — {r.tourTitle}
+                  <span className="font-mono text-[#1267E6]">{r.tourCode}</span> — {r.tourTitle}
                 </td>
                 <td className="py-2 text-right font-mono">
                   {r.confirmedPassengers}/{r.capacity} (%{r.occupancyPct})
@@ -538,7 +538,7 @@ export function TourAnalyticsAndReportsTab({
                 </td>
                 <td
                   className={`py-2 text-right font-mono font-semibold ${
-                    r.netProfitTry >= 0 ? 'text-[#34D399]' : 'text-rose-400'
+                    r.netProfitTry >= 0 ? 'text-[#1267E6]' : 'text-rose-400'
                   }`}
                 >
                   {Number(r.netProfitTry).toLocaleString('tr-TR')}
@@ -553,14 +553,14 @@ export function TourAnalyticsAndReportsTab({
       </div>
 
       {/* Araç Kullanım Süreleri */}
-      <div className="rounded-xl border border-white/[0.08] bg-[#111513] p-4">
+      <div className="rounded-xl border border-[--line] bg-[white] p-4">
         <h4 className="mb-3 text-sm font-semibold text-zinc-100">
           Filo Araçlarının Tur Kullanım Süreleri
         </h4>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
           {vehUsage.map((v: any) => (
-            <div key={v.vehicleId} className="rounded-lg border border-white/[0.08] bg-[#161B18] p-3 text-xs">
-              <div className="font-mono font-bold text-[#34D399]">{v.plate}</div>
+            <div key={v.vehicleId} className="rounded-lg border border-[--line] bg-[#161B18] p-3 text-xs">
+              <div className="font-mono font-bold text-[#1267E6]">{v.plate}</div>
               <div className="text-[11px] text-zinc-300">{v.brandModel}</div>
               <div className="mt-1.5 font-mono text-[11px] text-zinc-400">
                 {v.tourCount} tur · {v.totalDays} gün · {v.totalHours} saat

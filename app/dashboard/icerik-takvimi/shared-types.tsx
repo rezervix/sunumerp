@@ -58,7 +58,7 @@ export const STATUS_META: Record<string, { label: string; color: string; bg: str
   yuklendi:               { label: "Yüklendi",                color: "text-blue-600",    bg: "bg-blue-100 dark:bg-blue-900/40",    icon: <Upload size={12} /> },
   revize_istendi:         { label: "Revize İstendi",          color: "text-orange-600",  bg: "bg-orange-100 dark:bg-orange-900/40",icon: <AlertCircle size={12} /> },
   revize_edildi:          { label: "Revize Edildi",           color: "text-purple-600",  bg: "bg-purple-100 dark:bg-purple-900/40",icon: <RefreshCw size={12} /> },
-  onaylandi:              { label: "Onaylandı",               color: "text-emerald-600", bg: "bg-emerald-100 dark:bg-emerald-900/40",icon: <CheckCircle2 size={12} /> },
+  onaylandi:              { label: "Onaylandı",               color: "text-[--brand]", bg: "bg-[--brand-soft]",icon: <CheckCircle2 size={12} /> },
   planlandi:              { label: "Planlandı",               color: "text-sky-600",     bg: "bg-sky-100 dark:bg-sky-900/40",      icon: <Clock size={12} /> },
   yayinlandi:             { label: "Yayınlandı",              color: "text-indigo-600",  bg: "bg-indigo-100 dark:bg-indigo-900/40",icon: <CheckCircle2 size={12} /> },
   iptal_edildi:           { label: "İptal Edildi",            color: "text-red-650 line-through opacity-70", bg: "bg-red-50 dark:bg-red-95/40", icon: <XCircle size={12} /> },

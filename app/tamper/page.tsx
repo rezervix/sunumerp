@@ -25,22 +25,22 @@ export default function TamperPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#080A09] text-white flex flex-col items-center justify-center p-6 select-none relative overflow-hidden">
+    <div className="min-h-screen bg-[#F6F8FB] text-white flex flex-col items-center justify-center p-6 select-none relative overflow-hidden">
       {/* Dynamic Background Glows */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
-      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] rounded-full bg-emerald-500/5 blur-[120px] pointer-events-none" />
+      <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] rounded-full bg-[--brand]/5 blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-lg bg-[#111513]/90 backdrop-blur-2xl border border-white/10 rounded-[24px] p-8 text-center space-y-6 shadow-2xl relative overflow-hidden z-10">
+      <div className="w-full max-w-lg bg-[white]/90 backdrop-blur-2xl border border-[--line] rounded-[24px] p-8 text-center space-y-6 shadow-2xl relative overflow-hidden z-10">
         
         {isTestMode ? (
           /* TEST MODE ACTIVE BANNER */
           <>
-            <div className="size-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto text-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.2)]">
+            <div className="size-16 rounded-2xl bg-[--brand]/10 border border-[--brand-line] flex items-center justify-center mx-auto text-[--brand] shadow-[0_0_20px_rgba(52,211,153,0.2)]">
               <ShieldCheck size={36} />
             </div>
 
             <div className="space-y-2">
-              <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-semibold uppercase tracking-wider">
+              <span className="px-3 py-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full text-xs font-semibold uppercase tracking-wider">
                 Test Modu Aktif
               </span>
               <h1 className="text-2xl font-bold tracking-tight text-white">Güvenlik Koruması Devre Dışı</h1>
@@ -49,8 +49,8 @@ export default function TamperPage() {
               </p>
             </div>
 
-            <div className="bg-white/[0.02] border border-white/10 p-4 rounded-xl text-xs text-left leading-relaxed text-zinc-400 font-mono space-y-2">
-              <p className="text-emerald-400 font-bold">[✓] TEST MODU BİLGİSİ</p>
+            <div className="bg-[--page] border border-[--line] p-4 rounded-xl text-xs text-left leading-relaxed text-zinc-400 font-mono space-y-2">
+              <p className="text-[--brand] font-bold">[✓] TEST MODU BİLGİSİ</p>
               <p>&gt; Test bayrak dosyası silinmediği sürece güvenlik kilidi kapalı kalacaktır.</p>
               <p>&gt; Dosyayı sildiğinizde (storage/TEST_MODE) güvenlik koruması tekrar aktifleşecektir.</p>
             </div>
@@ -58,7 +58,7 @@ export default function TamperPage() {
             <div className="pt-2">
               <button
                 onClick={() => router.push("/dashboard")}
-                className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.3)] cursor-pointer"
+                className="w-full h-12 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
               >
                 Dashboard&apos;a Dön <ArrowRight size={16} />
               </button>
@@ -88,11 +88,11 @@ export default function TamperPage() {
               <p className="text-zinc-200 mt-2 font-sans font-medium">&gt; Lütfen sistem yöneticinizle irtibata geçin.</p>
             </div>
 
-            <div className="flex items-center justify-between pt-2 text-[10px] text-zinc-500 font-mono border-t border-white/[0.08]">
+            <div className="flex items-center justify-between pt-2 text-[10px] text-zinc-500 font-mono border-t border-[--line]">
               <span>KOD: 0x800F_TAMPER_DETECTED</span>
               <Link 
                 href="/dashboard/support-tickets"
-                className="text-emerald-400 hover:underline font-sans font-semibold flex items-center gap-1 cursor-pointer"
+                className="text-[--brand] hover:underline font-sans font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <LifeBuoy size={12} /> Destek Talebi
               </Link>

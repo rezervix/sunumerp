@@ -52,7 +52,7 @@ export default function TurizmDashboardHubPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Compass className="h-6 w-6 text-emerald-400" />
+            <Compass className="h-6 w-6 text-[--brand]" />
             <h1 className="text-xl font-bold tracking-tight text-white">
               Turizm &amp; Ağırlama Sektörel Yönetim Panosu
             </h1>
@@ -65,7 +65,7 @@ export default function TurizmDashboardHubPage() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/dashboard/turizm/raporlar"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 px-3.5 py-2 text-xs font-medium text-[--brand] hover:bg-[--brand]/20 transition-colors"
           >
             <BarChart3 className="h-4 w-4" />
             Konsolide Raporlar
@@ -97,7 +97,7 @@ export default function TurizmDashboardHubPage() {
             onClick={() => setActiveTab(key as SectorTab)}
             className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition ${
               activeTab === key
-                ? "bg-emerald-600 text-white shadow-sm"
+                ? "bg-[--brand] text-white shadow-sm"
                 : "bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
             }`}
           >
@@ -111,10 +111,10 @@ export default function TurizmDashboardHubPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* RENT-A-CAR KART */}
         {(activeTab === "all" || activeTab === "rentacar") && m?.rentacar && (
-          <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-3">
+          <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
             <div className="flex items-center justify-between text-xs text-zinc-400">
-              <span className="font-semibold text-emerald-400">Rent-a-Car Operasyonu</span>
-              <Compass className="h-4 w-4 text-emerald-400" />
+              <span className="font-semibold text-[--brand]">Rent-a-Car Operasyonu</span>
+              <Compass className="h-4 w-4 text-[--brand]" />
             </div>
             <div className="text-3xl font-light text-white tracking-tight">
               {m.rentacar.activeRentalsCount}{" "}
@@ -127,12 +127,12 @@ export default function TurizmDashboardHubPage() {
               </div>
               <div>
                 <span className="block text-[10px] text-zinc-500">Aylık Hacim</span>
-                <span className="text-emerald-400 font-medium">₺{m.rentacar.monthlyRevenueTry.toLocaleString("tr-TR")}</span>
+                <span className="text-[--brand] font-medium">₺{m.rentacar.monthlyRevenueTry.toLocaleString("tr-TR")}</span>
               </div>
             </div>
             <Link
               href="/dashboard/arac-kiralama"
-              className="mt-2 block text-center rounded-lg bg-white/[0.04] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
+              className="mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
             >
               Kiralama Yönetimine Git →
             </Link>
@@ -141,7 +141,7 @@ export default function TurizmDashboardHubPage() {
 
         {/* OTEL PMS KART */}
         {(activeTab === "all" || activeTab === "hotel") && m?.hotel && (
-          <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-3">
+          <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
             <div className="flex items-center justify-between text-xs text-zinc-400">
               <span className="font-semibold text-sky-400">Otel &amp; Konaklama (Mini PMS)</span>
               <Building2 className="h-4 w-4 text-sky-400" />
@@ -162,7 +162,7 @@ export default function TurizmDashboardHubPage() {
             </div>
             <Link
               href="/dashboard/otel"
-              className="mt-2 block text-center rounded-lg bg-white/[0.04] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
+              className="mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
             >
               Ön Büro &amp; Odalara Git →
             </Link>
@@ -171,7 +171,7 @@ export default function TurizmDashboardHubPage() {
 
         {/* TUR OPERATÖRLÜĞÜ KART */}
         {(activeTab === "all" || activeTab === "tour") && m?.tour && (
-          <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-3">
+          <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
             <div className="flex items-center justify-between text-xs text-zinc-400">
               <span className="font-semibold text-purple-400">Tur Operasyonları</span>
               <Compass className="h-4 w-4 text-purple-400" />
@@ -192,7 +192,7 @@ export default function TurizmDashboardHubPage() {
             </div>
             <Link
               href="/dashboard/tur"
-              className="mt-2 block text-center rounded-lg bg-white/[0.04] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
+              className="mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
             >
               Tur Takvimi &amp; Manifestoya Git →
             </Link>
@@ -201,7 +201,7 @@ export default function TurizmDashboardHubPage() {
 
         {/* B2B PARTNER AĞI KART */}
         {(activeTab === "all" || activeTab === "b2b") && m?.b2b && (
-          <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-3">
+          <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
             <div className="flex items-center justify-between text-xs text-zinc-400">
               <span className="font-semibold text-teal-400">B2B Partner Ekosistemi</span>
               <Globe className="h-4 w-4 text-teal-400" />
@@ -222,7 +222,7 @@ export default function TurizmDashboardHubPage() {
             </div>
             <Link
               href="/dashboard/partner-agi"
-              className="mt-2 block text-center rounded-lg bg-white/[0.04] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
+              className="mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text-zinc-300 hover:bg-white/[0.08]"
             >
               Partner Ağı &amp; Mutabakata Git →
             </Link>
@@ -231,14 +231,14 @@ export default function TurizmDashboardHubPage() {
       </div>
 
       {/* HIZLI BAĞLANTILAR VE OPERASYON REHBERİ */}
-      <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-6 space-y-4">
+      <div className="rounded-2xl border border-zinc-800 bg-[white] p-6 space-y-4">
         <h2 className="text-sm font-semibold text-zinc-200">Entegre Sektörel Modül Kısayolları</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <Link
             href="/dashboard/arac-kiralama"
-            className="flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-3.5 hover:border-emerald-500/40 transition"
+            className="flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-3.5 hover:border-[--brand-line] transition"
           >
-            <Compass className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+            <Compass className="h-5 w-5 text-[--brand] shrink-0 mt-0.5" />
             <div>
               <div className="text-xs font-semibold text-zinc-100">Araç Kiralama</div>
               <p className="text-[11px] text-zinc-400 mt-0.5">Müsaitlik Gantt, sözleşme, teslim/iade ve KABİS hazırlığı.</p>

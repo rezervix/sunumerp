@@ -6,7 +6,12 @@ import {
   FileCheck2,
   Handshake,
   RefreshCw,
-  RotateCcw
+  RotateCcw,
+  Building2,
+  Scale,
+  ClipboardCheck,
+  Truck,
+  ShieldAlert
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -18,12 +23,12 @@ import { ConsignmentStockManager } from './components/ConsignmentStockManager';
 import { CreateRequisitionModal } from './components/CreateRequisitionModal';
 import { InventoryModuleNav } from '../stok/components/InventoryModuleNav';
 import { mockDatabase } from '@/lib/data/mockDatabase';
-import { Building2, Scale, ClipboardCheck, Truck, ShieldAlert, BarChart3 } from 'lucide-react';
 import SupplierMasterScorecardTab from './components/SupplierMasterScorecardTab';
 import RfqComparisonTab from './components/RfqComparisonTab';
 import { MultiTierPoTab, EoqSuggestionsPanel } from './components/MultiTierPoAndEoqTab';
 import { AsnTrackingTab, SingleSourceRiskTab } from './components/AsnAndRiskTabs';
 import { ErpPerspectiveSwitchButton } from '@/components/demo/SupplierPortalDemoComponents';
+import { safeNumber } from '@/lib/utils/safe-display';
 
 const EMPTY_PROCUREMENT_STATS = {
   totalCriticalItems: 0,
@@ -194,9 +199,9 @@ export default function SmartProcurementAndConsignmentPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] m-6">
-        <RefreshCw className="w-8 h-8 text-[#34D399] animate-spin" />
-        <p className="text-sm font-medium text-zinc-400">
+      <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] m-6">
+        <RefreshCw className="w-8 h-8 text-[--brand] animate-spin" />
+        <p className="text-sm font-medium text-[--text-muted]">
           Akıllı Satın Alma ve ROP Motoru Yükleniyor...
         </p>
       </div>
@@ -210,26 +215,26 @@ export default function SmartProcurementAndConsignmentPage() {
 
       {/* 1. ÜST ÖZET KARTLAR VE HIZLI AKSİYONLAR (KUTUSUZ BORDERLESS STRIP) */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-400">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-[--text-muted]">
           {faz3Summary && (
             <>
-              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
-                Onaylı Tedarikçi: <strong className="text-[#34D399]">{faz3Summary.approvedSuppliers}/{faz3Summary.totalSuppliers}</strong>
+              <span className="px-2.5 py-1 rounded-lg border border-[--line] bg-white">
+                Onaylı Tedarikçi: <strong className="text-[--brand]">{safeNumber(faz3Summary.approvedSuppliers)}/{safeNumber(faz3Summary.totalSuppliers)}</strong>
               </span>
-              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
-                Onay Bekleyen PO: <strong className="text-amber-300">{faz3Summary.pendingApprovalPoCount}</strong>
+              <span className="px-2.5 py-1 rounded-lg border border-[--line] bg-white">
+                Onay Bekleyen PO: <strong className="text-[--warn]">{safeNumber(faz3Summary.pendingApprovalPoCount)}</strong>
               </span>
-              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
-                Açık RFQ: <strong className="text-sky-300">{faz3Summary.openRfqCount}</strong>
+              <span className="px-2.5 py-1 rounded-lg border border-[--line] bg-white">
+                Açık RFQ: <strong className="text-[--brand]">{safeNumber(faz3Summary.openRfqCount)}</strong>
               </span>
-              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
-                Açık ASN: <strong className="text-zinc-200">{faz3Summary.openAsnCount}</strong>
+              <span className="px-2.5 py-1 rounded-lg border border-[--line] bg-white">
+                Açık ASN: <strong className="text-[--text]">{safeNumber(faz3Summary.openAsnCount)}</strong>
               </span>
-              <span className="px-2.5 py-1 rounded-lg border border-white/[0.07] bg-[#121614]">
-                Ort. Skor Kartı: <strong className="text-[#34D399]">{faz3Summary.avgSupplierScore}</strong>
+              <span className="px-2.5 py-1 rounded-lg border border-[--line] bg-white">
+                Ort. Skor Kartı: <strong className="text-[--ok]">{safeNumber(faz3Summary.avgSupplierScore)}</strong>
               </span>
-              {faz3Summary.redFlagPoCount > 0 && (
-                <span className="px-2.5 py-1 rounded-lg border border-rose-500/35 bg-rose-500/10 text-rose-300 font-semibold">
+              {safeNumber(faz3Summary.redFlagPoCount) > 0 && (
+                <span className="px-2.5 py-1 rounded-lg border border-[--bad]/25 bg-[--bad-soft] text-[--bad] font-semibold">
                   {faz3Summary.redFlagPoCount} Kırmızı Bayrak PO
                 </span>
               )}
@@ -246,12 +251,12 @@ export default function SmartProcurementAndConsignmentPage() {
       />
 
       {/* Durum & Araç Çubuğu */}
-      <div className="flex items-center justify-between text-xs text-zinc-400 bg-[#111513]/90 border border-white/[0.06] px-4 py-2.5 rounded-xl">
+      <div className="flex items-center justify-between text-xs text-[--text-muted] bg-white/80 backdrop-blur-xl border border-[--line] px-4 py-2.5 rounded-xl shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-[#34D399] animate-ping" />
-          <span className="text-zinc-300">Prisma / PostgreSQL Otomatik ROP Motoru Aktif</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-[--ok] animate-ping" />
+          <span className="text-[--text]">Prisma / PostgreSQL Otomatik ROP Motoru Aktif</span>
           {refreshing && (
-            <span className="text-[#34D399] font-medium flex items-center gap-1">
+            <span className="text-[--brand] font-medium flex items-center gap-1">
               <RefreshCw className="w-3 h-3 animate-spin" /> Güncelleniyor...
             </span>
           )}
@@ -260,17 +265,17 @@ export default function SmartProcurementAndConsignmentPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => fetchProcurementData()}
-            className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition cursor-pointer"
+            className="flex items-center gap-1.5 text-[--text-muted] hover:text-[--text] transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Yenile
           </button>
           {demoMode && (
             <>
-              <span className="text-white/20">•</span>
+              <span className="text-[--line]">•</span>
               <button
                 onClick={handleResetSeed}
-                className="flex items-center gap-1.5 text-zinc-400 hover:text-amber-400 transition cursor-pointer"
+                className="flex items-center gap-1.5 text-[--text-muted] hover:text-[--warn] transition cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Örnek Verileri Sıfırla
@@ -282,68 +287,68 @@ export default function SmartProcurementAndConsignmentPage() {
 
       {/* 2. MODÜLER TAB YAPISI */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="flex flex-wrap gap-1.5 bg-[#111513]/90 border border-white/[0.06] p-1.5 rounded-2xl h-auto">
+        <TabsList className="flex flex-wrap gap-1.5 bg-white/80 backdrop-blur-xl border border-[--line] p-1.5 rounded-2xl h-auto shadow-sm">
           <TabsTrigger
             value="critical-rop"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+            <AlertTriangle className="w-3.5 h-3.5 text-[--warn]" />
             Kritik Stok & EOQ/ROP ({criticalItems.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="orders"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <ClipboardCheck className="w-3.5 h-3.5 text-[#34D399]" />
+            <ClipboardCheck className="w-3.5 h-3.5 text-[--brand]" />
             Çok Kademeli PO ({purchaseOrders.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="rfq"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <Scale className="w-3.5 h-3.5 text-[#34D399]" />
+            <Scale className="w-3.5 h-3.5 text-[--brand]" />
             RFQ & Teklif Kıyas ({rfqs.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="asns"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <Truck className="w-3.5 h-3.5 text-[#34D399]" />
+            <Truck className="w-3.5 h-3.5 text-[--brand]" />
             ASN & EDI Sevkiyat ({asns.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="suppliers"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <Building2 className="w-3.5 h-3.5 text-[#34D399]" />
+            <Building2 className="w-3.5 h-3.5 text-[--brand]" />
             Tedarikçi & Skor Kartı ({suppliers.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="single-source"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+            <ShieldAlert className="w-3.5 h-3.5 text-[--warn]" />
             Tek-Kaynak Riski ({(singleSourceRisk?.riskItems || []).length})
           </TabsTrigger>
 
           <TabsTrigger
             value="requisitions"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <FileCheck2 className="w-3.5 h-3.5 text-[#34D399]" />
+            <FileCheck2 className="w-3.5 h-3.5 text-[--brand]" />
             Satın Alma Talepleri ({purchaseRequisitions.length})
           </TabsTrigger>
 
           <TabsTrigger
             value="consignment"
-            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-white transition data-[state=active]:bg-white/[0.08] data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-white/[0.1] data-[state=active]:shadow-sm"
+            className="flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[--brand-soft] data-[state=active]:text-[--brand] data-[state=active]:border data-[state=active]:border-[--brand-line] data-[state=active]:shadow-sm"
           >
-            <Handshake className="w-3.5 h-3.5 text-zinc-300" />
+            <Handshake className="w-3.5 h-3.5 text-[--brand]" />
             Konsinye Stoklar ({consignmentStocks.length})
           </TabsTrigger>
         </TabsList>

@@ -65,20 +65,20 @@ export function FleetMaintenanceTab({
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: 'MTBF (Arızalar Arası)', val: `${kpis.mtbfHours ?? 0} sa`, color: 'text-[#34D399]' },
+          { label: 'MTBF (Arızalar Arası)', val: `${kpis.mtbfHours ?? 0} sa`, color: 'text-[#1267E6]' },
           { label: 'MTTR (Ort. Onarım)', val: `${kpis.mttrMinutes ?? 0} dk`, color: 'text-sky-300' },
           { label: 'Vadesi Gelen / Geçen Plan', val: `${kpis.dueOrOverduePlanCount ?? 0} / ${kpis.soonPlanCount ?? 0}`, color: 'text-amber-300' },
           { label: 'Açık İş Emri / Arıza', val: `${kpis.openWorkOrderCount ?? 0} / ${kpis.openFaultCount ?? 0}`, color: 'text-rose-300' },
           { label: 'Toplam Bakım Maliyeti', val: `₺${Number(kpis.totalMaintenanceCostTry || 0).toLocaleString('tr-TR')}`, color: 'text-white' },
         ].map((card) => (
-          <div key={card.label} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+          <div key={card.label} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
             <div className="text-[11px] text-zinc-400">{card.label}</div>
             <div className={`text-xl font-bold font-mono mt-1 ${card.color}`}>{card.val}</div>
           </div>
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-[white]/90 border border-[--line] rounded-[20px] p-3">
         <div className="flex flex-wrap gap-1.5">
           {[
             { id: 'orders', label: `Bakım İş Emirleri (${workOrders.length})` },
@@ -92,8 +92,8 @@ export function FleetMaintenanceTab({
               onClick={() => setSubTab(t.id as any)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-medium cursor-pointer transition ${
                 subTab === t.id
-                  ? 'bg-emerald-500/15 text-[#34D399] border border-emerald-500/30'
-                  : 'bg-white/[0.03] text-zinc-400 border border-white/[0.06]'
+                  ? 'bg-[--brand]/15 text-[#1267E6] border border-[--brand-line]'
+                  : 'bg-white text-zinc-400 border border-[--line]'
               }`}
             >
               {t.label}
@@ -123,9 +123,9 @@ export function FleetMaintenanceTab({
                   toast.error(err.message);
                 }
               }}
-              className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5"
+              className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5"
             >
-              <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Plus className="w-3.5 h-3.5 text-[#34D399]" /> Yeni Araç Bakım İş Emri</div>
+              <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Plus className="w-3.5 h-3.5 text-[#1267E6]" /> Yeni Araç Bakım İş Emri</div>
               <div className="grid grid-cols-2 gap-2">
                 <select required value={woForm.vehicleId} onChange={(e) => setWoForm({ ...woForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white">
                   <option value="">Araç Seçin</option>
@@ -141,7 +141,7 @@ export function FleetMaintenanceTab({
                 <input placeholder="Servis / Atölye" value={woForm.serviceProviderName} onChange={(e) => setWoForm({ ...woForm, serviceProviderName: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white" />
                 <input type="number" placeholder="Dış Servis Tutarı (₺)" value={woForm.externalServiceCostTry} onChange={(e) => setWoForm({ ...woForm, externalServiceCostTry: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white" />
               </div>
-              <button type="submit" className="w-full py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">İş Emri Aç</button>
+              <button type="submit" className="w-full py-2 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">İş Emri Aç</button>
             </form>
 
             <form
@@ -158,9 +158,9 @@ export function FleetMaintenanceTab({
                   toast.error(err.message);
                 }
               }}
-              className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5"
+              className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5"
             >
-              <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Settings className="w-3.5 h-3.5 text-[#34D399]" /> İş Emrine Yedek Parça Sarfiyatı (Mevcut Stoktan)</div>
+              <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Settings className="w-3.5 h-3.5 text-[#1267E6]" /> İş Emrine Yedek Parça Sarfiyatı (Mevcut Stoktan)</div>
               <div className="grid grid-cols-2 gap-2">
                 <select required value={sparePartWoId} onChange={(e) => setSparePartWoId(e.target.value)} className="col-span-2 bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white">
                   <option value="">İş Emri Seçin</option>
@@ -180,10 +180,10 @@ export function FleetMaintenanceTab({
             </form>
           </div>
 
-          <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
+          <div className="bg-[white]/90 border border-[--line] rounded-[20px] overflow-hidden">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+                <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase text-zinc-400">
                   <th className="py-3 px-4">İş Emri / Araç</th>
                   <th className="py-3 px-4">Tür &amp; Başlık</th>
                   <th className="py-3 px-4">Parça / Duruş</th>
@@ -196,7 +196,7 @@ export function FleetMaintenanceTab({
                   <tr key={wo.id}>
                     <td className="py-3 px-4">
                       <div className="font-mono font-semibold text-white">{wo.workOrderNumber}</div>
-                      <div className="text-[11px] text-[#34D399]">{wo.plate}</div>
+                      <div className="text-[11px] text-[#1267E6]">{wo.plate}</div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="text-zinc-200 font-medium">{wo.title}</div>
@@ -214,7 +214,7 @@ export function FleetMaintenanceTab({
                         <button type="button" onClick={() => postAction({ action: 'update_maint_wo_status', workOrderId: wo.id, nextStatus: 'IN_PROGRESS' })} className="px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 text-[10px] cursor-pointer">Servise Al</button>
                       )}
                       {wo.status === 'IN_PROGRESS' && (
-                        <button type="button" onClick={() => postAction({ action: 'update_maint_wo_status', workOrderId: wo.id, nextStatus: 'COMPLETED', downtimeMinutes: 90, laborHours: 2 })} className="px-2.5 py-1 rounded-full bg-[#34D399] text-[#061811] font-semibold text-[10px] cursor-pointer">Tamamla &amp; Finansa İşle</button>
+                        <button type="button" onClick={() => postAction({ action: 'update_maint_wo_status', workOrderId: wo.id, nextStatus: 'COMPLETED', downtimeMinutes: 90, laborHours: 2 })} className="px-2.5 py-1 rounded-full bg-[#1267E6] text-white font-semibold text-[10px] cursor-pointer">Tamamla &amp; Finansa İşle</button>
                       )}
                     </td>
                   </tr>
@@ -242,7 +242,7 @@ export function FleetMaintenanceTab({
                 toast.error(err.message);
               }
             }}
-            className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-5 gap-2"
+            className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-5 gap-2"
           >
             <select required value={planForm.vehicleId} onChange={(e) => setPlanForm({ ...planForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
               <option value="">Araç Seçin</option>
@@ -255,12 +255,12 @@ export function FleetMaintenanceTab({
               <option value="METER_HOURS">Motor / Frigo Saati</option>
             </select>
             <input type="number" placeholder="Periyot (km)" value={planForm.frequencyKm} onChange={(e) => setPlanForm({ ...planForm, frequencyKm: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <button type="submit" className="rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">Bakım Planı Ekle</button>
+            <button type="submit" className="rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Bakım Planı Ekle</button>
           </form>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {plans.map((p: any) => (
-              <div key={p.id} className="bg-[#111513]/90 border border-white/[0.06] rounded-2xl p-4 flex items-center justify-between text-xs">
+              <div key={p.id} className="bg-[white]/90 border border-[--line] rounded-2xl p-4 flex items-center justify-between text-xs">
                 <div>
                   <div className="font-semibold text-white">{p.plate || 'Genel'} · {p.name}</div>
                   <div className="text-[11px] text-zinc-400 mt-0.5">
@@ -273,7 +273,7 @@ export function FleetMaintenanceTab({
                     ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
                     : p.isSoon
                       ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                      : 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
+                      : 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
                 }`}>
                   {p.isDue ? 'Bakım Vadesi Geldi/Geçti' : p.isSoon ? 'Yaklaşıyor' : 'Normal'}
                 </span>
@@ -295,7 +295,7 @@ export function FleetMaintenanceTab({
                 toast.error(err.message);
               }
             }}
-            className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-5 gap-2"
+            className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-5 gap-2"
           >
             <select required value={faultForm.vehicleId} onChange={(e) => setFaultForm({ ...faultForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
               <option value="">Araç Seçin</option>
@@ -312,7 +312,7 @@ export function FleetMaintenanceTab({
 
           <div className="space-y-2">
             {faultLogs.map((f: any) => (
-              <div key={f.id} className="bg-[#111513]/90 border border-white/[0.06] rounded-2xl p-3.5 flex items-center justify-between text-xs">
+              <div key={f.id} className="bg-[white]/90 border border-[--line] rounded-2xl p-3.5 flex items-center justify-between text-xs">
                 <div>
                   <div className="font-semibold text-white"><span className="font-mono text-zinc-400">{f.faultCode}</span> · {f.plate} — {f.title}</div>
                   <div className="text-[11px] text-zinc-400">{f.category} · Öncelik: {f.severity} · {Number(f.odometerKm).toLocaleString('tr-TR')} km</div>
@@ -335,7 +335,7 @@ export function FleetMaintenanceTab({
                 toast.error(err.message);
               }
             }}
-            className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-6 gap-2"
+            className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 grid grid-cols-1 md:grid-cols-6 gap-2"
           >
             <select required value={tireForm.vehicleId} onChange={(e) => setTireForm({ ...tireForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
               <option value="">Araç Seçin</option>
@@ -347,18 +347,18 @@ export function FleetMaintenanceTab({
             <input required placeholder="DOT / Seri" value={tireForm.serialOrDot} onChange={(e) => setTireForm({ ...tireForm, serialOrDot: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
             <input required placeholder="Marka Model" value={tireForm.brandModel} onChange={(e) => setTireForm({ ...tireForm, brandModel: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
             <input type="number" step="0.1" placeholder="Diş (mm)" value={tireForm.currentTreadDepthMm} onChange={(e) => setTireForm({ ...tireForm, currentTreadDepthMm: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <button type="submit" className="rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">Lastik Kaydet</button>
+            <button type="submit" className="rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Lastik Kaydet</button>
           </form>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {tires.map((t: any) => (
-              <div key={t.id} className="bg-[#111513]/90 border border-white/[0.06] rounded-2xl p-3.5 text-xs flex items-center justify-between">
+              <div key={t.id} className="bg-[white]/90 border border-[--line] rounded-2xl p-3.5 text-xs flex items-center justify-between">
                 <div>
                   <div className="font-semibold text-white">{t.plate} · {TIRE_POSITION_LABELS[t.position as TirePosition] || t.position}</div>
                   <div className="text-[11px] text-zinc-400">{t.brandModel} ({t.sizeCode}) · <span className="font-mono">{t.serialOrDot}</span></div>
                 </div>
                 <div className="text-right">
-                  <div className={`font-mono font-bold ${t.treadWarning ? 'text-rose-300' : 'text-[#34D399]'}`}>{t.currentTreadDepthMm} mm</div>
+                  <div className={`font-mono font-bold ${t.treadWarning ? 'text-rose-300' : 'text-[#1267E6]'}`}>{t.currentTreadDepthMm} mm</div>
                   <div className="text-[10px] text-zinc-500">Min {t.minTreadDepthMm} mm</div>
                 </div>
               </div>
@@ -465,8 +465,8 @@ export function FleetFuelTab({
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <form onSubmit={handleSaveFuel} className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5">
-          <div className="text-xs font-semibold text-white flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5 text-[#34D399]" /> Elle Yakıt Alımı Kaydet</div>
+        <form onSubmit={handleSaveFuel} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5">
+          <div className="text-xs font-semibold text-white flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5 text-[#1267E6]" /> Elle Yakıt Alımı Kaydet</div>
           <div className="grid grid-cols-2 gap-2">
             <select required value={form.vehicleId} onChange={(e) => setForm({ ...form, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white">
               <option value="">Araç Seçin</option>
@@ -478,11 +478,11 @@ export function FleetFuelTab({
             <input placeholder="İstasyon" value={form.stationName} onChange={(e) => setForm({ ...form, stationName: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white" />
             <input placeholder="Fatura Ref (Opsiyonel)" value={form.invoiceRef} onChange={(e) => setForm({ ...form, invoiceRef: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-white" />
           </div>
-          <button type="submit" className="w-full py-2 rounded-full bg-[#34D399] text-[#061811] text-xs font-semibold cursor-pointer">Yakıt Kaydet &amp; Finansa Bağla</button>
+          <button type="submit" className="w-full py-2 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Yakıt Kaydet &amp; Finansa Bağla</button>
         </form>
 
-        <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4 space-y-2.5">
-          <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Upload className="w-3.5 h-3.5 text-[#34D399]" /> Yakıt Kartı Ekstresi İçe Aktar (CSV)</div>
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-2.5">
+          <div className="text-xs font-semibold text-white flex items-center gap-1.5"><Upload className="w-3.5 h-3.5 text-[#1267E6]" /> Yakıt Kartı Ekstresi İçe Aktar (CSV)</div>
           <textarea
             rows={4}
             value={csvText}
@@ -496,14 +496,14 @@ export function FleetFuelTab({
         </div>
       </div>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] overflow-hidden">
-        <div className="p-4 border-b border-white/[0.06] text-sm font-semibold text-white">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] overflow-hidden">
+        <div className="p-4 border-b border-[--line] text-sm font-semibold text-white">
           Araç Bazlı Tüketim (L/100km) &amp; Kart Fatura Mutabakatı
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-white/[0.02] border-b border-white/[0.06] text-[11px] uppercase text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase text-zinc-400">
                 <th className="py-3 px-4">Araç</th>
                 <th className="py-3 px-4">Mesafe (km)</th>
                 <th className="py-3 px-4">Ort. Tüketim</th>
@@ -521,7 +521,7 @@ export function FleetFuelTab({
                   </td>
                   <td className="py-3 px-4 font-mono text-zinc-300">{Number(s.totalDistanceKm || 0).toLocaleString('tr-TR')} km</td>
                   <td className="py-3 px-4 font-mono">
-                    <span className={s.anomalyCount > 0 ? 'text-rose-300 font-bold' : 'text-[#34D399]'}>
+                    <span className={s.anomalyCount > 0 ? 'text-rose-300 font-bold' : 'text-[#1267E6]'}>
                       {s.avgLitersPer100Km !== null ? `${s.avgLitersPer100Km} L/100km` : '—'}
                     </span>
                     <div className="text-[10px] text-zinc-500">Hedef: {s.expectedLPer100Km} L</div>
@@ -537,8 +537,8 @@ export function FleetFuelTab({
                       s.reconciliationStatus === 'VARIANCE_WARNING'
                         ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
                         : s.reconciliationStatus === 'MATCHED'
-                          ? 'bg-emerald-500/15 text-[#34D399] border-emerald-500/30'
-                          : 'bg-zinc-500/15 text-zinc-400 border-white/[0.08]'
+                          ? 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
+                          : 'bg-zinc-500/15 text-zinc-400 border-[--line]'
                     }`}>
                       {s.reconciliationStatus === 'VARIANCE_WARNING' ? 'Fark Uyarısı' : s.reconciliationStatus === 'MATCHED' ? 'Mutabık' : 'Fatura Bekliyor'}
                     </span>
@@ -550,11 +550,11 @@ export function FleetFuelTab({
         </div>
       </div>
 
-      <div className="bg-[#111513]/90 border border-white/[0.06] rounded-[20px] p-4">
+      <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
         <div className="text-xs font-semibold text-white mb-2">Son Yakıt İşlemleri ({logs.length})</div>
         <div className="space-y-1.5 max-h-60 overflow-y-auto text-xs">
           {logs.slice(0, 25).map((l: any) => (
-            <div key={l.id} className="bg-white/[0.02] border border-white/[0.05] rounded-xl px-3 py-2 flex items-center justify-between">
+            <div key={l.id} className="bg-[--page] border border-white/[0.05] rounded-xl px-3 py-2 flex items-center justify-between">
               <div>
                 <span className="font-semibold text-white">{l.plate}</span> · {new Date(l.fuelDate).toLocaleDateString('tr-TR')} · {l.stationName || 'İstasyon'}
                 {l.isAnomaly && <span className="ml-2 px-2 py-0.5 rounded-full text-[10px] bg-rose-500/15 text-rose-300">Anormal Tüketim</span>}

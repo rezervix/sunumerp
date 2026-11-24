@@ -87,7 +87,7 @@ export default function SssPage() {
           onClick={() => {
             window.dispatchEvent(new CustomEvent("relaunch-onboarding", { detail: { guideId: "welcome-overview" } }))
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#34D399] hover:bg-emerald-400 text-[#061811] rounded-full text-xs font-medium shadow-md shadow-emerald-500/20 transition-all shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white shadow-sm rounded-full text-xs font-medium shadow-sm transition-all shrink-0 cursor-pointer"
         >
           <HelpCircle size={15} />
           <span>Platform Rehberini Başlat</span>
@@ -95,7 +95,7 @@ export default function SssPage() {
       </div>
 
       {Object.keys(faqsByCategory).length === 0 ? (
-        <Card className="bg-[#111513]/90 border-white/[0.06] rounded-[20px] shadow-2xl">
+        <Card className="bg-white/80 backdrop-blur-xl border-[--line] rounded-[20px] shadow-2xl">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center text-zinc-500">
             <HelpCircle className="h-12 w-12 text-zinc-600 mb-3" />
             <p className="text-base font-medium text-zinc-300">Henüz soru eklenmemiş</p>
@@ -105,16 +105,16 @@ export default function SssPage() {
       ) : (
         <div className="space-y-6">
           {Object.entries(faqsByCategory).map(([category, items]) => (
-            <Card key={category} className="bg-[#111513]/90 border-white/[0.06] rounded-[20px] shadow-2xl overflow-hidden">
-              <CardHeader className="border-b border-white/[0.06] pb-4">
+            <Card key={category} className="bg-white/80 backdrop-blur-xl border-[--line] rounded-[20px] shadow-2xl overflow-hidden">
+              <CardHeader className="border-b border-[--line] pb-4">
                 <CardTitle className="text-lg font-light text-white tracking-tight">{category}</CardTitle>
                 <CardDescription className="text-xs text-zinc-400">{category} ile ilgili sıkça sorulan sorular</CardDescription>
               </CardHeader>
               <CardContent className="pt-4">
                 <Accordion type="single" collapsible className="w-full">
                   {items.map((faq) => (
-                    <AccordionItem key={faq.id} value={faq.id} className="border-white/[0.06]">
-                      <AccordionTrigger className="text-left font-medium text-sm text-zinc-200 hover:text-emerald-300 transition-colors">
+                    <AccordionItem key={faq.id} value={faq.id} className="border-[--line]">
+                      <AccordionTrigger className="text-left font-medium text-sm text-zinc-200 hover:text-[--brand] transition-colors">
                         {faq.question}
                       </AccordionTrigger>
                       <AccordionContent className="text-zinc-400 text-xs leading-relaxed">

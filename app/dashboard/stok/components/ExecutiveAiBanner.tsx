@@ -127,8 +127,8 @@ export function ExecutiveAiBanner({ onQuickStockEntry, refreshTrigger }: Executi
   const actionLabel = creatingPr
     ? "Oluşturuluyor..."
     : banner.criticalTopItem
-    ? `Hızlı Talep: ${banner.criticalTopItem.name.slice(0, 18)}... →`
-    : "AI Analiz Raporu →"
+      ? `Hızlı Talep: ${banner.criticalTopItem.name.slice(0, 18)}... →`
+      : "AI Analiz Raporu →"
 
   return (
     <AiSummaryBar

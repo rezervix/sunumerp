@@ -33,7 +33,7 @@ export function SystemBanner() {
             key={banner.id}
             className={cn(
               'w-full px-4 py-3 flex items-center justify-between text-sm font-medium transition-colors border-b',
-              isSuccess && 'bg-emerald-600 text-white border-emerald-700 dark:bg-emerald-700',
+              isSuccess && 'bg-[--brand] text-white border-[--brand] bg-[--brand]',
               isInfo && 'bg-blue-600 text-white border-blue-700 dark:bg-blue-700',
               isWarning && 'bg-amber-500 text-slate-950 border-amber-600 dark:bg-amber-600 dark:text-white',
               isError && 'bg-rose-600 text-white border-rose-700 dark:bg-rose-700'

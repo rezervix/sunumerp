@@ -38,7 +38,7 @@ function MiniSwitch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={`w-9 h-5 rounded-full transition-all duration-200 p-0.5 flex items-center shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-        checked ? "bg-emerald-500 justify-end" : "bg-zinc-700 justify-start"
+        checked ? "bg-[--brand] justify-end" : "bg-zinc-700 justify-start"
       }`}
     >
       <span className="size-4 rounded-full bg-white shadow-sm transition-transform" />
@@ -166,7 +166,7 @@ export function LogisticsNotificationPrefsPanel({
 
   if (data.isSupplierScoped) {
     return (
-      <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] text-xs text-zinc-400">
+      <div className="p-4 rounded-xl border border-[--line] bg-[--page] text-xs text-zinc-400">
         Dış tedarikçi portal hesabında dahili operasyon uyarı kuralları kapalıdır.
       </div>
     )
@@ -181,7 +181,7 @@ export function LogisticsNotificationPrefsPanel({
       <div className="flex items-start justify-between gap-3">
         <div>
           <h4 className={`${compact ? "text-xs" : "text-base"} font-bold flex items-center gap-2 text-foreground`}>
-            <BellRing className={`${compact ? "w-3.5 h-3.5" : "w-5 h-5"} text-emerald-400`} />
+            <BellRing className={`${compact ? "w-3.5 h-3.5" : "w-5 h-5"} text-[--brand]`} />
             Lojistik &amp; Operasyon Uyarı Kuralları (6 Kural)
           </h4>
           {!compact && (
@@ -196,7 +196,7 @@ export function LogisticsNotificationPrefsPanel({
             type="button"
             disabled={scanning}
             onClick={handleEvaluateNow}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 transition-colors cursor-pointer disabled:opacity-50 shrink-0"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-[--brand]/10 text-[--brand] hover:bg-[--brand]/20 border border-[--brand-line] transition-colors cursor-pointer disabled:opacity-50 shrink-0"
           >
             <RefreshCw className={`w-3 h-3 ${scanning ? "animate-spin" : ""}`} />
             {compact ? "Tara" : "Kuralları Şimdi Tara"}
@@ -206,7 +206,7 @@ export function LogisticsNotificationPrefsPanel({
 
       {/* Master In-App + Sound Switches */}
       <div className={`grid ${compact ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2"} gap-2`}>
-        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-background/60 border border-white/[0.06]">
+        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-background/60 border border-[--line]">
           <span className="text-[11px] font-medium text-foreground">Uygulama İçi Uyarı</span>
           <MiniSwitch
             checked={data.preferences.inAppEnabled}
@@ -215,7 +215,7 @@ export function LogisticsNotificationPrefsPanel({
             onChange={(val) => persistPatch({ inAppEnabled: val })}
           />
         </div>
-        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-background/60 border border-white/[0.06]">
+        <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-background/60 border border-[--line]">
           <span className="text-[11px] font-medium text-foreground">Sesli Uyarı</span>
           <MiniSwitch
             checked={data.preferences.soundEnabled}
@@ -229,7 +229,7 @@ export function LogisticsNotificationPrefsPanel({
       {/* Aktif Lojistik Bildirim Kuralları */}
       <div className="space-y-2">
         {data.ruleDefinitions.filter((def) => Boolean(data.activeFlags[def.flagKey])).length === 0 ? (
-          <div className="p-3.5 rounded-xl bg-background/60 border border-white/[0.06] text-xs text-muted-foreground">
+          <div className="p-3.5 rounded-xl bg-background/60 border border-[--line] text-xs text-muted-foreground">
             Hesabınız için etkin lojistik bildirim kuralı bulunmuyor.
           </div>
         ) : (
@@ -244,7 +244,7 @@ export function LogisticsNotificationPrefsPanel({
                   key={def.key}
                   className={`flex items-center justify-between gap-3 ${
                     compact ? "p-2.5" : "p-3.5"
-                  } rounded-xl bg-background border border-white/[0.06]`}
+                  } rounded-xl bg-background border border-[--line]`}
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -277,7 +277,7 @@ export function LogisticsNotificationPrefsPanel({
       </div>
 
       {lastSavedText && (
-        <div className="flex items-center gap-1.5 text-[11px] text-emerald-400">
+        <div className="flex items-center gap-1.5 text-[11px] text-[--brand]">
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>{lastSavedText}</span>
           <ShieldCheck className="w-3.5 h-3.5 ml-auto text-zinc-500" />

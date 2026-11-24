@@ -55,8 +55,8 @@ export function FleetPickerSelect({
   if (!ready || (vehicles.length === 0 && drivers.length === 0)) return null;
 
   return (
-    <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded-xl p-2.5 flex flex-wrap items-center gap-2">
-      <div className="inline-flex items-center gap-1 text-[11px] font-medium text-[#34D399] mr-1">
+    <div className="bg-[--brand]/[0.06] border border-[--brand-line] rounded-xl p-2.5 flex flex-wrap items-center gap-2">
+      <div className="inline-flex items-center gap-1 text-[11px] font-medium text-[#1267E6] mr-1">
         <Truck className="w-3.5 h-3.5" />
         Filodan Seç:
       </div>

@@ -75,7 +75,7 @@ export default function TurizmReportsPage() {
             >
               <ArrowRight className="h-5 w-5 rotate-180" />
             </Link>
-            <BarChart3 className="h-6 w-6 text-emerald-400" />
+            <BarChart3 className="h-6 w-6 text-[--brand]" />
             <h1 className="text-xl font-bold tracking-tight text-white">
               Birleşik Turizm &amp; Sektör Raporları
             </h1>
@@ -88,7 +88,7 @@ export default function TurizmReportsPage() {
         <div className="flex items-center gap-2">
           <a
             href={`/api/turizm/raporlar?type=${selectedType}&format=xlsx`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-medium text-emerald-300 hover:bg-emerald-500/20"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 px-3.5 py-2 text-xs font-medium text-[--brand] hover:bg-[--brand]/20"
           >
             <FileSpreadsheet className="h-4 w-4" />
             Excel (.xlsx) İndir
@@ -126,7 +126,7 @@ export default function TurizmReportsPage() {
             onClick={() => setSelectedType(key as ReportType)}
             className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition ${
               selectedType === key
-                ? "bg-emerald-600 text-white shadow-sm"
+                ? "bg-[--brand] text-white shadow-sm"
                 : "bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
             }`}
           >
@@ -142,7 +142,7 @@ export default function TurizmReportsPage() {
           {reportData.summaryCards.map((card, idx) => (
             <div
               key={idx}
-              className="rounded-xl border border-zinc-800 bg-[#111513] p-4 space-y-1"
+              className="rounded-xl border border-zinc-800 bg-[white] p-4 space-y-1"
             >
               <span className="block text-[11px] text-zinc-400 font-medium">{card.label}</span>
               <div className="text-xl font-semibold text-white tracking-tight">{card.value}</div>
@@ -154,7 +154,7 @@ export default function TurizmReportsPage() {
 
       {/* GRAFİK BÖLÜMÜ */}
       {reportData?.chartData && reportData.chartData.length > 0 && (
-        <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-3">
+        <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
           <h2 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
             {reportData.chartTitle || "Sektörel Dağılım Grafiği"}
           </h2>
@@ -168,7 +168,7 @@ export default function TurizmReportsPage() {
                   contentStyle={{ backgroundColor: "#18181b", borderColor: "#3f3f46", borderRadius: "8px", fontSize: "12px" }}
                   formatter={(val: any) => [`₺${Number(val).toLocaleString("tr-TR")}`, "Tutar"]}
                 />
-                <Bar dataKey="primaryValue" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="primaryValue" fill="#1267E6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -176,7 +176,7 @@ export default function TurizmReportsPage() {
       )}
 
       {/* TABLO BÖLÜMÜ */}
-      <div className="rounded-2xl border border-zinc-800 bg-[#111513] p-5 space-y-4">
+      <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-semibold text-white">{reportData?.title || "Rapor Detayları"}</h3>
@@ -190,7 +190,7 @@ export default function TurizmReportsPage() {
               placeholder="Tabloda filtrele..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none w-56"
+              className="rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[--brand] focus:outline-none w-56"
             />
           </div>
         </div>

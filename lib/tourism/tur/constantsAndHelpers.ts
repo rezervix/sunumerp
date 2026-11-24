@@ -41,7 +41,7 @@ export const TOUR_STATUS_LABELS: Record<TourStatus, string> = {
 export const TOUR_STATUS_BADGES: Record<TourStatus, string> = {
   DRAFT: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
   ON_SALE: "bg-sky-500/15 text-sky-300 border-sky-500/35",
-  GUARANTEED: "bg-emerald-500/20 text-[#34D399] border-emerald-500/40",
+  GUARANTEED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   FULL: "bg-amber-500/20 text-amber-300 border-amber-500/40",
   COMPLETED: "bg-purple-500/15 text-purple-300 border-purple-500/35",
   CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/35",
@@ -69,7 +69,7 @@ export const TOUR_BOARDING_STATUS_LABELS: Record<string, string> = {
 
 export const TOUR_BOARDING_STATUS_BADGES: Record<string, string> = {
   WAITING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  BOARDED: "bg-emerald-500/20 text-[#34D399] border-emerald-500/40",
+  BOARDED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
   NO_SHOW: "bg-rose-500/15 text-rose-300 border-rose-500/30",
 }
 

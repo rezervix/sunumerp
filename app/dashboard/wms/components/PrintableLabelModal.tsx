@@ -62,7 +62,7 @@ export function PrintableLabelModal({
     try {
       JsBarcode(barcodeSvgRef.current, String(label.barcodeValue), {
         format: "CODE128",
-        lineColor: "#090d0b",
+        lineColor: "#0B1B33",
         background: "#ffffff",
         width: 1.8,
         height: 46,
@@ -82,7 +82,7 @@ export function PrintableLabelModal({
     const metaRows = Object.entries(label.metadata || {})
       .map(
         ([k, v]) =>
-          `<tr><td style="padding:3px 6px;font-weight:600;color:#444;">${k}</td><td style="padding:3px 6px;font-family:monospace;">${String(v)}</td></tr>`
+          `<tr><td style="padding:4px 8px;font-weight:600;color:#33445E;">${k}</td><td style="padding:4px 8px;font-family:monospace;color:#0B1B33;">${String(v)}</td></tr>`
       )
       .join("")
     printWin.document.write(`
@@ -90,15 +90,19 @@ export function PrintableLabelModal({
         <head>
           <title>Etiket: ${label.title}</title>
           <style>
-            body { font-family: system-ui, -apple-system, sans-serif; padding: 16px; color: #111; }
-            .card { border: 2px solid #111; border-radius: 10px; padding: 14px; max-width: 420px; }
-            .hdr { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px dashed #999; padding-bottom: 10px; }
-            .title { font-size: 20px; font-weight: 800; font-family: monospace; }
-            .sub { font-size: 12px; color: #555; margin-top: 2px; }
-            .barcode { margin: 12px 0; text-align: center; }
-            .human { font-family: monospace; font-size: 13px; font-weight: 700; margin-top: 4px; }
-            table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px; }
-            tr { border-top: 1px solid #eee; }
+            body { font-family: system-ui, -apple-system, sans-serif; padding: 16px; color: #0B1B33; background: #fff; }
+            .card { border: 2px solid #0B1B33; border-radius: 12px; padding: 16px; max-width: 440px; margin: 0 auto; }
+            .hdr { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px dashed #CBD5E1; padding-bottom: 12px; }
+            .title { font-size: 20px; font-weight: 800; font-family: monospace; color: #0B1B33; }
+            .sub { font-size: 12px; color: #5B6B82; margin-top: 2px; }
+            .barcode { margin: 14px 0; text-align: center; }
+            .human { font-family: monospace; font-size: 13px; font-weight: 700; margin-top: 4px; color: #0B1B33; }
+            table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+            tr { border-top: 1px solid #E2E8F0; }
+            @media print {
+              body { padding: 0; }
+              .card { border-width: 1px; }
+            }
           </style>
         </head>
         <body>
@@ -125,10 +129,10 @@ export function PrintableLabelModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-lg backdrop-blur-xl bg-[#111513] border border-white/[0.08] text-white rounded-2xl">
+      <DialogContent className="sm:max-w-lg bg-white border border-[--line] text-[--text] rounded-2xl shadow-2xl p-6">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold flex items-center gap-2 text-white">
-            <QrCode className="h-5 w-5 text-[#34D399]" />
+          <DialogTitle className="text-base font-semibold flex items-center gap-2 text-[--text]">
+            <QrCode className="h-5 w-5 text-[--brand]" />
             <span>
               {entityType === "LPN"
                 ? "GS1-128 SSCC Palet / Koli Etiketi"
@@ -137,30 +141,30 @@ export function PrintableLabelModal({
                   : "Ürün Barkod Etiketi"}
             </span>
           </DialogTitle>
-          <DialogDescription className="text-xs text-zinc-400">
+          <DialogDescription className="text-xs text-[--text-muted]">
             Zebra/Termal yazıcı veya PDF çıktısı için GS1 CODE-128 &amp; QR etiket önizlemesi.
           </DialogDescription>
         </DialogHeader>
 
         {loading ? (
-          <div className="py-12 flex flex-col items-center justify-center gap-2 text-xs text-zinc-400">
-            <RefreshCw className="h-6 w-6 animate-spin text-[#34D399]" />
+          <div className="py-12 flex flex-col items-center justify-center gap-2 text-xs text-[--text-muted]">
+            <RefreshCw className="h-6 w-6 animate-spin text-[--brand]" />
             <span>Etiket oluşturuluyor...</span>
           </div>
         ) : error ? (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300">
+          <div className="p-4 rounded-xl bg-[--bad-soft] border border-[--bad-fill]/20 text-xs text-[--bad] font-medium">
             {error}
           </div>
         ) : label ? (
-          <div className="bg-white text-zinc-950 rounded-2xl p-5 border border-zinc-200 space-y-4">
-            <div className="flex items-start justify-between gap-4 border-b border-dashed border-zinc-300 pb-3">
+          <div className="bg-white text-[--text] rounded-2xl p-5 border border-[--line] space-y-4 shadow-sm">
+            <div className="flex items-start justify-between gap-4 border-b border-dashed border-[--line] pb-3">
               <div>
-                <div className="text-xl font-extrabold font-mono tracking-tight text-zinc-950">
+                <div className="text-xl font-bold font-mono tracking-tight text-[--text]">
                   {label.title}
                 </div>
-                <div className="text-xs text-zinc-600 mt-0.5">{label.subtitle}</div>
+                <div className="text-xs text-[--text-muted] mt-0.5">{label.subtitle}</div>
                 {label.ssccValid !== undefined && (
-                  <div className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+                  <div className="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold bg-[--ok-soft] text-[--ok]">
                     <CheckCircle2 className="h-3 w-3" />
                     {label.ssccValid
                       ? "GS1 Mod-10 Check-Digit Doğrulandı"
@@ -170,36 +174,36 @@ export function PrintableLabelModal({
               </div>
               {label.qrSvg && (
                 <div
-                  className="w-24 h-24 shrink-0 border border-zinc-200 rounded-lg p-1 bg-white [&>svg]:w-full [&>svg]:h-full"
+                  className="w-24 h-24 shrink-0 border border-[--line] rounded-lg p-1 bg-white [&>svg]:w-full [&>svg]:h-full"
                   dangerouslySetInnerHTML={{ __html: label.qrSvg }}
                 />
               )}
             </div>
 
-            <div className="flex flex-col items-center justify-center bg-zinc-50 border border-zinc-200 rounded-xl p-3">
+            <div className="flex flex-col items-center justify-center bg-[--page] border border-[--line] rounded-xl p-3">
               <svg ref={barcodeSvgRef} className="max-w-full" />
-              <div className="font-mono text-xs font-bold text-zinc-900 mt-1">
+              <div className="font-mono text-xs font-bold text-[--text] mt-1">
                 {label.humanReadable}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               {Object.entries(label.metadata || {}).map(([k, v]) => (
-                <div key={k} className="bg-zinc-50 rounded-lg px-2.5 py-1.5 border border-zinc-200">
-                  <div className="text-[10px] text-zinc-500 uppercase">{k}</div>
-                  <div className="font-mono font-semibold text-zinc-900 truncate">{String(v)}</div>
+                <div key={k} className="bg-[--page] rounded-lg px-2.5 py-1.5 border border-[--line]">
+                  <div className="text-[10px] text-[--text-muted] uppercase tracking-wider">{k}</div>
+                  <div className="font-mono font-semibold text-[--text] truncate">{String(v)}</div>
                 </div>
               ))}
             </div>
           </div>
         ) : null}
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 sm:gap-2 pt-2">
           <Button
             variant="outline"
             size="sm"
             onClick={onClose}
-            className="text-xs border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 rounded-full h-9 px-4"
+            className="text-xs border-[--line] bg-white hover:bg-[--muted-bg] text-[--text-2] rounded-full h-9 px-4 cursor-pointer"
           >
             Kapat
           </Button>
@@ -207,7 +211,7 @@ export function PrintableLabelModal({
             size="sm"
             disabled={!label}
             onClick={handlePrint}
-            className="text-xs bg-[#34D399] hover:bg-[#34D399]/90 text-[#061811] font-semibold rounded-full h-9 px-4 gap-1.5 cursor-pointer"
+            className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
           >
             <Barcode className="h-3.5 w-3.5" />
             <span>Etiketi Yazdır / PDF</span>

@@ -163,7 +163,7 @@ export async function POST(req: Request) {
     // 12. Appointments
     await prisma.appointment.createMany({
       data: [
-        { branchId, title: "[DEMO] TeknoMarket Proje Tanıtım Toplantısı", description: "Web sitesi arayüz taslaklarının sunumu yapılacak.", startDate: new Date(Date.now() + 2 * 3600000), endDate: new Date(Date.now() + 3 * 3600000), status: "scheduled", color: "#10B981", userId },
+        { branchId, title: "[DEMO] TeknoMarket Proje Tanıtım Toplantısı", description: "Web sitesi arayüz taslaklarının sunumu yapılacak.", startDate: new Date(Date.now() + 2 * 3600000), endDate: new Date(Date.now() + 3 * 3600000), status: "scheduled", color: "#1267E6", userId },
         { branchId, title: "[DEMO] Aday Ali Yılmaz - Mülakat", description: "Tasarım ekibiyle teknik mülakat.", startDate: new Date(Date.now() + 24 * 3600000), endDate: new Date(Date.now() + 25 * 3600000), status: "scheduled", color: "#3B82F6", userId }
       ]
     })
