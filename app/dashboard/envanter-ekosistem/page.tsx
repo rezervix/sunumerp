@@ -450,11 +450,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
                     <div
                       key={sc.id}
                       onClick={() => setActiveSimId(sc.id)}
-                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2.5 transition-all ${
-                        activeSimId === sc.id
-                          ? "border-[--brand] ring-1 ring-[--brand]/20 bg-[--brand-soft]/30"
-                          : "border-[--line] bg-[--page]/40 hover:bg-white"
-                      }`}
+                      className={`cursor-pointer rounded-xl border p-3.5 space-y-2.5 transition-all ${ activeSimId === sc.id ? "border-[--brand] ring-1 ring-[--brand]/20 bg-[--brand-soft]/30" : "border-[--line] bg-[--page]/40 hover:bg-white" }`}
                     >
                       <div className="font-medium text-xs sm:text-sm text-[--text]">{sc.title}</div>
                       <Button
@@ -485,11 +481,7 @@ export default function EcosystemApiMigrationAndSaasPage() {
               return (
                 <div
                   key={tier.id}
-                  className={`bg-white/80 backdrop-blur-xl border rounded-[20px] p-6 space-y-4 transition-all shadow-card ${
-                    isCurrent
-                      ? "border-[--brand] ring-2 ring-[--brand]/20 shadow-md"
-                      : "border-[--line]"
-                  }`}
+                  className={`bg-white/80 backdrop-blur-xl border rounded-[20px] p-6 space-y-4 transition-all shadow-card ${ isCurrent ? "border-[--brand] ring-2 ring-[--brand]/20 shadow-md" : "border-[--line]" }`}
                 >
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">

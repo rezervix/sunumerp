@@ -37,9 +37,7 @@ function MiniSwitch({
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`w-9 h-5 rounded-full transition-all duration-200 p-0.5 flex items-center shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-        checked ? "bg-[--brand] justify-end" : "bg-zinc-700 justify-start"
-      }`}
+      className={`w-9 h-5 rounded-full transition-all duration-200 p-0.5 flex items-center shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${ checked ? "bg-[--brand] justify-end" : "bg-[var(--muted-bg)] justify-start" }`}
     >
       <span className="size-4 rounded-full bg-white shadow-sm transition-transform" />
     </button>
@@ -150,7 +148,7 @@ export function LogisticsNotificationPrefsPanel({
 
   if (loading) {
     return (
-      <div className="p-4 text-xs text-zinc-400 text-center">
+      <div className="p-4 text-xs text-[var(--text-muted)] text-center">
         Bildirim kuralları yükleniyor...
       </div>
     )
@@ -158,7 +156,7 @@ export function LogisticsNotificationPrefsPanel({
 
   if (!data) {
     return (
-      <div className="p-4 text-xs text-zinc-400 text-center">
+      <div className="p-4 text-xs text-[var(--text-muted)] text-center">
         Kişisel bildirim tercihleri şu an alınamadı.
       </div>
     )
@@ -166,7 +164,7 @@ export function LogisticsNotificationPrefsPanel({
 
   if (data.isSupplierScoped) {
     return (
-      <div className="p-4 rounded-xl border border-[--line] bg-[--page] text-xs text-zinc-400">
+      <div className="p-4 rounded-xl border border-[--line] bg-[--page] text-xs text-[var(--text-muted)]">
         Dış tedarikçi portal hesabında dahili operasyon uyarı kuralları kapalıdır.
       </div>
     )
@@ -242,15 +240,13 @@ export function LogisticsNotificationPrefsPanel({
               return (
                 <div
                   key={def.key}
-                  className={`flex items-center justify-between gap-3 ${
-                    compact ? "p-2.5" : "p-3.5"
-                  } rounded-xl bg-background border border-[--line]`}
+                  className={`flex items-center justify-between gap-3 ${ compact ? "p-2.5" : "p-3.5" } rounded-xl bg-background border border-[--line]`}
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-xs font-semibold text-foreground">{def.title}</span>
                       {!isPermitted && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--warn-soft)] text-[var(--warn)]">
                           Yetki Dışı
                         </span>
                       )}
@@ -280,7 +276,7 @@ export function LogisticsNotificationPrefsPanel({
         <div className="flex items-center gap-1.5 text-[11px] text-[--brand]">
           <CheckCircle2 className="w-3.5 h-3.5" />
           <span>{lastSavedText}</span>
-          <ShieldCheck className="w-3.5 h-3.5 ml-auto text-zinc-500" />
+          <ShieldCheck className="w-3.5 h-3.5 ml-auto text-[var(--text-muted)]" />
         </div>
       )}
     </div>

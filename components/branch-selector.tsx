@@ -67,9 +67,7 @@ export function BranchSelector({
                   className="text-xs cursor-pointer"
                 >
                   <IconCheck
-                    className={`mr-1.5 size-3.5 text-[var(--brand)] ${
-                      currentBranch?.id === branch.id ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`mr-1.5 size-3.5 text-[var(--brand)] ${ currentBranch?.id === branch.id ? "opacity-100" : "opacity-0" }`}
                   />
                   <div className="flex flex-col min-w-0">
                     <span className="font-medium text-[var(--text)] truncate">

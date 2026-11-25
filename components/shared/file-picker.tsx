@@ -111,8 +111,8 @@ export function FilePicker({
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
-                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-                <span className="text-xs text-gray-500">{selectedUrls.length}/{maxFiles} Dosya</span>
+                <label className="text-sm font-semibold text-[var(--text-2)]">{label}</label>
+                <span className="text-xs text-[var(--text-muted)]">{selectedUrls.length}/{maxFiles} Dosya</span>
             </div>
 
             {showContentCalendarSelect && contentCalendars.length > 0 && (
@@ -139,7 +139,7 @@ export function FilePicker({
 
             <div
                 onClick={() => !disabled && fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all ${disabled ? "cursor-not-allowed opacity-60 border-gray-300 dark:border-gray-700" : "cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 border-gray-200 dark:border-gray-800"}`}
+                className={`border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all ${disabled ? "cursor-not-allowed opacity-60 border-gray-300 " : "cursor-pointer hover:bg-gray-50 :bg-[var(--muted-bg)] border-[var(--line)]"}`}
             >
                 <input
                     type="file"
@@ -151,16 +151,16 @@ export function FilePicker({
                     className="hidden"
                 />
                 <span className="material-symbols-outlined text-primary text-3xl mb-2">cloud_upload</span>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 text-center">
+                <p className="text-sm font-medium text-[var(--text-muted)] text-center">
                     Tıklayın veya dosyaları buraya sürükleyin
                 </p>
-                <p className="text-[11px] text-gray-400 mt-1">Tüm dosya türlerine izin verilir (Maks. 10GB)</p>
+                <p className="text-[11px] text-[var(--text-muted)] mt-1">Tüm dosya türlerine izin verilir (Maks. 10GB)</p>
             </div>
 
             {uploading && (
                 <div className="space-y-2">
                     <div className="flex justify-between text-xs">
-                        <span className="text-gray-500">Yükleniyor...</span>
+                        <span className="text-[var(--text-muted)]">Yükleniyor...</span>
                         <span className="font-bold text-primary">{progress}%</span>
                     </div>
                     <Progress value={progress} className="h-1.5" />
@@ -170,16 +170,16 @@ export function FilePicker({
             {selectedUrls.length > 0 && (
                 <div className="grid grid-cols-1 gap-2">
                     {selectedUrls.map((url, index) => (
-                        <div key={index} className="flex items-center justify-between p-2.5 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-gray-800 rounded-lg group">
+                        <div key={index} className="flex items-center justify-between p-2.5 bg-[var(--muted-bg)] border border-[var(--line-soft)] rounded-lg group">
                             <div className="flex items-center gap-2 min-w-0">
-                                <span className="material-symbols-outlined text-gray-400 text-[20px]">description</span>
-                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300 truncate">
+                                <span className="material-symbols-outlined text-[var(--text-muted)] text-[20px]">description</span>
+                                <span className="text-xs font-medium text-gray-600 (--text-2)] truncate">
                                     {url.split('/').pop()}
                                 </span>
                             </div>
                             <button
                                 onClick={() => removeFile(index)}
-                                className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="text-[var(--text-muted)] hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                                 <span className="material-symbols-outlined text-[18px]">close</span>
                             </button>

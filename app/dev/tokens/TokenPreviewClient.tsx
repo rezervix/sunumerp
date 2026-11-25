@@ -313,9 +313,7 @@ export function TokenPreviewClient() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveFilter(tab.id)}
-                  className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${
-                    isActive ? "text-brand" : "text-ink-2 hover:text-ink"
-                  }`}
+                  className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${ isActive ? "text-brand" : "text-ink-2 hover:text-ink" }`}
                 >
                   {isActive &&
                     (prefersReducedMotion ? (

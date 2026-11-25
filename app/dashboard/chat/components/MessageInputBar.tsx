@@ -340,11 +340,11 @@ export function MessageInputBar({
   }
 
   return (
-    <div className="flex flex-col border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-[#1e1e1e] relative">
+    <div className="flex flex-col border-t border-[var(--line-soft)] bg-white relative">
       {/* Reply Preview Bar */}
       {replyMessage && (
-        <div className="px-6 py-2.5 bg-gray-50 dark:bg-black/20 flex items-center justify-between border-b border-gray-100 dark:border-gray-800">
-          <div className="flex flex-col text-xs text-gray-500">
+        <div className="px-6 py-2.5 bg-gray-50 flex items-center justify-between border-b border-[var(--line-soft)]">
+          <div className="flex flex-col text-xs text-[var(--text-muted)]">
             <span className="font-semibold text-primary">
               Şu mesaja yanıt veriyorsun:
             </span>
@@ -354,7 +354,7 @@ export function MessageInputBar({
           </div>
           <button
             onClick={onCancelReply}
-            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/5 text-gray-400"
+            className="w-6 h-6 rounded-full flex items-center justify-center hover:bg-gray-200 :bg-[var(--muted-bg)] text-[var(--text-muted)]"
           >
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
@@ -365,7 +365,7 @@ export function MessageInputBar({
       <div className="p-3 flex items-end gap-2 shrink-0 relative">
         {isRecording ? (
           // Recording Mode Overlay
-          <div className="flex-1 bg-red-50/50 dark:bg-red-950/20 border border-red-200/50 dark:border-red-900/20 rounded-2xl flex items-center gap-3 px-4 py-2 min-h-[46px]">
+          <div className="flex-1 bg-red-50/50 border border-red-200/50 rounded-2xl flex items-center gap-3 px-4 py-2 min-h-[46px]">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
             <span className="text-red-500 text-xs font-bold shrink-0 select-none">
               Kayıt: {formatSeconds(recordingSeconds)}
@@ -376,13 +376,13 @@ export function MessageInputBar({
 
             <button
               onClick={cancelRecording}
-              className="px-3 py-1.5 rounded-xl hover:bg-red-500/10 text-red-500 text-xs font-semibold"
+              className="px-3 py-1.5 rounded-xl hover:bg-[var(--bad-soft)] text-red-500 text-xs font-semibold"
             >
               Sil
             </button>
             <button
               onClick={stopRecording}
-              className="h-9 px-4 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs shadow-md shadow-red-500/20"
+              className="h-9 px-4 rounded-xl bg-red-500 hover:bg-red-600 text-[var(--text)] font-bold text-xs shadow-md shadow-red-500/20"
             >
               Gönder
             </button>
@@ -393,13 +393,13 @@ export function MessageInputBar({
             <div className="relative">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="h-[46px] w-[46px] rounded-xl flex items-center justify-center text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  <button className="h-[46px] w-[46px] rounded-xl flex items-center justify-center text-[var(--text-muted)] hover:bg-gray-50 :bg-[var(--muted-bg)] transition-colors">
                     <span className="material-symbols-outlined text-[24px]">add_circle</span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="absolute bottom-14 left-0 mb-2 w-56 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-2 z-10">
+                <DropdownMenuContent className="absolute bottom-14 left-0 mb-2 w-56 bg-white rounded-2xl shadow-xl border border-[var(--line-soft)] p-2 z-10">
                   <DropdownMenuItem onClick={() => triggerUpload("document")} className="rounded-xl gap-3 cursor-pointer py-2">
-                    <span className="material-symbols-outlined text-indigo-500">description</span>
+                    <span className="material-symbols-outlined text-[var(--brand)]">description</span>
                     Belge
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => triggerUpload("image")} className="rounded-xl gap-3 cursor-pointer py-2">
@@ -415,7 +415,7 @@ export function MessageInputBar({
                     Konum
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsPollOpen(true)} className="rounded-xl gap-3 cursor-pointer py-2">
-                    <span className="material-symbols-outlined text-purple-500">ballot</span>
+                    <span className="material-symbols-outlined text-[var(--brand)]">ballot</span>
                     Anket
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -425,9 +425,9 @@ export function MessageInputBar({
             <input type="file" ref={fileInputRef} className="hidden" accept={acceptType} onChange={handleFileSelect} />
 
             {/* Main Textarea Container */}
-            <div className="flex-1 bg-gray-50 dark:bg-black/10 border border-gray-200 dark:border-gray-800 rounded-2xl flex items-end overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all relative min-h-[46px] max-h-[120px]">
+            <div className="flex-1 bg-gray-50 border border-[var(--line)] rounded-2xl flex items-end overflow-hidden focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all relative min-h-[46px] max-h-[120px]">
               {uploading && (
-                <div className="absolute inset-0 bg-white/80 dark:bg-black/50 backdrop-blur-sm z-10 flex items-center justify-center gap-2 select-none">
+                <div className="absolute inset-0 bg-white/80 (--muted-bg)] backdrop-blur-sm z-10 flex items-center justify-center gap-2 select-none">
                   <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   <span className="text-xs font-semibold text-primary">Gönderiliyor...</span>
                 </div>
@@ -436,13 +436,13 @@ export function MessageInputBar({
               {/* Simple inline Emojis list as quick picker */}
               <button
                 onClick={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}
-                className="p-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors shrink-0"
+                className="p-3 text-[var(--text-muted)] hover:text-gray-600 :text-[var(--text-2)] transition-colors shrink-0"
               >
                 😊
               </button>
 
               {isEmojiPickerOpen && (
-                <div className="absolute bottom-14 left-2 p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl flex flex-wrap gap-2 max-w-[200px] shadow-xl z-20">
+                <div className="absolute bottom-14 left-2 p-3 bg-white border border-[var(--line)] rounded-2xl flex flex-wrap gap-2 max-w-[200px] shadow-xl z-20">
                   {["😊", "👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "💯", "🎉"].map((emoji) => (
                     <button
                       key={emoji}
@@ -463,7 +463,7 @@ export function MessageInputBar({
                 value={content}
                 onChange={handleTextChange}
                 onKeyDown={handleKeyDown}
-                className="w-full px-1 py-3.5 bg-transparent text-sm focus:outline-none resize-none max-h-[120px] custom-scrollbar text-gray-850 dark:text-gray-150"
+                className="w-full px-1 py-3.5 bg-transparent text-sm focus:outline-none resize-none max-h-[120px] custom-scrollbar text-gray-850"
                 rows={1}
                 style={{ height: "auto", minHeight: "46px" }}
                 onInput={(e) => {
@@ -485,7 +485,7 @@ export function MessageInputBar({
             ) : (
               <button
                 onClick={startRecording}
-                className="h-[46px] w-[46px] bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-800 text-gray-500 hover:text-primary rounded-full transition-all flex items-center justify-center shrink-0 p-0 hover:scale-105"
+                className="h-[46px] w-[46px] bg-[var(--muted-bg)] border border-[var(--line)] text-[var(--text-muted)] hover:text-primary rounded-full transition-all flex items-center justify-center shrink-0 p-0 hover:scale-105"
               >
                 <span className="material-symbols-outlined text-[22px]">mic</span>
               </button>
@@ -496,25 +496,25 @@ export function MessageInputBar({
 
       {/* Poll Creation Dialog */}
       <Dialog open={isPollOpen} onOpenChange={() => setIsPollOpen(false)}>
-        <DialogContent className="max-w-md bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-2xl">
+        <DialogContent className="max-w-md bg-white border border-[var(--line)] rounded-3xl p-6 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">Anket Oluştur</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 my-2">
             <div>
-              <label className="text-xs font-bold text-gray-400 block mb-1">SORU</label>
+              <label className="text-xs font-bold text-[var(--text-muted)] block mb-1">SORU</label>
               <input
                 type="text"
                 placeholder="Bir soru yazın"
                 value={pollQuestion}
                 onChange={(e) => setPollQuestion(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-gray-400 block mb-1">SEÇENEKLER</label>
+              <label className="text-xs font-bold text-[var(--text-muted)] block mb-1">SEÇENEKLER</label>
               <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
                 {pollOptions.map((opt, idx) => (
                   <div key={idx} className="flex items-center gap-2">
@@ -527,12 +527,12 @@ export function MessageInputBar({
                         next[idx] = e.target.value
                         setPollOptions(next)
                       }}
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                     />
                     {pollOptions.length > 2 && (
                       <button
                         onClick={() => removePollOption(idx)}
-                        className="text-red-500 hover:bg-red-500/10 p-1.5 rounded-lg shrink-0"
+                        className="text-red-500 hover:bg-[var(--bad-soft)] p-1.5 rounded-lg shrink-0"
                       >
                         <span className="material-symbols-outlined text-[20px]">delete</span>
                       </button>
@@ -552,7 +552,7 @@ export function MessageInputBar({
 
             {/* Config Toggles */}
             <div className="flex flex-col gap-2 pt-2">
-              <label className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-white/5 rounded-xl transition cursor-pointer">
+              <label className="flex items-center justify-between p-2 hover:bg-gray-50 :bg-[var(--muted-bg)] rounded-xl transition cursor-pointer">
                 <span className="text-xs font-semibold">Anonim Oy Verme</span>
                 <input
                   type="checkbox"
@@ -562,7 +562,7 @@ export function MessageInputBar({
                 />
               </label>
 
-              <label className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-white/5 rounded-xl transition cursor-pointer">
+              <label className="flex items-center justify-between p-2 hover:bg-gray-50 :bg-[var(--muted-bg)] rounded-xl transition cursor-pointer">
                 <span className="text-xs font-semibold">Çoklu Seçime İzin Ver</span>
                 <input
                   type="checkbox"
@@ -573,21 +573,21 @@ export function MessageInputBar({
               </label>
 
               <div>
-                <label className="text-[10px] font-bold text-gray-400 block mb-1">SONA ERME TARİHİ</label>
+                <label className="text-[10px] font-bold text-[var(--text-muted)] block mb-1">SONA ERME TARİHİ</label>
                 <input
                   type="datetime-local"
                   value={pollExpiresAt}
                   onChange={(e) => setPollExpiresAt(e.target.value)}
-                  className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 text-xs text-gray-700 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-xl border border-[var(--line)] bg-gray-50 text-xs text-gray-700 focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800 pt-3">
+          <div className="mt-4 flex justify-end gap-3 border-t border-[var(--line-soft)] pt-3">
             <button
               onClick={() => setIsPollOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm font-semibold bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--muted-bg)] text-gray-600 (--text-2)] hover:bg-gray-100 :bg-[var(--muted-bg)]"
             >
               İptal
             </button>

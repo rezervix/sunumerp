@@ -62,13 +62,7 @@ function SwitchToggle({ checked, onChange, disabled, danger }: { checked: boolea
       type="button"
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-        checked
-          ? danger
-            ? "bg-[--bad] justify-end"
-            : "bg-[--brand] justify-end"
-          : "bg-[--line] justify-start"
-      }`}
+      className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${ checked ? danger ? "bg-[--bad] justify-end" : "bg-[--brand] justify-end" : "bg-[--line] justify-start" }`}
     >
       <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
     </button>
@@ -101,7 +95,7 @@ export default function SettingsPage() {
   const [primaryColor, setPrimaryColor] = useState<string>("#D37112")
   const [accentColor, setAccentColor] = useState<string>("#D32F28")
 
-  const [darkBgColor, setDarkBgColor] = useState<string>("#171310")
+  const [darkBgColor, setDarkBgColor] = useState<string>("#0B1B33")
   const [darkCardColor, setDarkCardColor] = useState<string>("#231C17")
   const [darkPrimaryColor, setDarkPrimaryColor] = useState<string>("#E6923C")
   const [darkAccentColor, setDarkAccentColor] = useState<string>("#E2534B")
@@ -576,15 +570,7 @@ export default function SettingsPage() {
                   aria-controls={`panel-${tab.id}`}
                   id={`tab-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${
-                    isActive
-                      ? tab.danger
-                        ? "bg-[--bad-soft] border-[--bad-soft] text-[--bad] shadow-xs"
-                        : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-xs"
-                      : tab.danger
-                      ? "border-transparent text-[--bad] hover:bg-[--bad-soft]"
-                      : "border-transparent text-[--text-muted] hover:bg-[--muted-bg] hover:text-[--text]"
-                  }`}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${ isActive ? tab.danger ? "bg-[--bad-soft] border-[--bad-soft] text-[--bad] shadow-xs" : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-xs" : tab.danger ? "border-transparent text-[--bad] hover:bg-[--bad-soft]" : "border-transparent text-[--text-muted] hover:bg-[--muted-bg] hover:text-[--text]" }`}
                 >
                   <Icon className={`w-4 h-4 shrink-0 ${isActive ? (tab.danger ? "text-[--bad]" : "text-[--brand]") : "text-[--text-muted]"}`} />
                   <div className="flex-1 min-w-0">
@@ -992,7 +978,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="flex items-center gap-4 p-4 rounded-xl bg-background border border-border">
-                      <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-zinc-700 p-2 flex items-center justify-center shrink-0 shadow-inner">
+                      <div className="w-20 h-20 rounded-2xl bg-[var(--bg)] border border-[var(--line)] p-2 flex items-center justify-center shrink-0 shadow-inner">
                         <img src={brandLogo} alt="Logo" className="max-h-full max-w-full object-contain" />
                       </div>
                       <div className="flex-1">
@@ -1045,16 +1031,16 @@ export default function SettingsPage() {
                     </div>
 
                     {/* Logoya Özel Dynamic Dark Mode Color Pickers */}
-                    <div className="p-4 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-100 space-y-3 shadow-md">
+                    <div className="p-4 rounded-xl bg-[var(--bg)] border border-neutral-800 text-neutral-100 space-y-3 shadow-md">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <Moon className="w-4 h-4 text-indigo-400" />
+                          <Moon className="w-4 h-4 text-[var(--brand)]" />
                           <h4 className="text-xs font-bold text-neutral-200 uppercase tracking-wider">Logodan Üretilen Karanlık Tema Paleti</h4>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleRegenerateDarkColors()}
-                          className="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1 rounded-lg bg-[var(--brand-soft)] text-indigo-300 hover:bg-indigo-500/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
                         >
                           <RefreshCw className="w-3 h-3" /> Logodan Yeniden Üret
                         </button>
@@ -1115,7 +1101,7 @@ export default function SettingsPage() {
                             </div>
                             <span className="size-2 rounded-full" style={{ backgroundColor: primaryColor }} />
                           </div>
-                          <div className="h-4 rounded px-2 flex items-center justify-center text-[9px] font-bold text-white shadow-xs" style={{ backgroundColor: primaryColor }}>
+                          <div className="h-4 rounded px-2 flex items-center justify-center text-[9px] font-bold text-[var(--text)] shadow-xs" style={{ backgroundColor: primaryColor }}>
                             Birincil Buton
                           </div>
                         </div>
@@ -1129,7 +1115,7 @@ export default function SettingsPage() {
                             </div>
                             <span className="size-2 rounded-full" style={{ backgroundColor: darkPrimaryColor }} />
                           </div>
-                          <div className="h-4 rounded px-2 flex items-center justify-center text-[9px] font-bold text-white shadow-xs" style={{ backgroundColor: darkPrimaryColor }}>
+                          <div className="h-4 rounded px-2 flex items-center justify-center text-[9px] font-bold text-[var(--text)] shadow-xs" style={{ backgroundColor: darkPrimaryColor }}>
                             Koyu Buton
                           </div>
                         </div>
@@ -1284,11 +1270,7 @@ export default function SettingsPage() {
                           <button
                             key={code}
                             onClick={() => handleLanguageChange(code)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
-                              locale === code
-                                ? "border-primary bg-primary/10 text-primary shadow-xs"
-                                : "border-border bg-background hover:bg-muted text-foreground"
-                            }`}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${ locale === code ? "border-primary bg-primary/10 text-primary shadow-xs" : "border-border bg-background hover:bg-muted text-foreground" }`}
                           >
                             <span className="text-lg">{flag}</span>
                             <span>{label}</span>

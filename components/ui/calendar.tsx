@@ -192,7 +192,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        'rounded-[10px] tabular-nums text-[var(--text)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] data-[selected-single=true]:bg-[var(--brand)] data-[selected-single=true]:text-white data-[selected-single=true]:hover:bg-[var(--brand-hover)] data-[range-middle=true]:bg-[var(--brand-soft)] data-[range-middle=true]:text-[var(--navy)] data-[range-start=true]:bg-[var(--brand)] data-[range-start=true]:text-white data-[range-end=true]:bg-[var(--brand)] data-[range-end=true]:text-white flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal data-[range-end=true]:rounded-r-[10px] data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-l-[10px] [&>span]:text-xs [&>span]:opacity-70',
+        'rounded-[10px] tabular-nums text-[var(--text)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] data-[selected-single=true]:bg-[var(--brand)] data-[selected-single=true]:text-[var(--brand)] font-medium data-[selected-single=true]:hover:bg-[var(--brand-hover)] data-[range-middle=true]:bg-[var(--brand-soft)] data-[range-middle=true]:text-[var(--navy)] data-[range-start=true]:bg-[var(--brand)] data-[range-start=true]:text-[var(--brand)] font-medium data-[range-end=true]:bg-[var(--brand)] data-[range-end=true]:text-white flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal data-[range-end=true]:rounded-r-[10px] data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-l-[10px] [&>span]:text-xs [&>span]:opacity-70',
         defaultClassNames.day,
         className,
       )}

@@ -492,7 +492,7 @@ export default function PersonelDenetimPage() {
         <div className="flex flex-wrap items-center gap-2.5">
           <Button
             onClick={() => router.push("/dashboard/personel-denetim/gun-sonu")}
-            className="gap-2 bg-white/5 hover:bg-white/10 text-zinc-300 border border-[--line] rounded-full font-medium text-xs h-9"
+            className="gap-2 bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[var(--text-2)] border border-[--line] rounded-full font-medium text-xs h-9"
             size="sm"
           >
             <ClipboardCheck className="h-3.5 w-3.5 text-[--brand]" />
@@ -501,7 +501,7 @@ export default function PersonelDenetimPage() {
           {isManager && (
             <Button
               onClick={() => router.push("/dashboard/personel-denetim/musteri-talepleri")}
-              className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold rounded-full text-xs h-9 shadow-sm"
+              className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-semibold rounded-full text-xs h-9 shadow-sm"
               size="sm"
             >
               <MessageCircle className="h-3.5 w-3.5" />
@@ -518,7 +518,7 @@ export default function PersonelDenetimPage() {
               if (isHr) fetchHrDashboard()
               toast.success("Veriler güncellendi.")
             }}
-            className="gap-1.5 border-[--line] bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
+            className="gap-1.5 border-[--line] bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[var(--text-2)] rounded-full text-xs h-9"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Yenile
@@ -534,15 +534,15 @@ export default function PersonelDenetimPage() {
       ) : (
         <Tabs defaultValue="my-task" value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col space-y-6">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 max-w-2xl bg-white/80 backdrop-blur-xl border border-[--line] p-1.5 rounded-[20px] h-auto">
-            <TabsTrigger value="my-task" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-white/10 data-[state=active]:text-[--text]">Aktif Görevim</TabsTrigger>
+            <TabsTrigger value="my-task" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[var(--muted-bg)] data-[state=active]:text-[--text]">Aktif Görevim</TabsTrigger>
             {isManager && (
-              <TabsTrigger value="team-live" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-white/10 data-[state=active]:text-[--text]">Canlı Ekip Panosu</TabsTrigger>
+              <TabsTrigger value="team-live" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[var(--muted-bg)] data-[state=active]:text-[--text]">Canlı Ekip Panosu</TabsTrigger>
             )}
             {isManager && (
-              <TabsTrigger value="mgmt" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-white/10 data-[state=active]:text-[--text]">Yönetim Paneli</TabsTrigger>
+              <TabsTrigger value="mgmt" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[var(--muted-bg)] data-[state=active]:text-[--text]">Yönetim Paneli</TabsTrigger>
             )}
             {isHr && (
-              <TabsTrigger value="hr" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-white/10 data-[state=active]:text-[--text]">İK / Performans</TabsTrigger>
+              <TabsTrigger value="hr" className="rounded-xl text-xs sm:text-sm font-medium text-[--text-muted] hover:text-[--text] transition data-[state=active]:bg-[var(--muted-bg)] data-[state=active]:text-[--text]">İK / Performans</TabsTrigger>
             )}
           </TabsList>
 
@@ -554,7 +554,7 @@ export default function PersonelDenetimPage() {
               
               {/* Sol Taraf: Aktif Görev Paneli */}
               <Card className="lg:col-span-2 border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] overflow-hidden shadow-xl text-[--text]">
-                <CardHeader className="bg-[#0d100e] border-b border-[--line]">
+                <CardHeader className="bg-[var(--bg)] border-b border-[--line]">
                   <CardTitle className="text-base font-semibold flex items-center gap-2 text-[--text]">
                     <Clock className="h-4 w-4 text-[--brand] animate-pulse" />
                     Şu An Çalıştığım Görev
@@ -568,12 +568,7 @@ export default function PersonelDenetimPage() {
                     <div className="space-y-6">
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                         <div className="space-y-2">
-                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${
-                            activeTask.priority === "URGENT" ? "bg-rose-500/10 text-rose-300 border-rose-500/20" :
-                            activeTask.priority === "HIGH" ? "bg-amber-500/10 text-amber-300 border-amber-500/20" :
-                            activeTask.priority === "MEDIUM" ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]" :
-                            "bg-white/5 text-[--text-muted] border border-[--line]"
-                          }`}>
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border ${ activeTask.priority === "URGENT" ? "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]" : activeTask.priority === "HIGH" ? "bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]" : activeTask.priority === "MEDIUM" ? "bg-[--brand]/10 text-[--brand] border border-[--brand-line]" : "bg-[var(--muted-bg)] text-[--text-muted] border border-[--line]" }`}>
                             {activeTask.priority === "URGENT" ? "Acil" : 
                              activeTask.priority === "HIGH" ? "Yüksek" : 
                              activeTask.priority === "MEDIUM" ? "Orta" : "Düşük"} Öncelik
@@ -585,15 +580,15 @@ export default function PersonelDenetimPage() {
                             {activeTask.description || "Açıklama girilmemiş."}
                           </p>
                           <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-[--text-muted]">
-                            <span>Atayan: <strong className="text-zinc-300 font-medium">{activeTask.assigner?.fullName}</strong></span>
+                            <span>Atayan: <strong className="text-[var(--text-2)] font-medium">{activeTask.assigner?.fullName}</strong></span>
                             {activeTask.dueDate && (
-                              <span>Bitiş Tarihi: <strong className="text-rose-400 font-mono">{new Date(activeTask.dueDate).toLocaleDateString("tr-TR")}</strong></span>
+                              <span>Bitiş Tarihi: <strong className="text-[var(--bad)] font-mono">{new Date(activeTask.dueDate).toLocaleDateString("tr-TR")}</strong></span>
                             )}
                           </div>
                         </div>
                         
                         {/* Timer Göstergesi - Zümrüt Radyal Gauge */}
-                        <div className="relative flex flex-col items-center justify-center p-4 rounded-[20px] bg-[#0d100e] border border-[--line] shadow-inner min-w-[160px] shrink-0">
+                        <div className="relative flex flex-col items-center justify-center p-4 rounded-[20px] bg-[var(--bg)] border border-[--line] shadow-inner min-w-[160px] shrink-0">
                           <div className="relative w-28 h-28 flex items-center justify-center">
                             <svg className="absolute inset-0 w-full h-full -rotate-90">
                               <circle
@@ -622,7 +617,7 @@ export default function PersonelDenetimPage() {
                             </svg>
                             <div className="flex flex-col items-center z-10 text-center">
                               <span className="text-[10px] font-medium text-[--text-muted] uppercase tracking-wider">Aktif Süre</span>
-                              <span className="text-xl font-mono font-bold text-[--brand]  mt-0.5">
+                              <span className="text-xl font-mono font-bold text-[--brand] mt-0.5">
                                 {formatTime(timerSeconds)}
                               </span>
                             </div>
@@ -635,14 +630,14 @@ export default function PersonelDenetimPage() {
                         <Button 
                           variant="outline"
                           onClick={handlePauseTask}
-                          className="gap-2 border-[--line] bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs"
+                          className="gap-2 border-[--line] bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[var(--text-2)] rounded-full text-xs"
                         >
                           <Pause className="h-3.5 w-3.5" />
                           Çalışmayı Duraklat
                         </Button>
                         <Button 
                           onClick={() => setIsCompleteDialogOpen(true)}
-                          className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold rounded-full text-xs shadow-sm"
+                          className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-semibold rounded-full text-xs shadow-sm"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           Görevi Tamamla
@@ -651,7 +646,7 @@ export default function PersonelDenetimPage() {
                     </div>
                   ) : (
                     <div className="text-center py-10 space-y-3">
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 border border-[--line]">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--muted-bg)] border border-[--line]">
                         <AlertTriangle className="h-5 w-5 text-[--text-muted]" />
                       </div>
                       <div>
@@ -678,24 +673,20 @@ export default function PersonelDenetimPage() {
                         <div 
                           key={t.id} 
                           onClick={() => setSelectedTaskId(t.id)}
-                          className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${
-                            selectedTaskId === t.id 
-                              ? "border-blue-500 bg-blue-50/40 dark:bg-blue-950/20" 
-                              : "border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                          }`}
+                          className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${ selectedTaskId === t.id ? "border-blue-500 bg-blue-50/40 " : "border-slate-100 (--line)] hover:border-slate-300 :border-[var(--line)]" }`}
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-slate-500">{t.priority}</span>
-                            <span className="text-xs text-slate-400">
+                            <span className="text-xs font-semibold text-[var(--text-muted)]">{t.priority}</span>
+                            <span className="text-xs text-[var(--text-muted)]">
                               {t.dueDate ? new Date(t.dueDate).toLocaleDateString("tr-TR") : "Süre Yok"}
                             </span>
                           </div>
-                          <h4 className="font-semibold text-sm text-slate-950 dark:text-slate-50 mt-1 truncate">{t.title}</h4>
+                          <h4 className="font-semibold text-sm text-slate-950 mt-1 truncate">{t.title}</h4>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-400 text-center py-6">Atanmış bekleyen göreviniz bulunmuyor.</p>
+                    <p className="text-xs text-[var(--text-muted)] text-center py-6">Atanmış bekleyen göreviniz bulunmuyor.</p>
                   )}
 
                   <div className="pt-4 border-t">
@@ -714,7 +705,7 @@ export default function PersonelDenetimPage() {
 
             {/* Görevi Bitirme Not Giriş Dialogu */}
             {isCompleteDialogOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--muted-bg)] p-4">
                 <Card className="w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-150">
                   <CardHeader>
                     <CardTitle className="text-xl">Görevi Tamamla</CardTitle>
@@ -745,35 +736,35 @@ export default function PersonelDenetimPage() {
               
               {/* Daily mini statistics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-950 shadow-xs">
+                <Card className="border-slate-100 (--line)] bg-white shadow-xs">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                    <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
                       <Play className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs text-slate-500 font-semibold block">Bugün Başlanan Çalışmalar</span>
+                      <span className="text-xs text-[var(--text-muted)] font-semibold block">Bugün Başlanan Çalışmalar</span>
                       <strong className="text-2xl font-bold">{dailySummary.started}</strong>
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-950 shadow-xs">
+                <Card className="border-slate-100 (--line)] bg-white shadow-xs">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-[--brand-soft] flex items-center justify-center text-[--brand] dark:text-[--brand]">
+                    <div className="h-10 w-10 rounded-lg bg-[--brand-soft] flex items-center justify-center text-[--brand] ]">
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs text-slate-500 font-semibold block">Bugün Tamamlanan Görevler</span>
+                      <span className="text-xs text-[var(--text-muted)] font-semibold block">Bugün Tamamlanan Görevler</span>
                       <strong className="text-2xl font-bold">{dailySummary.completed}</strong>
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-950 shadow-xs">
+                <Card className="border-slate-100 (--line)] bg-white shadow-xs">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                    <div className="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600">
                       <AlertTriangle className="h-5 w-5" />
                     </div>
                     <div>
-                      <span className="text-xs text-slate-500 font-semibold block">Ekipte Geciken Görev Sayısı</span>
+                      <span className="text-xs text-[var(--text-muted)] font-semibold block">Ekipte Geciken Görev Sayısı</span>
                       <strong className="text-2xl font-bold">{dailySummary.overdue}</strong>
                     </div>
                   </CardContent>
@@ -781,7 +772,7 @@ export default function PersonelDenetimPage() {
               </div>
 
               {/* Department select bar */}
-              <div className="flex justify-between items-center bg-white dark:bg-slate-900 border p-4 rounded-xl">
+              <div className="flex justify-between items-center bg-white border p-4 rounded-xl">
                 <span className="text-sm font-semibold text-slate-600">Departman Seçin:</span>
                 <Select value={selectedLeaderDept} onValueChange={(val) => { setSelectedLeaderDept(val === "all" ? "" : val) }}>
                   <SelectTrigger className="w-56">
@@ -801,7 +792,7 @@ export default function PersonelDenetimPage() {
               {/* Team list */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {teamList.map(member => (
-                  <Card key={member.id} className="border-slate-200 dark:border-slate-800 hover:shadow-md transition-all">
+                  <Card key={member.id} className="border-slate-200 (--line)] hover:shadow-md transition-all">
                     <CardHeader className="flex flex-row items-center gap-3 pb-3 border-b">
                       {member.avatarUrl ? (
                         <img src={member.avatarUrl} alt="avatar" className="h-10 w-10 rounded-full object-cover border" />
@@ -811,19 +802,19 @@ export default function PersonelDenetimPage() {
                         </div>
                       )}
                       <div className="leading-tight">
-                        <CardTitle className="text-sm font-bold text-slate-950 dark:text-slate-50">{member.fullName}</CardTitle>
+                        <CardTitle className="text-sm font-bold text-slate-950">{member.fullName}</CardTitle>
                         <CardDescription className="text-xs mt-0.5">{member.position || "Ekip Üyesi"}</CardDescription>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-4 space-y-4">
                       
                       {/* Active task info */}
-                      <div className="bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Şu An Çalıştığı Görev</span>
+                      <div className="bg-slate-50 (--muted-bg)] p-3 rounded-lg border border-slate-100 (--line)]">
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">Şu An Çalıştığı Görev</span>
                         {member.activeTask ? (
                           <div className="mt-1 flex items-start justify-between gap-2">
                             <div>
-                              <h4 className="font-semibold text-xs text-slate-900 dark:text-slate-100 leading-snug">{member.activeTask.title}</h4>
+                              <h4 className="font-semibold text-xs text-slate-900 (--text)] leading-snug">{member.activeTask.title}</h4>
                               <span className="text-[10px] text-blue-600 font-mono mt-1 inline-block">
                                 Aktif: {formatTime(Math.floor((Date.now() - new Date(member.activeTask.startedAt).getTime()) / 1000))}
                               </span>
@@ -842,29 +833,29 @@ export default function PersonelDenetimPage() {
                             </Button>
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-400 mt-1 italic">Boşta / Atanmamış</p>
+                          <p className="text-xs text-[var(--text-muted)] mt-1 italic">Boşta / Atanmamış</p>
                         )}
                       </div>
 
                       {/* Workload */}
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">İş Yükü Durumu</span>
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">İş Yükü Durumu</span>
                         <div className="grid grid-cols-4 gap-1 mt-1 text-center text-xs">
-                          <div className="bg-slate-100/50 dark:bg-slate-800 p-1.5 rounded-md">
-                            <span className="text-slate-500 font-bold block">{member.workload.todo}</span>
-                            <span className="text-[9px] text-slate-400">Todo</span>
+                          <div className="bg-slate-100/50 (--muted-bg)] p-1.5 rounded-md">
+                            <span className="text-[var(--text-muted)] font-bold block">{member.workload.todo}</span>
+                            <span className="text-[9px] text-[var(--text-muted)]">Todo</span>
                           </div>
-                          <div className="bg-blue-50/50 dark:bg-blue-900/10 p-1.5 rounded-md">
+                          <div className="bg-blue-50/50 p-1.5 rounded-md">
                             <span className="text-blue-600 font-bold block">{member.workload.inProgress}</span>
                             <span className="text-[9px] text-blue-400">Prog</span>
                           </div>
-                          <div className="bg-amber-50/50 dark:bg-amber-900/10 p-1.5 rounded-md">
+                          <div className="bg-amber-50/50 p-1.5 rounded-md">
                             <span className="text-amber-600 font-bold block">{member.workload.review}</span>
-                            <span className="text-[9px] text-amber-400 font-semibold">Review</span>
+                            <span className="text-[9px] text-[var(--warn)] font-semibold">Review</span>
                           </div>
                           <div className="bg-slate-100/30 p-1.5 rounded-md">
-                            <span className="text-slate-400 block">{member.workload.done}</span>
-                            <span className="text-[9px] text-slate-400">Done</span>
+                            <span className="text-[var(--text-muted)] block">{member.workload.done}</span>
+                            <span className="text-[9px] text-[var(--text-muted)]">Done</span>
                           </div>
                         </div>
                         {member.workload.totalOpen >= 5 && (
@@ -882,7 +873,7 @@ export default function PersonelDenetimPage() {
 
               {/* Devir Modalı */}
               {isReassignDialogOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--muted-bg)] p-4">
                   <Card className="w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-150">
                     <CardHeader>
                       <CardTitle className="text-xl">Görevi Başka Personele Devret</CardTitle>
@@ -922,34 +913,34 @@ export default function PersonelDenetimPage() {
               
               {/* Summary KPIs */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Card className="border-slate-100 bg-white dark:bg-slate-950 shadow-xs hover:shadow-md transition-shadow">
+                <Card className="border-slate-100 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
-                    <span className="text-xs text-slate-500 font-bold block">Bitirilen Toplam Görev (Son 30 Gün)</span>
+                    <span className="text-xs text-[var(--text-muted)] font-bold block">Bitirilen Toplam Görev (Son 30 Gün)</span>
                     <strong className="text-3xl font-extrabold text-blue-600 mt-1 block">{mgmtSummary.completedCount}</strong>
                   </CardContent>
                 </Card>
-                <Card className="border-slate-100 bg-white dark:bg-slate-950 shadow-xs hover:shadow-md transition-shadow">
+                <Card className="border-slate-100 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
-                    <span className="text-xs text-slate-500 font-bold block">Görev Başarı/Tamamlama Oranı</span>
+                    <span className="text-xs text-[var(--text-muted)] font-bold block">Görev Başarı/Tamamlama Oranı</span>
                     <strong className="text-3xl font-extrabold text-[--brand] mt-1 block">%{mgmtSummary.completionRate}</strong>
                   </CardContent>
                 </Card>
-                <Card className="border-slate-100 bg-white dark:bg-slate-950 shadow-xs hover:shadow-md transition-shadow">
+                <Card className="border-slate-100 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
-                    <span className="text-xs text-slate-500 font-bold block">Ortalama Görev Bitirme Süresi</span>
-                    <strong className="text-3xl font-extrabold text-indigo-600 mt-1 block">{mgmtSummary.avgDurationHours} Saat</strong>
+                    <span className="text-xs text-[var(--text-muted)] font-bold block">Ortalama Görev Bitirme Süresi</span>
+                    <strong className="text-3xl font-extrabold text-[var(--brand)] mt-1 block">{mgmtSummary.avgDurationHours} Saat</strong>
                   </CardContent>
                 </Card>
-                <Card className="border-slate-100 bg-white dark:bg-slate-950 shadow-xs hover:shadow-md transition-shadow">
+                <Card className="border-slate-100 bg-white shadow-xs hover:shadow-md transition-shadow">
                   <CardContent className="p-5">
-                    <span className="text-xs text-slate-500 font-bold block">Gecikmiş Aktif Görevler</span>
+                    <span className="text-xs text-[var(--text-muted)] font-bold block">Gecikmiş Aktif Görevler</span>
                     <strong className="text-3xl font-extrabold text-red-600 mt-1 block">{mgmtSummary.overdueCount}</strong>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Quick Search Widget */}
-              <Card className="border-slate-200 dark:border-slate-800 shadow-xs">
+              <Card className="border-slate-200 (--line)] shadow-xs">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg">Anlık Personel Sorgu Widget'ı</CardTitle>
                   <CardDescription>İstediğiniz personelin ismini aratarak şu an ne yaptığını ve bugünkü tamamlama özetini tek bakışta görün.</CardDescription>
@@ -957,7 +948,7 @@ export default function PersonelDenetimPage() {
                 <CardContent className="space-y-4">
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
                       <Input 
                         placeholder="Personel adı girin... (Örn: Test Geliştirici)" 
                         value={searchQuery}
@@ -969,7 +960,7 @@ export default function PersonelDenetimPage() {
                   </div>
 
                   {searchResult ? (
-                    <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/20 dark:bg-slate-800/40 dark:border-slate-800 space-y-3">
+                    <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/20 (--muted-bg)] (--line)] space-y-3">
                       <div className="flex items-center gap-3">
                         {searchResult.user.avatarUrl ? (
                           <img src={searchResult.user.avatarUrl} alt="avatar" className="h-10 w-10 rounded-full border object-cover" />
@@ -979,31 +970,31 @@ export default function PersonelDenetimPage() {
                           </div>
                         )}
                         <div>
-                          <h4 className="font-bold text-sm text-slate-900 dark:text-[--text]">{searchResult.user.fullName}</h4>
-                          <span className="text-xs text-slate-400">{searchResult.user.position || "Ekip Üyesi"} | {searchResult.user.department || "Genel"}</span>
+                          <h4 className="font-bold text-sm text-slate-900 ]">{searchResult.user.fullName}</h4>
+                          <span className="text-xs text-[var(--text-muted)]">{searchResult.user.position || "Ekip Üyesi"} | {searchResult.user.department || "Genel"}</span>
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2 border-t">
                         <div>
-                          <span className="text-slate-400 block">Şu Anki Görevi:</span>
-                          <strong className="text-slate-800 dark:text-slate-200">
+                          <span className="text-[var(--text-muted)] block">Şu Anki Görevi:</span>
+                          <strong className="text-slate-800 (--text-2)]">
                             {searchResult.activeTask ? searchResult.activeTask.title : "Boşta / Çalışmıyor"}
                           </strong>
                         </div>
                         <div>
-                          <span className="text-slate-400 block">Göreve Başlama Zamanı:</span>
-                          <strong className="text-slate-800 dark:text-slate-200">
+                          <span className="text-[var(--text-muted)] block">Göreve Başlama Zamanı:</span>
+                          <strong className="text-slate-800 (--text-2)]">
                             {searchResult.activeTask ? new Date(searchResult.activeTask.startedAt).toLocaleTimeString("tr-TR") : "-"}
                           </strong>
                         </div>
                         <div>
-                          <span className="text-slate-400 block">Açık Görev Sayısı / Son Tamamlanan:</span>
-                          <strong className="text-slate-800 dark:text-slate-200">{searchResult.totalOpenTasks} açık / {searchResult.weeklyCompletions} biten</strong>
+                          <span className="text-[var(--text-muted)] block">Açık Görev Sayısı / Son Tamamlanan:</span>
+                          <strong className="text-slate-800 (--text-2)]">{searchResult.totalOpenTasks} açık / {searchResult.weeklyCompletions} biten</strong>
                         </div>
                       </div>
                     </div>
                   ) : searchQuery ? (
-                    <p className="text-xs text-slate-400 italic">Aranan isimde personel bulunamadı.</p>
+                    <p className="text-xs text-[var(--text-muted)] italic">Aranan isimde personel bulunamadı.</p>
                   ) : null}
                 </CardContent>
               </Card>
@@ -1060,17 +1051,17 @@ export default function PersonelDenetimPage() {
                 </Card>
 
                 {/* Department Averages (Threshold Alerts) */}
-                <Card className="border-slate-200 dark:border-slate-800">
+                <Card className="border-slate-200 (--line)]">
                   <CardHeader>
                     <CardTitle className="text-lg">Departman Performans Eşikleri</CardTitle>
                     <CardDescription>Eşik değerlerine göre genel performans alarmları.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {deptMetrics.map(dm => (
-                      <div key={dm.name} className="flex justify-between items-center p-3 rounded-lg border border-slate-100 bg-slate-50/50 dark:bg-slate-850 dark:border-slate-800">
+                      <div key={dm.name} className="flex justify-between items-center p-3 rounded-lg border border-slate-100 bg-slate-50/50 (--line)]">
                         <div>
                           <strong className="text-sm block">{dm.name}</strong>
-                          <span className="text-[10px] text-slate-400">Toplam: {dm.totalTasks} | Geciken: {dm.overdueCount}</span>
+                          <span className="text-[10px] text-[var(--text-muted)]">Toplam: {dm.totalTasks} | Geciken: {dm.overdueCount}</span>
                         </div>
                         <div className="text-right">
                           <strong className={`text-sm block ${dm.completionRate < 60 ? "text-red-500" : "text-[--brand]"}`}>
@@ -1089,7 +1080,7 @@ export default function PersonelDenetimPage() {
               </div>
 
               {/* Warning List */}
-              <Card className="border-slate-200 dark:border-slate-800">
+              <Card className="border-slate-200 (--line)]">
                 <CardHeader>
                   <CardTitle className="text-lg">Kritik Uyarılar ve Takip Alarmları</CardTitle>
                   <CardDescription>Zaman aşımı, gecikme ve boşta durma bildirimleri listesi.</CardDescription>
@@ -1098,7 +1089,7 @@ export default function PersonelDenetimPage() {
                   {warnings.length > 0 ? (
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
-                        <tr className="border-b text-slate-400">
+                        <tr className="border-b text-[var(--text-muted)]">
                           <th className="py-2">Tipi</th>
                           <th className="py-2">Mesaj</th>
                           <th className="py-2">Sorumlu</th>
@@ -1108,20 +1099,16 @@ export default function PersonelDenetimPage() {
                       </thead>
                       <tbody>
                         {warnings.map((w, idx) => (
-                          <tr key={idx} className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                          <tr key={idx} className="border-b hover:bg-slate-50/50 :bg-[var(--muted-bg)]">
                             <td className="py-3">
-                              <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold ${
-                                w.type === "overdue" ? "bg-red-100 text-red-800 dark:bg-red-900/30" :
-                                w.type === "long_active" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30" :
-                                "bg-slate-100 text-slate-800 dark:bg-slate-900/30"
-                              }`}>
+                              <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold ${ w.type === "overdue" ? "bg-red-100 text-red-800 " : w.type === "long_active" ? "bg-amber-100 text-amber-800 " : "bg-slate-100 text-slate-800 (--muted-bg)]" }`}>
                                 {w.type === "overdue" ? "Gecikme" : w.type === "long_active" ? "Zaman Aşımı" : "Boşta"}
                               </span>
                             </td>
-                            <td className="py-3 text-slate-900 dark:text-slate-100">{w.message}</td>
+                            <td className="py-3 text-slate-900 (--text)]">{w.message}</td>
                             <td className="py-3 font-semibold">{w.assignee}</td>
-                            <td className="py-3 text-slate-400">{w.department}</td>
-                            <td className="py-3 text-slate-500 font-mono">
+                            <td className="py-3 text-[var(--text-muted)]">{w.department}</td>
+                            <td className="py-3 text-[var(--text-muted)] font-mono">
                               {w.type === "overdue" && w.date ? `Son Tarih: ${new Date(w.date).toLocaleDateString("tr-TR")}` :
                                w.type === "long_active" ? `${w.duration} saattir` : "Aktif görev yok"}
                             </td>
@@ -1130,7 +1117,7 @@ export default function PersonelDenetimPage() {
                       </tbody>
                     </table>
                   ) : (
-                    <p className="text-center py-6 text-slate-400">Herhangi bir kritik uyarı bulunmuyor.</p>
+                    <p className="text-center py-6 text-[var(--text-muted)]">Herhangi bir kritik uyarı bulunmuyor.</p>
                   )}
                 </CardContent>
               </Card>
@@ -1145,7 +1132,7 @@ export default function PersonelDenetimPage() {
             <TabsContent value="hr" className="space-y-6 focus-visible:outline-hidden">
               
               {/* Header and Export / Filters */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 border p-4 rounded-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border p-4 rounded-xl">
                 <div className="flex items-center gap-4">
                   <span className="text-sm font-semibold text-slate-600">Rapor Periyodu:</span>
                   <Select value={hrPeriod} onValueChange={setHrPeriod}>
@@ -1172,7 +1159,7 @@ export default function PersonelDenetimPage() {
               </div>
 
               {/* Performance List */}
-              <Card className="border-slate-200 dark:border-slate-800">
+              <Card className="border-slate-200 (--line)]">
                 <CardHeader>
                   <CardTitle className="text-lg">Personel Dönemsel Performans Değerlendirmeleri</CardTitle>
                   <CardDescription>Bireysel performans metrikleri (Sıralama / Lig Tablosu barındırmayan, hedef bazlı sunum).</CardDescription>
@@ -1180,7 +1167,7 @@ export default function PersonelDenetimPage() {
                 <CardContent className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b text-slate-400">
+                      <tr className="border-b text-[var(--text-muted)]">
                         <th className="py-2">Personel</th>
                         <th className="py-2">Departman</th>
                         <th className="py-2">Pozisyon</th>
@@ -1192,17 +1179,17 @@ export default function PersonelDenetimPage() {
                     </thead>
                     <tbody>
                       {hrReports.map(rep => (
-                        <tr key={rep.id} className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                          <td className="py-3 font-semibold text-slate-900 dark:text-slate-100">{rep.fullName}</td>
-                          <td className="py-3 text-slate-500">{rep.department || "Genel"}</td>
-                          <td className="py-3 text-slate-500">{rep.position || "Belirtilmemiş"}</td>
+                        <tr key={rep.id} className="border-b hover:bg-slate-50/50 :bg-[var(--muted-bg)]">
+                          <td className="py-3 font-semibold text-slate-900 (--text)]">{rep.fullName}</td>
+                          <td className="py-3 text-[var(--text-muted)]">{rep.department || "Genel"}</td>
+                          <td className="py-3 text-[var(--text-muted)]">{rep.position || "Belirtilmemiş"}</td>
                           <td className="py-3 text-center text-blue-600 font-bold">{rep.completedCount}</td>
                           <td className="py-3 text-center">{rep.avgHours} Saat</td>
                           <td className="py-3 text-center font-semibold text-[--brand]">% {rep.onTimeRate}</td>
                           <td className="py-3 text-center">
                             <div className="flex items-center justify-center gap-2">
                               <span>% {rep.completionRate}</span>
-                              <div className="w-12 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                              <div className="w-12 bg-slate-100 (--muted-bg)] rounded-full h-1.5 overflow-hidden">
                                 <div className="bg-[--brand] h-1.5 rounded-full" style={{ width: `${rep.completionRate}%` }}></div>
                               </div>
                             </div>
@@ -1215,7 +1202,7 @@ export default function PersonelDenetimPage() {
               </Card>
 
               {/* Department Peer Averages */}
-              <Card className="border-slate-200 dark:border-slate-800">
+              <Card className="border-slate-200 (--line)]">
                 <CardHeader>
                   <CardTitle className="text-lg">Departman Akran Karşılaştırmalı Analizi</CardTitle>
                   <CardDescription>Departman genel ortalamaları üzerinden personellerin durumlarını değerlendirebileceğiniz isim ifşa etmeyen akran verileri.</CardDescription>
@@ -1223,7 +1210,7 @@ export default function PersonelDenetimPage() {
                 <CardContent className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b text-slate-400">
+                      <tr className="border-b text-[var(--text-muted)]">
                         <th className="py-2">Departman</th>
                         <th className="py-2 text-center">Ort. Tamamlama Oranı</th>
                         <th className="py-2 text-center">Ort. Görev Süresi</th>
@@ -1243,7 +1230,7 @@ export default function PersonelDenetimPage() {
               </Card>
 
               {/* Ham veri denetimi logları (Audit Trail) */}
-              <Card className="border-slate-200 dark:border-slate-800">
+              <Card className="border-slate-200 (--line)]">
                 <CardHeader>
                   <CardTitle className="text-lg">Personel Görev ve Durum Denetim Logu (Audit Log)</CardTitle>
                   <CardDescription>Belirli bir döneme ait tüm görev başlatma, duraklatma ve tamamlama ham logları.</CardDescription>
@@ -1251,7 +1238,7 @@ export default function PersonelDenetimPage() {
                 <CardContent className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="border-b text-slate-400">
+                      <tr className="border-b text-[var(--text-muted)]">
                         <th className="py-2">Tarih</th>
                         <th className="py-2">Personel</th>
                         <th className="py-2">Departman</th>
@@ -1262,23 +1249,19 @@ export default function PersonelDenetimPage() {
                     </thead>
                     <tbody>
                       {rawLogs.map(log => (
-                        <tr key={log.id} className="border-b hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                          <td className="py-3 text-slate-500 font-mono">{new Date(log.startedAt).toLocaleString("tr-TR")}</td>
+                        <tr key={log.id} className="border-b hover:bg-slate-50/50 :bg-[var(--muted-bg)]">
+                          <td className="py-3 text-[var(--text-muted)] font-mono">{new Date(log.startedAt).toLocaleString("tr-TR")}</td>
                           <td className="py-3 font-semibold">{log.userFullName}</td>
-                          <td className="py-3 text-slate-400">{log.department}</td>
-                          <td className="py-3 text-slate-900 dark:text-slate-100">{log.taskTitle}</td>
+                          <td className="py-3 text-[var(--text-muted)]">{log.department}</td>
+                          <td className="py-3 text-slate-900 (--text)]">{log.taskTitle}</td>
                           <td className="py-3">
-                            <span className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-bold ${
-                              log.status === "COMPLETE" ? "bg-[--brand-soft] text-[--brand]" :
-                              log.status === "PAUSE" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30" :
-                              "bg-blue-100 text-blue-800 dark:bg-blue-900/30"
-                            }`}>
+                            <span className={`inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-bold ${ log.status === "COMPLETE" ? "bg-[--brand-soft] text-[--brand]" : log.status === "PAUSE" ? "bg-amber-100 text-amber-800 " : "bg-blue-100 text-blue-800 " }`}>
                               {log.status === "START" ? "Başlatıldı" : 
                                log.status === "RESUME" ? "Devam Ettirildi" : 
                                log.status === "PAUSE" ? "Duraklatıldı" : "Tamamlandı"}
                             </span>
                           </td>
-                          <td className="py-3 text-slate-400 italic max-w-xs truncate">{log.note || "-"}</td>
+                          <td className="py-3 text-[var(--text-muted)] italic max-w-xs truncate">{log.note || "-"}</td>
                         </tr>
                       ))}
                     </tbody>

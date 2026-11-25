@@ -109,7 +109,7 @@ export default function AjansKutuphanesiPage() {
             <Library size={16} className="text-[--brand]" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white leading-tight">Ajans Kütüphanesi</p>
+            <p className="text-sm font-semibold text-[var(--text)] leading-tight">Ajans Kütüphanesi</p>
             <div className="flex items-center gap-1.5">
               <p className="text-caption text-muted-foreground">Dosya Yönetimi</p>
               {process.env.NODE_ENV !== "production" && (
@@ -140,7 +140,7 @@ export default function AjansKutuphanesiPage() {
                 "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-all",
                 section === key
                   ? "bg-[--brand]/10 text-[--brand] font-medium border border-[--brand-line]"
-                  : "text-zinc-400 hover:bg-white hover:text-white border border-transparent"
+                  : "text-[var(--text-muted)] hover:bg-white hover:text-[var(--brand)] border border-transparent"
               )}
             >
               <Icon size={14} className="shrink-0" />
@@ -168,7 +168,7 @@ export default function AjansKutuphanesiPage() {
       </aside>
 
       {/* ── Ana İçerik ── */}
-      <main className="flex flex-col flex-1 min-w-0 overflow-hidden bg-[#0A0D0B]">
+      <main className="flex flex-col flex-1 min-w-0 overflow-hidden bg-[var(--bg)]">
         {/* Üst çubuk */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-[--line] shrink-0 bg-[white]/80 backdrop-blur-xl">
           {/* Breadcrumb */}
@@ -281,7 +281,7 @@ export default function AjansKutuphanesiPage() {
 
       {/* ── Mobil Sol Panel (Drawer) ── */}
       {isMobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsMobileSidebarOpen(false)}>
+        <div className="fixed inset-0 z-50 flex lg:hidden bg-[var(--muted-bg)] backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setIsMobileSidebarOpen(false)}>
           <aside className="w-64 bg-card h-full flex flex-col border-r border-border animate-in slide-in-from-left duration-200" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-4 py-4 border-b border-border">
               <div className="flex items-center gap-2">

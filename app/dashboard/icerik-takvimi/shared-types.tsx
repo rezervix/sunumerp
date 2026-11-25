@@ -53,15 +53,15 @@ export interface ProductionShoot {
 // ─── SABİTLER ─────────────────────────────────────────────────────────
 
 export const STATUS_META: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
-  taslak:                 { label: "Taslak",                  color: "text-slate-600",   bg: "bg-slate-100 dark:bg-slate-800",     icon: <FileText size={12} /> },
-  cekim_tasarim_bekliyor: { label: "Çekim/Tasarım Bekliyor",  color: "text-amber-600",   bg: "bg-amber-100 dark:bg-amber-900/40",  icon: <Camera size={12} /> },
-  yuklendi:               { label: "Yüklendi",                color: "text-blue-600",    bg: "bg-blue-100 dark:bg-blue-900/40",    icon: <Upload size={12} /> },
-  revize_istendi:         { label: "Revize İstendi",          color: "text-orange-600",  bg: "bg-orange-100 dark:bg-orange-900/40",icon: <AlertCircle size={12} /> },
-  revize_edildi:          { label: "Revize Edildi",           color: "text-purple-600",  bg: "bg-purple-100 dark:bg-purple-900/40",icon: <RefreshCw size={12} /> },
+  taslak:                 { label: "Taslak",                  color: "text-slate-600",   bg: "bg-slate-100 (--muted-bg)]",     icon: <FileText size={12} /> },
+  cekim_tasarim_bekliyor: { label: "Çekim/Tasarım Bekliyor",  color: "text-amber-600",   bg: "bg-amber-100 ",  icon: <Camera size={12} /> },
+  yuklendi:               { label: "Yüklendi",                color: "text-blue-600",    bg: "bg-blue-100 ",    icon: <Upload size={12} /> },
+  revize_istendi:         { label: "Revize İstendi",          color: "text-orange-600",  bg: "bg-orange-100 ",icon: <AlertCircle size={12} /> },
+  revize_edildi:          { label: "Revize Edildi",           color: "text-[var(--brand)]",  bg: "bg-[var(--brand-soft)] (--brand-soft)]/40",icon: <RefreshCw size={12} /> },
   onaylandi:              { label: "Onaylandı",               color: "text-[--brand]", bg: "bg-[--brand-soft]",icon: <CheckCircle2 size={12} /> },
-  planlandi:              { label: "Planlandı",               color: "text-sky-600",     bg: "bg-sky-100 dark:bg-sky-900/40",      icon: <Clock size={12} /> },
-  yayinlandi:             { label: "Yayınlandı",              color: "text-indigo-600",  bg: "bg-indigo-100 dark:bg-indigo-900/40",icon: <CheckCircle2 size={12} /> },
-  iptal_edildi:           { label: "İptal Edildi",            color: "text-red-650 line-through opacity-70", bg: "bg-red-50 dark:bg-red-95/40", icon: <XCircle size={12} /> },
+  planlandi:              { label: "Planlandı",               color: "text-sky-600",     bg: "bg-sky-100 ",      icon: <Clock size={12} /> },
+  yayinlandi:             { label: "Yayınlandı",              color: "text-[var(--brand)]",  bg: "bg-indigo-100 ",icon: <CheckCircle2 size={12} /> },
+  iptal_edildi:           { label: "İptal Edildi",            color: "text-red-650 line-through opacity-70", bg: "bg-red-50 ", icon: <XCircle size={12} /> },
 }
 
 export const PLATFORM_META: Record<string, { label: string; color: string; icon: React.ReactNode }> = {

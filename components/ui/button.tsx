@@ -23,9 +23,9 @@ const buttonVariants = cva(
         tertiary:
           'bg-transparent text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] active:bg-[var(--brand-soft-2)]',
         destructive:
-          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-white active:opacity-95',
+          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-[var(--brand)] active:opacity-95',
         danger:
-          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-white active:opacity-95',
+          'bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-fill)]/25 hover:bg-[var(--bad-fill)] hover:text-[var(--brand)] active:opacity-95',
         link: 'text-[var(--brand)] underline-offset-4 hover:text-[var(--brand-hover)] hover:underline px-0',
       },
       size: {

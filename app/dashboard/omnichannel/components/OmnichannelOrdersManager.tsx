@@ -297,11 +297,7 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                       {getStatusBadge(ord.status)}
                       {ord.eInvoiceNo && (
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-mono border ${
-                            ord.eInvoiceStatus === 'TASLAK'
-                              ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
-                              : 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
-                          }`}
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-mono border ${ ord.eInvoiceStatus === 'TASLAK' ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25' : 'bg-[--ok-soft] text-[--ok] border-[--ok]/25' }`}
                         >
                           {ord.eInvoiceStatus === 'TASLAK' ? 'Taslak Fatura' : 'E-Fatura'}: {safeText(ord.eInvoiceNo)}
                         </span>
@@ -431,11 +427,7 @@ export function OmnichannelOrdersManager({ orders, onOrderUpdated }: Props) {
                                   {[0, 1, 2, 3, 4].map(idx => (
                                     <div
                                       key={idx}
-                                      className={`h-1.5 w-3 rounded-full transition-colors ${
-                                        idx < activeLeds
-                                          ? "bg-[--brand]"
-                                          : "bg-[--line]"
-                                      }`}
+                                      className={`h-1.5 w-3 rounded-full transition-colors ${ idx < activeLeds ? "bg-[--brand]" : "bg-[--line]" }`}
                                     />
                                   ))}
                                 </div>

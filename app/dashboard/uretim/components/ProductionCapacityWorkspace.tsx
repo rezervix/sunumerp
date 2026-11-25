@@ -282,21 +282,21 @@ export function ProductionCapacityWorkspace() {
   return (
     <div className="space-y-6">
       {/* ── ÜST BAŞLIK VE EYLEMLER ── */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-zinc-900/60 border border-[--line] backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-[var(--bg)] border border-[--line] backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--warn-soft)] border border-[var(--warn-line)] flex items-center justify-center text-[var(--warn)]">
             <Cpu className="w-6 h-6 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white">
+              <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--text)]">
                 Kapasite Planlama (CRP) & Çizelgeleme
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">
                 FAZ 6
               </span>
             </div>
-            <p className="text-sm text-zinc-400 mt-1">
+            <p className="text-sm text-[var(--text-muted)] mt-1">
               Sonlu/Sonsuz kapasite hesaplama, interaktif Gantt çizelgesi, darboğaz yönetimi ve CTP simülasyonu.
             </p>
           </div>
@@ -308,7 +308,7 @@ export function ProductionCapacityWorkspace() {
             size="sm"
             onClick={fetchData}
             disabled={loading}
-            className="rounded-xl border-[--line] hover:bg-white/5 text-zinc-300"
+            className="rounded-xl border-[--line] hover:bg-[var(--muted-bg)] text-[var(--text-2)]"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -326,61 +326,61 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── KPI ÖZET KARTLARI ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-1">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="p-4 rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>Aktif İş Merkezleri</span>
-            <Cpu className="w-4 h-4 text-amber-400" />
+            <Cpu className="w-4 h-4 text-[var(--warn)]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             {overviewData?.totalWorkCentersCount || 0}
           </div>
-          <p className="text-[11px] text-zinc-500">Mevcut tanımlı istasyonlar</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Mevcut tanımlı istasyonlar</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-1">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="p-4 rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>Açık Operasyonlar</span>
             <Layers className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             {overviewData?.totalOpenOperationsCount || 0}
           </div>
-          <p className="text-[11px] text-zinc-500">Çizelgeye aday adımlar</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Çizelgeye aday adımlar</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-1">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="p-4 rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>Kilitli Görevler</span>
-            <Lock className="w-4 h-4 text-purple-400" />
+            <Lock className="w-4 h-4 text-[var(--brand)]" />
           </div>
-          <div className="text-2xl font-bold text-purple-400">
+          <div className="text-2xl font-bold text-[var(--brand)]">
             {overviewData?.lockedOperationsCount || 0}
           </div>
-          <p className="text-[11px] text-zinc-500">Sabitlenmiş / korunanlar</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Sabitlenmiş / korunanlar</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-zinc-900/40 border border-white/5 space-y-1">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        <div className="p-4 rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
             <span>Gecikme Riski</span>
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
+            <AlertTriangle className="w-4 h-4 text-[var(--bad)]" />
           </div>
-          <div className="text-2xl font-bold text-rose-400">
+          <div className="text-2xl font-bold text-[var(--bad)]">
             {overviewData?.delayedCount || 0}
           </div>
-          <p className="text-[11px] text-zinc-500">Termini aşan operasyonlar</p>
+          <p className="text-[11px] text-[var(--text-muted)]">Termini aşan operasyonlar</p>
         </div>
       </div>
 
       {/* ── ÇAKIŞMA UYARI BİLDİRİMİ ── */}
       {ganttData?.hasConflicts && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between gap-4">
+        <div className="p-4 rounded-2xl bg-[var(--bad-soft)] border border-[var(--bad-line)] flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <ShieldAlert className="w-6 h-6 text-rose-400 shrink-0" />
+            <ShieldAlert className="w-6 h-6 text-[var(--bad)] shrink-0" />
             <div>
-              <h3 className="text-sm font-semibold text-rose-300">
+              <h3 className="text-sm font-semibold text-[var(--bad)]">
                 Kapasite Çakışması Tespit Edildi ({ganttData.conflicts.length} Adet)
               </h3>
-              <p className="text-xs text-rose-400/80">
+              <p className="text-xs text-[var(--bad)]/80">
                 Aynı iş merkezinde aynı anda iki operasyon planlanmış. Lütfen 'Sonlu (Finite)' modda yeniden çizelgeleyin veya sürükleyerek kaydırın.
               </p>
             </div>
@@ -399,11 +399,7 @@ export function ProductionCapacityWorkspace() {
       <div className="flex items-center gap-2 border-b border-[--line] pb-2">
         <button
           onClick={() => setActiveTab("overview")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-            activeTab === "overview"
-              ? "bg-white/10 text-white border border-[--line]"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ activeTab === "overview" ? "bg-[var(--muted-bg)] text-[var(--text)] border border-[--line]" : "text-[var(--text-muted)] hover:text-[var(--brand)]" }`}
         >
           <BarChart3 className="w-4 h-4 inline mr-2" />
           Kapasite & Yük Özeti
@@ -411,11 +407,7 @@ export function ProductionCapacityWorkspace() {
 
         <button
           onClick={() => setActiveTab("gantt")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-            activeTab === "gantt"
-              ? "bg-white/10 text-white border border-[--line]"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ activeTab === "gantt" ? "bg-[var(--muted-bg)] text-[var(--text)] border border-[--line]" : "text-[var(--text-muted)] hover:text-[var(--brand)]" }`}
         >
           <Calendar className="w-4 h-4 inline mr-2" />
           Görsel Çizelgeleyici (Gantt)
@@ -423,11 +415,7 @@ export function ProductionCapacityWorkspace() {
 
         <button
           onClick={() => setActiveTab("ctp")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-            activeTab === "ctp"
-              ? "bg-white/10 text-white border border-[--line]"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ activeTab === "ctp" ? "bg-[var(--muted-bg)] text-[var(--text)] border border-[--line]" : "text-[var(--text-muted)] hover:text-[var(--brand)]" }`}
         >
           <Target className="w-4 h-4 inline mr-2" />
           Söz Verilebilir Teslim (CTP)
@@ -435,11 +423,7 @@ export function ProductionCapacityWorkspace() {
 
         <button
           onClick={() => setActiveTab("variance")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-            activeTab === "variance"
-              ? "bg-white/10 text-white border border-[--line]"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ activeTab === "variance" ? "bg-[var(--muted-bg)] text-[var(--text)] border border-[--line]" : "text-[var(--text-muted)] hover:text-[var(--brand)]" }`}
         >
           <TrendingUp className="w-4 h-4 inline mr-2" />
           Süre Varyansı & Öğrenme
@@ -447,11 +431,7 @@ export function ProductionCapacityWorkspace() {
 
         <button
           onClick={() => setActiveTab("alerts")}
-          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-            activeTab === "alerts"
-              ? "bg-white/10 text-white border border-[--line]"
-              : "text-zinc-400 hover:text-white"
-          }`}
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${ activeTab === "alerts" ? "bg-[var(--muted-bg)] text-[var(--text)] border border-[--line]" : "text-[var(--text-muted)] hover:text-[var(--brand)]" }`}
         >
           <AlertTriangle className="w-4 h-4 inline mr-2" />
           Darboğaz & Uyarılar ({overviewData?.recentAlerts?.length || 0})
@@ -461,46 +441,46 @@ export function ProductionCapacityWorkspace() {
       {/* ── TAB 1: OVERVIEW & CRP MATRIX ── */}
       {activeTab === "overview" && (
         <div className="space-y-6">
-          <div className="p-6 rounded-3xl bg-zinc-900/40 border border-white/5 space-y-4">
+          <div className="p-6 rounded-3xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-semibold text-white">İş Merkezleri Kullanılabilirlik & Yük Dağılımı</h2>
-                <p className="text-xs text-zinc-400">14 günlük ufukta iş merkezlerinin net kapasitesi ve planlanan operasyon yükü</p>
+                <h2 className="text-base font-semibold text-[var(--text)]">İş Merkezleri Kullanılabilirlik & Yük Dağılımı</h2>
+                <p className="text-xs text-[var(--text-muted)]">14 günlük ufukta iş merkezlerinin net kapasitesi ve planlanan operasyon yükü</p>
               </div>
-              <span className="text-xs font-mono text-amber-400">
+              <span className="text-xs font-mono text-[var(--warn)]">
                 Aktif Plan: {overviewData?.activePlan?.code || "Mevcut Değil"}
               </span>
             </div>
 
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="bg-zinc-900/80">
-                  <TableRow className="border-white/5">
-                    <TableHead className="text-zinc-400">İş Merkezi Kodu</TableHead>
-                    <TableHead className="text-zinc-400">İstasyon Adı</TableHead>
-                    <TableHead className="text-zinc-400">Günlük Net Mesai</TableHead>
-                    <TableHead className="text-zinc-400">Verimlilik</TableHead>
-                    <TableHead className="text-zinc-400">Çalışma Günleri</TableHead>
-                    <TableHead className="text-zinc-400">Durum</TableHead>
+                <TableHeader className="bg-[var(--bg)]">
+                  <TableRow className="border-[var(--line-soft)]">
+                    <TableHead className="text-[var(--text-muted)]">İş Merkezi Kodu</TableHead>
+                    <TableHead className="text-[var(--text-muted)]">İstasyon Adı</TableHead>
+                    <TableHead className="text-[var(--text-muted)]">Günlük Net Mesai</TableHead>
+                    <TableHead className="text-[var(--text-muted)]">Verimlilik</TableHead>
+                    <TableHead className="text-[var(--text-muted)]">Çalışma Günleri</TableHead>
+                    <TableHead className="text-[var(--text-muted)]">Durum</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {(!overviewData?.workCenters || overviewData.workCenters.length === 0) ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                      <TableCell colSpan={6} className="text-center py-8 text-[var(--text-muted)]">
                         Tanımlı aktif iş merkezi bulunmuyor.
                       </TableCell>
                     </TableRow>
                   ) : (
                     overviewData.workCenters.map((wc: any) => (
-                      <TableRow key={wc.workCenterId} className="border-white/5 hover:bg-[--page]">
-                        <TableCell className="font-mono font-medium text-amber-400">{wc.code}</TableCell>
-                        <TableCell className="font-semibold text-white">{wc.name}</TableCell>
-                        <TableCell className="text-zinc-300 font-mono">
+                      <TableRow key={wc.workCenterId} className="border-[var(--line-soft)] hover:bg-[--page]">
+                        <TableCell className="font-mono font-medium text-[var(--warn)]">{wc.code}</TableCell>
+                        <TableCell className="font-semibold text-[var(--text)]">{wc.name}</TableCell>
+                        <TableCell className="text-[var(--text-2)] font-mono">
                           {Math.round(wc.dailyNetWorkingMinutes / 60)} Saat ({wc.dailyNetWorkingMinutes} dk)
                         </TableCell>
-                        <TableCell className="text-zinc-300 font-mono">%{wc.efficiencyPercent}</TableCell>
-                        <TableCell className="text-xs text-zinc-400 font-mono">
+                        <TableCell className="text-[var(--text-2)] font-mono">%{wc.efficiencyPercent}</TableCell>
+                        <TableCell className="text-xs text-[var(--text-muted)] font-mono">
                           {wc.workingDays.join(", ")}
                         </TableCell>
                         <TableCell>
@@ -522,23 +502,23 @@ export function ProductionCapacityWorkspace() {
       {activeTab === "gantt" && (
         <div className="space-y-6">
           {/* Gantt Filtre Çubuğu */}
-          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-zinc-900/50 border border-white/5">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)]">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
                 <Input
                   value={ganttSearchQuery}
                   onChange={(e) => setGanttSearchQuery(e.target.value)}
                   placeholder="İş Emri veya Operasyon Ara..."
-                  className="pl-9 h-10 w-64 bg-zinc-900 border-[--line] text-sm"
+                  className="pl-9 h-10 w-64 bg-[var(--bg)] border-[--line] text-sm"
                 />
               </div>
 
               <Select value={ganttFilterWc} onValueChange={setGanttFilterWc}>
-                <SelectTrigger className="w-56 h-10 bg-zinc-900 border-[--line] text-sm">
+                <SelectTrigger className="w-56 h-10 bg-[var(--bg)] border-[--line] text-sm">
                   <SelectValue placeholder="İş Merkezi Filtresi" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                   <SelectItem value="ALL">Tüm İstasyonlar</SelectItem>
                   {(ganttData?.workCenters || []).map((w: any) => (
                     <SelectItem key={w.workCenterId} value={w.workCenterId}>
@@ -550,16 +530,16 @@ export function ProductionCapacityWorkspace() {
             </div>
 
             <div className="flex items-center gap-4 text-xs">
-              <span className="flex items-center gap-1.5 text-zinc-400">
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
                 <span className="w-3 h-3 rounded bg-blue-500 inline-block" /> Planlandı
               </span>
-              <span className="flex items-center gap-1.5 text-zinc-400">
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
                 <span className="w-3 h-3 rounded bg-[--brand] inline-block" /> İcrada
               </span>
-              <span className="flex items-center gap-1.5 text-zinc-400">
-                <span className="w-3 h-3 rounded bg-purple-500 inline-block" /> Kilitli
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
+                <span className="w-3 h-3 rounded bg-[var(--brand-soft)] inline-block" /> Kilitli
               </span>
-              <span className="flex items-center gap-1.5 text-zinc-400">
+              <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
                 <span className="w-3 h-3 rounded bg-rose-500 inline-block" /> Gecikmeli
               </span>
             </div>
@@ -575,16 +555,16 @@ export function ProductionCapacityWorkspace() {
                 return (
                   <div
                     key={wc.workCenterId}
-                    className="p-5 rounded-2xl bg-zinc-900/60 border border-[--line] space-y-3"
+                    className="p-5 rounded-2xl bg-[var(--bg)] border border-[--line] space-y-3"
                   >
-                    <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                    <div className="flex items-center justify-between border-b border-[var(--line-soft)] pb-2">
                       <div className="flex items-center gap-3">
-                        <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 font-mono text-xs font-bold border border-amber-500/20">
+                        <span className="px-2.5 py-1 rounded-lg bg-[var(--warn-soft)] text-[var(--warn)] font-mono text-xs font-bold border border-[var(--warn-line)]">
                           {wc.code}
                         </span>
-                        <h3 className="text-sm font-semibold text-white">{wc.name}</h3>
+                        <h3 className="text-sm font-semibold text-[var(--text)]">{wc.name}</h3>
                       </div>
-                      <span className="text-xs text-zinc-400">
+                      <span className="text-xs text-[var(--text-muted)]">
                         {wcTasks.length} Atanmış Operasyon
                       </span>
                     </div>
@@ -609,22 +589,16 @@ export function ProductionCapacityWorkspace() {
                                 setEditWorkCenterId(task.workCenterId)
                                 setEditIsLocked(task.isLocked)
                               }}
-                              className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
-                                isDelayed
-                                  ? "bg-rose-950/40 border-rose-500/50 text-rose-200"
-                                  : isLocked
-                                  ? "bg-purple-950/40 border-purple-500/50 text-purple-200"
-                                  : "bg-blue-950/30 border-blue-500/40 text-blue-200"
-                              }`}
+                              className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${ isDelayed ? "bg-rose-950/40 border-[var(--bad-line)] text-rose-200" : isLocked ? "bg-[var(--brand-soft)]/40 border-[var(--brand-line)]/50 text-[var(--brand)]" : "bg-blue-950/30 border-blue-500/40 text-blue-200" }`}
                             >
                               <div className="flex items-center justify-between gap-2 font-mono font-bold mb-1">
                                 <span>{task.workOrder?.workOrderNumber || "İş Emri"}</span>
-                                {isLocked && <Lock className="w-3 h-3 text-purple-400" />}
+                                {isLocked && <Lock className="w-3 h-3 text-[var(--brand)]" />}
                               </div>
-                              <p className="text-white font-medium truncate max-w-[180px]">
+                              <p className="text-[var(--text)] font-medium truncate max-w-[180px]">
                                 #{task.operation?.operationNumber} {task.operation?.name}
                               </p>
-                              <div className="text-[10px] text-zinc-400 mt-1 flex items-center justify-between gap-2 font-mono">
+                              <div className="text-[10px] text-[var(--text-muted)] mt-1 flex items-center justify-between gap-2 font-mono">
                                 <span>{new Date(task.scheduledStart).toLocaleDateString("tr-TR")}</span>
                                 <span>{task.totalMinutes} dk</span>
                               </div>
@@ -643,43 +617,43 @@ export function ProductionCapacityWorkspace() {
       {/* ── TAB 3: SÖZ VERİLEBİLİR TESLİM TARİHİ (CTP) ── */}
       {activeTab === "ctp" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
+          <div className="p-6 rounded-3xl bg-[var(--bg)] border border-[--line] space-y-4">
             <div className="flex items-center gap-3 mb-2">
-              <Target className="w-5 h-5 text-amber-400" />
-              <h2 className="text-base font-semibold text-white">CTP Simülasyon Talebi</h2>
+              <Target className="w-5 h-5 text-[var(--warn)]" />
+              <h2 className="text-base font-semibold text-[var(--text)]">CTP Simülasyon Talebi</h2>
             </div>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Yeni sipariş için makine kuyrukları ve mevcut işler incelenerek en erken teslim tarihi hesaplanır.
             </p>
 
             <form onSubmit={handleRunCtp} className="space-y-4">
               <div>
-                <Label className="text-xs text-zinc-300">Mamul Kimliği / Kodu *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Mamul Kimliği / Kodu *</Label>
                 <Input
                   value={ctpItemId}
                   onChange={(e) => setCtpItemId(e.target.value)}
                   placeholder="Mamul ID veya SKU..."
-                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1"
+                  className="h-10 bg-[var(--bg)] border-[--line] text-sm mt-1"
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Sipariş Miktarı (Adet) *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Sipariş Miktarı (Adet) *</Label>
                 <Input
                   type="number"
                   value={ctpQuantity}
                   onChange={(e) => setCtpQuantity(e.target.value)}
-                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1 font-mono"
+                  className="h-10 bg-[var(--bg)] border-[--line] text-sm mt-1 font-mono"
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Müşterinin İstediği Termin (Opsiyonel)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Müşterinin İstediği Termin (Opsiyonel)</Label>
                 <Input
                   type="date"
                   value={ctpRequestedDate}
                   onChange={(e) => setCtpRequestedDate(e.target.value)}
-                  className="h-10 bg-zinc-900 border-[--line] text-sm mt-1"
+                  className="h-10 bg-[var(--bg)] border-[--line] text-sm mt-1"
                 />
               </div>
 
@@ -698,37 +672,33 @@ export function ProductionCapacityWorkspace() {
             </form>
           </div>
 
-          <div className="lg:col-span-2 p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-amber-400" />
+          <div className="lg:col-span-2 p-6 rounded-3xl bg-[var(--bg)] border border-[--line] space-y-4">
+            <h2 className="text-base font-semibold text-[var(--text)] flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-[var(--warn)]" />
               Simülasyon Sonucu ve Çizelge Önerisi
             </h2>
 
             {!ctpResult ? (
-              <div className="p-12 text-center rounded-2xl bg-zinc-900/30 border border-white/5 text-zinc-500">
+              <div className="p-12 text-center rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] text-[var(--text-muted)]">
                 Henüz bir CTP simülasyonu çalıştırılmadı. Soldaki formdan hesaplama yapabilirsiniz.
               </div>
             ) : (
               <div className="space-y-4">
                 <div
-                  className={`p-4 rounded-2xl border flex items-center justify-between ${
-                    ctpResult.isFeasible
-                      ? "bg-[--brand-soft] border-[--brand-line] text-[--brand]"
-                      : "bg-rose-950/20 border-rose-500/30 text-rose-300"
-                  }`}
+                  className={`p-4 rounded-2xl border flex items-center justify-between ${ ctpResult.isFeasible ? "bg-[--brand-soft] border-[--brand-line] text-[--brand]" : "bg-rose-950/20 border-[var(--bad-line)] text-[var(--bad)]" }`}
                 >
                   <div>
                     <span className="text-xs uppercase tracking-wider font-semibold">
                       {ctpResult.isFeasible ? "UYGULANABİLİR (FEASIBLE)" : "TERMİN RİSKİ (INFEASIBLE)"}
                     </span>
-                    <h3 className="text-lg font-bold text-white mt-1">
+                    <h3 className="text-lg font-bold text-[var(--text)] mt-1">
                       En Erken Teslim Tarihi:{" "}
                       {new Date(ctpResult.calculatedEarliestDueDate).toLocaleString("tr-TR")}
                     </h3>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-zinc-400 block">Kritik Yol Süresi</span>
-                    <span className="font-mono text-xl font-bold text-white">
+                    <span className="text-xs text-[var(--text-muted)] block">Kritik Yol Süresi</span>
+                    <span className="font-mono text-xl font-bold text-[var(--text)]">
                       {ctpResult.criticalPathDays} Gün
                     </span>
                   </div>
@@ -736,27 +706,27 @@ export function ProductionCapacityWorkspace() {
 
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader className="bg-zinc-900/80">
-                      <TableRow className="border-white/5">
-                        <TableHead className="text-zinc-400">Adım</TableHead>
-                        <TableHead className="text-zinc-400">Operasyon</TableHead>
-                        <TableHead className="text-zinc-400">Başlangıç</TableHead>
-                        <TableHead className="text-zinc-400">Bitiş</TableHead>
-                        <TableHead className="text-zinc-400">Süre</TableHead>
+                    <TableHeader className="bg-[var(--bg)]">
+                      <TableRow className="border-[var(--line-soft)]">
+                        <TableHead className="text-[var(--text-muted)]">Adım</TableHead>
+                        <TableHead className="text-[var(--text-muted)]">Operasyon</TableHead>
+                        <TableHead className="text-[var(--text-muted)]">Başlangıç</TableHead>
+                        <TableHead className="text-[var(--text-muted)]">Bitiş</TableHead>
+                        <TableHead className="text-[var(--text-muted)]">Süre</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {ctpResult.schedule.map((step: any, idx: number) => (
-                        <TableRow key={idx} className="border-white/5 font-mono text-xs">
-                          <TableCell className="text-amber-400">#{step.operationNumber}</TableCell>
-                          <TableCell className="text-white font-sans">{step.operationName}</TableCell>
-                          <TableCell className="text-zinc-300">
+                        <TableRow key={idx} className="border-[var(--line-soft)] font-mono text-xs">
+                          <TableCell className="text-[var(--warn)]">#{step.operationNumber}</TableCell>
+                          <TableCell className="text-[var(--text)] font-sans">{step.operationName}</TableCell>
+                          <TableCell className="text-[var(--text-2)]">
                             {new Date(step.start).toLocaleDateString("tr-TR")}
                           </TableCell>
-                          <TableCell className="text-zinc-300">
+                          <TableCell className="text-[var(--text-2)]">
                             {new Date(step.end).toLocaleDateString("tr-TR")}
                           </TableCell>
-                          <TableCell className="text-zinc-300">{step.durationMinutes} dk</TableCell>
+                          <TableCell className="text-[var(--text-2)]">{step.durationMinutes} dk</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -770,11 +740,11 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── TAB 4: SÜRE VARYANSI & STANDART ÖNERİSİ ── */}
       {activeTab === "variance" && (
-        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
+        <div className="p-6 rounded-3xl bg-[var(--bg)] border border-[--line] space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-white">Planlanan vs. Gerçekleşen Çevrim Süreleri</h2>
-              <p className="text-xs text-zinc-400">
+              <h2 className="text-base font-semibold text-[var(--text)]">Planlanan vs. Gerçekleşen Çevrim Süreleri</h2>
+              <p className="text-xs text-[var(--text-muted)]">
                 Atölye icra verilerine dayalı öğrenme eğrisi analizi ve rota standart süre güncelleme önerileri.
               </p>
             </div>
@@ -782,20 +752,20 @@ export function ProductionCapacityWorkspace() {
 
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-zinc-900/80">
-                <TableRow className="border-white/5">
-                  <TableHead className="text-zinc-400">Operasyon Adı</TableHead>
-                  <TableHead className="text-zinc-400">Örnek Sayısı</TableHead>
-                  <TableHead className="text-zinc-400">Planlanan Standart</TableHead>
-                  <TableHead className="text-zinc-400">Gerçekleşen Ortalama</TableHead>
-                  <TableHead className="text-zinc-400">Sapma (Varyans)</TableHead>
-                  <TableHead className="text-zinc-400">Önerilen Standart</TableHead>
+              <TableHeader className="bg-[var(--bg)]">
+                <TableRow className="border-[var(--line-soft)]">
+                  <TableHead className="text-[var(--text-muted)]">Operasyon Adı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Örnek Sayısı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Planlanan Standart</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Gerçekleşen Ortalama</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Sapma (Varyans)</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Önerilen Standart</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {varianceData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-[var(--text-muted)]">
                       Henüz tamamlanmış operasyon verisi bulunmuyor.
                     </TableCell>
                   </TableRow>
@@ -803,22 +773,20 @@ export function ProductionCapacityWorkspace() {
                   varianceData.map((v: any, idx: number) => {
                     const isPositive = v.variancePercent > 0
                     return (
-                      <TableRow key={idx} className="border-white/5 hover:bg-[--page] text-xs font-mono">
-                        <TableCell className="font-semibold text-white font-sans">{v.operationName}</TableCell>
-                        <TableCell className="text-zinc-400">{v.sampleCount} İcra</TableCell>
-                        <TableCell className="text-zinc-300">{v.plannedStandardMinutes} dk</TableCell>
-                        <TableCell className="text-zinc-300 font-bold">{v.actualAverageMinutes} dk</TableCell>
+                      <TableRow key={idx} className="border-[var(--line-soft)] hover:bg-[--page] text-xs font-mono">
+                        <TableCell className="font-semibold text-[var(--text)] font-sans">{v.operationName}</TableCell>
+                        <TableCell className="text-[var(--text-muted)]">{v.sampleCount} İcra</TableCell>
+                        <TableCell className="text-[var(--text-2)]">{v.plannedStandardMinutes} dk</TableCell>
+                        <TableCell className="text-[var(--text-2)] font-bold">{v.actualAverageMinutes} dk</TableCell>
                         <TableCell>
                           <span
-                            className={`px-2 py-0.5 rounded ${
-                              isPositive ? "bg-rose-500/10 text-rose-400" : "bg-[--brand]/10 text-[--brand]"
-                            }`}
+                            className={`px-2 py-0.5 rounded ${ isPositive ? "bg-[var(--bad-soft)] text-[var(--bad)]" : "bg-[--brand]/10 text-[--brand]" }`}
                           >
                             {isPositive ? "+" : ""}
                             {v.variancePercent}%
                           </span>
                         </TableCell>
-                        <TableCell className="text-amber-400 font-bold">
+                        <TableCell className="text-[var(--warn)] font-bold">
                           {v.suggestedStandardMinutes} dk
                         </TableCell>
                       </TableRow>
@@ -833,15 +801,15 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── TAB 5: DARBOĞAZ & UYARILAR ── */}
       {activeTab === "alerts" && (
-        <div className="p-6 rounded-3xl bg-zinc-900/60 border border-[--line] space-y-4">
+        <div className="p-6 rounded-3xl bg-[var(--bg)] border border-[--line] space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-white">Aktif Kapasite ve Aşırı Yük Uyarıları</h2>
-            <span className="text-xs text-zinc-500">Eşik Aşımı (≥ %95) ve Darboğazlar</span>
+            <h2 className="text-base font-semibold text-[var(--text)]">Aktif Kapasite ve Aşırı Yük Uyarıları</h2>
+            <span className="text-xs text-[var(--text-muted)]">Eşik Aşımı (≥ %95) ve Darboğazlar</span>
           </div>
 
           <div className="space-y-3">
             {(!overviewData?.recentAlerts || overviewData.recentAlerts.length === 0) ? (
-              <div className="p-12 text-center rounded-2xl bg-zinc-900/30 border border-white/5 text-zinc-500">
+              <div className="p-12 text-center rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] text-[var(--text-muted)]">
                 <CheckCircle2 className="w-10 h-10 text-[--brand] mx-auto mb-2" />
                 Aktif bir kapasite aşımı veya darboğaz uyarısı bulunmuyor.
               </div>
@@ -849,17 +817,15 @@ export function ProductionCapacityWorkspace() {
               overviewData.recentAlerts.map((alert: any) => (
                 <div
                   key={alert.id}
-                  className="p-4 rounded-2xl bg-zinc-900/80 border border-[--line] flex items-center justify-between gap-4"
+                  className="p-4 rounded-2xl bg-[var(--bg)] border border-[--line] flex items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-3">
                     <AlertTriangle
-                      className={`w-5 h-5 shrink-0 ${
-                        alert.severity === "CRITICAL" ? "text-rose-400" : "text-amber-400"
-                      }`}
+                      className={`w-5 h-5 shrink-0 ${ alert.severity === "CRITICAL" ? "text-[var(--bad)]" : "text-[var(--warn)]" }`}
                     />
                     <div>
-                      <p className="text-sm text-white font-medium">{alert.message}</p>
-                      <span className="text-[10px] text-zinc-500 font-mono">
+                      <p className="text-sm text-[var(--text)] font-medium">{alert.message}</p>
+                      <span className="text-[10px] text-[var(--text-muted)] font-mono">
                         {new Date(alert.createdAt).toLocaleString("tr-TR")} | Tür: {alert.alertType}
                       </span>
                     </div>
@@ -882,22 +848,22 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── HESAPLAMA MODALI ── */}
       <Dialog open={calculateModalOpen} onOpenChange={setCalculateModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-900 border-[--line] text-white rounded-3xl">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[--line] text-[var(--text)] rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">Kapasite Çizelgeleme Motorunu Çalıştır</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Açık iş emirleri seçilen öncelik ve kısıt kurallarına göre sıralanır.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Kapasite Modu *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Kapasite Modu *</Label>
               <Select value={schedulingMode} onValueChange={(v: any) => setSchedulingMode(v)}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
+                <SelectTrigger className="h-10 bg-[var(--bg)] border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                   <SelectItem value="FINITE">Sonlu Kapasite (Finite - Makine Çakışması Yok)</SelectItem>
                   <SelectItem value="INFINITE">Sonsuz Kapasite (Infinite - Yük Görüntüleme)</SelectItem>
                 </SelectContent>
@@ -905,12 +871,12 @@ export function ProductionCapacityWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Öncelik Kuralı (Dispatching Rule) *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Öncelik Kuralı (Dispatching Rule) *</Label>
               <Select value={priorityRule} onValueChange={(v: any) => setPriorityRule(v)}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
+                <SelectTrigger className="h-10 bg-[var(--bg)] border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                   <SelectItem value="EDD">En Erken Teslim Tarihi (Earliest Due Date - EDD)</SelectItem>
                   <SelectItem value="FCFS">İlk Gelen İlk Yapılır (FCFS)</SelectItem>
                   <SelectItem value="CR">Kritik Oran (Critical Ratio - CR)</SelectItem>
@@ -920,12 +886,12 @@ export function ProductionCapacityWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Aşırı Yük Eşik Değeri (%)</Label>
+              <Label className="text-xs text-[var(--text-2)]">Aşırı Yük Eşik Değeri (%)</Label>
               <Input
                 type="number"
                 value={overloadThreshold}
                 onChange={(e) => setOverloadThreshold(e.target.value)}
-                className="h-10 bg-zinc-950 border-[--line] mt-1 font-mono"
+                className="h-10 bg-[var(--bg)] border-[--line] mt-1 font-mono"
               />
             </div>
           </div>
@@ -952,44 +918,44 @@ export function ProductionCapacityWorkspace() {
 
       {/* ── GÖREV DÜZENLEME & YENİDEN ZAMANLAMA MODALI ── */}
       <Dialog open={Boolean(selectedTaskForEdit)} onOpenChange={() => setSelectedTaskForEdit(null)}>
-        <DialogContent className="sm:max-w-lg bg-zinc-900 border-[--line] text-white rounded-3xl">
+        <DialogContent className="sm:max-w-lg bg-[var(--bg)] border-[--line] text-[var(--text)] rounded-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">
               Operasyon Çizelgesini Düzenle (#{selectedTaskForEdit?.operation?.operationNumber})
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               {selectedTaskForEdit?.workOrder?.workOrderNumber} - {selectedTaskForEdit?.operation?.name}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Başlangıç Zamanı</Label>
+              <Label className="text-xs text-[var(--text-2)]">Başlangıç Zamanı</Label>
               <Input
                 type="datetime-local"
                 value={editStartDate}
                 onChange={(e) => setEditStartDate(e.target.value)}
-                className="h-10 bg-zinc-950 border-[--line] mt-1"
+                className="h-10 bg-[var(--bg)] border-[--line] mt-1"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Bitiş Zamanı</Label>
+              <Label className="text-xs text-[var(--text-2)]">Bitiş Zamanı</Label>
               <Input
                 type="datetime-local"
                 value={editEndDate}
                 onChange={(e) => setEditEndDate(e.target.value)}
-                className="h-10 bg-zinc-950 border-[--line] mt-1"
+                className="h-10 bg-[var(--bg)] border-[--line] mt-1"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Atanan İş Merkezi</Label>
+              <Label className="text-xs text-[var(--text-2)]">Atanan İş Merkezi</Label>
               <Select value={editWorkCenterId} onValueChange={setEditWorkCenterId}>
-                <SelectTrigger className="h-10 bg-zinc-950 border-[--line] mt-1">
+                <SelectTrigger className="h-10 bg-[var(--bg)] border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                   {(ganttData?.workCenters || []).map((w: any) => (
                     <SelectItem key={w.workCenterId} value={w.workCenterId}>
                       {w.code} - {w.name}
@@ -1005,9 +971,9 @@ export function ProductionCapacityWorkspace() {
                 id="editLock"
                 checked={editIsLocked}
                 onChange={(e) => setEditIsLocked(e.target.checked)}
-                className="w-4 h-4 rounded bg-zinc-950 border-[--line] text-amber-500 focus:ring-amber-500"
+                className="w-4 h-4 rounded bg-[var(--bg)] border-[--line] text-amber-500 focus:ring-amber-500"
               />
-              <Label htmlFor="editLock" className="text-xs text-zinc-300 cursor-pointer">
+              <Label htmlFor="editLock" className="text-xs text-[var(--text-2)] cursor-pointer">
                 Bu operasyonu kilitle (Yeniden otomatik planlamada yeri sabit kalır)
               </Label>
             </div>

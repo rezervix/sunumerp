@@ -48,7 +48,7 @@ if (typeof window !== "undefined" && !customElements.get("vendor-bandrol")) {
               padding: 8px 12px;
               text-decoration: none;
               color: #ffffff;
-              background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+              background: linear-gradient(135deg, #0B1B33 0%, var(--page) 100%);
               border: 1px solid rgba(255, 255, 255, 0.08);
               border-radius: 12px;
               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -56,7 +56,7 @@ if (typeof window !== "undefined" && !customElements.get("vendor-bandrol")) {
             }
             .bandrol-link:hover {
               transform: translateY(-1px);
-              background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+              background: linear-gradient(135deg, #334155 0%, #0B1B33 100%);
               border-color: rgba(255, 255, 255, 0.15);
               box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
             }

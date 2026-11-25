@@ -41,12 +41,12 @@ function formatDateLabel(isoStr: string) {
 // Kategoriye göre renk/etiket
 function eventTypeMeta(type: CalendarEvent["type"]) {
   const map: Record<CalendarEvent["type"], { label: string; bg: string; text: string }> = {
-    appointment:     { label: "Randevu",       bg: "bg-blue-100  dark:bg-blue-900/40",   text: "text-blue-700   dark:text-blue-300" },
+    appointment:     { label: "Randevu",       bg: "bg-blue-100  ",   text: "text-blue-700   " },
     income_payment:  { label: "Alınacak Ödeme",bg: "bg-[--brand-soft]", text: "text-[--brand]" },
-    expense_payment: { label: "Yapılacak Ödeme",bg: "bg-red-100  dark:bg-red-900/40",     text: "text-red-700    dark:text-red-300" },
-    reminder:        { label: "Hatırlatıcı",   bg: "bg-amber-100  dark:bg-amber-900/40",  text: "text-amber-700  dark:text-amber-300" },
-    todo:            { label: "Yapılacak",      bg: "bg-violet-100 dark:bg-violet-900/40", text: "text-violet-700 dark:text-violet-300" },
-    content_calendar: { label: "İçerik Planı",  bg: "bg-fuchsia-100 dark:bg-fuchsia-900/40", text: "text-fuchsia-700 dark:text-fuchsia-300" },
+    expense_payment: { label: "Yapılacak Ödeme",bg: "bg-red-100  ",     text: "text-red-700    " },
+    reminder:        { label: "Hatırlatıcı",   bg: "bg-amber-100  ",  text: "text-amber-700  " },
+    todo:            { label: "Yapılacak",      bg: "bg-[var(--brand-soft)] (--brand-soft)]/40", text: "text-[var(--brand)] (--brand)]" },
+    content_calendar: { label: "İçerik Planı",  bg: "bg-[var(--brand-soft)] (--brand-soft)]/40", text: "text-[var(--brand)] (--brand)]" },
   }
   return map[type]
 }
@@ -124,9 +124,9 @@ function AppointmentModal({ date, branchId, onClose, onSaved }: AppointmentModal
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[var(--muted-bg)] backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-md bg-white dark:bg-[#1f2428] rounded-2xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border bg-primary/5">
           <div className="flex items-center gap-2">
@@ -463,8 +463,8 @@ export default function TakvimPage() {
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setSelectedEvent(null)} />
-        <div className="relative z-10 w-full max-w-sm bg-white dark:bg-[#1f2428] rounded-2xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute inset-0 bg-[var(--muted-bg)] backdrop-blur-sm" onClick={() => setSelectedEvent(null)} />
+        <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="h-1.5 w-full" style={{ backgroundColor: selectedEvent.color }} />
           <div className="p-5">
             <div className="flex items-start justify-between gap-3 mb-4">
@@ -514,7 +514,7 @@ export default function TakvimPage() {
                   disabled={deleting}
                 >
                   {deleting
-                    ? <><span className="inline-block w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />Siliniyor...</>
+                    ? <><span className="inline-block w-3 h-3 border-2 border-[var(--line-soft)] border-t-white rounded-full animate-spin mr-2" />Siliniyor...</>
                     : "Randevuyu Sil"
                   }
                 </Button>
@@ -544,7 +544,7 @@ export default function TakvimPage() {
               <button
                 key={v}
                 onClick={() => setViewMode(v)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === v ? "bg-white dark:bg-[#1f2428] text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${viewMode === v ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
               >
                 {v === "month" ? "Ay" : v === "week" ? "Hafta" : "Ajanda"}
               </button>
@@ -574,7 +574,7 @@ export default function TakvimPage() {
       </div>
 
       {/* ── Ana Takvim Kartı ── */}
-      <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-border overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-border overflow-hidden">
 
         {/* Navigasyon Başlığı */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -677,7 +677,7 @@ export default function TakvimPage() {
         const diff = Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
         return diff >= 0 && diff <= 7
       }).length > 0 && (
-        <div className="bg-white dark:bg-[#1f2428] rounded-2xl shadow-sm border border-border p-5">
+        <div className="bg-white rounded-2xl shadow-sm border border-border p-5">
           <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
             <Clock size={16} className="text-primary" />
             Yaklaşan 7 Gün

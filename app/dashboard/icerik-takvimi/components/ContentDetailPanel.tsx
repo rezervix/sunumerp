@@ -455,9 +455,9 @@ export default function ContentDetailPanel({
 
               {/* Çekim bilgisi */}
               {item.shoot && (
-                <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 flex items-start justify-between">
+                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 flex items-start justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-medium text-xs mb-2">
+                    <div className="flex items-center gap-2 text-amber-600 font-medium text-xs mb-2">
                       <Camera size={12} /> Bağlı Çekim
                     </div>
                     <div className="text-sm font-semibold">{new Date(item.shoot.shootDate).toLocaleDateString("tr-TR")}</div>
@@ -480,7 +480,7 @@ export default function ContentDetailPanel({
               {/* Müşteri onayı */}
               {item.clientApprovalRequired && (
                 <div className="flex items-center gap-2 text-sm">
-                  <AlertCircle size={14} className="text-violet-500" />
+                  <AlertCircle size={14} className="text-[var(--brand)]" />
                   <span>Müşteri onayı gerekli —</span>
                   <Badge variant={
                     item.clientApprovalStatus === "approved" ? "default" :
@@ -512,7 +512,7 @@ export default function ContentDetailPanel({
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-semibold">Durumu Güncelle</Label>
                   {item.status === "iptal_edildi" && (
-                    <span className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
                       İptal Edilmiş Kayıt
                     </span>
                   )}
@@ -585,8 +585,8 @@ export default function ContentDetailPanel({
                     isSuperAdmin
 
                   return (
-                    <div className="p-3.5 rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/15 space-y-2.5">
-                      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-xs">
+                    <div className="p-3.5 rounded-xl border border-amber-300 bg-amber-50/50 space-y-2.5">
+                      <div className="flex items-center gap-2 text-amber-600 font-bold text-xs">
                         <AlertCircle size={14} /> Aktif Revizyon Talebi var (Tur #{activeRev.revisionNumber})
                       </div>
                       <div className="text-xs bg-background/50 p-2.5 rounded-lg border whitespace-pre-wrap">
@@ -634,8 +634,8 @@ export default function ContentDetailPanel({
               {/* REVİZYON TALEBİ AÇMA BUTONU VE FORMU */}
               <div className="space-y-2">
                 {showRevisionForm ? (
-                  <div className="space-y-2 border border-orange-200 dark:border-orange-900/50 p-3 rounded-lg bg-orange-50/30 dark:bg-orange-950/10">
-                    <Label className="text-xs font-semibold text-orange-600 dark:text-orange-400">Revizyon Talebi Mesajı</Label>
+                  <div className="space-y-2 border border-orange-200 p-3 rounded-lg bg-orange-50/30">
+                    <Label className="text-xs font-semibold text-orange-600">Revizyon Talebi Mesajı</Label>
                     <Textarea
                       value={revisionMessage}
                       onChange={(e) => setRevisionMessage(e.target.value)}
@@ -682,7 +682,7 @@ export default function ContentDetailPanel({
                     {revisions.map((rev) => (
                       <div key={rev.id} className="p-3 rounded-lg border border-border bg-card/50 space-y-2 text-xs">
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-orange-600 dark:text-orange-400">Revizyon #{rev.revisionNumber}</span>
+                          <span className="font-bold text-orange-600">Revizyon #{rev.revisionNumber}</span>
                           <Badge variant={rev.status === "tamamlandi" ? "default" : "outline"} className="text-[9px] px-1.5 h-4">
                             {rev.status === "tamamlandi" ? "Tamamlandı" : "Bekliyor"}
                           </Badge>
@@ -697,7 +697,7 @@ export default function ContentDetailPanel({
                             <strong>Açan:</strong> {rev.createdBy?.fullName || "Bilinmeyen"} ({new Date(rev.createdAt).toLocaleString("tr-TR")})
                           </div>
                           {rev.status === "tamamlandi" && (
-                            <div className="text-[--brand] dark:text-[--brand] mt-1">
+                            <div className="text-[--brand] ] mt-1">
                               <strong>Edildi:</strong> {rev.completedBy?.fullName || "Bilinmeyen"} ({new Date(rev.completedAt).toLocaleString("tr-TR")})
                             </div>
                           )}
@@ -859,8 +859,8 @@ export default function ContentDetailPanel({
                   label="Atanan Kameraman"
                   icon={<Camera size={15} />}
                   color="text-amber-500"
-                  bg="bg-amber-50 dark:bg-amber-900/10"
-                  border="border-amber-200 dark:border-amber-800/50"
+                  bg="bg-amber-50 "
+                  border="border-amber-200 "
                   assignedUserId={item.shooterId}
                   assignedUserName={getUserName(item.shooterId)}
                   sending={sendingTask === "shooter"}
@@ -876,8 +876,8 @@ export default function ContentDetailPanel({
                   label="Atanan Video Editörü"
                   icon={<Edit3 size={15} />}
                   color="text-blue-500"
-                  bg="bg-blue-50 dark:bg-blue-900/10"
-                  border="border-blue-200 dark:border-blue-800/50"
+                  bg="bg-blue-50 "
+                  border="border-blue-200 "
                   assignedUserId={item.editorId}
                   assignedUserName={getUserName(item.editorId)}
                   sending={sendingTask === "editor"}
@@ -892,9 +892,9 @@ export default function ContentDetailPanel({
                   role="designer"
                   label="Atanan Grafik Tasarım Uzmanı"
                   icon={<Edit3 size={15} />}
-                  color="text-indigo-500"
-                  bg="bg-indigo-50 dark:bg-indigo-900/10"
-                  border="border-indigo-200 dark:border-indigo-800/50"
+                  color="text-[var(--brand)]"
+                  bg="bg-indigo-50 "
+                  border="border-indigo-200 "
                   assignedUserId={item.designerId}
                   assignedUserName={getUserName(item.designerId)}
                   sending={sendingTask === "designer"}
@@ -908,9 +908,9 @@ export default function ContentDetailPanel({
                 role="manager"
                 label="Sosyal Medya Yöneticisi"
                 icon={<Users size={15} />}
-                color="text-violet-500"
-                bg="bg-violet-50 dark:bg-violet-900/10"
-                border="border-violet-200 dark:border-violet-800/50"
+                color="text-[var(--brand)]"
+                bg="bg-[var(--brand-soft)] (--brand-soft)]/10"
+                border="border-[var(--brand-line)] (--brand-line)]/50"
                 assignedUserId={item.managerId}
                 assignedUserName={getUserName(item.managerId)}
                 sending={sendingTask === "manager"}

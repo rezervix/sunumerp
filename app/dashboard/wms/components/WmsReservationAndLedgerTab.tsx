@@ -210,7 +210,7 @@ export function WmsReservationAndLedgerTab({
             <Button
               size="sm"
               onClick={handleSimulateFefo}
-              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full cursor-pointer shadow-sm"
+              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full cursor-pointer shadow-sm"
             >
               Lot Sırası Hesapla
             </Button>
@@ -261,7 +261,7 @@ export function WmsReservationAndLedgerTab({
           <Button
             size="sm"
             onClick={() => setIsNewResOpen(true)}
-            className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1.5 cursor-pointer shadow-sm"
+            className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full gap-1.5 cursor-pointer shadow-sm"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Stok Rezerve Et</span>
@@ -477,9 +477,7 @@ export function WmsReservationAndLedgerTab({
                       </div>
                     </td>
                     <td
-                      className={`py-3 px-3 text-right font-mono font-bold ${
-                        Number(m.quantity) >= 0 ? "text-[--ok]" : "text-[--bad]"
-                      }`}
+                      className={`py-3 px-3 text-right font-mono font-bold ${ Number(m.quantity) >= 0 ? "text-[--ok]" : "text-[--bad]" }`}
                     >
                       {Number(m.quantity) > 0 ? `+${m.quantity}` : m.quantity} {m.unit}
                     </td>
@@ -573,7 +571,7 @@ export function WmsReservationAndLedgerTab({
             </div>
             <DialogFooter className="gap-2 pt-2">
               <Button type="button" variant="outline" size="sm" onClick={() => setIsNewResOpen(false)} className="text-xs border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full h-9 px-4 cursor-pointer">Vazgeç</Button>
-              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">Rezerve Et</Button>
+              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">Rezerve Et</Button>
             </DialogFooter>
           </form>
         </DialogContent>

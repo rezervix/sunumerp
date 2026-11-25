@@ -49,7 +49,7 @@ export default function TasksPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsCreateOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-medium text-xs sm:text-sm rounded-full shadow-sm transition active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-medium text-xs sm:text-sm rounded-full shadow-sm transition active:scale-95 cursor-pointer"
             >
               <Plus className="h-4 w-4" />
               {tText("tasks.addTask", "Yeni Görev")}

@@ -211,10 +211,7 @@ export function ItemProductionProfileTab({
           </div>
         </div>
         <span
-          className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border ${isConfiguredInDb
-            ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-            : "bg-[--muted-bg]/40 text-[--text-muted] border-[--line]"
-            }`}
+          className={`text-[10px] font-medium px-2.5 py-0.5 rounded-full border ${isConfiguredInDb ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "bg-[--muted-bg]/40 text-[--text-muted] border-[--line]" }`}
         >
           {isConfiguredInDb ? (
             <span className="inline-flex items-center gap-1">
@@ -321,7 +318,7 @@ export function ItemProductionProfileTab({
 
         <div className="space-y-1">
           <Label className="text-[11px] font-medium text-[--text-muted] flex items-center gap-1">
-            <ShieldAlert className="h-3 w-3 text-amber-400" />
+            <ShieldAlert className="h-3 w-3 text-[var(--warn)]" />
             Güvenlik Stoğu
           </Label>
           <Input
@@ -491,7 +488,7 @@ export function ItemProductionProfileTab({
           size="sm"
           disabled={saving}
           onClick={handleSave}
-          className="text-xs h-8.5 bg-[--brand] hover:bg-[--brand-hover] text-white font-medium rounded-xl cursor-pointer gap-1.5 shadow-sm"
+          className="text-xs h-8.5 bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-medium rounded-xl cursor-pointer gap-1.5 shadow-sm"
         >
           {saving ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />

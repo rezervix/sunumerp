@@ -350,9 +350,7 @@ export default function SurucuMobilTeslimatPage() {
                     </div>
                   </div>
                   <span
-                    className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${
-                      DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] || 'text-[--text-muted]'
-                    }`}
+                    className={`text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 ${ DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] || 'text-[--text-muted]' }`}
                   >
                     {DISPATCH_STOP_STATUS_LABELS[stop.status as DispatchStopStatus] || stop.status}
                   </span>
@@ -497,22 +495,14 @@ export default function SurucuMobilTeslimatPage() {
               <button
                 type="button"
                 onClick={() => setDeliveryStatus('TESLIM_EDILDI')}
-                className={`flex-1 py-2 rounded-xl border transition ${
-                  deliveryStatus === 'TESLIM_EDILDI'
-                    ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold'
-                    : 'bg-white border-[--line] text-[--text-muted]'
-                }`}
+                className={`flex-1 py-2 rounded-xl border transition ${ deliveryStatus === 'TESLIM_EDILDI' ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold' : 'bg-white border-[--line] text-[--text-muted]' }`}
               >
                 Tam Teslim
               </button>
               <button
                 type="button"
                 onClick={() => setDeliveryStatus('KISMI_TESLIM')}
-                className={`flex-1 py-2 rounded-xl border transition ${
-                  deliveryStatus === 'KISMI_TESLIM'
-                    ? 'bg-[--warn-soft] border-[--warn] text-[--warn] font-semibold'
-                    : 'bg-white border-[--line] text-[--text-muted]'
-                }`}
+                className={`flex-1 py-2 rounded-xl border transition ${ deliveryStatus === 'KISMI_TESLIM' ? 'bg-[--warn-soft] border-[--warn] text-[--warn] font-semibold' : 'bg-white border-[--line] text-[--text-muted]' }`}
               >
                 Kısmi Teslim
               </button>
@@ -670,7 +660,7 @@ export default function SurucuMobilTeslimatPage() {
                   });
                   setFailStop(null);
                 }}
-                className="px-4 py-2 rounded-full bg-[--bad] hover:bg-[--bad]/90 text-white font-semibold shadow-sm"
+                className="px-4 py-2 rounded-full bg-[--bad] hover:bg-[--bad]/90 text-[var(--text)] font-semibold shadow-sm"
               >
                 Kaydet
               </button>

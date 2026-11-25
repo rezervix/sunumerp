@@ -232,13 +232,7 @@ export function CriticalStockRopTable({
                     </td>
 
                     <td className="py-3.5 px-3 text-right font-mono tabular-nums">
-                      <span className={`font-semibold ${
-                        safeNumber(item.availableQty) <= 0
-                          ? 'text-[--bad]'
-                          : safeNumber(item.availableQty) < safeNumber(item.reorderPointRop)
-                          ? 'text-[--warn]'
-                          : 'text-[--ok]'
-                      }`}>
+                      <span className={`font-semibold ${ safeNumber(item.availableQty) <= 0 ? 'text-[--bad]' : safeNumber(item.availableQty) < safeNumber(item.reorderPointRop) ? 'text-[--warn]' : 'text-[--ok]' }`}>
                         {safeNumber(item.availableQty)} {safeText(item.unit)}
                       </span>
                     </td>

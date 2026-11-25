@@ -110,11 +110,7 @@ export function NotificationCenter() {
               onClick={() => setActiveView(activeView === "list" ? "prefs" : "list")}
               title={activeView === "list" ? "Bildirim Tercihleri" : "Bildirim Listesine Dön"}
               aria-label={activeView === "list" ? "Bildirim Tercihleri" : "Bildirim Listesine Dön"}
-              className={`p-1.5 rounded-full transition-colors cursor-pointer ${
-                activeView === "prefs"
-                  ? "bg-[var(--brand-soft)] text-[var(--brand)]"
-                  : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]"
-              }`}
+              className={`p-1.5 rounded-full transition-colors cursor-pointer ${ activeView === "prefs" ? "bg-[var(--brand-soft)] text-[var(--brand)]" : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]" }`}
             >
               <IconSettings size={14} />
             </button>
@@ -156,11 +152,7 @@ export function NotificationCenter() {
                     )}
                     <div className="pl-2.5">
                       <p
-                        className={`text-xs leading-snug ${
-                          !n.isRead
-                            ? "font-semibold text-[var(--text)]"
-                            : "text-[var(--text-2)]"
-                        }`}
+                        className={`text-xs leading-snug ${ !n.isRead ? "font-semibold text-[var(--text)]" : "text-[var(--text-2)]" }`}
                       >
                         {safeText(n.title, "Bildirim")}
                       </p>

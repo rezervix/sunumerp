@@ -211,7 +211,7 @@ export function PrintableLabelModal({
             size="sm"
             disabled={!label}
             onClick={handlePrint}
-            className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+            className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full h-9 px-4 gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
           >
             <Barcode className="h-3.5 w-3.5" />
             <span>Etiketi Yazdır / PDF</span>

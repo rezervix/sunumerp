@@ -321,11 +321,7 @@ export default function RolesPage() {
                                   type="button"
                                   disabled={editingRole?.name === "Super Admin"}
                                   onClick={() => handleTogglePermission(resource.key, action)}
-                                  className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 ${
-                                    isChecked
-                                      ? "bg-[--brand] justify-end"
-                                      : "bg-[--line] justify-start"
-                                  }`}
+                                  className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer disabled:opacity-40 ${ isChecked ? "bg-[--brand] justify-end" : "bg-[--line] justify-start" }`}
                                 >
                                   <span className="size-4 rounded-full bg-white shadow-xs" />
                                 </button>

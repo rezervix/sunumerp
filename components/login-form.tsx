@@ -37,33 +37,33 @@ export function LoginForm() {
   }
 
   return (
-    <div className="bg-[white]/90 backdrop-blur-2xl rounded-[24px] border border-[--line] shadow-2xl p-8 space-y-6 text-white">
+    <div className="bg-[white]/90 backdrop-blur-2xl rounded-[24px] border border-[--line] shadow-2xl p-8 space-y-6 text-[var(--text)]">
       <div className="lg:hidden text-center">
-        <h2 className="text-xl font-bold text-white">{t.login.form.submit}</h2>
-        <p className="text-xs text-zinc-400 mt-1">{t.login.subtitle}</p>
+        <h2 className="text-xl font-bold text-[var(--text)]">{t.login.form.submit}</h2>
+        <p className="text-xs text-[var(--text-muted)] mt-1">{t.login.subtitle}</p>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-4">
         {error && (
-          <Alert variant="destructive" className="py-3 bg-red-500/10 border-red-500/20 text-red-400">
+          <Alert variant="destructive" className="py-3 bg-[var(--bad-soft)] border-[var(--bad-line)] text-red-400">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
         <div className="space-y-1.5">
-          <Label htmlFor="username" className="text-xs font-medium text-zinc-300">
+          <Label htmlFor="username" className="text-xs font-medium text-[var(--text-2)]">
             {t.login.form.username}
           </Label>
           <div className="relative">
-            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+            <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
             <Input
               id="username"
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
               required
-              className="pl-10 h-11 bg-white border-[--line] text-white placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
+              className="pl-10 h-11 bg-white border-[--line] text-[var(--text)] placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
               placeholder="kullanici.adi"
               autoComplete="username"
             />
@@ -72,27 +72,27 @@ export function LoginForm() {
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password" className="text-xs font-medium text-zinc-300">{t.login.form.password}</Label>
+            <Label htmlFor="password" className="text-xs font-medium text-[var(--text-2)]">{t.login.form.password}</Label>
             <Link href="/forgot-password" className="text-xs text-[--brand] hover:underline font-medium">
               {t.login.form.forgotPassword}
             </Link>
           </div>
           <div className="relative">
-            <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+            <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
             <Input
               id="password"
               type={showPw ? "text" : "password"}
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="pl-10 pr-10 h-11 bg-white border-[--line] text-white placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
+              className="pl-10 pr-10 h-11 bg-white border-[--line] text-[var(--text)] placeholder:text-zinc-600 focus-visible:ring-[--brand]/50 rounded-xl text-xs"
               placeholder="••••••••"
               autoComplete="current-password"
             />
             <button
               type="button"
               onClick={() => setShowPw(v => !v)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors cursor-pointer"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors cursor-pointer"
               tabIndex={-1}
             >
               {showPw ? <EyeOff size={16} /> : <Eye size={16} />}

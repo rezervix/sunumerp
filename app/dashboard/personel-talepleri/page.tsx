@@ -578,9 +578,9 @@ export default function PersonelTalepleriPage() {
                         <span
                           className={cn(
                             "inline-flex items-center text-[11px] font-medium px-2.5 py-0.5 rounded-full",
-                            req.status === "pending" && "bg-amber-500/10 text-amber-300",
+                            req.status === "pending" && "bg-[var(--warn-soft)] text-[var(--warn)]",
                             req.status === "approved" && "bg-[--brand-soft] text-[--brand]",
-                            req.status === "rejected" && "bg-rose-500/10 text-rose-400",
+                            req.status === "rejected" && "bg-[var(--bad-soft)] text-[var(--bad)]",
                             req.status === "completed" && "bg-[--brand-soft] text-[--brand]"
                           )}
                         >
@@ -609,7 +609,7 @@ export default function PersonelTalepleriPage() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="size-7 rounded-full hover:bg-rose-500/10 text-[--text-muted] hover:text-rose-400"
+                              className="size-7 rounded-full hover:bg-[var(--bad-soft)] text-[--text-muted] hover:text-[var(--bad)]"
                               onClick={(e) => handleCancelRequest(req.id, e)}
                             >
                               <Trash2 size={14} />
@@ -923,7 +923,7 @@ export default function PersonelTalepleriPage() {
                       onDragLeave={handleDrag}
                       onDrop={handleDrop}
                       className={cn(
-                        "border border-dashed border-white/[0.12] rounded-[20px] p-6 text-center transition-all cursor-pointer",
+                        "border border-dashed border-[var(--line-soft)] rounded-[20px] p-6 text-center transition-all cursor-pointer",
                         dragActive ? "border-[--brand-line] bg-[--brand-soft]" : "hover:bg-white"
                       )}
                     >
@@ -939,7 +939,7 @@ export default function PersonelTalepleriPage() {
                             <span className="truncate max-w-32">{file}</span>
                             <button
                               onClick={() => setFormFiles(prev => prev.filter((_, i) => i !== idx))}
-                              className="size-3.5 rounded-full hover:bg-white/10 flex items-center justify-center shrink-0"
+                              className="size-3.5 rounded-full hover:bg-[var(--muted-bg)] flex items-center justify-center shrink-0"
                             >
                               <X size={10} />
                             </button>
@@ -1146,9 +1146,9 @@ export default function PersonelTalepleriPage() {
                         <span
                           className={cn(
                             "text-[10px] px-2 py-0.5 rounded-full font-medium",
-                            detailItem.status === "pending" && "bg-amber-500/10 text-amber-300",
+                            detailItem.status === "pending" && "bg-[var(--warn-soft)] text-[var(--warn)]",
                             (detailItem.status === "approved" || detailItem.status === "completed") && "bg-[--brand-soft] text-[--brand]",
-                            detailItem.status === "rejected" && "bg-rose-500/10 text-rose-400"
+                            detailItem.status === "rejected" && "bg-[var(--bad-soft)] text-[var(--bad)]"
                           )}
                         >
                           {detailItem.status === "pending" ? "Onay Bekliyor" : detailItem.status === "rejected" ? "Reddedildi" : "Onaylandı"}
@@ -1170,7 +1170,7 @@ export default function PersonelTalepleriPage() {
                     <div
                       className={cn(
                         "absolute -left-[29px] top-1 size-3 rounded-full ring-4 ring-white",
-                        detailItem.status === "completed" ? "bg-[--brand]" : "bg-zinc-700"
+                        detailItem.status === "completed" ? "bg-[--brand]" : "bg-[var(--muted-bg)]"
                       )}
                     />
                     <div>
@@ -1204,7 +1204,7 @@ export default function PersonelTalepleriPage() {
                   <div className="flex gap-2.5">
                     <Button
                       variant="outline"
-                      className="flex-1 gap-2 border-rose-500/25 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 rounded-full h-9"
+                      className="flex-1 gap-2 border-rose-500/25 bg-[var(--bad-soft)] text-[var(--bad)] hover:bg-[var(--bad-soft)] rounded-full h-9"
                       onClick={() => setRejectOpen(true)}
                     >
                       <ThumbsDown size={14} />
@@ -1244,7 +1244,7 @@ export default function PersonelTalepleriPage() {
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogContent className="max-w-md glass-panel border-[--line] text-[--text]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-rose-400 font-medium">
+            <DialogTitle className="flex items-center gap-2 text-[var(--bad)] font-medium">
               <XCircle size={18} />
               Talebi Reddet
             </DialogTitle>

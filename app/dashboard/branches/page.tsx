@@ -387,7 +387,7 @@ export default function BranchesPage() {
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.name || !formData.code}
-                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-sm"
+                className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-sm"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : "Kaydet"}
@@ -527,7 +527,7 @@ export default function BranchesPage() {
               <button
                 onClick={handleEdit}
                 disabled={loading || !formData.name || !formData.code}
-                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-sm"
+                className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shadow-sm"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[16px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : "Kaydet"}

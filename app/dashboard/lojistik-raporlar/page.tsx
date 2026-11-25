@@ -133,14 +133,14 @@ function LojistikRaporlarContent() {
       {/* Üst Başlık & Dışa Aktarma Aksiyonları */}
       <div className="bg-[white] border border-[--line] rounded-[20px] p-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-400 font-medium">
+          <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--text-muted)] font-medium">
             Lojistik &amp; Tedarik Zinciri Analitiği
           </p>
           <h1 className="text-2xl font-light text-[--text] tracking-tight mt-1 flex items-center gap-2.5">
             <BarChart3 className="w-6 h-6 text-[--brand]" />
             Lojistik Raporları
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             Yalnızca erişim yetkiniz bulunan ve sistem bayrağı etkin modüllerin canlı veritabanı raporlarını görüntüleyin, Excel veya PDF olarak indirin.
           </p>
         </div>
@@ -150,7 +150,7 @@ function LojistikRaporlarContent() {
             type="button"
             onClick={() => fetchReport()}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-zinc-200 transition-colors cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-[var(--text-2)] transition-colors cursor-pointer disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -202,10 +202,7 @@ function LojistikRaporlarContent() {
                 role="tab"
                 aria-selected={isSelected}
                 onClick={() => handleModuleSwitch(mod.key)}
-                className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${isSelected
-                  ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                  : "bg-[white] text-zinc-400 hover:text-[--text] border-[--line]"
-                  }`}
+                className={`px-4 py-2 rounded-full text-xs font-medium border transition-colors cursor-pointer ${isSelected ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "bg-[white] text-[var(--text-muted)] hover:text-[--text] border-[--line]" }`}
               >
                 {mod.shortTitle}
               </button>
@@ -215,7 +212,7 @@ function LojistikRaporlarContent() {
           {activeDef && (
             <Link
               href={activeDef.primaryHref}
-              className="ml-auto inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-[--brand] transition-colors"
+              className="ml-auto inline-flex items-center gap-1 text-xs text-[var(--text-muted)] hover:text-[--brand] transition-colors"
             >
               Modüle Git
               <ArrowRight className="w-3.5 h-3.5" />
@@ -226,10 +223,10 @@ function LojistikRaporlarContent() {
 
       {/* Erişim Yetkisi Bilgilendirmesi */}
       {errorMessage && (
-        <div className="bg-[white] border border-amber-500/30 rounded-[20px] p-8 flex flex-col items-center text-center gap-3">
-          <ShieldAlert className="w-8 h-8 text-amber-400" />
+        <div className="bg-[white] border border-[var(--warn-line)] rounded-[20px] p-8 flex flex-col items-center text-center gap-3">
+          <ShieldAlert className="w-8 h-8 text-[var(--warn)]" />
           <p className="text-sm font-medium text-[--text]">{errorMessage}</p>
-          <p className="text-xs text-zinc-400 max-w-md">
+          <p className="text-xs text-[var(--text-muted)] max-w-md">
             Bu raporları görüntülemek için hesabınızda en az bir lojistik okuma yetkisi bulunduğundan emin olun.
           </p>
         </div>
@@ -241,32 +238,32 @@ function LojistikRaporlarContent() {
           {/* Filtre Çubuğu */}
           <div className="bg-[white] border border-[--line] rounded-[20px] p-4 flex flex-wrap items-end gap-3">
             <div className="space-y-1">
-              <label className="block text-[11px] text-zinc-400">Başlangıç Tarihi</label>
+              <label className="block text-[11px] text-[var(--text-muted)]">Başlangıç Tarihi</label>
               <input
                 type="date"
                 value={filters.dateFrom || ""}
                 onChange={(e) => handleFilterChange({ dateFrom: e.target.value || undefined })}
-                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text]"
+                className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="block text-[11px] text-zinc-400">Bitiş Tarihi</label>
+              <label className="block text-[11px] text-[var(--text-muted)]">Bitiş Tarihi</label>
               <input
                 type="date"
                 value={filters.dateTo || ""}
                 onChange={(e) => handleFilterChange({ dateTo: e.target.value || undefined })}
-                className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text]"
+                className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text]"
               />
             </div>
 
             {report.filterOptions.warehouses && report.filterOptions.warehouses.length > 0 && (
               <div className="space-y-1">
-                <label className="block text-[11px] text-zinc-400">Depo</label>
+                <label className="block text-[11px] text-[var(--text-muted)]">Depo</label>
                 <select
                   value={filters.warehouseId || ""}
                   onChange={(e) => handleFilterChange({ warehouseId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
+                  className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Depolar</option>
                   {report.filterOptions.warehouses.map((w) => (
@@ -280,11 +277,11 @@ function LojistikRaporlarContent() {
 
             {report.filterOptions.vehicles && report.filterOptions.vehicles.length > 0 && (
               <div className="space-y-1">
-                <label className="block text-[11px] text-zinc-400">Araç</label>
+                <label className="block text-[11px] text-[var(--text-muted)]">Araç</label>
                 <select
                   value={filters.vehicleId || ""}
                   onChange={(e) => handleFilterChange({ vehicleId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
+                  className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Araçlar</option>
                   {report.filterOptions.vehicles.map((v) => (
@@ -298,11 +295,11 @@ function LojistikRaporlarContent() {
 
             {report.filterOptions.suppliers && report.filterOptions.suppliers.length > 0 && (
               <div className="space-y-1">
-                <label className="block text-[11px] text-zinc-400">Tedarikçi</label>
+                <label className="block text-[11px] text-[var(--text-muted)]">Tedarikçi</label>
                 <select
                   value={filters.supplierId || ""}
                   onChange={(e) => handleFilterChange({ supplierId: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
+                  className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[180px]"
                 >
                   <option value="">Tüm Tedarikçiler</option>
                   {report.filterOptions.suppliers.map((s) => (
@@ -316,11 +313,11 @@ function LojistikRaporlarContent() {
 
             {report.filterOptions.channels && report.filterOptions.channels.length > 0 && (
               <div className="space-y-1">
-                <label className="block text-[11px] text-zinc-400">Satış Kanalı</label>
+                <label className="block text-[11px] text-[var(--text-muted)]">Satış Kanalı</label>
                 <select
                   value={filters.channelCode || ""}
                   onChange={(e) => handleFilterChange({ channelCode: e.target.value || undefined })}
-                  className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[160px]"
+                  className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs text-[--text] min-w-[160px]"
                 >
                   <option value="">Tüm Kanallar</option>
                   {report.filterOptions.channels.map((ch) => (
@@ -335,7 +332,7 @@ function LojistikRaporlarContent() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="ml-auto h-8 px-3 rounded-xl bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-zinc-300 cursor-pointer"
+              className="ml-auto h-8 px-3 rounded-xl bg-white/[0.04] hover:bg-[--muted-bg] border border-[--line] text-xs text-[var(--text-2)] cursor-pointer"
             >
               Filtreleri Sıfırla
             </button>
@@ -348,9 +345,9 @@ function LojistikRaporlarContent() {
                 key={i}
                 className="bg-[white] border border-[--line] rounded-[20px] p-4 space-y-1"
               >
-                <p className="text-[11px] text-zinc-400">{card.label}</p>
+                <p className="text-[11px] text-[var(--text-muted)]">{card.label}</p>
                 <p className="text-xl font-light text-[--text] tabular-nums">{card.value}</p>
-                {card.hint && <p className="text-[11px] text-zinc-500">{card.hint}</p>}
+                {card.hint && <p className="text-[11px] text-[var(--text-muted)]">{card.hint}</p>}
               </div>
             ))}
           </div>
@@ -360,7 +357,7 @@ function LojistikRaporlarContent() {
             <div className="bg-[white] border border-[--line] rounded-[20px] p-5 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="text-sm font-medium text-[--text]">{report.chartTitle}</h2>
-                <span className="text-[11px] text-zinc-500">
+                <span className="text-[11px] text-[var(--text-muted)]">
                   Oluşturulma: {formatReportDateTr(report.generatedAt)}
                 </span>
               </div>
@@ -419,18 +416,18 @@ function LojistikRaporlarContent() {
                   {report.title} ({report.rows.length} kayıt)
                 </span>
               </div>
-              <span className="text-[11px] text-zinc-500">{report.subtitle}</span>
+              <span className="text-[11px] text-[var(--text-muted)]">{report.subtitle}</span>
             </div>
 
             {report.rows.length === 0 ? (
-              <div className="py-12 text-center text-xs text-zinc-500">
+              <div className="py-12 text-center text-xs text-[var(--text-muted)]">
                 Seçili filtre kriterleriyle eşleşen kayıt bulunamadı.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="bg-white/[0.02] border-b border-[--line] text-[11px] text-zinc-400">
+                    <tr className="bg-white/[0.02] border-b border-[--line] text-[11px] text-[var(--text-muted)]">
                       {report.columns.map((col) => (
                         <th key={col.key} className="py-3 px-4 font-medium whitespace-nowrap">
                           {col.label}
@@ -444,10 +441,7 @@ function LojistikRaporlarContent() {
                         {report.columns.map((col) => (
                           <td
                             key={col.key}
-                            className={`py-2.5 px-4 whitespace-nowrap ${col.format && col.format !== "text"
-                              ? "font-mono tabular-nums text-zinc-200"
-                              : "text-zinc-200"
-                              }`}
+                            className={`py-2.5 px-4 whitespace-nowrap ${col.format && col.format !== "text" ? "font-mono tabular-nums text-[var(--text-2)]" : "text-[var(--text-2)]" }`}
                           >
                             {formatReportCellValue(row[col.key], col.format)}
                           </td>
@@ -469,7 +463,7 @@ export default function LojistikRaporlarPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-6 max-w-7xl mx-auto text-xs text-zinc-400">
+        <div className="p-6 max-w-7xl mx-auto text-xs text-[var(--text-muted)]">
           Lojistik raporları yükleniyor...
         </div>
       }

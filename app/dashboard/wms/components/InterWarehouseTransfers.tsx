@@ -735,7 +735,7 @@ export function InterWarehouseTransfers({
                     }))
                   )
                 }
-                className="px-4 py-2 rounded-full text-xs bg-[--bad] hover:bg-[--bad]/90 text-white font-semibold cursor-pointer shadow-sm disabled:opacity-50"
+                className="px-4 py-2 rounded-full text-xs bg-[--bad] hover:bg-[--bad]/90 text-[var(--text)] font-semibold cursor-pointer shadow-sm disabled:opacity-50"
               >
                 {submitting ? 'Kaydediliyor...' : 'Farklı Teslimatı Onayla'}
               </button>

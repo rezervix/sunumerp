@@ -58,9 +58,7 @@ export function KpiStrip({ items, loading = false, className = "" }: KpiStripPro
                 <Skeleton className="h-9 w-24 rounded-lg bg-[--muted-bg]" />
               ) : (
                 <div
-                  className={`text-3xl md:text-4xl font-light tracking-tight tabular-nums ${
-                    isBad ? "text-[--bad]" : "text-[--text]"
-                  }`}
+                  className={`text-3xl md:text-4xl font-light tracking-tight tabular-nums ${ isBad ? "text-[--bad]" : "text-[--text]" }`}
                 >
                   <AnimatedNumber
                     value={item.value}

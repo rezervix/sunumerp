@@ -276,18 +276,13 @@ export function RmaDetailAndDecisionDrawer({
                 {detail.rmaNumber}
               </h2>
               <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${
-                  RMA_STATUS_BADGE_CLASSES[status]
-                }`}
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${ RMA_STATUS_BADGE_CLASSES[status] }`}
               >
                 {RMA_STATUS_LABELS[status]}
               </span>
               {detail.qualityDecision && (
                 <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${
-                    RMA_DECISION_BADGE_CLASSES[detail.qualityDecision as RmaQualityDecision] ||
-                    'bg-[--muted-bg] text-[--text-muted] border-[--line]'
-                  }`}
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${ RMA_DECISION_BADGE_CLASSES[detail.qualityDecision as RmaQualityDecision] || 'bg-[--muted-bg] text-[--text-muted] border-[--line]' }`}
                 >
                   {RMA_DECISION_LABELS[detail.qualityDecision as RmaQualityDecision] ||
                     detail.qualityDecision}
@@ -345,11 +340,7 @@ export function RmaDetailAndDecisionDrawer({
                 return (
                   <div
                     key={st}
-                    className={`rounded-xl px-2 py-2 text-center border text-[10px] ${
-                      done
-                        ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold'
-                        : 'bg-white border-[--line] text-[--text-muted]'
-                    }`}
+                    className={`rounded-xl px-2 py-2 text-center border text-[10px] ${ done ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold' : 'bg-white border-[--line] text-[--text-muted]' }`}
                   >
                     <div className="truncate">{RMA_STATUS_LABELS[st].split(' ')[0]}</div>
                   </div>
@@ -418,11 +409,7 @@ export function RmaDetailAndDecisionDrawer({
                         type="button"
                         disabled={busy}
                         onClick={() => handleTransition(st)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer disabled:opacity-50 ${
-                          st === 'REDDEDILDI' || st === 'IPTAL'
-                            ? 'bg-[--bad-soft] hover:bg-[--bad-soft]/80 text-[--bad] border border-[--bad-soft]'
-                            : 'bg-white hover:bg-[--brand-soft] text-[--text] border border-[--line]'
-                        }`}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer disabled:opacity-50 ${ st === 'REDDEDILDI' || st === 'IPTAL' ? 'bg-[--bad-soft] hover:bg-[--bad-soft]/80 text-[--bad] border border-[--bad-soft]' : 'bg-white hover:bg-[--brand-soft] text-[--text] border border-[--line]' }`}
                       >
                         → {RMA_STATUS_LABELS[st]}
                       </button>
@@ -770,7 +757,7 @@ export function RmaDetailAndDecisionDrawer({
                       type="button"
                       disabled={busy}
                       onClick={() => handleCreditAction('ISSUE_AND_PAY')}
-                      className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold cursor-pointer shadow-sm hover:opacity-95"
+                      className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold cursor-pointer shadow-sm hover:opacity-95"
                     >
                       İade Ödemesini Tamamla &amp; RMA Kapat
                     </button>
@@ -796,7 +783,7 @@ export function RmaDetailAndDecisionDrawer({
                   type="button"
                   disabled={busy}
                   onClick={() => handleCreditAction('REQUEST_DRAFT')}
-                  className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold cursor-pointer shrink-0 shadow-sm hover:opacity-95"
+                  className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold cursor-pointer shrink-0 shadow-sm hover:opacity-95"
                 >
                   Kredi Notası Taslağı Aç
                 </button>

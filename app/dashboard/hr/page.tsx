@@ -190,9 +190,7 @@ export default function HRPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`relative px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
-                    isActive ? "text-[--brand]" : "text-[--text-muted] hover:text-[--text]"
-                  }`}
+                  className={`relative px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${ isActive ? "text-[--brand]" : "text-[--text-muted] hover:text-[--text]" }`}
                 >
                   {isActive && (
                     <motion.div
@@ -331,7 +329,7 @@ export default function HRPage() {
                               </h4>
                               {c.rating > 0 && (
                                 <span className="flex text-[--warn] text-xs items-center gap-1 font-mono">
-                                  <Star className="size-3 fill-amber-400 text-amber-400" />
+                                  <Star className="size-3 fill-amber-400 text-[var(--warn)]" />
                                   {c.rating}
                                 </span>
                               )}

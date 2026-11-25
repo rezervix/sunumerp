@@ -137,8 +137,8 @@ export function FilePreviewModal({
       case "audio":
         return (
           <div className="flex-1 flex flex-col items-center justify-center gap-6">
-            <div className="size-32 rounded-3xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 border border-pink-500/20 flex items-center justify-center">
-              <Music size={48} className="text-pink-400" />
+            <div className="size-32 rounded-3xl bg-gradient-to-br from-pink-500/20 to-purple-600/20 border border-[var(--brand-line)]/20 flex items-center justify-center">
+              <Music size={48} className="text-[var(--brand)]" />
             </div>
             <div className="text-center">
               <p className="font-semibold text-lg">{file.originalName}</p>
@@ -312,7 +312,7 @@ export function FilePreviewModal({
             {onDelete && (
               <button
                 onClick={() => onDelete(file)}
-                className="size-8 rounded-lg flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-destructive transition-colors text-muted-foreground"
+                className="size-8 rounded-lg flex items-center justify-center hover:bg-red-50 :bg-red-950/30 hover:text-destructive transition-colors text-muted-foreground"
                 title="Sil"
               >
                 <Trash2 size={15} />

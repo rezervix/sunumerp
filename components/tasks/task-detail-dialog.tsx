@@ -91,23 +91,23 @@ export function TaskDetailDialog({ task, open, onOpenChange, onSuccess, isManage
         
         <div className="space-y-6 py-4">
           <div>
-            <Label className="text-slate-500">Açıklama</Label>
+            <Label className="text-[var(--text-muted)]">Açıklama</Label>
             <p className="mt-1 text-sm whitespace-pre-wrap text-slate-800">
               {task.description || "Açıklama bulunmuyor."}
             </p>
           </div>
 
           <div>
-            <Label className="text-slate-500 flex items-center gap-2 mb-2">
+            <Label className="text-[var(--text-muted)] flex items-center gap-2 mb-2">
               <Paperclip size={16} /> Yüklenen Dosyalar
             </Label>
             {attachments.length === 0 ? (
-              <p className="text-sm text-slate-400 italic">Henüz dosya yüklenmemiş.</p>
+              <p className="text-sm text-[var(--text-muted)] italic">Henüz dosya yüklenmemiş.</p>
             ) : (
               <ul className="space-y-2">
                 {attachments.map((att, i) => (
                   <li key={i} className="flex items-center gap-2 p-2 border rounded-md bg-slate-50">
-                    <Paperclip size={14} className="text-slate-400" />
+                    <Paperclip size={14} className="text-[var(--text-muted)]" />
                     <span className="text-sm flex-1 truncate">{att.name}</span>
                     <a href={att.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1 text-xs">
                       Görüntüle <ExternalLink size={12} />

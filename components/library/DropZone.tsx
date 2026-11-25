@@ -24,8 +24,8 @@ interface DropZoneProps {
 
 function getFileIcon(mimeType: string) {
   if (mimeType.startsWith("image/")) return <Image size={16} className="text-blue-500" />
-  if (mimeType.startsWith("video/")) return <Video size={16} className="text-purple-500" />
-  if (mimeType.startsWith("audio/")) return <Music size={16} className="text-pink-500" />
+  if (mimeType.startsWith("video/")) return <Video size={16} className="text-[var(--brand)]" />
+  if (mimeType.startsWith("audio/")) return <Music size={16} className="text-[var(--brand)]" />
   if (mimeType.includes("zip") || mimeType.includes("rar") || mimeType.includes("7z"))
     return <Archive size={16} className="text-yellow-500" />
   if (mimeType.includes("pdf") || mimeType.includes("word") || mimeType.includes("sheet"))
@@ -245,8 +245,8 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
               <Upload size={32} />
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-medium text-white">Dosyaları buraya bırakın</p>
-              <p className="text-xs text-zinc-400">Çoklu dosya yükleme ve chunked aktarım destekleniyor</p>
+              <p className="text-base font-medium text-[var(--text)]">Dosyaları buraya bırakın</p>
+              <p className="text-xs text-[var(--text-muted)]">Çoklu dosya yükleme ve chunked aktarım destekleniyor</p>
             </div>
           </div>
         </div>
@@ -258,7 +258,7 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
           <select
             value={selectedCalendarId}
             onChange={(e) => setSelectedCalendarId(e.target.value)}
-            className="rounded-xl border border-[--line] bg-[white] px-3 py-1.5 text-xs outline-none focus:border-[--brand-line] max-w-[200px] truncate text-zinc-200"
+            className="rounded-xl border border-[--line] bg-[white] px-3 py-1.5 text-xs outline-none focus:border-[--brand-line] max-w-[200px] truncate text-[var(--text-2)]"
           >
             <option value="">İçerik Takvimi İlişkisi (Yok)</option>
             {contentCalendars.map((item) => (
@@ -295,11 +295,11 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
               {allDone && !hasErrors ? (
                 <CheckCircle size={16} className="text-[--brand]" />
               ) : hasErrors ? (
-                <AlertCircle size={16} className="text-rose-400" />
+                <AlertCircle size={16} className="text-[var(--bad)]" />
               ) : (
                 <Loader2 size={16} className="text-[--brand] animate-spin" />
               )}
-              <span className="text-xs font-semibold text-white">
+              <span className="text-xs font-semibold text-[var(--text)]">
                 {allDone
                   ? hasErrors ? "Bazı dosyalar yüklenemedi" : "Tüm yüklemeler tamamlandı"
                   : `${uploads.filter((u) => u.status === "done").length}/${uploads.length} yüklendi`}
@@ -309,14 +309,14 @@ export function DropZone({ branchId, folderId, onUploadComplete }: DropZoneProps
               {allDone && (
                 <button
                   onClick={clearDone}
-                  className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded"
+                  className="text-xs text-[var(--text-muted)] hover:text-[var(--brand)] transition-colors px-2 py-1 rounded"
                 >
                   Temizle
                 </button>
               )}
               <button
                 onClick={() => setIsOpen(false)}
-                className="size-6 rounded-md flex items-center justify-center hover:bg-white/[0.08] transition-colors text-zinc-400"
+                className="size-6 rounded-md flex items-center justify-center hover:bg-white/[0.08] transition-colors text-[var(--text-muted)]"
               >
                 <X size={14} />
               </button>

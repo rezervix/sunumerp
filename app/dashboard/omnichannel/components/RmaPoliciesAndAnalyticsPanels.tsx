@@ -363,7 +363,7 @@ export function RmaPoliciesPanel({
         <button
           type="submit"
           disabled={saving}
-          className="w-full py-2.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white font-semibold cursor-pointer disabled:opacity-50 shadow-sm transition"
+          className="w-full py-2.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-[var(--text)] font-semibold cursor-pointer disabled:opacity-50 shadow-sm transition"
         >
           {saving ? 'Kaydediliyor...' : 'Politikayı Kaydet'}
         </button>
@@ -465,7 +465,7 @@ export function RmaWebhookLogsPanel({
               disabled={simulating}
               onClick={handleSimulateWebhook}
               data-testid="simulate-return-webhook-btn"
-              className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white font-semibold cursor-pointer disabled:opacity-50 shadow-sm transition"
+              className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-[var(--text)] font-semibold cursor-pointer disabled:opacity-50 shadow-sm transition"
             >
               {simulating ? 'Gönderiliyor...' : 'İmzalı Webhook Gönder'}
             </button>
@@ -526,13 +526,7 @@ export function RmaWebhookLogsPanel({
                     </td>
                     <td className="py-3 px-3 font-mono">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${
-                          log.status === 'ACCEPTED'
-                            ? 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
-                            : log.status === 'DUPLICATE'
-                              ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
-                              : 'bg-[--bad-soft] text-[--bad] border-[--bad]/25'
-                        }`}
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${ log.status === 'ACCEPTED' ? 'bg-[--ok-soft] text-[--ok] border-[--ok]/25' : log.status === 'DUPLICATE' ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25' : 'bg-[--bad-soft] text-[--bad] border-[--bad]/25' }`}
                       >
                         {safeText(log.status)}
                       </span>

@@ -346,12 +346,12 @@ export function ProductionQualityWorkspace() {
         <div className="p-4 rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm flex items-center justify-between">
           <div>
             <p className="text-xs font-medium text-muted-foreground">Ret & Blokaj Sayısı</p>
-            <h3 className="text-2xl font-bold text-rose-500 mt-1">
+            <h3 className="text-2xl font-bold text-[var(--bad)] mt-1">
               {stats?.rejectedCount ?? 0}
             </h3>
-            <p className="text-xs text-rose-400 mt-1">Karantinaya alınan partiler</p>
+            <p className="text-xs text-[var(--bad)] mt-1">Karantinaya alınan partiler</p>
           </div>
-          <div className="h-10 w-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-500">
+          <div className="h-10 w-10 rounded-lg bg-[var(--bad-soft)] flex items-center justify-center text-[var(--bad)]">
             <XCircle className="h-5 w-5" />
           </div>
         </div>
@@ -362,11 +362,11 @@ export function ProductionQualityWorkspace() {
             <h3 className="text-2xl font-bold text-amber-500 mt-1">
               {stats?.activeNcrs ?? 0}
             </h3>
-            <p className="text-xs text-amber-400 mt-1">
+            <p className="text-xs text-[var(--warn)] mt-1">
               {stats?.criticalNcrs ?? 0} kritik uygunsuzluk
             </p>
           </div>
-          <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+          <div className="h-10 w-10 rounded-lg bg-[var(--warn-soft)] flex items-center justify-center text-amber-500">
             <AlertTriangle className="h-5 w-5" />
           </div>
         </div>
@@ -376,7 +376,7 @@ export function ProductionQualityWorkspace() {
             <p className="text-xs font-medium text-muted-foreground">Kalibrasyon Durumu</p>
             <h3 className="text-2xl font-bold text-foreground mt-1">
               {stats?.expiredDevicesCount ?? 0 > 0 ? (
-                <span className="text-rose-500">{stats?.expiredDevicesCount} Geçmiş</span>
+                <span className="text-[var(--bad)]">{stats?.expiredDevicesCount} Geçmiş</span>
               ) : (
                 <span className="text-[--brand]">Aktif</span>
               )}
@@ -407,11 +407,7 @@ export function ProductionQualityWorkspace() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${
-                isActive
-                  ? "border-[--brand] text-[--brand] font-semibold"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors ${ isActive ? "border-[--brand] text-[--brand] font-semibold" : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30" }`}
             >
               <Icon className="h-4 w-4" />
               {tab.label}
@@ -481,7 +477,7 @@ export function ProductionQualityWorkspace() {
                       </TableCell>
                       <TableCell>
                         {ins.totalDefects > 0 ? (
-                          <span className="text-rose-500 font-semibold">
+                          <span className="text-[var(--bad)] font-semibold">
                             {ins.totalDefects} Hata
                           </span>
                         ) : (
@@ -494,11 +490,11 @@ export function ProductionQualityWorkspace() {
                             KABUL
                           </span>
                         ) : ins.status === "CONDITIONAL_PASSED" ? (
-                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[var(--warn-soft)] text-amber-500 border border-[var(--warn-line)]">
                             ŞARTLI KABUL
                           </span>
                         ) : ins.status === "REJECTED" ? (
-                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20">
+                          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]">
                             RET (KARANTİNA)
                           </span>
                         ) : (
@@ -509,7 +505,7 @@ export function ProductionQualityWorkspace() {
                       </TableCell>
                       <TableCell>
                         {ins.isStockBlocked ? (
-                          <span className="flex items-center gap-1 text-xs text-rose-500 font-medium">
+                          <span className="flex items-center gap-1 text-xs text-[var(--bad)] font-medium">
                             <AlertOctagon className="h-3.5 w-3.5" /> Blokeli
                           </span>
                         ) : (
@@ -637,13 +633,7 @@ export function ProductionQualityWorkspace() {
                       </TableCell>
                       <TableCell>
                         <span
-                          className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                            ncr.severity === "CRITICAL"
-                              ? "bg-rose-500/20 text-rose-400 border border-rose-500/30"
-                              : ncr.severity === "MAJOR"
-                              ? "bg-amber-500/20 text-amber-400"
-                              : "bg-muted text-muted-foreground"
-                          }`}
+                          className={`px-2 py-0.5 rounded text-xs font-semibold ${ ncr.severity === "CRITICAL" ? "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]" : ncr.severity === "MAJOR" ? "bg-[var(--warn-soft)] text-[var(--warn)]" : "bg-muted text-muted-foreground" }`}
                         >
                           {ncr.severity}
                         </span>
@@ -715,13 +705,7 @@ export function ProductionQualityWorkspace() {
             {calibrations.map((dev) => (
               <div
                 key={dev.id}
-                className={`p-4 rounded-xl border bg-card transition-all ${
-                  dev.isExpired
-                    ? "border-rose-500/50 bg-rose-500/5"
-                    : dev.isExpiringSoon
-                    ? "border-amber-500/50 bg-amber-500/5"
-                    : "border-border/50"
-                }`}
+                className={`p-4 rounded-xl border bg-card transition-all ${ dev.isExpired ? "border-[var(--bad-line)] bg-rose-500/5" : dev.isExpiringSoon ? "border-[var(--warn-line)] bg-amber-500/5" : "border-border/50" }`}
               >
                 <div className="flex justify-between items-start">
                   <div>
@@ -731,7 +715,7 @@ export function ProductionQualityWorkspace() {
                     <h3 className="font-bold text-foreground mt-2">{dev.deviceName}</h3>
                   </div>
                   {dev.isExpired ? (
-                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-rose-500 text-white flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded text-xs font-bold bg-rose-500 text-[var(--text)] flex items-center gap-1">
                       <XCircle className="h-3 w-3" /> SÜRESİ GEÇMİŞ
                     </span>
                   ) : dev.isExpiringSoon ? (
@@ -824,7 +808,7 @@ export function ProductionQualityWorkspace() {
             <div className="p-6 rounded-xl border border-border/50 bg-card space-y-6">
               {traceMode === "RECALL" ? (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-rose-500 font-bold text-lg">
+                  <div className="flex items-center gap-2 text-[var(--bad)] font-bold text-lg">
                     <AlertOctagon className="h-6 w-6" />
                     Geri Çağırma (Recall) Risk ve Etki Raporu: {traceResult.lotNumber}
                   </div>
@@ -844,14 +828,14 @@ export function ProductionQualityWorkspace() {
                     </div>
                     <div className="p-4 rounded-lg bg-muted/40 border border-border/40">
                       <p className="text-xs text-muted-foreground">Müşterilere Sevk Edilmiş</p>
-                      <h3 className="text-xl font-bold mt-1 text-rose-500">
+                      <h3 className="text-xl font-bold mt-1 text-[var(--bad)]">
                         {traceResult.shippedToCustomerQty} Adet
                       </h3>
                     </div>
                   </div>
 
-                  <div className="p-4 rounded-lg border border-rose-500/20 bg-rose-500/5 text-sm text-foreground">
-                    <span className="font-semibold text-rose-500">Önerilen Aksiyon: </span>
+                  <div className="p-4 rounded-lg border border-[var(--bad-line)] bg-rose-500/5 text-sm text-foreground">
+                    <span className="font-semibold text-[var(--bad)]">Önerilen Aksiyon: </span>
                     {traceResult.recommendedAction}
                   </div>
 
@@ -944,7 +928,7 @@ export function ProductionQualityWorkspace() {
                         <TableCell className="text-xs font-semibold">%{p.cumulativePercentage}</TableCell>
                         <TableCell>
                           {p.isVitalFew ? (
-                            <span className="px-2 py-0.5 rounded text-xs font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
+                            <span className="px-2 py-0.5 rounded text-xs font-bold bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]">
                               Kritik %80
                             </span>
                           ) : (
@@ -994,13 +978,7 @@ export function ProductionQualityWorkspace() {
                         <TableCell className="font-bold text-xs">{s.qualityScore} / 100</TableCell>
                         <TableCell>
                           <span
-                            className={`px-2 py-0.5 rounded text-xs font-bold ${
-                              s.ratingBadge === "EXCELLENT"
-                                ? "bg-[--brand]/20 text-[--brand]"
-                                : s.ratingBadge === "GOOD"
-                                ? "bg-blue-500/20 text-blue-500"
-                                : "bg-rose-500/20 text-rose-500"
-                            }`}
+                            className={`px-2 py-0.5 rounded text-xs font-bold ${ s.ratingBadge === "EXCELLENT" ? "bg-[--brand]/20 text-[--brand]" : s.ratingBadge === "GOOD" ? "bg-blue-500/20 text-blue-500" : "bg-[var(--bad-soft)] text-[var(--bad)]" }`}
                           >
                             {s.ratingBadge}
                           </span>
@@ -1133,9 +1111,7 @@ export function ProductionQualityWorkspace() {
                             type="button"
                             size="sm"
                             variant={m.isAttributePassed ? "default" : "outline"}
-                            className={`h-7 px-3 text-xs ${
-                              m.isAttributePassed ? "bg-[--brand] text-white" : ""
-                            }`}
+                            className={`h-7 px-3 text-xs ${ m.isAttributePassed ? "bg-[--brand] text-white" : "" }`}
                             onClick={() => {
                               const updated = [...inspectionForm.measurements]
                               updated[idx].isAttributePassed = true

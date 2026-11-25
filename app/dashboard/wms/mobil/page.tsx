@@ -498,11 +498,7 @@ export default function MobileFieldScannerPwaPage() {
                   toast.success("Çevrimiçi Moda Dönüldü")
                 }
               }}
-              className={`h-8 px-3 rounded-full text-xs font-semibold cursor-pointer ${
-                isOfflineMode
-                  ? "bg-[--warn-soft] text-[--warn] border border-[--warn-fill]/30"
-                  : "bg-[--ok-soft] text-[--ok] border border-[--ok-fill]/20"
-              }`}
+              className={`h-8 px-3 rounded-full text-xs font-semibold cursor-pointer ${ isOfflineMode ? "bg-[--warn-soft] text-[--warn] border border-[--warn-fill]/30" : "bg-[--ok-soft] text-[--ok] border border-[--ok-fill]/20" }`}
             >
               {isOfflineMode ? <WifiOff className="mr-1 h-3.5 w-3.5" /> : <Wifi className="mr-1 h-3.5 w-3.5" />}
               {isOfflineMode ? "Offline" : "Online"}
@@ -548,7 +544,7 @@ export default function MobileFieldScannerPwaPage() {
               size="sm"
               onClick={handleBatchSync}
               disabled={isSyncing}
-              className="h-7 px-3 bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-white font-bold text-xs rounded-full cursor-pointer shadow-xs"
+              className="h-7 px-3 bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-[var(--text)] font-bold text-xs rounded-full cursor-pointer shadow-xs"
             >
               <RefreshCw className={`mr-1 h-3 w-3 ${isSyncing ? "animate-spin" : ""}`} />
               Eşitle
@@ -583,11 +579,7 @@ export default function MobileFieldScannerPwaPage() {
                     key={t.id}
                     type="button"
                     onClick={() => handleSelectLiveTask(t)}
-                    className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${
-                      isSelected
-                        ? "bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold"
-                        : "bg-[--page] border-[--line] text-[--text-2] hover:bg-white"
-                    }`}
+                    className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${ isSelected ? "bg-[--brand-soft] border-[--brand-line] text-[--brand] font-semibold" : "bg-[--page] border-[--line] text-[--text-2] hover:bg-white" }`}
                   >
                     <div className="font-mono font-semibold text-[--brand]">{t.taskNumber}</div>
                     <div className="truncate max-w-[140px] text-[--text]">{fl?.itemName || t.workflowStage}</div>
@@ -610,11 +602,7 @@ export default function MobileFieldScannerPwaPage() {
             <button
               type="button"
               onClick={() => setSelectedAction("GOODS_RECEIPT")}
-              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
-                selectedAction === "GOODS_RECEIPT"
-                  ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]"
-              }`}
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${ selectedAction === "GOODS_RECEIPT" ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]" }`}
             >
               <Truck className={`h-5 w-5 ${selectedAction === "GOODS_RECEIPT" ? "text-white" : "text-[--brand]"}`} />
               <div>
@@ -626,11 +614,7 @@ export default function MobileFieldScannerPwaPage() {
             <button
               type="button"
               onClick={() => setSelectedAction("PUTAWAY_CONFIRM")}
-              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
-                selectedAction === "PUTAWAY_CONFIRM"
-                  ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]"
-              }`}
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${ selectedAction === "PUTAWAY_CONFIRM" ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]" }`}
             >
               <MapPin className={`h-5 w-5 ${selectedAction === "PUTAWAY_CONFIRM" ? "text-white" : "text-[--brand]"}`} />
               <div>
@@ -642,11 +626,7 @@ export default function MobileFieldScannerPwaPage() {
             <button
               type="button"
               onClick={() => setSelectedAction("PICK_CONFIRM")}
-              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
-                selectedAction === "PICK_CONFIRM"
-                  ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]"
-              }`}
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${ selectedAction === "PICK_CONFIRM" ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]" }`}
             >
               <PackageCheck className={`h-5 w-5 ${selectedAction === "PICK_CONFIRM" ? "text-white" : "text-[--brand]"}`} />
               <div>
@@ -658,11 +638,7 @@ export default function MobileFieldScannerPwaPage() {
             <button
               type="button"
               onClick={() => setSelectedAction("BLIND_COUNT_ENTRY")}
-              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${
-                selectedAction === "BLIND_COUNT_ENTRY"
-                  ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]"
-              }`}
+              className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between h-22 cursor-pointer ${ selectedAction === "BLIND_COUNT_ENTRY" ? "bg-[--brand] text-white border-[--brand] shadow-sm font-semibold" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text] hover:border-[--brand-line]" }`}
             >
               <ClipboardCheck className={`h-5 w-5 ${selectedAction === "BLIND_COUNT_ENTRY" ? "text-white" : "text-[--brand]"}`} />
               <div>
@@ -675,11 +651,7 @@ export default function MobileFieldScannerPwaPage() {
             <button
               type="button"
               onClick={() => setSelectedAction("SSCC_SCAN")}
-              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${
-                selectedAction === "SSCC_SCAN"
-                  ? "bg-[--brand] text-white border-[--brand] font-semibold shadow-sm"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text]"
-              }`}
+              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${ selectedAction === "SSCC_SCAN" ? "bg-[--brand] text-white border-[--brand] font-semibold shadow-sm" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text]" }`}
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <QrCode className={`h-4 w-4 shrink-0 ${selectedAction === "SSCC_SCAN" ? "text-white" : "text-[--brand]"}`} />
@@ -695,11 +667,7 @@ export default function MobileFieldScannerPwaPage() {
                 if (targetBinCode === "A-01-01") setTargetBinCode("Q-01-01")
               }}
               data-testid="mobile-action-rma-receipt"
-              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${
-                selectedAction === "RMA_RETURN_RECEIPT"
-                  ? "bg-[--warn-fill] text-white border-[--warn-fill] font-semibold shadow-sm"
-                  : "bg-white border-[--line] text-[--text-muted] hover:text-[--text]"
-              }`}
+              className={`w-full p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between cursor-pointer ${ selectedAction === "RMA_RETURN_RECEIPT" ? "bg-[--warn-fill] text-white border-[--warn-fill] font-semibold shadow-sm" : "bg-white border-[--line] text-[--text-muted] hover:text-[--text]" }`}
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <RotateCcw className={`h-4 w-4 shrink-0 ${selectedAction === "RMA_RETURN_RECEIPT" ? "text-white" : "text-[--warn]"}`} />
@@ -748,11 +716,7 @@ export default function MobileFieldScannerPwaPage() {
                       setBarcodeInput(r.labelCode || r.rmaNumber)
                       toast.success(`İade seçildi: ${r.rmaNumber}`)
                     }}
-                    className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${
-                      isSel
-                        ? "bg-[--warn-soft] border-[--warn-fill]/50 text-[--warn] font-semibold"
-                        : "bg-[--page] border-[--line] text-[--text-2] hover:bg-white"
-                    }`}
+                    className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${ isSel ? "bg-[--warn-soft] border-[--warn-fill]/50 text-[--warn] font-semibold" : "bg-[--page] border-[--line] text-[--text-2] hover:bg-white" }`}
                   >
                     <div className="font-mono font-semibold text-[--warn]">{r.rmaNumber}</div>
                     <div className="truncate max-w-[145px] text-[--text]">{r.customerName}</div>
@@ -790,7 +754,7 @@ export default function MobileFieldScannerPwaPage() {
                 size="sm"
                 disabled={isLoadingLookup}
                 onClick={() => handleLookupAndExecute(barcodeInput, "USB")}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold text-xs rounded-xl cursor-pointer shadow-xs disabled:opacity-50"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold text-xs rounded-xl cursor-pointer shadow-xs disabled:opacity-50"
               >
                 {isLoadingLookup ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : "İşle"}
               </Button>
@@ -1004,7 +968,7 @@ export default function MobileFieldScannerPwaPage() {
             </div>
 
             <Button
-              className="w-full bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full mt-2 h-9 cursor-pointer shadow-sm"
+              className="w-full bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full mt-2 h-9 cursor-pointer shadow-sm"
               onClick={() => {
                 setIsSettingsOpen(false)
                 toast.success("Terminal ayarları kaydedildi.")

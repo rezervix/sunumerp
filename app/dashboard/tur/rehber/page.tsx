@@ -228,16 +228,16 @@ export default function TourGuideMobilePage() {
   const isRestricted = Boolean(data?.isRestrictedGuide);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] p-4 text-zinc-100">
+    <div className="min-h-screen bg-[#F6F8FB] p-4 text-[var(--text)]">
       <div className="mx-auto max-w-3xl space-y-4">
-        <div className="rounded-2xl border border-[--line] bg-[white] p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5 text-[#1267E6]" />
+              <Smartphone className="h-5 w-5 text-[var(--brand)]" />
               <div>
-                <h1 className="text-lg font-bold text-white">Rehber & Şoför Mobil Saha Ekranı</h1>
-                <p className="text-[11px] text-zinc-400">
-                  Görevli: <strong className="text-zinc-200">{data?.staffUser?.username || '-'}</strong>
+                <h1 className="text-lg font-bold text-[var(--text)]">Rehber & Şoför Mobil Saha Ekranı</h1>
+                <p className="text-[11px] text-[var(--text-muted)]">
+                  Görevli: <strong className="text-[var(--text)]">{data?.staffUser?.username || '-'}</strong>
                   {isRestricted && ' · Kısıtlı Rehber Görünümü'}
                 </p>
               </div>
@@ -246,7 +246,7 @@ export default function TourGuideMobilePage() {
               {!isRestricted && (
                 <Link
                   href="/dashboard/tur"
-                  className="flex items-center gap-1 rounded-lg border border-white/[0.1] bg-[#161B18] px-2.5 py-1.5 text-xs text-zinc-200"
+                  className="flex items-center gap-1 rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
                 >
                   <Compass className="h-3.5 w-3.5" /> Operasyon
                 </Link>
@@ -254,11 +254,7 @@ export default function TourGuideMobilePage() {
               <button
                 type="button"
                 onClick={() => setSimulatedOffline((v) => !v)}
-                className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${
-                  effectiveOnline
-                    ? 'border-[--brand]/35 bg-[--brand]/15 text-[#1267E6]'
-                    : 'border-amber-500/40 bg-amber-500/20 text-amber-300'
-                }`}
+                className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${ effectiveOnline ? 'border-[--brand]/35 bg-[--brand]/15 text-[var(--brand)]' : 'border-[var(--warn-line)] bg-[var(--warn-soft)] text-[var(--warn)]' }`}
               >
                 {effectiveOnline ? <Wifi className="h-3.5 w-3.5" /> : <WifiOff className="h-3.5 w-3.5" />}
                 {effectiveOnline ? 'Çevrimiçi' : 'Çevrimdışı Mod'}
@@ -275,7 +271,7 @@ export default function TourGuideMobilePage() {
         </div>
 
         {pendingQueue.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--warn-line)] bg-[var(--warn-soft)] p-3 text-xs">
             <span className="text-amber-200">
               <strong>{pendingQueue.length} çevrimdışı işlem</strong> senkronizasyon bekliyor.
             </span>
@@ -283,7 +279,7 @@ export default function TourGuideMobilePage() {
               type="button"
               disabled={syncing || !effectiveOnline}
               onClick={handleSync}
-              className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 font-semibold text-[#F6F8FB] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-1.5 font-semibold text-[var(--text)] disabled:opacity-50"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
               Senkronize Et
@@ -292,11 +288,11 @@ export default function TourGuideMobilePage() {
         )}
 
         {/* Tur Seçimi */}
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[--line] bg-[white] p-3">
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-3">
           <select
             value={activeTour?.id || ''}
             onChange={(e) => setSelectedTourId(e.target.value)}
-            className="flex-1 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+            className="flex-1 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
           >
             {tours.map((t: any) => (
               <option key={t.id} value={t.id}>
@@ -307,7 +303,7 @@ export default function TourGuideMobilePage() {
           {activeTour && (
             <a
               href={`/api/tur?section=manifesto_pdf&tourId=${encodeURIComponent(activeTour.id)}`}
-              className="flex items-center gap-1 rounded-lg bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[#1267E6]"
+              className="flex items-center gap-1 rounded-lg bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[var(--brand)]"
             >
               <Download className="h-3.5 w-3.5" /> Manifesto PDF
             </a>
@@ -316,7 +312,7 @@ export default function TourGuideMobilePage() {
 
         {/* Yolcu Listesi & Tek Tıkla Yoklama */}
         {loading && !data ? (
-          <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-8 text-center text-xs text-[var(--text-muted)]">
             Tur yolcu listesi yükleniyor...
           </div>
         ) : activeTour ? (
@@ -325,38 +321,36 @@ export default function TourGuideMobilePage() {
               {(activeTour.passengers || []).map((p: any) => (
                 <div
                   key={p.id}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[--line] bg-[white] p-3"
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-3"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="rounded bg-[--brand]/20 px-2 py-0.5 font-mono text-xs font-bold text-[#1267E6]">
+                      <span className="rounded bg-[--brand]/20 px-2 py-0.5 font-mono text-xs font-bold text-[var(--brand)]">
                         K:{p.seatNumber || '-'}
                       </span>
-                      <strong className="text-sm text-white">{p.fullName}</strong>
+                      <strong className="text-sm text-[var(--text)]">{p.fullName}</strong>
                     </div>
-                    <div className="mt-0.5 text-[11px] text-zinc-400">
+                    <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
                       Durak: {p.pickupStopLabel} · {p.phone || '-'}
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span
-                      className={`rounded-full border px-2 py-0.5 text-[10px] ${
-                        TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]'
-                      }`}
+                      className={`rounded-full border px-2 py-0.5 text-[10px] ${ TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]' }`}
                     >
                       {TOUR_BOARDING_STATUS_LABELS[p.boardingStatus] || p.boardingStatus}
                     </span>
                     <button
                       type="button"
                       onClick={() => handleToggleBoarding(p, 'BOARDED')}
-                      className="rounded-lg bg-[#1267E6] px-2.5 py-1.5 text-xs font-semibold text-[#F6F8FB]"
+                      className="rounded-lg bg-[var(--brand)] px-2.5 py-1.5 text-xs font-semibold text-[var(--text)]"
                     >
                       Bindi
                     </button>
                     <button
                       type="button"
                       onClick={() => handleToggleBoarding(p, 'NO_SHOW')}
-                      className="rounded-lg bg-rose-500/20 px-2.5 py-1.5 text-xs text-rose-300"
+                      className="rounded-lg bg-[var(--bad-soft)] px-2.5 py-1.5 text-xs text-[var(--bad)]"
                     >
                       Gelmedi
                     </button>
@@ -369,16 +363,16 @@ export default function TourGuideMobilePage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <form
                 onSubmit={handleFieldCollection}
-                className="space-y-2.5 rounded-xl border border-[--brand-line] bg-[white] p-4"
+                className="space-y-2.5 rounded-xl border border-[--brand-line] bg-[var(--bg)] shadow-sm p-4"
               >
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#1267E6]">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--brand)]">
                   <CreditCard className="h-4 w-4" /> Saha Ödeme Tahsilatı
                 </div>
                 <select
                   required
                   value={collectBookingId}
                   onChange={(e) => setCollectBookingId(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
                 >
                   <option value="">Açık bakiyeli rezervasyon seç...</option>
                   {(activeTour.bookings || [])
@@ -395,12 +389,12 @@ export default function TourGuideMobilePage() {
                     min={1}
                     value={collectAmount}
                     onChange={(e) => setCollectAmount(Number(e.target.value))}
-                    className="w-28 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                    className="w-28 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
                   />
                   <select
                     value={collectMethod}
                     onChange={(e) => setCollectMethod(e.target.value)}
-                    className="flex-1 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                    className="flex-1 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
                   >
                     <option value="Saha Nakit (Rehber)">Saha Nakit</option>
                     <option value="Mobil POS Kart">Mobil POS Kart</option>
@@ -408,7 +402,7 @@ export default function TourGuideMobilePage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-[#1267E6] py-2 text-xs font-semibold text-[#F6F8FB]"
+                  className="w-full rounded-lg bg-[var(--brand)] py-2 text-xs font-semibold text-[var(--text)]"
                 >
                   Tahsilatı Kaydet
                 </button>
@@ -416,9 +410,9 @@ export default function TourGuideMobilePage() {
 
               <form
                 onSubmit={handleSaveEmergencyNote}
-                className="space-y-2.5 rounded-xl border border-amber-500/30 bg-[white] p-4"
+                className="space-y-2.5 rounded-xl border border-[var(--warn-line)] bg-[var(--bg)] shadow-sm p-4"
               >
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-300">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--warn)]">
                   <AlertTriangle className="h-4 w-4" /> Acil Saha Notu / Operasyon Bildirimi
                 </div>
                 <textarea
@@ -427,11 +421,11 @@ export default function TourGuideMobilePage() {
                   value={emergencyNote}
                   onChange={(e) => setEmergencyNote(e.target.value)}
                   placeholder="Gecikme, durak değişikliği veya acil yolcu notunu yazın..."
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] p-2.5 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2.5 text-xs text-[var(--text)]"
                 />
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-amber-400 py-2 text-xs font-semibold text-[#F6F8FB]"
+                  className="w-full rounded-lg bg-amber-400 py-2 text-xs font-semibold text-[var(--text)]"
                 >
                   Saha Notunu Kaydet
                 </button>
@@ -439,7 +433,7 @@ export default function TourGuideMobilePage() {
             </div>
           </>
         ) : (
-          <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-8 text-center text-xs text-[var(--text-muted)]">
             Atanmış aktif tur bulunmuyor.
           </div>
         )}

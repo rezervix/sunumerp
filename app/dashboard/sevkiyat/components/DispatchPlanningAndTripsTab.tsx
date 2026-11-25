@@ -246,11 +246,7 @@ export function DispatchPlanningAndTripsTab({
                 return (
                   <label
                     key={key}
-                    className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
-                      checked
-                        ? 'bg-[--brand-soft] border-[--brand-line]'
-                        : 'bg-white border-[--line] hover:border-[--brand-line]'
-                    }`}
+                    className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${ checked ? 'bg-[--brand-soft] border-[--brand-line]' : 'bg-white border-[--line] hover:border-[--brand-line]' }`}
                   >
                     <input
                       type="checkbox"
@@ -432,19 +428,12 @@ export function DispatchPlanningAndTripsTab({
                   type="button"
                   key={t.id}
                   onClick={() => setSelectedTripId(t.id)}
-                  className={`w-full text-left p-3 rounded-xl border transition space-y-1.5 ${
-                    active
-                      ? 'bg-[--brand-soft] border-[--brand-line]'
-                      : 'bg-white border-[--line] hover:border-[--brand-line]'
-                  }`}
+                  className={`w-full text-left p-3 rounded-xl border transition space-y-1.5 ${ active ? 'bg-[--brand-soft] border-[--brand-line]' : 'bg-white border-[--line] hover:border-[--brand-line]' }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-semibold text-[--text] text-xs">{t.tripNumber}</span>
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                        DISPATCH_TRIP_STATUS_BADGES[t.status as DispatchTripStatus] ||
-                        'bg-[--muted-bg] text-[--text-muted]'
-                      }`}
+                      className={`text-[10px] px-2 py-0.5 rounded-full border ${ DISPATCH_TRIP_STATUS_BADGES[t.status as DispatchTripStatus] || 'bg-[--muted-bg] text-[--text-muted]' }`}
                     >
                       {DISPATCH_TRIP_STATUS_LABELS[t.status as DispatchTripStatus] || t.status}
                     </span>
@@ -566,7 +555,7 @@ export function DispatchPlanningAndTripsTab({
                 {selectedTrip.maintenanceImpactWarning && (
                   <div className="p-3 rounded-xl bg-[--warn-soft] border border-[--warn-soft] flex flex-wrap items-center justify-between gap-2 text-xs text-[--warn]">
                     <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" />
+                      <AlertTriangle className="w-4 h-4 text-[var(--warn)] shrink-0" />
                       <span>
                         <strong>Araç Bakım/Arıza Etkisi:</strong> {selectedTrip.maintenanceImpactWarning}
                       </span>
@@ -611,11 +600,7 @@ export function DispatchPlanningAndTripsTab({
                           setDragStopId(null);
                           await handleReorderStops(selectedTrip, copy);
                         }}
-                        className={`p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition ${
-                          dragStopId === stop.id
-                            ? 'opacity-60 border-[--brand]'
-                            : 'bg-white border-[--line] hover:border-[--brand-line]'
-                        }`}
+                        className={`p-3 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition ${ dragStopId === stop.id ? 'opacity-60 border-[--brand]' : 'bg-white border-[--line] hover:border-[--brand-line]' }`}
                       >
                         <div className="flex items-start gap-3 min-w-0">
                           <div className="w-7 h-7 rounded-full bg-[--brand-soft] border border-[--brand-line] text-[--brand] font-bold text-xs flex items-center justify-center shrink-0">
@@ -630,10 +615,7 @@ export function DispatchPlanningAndTripsTab({
                                 {stop.sourceRefNo || stop.sourceType}
                               </span>
                               <span
-                                className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                                  DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] ||
-                                  'bg-[--muted-bg] text-[--text-muted]'
-                                }`}
+                                className={`text-[10px] px-2 py-0.5 rounded-full border ${ DISPATCH_STOP_STATUS_BADGES[stop.status as DispatchStopStatus] || 'bg-[--muted-bg] text-[--text-muted]' }`}
                               >
                                 {DISPATCH_STOP_STATUS_LABELS[stop.status as DispatchStopStatus] ||
                                   stop.status}

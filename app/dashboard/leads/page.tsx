@@ -337,7 +337,7 @@ export default function LeadsPage() {
 
       {/* Main Table */}
       <StaggerItem className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-[--line] bg-white/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="p-5 border-b border-[--line] bg-[var(--muted-bg)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h2 className="text-lg font-semibold text-[--navy]">Tüm Potansiyel Müşteriler</h2>
           <div className="relative sm:w-64">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[--text-muted] text-[20px]">search</span>
@@ -378,12 +378,7 @@ export default function LeadsPage() {
                       <div className="text-xs text-[--text-muted]">{lead.email || "-"}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${lead.status === "hot" ? "bg-[--ok-soft] text-[--ok] border border-[--ok-soft]" :
-                          lead.status === "warm" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" :
-                            lead.status === "contacted" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" :
-                              lead.status === "lost" ? "bg-[--bad-soft] text-[--bad] border border-[--bad-soft]" :
-                                "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
-                        }`}>
+                      <span className={`inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium ${lead.status === "hot" ? "bg-[--ok-soft] text-[--ok] border border-[--ok-soft]" : lead.status === "warm" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" : lead.status === "contacted" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" : lead.status === "lost" ? "bg-[--bad-soft] text-[--bad] border border-[--bad-soft]" : "bg-[--muted-bg] text-[--text-muted] border border-[--line]" }`}>
                         {lead.status === "hot" ? "Sıcak" :
                           lead.status === "warm" ? "Ilık" :
                             lead.status === "contacted" ? "İletişime Geçildi" :

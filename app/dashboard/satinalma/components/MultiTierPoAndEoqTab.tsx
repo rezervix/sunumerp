@@ -233,7 +233,7 @@ export function MultiTierPoTab({
           </div>
           <button
             type="submit"
-            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
+            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             PO Onaya Gönder
           </button>
@@ -247,11 +247,7 @@ export function MultiTierPoTab({
             <div
               key={po.id}
               data-testid={`po-card-${po.poNumber}`}
-              className={`rounded-2xl border p-4 space-y-3 shadow-sm transition ${
-                isRedFlag
-                  ? "border-[--bad]/30 bg-[--bad-soft]/30"
-                  : "border-[--line] bg-white hover:border-[--brand-line]"
-              }`}
+              className={`rounded-2xl border p-4 space-y-3 shadow-sm transition ${ isRedFlag ? "border-[--bad]/30 bg-[--bad-soft]/30" : "border-[--line] bg-white hover:border-[--brand-line]" }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -259,15 +255,7 @@ export function MultiTierPoTab({
                     <span className="font-mono text-sm font-bold text-[--brand]">{safeText(po.poNumber)}</span>
                     <span className="text-sm font-semibold text-[--text]">{safeText(po.supplierName)}</span>
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-                        isRedFlag
-                          ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
-                          : po.status === "TESLIM_ALINDI" || po.status === "TEDARIKCI_ONAYLADI"
-                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                            : po.status === "ONAY_BEKLIYOR"
-                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                              : "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                      }`}
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${ isRedFlag ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25" : po.status === "TESLIM_ALINDI" || po.status === "TEDARIKCI_ONAYLADI" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : po.status === "ONAY_BEKLIYOR" ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25" : "bg-[--brand-soft] text-[--brand] border-[--brand-line]" }`}
                     >
                       {PO_STATUS_LABELS[po.status] || safeText(po.status)}
                     </span>
@@ -310,15 +298,7 @@ export function MultiTierPoTab({
                   {(po.approvals || []).map((st: any) => (
                     <span
                       key={st.id}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border ${
-                        st.status === "ONAYLANDI"
-                          ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                          : st.status === "REDDEDILDI"
-                            ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
-                            : po.currentApprovalStep === st.stepOrder
-                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25 font-semibold"
-                              : "bg-[--muted-bg] text-[--text-muted] border-[--line]"
-                      }`}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border ${ st.status === "ONAYLANDI" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : st.status === "REDDEDILDI" ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25" : po.currentApprovalStep === st.stepOrder ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25 font-semibold" : "bg-[--muted-bg] text-[--text-muted] border-[--line]" }`}
                     >
                       <span>
                         Kademe {safeNumber(st.stepOrder)}: {safeText(st.approverRole)}
@@ -503,11 +483,7 @@ export function EoqSuggestionsPanel({
                     disabled={convertingId === pol.id}
                     onClick={() => handleConvertPo(pol)}
                     data-testid={`eoq-convert-po-${pol.sku}`}
-                    className={`inline-flex items-center gap-1 h-7 px-3 rounded-full text-[11px] font-semibold transition cursor-pointer ${
-                      pol.needsReorder
-                        ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white shadow-sm hover:opacity-95"
-                        : "border border-[--line] bg-white text-[--text-muted] hover:bg-[--muted-bg]"
-                    }`}
+                    className={`inline-flex items-center gap-1 h-7 px-3 rounded-full text-[11px] font-semibold transition cursor-pointer ${ pol.needsReorder ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white shadow-sm hover:opacity-95" : "border border-[--line] bg-white text-[--text-muted] hover:bg-[--muted-bg]" }`}
                   >
                     <ShoppingCart className="size-3" />
                     {convertingId === pol.id ? "Açılıyor..." : "EOQ'dan PO Aç"}

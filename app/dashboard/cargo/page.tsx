@@ -638,7 +638,7 @@ export default function CargoPage() {
                         </div>
                         <div className="p-6 border-t border-[--line] bg-[--page] flex justify-end gap-3">
                             <button onClick={() => setIsCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-[--text-2] bg-white border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleCreate} disabled={loading || !form.carrierName || !form.trackingNumber} className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
+                            <button onClick={handleCreate} disabled={loading || !form.carrierName || !form.trackingNumber} className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Kaydet"}
                             </button>
                         </div>
@@ -692,7 +692,7 @@ export default function CargoPage() {
                         </div>
                         <div className="p-6 border-t border-[--line] bg-[--page] flex justify-end gap-3">
                             <button onClick={() => setIsEditOpen(false)} className="px-4 py-2 text-sm font-medium text-[--text-2] bg-white border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleEdit} disabled={loading} className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
+                            <button onClick={handleEdit} disabled={loading} className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>
                         </div>
@@ -748,7 +748,7 @@ export default function CargoPage() {
                         </div>
                         <div className="p-6 border-t border-[--line] bg-[--page] flex justify-end gap-3">
                             <button onClick={() => setIsFileCreateOpen(false)} className="px-4 py-2 text-sm font-medium text-[--text-2] bg-white border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleFileCreate} disabled={loading || !fileForm.title || !fileForm.trackingNumber} className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
+                            <button onClick={handleFileCreate} disabled={loading || !fileForm.title || !fileForm.trackingNumber} className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Gönder"}
                             </button>
                         </div>
@@ -797,7 +797,7 @@ export default function CargoPage() {
                         </div>
                         <div className="p-6 border-t border-[--line] bg-[--page] flex justify-end gap-3">
                             <button onClick={() => setIsFileEditOpen(false)} className="px-4 py-2 text-sm font-medium text-[--text-2] bg-white border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors">{tText("common.cancel", "İptal")}</button>
-                            <button onClick={handleFileEdit} disabled={loading} className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
+                            <button onClick={handleFileEdit} disabled={loading} className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] rounded-full transition-all shadow-sm hover:opacity-95 disabled:opacity-50">
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>
                         </div>

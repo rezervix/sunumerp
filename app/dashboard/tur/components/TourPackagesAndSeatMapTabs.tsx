@@ -166,14 +166,12 @@ export function TourPackagesAndCalendarTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex flex-wrap gap-1.5">
           <button
             type="button"
             onClick={() => setStatusFilter('ALL')}
-            className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-              statusFilter === 'ALL' ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc-300'
-            }`}
+            className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${ statusFilter === 'ALL' ? 'bg-[var(--brand)] text-white' : 'bg-[var(--muted-bg)] text-[var(--text-2)]' }`}
           >
             Tümü ({tours.length})
           </button>
@@ -182,9 +180,7 @@ export function TourPackagesAndCalendarTab({
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-                statusFilter === st ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc-300'
-              }`}
+              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${ statusFilter === st ? 'bg-[var(--brand)] text-white' : 'bg-[var(--muted-bg)] text-[var(--text-2)]' }`}
             >
               {TOUR_STATUS_LABELS[st]}
             </button>
@@ -195,25 +191,25 @@ export function TourPackagesAndCalendarTab({
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-200"
+            className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
           >
             <option value="ALL">Tüm Tur Tipleri</option>
             <option value="DAY_TRIP">Günübirlik</option>
             <option value="MULTI_DAY">Konaklamalı</option>
           </select>
           <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-zinc-500" />
+            <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[var(--text-muted)]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tur kodu, ad, şehir..."
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 pr-3 text-xs text-zinc-200"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] py-1.5 pl-8 pr-3 text-xs text-[var(--text)]"
             />
           </div>
           <button
             type="button"
             onClick={() => setShowForm((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             <Plus className="h-3.5 w-3.5" /> Yeni Tur Planla
           </button>
@@ -223,42 +219,42 @@ export function TourPackagesAndCalendarTab({
       {showForm && (
         <form
           onSubmit={handleSaveTour}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[white] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[var(--bg)] shadow-sm p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#1267E6]">
+            <h4 className="text-sm font-semibold text-[var(--brand)]">
               Yeni Tur Paketi (Araç / Şoför / Rehber Çakışma Kontrolü Aktif)
             </h4>
-            <button type="button" onClick={() => setShowForm(false)} className="text-zinc-400">
+            <button type="button" onClick={() => setShowForm(false)} className="text-[var(--text-muted)]">
               <X className="h-4 w-4" />
             </button>
           </div>
           <div className="md:col-span-2">
-            <label className="mb-1 block text-[11px] text-zinc-400">Tur Adı</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Tur Adı</label>
             <input
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Örn. Kazdağları & Assos 2 Günlük Kültür Turu"
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Destinasyon</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Destinasyon</label>
             <input
               required
               value={destinationCity}
               onChange={(e) => setDestinationCity(e.target.value)}
               placeholder="Örn. Çanakkale / Assos"
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Tur Tipi</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Tur Tipi</label>
             <select
               value={tourType}
               onChange={(e) => setTourType(e.target.value as TourType)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="DAY_TRIP">Günübirlik Tur</option>
               <option value="MULTI_DAY">Konaklamalı Tur (Otel Bağlantılı)</option>
@@ -266,66 +262,66 @@ export function TourPackagesAndCalendarTab({
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Hareket Tarih/Saat</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Hareket Tarih/Saat</label>
             <input
               type="datetime-local"
               required
               value={startAt}
               onChange={(e) => setStartAt(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Dönüş Tarih/Saat</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Dönüş Tarih/Saat</label>
             <input
               type="datetime-local"
               required
               value={endAt}
               onChange={(e) => setEndAt(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Yetişkin / Çocuk (₺)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Yetişkin / Çocuk (₺)</label>
             <div className="flex gap-1.5">
               <input
                 type="number"
                 value={adultPriceTry}
                 onChange={(e) => setAdultPriceTry(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
               <input
                 type="number"
                 value={childPriceTry}
                 onChange={(e) => setChildPriceTry(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Kapasite / Min. Katılım</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Kapasite / Min. Katılım</label>
             <div className="flex gap-1.5">
               <input
                 type="number"
                 value={capacity}
                 onChange={(e) => setCapacity(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
               <input
                 type="number"
                 value={minParticipants}
                 onChange={(e) => setMinParticipants(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Filo Aracı</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Filo Aracı</label>
             <select
               value={vehicleId}
               onChange={(e) => setVehicleId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Sonra Ata</option>
               {vehicles.map((v) => (
@@ -336,11 +332,11 @@ export function TourPackagesAndCalendarTab({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Şoför (Filo)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Şoför (Filo)</label>
             <select
               value={driverId}
               onChange={(e) => setDriverId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Sonra Ata</option>
               {drivers.map((d) => (
@@ -351,11 +347,11 @@ export function TourPackagesAndCalendarTab({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Tur Rehberi</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Tur Rehberi</label>
             <select
               value={guideId}
               onChange={(e) => setGuideId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Sonra Ata</option>
               {guides.map((g) => (
@@ -366,11 +362,11 @@ export function TourPackagesAndCalendarTab({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Koltuk Şeması</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Koltuk Şeması</label>
             <select
               value={seatLayoutId}
               onChange={(e) => setSeatLayoutId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {seatLayouts.map((l) => (
                 <option key={l.id} value={l.id}>
@@ -382,13 +378,13 @@ export function TourPackagesAndCalendarTab({
 
           {tourType === 'MULTI_DAY' && (
             <div className="md:col-span-2">
-              <label className="mb-1 block text-[11px] text-[#1267E6]">
+              <label className="mb-1 block text-[11px] text-[var(--brand)]">
                 Bağlı Otel Kontenjanı (Otel PMS)
               </label>
               <select
                 value={hotelAllotmentId}
                 onChange={(e) => setHotelAllotmentId(e.target.value)}
-                className="w-full rounded-lg border border-[--brand]/35 bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[--brand]/35 bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
               >
                 <option value="">Otel kontenjanı seç (opsiyonel)...</option>
                 {hotelAllotments.map((al) => (
@@ -404,14 +400,14 @@ export function TourPackagesAndCalendarTab({
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="rounded-lg border border-white/[0.1] px-4 py-2 text-xs text-zinc-300"
+              className="rounded-lg border border-[var(--line)] px-4 py-2 text-xs text-[var(--text-2)]"
             >
               Vazgeç
             </button>
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+              className="rounded-lg bg-[var(--brand)] px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
             >
               {busy ? 'Çakışmalar Kontrol Ediliyor...' : 'Turu Kaydet'}
             </button>
@@ -432,16 +428,16 @@ export function TourPackagesAndCalendarTab({
           return (
             <div
               key={t.id}
-              className="flex flex-col justify-between rounded-xl border border-[--line] bg-[white] p-4"
+              className="flex flex-col justify-between rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono text-xs font-semibold text-[#1267E6]">
+                      <span className="font-mono text-xs font-semibold text-[var(--brand)]">
                         {t.code}
                       </span>
-                      <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-zinc-300">
+                      <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-[var(--text-2)]">
                         {TOUR_TYPE_LABELS[t.tourType as TourType] || t.tourType} ({t.durationDays} Gün)
                       </span>
                       {t.hotelAllotmentId && (
@@ -450,17 +446,15 @@ export function TourPackagesAndCalendarTab({
                         </span>
                       )}
                     </div>
-                    <h3 className="mt-1 text-sm font-bold text-white">{t.title}</h3>
-                    <p className="text-xs text-zinc-400">
+                    <h3 className="mt-1 text-sm font-bold text-[var(--text)]">{t.title}</h3>
+                    <p className="text-xs text-[var(--text-muted)]">
                       {t.departureCity} → {t.destinationCity} ·{' '}
                       {String(t.startAt).slice(0, 16).replace('T', ' ')}
                     </p>
                   </div>
 
                   <span
-                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${
-                      TOUR_STATUS_BADGES[t.status as TourStatus] || 'border-[--line] text-zinc-300'
-                    }`}
+                    className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${ TOUR_STATUS_BADGES[t.status as TourStatus] || 'border-[--line] text-[var(--text-2)]' }`}
                   >
                     {TOUR_STATUS_LABELS[t.status as TourStatus] || t.status}
                   </span>
@@ -469,45 +463,39 @@ export function TourPackagesAndCalendarTab({
                 {/* Doluluk Barı & Kaynaklar */}
                 <div className="mt-3 space-y-1.5">
                   <div className="flex justify-between text-[11px]">
-                    <span className="text-zinc-300">
+                    <span className="text-[var(--text-2)]">
                       Doluluk: <strong>{paxCount}</strong> / {t.capacity} yolcu (%{occPct}){' '}
-                      <span className={belowMin ? 'text-amber-300' : 'text-zinc-400'}>
+                      <span className={belowMin ? 'text-[var(--warn)]' : 'text-[var(--text-muted)]'}>
                         · Min: {t.minParticipants}
                       </span>
                     </span>
-                    <span className="font-mono font-semibold text-[#1267E6]">
+                    <span className="font-mono font-semibold text-[var(--brand)]">
                       {Number(t.adultPriceTry).toLocaleString('tr-TR')} ₺
                     </span>
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.08]">
                     <div
-                      className={`h-full rounded-full ${
-                        occPct >= 95
-                          ? 'bg-amber-400'
-                          : belowMin
-                            ? 'bg-rose-400'
-                            : 'bg-[#1267E6]'
-                      }`}
+                      className={`h-full rounded-full ${ occPct >= 95 ? 'bg-amber-400' : belowMin ? 'bg-rose-400' : 'bg-[var(--brand)]' }`}
                       style={{ width: `${occPct}%` }}
                     />
                   </div>
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[#0B0E0D] p-2.5 text-[11px] text-zinc-300">
+                <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[var(--bg)] p-2.5 text-[11px] text-[var(--text-2)]">
                   <div>
-                    <span className="block text-[10px] text-zinc-500">Araç</span>
+                    <span className="block text-[10px] text-[var(--text-muted)]">Araç</span>
                     <strong className="truncate block">
                       {t.vehicle?.plate || 'Atanmadı'}
                     </strong>
                   </div>
                   <div>
-                    <span className="block text-[10px] text-zinc-500">Şoför</span>
+                    <span className="block text-[10px] text-[var(--text-muted)]">Şoför</span>
                     <strong className="truncate block">
                       {t.driver?.fullName || 'Atanmadı'}
                     </strong>
                   </div>
                   <div>
-                    <span className="block text-[10px] text-zinc-500">Rehber</span>
+                    <span className="block text-[10px] text-[var(--text-muted)]">Rehber</span>
                     <strong className="truncate block">
                       {t.guide?.fullName || 'Atanmadı'}
                     </strong>
@@ -515,10 +503,10 @@ export function TourPackagesAndCalendarTab({
                 </div>
 
                 {Array.isArray(t.itinerary) && t.itinerary.length > 0 && (
-                  <div className="mt-2.5 space-y-1 text-[11px] text-zinc-400">
+                  <div className="mt-2.5 space-y-1 text-[11px] text-[var(--text-muted)]">
                     {t.itinerary.slice(0, 2).map((it: any, i: number) => (
                       <div key={i} className="truncate">
-                        <span className="font-mono text-[#1267E6]">
+                        <span className="font-mono text-[var(--brand)]">
                           Gün {it.day} {it.time}
                         </span>{' '}
                         · {it.location} — {it.activity}
@@ -533,7 +521,7 @@ export function TourPackagesAndCalendarTab({
                   <button
                     type="button"
                     onClick={() => onFocusTour(t.id, 'seat_map')}
-                    className="rounded-md bg-[--brand]/15 px-2.5 py-1 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/30"
+                    className="rounded-md bg-[--brand]/15 px-2.5 py-1 text-[11px] font-medium text-[var(--brand)] hover:bg-[--brand]/30"
                   >
                     Koltuk & Duraklar
                   </button>
@@ -547,7 +535,7 @@ export function TourPackagesAndCalendarTab({
                   <button
                     type="button"
                     onClick={() => onFocusTour(t.id, 'profit')}
-                    className="rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-medium text-purple-300 hover:bg-purple-500/30"
+                    className="rounded-md bg-[var(--brand-soft)] px-2.5 py-1 text-[11px] font-medium text-[var(--brand)] hover:bg-[var(--brand-soft-2)] transition-colors"
                   >
                     Kâr Analizi
                   </button>
@@ -557,7 +545,7 @@ export function TourPackagesAndCalendarTab({
                   disabled={busy}
                   value={t.status}
                   onChange={(e) => handleStatusChange(t, e.target.value as TourStatus)}
-                  className="rounded-md border border-white/[0.1] bg-[#0B0E0D] px-2 py-1 text-[10px] text-zinc-200"
+                  className="rounded-md border border-[var(--line)] bg-[var(--bg)] px-2 py-1 text-[10px] text-[var(--text)]"
                 >
                   {TOUR_STATUSES.map((s) => (
                     <option key={s} value={s}>
@@ -697,17 +685,17 @@ export function TourSeatMapAndStopsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex items-center gap-2">
-          <Compass className="h-4 w-4 text-[#1267E6]" />
-          <h3 className="text-sm font-semibold text-zinc-100">
+          <Compass className="h-4 w-4 text-[var(--brand)]" />
+          <h3 className="text-sm font-semibold text-[var(--text)]">
             Dinamik Araç Koltuk Planı & Biniş Noktaları Rotası
           </h3>
         </div>
         <select
           value={tour?.id || ''}
           onChange={(e) => setSelectedTourId(e.target.value)}
-          className="min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+          className="min-w-[280px] rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
         >
           {tours.map((t) => (
             <option key={t.id} value={t.id}>
@@ -720,30 +708,30 @@ export function TourSeatMapAndStopsTab({
       {tour && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Sol: Dinamik Koltuk Haritası */}
-          <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
+          <div className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">
+                <h4 className="text-sm font-semibold text-[var(--text)]">
                   {tour.seatLayout?.name || 'Araç Koltuk Şeması'} · {tour.vehicle?.plate || 'Araç'}
                 </h4>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-[var(--text-muted)]">
                   Cinsiyet kuralı: {tour.enforceGenderSeatRule ? 'Aktif' : 'Esnek'} · Aile yan yana istisnası:{' '}
                   {tour.allowFamilySeatOverride ? 'Açık' : 'Kapalı'}
                 </p>
               </div>
               <div className="flex gap-1.5 text-[10px]">
-                <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[#1267E6]">Boş</span>
+                <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[var(--brand)]">Boş</span>
                 <span className="rounded bg-sky-500/20 px-2 py-0.5 text-sky-300">Erkek (E)</span>
-                <span className="rounded bg-pink-500/20 px-2 py-0.5 text-pink-300">Kadın (K)</span>
+                <span className="rounded bg-[var(--brand-soft)]/20 px-2 py-0.5 text-[var(--brand)]">Kadın (K)</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 rounded-lg bg-[#0B0E0D] p-2.5 text-xs">
-              <Users className="h-4 w-4 text-[#1267E6]" />
+            <div className="flex items-center gap-2 rounded-lg bg-[var(--bg)] p-2.5 text-xs">
+              <Users className="h-4 w-4 text-[var(--brand)]" />
               <select
                 value={selectedPaxId}
                 onChange={(e) => setSelectedPaxId(e.target.value)}
-                className="flex-1 rounded border border-white/[0.1] bg-[white] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="flex-1 rounded border border-[var(--line)] bg-[var(--bg)] shadow-sm px-2.5 py-1.5 text-xs text-[var(--text)]"
               >
                 <option value="">Koltuk atanacak / taşınacak yolcuyu seçin...</option>
                 {(tour.passengers || []).map((p: any) => (
@@ -757,8 +745,8 @@ export function TourSeatMapAndStopsTab({
             </div>
 
             {/* Koltuk Sıraları */}
-            <div className="space-y-2 rounded-xl border border-[--line] bg-[#0B0E0D] p-3">
-              <div className="mb-2 flex justify-between border-b border-[--line] pb-1.5 text-[10px] text-zinc-500">
+            <div className="space-y-2 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3">
+              <div className="mb-2 flex justify-between border-b border-[--line] pb-1.5 text-[10px] text-[var(--text-muted)]">
                 <span>ŞOFÖR / KAPTAN</span>
                 <span>ÖN KAPI / REHBER</span>
               </div>
@@ -772,9 +760,9 @@ export function TourSeatMapAndStopsTab({
                       {leftSeats.map((slot) => {
                         const pax = paxBySeat.get(slot.seatNumber);
                         const cls = !pax
-                          ? 'border-[--brand-line] bg-[--brand]/10 text-[#1267E6] hover:bg-[--brand]/25'
+                          ? 'border-[--brand-line] bg-[--brand]/10 text-[var(--brand)] hover:bg-[--brand]/25'
                           : pax.gender === 'F'
-                            ? 'border-pink-500/40 bg-pink-500/20 text-pink-200'
+                            ? 'border-[var(--brand-line)]/40 bg-[var(--brand-soft)]/20 text-[var(--brand)]'
                             : 'border-sky-500/40 bg-sky-500/20 text-sky-200';
                         return (
                           <button
@@ -800,9 +788,9 @@ export function TourSeatMapAndStopsTab({
                       {rightSeats.map((slot) => {
                         const pax = paxBySeat.get(slot.seatNumber);
                         const cls = !pax
-                          ? 'border-[--brand-line] bg-[--brand]/10 text-[#1267E6] hover:bg-[--brand]/25'
+                          ? 'border-[--brand-line] bg-[--brand]/10 text-[var(--brand)] hover:bg-[--brand]/25'
                           : pax.gender === 'F'
-                            ? 'border-pink-500/40 bg-pink-500/20 text-pink-200'
+                            ? 'border-[var(--brand-line)]/40 bg-[var(--brand-soft)]/20 text-[var(--brand)]'
                             : 'border-sky-500/40 bg-sky-500/20 text-sky-200';
                         return (
                           <button
@@ -828,15 +816,15 @@ export function TourSeatMapAndStopsTab({
           </div>
 
           {/* Sağ: Biniş Noktaları & Mevcut Lojistik Harita Bileşeni */}
-          <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
+          <div className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-semibold text-zinc-100">
+                <h4 className="text-sm font-semibold text-[var(--text)]">
                   Biniş Noktaları & Rota Haritası ({mapStops.length} Durak)
                 </h4>
-                <p className="text-[11px] text-zinc-400">
+                <p className="text-[11px] text-[var(--text-muted)]">
                   Tahmini Mesafe:{' '}
-                  <strong className="text-[#1267E6]">
+                  <strong className="text-[var(--brand)]">
                     {tour.estimatedDistanceKm || tour.routeEstimate?.estimatedDistanceKm || 0} km (tahmini)
                   </strong>{' '}
                   · Tahmini Süre:{' '}
@@ -867,19 +855,19 @@ export function TourSeatMapAndStopsTab({
                 return (
                   <div
                     key={s.id}
-                    className="flex items-center justify-between rounded-lg border border-[--line] bg-[#0B0E0D] px-3 py-2 text-xs"
+                    className="flex items-center justify-between rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[--brand]/20 font-mono text-[10px] font-bold text-[#1267E6]">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[--brand]/20 font-mono text-[10px] font-bold text-[var(--brand)]">
                         {s.sequenceNo}
                       </span>
                       <div>
                         <span className="font-mono font-semibold text-sky-300">{s.pickupTime}</span>{' '}
-                        <span className="font-medium text-zinc-100">{s.stopName}</span>{' '}
-                        <span className="text-zinc-500">({s.district || '-'})</span>
+                        <span className="font-medium text-[var(--text)]">{s.stopName}</span>{' '}
+                        <span className="text-[var(--text-muted)]">({s.district || '-'})</span>
                       </div>
                     </div>
-                    <span className="rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-zinc-300">
+                    <span className="rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-[var(--text-2)]">
                       {paxAtStop} yolcu
                     </span>
                   </div>
@@ -893,19 +881,19 @@ export function TourSeatMapAndStopsTab({
                 value={stopName}
                 onChange={(e) => setStopName(e.target.value)}
                 placeholder="Yeni biniş durağı adı..."
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
               <input
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
                 placeholder="İlçe / Bölge"
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
               <input
                 value={pickupTime}
                 onChange={(e) => setPickupTime(e.target.value)}
                 placeholder="07:45"
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
               <div className="flex gap-1">
                 <input
@@ -913,20 +901,20 @@ export function TourSeatMapAndStopsTab({
                   step="0.0001"
                   value={lat}
                   onChange={(e) => setLat(Number(e.target.value))}
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-1.5 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-1.5 text-xs text-[var(--text)]"
                 />
                 <input
                   type="number"
                   step="0.0001"
                   value={lng}
                   onChange={(e) => setLng(Number(e.target.value))}
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-1.5 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-1.5 text-xs text-[var(--text)]"
                 />
               </div>
               <button
                 type="submit"
                 disabled={busy}
-                className="col-span-2 flex items-center justify-center gap-1.5 rounded-lg bg-[--brand]/20 py-1.5 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/30"
+                className="col-span-2 flex items-center justify-center gap-1.5 rounded-lg bg-[--brand]/20 py-1.5 text-xs font-medium text-[var(--brand)] hover:bg-[--brand]/30"
               >
                 <MapPin className="h-3.5 w-3.5" /> Biniş Durağı Ekle & Tahmini Rotayı Güncelle
               </button>

@@ -126,12 +126,12 @@ export function TourBookingsAndManifestoTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={tour?.id || ''}
             onChange={(e) => setSelectedTourId(e.target.value)}
-            className="min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+            className="min-w-[280px] rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
           >
             {tours.map((t) => (
               <option key={t.id} value={t.id}>
@@ -145,7 +145,7 @@ export function TourBookingsAndManifestoTab({
               href={`/api/tur?section=manifesto_pdf&tourId=${encodeURIComponent(
                 tour.id
               )}&demoCompanyId=${encodeURIComponent(demoCompanyId)}`}
-              className="flex items-center gap-1.5 rounded-lg border border-[--brand]/35 bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/25"
+              className="flex items-center gap-1.5 rounded-lg border border-[--brand]/35 bg-[--brand]/15 px-3 py-2 text-xs font-medium text-[var(--brand)] hover:bg-[--brand]/25"
             >
               <Download className="h-3.5 w-3.5" /> İmzalı Manifesto PDF İndir
             </a>
@@ -171,7 +171,7 @@ export function TourBookingsAndManifestoTab({
         <button
           type="button"
           onClick={() => setShowBookingForm((v) => !v)}
-          className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+          className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
         >
           <Plus className="h-3.5 w-3.5" /> Yeni Yolcu Rezervasyonu
         </button>
@@ -180,22 +180,22 @@ export function TourBookingsAndManifestoTab({
       {showBookingForm && tour && (
         <form
           onSubmit={handleCreateBooking}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[white] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand]/35 bg-[var(--bg)] shadow-sm p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#1267E6]">
+            <h4 className="text-sm font-semibold text-[var(--brand)]">
               Yeni Rezervasyon ({tour.code}) — Koltuk & Kontenjan Kilitli
             </h4>
-            <button type="button" onClick={() => setShowBookingForm(false)} className="text-zinc-400">
+            <button type="button" onClick={() => setShowBookingForm(false)} className="text-[var(--text-muted)]">
               <X className="h-4 w-4" />
             </button>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Cari Müşteri</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Cari Müşteri</label>
             <select
               value={customerId}
               onChange={(e) => setCustomerId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {customers.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -205,11 +205,11 @@ export function TourBookingsAndManifestoTab({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Acenta (Komisyonlu)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Acenta (Komisyonlu)</label>
             <select
               value={agencyId}
               onChange={(e) => setAgencyId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Direkt Satış (%0 Komisyon)</option>
               {agencies.map((a) => (
@@ -220,12 +220,12 @@ export function TourBookingsAndManifestoTab({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Tip / Grup Adı</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Tip / Grup Adı</label>
             <div className="flex gap-1.5">
               <select
                 value={bookingType}
                 onChange={(e) => setBookingType(e.target.value as 'INDIVIDUAL' | 'GROUP')}
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               >
                 <option value="INDIVIDUAL">Bireysel</option>
                 <option value="GROUP">Grup</option>
@@ -234,47 +234,47 @@ export function TourBookingsAndManifestoTab({
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
                 placeholder="Grup adı"
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">İlk Tahsilat / Kısmi Ödeme (₺)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">İlk Tahsilat / Kısmi Ödeme (₺)</label>
             <input
               type="number"
               min={0}
               value={paidAmountTry}
               onChange={(e) => setPaidAmountTry(Number(e.target.value))}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Yolcu Ad Soyad</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Yolcu Ad Soyad</label>
             <input
               required
               value={paxFullName}
               onChange={(e) => setPaxFullName(e.target.value)}
               placeholder="Örn. Deniz Akın"
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">TCKN / Pasaport (KVKK Maskeli)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">TCKN / Pasaport (KVKK Maskeli)</label>
             <input
               value={paxTckn}
               onChange={(e) => setPaxTckn(e.target.value)}
               placeholder="Opsiyonel"
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Cinsiyet / Koltuk No</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Cinsiyet / Koltuk No</label>
             <div className="flex gap-1.5">
               <select
                 value={paxGender}
                 onChange={(e) => setPaxGender(e.target.value as 'M' | 'F')}
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               >
                 <option value="M">Erkek</option>
                 <option value="F">Kadın</option>
@@ -283,16 +283,16 @@ export function TourBookingsAndManifestoTab({
                 value={paxSeat}
                 onChange={(e) => setPaxSeat(e.target.value)}
                 placeholder="Koltuk No"
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
               />
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Biniş Noktası</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Biniş Noktası</label>
             <select
               value={paxStopId}
               onChange={(e) => setPaxStopId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {(tour.stops || []).map((s: any) => (
                 <option key={s.id} value={s.id}>
@@ -318,7 +318,7 @@ export function TourBookingsAndManifestoTab({
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB]"
+              className="rounded-lg bg-[var(--brand)] px-4 py-2 text-xs font-semibold text-[var(--text)]"
             >
               Rezervasyonu Oluştur
             </button>
@@ -329,12 +329,12 @@ export function TourBookingsAndManifestoTab({
       {/* Rezervasyonlar Tablosu */}
       {tour && (
         <>
-          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
-            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-zinc-200">
+          <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
+            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-[var(--text)]">
               Rezervasyonlar & Kısmi Ödeme / Komisyon Takibi ({tour.bookings?.length || 0})
             </div>
             <table className="w-full min-w-[840px] text-left text-xs">
-              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
                 <tr>
                   <th className="px-3 py-2">Rez No / Grup</th>
                   <th className="px-3 py-2">Acenta / Kanal</th>
@@ -349,35 +349,35 @@ export function TourBookingsAndManifestoTab({
                 {(tour.bookings || []).map((b: any) => (
                   <tr key={b.id} className="hover:bg-[--page]">
                     <td className="px-3 py-2.5">
-                      <div className="font-mono font-semibold text-zinc-100">{b.bookingNo}</div>
-                      <div className="text-[10px] text-zinc-400">
+                      <div className="font-mono font-semibold text-[var(--text)]">{b.bookingNo}</div>
+                      <div className="text-[10px] text-[var(--text-muted)]">
                         {b.groupName || b.customerName}
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-zinc-300">
+                    <td className="px-3 py-2.5 text-[var(--text-2)]">
                       {b.agencyName || 'Direkt Satış'}
                     </td>
                     <td className="px-3 py-2.5 text-right font-mono">{b.passengerCount}</td>
                     <td className="px-3 py-2.5 text-right font-mono">
                       <div>{Number(b.totalPriceTry).toLocaleString('tr-TR')} ₺</div>
                       <div className="text-[10px]">
-                        <span className="text-[#1267E6]">
+                        <span className="text-[var(--brand)]">
                           Öd: {Number(b.paidAmountTry).toLocaleString('tr-TR')} ₺
                         </span>{' '}
                         ·{' '}
-                        <span className={b.balanceDueTry > 0 ? 'text-amber-300' : 'text-zinc-500'}>
+                        <span className={b.balanceDueTry > 0 ? 'text-[var(--warn)]' : 'text-[var(--text-muted)]'}>
                           Bak: {Number(b.balanceDueTry).toLocaleString('tr-TR')} ₺
                         </span>
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-right font-mono text-amber-300">
+                    <td className="px-3 py-2.5 text-right font-mono text-[var(--warn)]">
                       {b.agencyCommissionTry > 0
                         ? `${Number(b.agencyCommissionTry).toLocaleString('tr-TR')} ₺ (%${b.agencyCommissionRatePct})`
                         : '-'}
                     </td>
                     <td className="px-3 py-2.5 text-[11px]">
                       <div>{TOUR_BOOKING_STATUS_LABELS[b.status] || b.status}</div>
-                      <div className="text-[10px] text-zinc-400">
+                      <div className="text-[10px] text-[var(--text-muted)]">
                         {TOUR_PAYMENT_STATUS_LABELS[b.paymentStatus] || b.paymentStatus}
                         {b.eDocumentNo ? ` · ${b.eDocumentNo}` : ''}
                       </div>
@@ -399,7 +399,7 @@ export function TourBookingsAndManifestoTab({
                                 `${b.bookingNo} kalan bakiyesi tahsil edildi ve Finansa işlendi.`
                               )
                             }
-                            className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[#1267E6]"
+                            className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[var(--brand)]"
                           >
                             Bakiye Kapat
                           </button>
@@ -429,7 +429,7 @@ export function TourBookingsAndManifestoTab({
                                 `${b.bookingNo} iptal edildi.`
                               )
                             }
-                            className="rounded bg-rose-500/15 px-2 py-1 text-[10px] text-rose-300"
+                            className="rounded bg-[var(--bad-soft)] px-2 py-1 text-[10px] text-[var(--bad)]"
                           >
                             İptal
                           </button>
@@ -443,12 +443,12 @@ export function TourBookingsAndManifestoTab({
           </div>
 
           {/* Yolcu Manifesto & Yoklama Tablosu */}
-          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
-            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-zinc-200">
+          <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
+            <div className="border-b border-[--line] px-4 py-3 text-xs font-semibold text-[var(--text)]">
               Yolcu Manifestosu & Biniş Check-In Listesi ({tour.passengers?.length || 0} Yolcu · KVKK Maskeli)
             </div>
             <table className="w-full min-w-[800px] text-left text-xs">
-              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
                 <tr>
                   <th className="px-3 py-2">Koltuk</th>
                   <th className="px-3 py-2">Yolcu Ad Soyad</th>
@@ -462,24 +462,24 @@ export function TourBookingsAndManifestoTab({
               <tbody className="divide-y divide-white/[0.05]">
                 {(tour.passengers || []).slice(0, 40).map((p: any) => (
                   <tr key={p.id} className="hover:bg-[--page]">
-                    <td className="px-3 py-2 font-mono font-bold text-[#1267E6]">
+                    <td className="px-3 py-2 font-mono font-bold text-[var(--brand)]">
                       {p.seatNumber || '-'}
                     </td>
-                    <td className="px-3 py-2 font-medium text-zinc-100">
+                    <td className="px-3 py-2 font-medium text-[var(--text)]">
                       {p.fullName}{' '}
-                      <span className="text-[10px] text-zinc-500">
+                      <span className="text-[10px] text-[var(--text-muted)]">
                         ({p.gender === 'F' ? 'K' : p.gender === 'M' ? 'E' : '-'})
                       </span>
                     </td>
-                    <td className="px-3 py-2 font-mono text-[11px] text-zinc-300">
+                    <td className="px-3 py-2 font-mono text-[11px] text-[var(--text-2)]">
                       {p.tckn || p.passportNo || '-'} · {p.nationality}
                     </td>
-                    <td className="px-3 py-2 font-mono text-[11px] text-zinc-400">
+                    <td className="px-3 py-2 font-mono text-[11px] text-[var(--text-muted)]">
                       {p.phone || '-'}
                     </td>
                     <td className="px-3 py-2 text-[10px]">
                       {p.kbsRecordId ? (
-                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[#1267E6]">
+                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[var(--brand)]">
                           KBS Hazır
                         </span>
                       ) : p.hotelRoomId ? (
@@ -487,14 +487,12 @@ export function TourBookingsAndManifestoTab({
                           Oda Atandı
                         </span>
                       ) : (
-                        <span className="text-zinc-500">-</span>
+                        <span className="text-[var(--text-muted)]">-</span>
                       )}
                     </td>
                     <td className="px-3 py-2">
                       <span
-                        className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                          TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]'
-                        }`}
+                        className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${ TOUR_BOARDING_STATUS_BADGES[p.boardingStatus] || 'border-[--line]' }`}
                       >
                         {TOUR_BOARDING_STATUS_LABELS[p.boardingStatus] || p.boardingStatus}
                       </span>
@@ -513,7 +511,7 @@ export function TourBookingsAndManifestoTab({
                             `${p.fullName} biniş durumu güncellendi.`
                           )
                         }
-                        className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[#1267E6]"
+                        className="rounded bg-[--brand]/20 px-2 py-1 text-[10px] text-[var(--brand)]"
                       >
                         {p.boardingStatus === 'BOARDED' ? 'Geri Al' : 'Bindi İşaretle'}
                       </button>
@@ -574,14 +572,14 @@ export function TourResourceGanttAndConflictsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex items-center gap-2">
-          <CalendarDays className="h-4 w-4 text-[#1267E6]" />
+          <CalendarDays className="h-4 w-4 text-[var(--brand)]" />
           <div>
-            <h3 className="text-sm font-semibold text-zinc-100">
+            <h3 className="text-sm font-semibold text-[var(--text)]">
               Araç, Şoför & Rehber Çapraz Kaynak Çakışma Takvimi (Gantt)
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Turlar, Filo bakım/arıza kayıtları ve Rent-a-Car kiralamaları tek çakışma matrisinde izlenir.
             </p>
           </div>
@@ -591,16 +589,16 @@ export function TourResourceGanttAndConflictsTab({
             type="date"
             value={ganttStartDate}
             onChange={(e) => onChangeStartDate(e.target.value)}
-            className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-200"
+            className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
           />
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
         <table className="w-full min-w-[920px] border-collapse text-xs">
           <thead>
-            <tr className="border-b border-[--line] bg-[#161B18] text-zinc-400">
-              <th className="sticky left-0 z-10 bg-[#161B18] px-3 py-2 text-left">Kaynak</th>
+            <tr className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
+              <th className="sticky left-0 z-10 bg-[var(--muted-bg)] px-3 py-2 text-left">Kaynak</th>
               {(resourceGantt?.dateHeaders || []).map((dk) => (
                 <th key={dk} className="px-1.5 py-2 text-center font-mono text-[10px]">
                   {dk.slice(5)}
@@ -611,9 +609,9 @@ export function TourResourceGanttAndConflictsTab({
           <tbody className="divide-y divide-white/[0.05]">
             {(resourceGantt?.rows || []).map((row) => (
               <tr key={`${row.resourceType}-${row.resourceId}`}>
-                <td className="sticky left-0 z-10 border-r border-[--line] bg-[white] px-3 py-2">
-                  <div className="font-semibold text-zinc-100">{row.label}</div>
-                  <div className="text-[10px] text-zinc-500">{row.subLabel}</div>
+                <td className="sticky left-0 z-10 border-r border-[--line] bg-[var(--bg)] shadow-sm px-3 py-2">
+                  <div className="font-semibold text-[var(--text)]">{row.label}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">{row.subLabel}</div>
                 </td>
                 {row.days.map((c: any) => (
                   <td key={c.dateKey} className="p-1">
@@ -636,7 +634,7 @@ export function TourResourceGanttAndConflictsTab({
                         BAKIM
                       </div>
                     ) : (
-                      <div className="rounded bg-[--brand]/10 py-1.5 text-center text-[9px] text-[#1267E6]/60">
+                      <div className="rounded bg-[--brand]/10 py-1.5 text-center text-[9px] text-[var(--brand)]/60">
                         Boş
                       </div>
                     )}
@@ -649,10 +647,10 @@ export function TourResourceGanttAndConflictsTab({
       </div>
 
       {/* Çakışma Günlüğü & Manuel Çözüm */}
-      <div className="rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="mb-3 flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-[#1267E6]" />
-          <h4 className="text-sm font-semibold text-zinc-100">
+          <ShieldCheck className="h-4 w-4 text-[var(--brand)]" />
+          <h4 className="text-sm font-semibold text-[var(--text)]">
             Engellenen Kaynak / Koltuk / Kontenjan Çakışmaları ({conflictLogs.length})
           </h4>
         </div>
@@ -660,25 +658,21 @@ export function TourResourceGanttAndConflictsTab({
           {conflictLogs.map((c) => (
             <div
               key={c.id}
-              className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-xs ${
-                c.resolved
-                  ? 'border-[--brand]/25 bg-[--brand]/5'
-                  : 'border-rose-500/30 bg-rose-500/10'
-              }`}
+              className={`flex flex-wrap items-center justify-between gap-2 rounded-lg border px-3 py-2 text-xs ${ c.resolved ? 'border-[--brand]/25 bg-[--brand]/5' : 'border-[var(--bad-line)] bg-[var(--bad-soft)]' }`}
             >
               <div className="flex items-center gap-2">
                 {c.resolved ? (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-[#1267E6]" />
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-[var(--brand)]" />
                 ) : (
-                  <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
+                  <AlertTriangle className="h-4 w-4 shrink-0 text-[var(--bad)]" />
                 )}
                 <div>
-                  <span className="font-mono text-[11px] font-semibold text-white">
+                  <span className="font-mono text-[11px] font-semibold text-[var(--text)]">
                     {c.rejectionCode}
                   </span>{' '}
-                  <span className="text-zinc-200">{c.rejectionMessage}</span>
+                  <span className="text-[var(--text)]">{c.rejectionMessage}</span>
                   {c.resolutionNote && (
-                    <div className="text-[10px] text-[#1267E6]">Çözüm: {c.resolutionNote}</div>
+                    <div className="text-[10px] text-[var(--brand)]">Çözüm: {c.resolutionNote}</div>
                   )}
                 </div>
               </div>
@@ -687,7 +681,7 @@ export function TourResourceGanttAndConflictsTab({
                   type="button"
                   disabled={busy}
                   onClick={() => handleResolve(c.id)}
-                  className="rounded bg-[--brand]/20 px-2.5 py-1 text-[11px] font-medium text-[#1267E6]"
+                  className="rounded bg-[--brand]/20 px-2.5 py-1 text-[11px] font-medium text-[var(--brand)]"
                 >
                   Çözüldü İşaretle
                 </button>

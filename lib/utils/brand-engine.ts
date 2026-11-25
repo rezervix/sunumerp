@@ -11,7 +11,7 @@ export interface ExtractedColor {
   hsl: { h: number; s: number; l: number }
   contrastWithWhite: number
   contrastWithDark: number
-  recommendedForeground: "#FFFFFF" | "#0F172A"
+  recommendedForeground: "#FFFFFF" | "var(--page)"
 }
 
 export interface DarkThemePalette {
@@ -21,9 +21,9 @@ export interface DarkThemePalette {
   sidebar: string
   header: string
   primary: string
-  primaryForeground: "#FFFFFF" | "#0F172A"
+  primaryForeground: "#FFFFFF" | "var(--page)"
   accent: string
-  accentForeground: "#FFFFFF" | "#0F172A"
+  accentForeground: "#FFFFFF" | "var(--page)"
   foreground: string
   mutedForeground: string
   border: string
@@ -31,9 +31,9 @@ export interface DarkThemePalette {
 
 export interface BrandKitAnalysisResult {
   primary: string
-  primaryForeground: "#FFFFFF" | "#0F172A"
+  primaryForeground: "#FFFFFF" | "var(--page)"
   accent: string
-  accentForeground: "#FFFFFF" | "#0F172A"
+  accentForeground: "#FFFFFF" | "var(--page)"
   palette: ExtractedColor[]
   darkPalette: DarkThemePalette
   bgRemovedDataUrl?: string
@@ -124,12 +124,12 @@ export function rgbToHsl(r: number, g: number, b: number): { h: number; s: numbe
 }
 
 /**
- * Recommended foreground text color (#FFFFFF vs #0F172A) for WCAG compliance
+ * Recommended foreground text color (#FFFFFF vs var(--page)) for WCAG compliance
  */
-export function getReadableForeground(hex: string): "#FFFFFF" | "#0F172A" {
+export function getReadableForeground(hex: string): "#FFFFFF" | "var(--page)" {
   const contrastWithWhite = getContrastRatio(hex, "#FFFFFF")
-  const contrastWithDark = getContrastRatio(hex, "#0F172A")
-  return contrastWithWhite >= contrastWithDark ? "#FFFFFF" : "#0F172A"
+  const contrastWithDark = getContrastRatio(hex, "var(--page)")
+  return contrastWithWhite >= contrastWithDark ? "#FFFFFF" : "var(--page)"
 }
 
 /**
@@ -300,8 +300,8 @@ export function extractBrandColorsFromImage(imgElement: HTMLImageElement): Brand
     const hex = rgbToHex(avgR, avgG, avgB)
     const hsl = rgbToHsl(avgR, avgG, avgB)
     const cWhite = getContrastRatio(hex, "#FFFFFF")
-    const cDark = getContrastRatio(hex, "#0F172A")
-    const fg = cWhite >= cDark ? "#FFFFFF" : "#0F172A"
+    const cDark = getContrastRatio(hex, "var(--page)")
+    const fg = cWhite >= cDark ? "#FFFFFF" : "var(--page)"
 
     extractedList.push({
       hex,

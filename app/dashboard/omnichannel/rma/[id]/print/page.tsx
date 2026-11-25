@@ -83,7 +83,7 @@ export default function PrintRmaLabelPage() {
     try {
       JsBarcode(barcodeRef.current, String(label.barcodeValue), {
         format: "CODE128",
-        lineColor: "#0f172a",
+        lineColor: "var(--page)",
         background: "#ffffff",
         width: 1.9,
         height: 52,
@@ -97,7 +97,7 @@ export default function PrintRmaLabelPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-[#f7f9fb] text-[#191c1e]">
+      <div className="flex justify-center items-center h-screen bg-[#f7f9fb] text-[#0B1B33]">
         İade etiketi hazırlanıyor...
       </div>
     )
@@ -138,7 +138,7 @@ export default function PrintRmaLabelPage() {
           {/* Üst Başlık & QR Kodu */}
           <div className="p-6 md:p-8 border-b border-[--line] bg-[--page] flex justify-between items-start gap-6 flex-wrap">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl bg-[--navy] flex items-center justify-center text-white text-xl font-bold shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-[--navy] flex items-center justify-center text-[var(--text)] text-xl font-bold shadow-sm">
                 RMA
               </div>
               <div>

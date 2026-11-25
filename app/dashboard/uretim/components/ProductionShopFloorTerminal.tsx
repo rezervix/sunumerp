@@ -274,7 +274,7 @@ export function ProductionShopFloorTerminal() {
   }
 
   return (
-    <div className="min-h-[85vh] flex flex-col bg-zinc-950 text-white rounded-3xl border border-[--line] p-4 md:p-6 select-none">
+    <div className="min-h-[85vh] flex flex-col bg-[var(--bg)] text-[var(--text)] rounded-3xl border border-[--line] p-4 md:p-6 select-none">
       {/* ── ÜST BAR: İSTASYON, OPERATÖR, SAAT & EYLEMLER ── */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[--line]">
         <div className="flex items-center gap-3">
@@ -290,7 +290,7 @@ export function ProductionShopFloorTerminal() {
                 CANLI
               </span>
             </div>
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--text)]">
               {workCenters.find((w) => w.id === selectedWorkCenterId)?.name || "İş İstasyonu Seçiniz"}
             </h1>
           </div>
@@ -303,10 +303,10 @@ export function ProductionShopFloorTerminal() {
               value={selectedWorkCenterId}
               onValueChange={(val) => setSelectedWorkCenterId(val)}
             >
-              <SelectTrigger className="bg-zinc-900 border-[--line] h-11 text-sm font-medium">
+              <SelectTrigger className="bg-[var(--bg)] border-[--line] h-11 text-sm font-medium">
                 <SelectValue placeholder="İş İstasyonu Seçin" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-[--line] text-white">
+              <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                 {workCenters.map((wc) => (
                   <SelectItem key={wc.id} value={wc.id}>
                     {wc.code} - {wc.name}
@@ -318,14 +318,14 @@ export function ProductionShopFloorTerminal() {
 
           <button
             onClick={() => setIsPinModalOpen(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900 border border-[--line] hover:border-[--brand-line] transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--bg)] border border-[--line] hover:border-[--brand-line] transition-colors"
           >
             <div className="w-7 h-7 rounded-lg bg-[--brand]/10 flex items-center justify-center text-[--brand]">
               <User className="w-4 h-4" />
             </div>
             <div className="text-left hidden sm:block">
-              <p className="text-[10px] text-zinc-400 font-mono">OPERATÖR</p>
-              <p className="text-xs font-semibold text-white truncate max-w-[120px]">{operatorName}</p>
+              <p className="text-[10px] text-[var(--text-muted)] font-mono">OPERATÖR</p>
+              <p className="text-xs font-semibold text-[var(--text)] truncate max-w-[120px]">{operatorName}</p>
             </div>
           </button>
 
@@ -334,7 +334,7 @@ export function ProductionShopFloorTerminal() {
             size="icon"
             onClick={fetchTerminalData}
             disabled={loading}
-            className="h-11 w-11 border-[--line] bg-zinc-900 hover:bg-zinc-800"
+            className="h-11 w-11 border-[--line] bg-[var(--bg)] hover:bg-[var(--muted-bg)]"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[--brand]" : ""}`} />
           </Button>
@@ -343,7 +343,7 @@ export function ProductionShopFloorTerminal() {
             variant="outline"
             size="icon"
             onClick={toggleFullscreen}
-            className="h-11 w-11 border-[--line] bg-zinc-900 hover:bg-zinc-800"
+            className="h-11 w-11 border-[--line] bg-[var(--bg)] hover:bg-[var(--muted-bg)]"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </Button>
@@ -360,12 +360,12 @@ export function ProductionShopFloorTerminal() {
             value={barcodeInput}
             onChange={(e) => setBarcodeInput(e.target.value)}
             placeholder="İş Emri veya Malzeme Barkodu Okutun (veya girip Enter'a basın)..."
-            className="pl-13 h-14 bg-zinc-900/90 border-[--brand-line] text-base md:text-lg font-mono focus-visible:ring-[--brand]"
+            className="pl-13 h-14 bg-[var(--bg)] border-[--brand-line] text-base md:text-lg font-mono focus-visible:ring-[--brand]"
           />
         </div>
         <Button
           type="submit"
-          className="h-14 px-6 bg-[--brand] hover:bg-[--brand] text-white font-semibold text-base rounded-xl"
+          className="h-14 px-6 bg-[--brand] hover:bg-[--brand] text-[var(--text)] font-semibold text-base rounded-xl"
         >
           <QrCode className="w-5 h-5 mr-2" />
           OKUT
@@ -377,17 +377,17 @@ export function ProductionShopFloorTerminal() {
         {/* Sol 2 Kolon: İstasyon Operasyonları */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold tracking-wider uppercase text-zinc-400 flex items-center gap-2">
+            <h2 className="text-sm font-semibold tracking-wider uppercase text-[var(--text-muted)] flex items-center gap-2">
               <Layers className="w-4 h-4 text-[--brand]" />
               Aktif & Bekleyen Operasyonlar ({terminalData?.activeOperations?.length || 0})
             </h2>
-            <span className="text-xs text-zinc-500">Öncelik & Sıraya Göre Sıralı</span>
+            <span className="text-xs text-[var(--text-muted)]">Öncelik & Sıraya Göre Sıralı</span>
           </div>
 
           {(!terminalData?.activeOperations || terminalData.activeOperations.length === 0) ? (
-            <div className="p-12 text-center rounded-2xl bg-zinc-900/50 border border-white/5 space-y-3">
+            <div className="p-12 text-center rounded-2xl bg-[var(--muted-bg)] border border-[var(--line-soft)] space-y-3">
               <CheckCircle2 className="w-12 h-12 text-zinc-600 mx-auto" />
-              <p className="text-base text-zinc-400">Bu istasyonda atanmış aktif bir operasyon bulunmuyor.</p>
+              <p className="text-base text-[var(--text-muted)]">Bu istasyonda atanmış aktif bir operasyon bulunmuyor.</p>
               <p className="text-xs text-zinc-600">Yeni bir iş emri serbest bırakıldığında burada otomatik görünecektir.</p>
             </div>
           ) : (
@@ -402,48 +402,36 @@ export function ProductionShopFloorTerminal() {
                   <motion.div
                     key={op.id}
                     layout
-                    className={`p-5 rounded-2xl border transition-all ${
-                      isRunning
-                        ? "bg-[--brand-soft] border-[--brand-line] shadow-lg shadow-sm"
-                        : isPaused
-                        ? "bg-amber-950/20 border-amber-500/40"
-                        : "bg-zinc-900/70 border-[--line]"
-                    }`}
+                    className={`p-5 rounded-2xl border transition-all ${ isRunning ? "bg-[--brand-soft] border-[--brand-line] shadow-lg shadow-sm" : isPaused ? "bg-amber-950/20 border-[var(--warn-line)]" : "bg-[var(--bg)]/70 border-[--line]" }`}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 font-bold text-white">
+                          <span className="font-mono text-xs px-2 py-0.5 rounded bg-[var(--muted-bg)] font-bold text-[var(--text)]">
                             #{op.operationNumber}
                           </span>
                           <span className="font-mono text-xs text-[--brand]">
                             {op.workOrder?.workOrderNumber}
                           </span>
                           <span
-                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                              isRunning
-                                ? "bg-[--brand]/20 text-[--brand] border border-[--brand-line]"
-                                : isPaused
-                                ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                                : "bg-zinc-700/50 text-zinc-300"
-                            }`}
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${ isRunning ? "bg-[--brand]/20 text-[--brand] border border-[--brand-line]" : isPaused ? "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]" : "bg-[var(--muted-bg)]/50 text-[var(--text-2)]" }`}
                           >
                             {isRunning ? "DEVAM EDİYOR" : isPaused ? "DURAKLATILDI (DURUŞTA)" : "BEKLİYOR"}
                           </span>
                         </div>
-                        <h3 className="text-lg font-bold text-white">
+                        <h3 className="text-lg font-bold text-[var(--text)]">
                           {op.operationName}
                         </h3>
-                        <p className="text-xs text-zinc-400 mt-0.5">
-                          Ürün: <span className="text-zinc-200 font-medium">{op.workOrder?.item?.name || "Mamul"}</span> ({op.workOrder?.item?.sku})
+                        <p className="text-xs text-[var(--text-muted)] mt-0.5">
+                          Ürün: <span className="text-[var(--text-2)] font-medium">{op.workOrder?.item?.name || "Mamul"}</span> ({op.workOrder?.item?.sku})
                           {op.workOrder?.lotNumber ? ` · Lot: ${op.workOrder.lotNumber}` : ""}
                         </p>
                       </div>
 
                       {/* İlerleme Bilgisi */}
                       <div className="text-right">
-                        <p className="text-xs text-zinc-400">Üretilen / Planlanan</p>
-                        <p className="text-xl font-mono font-bold text-white">
+                        <p className="text-xs text-[var(--text-muted)]">Üretilen / Planlanan</p>
+                        <p className="text-xl font-mono font-bold text-[var(--text)]">
                           <span className="text-[--brand]">{op.producedQuantity}</span> / {op.plannedQuantity} {op.workOrder?.unit || "ADET"}
                         </p>
                         {op.scrapQuantity > 0 && (
@@ -456,8 +444,8 @@ export function ProductionShopFloorTerminal() {
 
                     {/* Duruş Mesajı (varsa) */}
                     {isPaused && (
-                      <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center gap-2 text-xs text-amber-300">
-                        <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                      <div className="mt-3 p-3 rounded-xl bg-[var(--warn-soft)] border border-[var(--warn-line)] flex items-center gap-2 text-xs text-[var(--warn)]">
+                        <AlertTriangle className="w-4 h-4 shrink-0 text-[var(--warn)]" />
                         <span>Duruş Sebebi: <strong>{op.stoppages?.[0]?.reasonCode || "Duruş Kaydı"}</strong> — {op.stoppages?.[0]?.notes || "Açıklama belirtilmemiş"}</span>
                       </div>
                     )}
@@ -467,7 +455,7 @@ export function ProductionShopFloorTerminal() {
                       {isPending && (
                         <Button
                           onClick={() => handleStartOperation(op.id)}
-                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-white font-bold text-sm rounded-xl flex-1 shadow-md shadow-sm"
+                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-[var(--text)] font-bold text-sm rounded-xl flex-1 shadow-md shadow-sm"
                         >
                           <Play className="w-5 h-5 mr-2" />
                           BAŞLAT
@@ -481,7 +469,7 @@ export function ProductionShopFloorTerminal() {
                               setSelectedOperationForStoppage(op)
                               setStoppageModalOpen(true)
                             }}
-                            className="h-12 px-5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm rounded-xl flex-1"
+                            className="h-12 px-5 bg-amber-600 hover:bg-amber-500 text-[var(--text)] font-bold text-sm rounded-xl flex-1"
                           >
                             <Pause className="w-5 h-5 mr-2" />
                             DURUŞ BİLDİR
@@ -493,7 +481,7 @@ export function ProductionShopFloorTerminal() {
                               setProducedQty(String(Math.max(0, op.plannedQuantity - op.producedQuantity)))
                               setCompleteModalOpen(true)
                             }}
-                            className="h-12 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl flex-1 shadow-md shadow-blue-900/30"
+                            className="h-12 px-6 bg-blue-600 hover:bg-blue-500 text-[var(--text)] font-bold text-sm rounded-xl flex-1 shadow-md shadow-blue-900/30"
                           >
                             <CheckCircle2 className="w-5 h-5 mr-2" />
                             İŞİ BİTİR / ÜRETİM GİRİŞİ
@@ -504,7 +492,7 @@ export function ProductionShopFloorTerminal() {
                       {isPaused && (
                         <Button
                           onClick={() => handleResumeOperation(op.id)}
-                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-white font-bold text-sm rounded-xl flex-1"
+                          className="h-12 px-6 bg-[--brand] hover:bg-[--brand] text-[var(--text)] font-bold text-sm rounded-xl flex-1"
                         >
                           <Play className="w-5 h-5 mr-2" />
                           DURUŞU BİTİR & DEVAM ET
@@ -520,31 +508,31 @@ export function ProductionShopFloorTerminal() {
 
         {/* Sağ Kolon: IoT Canlı Akışı & İstasyon Metrikleri */}
         <div className="space-y-4">
-          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-[--line] space-y-4">
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-zinc-400 flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+          <div className="p-5 rounded-2xl bg-[var(--bg)] border border-[--line] space-y-4">
+            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--text-muted)] flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-[var(--brand)]" />
               İstasyon Durumu & Canlı Veri (IoT)
             </h3>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <p className="text-[10px] text-zinc-400 uppercase">İstasyon Kapasitesi</p>
-                <p className="text-lg font-bold font-mono text-white mt-1">100%</p>
+              <div className="p-3 rounded-xl bg-[var(--muted-bg)] border border-[var(--line-soft)]">
+                <p className="text-[10px] text-[var(--text-muted)] uppercase">İstasyon Kapasitesi</p>
+                <p className="text-lg font-bold font-mono text-[var(--text)] mt-1">100%</p>
               </div>
-              <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                <p className="text-[10px] text-zinc-400 uppercase">Aktif Operatör</p>
+              <div className="p-3 rounded-xl bg-[var(--muted-bg)] border border-[var(--line-soft)]">
+                <p className="text-[10px] text-[var(--text-muted)] uppercase">Aktif Operatör</p>
                 <p className="text-sm font-semibold text-[--brand] mt-1 truncate">{operatorName}</p>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-white/5">
-              <p className="text-xs font-semibold text-zinc-300 mb-2 flex items-center justify-between">
+            <div className="pt-2 border-t border-[var(--line-soft)]">
+              <p className="text-xs font-semibold text-[var(--text-2)] mb-2 flex items-center justify-between">
                 <span>Son PLC / Sensör Girişleri</span>
-                <span className="text-[10px] font-mono text-zinc-500">Staging</span>
+                <span className="text-[10px] font-mono text-[var(--text-muted)]">Staging</span>
               </p>
 
               {(!terminalData?.recentIotLogs || terminalData.recentIotLogs.length === 0) ? (
-                <div className="p-4 rounded-xl bg-black/30 border border-white/5 text-center text-xs text-zinc-500">
+                <div className="p-4 rounded-xl bg-black/30 border border-[var(--line-soft)] text-center text-xs text-[var(--text-muted)]">
                   Bağlı sensörden son sinyal bekleniyor...
                 </div>
               ) : (
@@ -552,15 +540,15 @@ export function ProductionShopFloorTerminal() {
                   {terminalData.recentIotLogs.map((log: any) => (
                     <div
                       key={log.id}
-                      className="p-2.5 rounded-lg bg-black/40 border border-white/5 text-[11px] font-mono flex items-center justify-between"
+                      className="p-2.5 rounded-lg bg-[var(--muted-bg)] border border-[var(--line-soft)] text-[11px] font-mono flex items-center justify-between"
                     >
                       <div className="truncate">
-                        <span className="text-cyan-400">{log.deviceId}</span>:{" "}
-                        <span className="text-zinc-300">
+                        <span className="text-[var(--brand)]">{log.deviceId}</span>:{" "}
+                        <span className="text-[var(--text-2)]">
                           {typeof log.payload === "object" ? JSON.stringify(log.payload) : String(log.payload)}
                         </span>
                       </div>
-                      <span className="text-[9px] text-zinc-500 shrink-0 ml-2">
+                      <span className="text-[9px] text-[var(--text-muted)] shrink-0 ml-2">
                         {new Date(log.receivedAt).toLocaleTimeString("tr-TR")}
                       </span>
                     </div>
@@ -570,12 +558,12 @@ export function ProductionShopFloorTerminal() {
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[--brand-soft] border border-[--brand-line] text-xs text-zinc-300 space-y-2">
+          <div className="p-4 rounded-2xl bg-[--brand-soft] border border-[--brand-line] text-xs text-[var(--text-2)] space-y-2">
             <div className="flex items-center gap-2 text-[--brand] font-semibold">
               <Boxes className="w-4 h-4" />
               <span>Geri Yıkama (Backflush) Entegrasyonu</span>
             </div>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-[var(--text-muted)]">
               Operasyon tamamlandığında, ürün ağacında backflush olarak tanımlı hammaddeler otomatik olarak stoktan düşülür ve nihai mamul/yarı mamul anında depoya işlenir.
             </p>
           </div>
@@ -584,10 +572,10 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: OPERATÖR PIN DOĞRULAMA ── */}
       <Dialog open={isPinModalOpen} onOpenChange={setIsPinModalOpen}>
-        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-md">
+        <DialogContent className="bg-[var(--bg)] border-[--line] text-[var(--text)] sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Operatör Hızlı Girişi (PIN / Kart)</DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogDescription className="text-[var(--text-muted)]">
               Atölye terminaline atanmak üzere 4 haneli PIN numaranızı girin.
             </DialogDescription>
           </DialogHeader>
@@ -599,7 +587,7 @@ export function ProductionShopFloorTerminal() {
               value={enteredPin}
               onChange={(e) => setEnteredPin(e.target.value)}
               placeholder="PIN Giriniz..."
-              className="h-14 text-center text-2xl font-mono tracking-widest bg-zinc-900 border-[--line]"
+              className="h-14 text-center text-2xl font-mono tracking-widest bg-[var(--bg)] border-[--line]"
               autoFocus
             />
 
@@ -615,7 +603,7 @@ export function ProductionShopFloorTerminal() {
                     else if (key === "Giriş") handlePinSubmit()
                     else setEnteredPin((prev) => (prev.length < 6 ? prev + key : prev))
                   }}
-                  className="h-12 text-lg font-bold bg-zinc-900 border-[--line] hover:bg-zinc-800"
+                  className="h-12 text-lg font-bold bg-[var(--bg)] border-[--line] hover:bg-[var(--muted-bg)]"
                 >
                   {key}
                 </Button>
@@ -627,25 +615,25 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: DURUŞ BİLDİRİMİ ── */}
       <Dialog open={stoppageModalOpen} onOpenChange={setStoppageModalOpen}>
-        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-lg">
+        <DialogContent className="bg-[var(--bg)] border-[--line] text-[var(--text)] sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-amber-400">
+            <DialogTitle className="flex items-center gap-2 text-[var(--warn)]">
               <AlertTriangle className="w-5 h-5" />
               Duruş Bildirimi (Operasyonu Duraklat)
             </DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogDescription className="text-[var(--text-muted)]">
               İş emri #{selectedOperationForStoppage?.workOrder?.workOrderNumber} - Operasyon #{selectedOperationForStoppage?.operationNumber}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Duruş Nedeni Kodu</Label>
+              <Label className="text-xs text-[var(--text-2)]">Duruş Nedeni Kodu</Label>
               <Select value={stoppageReason} onValueChange={setStoppageReason}>
-                <SelectTrigger className="bg-zinc-900 border-[--line] mt-1">
+                <SelectTrigger className="bg-[var(--bg)] border-[--line] mt-1">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                   <SelectItem value="ARIZA">Makine / Ekipman Arızası</SelectItem>
                   <SelectItem value="AYAR">Ayar & Setup (Kalıp Değişimi)</SelectItem>
                   <SelectItem value="MALZEME_YOK">Hammadde / Malzeme Eksikliği</SelectItem>
@@ -659,12 +647,12 @@ export function ProductionShopFloorTerminal() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Açıklama / Not</Label>
+              <Label className="text-xs text-[var(--text-2)]">Açıklama / Not</Label>
               <Input
                 value={stoppageNotes}
                 onChange={(e) => setStoppageNotes(e.target.value)}
                 placeholder="Örn: 2 no'lu enjeksiyon valfi sıkıştı..."
-                className="bg-zinc-900 border-[--line] mt-1"
+                className="bg-[var(--bg)] border-[--line] mt-1"
               />
             </div>
           </div>
@@ -679,7 +667,7 @@ export function ProductionShopFloorTerminal() {
             </Button>
             <Button
               onClick={handlePauseOperation}
-              className="bg-amber-600 hover:bg-amber-500 text-white font-bold"
+              className="bg-amber-600 hover:bg-amber-500 text-[var(--text)] font-bold"
             >
               Duruşu Başlat
             </Button>
@@ -689,13 +677,13 @@ export function ProductionShopFloorTerminal() {
 
       {/* ── MODAL: İŞİ TAMAMLA & ÜRETİM ÇIKTISI ── */}
       <Dialog open={completeModalOpen} onOpenChange={setCompleteModalOpen}>
-        <DialogContent className="bg-zinc-950 border-[--line] text-white sm:max-w-lg">
+        <DialogContent className="bg-[var(--bg)] border-[--line] text-[var(--text)] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-blue-400">
               <CheckCircle2 className="w-5 h-5" />
               Operasyon Çıktı & Hurda Bildirimi
             </DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogDescription className="text-[var(--text-muted)]">
               Operasyon #{selectedOperationForComplete?.operationNumber}: {selectedOperationForComplete?.operationName}
             </DialogDescription>
           </DialogHeader>
@@ -703,38 +691,38 @@ export function ProductionShopFloorTerminal() {
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Üretilen Sağlam Miktar *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Üretilen Sağlam Miktar *</Label>
                 <Input
                   type="number"
                   min="0"
                   step="any"
                   value={producedQty}
                   onChange={(e) => setProducedQty(e.target.value)}
-                  className="bg-zinc-900 border-[--line] mt-1 text-lg font-mono font-bold"
+                  className="bg-[var(--bg)] border-[--line] mt-1 text-lg font-mono font-bold"
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Hurda / Fire Miktarı</Label>
+                <Label className="text-xs text-[var(--text-2)]">Hurda / Fire Miktarı</Label>
                 <Input
                   type="number"
                   min="0"
                   step="any"
                   value={scrapQty}
                   onChange={(e) => setScrapQty(e.target.value)}
-                  className="bg-zinc-900 border-[--line] mt-1 text-lg font-mono font-bold text-red-400"
+                  className="bg-[var(--bg)] border-[--line] mt-1 text-lg font-mono font-bold text-red-400"
                 />
               </div>
             </div>
 
             {Number(scrapQty) > 0 && (
               <div>
-                <Label className="text-xs text-zinc-300">Hurda Nedeni</Label>
+                <Label className="text-xs text-[var(--text-2)]">Hurda Nedeni</Label>
                 <Select value={scrapReason} onValueChange={setScrapReason}>
-                  <SelectTrigger className="bg-zinc-900 border-[--line] mt-1">
+                  <SelectTrigger className="bg-[var(--bg)] border-[--line] mt-1">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-white">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text)]">
                     <SelectItem value="HAMMADDE_HATASI">Hammadde Bozuk / Kusurlu</SelectItem>
                     <SelectItem value="OPERATOR_HATASI">Operatör Hatası</SelectItem>
                     <SelectItem value="MAKINE_HATASI">Makine / Donanım Arızası</SelectItem>
@@ -748,26 +736,26 @@ export function ProductionShopFloorTerminal() {
 
             <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[--line]">
               <div>
-                <Label className="text-xs text-zinc-300">Fiili Makine Süresi (Dakika)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Fiili Makine Süresi (Dakika)</Label>
                 <Input
                   type="number"
                   min="0"
                   value={actualMachineMinutes}
                   onChange={(e) => setActualMachineMinutes(e.target.value)}
                   placeholder="Boşsa tahmini alınır"
-                  className="bg-zinc-900 border-[--line] mt-1 font-mono"
+                  className="bg-[var(--bg)] border-[--line] mt-1 font-mono"
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Fiili İşçilik Süresi (Dakika)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Fiili İşçilik Süresi (Dakika)</Label>
                 <Input
                   type="number"
                   min="0"
                   value={actualLaborMinutes}
                   onChange={(e) => setActualLaborMinutes(e.target.value)}
                   placeholder="Boşsa tahmini alınır"
-                  className="bg-zinc-900 border-[--line] mt-1 font-mono"
+                  className="bg-[var(--bg)] border-[--line] mt-1 font-mono"
                 />
               </div>
             </div>
@@ -783,7 +771,7 @@ export function ProductionShopFloorTerminal() {
             </Button>
             <Button
               onClick={handleCompleteOperation}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold"
+              className="bg-blue-600 hover:bg-blue-500 text-[var(--text)] font-bold"
             >
               Onayla ve Tamamla
             </Button>

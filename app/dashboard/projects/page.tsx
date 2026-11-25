@@ -226,7 +226,7 @@ export default function ProjectsPage() {
             setFormData({ name: "", description: "", status: "active", progress: 0, startDate: "", endDate: "", customerNotes: "" })
             setIsCreateDialogOpen(true)
           }}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-medium text-xs sm:text-sm rounded-full shadow-sm transition active:scale-95 cursor-pointer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-medium text-xs sm:text-sm rounded-full shadow-sm transition active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Yeni Proje Ekle
@@ -518,7 +518,7 @@ export default function ProjectsPage() {
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="px-5 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Ekleniyor..." : "Proje Ekle"}
               </button>
@@ -648,7 +648,7 @@ export default function ProjectsPage() {
               <button
                 onClick={handleEdit}
                 disabled={loading || !formData.name}
-                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="px-5 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Güncelleniyor..." : "Güncelle"}
               </button>

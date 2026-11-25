@@ -141,11 +141,7 @@ export function CreateWmsTaskModal({
               <button
                 type="button"
                 onClick={() => setTaskType('GOODS_RECEIPT')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
-                  taskType === 'GOODS_RECEIPT'
-                    ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold'
-                    : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]'
-                }`}
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${ taskType === 'GOODS_RECEIPT' ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold' : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]' }`}
               >
                 <ArrowDownToLine className="w-4 h-4 text-[--brand]" />
                 Mal Kabul & Kalite
@@ -154,11 +150,7 @@ export function CreateWmsTaskModal({
               <button
                 type="button"
                 onClick={() => setTaskType('PUTAWAY')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
-                  taskType === 'PUTAWAY'
-                    ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold'
-                    : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]'
-                }`}
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${ taskType === 'PUTAWAY' ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold' : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]' }`}
               >
                 <Layers className="w-4 h-4 text-[--brand]" />
                 Rafa İstifleme (Putaway)
@@ -167,11 +159,7 @@ export function CreateWmsTaskModal({
               <button
                 type="button"
                 onClick={() => setTaskType('WAVE_PICK')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
-                  taskType === 'WAVE_PICK'
-                    ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold'
-                    : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]'
-                }`}
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${ taskType === 'WAVE_PICK' ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold' : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]' }`}
               >
                 <Search className="w-4 h-4 text-[--brand]" />
                 Sipariş Toplama (Pick)
@@ -180,11 +168,7 @@ export function CreateWmsTaskModal({
               <button
                 type="button"
                 onClick={() => setTaskType('TRANSFER_DISPATCH')}
-                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${
-                  taskType === 'TRANSFER_DISPATCH'
-                    ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold'
-                    : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]'
-                }`}
+                className={`p-2.5 rounded-xl border text-xs font-medium flex items-center gap-2 transition cursor-pointer ${ taskType === 'TRANSFER_DISPATCH' ? 'border-[--brand-line] bg-[--brand-soft] text-[--brand] font-semibold' : 'border-[--line] bg-[--page] text-[--text-muted] hover:bg-white hover:text-[--text]' }`}
               >
                 <Truck className="w-4 h-4 text-[--brand]" />
                 Sevk / Paketleme

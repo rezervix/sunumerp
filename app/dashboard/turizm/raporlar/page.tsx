@@ -64,23 +64,23 @@ export default function TurizmReportsPage() {
     : rows
 
   return (
-    <div className="space-y-6 p-4 md:p-6 text-zinc-100">
+    <div className="space-y-6 p-4 md:p-6 text-[var(--text)]">
       {/* ÜST BAŞLIK VE EYLEMLER */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/turizm"
-              className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
+              className="rounded-lg p-1 text-[var(--text-muted)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-colors"
             >
               <ArrowRight className="h-5 w-5 rotate-180" />
             </Link>
-            <BarChart3 className="h-6 w-6 text-[--brand]" />
-            <h1 className="text-xl font-bold tracking-tight text-white">
+            <BarChart3 className="h-6 w-6 text-[var(--brand)]" />
+            <h1 className="text-xl font-bold tracking-tight text-[var(--text)]">
               Birleşik Turizm &amp; Sektör Raporları
             </h1>
           </div>
-          <p className="text-xs text-zinc-400 mt-1 ml-7">
+          <p className="text-xs text-[var(--text-muted)] mt-1 ml-7">
             Rent-a-Car, Otel PMS, Tur Operatörlüğü ve B2B Partner Ağı tek raporda birleştirilmiş ve dışa aktarılabilir.
           </p>
         </div>
@@ -88,14 +88,14 @@ export default function TurizmReportsPage() {
         <div className="flex items-center gap-2">
           <a
             href={`/api/turizm/raporlar?type=${selectedType}&format=xlsx`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 px-3.5 py-2 text-xs font-medium text-[--brand] hover:bg-[--brand]/20"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-soft)] px-3.5 py-2 text-xs font-medium text-[var(--brand)] hover:bg-[var(--brand-soft-2)] transition-colors"
           >
             <FileSpreadsheet className="h-4 w-4" />
             Excel (.xlsx) İndir
           </a>
           <a
             href={`/api/turizm/raporlar?type=${selectedType}&format=pdf`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-medium text-sky-300 hover:bg-sky-500/20"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3.5 py-2 text-xs font-medium text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
           >
             <FileText className="h-4 w-4" />
             PDF (.pdf) İndir
@@ -104,7 +104,7 @@ export default function TurizmReportsPage() {
             type="button"
             disabled={loading}
             onClick={() => loadReport(selectedType)}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:bg-zinc-800"
+            className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2 text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           </button>
@@ -112,7 +112,7 @@ export default function TurizmReportsPage() {
       </div>
 
       {/* RAPOR TİPİ SEÇİCİ */}
-      <div className="flex flex-wrap gap-2 border-b border-zinc-800 pb-3">
+      <div className="flex flex-wrap gap-2 border-b border-[var(--line)] pb-3">
         {[
           { key: "CONSOLIDATED", label: "Konsolide Rapor", icon: Compass },
           { key: "RENTACAR", label: "Araç Kiralama (Rent-a-Car)", icon: Compass },
@@ -124,11 +124,7 @@ export default function TurizmReportsPage() {
             key={key}
             type="button"
             onClick={() => setSelectedType(key as ReportType)}
-            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition ${
-              selectedType === key
-                ? "bg-[--brand] text-white shadow-sm"
-                : "bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
-            }`}
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition ${ selectedType === key ? "bg-[var(--brand)] text-white shadow-sm" : "bg-[var(--muted-bg)] text-[var(--text-muted)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)]" }`}
           >
             <Icon className="h-4 w-4" />
             {label}
@@ -142,11 +138,11 @@ export default function TurizmReportsPage() {
           {reportData.summaryCards.map((card, idx) => (
             <div
               key={idx}
-              className="rounded-xl border border-zinc-800 bg-[white] p-4 space-y-1"
+              className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 space-y-1 shadow-sm"
             >
-              <span className="block text-[11px] text-zinc-400 font-medium">{card.label}</span>
-              <div className="text-xl font-semibold text-white tracking-tight">{card.value}</div>
-              {card.hint && <span className="block text-[10px] text-zinc-500">{card.hint}</span>}
+              <span className="block text-[11px] text-[var(--text-muted)] font-medium">{card.label}</span>
+              <div className="text-xl font-semibold text-[var(--text)] tracking-tight">{card.value}</div>
+              {card.hint && <span className="block text-[10px] text-[var(--text-muted)]">{card.hint}</span>}
             </div>
           ))}
         </div>
@@ -154,18 +150,18 @@ export default function TurizmReportsPage() {
 
       {/* GRAFİK BÖLÜMÜ */}
       {reportData?.chartData && reportData.chartData.length > 0 && (
-        <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3">
-          <h2 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-5 space-y-3 shadow-sm">
+          <h2 className="text-xs font-semibold text-[var(--text)] uppercase tracking-wider">
             {reportData.chartTitle || "Sektörel Dağılım Grafiği"}
           </h2>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={reportData.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
-                <XAxis dataKey="name" stroke="#71717a" fontSize={11} tickLine={false} />
-                <YAxis stroke="#71717a" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E3E8F0" vertical={false} />
+                <XAxis dataKey="name" stroke="#5B6B82" fontSize={11} tickLine={false} />
+                <YAxis stroke="#5B6B82" fontSize={11} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: "#18181b", borderColor: "#3f3f46", borderRadius: "8px", fontSize: "12px" }}
+                  contentStyle={{ backgroundColor: "#FFFFFF", borderColor: "#E3E8F0", borderRadius: "8px", fontSize: "12px", color: "#0B1B33" }}
                   formatter={(val: any) => [`₺${Number(val).toLocaleString("tr-TR")}`, "Tutar"]}
                 />
                 <Bar dataKey="primaryValue" fill="#1267E6" radius={[4, 4, 0, 0]} />
@@ -176,28 +172,28 @@ export default function TurizmReportsPage() {
       )}
 
       {/* TABLO BÖLÜMÜ */}
-      <div className="rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-4">
+      <div className="rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-5 space-y-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-white">{reportData?.title || "Rapor Detayları"}</h3>
-            <p className="text-[11px] text-zinc-400 mt-0.5">Toplam {filteredRows.length} kayıt listeleniyor.</p>
+            <h3 className="text-sm font-semibold text-[var(--text)]">{reportData?.title || "Rapor Detayları"}</h3>
+            <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Toplam {filteredRows.length} kayıt listeleniyor.</p>
           </div>
 
           <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-zinc-500" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-[var(--text-muted)]" />
             <input
               type="text"
               placeholder="Tabloda filtrele..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:border-[--brand] focus:outline-none w-56"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] pl-9 pr-3 py-1.5 text-xs text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--brand)] focus:outline-none w-56"
             />
           </div>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-zinc-800/80">
+        <div className="overflow-x-auto rounded-xl border border-[var(--line)]">
           <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-900/90 text-zinc-400 border-b border-zinc-800">
+            <thead className="bg-[var(--muted-bg)] text-[var(--text-muted)] border-b border-[var(--line)]">
               <tr>
                 {reportData?.columns.map((col) => (
                   <th key={col.key} className="px-3.5 py-2.5 font-medium">
@@ -206,11 +202,11 @@ export default function TurizmReportsPage() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60 bg-zinc-950/40">
+            <tbody className="divide-y divide-[var(--line-soft)] bg-[var(--bg)]">
               {filteredRows.map((row, idx) => (
-                <tr key={idx} className="hover:bg-zinc-900/40 transition">
+                <tr key={idx} className="hover:bg-[var(--brand-soft)] transition">
                   {reportData?.columns.map((col) => (
-                    <td key={col.key} className="px-3.5 py-2.5 text-zinc-300">
+                    <td key={col.key} className="px-3.5 py-2.5 text-[var(--text)]">
                       {formatReportCellValue(row[col.key], col.format)}
                     </td>
                   ))}
@@ -220,7 +216,7 @@ export default function TurizmReportsPage() {
                 <tr>
                   <td
                     colSpan={reportData?.columns.length || 4}
-                    className="p-8 text-center text-zinc-500 text-xs"
+                    className="p-8 text-center text-[var(--text-muted)] text-xs"
                   >
                     Kayıt bulunamadı.
                   </td>

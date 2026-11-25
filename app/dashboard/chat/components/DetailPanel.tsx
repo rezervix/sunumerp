@@ -234,13 +234,13 @@ export function DetailPanel({
   }
 
   return (
-    <div className="w-80 bg-white dark:bg-[#1a1a1a] border-l border-gray-200 dark:border-gray-800 flex flex-col h-full overflow-hidden shrink-0 animate-in slide-in-from-right-4 duration-200">
+    <div className="w-80 bg-white border-l border-[var(--line)] flex flex-col h-full overflow-hidden shrink-0 animate-in slide-in-from-right-4 duration-200">
       {/* Panel Header */}
-      <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between shrink-0 select-none">
-        <h3 className="font-bold text-gray-900 dark:text-white">Detaylar</h3>
+      <div className="p-4 border-b border-[var(--line-soft)] flex items-center justify-between shrink-0 select-none">
+        <h3 className="font-bold text-[var(--text)]">Detaylar</h3>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 text-gray-400"
+          className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-50 :bg-[var(--muted-bg)] text-[var(--text-muted)]"
         >
           <span className="material-symbols-outlined text-[20px]">close</span>
         </button>
@@ -260,53 +260,53 @@ export function DetailPanel({
                 .toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <h4 className="font-bold text-gray-900 dark:text-white text-base">
+          <h4 className="font-bold text-[var(--text)] text-base">
             {conversation.type === "dm" ? targetUser?.fullName : conversation.name}
           </h4>
-          <span className="text-xs text-gray-500 mt-0.5">
+          <span className="text-xs text-[var(--text-muted)] mt-0.5">
             {conversation.type === "dm" ? `@${targetUser?.username}` : `${participants.length} Katılımcı`}
           </span>
         </div>
 
         {/* Group Description */}
         {conversation.type !== "dm" && conversation.description && (
-          <div className="space-y-1 bg-gray-50 dark:bg-black/10 p-3 rounded-2xl">
-            <span className="text-[10px] font-bold text-gray-400 select-none uppercase tracking-wide">
+          <div className="space-y-1 bg-gray-50 p-3 rounded-2xl">
+            <span className="text-[10px] font-bold text-[var(--text-muted)] select-none uppercase tracking-wide">
               Grup Açıklaması
             </span>
-            <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-300">
+            <p className="text-xs leading-relaxed text-gray-600 (--text-2)]">
               {conversation.description}
             </p>
           </div>
         )}
 
         {/* Mute Settings */}
-        <div className="space-y-2 bg-gray-50 dark:bg-black/10 p-3 rounded-2xl">
-          <span className="text-[10px] font-bold text-gray-400 select-none uppercase tracking-wide">
+        <div className="space-y-2 bg-gray-50 p-3 rounded-2xl">
+          <span className="text-[10px] font-bold text-[var(--text-muted)] select-none uppercase tracking-wide">
             Sessize Al
           </span>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => handleMuteToggle("8h")}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-800 hover:bg-gray-100"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white (--muted-bg)] border border-[var(--line)] hover:bg-gray-100"
             >
               8 Saat
             </button>
             <button
               onClick={() => handleMuteToggle("1w")}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-800 hover:bg-gray-100"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white (--muted-bg)] border border-[var(--line)] hover:bg-gray-100"
             >
               1 Hafta
             </button>
             <button
               onClick={() => handleMuteToggle("forever")}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-800 hover:bg-gray-100"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white (--muted-bg)] border border-[var(--line)] hover:bg-gray-100"
             >
               Kalıcı
             </button>
             <button
               onClick={() => handleMuteToggle(null)}
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100"
+              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-500 hover:bg-red-100"
             >
               Sesi Aç
             </button>
@@ -315,8 +315,8 @@ export function DetailPanel({
 
         {/* Invite Link Controls */}
         {conversation.type !== "dm" && inviteData && (
-          <div className="space-y-2 bg-gray-50 dark:bg-black/10 p-3 rounded-2xl">
-            <span className="text-[10px] font-bold text-gray-400 select-none uppercase tracking-wide">
+          <div className="space-y-2 bg-gray-50 p-3 rounded-2xl">
+            <span className="text-[10px] font-bold text-[var(--text-muted)] select-none uppercase tracking-wide">
               Grup Davet Linki
             </span>
             <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ export function DetailPanel({
                 type="text"
                 readOnly
                 value={inviteData.fullUrl}
-                className="flex-1 bg-white dark:bg-black/20 text-[10px] p-2 rounded-lg border border-gray-250 dark:border-gray-750 focus:outline-none"
+                className="flex-1 bg-white text-[10px] p-2 rounded-lg border border-gray-250 focus:outline-none"
               />
               <button
                 onClick={() => {
@@ -352,11 +352,7 @@ export function DetailPanel({
           <div className="space-y-3">
             <button
               onClick={handleBlockToggle}
-              className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border ${
-                isBlocked
-                  ? "bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-900/30 text-red-500 hover:bg-red-100"
-                  : "bg-white dark:bg-white/5 border-gray-250 dark:border-gray-750 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/5"
-              }`}
+              className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border ${ isBlocked ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100" : "bg-white (--muted-bg)] border-gray-250 text-red-500 hover:bg-red-50 :bg-red-500/5" }`}
             >
               <span className="material-symbols-outlined text-[18px]">block</span>
               {isBlocked ? "Engeli Kaldır" : "Kullanıcıyı Engelle"}
@@ -368,7 +364,7 @@ export function DetailPanel({
         {conversation.type !== "dm" && (
           <div className="space-y-3">
             <div className="flex items-center justify-between select-none">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
+              <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wide">
                 Katılımcılar ({participants.length})
               </span>
               {isMeAdmin && (
@@ -389,7 +385,7 @@ export function DetailPanel({
                 return (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition"
+                    className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-50 :bg-[var(--muted-bg)] transition"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Avatar className="w-8 h-8">
@@ -399,11 +395,11 @@ export function DetailPanel({
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex flex-col">
-                        <span className="text-xs font-semibold truncate text-gray-900 dark:text-white">
+                        <span className="text-xs font-semibold truncate text-[var(--text)]">
                           {p.user.fullName} {isCurrentUser && "(Sen)"}
                         </span>
                         {isTargetAdmin && (
-                          <span className="text-[9px] font-bold text-primary dark:text-primary-foreground select-none uppercase tracking-wide mt-0.5">
+                          <span className="text-[9px] font-bold text-primary select-none uppercase tracking-wide mt-0.5">
                             Yönetici
                           </span>
                         )}
@@ -426,7 +422,7 @@ export function DetailPanel({
                             <button
                               onClick={() => handleChangeRole(p.user.id, "member")}
                               title="Yöneticiliği Kaldır"
-                              className="p-1 hover:bg-red-500/10 text-red-500 rounded-lg"
+                              className="p-1 hover:bg-[var(--bad-soft)] text-red-500 rounded-lg"
                             >
                               <span className="material-symbols-outlined text-[16px]">shield_person</span>
                             </button>
@@ -437,7 +433,7 @@ export function DetailPanel({
                           <button
                             onClick={() => handleKickParticipant(p.user.id)}
                             title="Gruptan Çıkar"
-                            className="p-1 hover:bg-red-500/10 text-red-500 rounded-lg"
+                            className="p-1 hover:bg-[var(--bad-soft)] text-red-500 rounded-lg"
                           >
                             <span className="material-symbols-outlined text-[16px]">logout</span>
                           </button>
@@ -454,7 +450,7 @@ export function DetailPanel({
 
       {/* Add Member Modal Dialog */}
       <Dialog open={isAddMemberOpen} onOpenChange={() => setIsAddMemberOpen(false)}>
-        <DialogContent className="max-w-md bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-2xl">
+        <DialogContent className="max-w-md bg-white border border-[var(--line)] rounded-3xl p-6 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">Gruba Üye Ekle</DialogTitle>
           </DialogHeader>
@@ -465,16 +461,16 @@ export function DetailPanel({
               placeholder="İsim veya kullanıcı adı arayın..."
               value={addSearchQuery}
               onChange={(e) => setAddSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
             />
-            <span className="material-symbols-outlined text-gray-400 text-[18px] absolute left-3 top-3">
+            <span className="material-symbols-outlined text-[var(--text-muted)] text-[18px] absolute left-3 top-3">
               search
             </span>
           </div>
 
           <div className="max-h-[220px] overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
             {filteredAddUsers.length === 0 ? (
-              <div className="text-center py-8 text-xs text-gray-400">Kullanıcı bulunamadı.</div>
+              <div className="text-center py-8 text-xs text-[var(--text-muted)]">Kullanıcı bulunamadı.</div>
             ) : (
               filteredAddUsers.map((u) => {
                 const isSelected = selectedUserIds.includes(u.id)
@@ -482,11 +478,7 @@ export function DetailPanel({
                   <button
                     key={u.id}
                     onClick={() => handleToggleAddSelect(u.id)}
-                    className={`w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all text-left ${
-                      isSelected
-                        ? "bg-primary/5 dark:bg-primary/10 border border-primary/20"
-                        : "hover:bg-gray-50 dark:hover:bg-white/5 border border-transparent"
-                    }`}
+                    className={`w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all text-left ${ isSelected ? "bg-primary/5 border border-primary/20" : "hover:bg-gray-50 :bg-[var(--muted-bg)] border border-transparent" }`}
                   >
                     <Avatar className="w-8.5 h-8.5">
                       <AvatarImage src={u.avatarUrl} />
@@ -495,15 +487,13 @@ export function DetailPanel({
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-xs truncate text-gray-900 dark:text-white">
+                      <div className="font-semibold text-xs truncate text-[var(--text)]">
                         {u.fullName}
                       </div>
-                      <div className="text-[10px] text-gray-400">@{u.username}</div>
+                      <div className="text-[10px] text-[var(--text-muted)]">@{u.username}</div>
                     </div>
                     <span
-                      className={`material-symbols-outlined text-[20px] ${
-                        isSelected ? "text-primary" : "text-gray-300 dark:text-gray-700"
-                      }`}
+                      className={`material-symbols-outlined text-[20px] ${ isSelected ? "text-primary" : "text-[var(--text-2)] " }`}
                     >
                       {isSelected ? "check_circle" : "radio_button_unchecked"}
                     </span>
@@ -513,10 +503,10 @@ export function DetailPanel({
             )}
           </div>
 
-          <div className="mt-4 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800 pt-3">
+          <div className="mt-4 flex justify-end gap-3 border-t border-[var(--line-soft)] pt-3">
             <button
               onClick={() => setIsAddMemberOpen(false)}
-              className="px-4 py-2 rounded-xl text-sm font-semibold bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--muted-bg)] text-gray-600 (--text-2)] hover:bg-gray-100 :bg-[var(--muted-bg)]"
             >
               İptal
             </button>

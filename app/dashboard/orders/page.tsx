@@ -494,7 +494,7 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       <StaggerItem className="bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm overflow-hidden">
-        <div className="p-5 lg:p-6 border-b border-[--line] bg-white/40">
+        <div className="p-5 lg:p-6 border-b border-[--line] bg-[var(--muted-bg)]">
           <div className="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
 
             <div className="relative w-full lg:max-w-xs">
@@ -584,13 +584,7 @@ export default function OrdersPage() {
                         <div className="font-semibold text-[--text]">
                           {order.totalAmount ? safeCurrency(order.totalAmount) : "—"}
                         </div>
-                        <div className={`text-xs mt-1 font-medium ${
-                          order.paymentStatus === 'paid' 
-                            ? 'text-[--ok]' 
-                            : order.paymentStatus === 'partial' 
-                            ? 'text-[--warn]' 
-                            : 'text-[--bad]'
-                        }`}>
+                        <div className={`text-xs mt-1 font-medium ${ order.paymentStatus === 'paid' ? 'text-[--ok]' : order.paymentStatus === 'partial' ? 'text-[--warn]' : 'text-[--bad]' }`}>
                           {order.paymentStatus === 'paid' ? 'Ödendi' : order.paymentStatus === 'partial' ? 'Kısmi Ödeme' : 'Ödenmedi'}
                         </div>
                       </td>
@@ -990,7 +984,7 @@ export default function OrdersPage() {
               <button
                 onClick={handleSubmit}
                 disabled={loading || !formData.title || !formData.orderType}
-                className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
+                className="px-5 py-2.5 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Kaydediliyor..." : editOrderId ? "Değişiklikleri Kaydet" : "Siparişi Oluştur"}
@@ -1062,7 +1056,7 @@ export default function OrdersPage() {
               <button
                 onClick={handleStatusUpdate}
                 disabled={loading || !statusUpdate.status}
-                className="px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
+                className="px-5 py-2.5 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
               >
                 {loading && <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>}
                 {loading ? "Güncelleniyor..." : "Güncelle"}

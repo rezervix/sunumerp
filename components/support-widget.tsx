@@ -246,7 +246,7 @@ export function SupportWidget() {
       <button
         id="support-widget-fab"
         onClick={handleOpenWidget}
-        className="fixed bottom-5 right-40 z-40 hidden sm:flex h-8.5 w-8.5 items-center justify-center rounded-full bg-white/85 border border-[var(--line)] text-[var(--text-muted)] hover:text-[var(--brand)] hover:border-[var(--brand-line)] shadow-[var(--shadow-card)] transition-all duration-150 focus:outline-none cursor-pointer backdrop-blur-xl"
+        className="fixed bottom-5 right-40 z-40 hidden sm:flex h-8.5 w-8.5 items-center justify-center rounded-full bg-[var(--muted-bg)] border border-[var(--line)] text-[var(--text-muted)] hover:text-[var(--brand)] hover:border-[var(--brand-line)] shadow-[var(--shadow-card)] transition-all duration-150 focus:outline-none cursor-pointer backdrop-blur-xl"
         title="Destek Talebi / Hata Bildir"
       >
         <LifeBuoy size={16} />

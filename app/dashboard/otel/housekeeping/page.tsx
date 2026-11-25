@@ -192,17 +192,17 @@ export default function HotelHousekeepingMobilePage() {
   const isRestricted = Boolean(data?.isRestrictedHousekeeper);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] p-4 text-zinc-100">
+    <div className="min-h-screen bg-[var(--page)] p-4 text-[var(--text)]">
       <div className="mx-auto max-w-3xl space-y-4">
         {/* Mobil Başlık & Bağlantı Durumu */}
-        <div className="rounded-2xl border border-[--line] bg-[white] p-4">
+        <div className="rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5 text-[#1267E6]" />
+              <Smartphone className="h-5 w-5 text-[var(--brand)]" />
               <div>
-                <h1 className="text-lg font-bold text-white">Kat Hizmetleri Mobil Görev Ekranı</h1>
-                <p className="text-[11px] text-zinc-400">
-                  Personel: <strong className="text-zinc-200">{data?.staffUser?.username || '-'}</strong>
+                <h1 className="text-lg font-bold text-[var(--text)]">Kat Hizmetleri Mobil Görev Ekranı</h1>
+                <p className="text-[11px] text-[var(--text-muted)]">
+                  Personel: <strong className="text-[var(--text)]">{data?.staffUser?.username || '-'}</strong>
                   {isRestricted && ' · Kısıtlı Rol (Yalnızca Atanan Odalar)'}
                 </p>
               </div>
@@ -212,7 +212,7 @@ export default function HotelHousekeepingMobilePage() {
               {!isRestricted && (
                 <Link
                   href="/dashboard/otel"
-                  className="flex items-center gap-1 rounded-lg border border-white/[0.1] bg-[#161B18] px-2.5 py-1.5 text-xs text-zinc-200"
+                  className="flex items-center gap-1 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" /> Ön Büro
                 </Link>
@@ -220,11 +220,7 @@ export default function HotelHousekeepingMobilePage() {
               <button
                 type="button"
                 onClick={() => setSimulatedOffline((v) => !v)}
-                className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${
-                  effectiveOnline
-                    ? 'border-[--brand]/35 bg-[--brand]/15 text-[#1267E6]'
-                    : 'border-amber-500/40 bg-amber-500/20 text-amber-300'
-                }`}
+                className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${ effectiveOnline ? 'border-[var(--brand-line)] bg-[var(--brand-soft)] text-[var(--brand)]' : 'border-amber-200 bg-amber-50 text-[var(--warn)]' }`}
               >
                 {effectiveOnline ? <Wifi className="h-3.5 w-3.5" /> : <WifiOff className="h-3.5 w-3.5" />}
                 {effectiveOnline ? 'Çevrimiçi' : 'Çevrimdışı Mod'}
@@ -233,8 +229,8 @@ export default function HotelHousekeepingMobilePage() {
           </div>
 
           {isRestricted && (
-            <div className="mt-3 flex items-center gap-2 rounded-lg border border-sky-500/25 bg-sky-500/10 px-3 py-2 text-[11px] text-sky-200">
-              <ShieldCheck className="h-4 w-4 shrink-0 text-sky-400" />
+            <div className="mt-3 flex items-center gap-2 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-soft)] px-3 py-2 text-[11px] text-[var(--brand)]">
+              <ShieldCheck className="h-4 w-4 shrink-0 text-[var(--brand)]" />
               <span>
                 Güvenlik izolasyonu aktif: Yalnızca size atanmış temizlik görevlerini görebilirsiniz; misafir kimlik/KVKK, rezervasyon ve folio kayıtlarına erişim kapalıdır.
               </span>
@@ -244,15 +240,15 @@ export default function HotelHousekeepingMobilePage() {
 
         {/* Çevrimdışı Senkron Kuyruğu Çubuğu */}
         {pendingQueue.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-xs">
-            <div className="text-amber-200">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs">
+            <div className="text-[var(--warn)]">
               <strong>{pendingQueue.length} çevrimdışı işlem</strong> cihazda (IndexedDB/LocalStorage) senkronizasyon bekliyor.
             </div>
             <button
               type="button"
               disabled={syncing || !effectiveOnline}
               onClick={handleSyncQueue}
-              className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 font-semibold text-[#F6F8FB] disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-1.5 font-semibold text-[var(--text)] hover:bg-[var(--brand-hover)] disabled:opacity-50 transition-colors"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
               Senkronize Et
@@ -262,17 +258,17 @@ export default function HotelHousekeepingMobilePage() {
 
         {/* Özet Kartları */}
         <div className="grid grid-cols-3 gap-2">
-          <div className="rounded-xl border border-[--line] bg-[white] p-3 text-center">
-            <div className="text-[11px] text-zinc-400">Bekleyen</div>
-            <div className="text-xl font-bold text-amber-300">{summary.pendingCount ?? 0}</div>
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3 text-center shadow-sm">
+            <div className="text-[11px] text-[var(--text-muted)]">Bekleyen</div>
+            <div className="text-xl font-bold text-[var(--warn)]">{summary.pendingCount ?? 0}</div>
           </div>
-          <div className="rounded-xl border border-[--line] bg-[white] p-3 text-center">
-            <div className="text-[11px] text-zinc-400">İşlemde</div>
-            <div className="text-xl font-bold text-sky-300">{summary.inProgressCount ?? 0}</div>
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3 text-center shadow-sm">
+            <div className="text-[11px] text-[var(--text-muted)]">İşlemde</div>
+            <div className="text-xl font-bold text-[var(--brand)]">{summary.inProgressCount ?? 0}</div>
           </div>
-          <div className="rounded-xl border border-[--line] bg-[white] p-3 text-center">
-            <div className="text-[11px] text-zinc-400">Tamamlandı</div>
-            <div className="text-xl font-bold text-[#1267E6]">
+          <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3 text-center shadow-sm">
+            <div className="text-[11px] text-[var(--text-muted)]">Tamamlandı</div>
+            <div className="text-xl font-bold text-[var(--ok)]">
               {(summary.completedCount ?? 0) + (summary.inspectedCount ?? 0)}
             </div>
           </div>
@@ -281,43 +277,41 @@ export default function HotelHousekeepingMobilePage() {
         {/* Atanan Oda Görev Kartları */}
         <div className="space-y-3">
           {loading && !data ? (
-            <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-8 text-center text-xs text-[var(--text-muted)] shadow-sm">
               Görevler yükleniyor...
             </div>
           ) : tasks.length === 0 ? (
-            <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-xs text-zinc-400">
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-8 text-center text-xs text-[var(--text-muted)] shadow-sm">
               Şu anda size atanmış aktif oda görevi bulunmuyor.
             </div>
           ) : (
             tasks.map((t: any) => (
               <div
                 key={t.id}
-                className="rounded-xl border border-[--line] bg-[white] p-4 space-y-3"
+                className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 space-y-3 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-white">Oda {t.roomNumber}</span>
-                      <span className="rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-zinc-300">
+                      <span className="text-lg font-bold text-[var(--text)]">Oda {t.roomNumber}</span>
+                      <span className="rounded bg-[var(--muted-bg)] px-2 py-0.5 text-[10px] text-[var(--text-muted)]">
                         {t.floorNumber}. Kat
                       </span>
                     </div>
-                    <div className="text-xs text-zinc-300">
+                    <div className="text-xs text-[var(--text-2)]">
                       {HOTEL_HK_TASK_TYPE_LABELS[t.taskType] || t.taskType}
                     </div>
-                    <div className="font-mono text-[10px] text-zinc-500">{t.taskNo}</div>
+                    <div className="font-mono text-[10px] text-[var(--text-muted)]">{t.taskNo}</div>
                   </div>
                   <span
-                    className={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${
-                      HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-zinc-300'
-                    }`}
+                    className={`rounded-full border px-2.5 py-0.5 text-[10px] font-medium ${ HOTEL_HK_STATUS_BADGES[t.status] || 'border-[var(--line)] text-[var(--text-2)]' }`}
                   >
                     {HOTEL_HK_STATUS_LABELS[t.status] || t.status}
                   </span>
                 </div>
 
                 {(t.notes || t.faultDescription) && (
-                  <p className="rounded-lg bg-[#0B0E0D] p-2.5 text-xs text-zinc-300">
+                  <p className="rounded-lg bg-[var(--muted-bg)] p-2.5 text-xs text-[var(--text-2)]">
                     {t.faultDescription || t.notes}
                   </p>
                 )}
@@ -327,7 +321,7 @@ export default function HotelHousekeepingMobilePage() {
                     <button
                       type="button"
                       onClick={() => handleTaskAction(t, 'IN_PROGRESS')}
-                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-sky-500/25 py-2.5 text-xs font-semibold text-sky-200 hover:bg-sky-500/40"
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--brand-soft)] py-2.5 text-xs font-semibold text-[var(--brand)] hover:bg-[var(--brand-soft-2)] transition"
                     >
                       <ClipboardCheck className="h-4 w-4" /> Temizliğe Başla
                     </button>
@@ -336,13 +330,13 @@ export default function HotelHousekeepingMobilePage() {
                     <button
                       type="button"
                       onClick={() => handleTaskAction(t, 'COMPLETED')}
-                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#1267E6] py-2.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+                      className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--brand)] py-2.5 text-xs font-semibold text-[var(--text)] hover:bg-[var(--brand-hover)] transition"
                     >
                       <CheckCircle2 className="h-4 w-4" /> Temizliği Tamamla
                     </button>
                   )}
                   {t.status === 'COMPLETED' && (
-                    <div className="w-full rounded-lg border border-purple-500/30 bg-purple-500/10 py-2 text-center text-xs text-purple-200">
+                    <div className="w-full rounded-lg border border-[var(--brand-line)] bg-[var(--brand-soft)] py-2 text-center text-xs text-[var(--brand)]">
                       Kat şefi denetim onayı bekleniyor (INSPECTION_PENDING).
                     </div>
                   )}
@@ -356,16 +350,16 @@ export default function HotelHousekeepingMobilePage() {
         {rooms.length > 0 && (
           <form
             onSubmit={handleReportFault}
-            className="space-y-3 rounded-2xl border border-orange-500/30 bg-[white] p-4"
+            className="space-y-3 rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm"
           >
-            <div className="flex items-center gap-2 text-sm font-semibold text-orange-300">
-              <Wrench className="h-4 w-4" /> Hızlı Teknik Arıza Bildir
+            <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text)]">
+              <Wrench className="h-4 w-4 text-[var(--brand)]" /> Hızlı Teknik Arıza Bildir
             </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <select
                 value={faultRoomId}
                 onChange={(e) => setFaultRoomId(e.target.value)}
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
               >
                 {rooms.map((rm: any) => (
                   <option key={rm.id} value={rm.id}>
@@ -376,7 +370,7 @@ export default function HotelHousekeepingMobilePage() {
               <select
                 value={faultCategory}
                 onChange={(e) => setFaultCategory(e.target.value)}
-                className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
               >
                 <option value="TESISAT_SU">Su / Tesisat</option>
                 <option value="KLIMA_HVAC">Klima / HVAC</option>
@@ -389,10 +383,10 @@ export default function HotelHousekeepingMobilePage() {
               value={faultDescription}
               onChange={(e) => setFaultDescription(e.target.value)}
               placeholder="Arıza detayını yazın (çevrimdışıysa cihazda kuyruğa alınır)..."
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--brand)] focus:outline-none"
             />
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <label className="flex items-center gap-2 text-xs text-zinc-300">
+              <label className="flex items-center gap-2 text-xs text-[var(--text-2)]">
                 <input
                   type="checkbox"
                   checked={markOutOfOrder}
@@ -402,7 +396,7 @@ export default function HotelHousekeepingMobilePage() {
               </label>
               <button
                 type="submit"
-                className="rounded-lg bg-orange-500/25 px-4 py-2 text-xs font-semibold text-orange-200 hover:bg-orange-500/40"
+                className="rounded-lg bg-[var(--brand)] px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[var(--brand-hover)] transition"
               >
                 Arızayı Kaydet
               </button>

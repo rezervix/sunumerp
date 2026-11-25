@@ -143,18 +143,18 @@ export function FleetVehiclesTab({
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-[var(--text-muted)] absolute left-3 top-2.5" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Plaka, şasi (VIN) veya marka ara..."
-              className="bg-[#0B0F0D] border border-[--line] rounded-full pl-8 pr-3 py-1.5 text-xs text-white w-60"
+              className="bg-[var(--bg)] border border-[--line] rounded-full pl-8 pr-3 py-1.5 text-xs text-[var(--text)] w-60"
             />
           </div>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="bg-[#0B0F0D] border border-[--line] rounded-full px-3 py-1.5 text-xs text-zinc-200"
+            className="bg-[var(--bg)] border border-[--line] rounded-full px-3 py-1.5 text-xs text-[var(--text-2)]"
           >
             <option value="ALL">Tüm Araç Tipleri</option>
             {FLEET_VEHICLE_TYPES.map((t) => (
@@ -166,7 +166,7 @@ export function FleetVehiclesTab({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-[#0B0F0D] border border-[--line] rounded-full px-3 py-1.5 text-xs text-zinc-200"
+            className="bg-[var(--bg)] border border-[--line] rounded-full px-3 py-1.5 text-xs text-[var(--text-2)]"
           >
             <option value="ALL">Tüm Durumlar</option>
             {FLEET_VEHICLE_STATUSES.map((s) => (
@@ -192,43 +192,43 @@ export function FleetVehiclesTab({
           onSubmit={handleSave}
           className="bg-[white]/90 border border-[--brand]/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-4 gap-3"
         >
-          <input required placeholder="Plaka (örn. 34 ABC 123)" value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input placeholder="Şasi No (VIN)" value={form.vin} onChange={(e) => setForm({ ...form, vin: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input required placeholder="Marka (Ford, Mercedes...)" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input required placeholder="Model (Transit, Sprinter...)" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
+          <input required placeholder="Plaka (örn. 34 ABC 123)" value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input placeholder="Şasi No (VIN)" value={form.vin} onChange={(e) => setForm({ ...form, vin: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input required placeholder="Marka (Ford, Mercedes...)" value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input required placeholder="Model (Transit, Sprinter...)" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
 
-          <select value={form.vehicleType} onChange={(e) => setForm({ ...form, vehicleType: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+          <select value={form.vehicleType} onChange={(e) => setForm({ ...form, vehicleType: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
             {FLEET_VEHICLE_TYPES.map((t) => <option key={t} value={t}>{FLEET_VEHICLE_TYPE_LABELS[t]}</option>)}
           </select>
-          <select value={form.fuelType} onChange={(e) => setForm({ ...form, fuelType: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+          <select value={form.fuelType} onChange={(e) => setForm({ ...form, fuelType: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
             {FLEET_FUEL_TYPES.map((f) => <option key={f} value={f}>{FLEET_FUEL_TYPE_LABELS[f]}</option>)}
           </select>
-          <select value={form.ownershipType} onChange={(e) => setForm({ ...form, ownershipType: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+          <select value={form.ownershipType} onChange={(e) => setForm({ ...form, ownershipType: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
             {FLEET_OWNERSHIP_TYPES.map((o) => <option key={o} value={o}>{FLEET_OWNERSHIP_LABELS[o]}</option>)}
           </select>
-          <select value={form.assignedDriverId} onChange={(e) => setForm({ ...form, assignedDriverId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+          <select value={form.assignedDriverId} onChange={(e) => setForm({ ...form, assignedDriverId: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
             <option value="">Şoför Seçin (Opsiyonel)</option>
             {drivers.map((d) => <option key={d.id} value={d.id}>{d.fullName}</option>)}
           </select>
 
-          <input type="number" placeholder="Kapasite (kg)" value={form.capacityKg} onChange={(e) => setForm({ ...form, capacityKg: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input type="number" placeholder="Hacim (m³)" value={form.capacityM3} onChange={(e) => setForm({ ...form, capacityM3: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input type="number" placeholder="Km Sayacı" value={form.odometerKm} onChange={(e) => setForm({ ...form, odometerKm: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <label className="flex items-center gap-2 text-xs text-zinc-300 px-2">
+          <input type="number" placeholder="Kapasite (kg)" value={form.capacityKg} onChange={(e) => setForm({ ...form, capacityKg: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input type="number" placeholder="Hacim (m³)" value={form.capacityM3} onChange={(e) => setForm({ ...form, capacityM3: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input type="number" placeholder="Km Sayacı" value={form.odometerKm} onChange={(e) => setForm({ ...form, odometerKm: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <label className="flex items-center gap-2 text-xs text-[var(--text-2)] px-2">
             <input type="checkbox" checked={form.isRefrigerated} onChange={(e) => setForm({ ...form, isRefrigerated: e.target.checked })} />
             Soğutuculu (Frigo) Kasa
           </label>
 
           {form.ownershipType !== 'OWNED' && (
             <>
-              <input placeholder="Kiralama Sözleşme No" value={form.contractNo} onChange={(e) => setForm({ ...form, contractNo: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-              <input placeholder="Kiralayan Firma" value={form.lessorName} onChange={(e) => setForm({ ...form, lessorName: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-              <input type="number" placeholder="Aylık Kira Bedeli (₺)" value={form.monthlyCostTry} onChange={(e) => setForm({ ...form, monthlyCostTry: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
+              <input placeholder="Kiralama Sözleşme No" value={form.contractNo} onChange={(e) => setForm({ ...form, contractNo: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+              <input placeholder="Kiralayan Firma" value={form.lessorName} onChange={(e) => setForm({ ...form, lessorName: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+              <input type="number" placeholder="Aylık Kira Bedeli (₺)" value={form.monthlyCostTry} onChange={(e) => setForm({ ...form, monthlyCostTry: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
             </>
           )}
 
           <div className="md:col-span-4 flex justify-end gap-2">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-zinc-300 cursor-pointer">İptal</button>
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-[var(--text-2)] cursor-pointer">İptal</button>
             <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">
               {saving ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
@@ -240,7 +240,7 @@ export function FleetVehiclesTab({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
                 <th className="py-3 px-4">Plaka / Kod</th>
                 <th className="py-3 px-4">Araç &amp; Şasi (VIN)</th>
                 <th className="py-3 px-4">Kapasite &amp; Yakıt</th>
@@ -254,40 +254,40 @@ export function FleetVehiclesTab({
               {filtered.map((v) => (
                 <tr key={v.id} className="hover:bg-[--page] border-l-2 border-l-transparent hover:border-l-[--brand]">
                   <td className="py-3 px-4">
-                    <div className="font-bold text-white flex items-center gap-1.5">
+                    <div className="font-bold text-[var(--text)] flex items-center gap-1.5">
                       <Truck className="w-3.5 h-3.5 text-[#1267E6]" />
                       {v.plate}
                     </div>
-                    <div className="text-[11px] text-zinc-500 font-mono">{v.code}</div>
+                    <div className="text-[11px] text-[var(--text-muted)] font-mono">{v.code}</div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-200 font-medium">{v.brand} {v.model} ({v.modelYear})</div>
-                    <div className="text-[11px] text-zinc-500">
+                    <div className="text-[var(--text-2)] font-medium">{v.brand} {v.model} ({v.modelYear})</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">
                       {FLEET_VEHICLE_TYPE_LABELS[v.vehicleType as FleetVehicleType] || v.vehicleType} · VIN: <span className="font-mono">{v.vin || '—'}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-200">{Number(v.capacityKg).toLocaleString('tr-TR')} kg · {v.capacityM3} m³</div>
-                    <div className="text-[11px] text-zinc-400">
+                    <div className="text-[var(--text-2)]">{Number(v.capacityKg).toLocaleString('tr-TR')} kg · {v.capacityM3} m³</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">
                       {FLEET_FUEL_TYPE_LABELS[v.fuelType as FleetFuelType] || v.fuelType}
                       {v.isRefrigerated ? ` · Frigo (${v.targetTempMinC ?? 2}..${v.targetTempMaxC ?? 6}°C)` : ''}
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-200">{FLEET_OWNERSHIP_LABELS[v.ownershipType as FleetOwnershipType] || v.ownershipType}</div>
+                    <div className="text-[var(--text-2)]">{FLEET_OWNERSHIP_LABELS[v.ownershipType as FleetOwnershipType] || v.ownershipType}</div>
                     {v.activeLease && (
-                      <div className="text-[11px] text-amber-300 font-mono">
+                      <div className="text-[11px] text-[var(--warn)] font-mono">
                         {v.activeLease.contractNo} · ₺{Number(v.activeLease.monthlyCostTry).toLocaleString('tr-TR')}/ay
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-4 font-mono text-zinc-200">
+                  <td className="py-3 px-4 font-mono text-[var(--text-2)]">
                     {Number(v.odometerKm || 0).toLocaleString('tr-TR')} km
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-200">{v.assignedDriverSummary?.fullName || 'Atanmadı'}</div>
+                    <div className="text-[var(--text-2)]">{v.assignedDriverSummary?.fullName || 'Atanmadı'}</div>
                     {v.expiringDocumentCount > 0 ? (
-                      <span className="text-[10px] text-rose-300 font-medium">{v.expiringDocumentCount} belge/vade uyarısı</span>
+                      <span className="text-[10px] text-[var(--bad)] font-medium">{v.expiringDocumentCount} belge/vade uyarısı</span>
                     ) : (
                       <span className="text-[10px] text-[--brand]">Belgeler güncel</span>
                     )}
@@ -301,7 +301,7 @@ export function FleetVehiclesTab({
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-zinc-500">Kriterlere uyan araç bulunamadı.</td>
+                  <td colSpan={7} className="text-center py-8 text-[var(--text-muted)]">Kriterlere uyan araç bulunamadı.</td>
                 </tr>
               )}
             </tbody>
@@ -363,11 +363,11 @@ export function FleetDriversKvkkTab({
   return (
     <div className="space-y-4">
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 text-xs text-zinc-300">
+        <div className="flex items-center gap-2.5 text-xs text-[var(--text-2)]">
           <Users className="w-4 h-4 text-[#1267E6]" />
-          <span className="font-semibold text-white">Şoför Kadrosu ({drivers.length})</span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[--muted-bg] border border-[--line] text-[11px] text-zinc-400">
-            {isKvkkRevealed ? <Unlock className="w-3 h-3 text-amber-300" /> : <Lock className="w-3 h-3 text-[#1267E6]" />}
+          <span className="font-semibold text-[var(--text)]">Şoför Kadrosu ({drivers.length})</span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[--muted-bg] border border-[--line] text-[11px] text-[var(--text-muted)]">
+            {isKvkkRevealed ? <Unlock className="w-3 h-3 text-[var(--warn)]" /> : <Lock className="w-3 h-3 text-[#1267E6]" />}
             KVKK: {isKvkkRevealed ? 'Açık (Erişim Denetim Günlüğüne Loglandı)' : 'Maskeli Görünüm'}
           </span>
         </div>
@@ -377,9 +377,9 @@ export function FleetDriversKvkkTab({
             <button
               type="button"
               onClick={onToggleRevealKvkk}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs text-[var(--text)] cursor-pointer"
             >
-              {isKvkkRevealed ? <EyeOff className="w-3.5 h-3.5 text-amber-300" /> : <Eye className="w-3.5 h-3.5 text-[#1267E6]" />}
+              {isKvkkRevealed ? <EyeOff className="w-3.5 h-3.5 text-[var(--warn)]" /> : <Eye className="w-3.5 h-3.5 text-[#1267E6]" />}
               {isKvkkRevealed ? 'KVKK Alanlarını Maskele' : 'KVKK Alanlarını Aç (Logla)'}
             </button>
           )}
@@ -396,20 +396,20 @@ export function FleetDriversKvkkTab({
 
       {showAdd && (
         <form onSubmit={handleSave} className="bg-[white]/90 border border-[--brand]/25 rounded-[20px] p-5 grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input required placeholder="Ad Soyad" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input placeholder="TCKN (KVKK maskelenir)" value={form.tckn} onChange={(e) => setForm({ ...form, tckn: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input placeholder="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <select value={form.licenseClass} onChange={(e) => setForm({ ...form, licenseClass: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+          <input required placeholder="Ad Soyad" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input placeholder="TCKN (KVKK maskelenir)" value={form.tckn} onChange={(e) => setForm({ ...form, tckn: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input placeholder="Telefon" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <select value={form.licenseClass} onChange={(e) => setForm({ ...form, licenseClass: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
             <option value="B">B Sınıfı</option>
             <option value="C">C Sınıfı</option>
             <option value="CE">CE (Tır / Ağır Vasıta)</option>
             <option value="D1">D1 (Minibüs)</option>
             <option value="D">D (Otobüs)</option>
           </select>
-          <input placeholder="Ehliyet Seri No" value={form.licenseNumber} onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-          <input type="date" title="Ehliyet Geçerlilik" value={form.licenseExpiresAt} onChange={(e) => setForm({ ...form, licenseExpiresAt: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
+          <input placeholder="Ehliyet Seri No" value={form.licenseNumber} onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+          <input type="date" title="Ehliyet Geçerlilik" value={form.licenseExpiresAt} onChange={(e) => setForm({ ...form, licenseExpiresAt: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
           <div className="md:col-span-3 flex justify-end gap-2">
-            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-zinc-300 cursor-pointer">İptal</button>
+            <button type="button" onClick={() => setShowAdd(false)} className="px-4 py-1.5 rounded-full bg-[--muted-bg] text-xs text-[var(--text-2)] cursor-pointer">İptal</button>
             <button type="submit" disabled={saving} className="px-5 py-1.5 rounded-full bg-[#1267E6] text-white text-xs font-semibold cursor-pointer">Kaydet</button>
           </div>
         </form>
@@ -419,7 +419,7 @@ export function FleetDriversKvkkTab({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-zinc-400">
+              <tr className="bg-[--page] border-b border-[--line] text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
                 <th className="py-3 px-4">Şoför</th>
                 <th className="py-3 px-4">TCKN &amp; Telefon (KVKK)</th>
                 <th className="py-3 px-4">Ehliyet &amp; Geçerlilik</th>
@@ -432,32 +432,32 @@ export function FleetDriversKvkkTab({
               {drivers.map((d) => (
                 <tr key={d.id} className="hover:bg-[--page]">
                   <td className="py-3 px-4">
-                    <div className="font-semibold text-white">{d.fullName}</div>
-                    <div className="text-[11px] text-zinc-500 font-mono">{d.code}</div>
+                    <div className="font-semibold text-[var(--text)]">{d.fullName}</div>
+                    <div className="text-[11px] text-[var(--text-muted)] font-mono">{d.code}</div>
                   </td>
-                  <td className="py-3 px-4 font-mono text-zinc-300">
+                  <td className="py-3 px-4 font-mono text-[var(--text-2)]">
                     <div>{d.tckn || '—'}</div>
-                    <div className="text-[11px] text-zinc-400">{d.phone || '—'}</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">{d.phone || '—'}</div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-200 font-semibold">{d.licenseClass} · <span className="font-mono font-normal text-zinc-400">{d.licenseNumber || '—'}</span></div>
-                    <div className="text-[11px] text-zinc-400">
+                    <div className="text-[var(--text-2)] font-semibold">{d.licenseClass} · <span className="font-mono font-normal text-[var(--text-muted)]">{d.licenseNumber || '—'}</span></div>
+                    <div className="text-[11px] text-[var(--text-muted)]">
                       {d.licenseExpiresAt ? new Date(d.licenseExpiresAt).toLocaleDateString('tr-TR') : '—'}
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="text-zinc-300">{d.srcType || 'SRC'} (<span className="font-mono text-zinc-400">{d.srcNumber || '—'}</span>)</div>
-                    <div className="text-[11px] text-zinc-400">
+                    <div className="text-[var(--text-2)]">{d.srcType || 'SRC'} (<span className="font-mono text-[var(--text-muted)]">{d.srcNumber || '—'}</span>)</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">
                       Psikoteknik: {d.psychotechExpiresAt ? new Date(d.psychotechExpiresAt).toLocaleDateString('tr-TR') : '—'}
                     </div>
                   </td>
-                  <td className="py-3 px-4 text-zinc-300">
+                  <td className="py-3 px-4 text-[var(--text-2)]">
                     <div>{d.shiftName}</div>
-                    <div className="text-[11px] text-zinc-500">{d.shiftStart} - {d.shiftEnd}</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">{d.shiftStart} - {d.shiftEnd}</div>
                   </td>
                   <td className="py-3 px-4">
                     {d.compliance?.hasAlert ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]">
                         <ShieldAlert className="w-3 h-3" /> Belge Yenileme Uyarısı
                       </span>
                     ) : (
@@ -553,8 +553,8 @@ export function FleetDocsAndPenaltiesTab({
     <div className="space-y-4">
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 text-xs">
-          <AlertTriangle className="w-4 h-4 text-amber-400" />
-          <span className="text-white font-semibold">
+          <AlertTriangle className="w-4 h-4 text-[var(--warn)]" />
+          <span className="text-[var(--text)] font-semibold">
             Vade Uyarıları: {expiryAlerts?.expiredCount || 0} Süresi Dolmuş · {expiryAlerts?.expiringSoonCount || 0} Yaklaşan
           </span>
         </div>
@@ -562,7 +562,7 @@ export function FleetDocsAndPenaltiesTab({
           type="button"
           disabled={sendingAlerts}
           onClick={handleDispatchAlerts}
-          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 text-xs font-semibold cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--warn-soft)] hover:bg-amber-500/30 border border-[var(--warn-line)] text-amber-200 text-xs font-semibold cursor-pointer"
         >
           <BellRing className="w-3.5 h-3.5" />
           {sendingAlerts ? 'Gönderiliyor...' : 'Bildirim Merkezine Uyarı Gönder'}
@@ -571,40 +571,40 @@ export function FleetDocsAndPenaltiesTab({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <form onSubmit={handleAddDoc} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
-          <div className="text-sm font-semibold text-white flex items-center gap-2">
+          <div className="text-sm font-semibold text-[var(--text)] flex items-center gap-2">
             <FileCheck2 className="w-4 h-4 text-[#1267E6]" /> Yeni Belge / Sigorta / Muayene
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <select required value={docForm.vehicleId} onChange={(e) => setDocForm({ ...docForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+            <select required value={docForm.vehicleId} onChange={(e) => setDocForm({ ...docForm, vehicleId: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
               <option value="">Araç Seçin</option>
               {vehicles.map((v) => <option key={v.id} value={v.id}>{v.plate}</option>)}
             </select>
-            <select value={docForm.docType} onChange={(e) => setDocForm({ ...docForm, docType: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+            <select value={docForm.docType} onChange={(e) => setDocForm({ ...docForm, docType: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
               {FLEET_DOCUMENT_TYPES.map((dt) => <option key={dt} value={dt}>{FLEET_DOCUMENT_TYPE_LABELS[dt]}</option>)}
             </select>
-            <input placeholder="Poliçe / Belge No" value={docForm.documentNo} onChange={(e) => setDocForm({ ...docForm, documentNo: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <input required type="date" value={docForm.expiresAt} onChange={(e) => setDocForm({ ...docForm, expiresAt: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <input type="number" placeholder="Tutar (₺)" value={docForm.costTry} onChange={(e) => setDocForm({ ...docForm, costTry: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
+            <input placeholder="Poliçe / Belge No" value={docForm.documentNo} onChange={(e) => setDocForm({ ...docForm, documentNo: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+            <input required type="date" value={docForm.expiresAt} onChange={(e) => setDocForm({ ...docForm, expiresAt: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+            <input type="number" placeholder="Tutar (₺)" value={docForm.costTry} onChange={(e) => setDocForm({ ...docForm, costTry: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
             <button type="submit" className="rounded-full bg-[#1267E6] text-white text-xs font-semibold py-2 cursor-pointer">Belge Ekle</button>
           </div>
         </form>
 
         <form onSubmit={handleAddPenalty} className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
-          <div className="text-sm font-semibold text-white flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-rose-400" /> Trafik Cezası Kaydet
+          <div className="text-sm font-semibold text-[var(--text)] flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-[var(--bad)]" /> Trafik Cezası Kaydet
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <select required value={penForm.vehicleId} onChange={(e) => setPenForm({ ...penForm, vehicleId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+            <select required value={penForm.vehicleId} onChange={(e) => setPenForm({ ...penForm, vehicleId: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
               <option value="">Araç Seçin</option>
               {vehicles.map((v) => <option key={v.id} value={v.id}>{v.plate}</option>)}
             </select>
-            <select value={penForm.driverId} onChange={(e) => setPenForm({ ...penForm, driverId: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white">
+            <select value={penForm.driverId} onChange={(e) => setPenForm({ ...penForm, driverId: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]">
               <option value="">Atanan Şoför (Otomatik)</option>
               {drivers.map((d) => <option key={d.id} value={d.id}>{d.fullName}</option>)}
             </select>
-            <input required placeholder="Tutanak / Ceza No" value={penForm.penaltyNo} onChange={(e) => setPenForm({ ...penForm, penaltyNo: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <input required placeholder="İhlal Nedeni" value={penForm.reason} onChange={(e) => setPenForm({ ...penForm, reason: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
-            <input required type="number" placeholder="Ceza Tutarı (₺)" value={penForm.amountTry} onChange={(e) => setPenForm({ ...penForm, amountTry: e.target.value })} className="bg-[#0B0F0D] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white" />
+            <input required placeholder="Tutanak / Ceza No" value={penForm.penaltyNo} onChange={(e) => setPenForm({ ...penForm, penaltyNo: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+            <input required placeholder="İhlal Nedeni" value={penForm.reason} onChange={(e) => setPenForm({ ...penForm, reason: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
+            <input required type="number" placeholder="Ceza Tutarı (₺)" value={penForm.amountTry} onChange={(e) => setPenForm({ ...penForm, amountTry: e.target.value })} className="bg-[var(--bg)] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)]" />
             <button type="submit" className="rounded-full bg-rose-500/80 hover:bg-rose-500 text-white text-xs font-semibold py-2 cursor-pointer">Ceza İşle</button>
           </div>
         </form>
@@ -612,23 +612,17 @@ export function FleetDocsAndPenaltiesTab({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-[#1267E6]" /> Araç Belgeleri ({documents.length})</h4>
+          <h4 className="text-sm font-semibold text-[var(--text)] mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-[#1267E6]" /> Araç Belgeleri ({documents.length})</h4>
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {documents.map((doc) => (
-              <div key={doc.id} className="bg-[--page] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
+              <div key={doc.id} className="bg-[--page] border border-[var(--line-soft)] rounded-xl p-3 flex items-center justify-between text-xs">
                 <div>
-                  <div className="font-semibold text-white">{doc.plate} · {FLEET_DOCUMENT_TYPE_LABELS[doc.docType as FleetDocumentType] || doc.docType}</div>
-                  <div className="text-[11px] text-zinc-400">
+                  <div className="font-semibold text-[var(--text)]">{doc.plate} · {FLEET_DOCUMENT_TYPE_LABELS[doc.docType as FleetDocumentType] || doc.docType}</div>
+                  <div className="text-[11px] text-[var(--text-muted)]">
                     {doc.documentNo || '—'} · Bitiş: {doc.expiresAt ? new Date(doc.expiresAt).toLocaleDateString('tr-TR') : '—'}
                   </div>
                 </div>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                  doc.expiryStatus === 'EXPIRED'
-                    ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                    : doc.expiryStatus === 'EXPIRING_SOON'
-                      ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                      : 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]'
-                }`}>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${ doc.expiryStatus === 'EXPIRED' ? 'bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]' : doc.expiryStatus === 'EXPIRING_SOON' ? 'bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]' : 'bg-[--brand]/15 text-[#1267E6] border-[--brand-line]' }`}>
                   {doc.expiryStatus === 'EXPIRED' ? `${Math.abs(doc.daysRemaining)}g geçti` : doc.expiryStatus === 'EXPIRING_SOON' ? `${doc.daysRemaining}g kaldı` : 'Geçerli'}
                 </span>
               </div>
@@ -637,17 +631,17 @@ export function FleetDocsAndPenaltiesTab({
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-rose-400" /> Trafik Cezaları ({penalties.length})</h4>
+          <h4 className="text-sm font-semibold text-[var(--text)] mb-3 flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-[var(--bad)]" /> Trafik Cezaları ({penalties.length})</h4>
           <div className="space-y-2 max-h-80 overflow-y-auto">
             {penalties.map((p) => (
-              <div key={p.id} className="bg-[--page] border border-white/[0.05] rounded-xl p-3 flex items-center justify-between text-xs">
+              <div key={p.id} className="bg-[--page] border border-[var(--line-soft)] rounded-xl p-3 flex items-center justify-between text-xs">
                 <div>
-                  <div className="font-semibold text-white">{p.plate} · <span className="font-mono text-zinc-400">{p.penaltyNo}</span></div>
-                  <div className="text-[11px] text-zinc-400">{p.reason} {p.driverName ? `· ${p.driverName}` : ''}</div>
+                  <div className="font-semibold text-[var(--text)]">{p.plate} · <span className="font-mono text-[var(--text-muted)]">{p.penaltyNo}</span></div>
+                  <div className="text-[11px] text-[var(--text-muted)]">{p.reason} {p.driverName ? `· ${p.driverName}` : ''}</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono font-bold text-rose-300">₺{Number(p.amountTry).toLocaleString('tr-TR')}</div>
-                  <div className="text-[10px] text-zinc-400">{p.paymentStatus}</div>
+                  <div className="font-mono font-bold text-[var(--bad)]">₺{Number(p.amountTry).toLocaleString('tr-TR')}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">{p.paymentStatus}</div>
                 </div>
               </div>
             ))}

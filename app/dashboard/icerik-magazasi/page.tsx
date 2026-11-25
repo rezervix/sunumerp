@@ -225,28 +225,28 @@ export default function IcerikMagazasiPage() {
             <Sparkles size={20} />
           </div>
           <div>
-            <h1 className="text-xl font-light tracking-wide text-white">İçerik Mağazası</h1>
-            <p className="text-xs text-zinc-400">Dijital kreatif varlıklar, görseller ve video arşivi</p>
+            <h1 className="text-xl font-light tracking-wide text-[var(--text)]">İçerik Mağazası</h1>
+            <p className="text-xs text-[var(--text-muted)]">Dijital kreatif varlıklar, görseller ve video arşivi</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Arama */}
           <div className="relative hidden sm:block">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder={tText("common.search", "Ara...")}
-              className="h-9 pl-9 pr-8 w-52 text-xs rounded-xl border border-[--line] bg-white text-white focus:outline-none focus:border-[--brand-line]"
+              className="h-9 pl-9 pr-8 w-52 text-xs rounded-xl border border-[--line] bg-white text-[var(--text)] focus:outline-none focus:border-[--brand-line]"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
+              <button onClick={() => setSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--brand)]">
                 <X size={12} />
               </button>
             )}
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9 border-[--line] bg-[--page] text-zinc-300 hover:text-white hover:bg-[--muted-bg]">
+          <Button variant="outline" size="sm" onClick={() => setFilterOpen(true)} className="flex items-center gap-1.5 text-xs rounded-xl h-9 border-[--line] bg-[--page] text-[var(--text-2)] hover:text-[var(--brand)] hover:bg-[--muted-bg]">
             <SlidersHorizontal size={14} />
             Filtrele
             {activeFilterCount > 0 && <span className="ml-1 size-5 rounded-full bg-[--brand] text-black text-[10px] font-bold flex items-center justify-center">{activeFilterCount}</span>}
@@ -254,7 +254,7 @@ export default function IcerikMagazasiPage() {
 
           {/* Toplu İşlem modu */}
           {canBulkActions && (
-            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className={`flex items-center gap-1.5 text-xs rounded-xl h-9 ${bulkMode ? "bg-[--brand] text-black font-semibold" : "border-[--line] bg-[--page] text-zinc-300 hover:text-white"}`}>
+            <Button variant={bulkMode ? "default" : "outline"} size="sm" onClick={() => { setBulkMode(!bulkMode); clearSelection() }} className={`flex items-center gap-1.5 text-xs rounded-xl h-9 ${bulkMode ? "bg-[--brand] text-black font-semibold" : "border-[--line] bg-[--page] text-[var(--text-2)] hover:text-[var(--brand)]"}`}>
               {bulkMode ? <><CheckSquare size={14} /> Toplu: Açık</> : <><Square size={14} /> Toplu İşlem</>}
             </Button>
           )}
@@ -275,9 +275,7 @@ export default function IcerikMagazasiPage() {
             <button
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); clearSelection() }}
-              className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors shrink-0 rounded-xl ${
-                isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
-              }`}
+              className={`relative flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors shrink-0 rounded-xl ${ isActive ? "text-white" : "text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
             >
               {isActive && (
                 <motion.div
@@ -289,7 +287,7 @@ export default function IcerikMagazasiPage() {
               <span className="relative z-10">{tab.icon}</span>
               <span className="relative z-10">{tab.label}</span>
               {tab.id === "pending" && pendingCount > 0 && (
-                <span className="relative z-10 ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold">
+                <span className="relative z-10 ml-1 px-1.5 py-0.2 rounded-full bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)] text-[10px] font-bold">
                   {pendingCount > 99 ? "99+" : pendingCount}
                 </span>
               )}

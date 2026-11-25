@@ -76,9 +76,9 @@ export const FLEET_VEHICLE_STATUS_LABELS: Record<FleetVehicleStatus, string> = {
 export const FLEET_VEHICLE_STATUS_BADGES: Record<FleetVehicleStatus, string> = {
   ACTIVE: "bg-[--brand]/15 text-[#1267E6] border-[--brand]/30",
   IN_TRANSIT: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  MAINTENANCE: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  FAULT: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  OUT_OF_SERVICE: "bg-zinc-500/15 text-zinc-400 border-white/[0.1]",
+  MAINTENANCE: "bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]",
+  FAULT: "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]",
+  OUT_OF_SERVICE: "bg-[var(--muted-bg)]/15 text-[var(--text-muted)] border-[var(--line)]",
 }
 
 export const FLEET_DOCUMENT_TYPES = [

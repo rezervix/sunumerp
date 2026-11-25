@@ -273,7 +273,7 @@ export default function CustomersPage() {
     ]
 
     return (
-      <div className="px-5 py-3 border-b border-[--line] shrink-0 bg-white/40 overflow-x-auto hide-scrollbar">
+      <div className="px-5 py-3 border-b border-[--line] shrink-0 bg-[var(--muted-bg)] overflow-x-auto hide-scrollbar">
         <div className="inline-flex items-center gap-1 bg-[--muted-bg] p-1 rounded-full border border-[--line] min-w-max">
           {tabs.map(t => (
             <button
@@ -424,7 +424,7 @@ export default function CustomersPage() {
       <div className="flex flex-1 overflow-hidden gap-5">
         {/* Left List */}
         <div className={`w-full lg:w-[340px] shrink-0 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm flex flex-col overflow-hidden ${selectedCustomer ? "hidden lg:flex" : "flex"}`}>
-          <div className="p-4 border-b border-[--line] bg-white/40">
+          <div className="p-4 border-b border-[--line] bg-[var(--muted-bg)]">
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center material-symbols-outlined text-[--text-muted] text-[20px]">search</span>
               <input
@@ -459,7 +459,7 @@ export default function CustomersPage() {
         {selectedCustomer ? (
           <div className="flex-1 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-sm flex flex-col overflow-hidden animate-in fade-in slide-in-from-right-4 duration-200">
             {/* Detail Header */}
-            <div className="p-5 lg:p-6 border-b border-[--line] shrink-0 bg-white/40 flex justify-between items-start gap-4">
+            <div className="p-5 lg:p-6 border-b border-[--line] shrink-0 bg-[var(--muted-bg)] flex justify-between items-start gap-4">
                <div className="flex gap-4 items-center min-w-0 flex-1">
                  <button onClick={() => setSelectedCustomer(null)} className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[--muted-bg] rounded-lg text-[--text-2] hover:bg-[--line] transition-colors"><span className="material-symbols-outlined text-[18px]">arrow_back</span></button>
                  <div className="size-14 rounded-2xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand] text-lg font-semibold shadow-xs shrink-0">

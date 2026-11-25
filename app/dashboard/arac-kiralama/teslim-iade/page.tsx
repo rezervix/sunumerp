@@ -37,17 +37,17 @@ export default function MobilTeslimVeIadePage() {
   }, [loadData]);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-zinc-100 p-4 md:p-6 space-y-4">
+    <div className="min-h-screen bg-[#F6F8FB] text-[var(--text)] p-4 md:p-6 space-y-4">
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-2xl bg-[--brand]/15 border border-[--brand-line] flex items-center justify-center">
             <Smartphone className="w-5 h-5 text-[#1267E6]" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-white">
+            <h1 className="text-base font-bold text-[var(--text)]">
               Saha Personeli Mobil Araç Teslim &amp; İade Ekspertiz Formu
             </h1>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Dokunmatik km/yakıt girişi, karoser hasar işaretlemesi, fotoğraf yükleme, iki form karşılaştırması ve müşteri imzası
             </p>
           </div>
@@ -56,7 +56,7 @@ export default function MobilTeslimVeIadePage() {
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/arac-kiralama"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs text-[var(--text)]"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-[#1267E6]" />
             Kiralama Merkezine Dön
@@ -65,7 +65,7 @@ export default function MobilTeslimVeIadePage() {
             type="button"
             onClick={loadData}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs text-[var(--text)] cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[#1267E6] ${loading ? 'animate-spin' : ''}`} />
             Yenile

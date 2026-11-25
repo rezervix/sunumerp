@@ -321,7 +321,7 @@ export function ConvertModal({ file, open, onClose, onSuccess }: ConvertModalPro
               <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-xl border border-green-500/20">
                 <CheckCircle size={18} className="text-green-500 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-green-700 dark:text-green-400">
+                  <p className="text-sm font-medium text-green-700">
                     Dönüşüm başarılı
                   </p>
                   <p className="text-caption truncate">{job.outputFile.originalName}</p>

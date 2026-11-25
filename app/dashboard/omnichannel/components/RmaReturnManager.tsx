@@ -221,11 +221,7 @@ export function RmaReturnManager({
                 key={tab.id}
                 type="button"
                 onClick={() => setSubTab(tab.id as RmaSubTab)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
-                  active
-                    ? 'bg-[--brand-soft] text-[--brand] border border-[--brand-line]'
-                    : 'bg-white text-[--text-muted] hover:text-[--text] border border-[--line] hover:bg-[--muted-bg]'
-                }`}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${ active ? 'bg-[--brand-soft] text-[--brand] border border-[--brand-line]' : 'bg-white text-[--text-muted] hover:text-[--text] border border-[--line] hover:bg-[--muted-bg]' }`}
               >
                 <Icon className="w-3.5 h-3.5" />
                 {tab.label}
@@ -369,11 +365,7 @@ export function RmaReturnManager({
                           ) : elig ? (
                             elig.isWithinReturnWindow ? (
                               <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${
-                                  elig.isExpiringSoon
-                                    ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
-                                    : 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
-                                }`}
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${ elig.isExpiringSoon ? 'bg-[--warn-soft] text-[--warn] border-[--warn]/25' : 'bg-[--ok-soft] text-[--ok] border-[--ok]/25' }`}
                               >
                                 <Clock className="w-3 h-3" />
                                 {elig.remainingDays} gün kaldı
@@ -397,13 +389,7 @@ export function RmaReturnManager({
                         <td className="py-3.5 px-3 text-center space-y-1">
                           <div>
                             <span
-                              className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${
-                                wfStatus === 'KAPANDI' || wfStatus === 'ONAYLANDI'
-                                  ? 'bg-[--ok-soft] text-[--ok] border-[--ok]/25'
-                                  : wfStatus === 'REDDEDILDI'
-                                    ? 'bg-[--bad-soft] text-[--bad] border-[--bad]/25'
-                                    : 'bg-[--warn-soft] text-[--warn] border-[--warn]/25'
-                              }`}
+                              className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${ wfStatus === 'KAPANDI' || wfStatus === 'ONAYLANDI' ? 'bg-[--ok-soft] text-[--ok] border-[--ok]/25' : wfStatus === 'REDDEDILDI' ? 'bg-[--bad-soft] text-[--bad] border-[--bad]/25' : 'bg-[--warn-soft] text-[--warn] border-[--warn]/25' }`}
                             >
                               {RMA_STATUS_LABELS[wfStatus] || wfStatus}
                             </span>

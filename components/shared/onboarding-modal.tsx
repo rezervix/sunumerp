@@ -210,7 +210,7 @@ export function OnboardingModal() {
         onTouchEnd={onTouchEnd}
       >
         {/* Left Side: High Resolution Visual Preview Panel */}
-        <div className="w-full md:w-1/2 bg-slate-950 p-5 flex flex-col justify-between items-center text-white relative transition-all duration-500 overflow-hidden border-b md:border-b-0 md:border-r border-border/40">
+        <div className="w-full md:w-1/2 bg-[var(--bg)] p-5 flex flex-col justify-between items-center text-[var(--text)] relative transition-all duration-500 overflow-hidden border-b md:border-b-0 md:border-r border-border/40">
           
           {/* Top Header Badge */}
           <div className="w-full flex items-center justify-between z-10">
@@ -218,7 +218,7 @@ export function OnboardingModal() {
               <Sparkles size={12} />
               {activeGuide.badgeText}
             </span>
-            <span className="text-xs font-semibold text-slate-300 bg-slate-800/80 px-2.5 py-0.5 rounded-full border border-slate-700">
+            <span className="text-xs font-semibold text-[var(--text-2)] bg-[var(--muted-bg)] px-2.5 py-0.5 rounded-full border border-[var(--line)]">
               Adım {currentStepIndex + 1} / {totalSteps}
             </span>
           </div>
@@ -238,9 +238,7 @@ export function OnboardingModal() {
               <button
                 key={i}
                 onClick={() => setCurrentStepIndex(i)}
-                className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary ${
-                  currentStepIndex === i ? "w-7 bg-primary" : "w-2 bg-slate-700 hover:bg-slate-500"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary ${ currentStepIndex === i ? "w-7 bg-primary" : "w-2 bg-slate-700 hover:bg-slate-500" }`}
                 title={`Adım ${i + 1}`}
                 aria-label={`Slayt ${i + 1}`}
               />

@@ -55,13 +55,13 @@ export const WMS_BIN_ROLE_LABELS: Record<WmsBinRole, string> = {
 }
 
 export const WMS_BIN_ROLE_BADGE_CLASSES: Record<WmsBinRole, string> = {
-  NORMAL: "bg-zinc-500/10 text-zinc-300 border-white/[0.08]",
-  COLD_STORAGE: "bg-cyan-500/10 text-cyan-300 border-cyan-500/25",
+  NORMAL: "bg-[var(--muted-bg)]/10 text-[var(--text-2)] border-[var(--line-soft)]",
+  COLD_STORAGE: "bg-[var(--brand-soft)] text-[var(--brand)] border-[var(--brand-line)]/25",
   FAST_PICK: "bg-[--brand]/10 text-[#1267E6] border-[--brand]/25",
-  QUARANTINE: "bg-amber-500/10 text-amber-300 border-amber-500/25",
-  RETURN_RMA: "bg-rose-500/10 text-rose-300 border-rose-500/25",
-  SHIPPING: "bg-indigo-500/10 text-indigo-300 border-indigo-500/25",
-  CROSS_DOCK: "bg-purple-500/10 text-purple-300 border-purple-500/25",
+  QUARANTINE: "bg-[var(--warn-soft)] text-[var(--warn)] border-amber-500/25",
+  RETURN_RMA: "bg-[var(--bad-soft)] text-[var(--bad)] border-rose-500/25",
+  SHIPPING: "bg-[var(--brand-soft)] text-indigo-300 border-indigo-500/25",
+  CROSS_DOCK: "bg-[var(--brand-soft)] text-[var(--brand)] border-[var(--brand-line)]/25",
 }
 
 export const WMS_PICK_POLICY_LABELS: Record<WmsPickPolicy, string> = {

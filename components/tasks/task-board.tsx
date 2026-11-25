@@ -37,10 +37,10 @@ const COLUMNS = [
 ]
 
 const PRIORITY_MAP: Record<string, { label: string, color: string, weight: number }> = {
-  LOW: { label: "Düşük", color: "bg-white/5 text-zinc-400 border border-[--line]", weight: 1 },
+  LOW: { label: "Düşük", color: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[--line]", weight: 1 },
   MEDIUM: { label: "Orta", color: "bg-[--brand]/10 text-[--brand] border border-[--brand-line]", weight: 2 },
-  HIGH: { label: "Yüksek", color: "bg-amber-500/10 text-amber-300 border border-amber-500/20", weight: 3 },
-  URGENT: { label: "Acil", color: "bg-rose-500/15 text-rose-300 border border-rose-500/30", weight: 4 },
+  HIGH: { label: "Yüksek", color: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]", weight: 3 },
+  URGENT: { label: "Acil", color: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]", weight: 4 },
 }
 
 export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
@@ -110,13 +110,13 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
         return (
           <div 
             key={column.id} 
-            className="flex-1 min-w-[300px] max-w-[400px] bg-[white]/60 border border-white/[0.05] rounded-[20px] p-4 flex flex-col shadow-xl"
+            className="flex-1 min-w-[300px] max-w-[400px] bg-[white]/60 border border-[var(--line-soft)] rounded-[20px] p-4 flex flex-col shadow-xl"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, column.id)}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-sm text-white">{column.title}</h3>
-              <span className="bg-white/5 text-zinc-300 border border-[--line] rounded-full px-2.5 py-0.5 text-xs font-mono font-medium">
+              <h3 className="font-medium text-sm text-[var(--text)]">{column.title}</h3>
+              <span className="bg-[var(--muted-bg)] text-[var(--text-2)] border border-[--line] rounded-full px-2.5 py-0.5 text-xs font-mono font-medium">
                 {columnTasks.length}
               </span>
             </div>
@@ -134,26 +134,24 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
                     onDragStart={(e) => handleDragStart(e, task.id)}
                     onClick={() => setSelectedTask(task)}
                     whileHover={{ y: -3 }}
-                    className={`bg-[#0d100e] p-4 rounded-[16px] shadow-sm cursor-grab active:cursor-grabbing hover:border-[--brand-line] transition-colors group text-white ${
-                      isOverdue ? "border border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.15)]" : "border border-[--line]"
-                    }`}
+                    className={`bg-[var(--bg)] p-4 rounded-[16px] shadow-sm cursor-grab active:cursor-grabbing hover:border-[--brand-line] transition-colors group text-white ${ isOverdue ? "border border-[var(--bad-line)] shadow-[0_0_15px_rgba(244,63,94,0.15)]" : "border border-[--line]" }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="flex gap-2 items-center flex-wrap">
-                        <span className={`text-[10px] rounded-full px-2 py-0.5 font-medium ${PRIORITY_MAP[task.priority]?.color || "bg-white/5 text-zinc-400"}`}>
+                        <span className={`text-[10px] rounded-full px-2 py-0.5 font-medium ${PRIORITY_MAP[task.priority]?.color || "bg-[var(--muted-bg)] text-[var(--text-muted)]"}`}>
                           {PRIORITY_MAP[task.priority]?.label || task.priority}
                         </span>
                         {isOverdue && (
-                          <span className="text-[10px] rounded-full px-2 py-0.5 font-medium bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                          <span className="text-[10px] rounded-full px-2 py-0.5 font-medium bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)]">
                             GECİKMİŞ
                           </span>
                         )}
                       </div>
                     </div>
                     
-                    <h4 className="font-medium text-sm text-white mb-1 line-clamp-2">{task.title}</h4>
+                    <h4 className="font-medium text-sm text-[var(--text)] mb-1 line-clamp-2">{task.title}</h4>
                     {task.description && (
-                      <p className="text-xs text-zinc-400 line-clamp-2 mb-3">{task.description}</p>
+                      <p className="text-xs text-[var(--text-muted)] line-clamp-2 mb-3">{task.description}</p>
                     )}
                     
                     <div className="mt-3 pt-3 border-t border-[--line] flex items-center justify-between">
@@ -164,20 +162,20 @@ export function TaskBoard({ tasks, onTaskUpdated, isManager }: TaskBoardProps) {
                             {task.assignee.fullName.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-xs text-zinc-300 line-clamp-1 max-w-[110px]">
+                        <span className="text-xs text-[var(--text-2)] line-clamp-1 max-w-[110px]">
                           {task.assignee.fullName}
                         </span>
                       </div>
                       
                       <div className="flex items-center gap-2">
                         {attachmentCount > 0 && (
-                          <div className="flex items-center gap-1 text-[10px] text-zinc-500">
+                          <div className="flex items-center gap-1 text-[10px] text-[var(--text-muted)]">
                             <Paperclip size={12} />
                             {attachmentCount}
                           </div>
                         )}
                         {task.dueDate && (
-                          <div className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-mono ${isOverdue ? "text-rose-300 bg-rose-500/15 border border-rose-500/30" : "text-zinc-400 bg-white/5 border border-[--line]"}`}>
+                          <div className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-mono ${isOverdue ? "text-[var(--bad)] bg-[var(--bad-soft)] border border-[var(--bad-line)]" : "text-[var(--text-muted)] bg-[var(--muted-bg)] border border-[--line]"}`}>
                             <Calendar size={11} />
                             {format(new Date(task.dueDate), "d MMM", { locale: tr })}
                           </div>

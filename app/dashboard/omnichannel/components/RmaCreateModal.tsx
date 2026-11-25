@@ -299,11 +299,7 @@ export function RmaCreateModal({
                       key={`${ord.orderSourceType}-${ord.orderId}`}
                       type="button"
                       onClick={() => selectOrder(ord)}
-                      className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${
-                        isSel
-                          ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-medium'
-                          : 'bg-white border-[--line] text-[--text-2] hover:bg-[--brand-soft]/50'
-                      }`}
+                      className={`shrink-0 text-left px-3 py-2 rounded-xl border text-[11px] transition cursor-pointer ${ isSel ? 'bg-[--brand-soft] border-[--brand-line] text-[--brand] font-medium' : 'bg-white border-[--line] text-[--text-2] hover:bg-[--brand-soft]/50' }`}
                     >
                       <div className="flex items-center gap-1.5">
                         <span className="font-mono font-semibold text-[--brand]">
@@ -360,7 +356,7 @@ export function RmaCreateModal({
                       const elig = line.eligibility;
                       const currentQty = selectedQtyBySku[line.sku] ?? 0;
                       return (
-                        <tr key={line.sku} className="hover:bg-white/60">
+                        <tr key={line.sku} className="hover:bg-[var(--muted-bg)]">
                           <td className="py-2.5 pr-3">
                             <div className="font-medium text-[--text]">{line.itemName}</div>
                             <div className="font-mono text-[10px] text-[--text-muted]">
@@ -376,11 +372,7 @@ export function RmaCreateModal({
                           <td className="py-2.5 px-2">
                             {elig?.isWithinReturnWindow ? (
                               <span
-                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${
-                                  elig.isExpiringSoon
-                                    ? 'bg-[--warn-soft] text-[--warn] border-[--warn-soft]'
-                                    : 'bg-[--ok-soft] text-[--ok] border-[--ok-soft]'
-                                }`}
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] border ${ elig.isExpiringSoon ? 'bg-[--warn-soft] text-[--warn] border-[--warn-soft]' : 'bg-[--ok-soft] text-[--ok] border-[--ok-soft]' }`}
                               >
                                 <Clock className="w-3 h-3" />
                                 {elig.remainingDays} gün kaldı

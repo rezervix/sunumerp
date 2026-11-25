@@ -97,7 +97,7 @@ export default function FleetDashboardPage() {
     Number(expiryAlerts?.totalAlerts || 0) + Number(fuel?.anomalyLogs?.length || 0);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-zinc-100 p-4 md:p-6 space-y-5">
+    <div className="min-h-screen bg-[#F6F8FB] text-[var(--text)] p-4 md:p-6 space-y-5">
       {/* Üst Başlık */}
       <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -106,8 +106,8 @@ export default function FleetDashboardPage() {
               <Truck className="w-5 h-5 text-[#1267E6]" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-white">Filo, Araç &amp; Sürücü Yönetimi</h1>
-              <p className="text-xs text-zinc-400">
+              <h1 className="text-lg font-bold text-[var(--text)]">Filo, Araç &amp; Sürücü Yönetimi</h1>
+              <p className="text-xs text-[var(--text-muted)]">
                 Araç envanteri, KVKK korumalı sürücü kadrosu, periyodik bakım/lastik, yakıt mutabakatı, TCO, canlı harita ve telematik merkezi
               </p>
             </div>
@@ -118,7 +118,7 @@ export default function FleetDashboardPage() {
           type="button"
           onClick={() => loadSnapshot()}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs font-medium text-[var(--text)] cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 text-[#1267E6] ${loading ? 'animate-spin' : ''}`} />
           Verileri Güncelle
@@ -128,45 +128,45 @@ export default function FleetDashboardPage() {
       {/* Üst Özet Kartları */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Toplam Araç / Seferde</div>
-          <div className="text-2xl font-bold text-white font-mono mt-1">
+          <div className="text-[11px] text-[var(--text-muted)]">Toplam Araç / Seferde</div>
+          <div className="text-2xl font-bold text-[var(--text)] font-mono mt-1">
             {vehicles.length} <span className="text-sm text-sky-300">/ {inTransitCount} sefer</span>
           </div>
           <div className="text-[11px] text-[#1267E6] mt-0.5">{activeCount} araç göreve hazır</div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Şoför Kadrosu</div>
-          <div className="text-2xl font-bold text-white font-mono mt-1">{drivers.length}</div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">KVKK yetkili maskeleme aktif</div>
+          <div className="text-[11px] text-[var(--text-muted)]">Şoför Kadrosu</div>
+          <div className="text-2xl font-bold text-[var(--text)] font-mono mt-1">{drivers.length}</div>
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">KVKK yetkili maskeleme aktif</div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Vade &amp; Anormal Tüketim Uyarısı</div>
-          <div className={`text-2xl font-bold font-mono mt-1 ${alertTotal > 0 ? 'text-rose-300' : 'text-[#1267E6]'}`}>
+          <div className="text-[11px] text-[var(--text-muted)]">Vade &amp; Anormal Tüketim Uyarısı</div>
+          <div className={`text-2xl font-bold font-mono mt-1 ${alertTotal > 0 ? 'text-[var(--bad)]' : 'text-[#1267E6]'}`}>
             {alertTotal}
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             {expiryAlerts?.totalAlerts || 0} vade · {fuel?.anomalyLogs?.length || 0} yakıt anomalisi
           </div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Filo MTBF / Açık İş Emri</div>
-          <div className="text-2xl font-bold text-white font-mono mt-1">
-            {maintenance?.kpis?.mtbfHours ?? 0} sa <span className="text-sm text-amber-300">/ {maintenance?.kpis?.openWorkOrderCount ?? 0}</span>
+          <div className="text-[11px] text-[var(--text-muted)]">Filo MTBF / Açık İş Emri</div>
+          <div className="text-2xl font-bold text-[var(--text)] font-mono mt-1">
+            {maintenance?.kpis?.mtbfHours ?? 0} sa <span className="text-sm text-[var(--warn)]">/ {maintenance?.kpis?.openWorkOrderCount ?? 0}</span>
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             Ort. Onarım (MTTR): {maintenance?.kpis?.mttrMinutes ?? 0} dk
           </div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Km Başı Maliyet / Tahmini CO₂</div>
+          <div className="text-[11px] text-[var(--text-muted)]">Km Başı Maliyet / Tahmini CO₂</div>
           <div className="text-2xl font-bold text-[#1267E6] font-mono mt-1">
             ₺{Number(tcoReport?.summary?.avgCostPerKmTry || 0).toLocaleString('tr-TR')}
           </div>
-          <div className="text-[11px] text-amber-300 mt-0.5">
+          <div className="text-[11px] text-[var(--warn)] mt-0.5">
             {Number(tcoReport?.summary?.totalEstimatedCo2Tonnes || 0).toFixed(2)} tCO₂e (tahmini)
           </div>
         </div>
@@ -191,11 +191,7 @@ export default function FleetDashboardPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as FiloTabId)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
-                active
-                  ? 'bg-[#1267E6] text-white font-semibold'
-                  : 'text-zinc-400 hover:text-white hover:bg-[--muted-bg]'
-              }`}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${ active ? 'bg-[#1267E6] text-[var(--text)] font-semibold' : 'text-[var(--text-muted)] hover:text-[var(--brand)] hover:bg-[--muted-bg]' }`}
             >
               <Icon className="w-3.5 h-3.5" />
               {tab.label}
@@ -205,14 +201,14 @@ export default function FleetDashboardPage() {
       </div>
 
       {errorMsg && !data && (
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-4 text-xs text-rose-200 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
+        <div className="bg-[var(--bad-soft)] border border-[var(--bad-line)] rounded-2xl p-4 text-xs text-rose-200 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[var(--bad)]" />
           {errorMsg}
         </div>
       )}
 
       {loading && !data ? (
-        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-12 text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-12 text-center text-xs text-[var(--text-muted)] flex items-center justify-center gap-2">
           <Activity className="w-4 h-4 text-[#1267E6] animate-pulse" />
           Filo veritabanı yükleniyor...
         </div>

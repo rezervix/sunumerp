@@ -245,7 +245,7 @@ export function RentHandoverAndReturnTab({
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <div>
-            <label className="block text-[10px] text-zinc-400 mb-1">
+            <label className="block text-[10px] text-[var(--text-muted)] mb-1">
               Teslim / İade İşlemi Yapılacak Rezervasyon
             </label>
             <select
@@ -258,7 +258,7 @@ export function RentHandoverAndReturnTab({
                   setOdometerKm(Number(found.vehicle?.odometerKm || 20000) + 450);
                 }
               }}
-              className="bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-xs text-white min-w-[320px]"
+              className="bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-2 text-xs text-[var(--text)] min-w-[320px]"
             >
               {actionableReservations.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -272,22 +272,14 @@ export function RentHandoverAndReturnTab({
             <button
               type="button"
               onClick={() => setFormType('DELIVERY')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-medium cursor-pointer ${
-                formType === 'DELIVERY'
-                  ? 'bg-[#1267E6] text-white font-semibold'
-                  : 'bg-[--muted-bg] text-zinc-300'
-              }`}
+              className={`px-3.5 py-2 rounded-xl text-xs font-medium cursor-pointer ${ formType === 'DELIVERY' ? 'bg-[#1267E6] text-[var(--text)] font-semibold' : 'bg-[--muted-bg] text-[var(--text-2)]' }`}
             >
               1. Teslim (Çıkış) Ekspertiz Formu
             </button>
             <button
               type="button"
               onClick={() => setFormType('RETURN')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-medium cursor-pointer ${
-                formType === 'RETURN'
-                  ? 'bg-[#1267E6] text-white font-semibold'
-                  : 'bg-[--muted-bg] text-zinc-300'
-              }`}
+              className={`px-3.5 py-2 rounded-xl text-xs font-medium cursor-pointer ${ formType === 'RETURN' ? 'bg-[#1267E6] text-[var(--text)] font-semibold' : 'bg-[--muted-bg] text-[var(--text-2)]' }`}
             >
               2. İade (Dönüş) &amp; Fark Hesaplama Formu
             </button>
@@ -300,7 +292,7 @@ export function RentHandoverAndReturnTab({
         {/* Sol: Mobil Uyumlu Teslim/İade Giriş Formu */}
         <div className="lg:col-span-7 bg-[white]/90 border border-[--line] rounded-[20px] p-5 space-y-4 text-xs">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white">
+            <h3 className="text-sm font-bold text-[var(--text)]">
               {formType === 'DELIVERY'
                 ? 'Araç Teslim (Çıkış) Ekspertiz Formu'
                 : 'Araç İade (Dönüş) Ekspertiz Formu'}
@@ -312,17 +304,17 @@ export function RentHandoverAndReturnTab({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-zinc-400 mb-1">Sayaç Kilometresi (Km)</label>
+              <label className="block text-[var(--text-muted)] mb-1">Sayaç Kilometresi (Km)</label>
               <input
                 type="number"
                 value={odometerKm}
                 onChange={(e) => setOdometerKm(Number(e.target.value))}
-                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+                className="w-full bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-2 text-[var(--text)] font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">
+              <label className="block text-[var(--text-muted)] mb-1">
                 Yakıt Seviyesi: %{fuelLevelPct} ({Math.round((fuelLevelPct / 100) * 8)}/8 Dilim)
               </label>
               <input
@@ -339,7 +331,7 @@ export function RentHandoverAndReturnTab({
 
           {/* 16 Karoser Hasar Bölgesi Seçimi */}
           <div>
-            <label className="block text-zinc-400 mb-1.5">
+            <label className="block text-[var(--text-muted)] mb-1.5">
               Karoser Hasar İşaretlemesi (Hasarlı bölgelere dokunun)
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -354,11 +346,7 @@ export function RentHandoverAndReturnTab({
                         active ? prev.filter((z) => z !== zone) : [...prev, zone]
                       )
                     }
-                    className={`px-2.5 py-1 rounded-lg text-[11px] border transition cursor-pointer ${
-                      active
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-semibold'
-                        : 'bg-[#F6F8FB] text-zinc-400 border-[--line] hover:text-white'
-                    }`}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] border transition cursor-pointer ${ active ? 'bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)] font-semibold' : 'bg-[#F6F8FB] text-[var(--text-muted)] border-[--line] hover:text-[var(--brand)]' }`}
                   >
                     {zone}
                   </button>
@@ -370,8 +358,8 @@ export function RentHandoverAndReturnTab({
           {/* Hasar Fotoğrafları Yükleme & Demo Görsel Seçici */}
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <label className="text-zinc-400">Ekspertiz &amp; Hasar Fotoğrafları</label>
-              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white cursor-pointer">
+              <label className="text-[var(--text-muted)]">Ekspertiz &amp; Hasar Fotoğrafları</label>
+              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-[var(--text)] cursor-pointer">
                 <Upload className="w-3.5 h-3.5 text-[#1267E6]" />
                 <span>{uploading ? 'Yükleniyor...' : 'Fotoğraf Yükle'}</span>
                 <input
@@ -394,7 +382,7 @@ export function RentHandoverAndReturnTab({
                       prev.includes(dp.url) ? prev : [...prev, dp.url]
                     )
                   }
-                  className="px-2.5 py-1 rounded-lg bg-[#F6F8FB] border border-[--line] text-[10px] text-zinc-300 hover:border-[--brand-line] cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-[#F6F8FB] border border-[--line] text-[10px] text-[var(--text-2)] hover:border-[--brand-line] cursor-pointer"
                 >
                   + {dp.label}
                 </button>
@@ -405,7 +393,7 @@ export function RentHandoverAndReturnTab({
               {damagePhotoUrls.map((url, idx) => (
                 <div
                   key={`${url}-${idx}`}
-                  className="relative bg-[#F6F8FB] border border-white/[0.1] rounded-xl p-1.5"
+                  className="relative bg-[#F6F8FB] border border-[var(--line)] rounded-xl p-1.5"
                 >
                   <img
                     src={url}
@@ -420,7 +408,7 @@ export function RentHandoverAndReturnTab({
           {formType === 'RETURN' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="block text-zinc-400 mb-1">
+                <label className="block text-[var(--text-muted)] mb-1">
                   Yeni Hasar Ekspertiz Onarım Bedeli (TRY)
                 </label>
                 <input
@@ -428,12 +416,12 @@ export function RentHandoverAndReturnTab({
                   min={0}
                   value={estimatedDamageCostTry}
                   onChange={(e) => setEstimatedDamageCostTry(Number(e.target.value))}
-                  className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white font-mono"
+                  className="w-full bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-2 text-[var(--text)] font-mono"
                 />
               </div>
 
               <div className="flex items-center mt-5">
-                <label className="flex items-center gap-2 text-amber-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-[var(--warn)] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={sendToMaintenance}
@@ -447,28 +435,28 @@ export function RentHandoverAndReturnTab({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="block text-zinc-400 mb-1">Dış Karoser Ekspertiz Notu</label>
+              <label className="block text-[var(--text-muted)] mb-1">Dış Karoser Ekspertiz Notu</label>
               <input
                 type="text"
                 value={exteriorNote}
                 onChange={(e) => setExteriorNote(e.target.value)}
-                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-2 text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="block text-zinc-400 mb-1">İç Kabin / Aksesuar Notu</label>
+              <label className="block text-[var(--text-muted)] mb-1">İç Kabin / Aksesuar Notu</label>
               <input
                 type="text"
                 value={interiorNote}
                 onChange={(e) => setInteriorNote(e.target.value)}
-                className="w-full bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-2 text-white"
+                className="w-full bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-2 text-[var(--text)]"
               />
             </div>
           </div>
 
           {/* Müşteri Teslim/İade İmzası */}
           <div>
-            <label className="block text-zinc-400 mb-1">
+            <label className="block text-[var(--text-muted)] mb-1">
               Kiracı Teslim / İade Onay İmzası (Dokunmatik / Fare)
             </label>
             <canvas
@@ -505,7 +493,7 @@ export function RentHandoverAndReturnTab({
             type="button"
             disabled={submitting}
             onClick={handleSubmitForm}
-            className="w-full py-2.5 rounded-xl bg-[#1267E6] hover:bg-[--brand] text-white font-semibold cursor-pointer"
+            className="w-full py-2.5 rounded-xl bg-[#1267E6] hover:bg-[--brand] text-[var(--text)] font-semibold cursor-pointer"
           >
             {submitting
               ? 'İşleniyor...'
@@ -517,82 +505,82 @@ export function RentHandoverAndReturnTab({
 
         {/* Sağ: Teslim vs İade Karşılaştırma & Otomatik Fark Hesabı */}
         <div className="lg:col-span-5 bg-[white]/90 border border-[--line] rounded-[20px] p-5 space-y-3 text-xs">
-          <h3 className="text-sm font-bold text-white">
+          <h3 className="text-sm font-bold text-[var(--text)]">
             Teslim vs İade Formu Karşılaştırması &amp; Fark Hesabı
           </h3>
           {liveComparison ? (
             <div className="space-y-2.5">
               <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] text-zinc-400">Kilometre Karşılaştırması</div>
-                  <div className="text-white font-mono">
+                  <div className="text-[11px] text-[var(--text-muted)]">Kilometre Karşılaştırması</div>
+                  <div className="text-[var(--text)] font-mono">
                     Çıkış: {liveComparison.deliveryKm.toLocaleString('tr-TR')} km → Dönüş:{' '}
                     {liveComparison.returnKm.toLocaleString('tr-TR')} km
                   </div>
-                  <div className="text-[11px] text-zinc-400">
+                  <div className="text-[11px] text-[var(--text-muted)]">
                     Kullanılan: {liveComparison.distanceDrivenKm} km / Limit:{' '}
                     {liveComparison.allowedKm} km (Aşım: {liveComparison.excessKm} km)
                   </div>
                 </div>
-                <div className="font-mono font-bold text-amber-300">
+                <div className="font-mono font-bold text-[var(--warn)]">
                   ₺{liveComparison.extraKmChargeTry.toLocaleString('tr-TR')}
                 </div>
               </div>
 
               <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] text-zinc-400">Yakıt Seviyesi Karşılaştırması</div>
-                  <div className="text-white font-mono">
+                  <div className="text-[11px] text-[var(--text-muted)]">Yakıt Seviyesi Karşılaştırması</div>
+                  <div className="text-[var(--text)] font-mono">
                     Çıkış: %{liveComparison.deliveryFuelPct} → Dönüş: %
                     {liveComparison.returnFuelPct} (Eksik: %{liveComparison.missingFuelPct})
                   </div>
                 </div>
-                <div className="font-mono font-bold text-amber-300">
+                <div className="font-mono font-bold text-[var(--warn)]">
                   ₺{liveComparison.fuelDifferenceChargeTry.toLocaleString('tr-TR')}
                 </div>
               </div>
 
               <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] text-zinc-400">Zaman / Gecikme Kontrolü</div>
-                  <div className="text-white font-mono">
+                  <div className="text-[11px] text-[var(--text-muted)]">Zaman / Gecikme Kontrolü</div>
+                  <div className="text-[var(--text)] font-mono">
                     Gecikme: {liveComparison.lateMinutes} dk (Hoşgörü:{' '}
                     {liveComparison.gracePeriodMinutes} dk → {liveComparison.billableLateHours} sa)
                   </div>
                 </div>
-                <div className="font-mono font-bold text-amber-300">
+                <div className="font-mono font-bold text-[var(--warn)]">
                   ₺{liveComparison.lateReturnChargeTry.toLocaleString('tr-TR')}
                 </div>
               </div>
 
               <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between">
                 <div>
-                  <div className="text-[11px] text-zinc-400">Karoser Yeni Hasar Farkı</div>
-                  <div className="text-white">
+                  <div className="text-[11px] text-[var(--text-muted)]">Karoser Yeni Hasar Farkı</div>
+                  <div className="text-[var(--text)]">
                     {liveComparison.newDamageMarkers.length > 0
                       ? liveComparison.newDamageMarkers.join(', ')
                       : 'Yeni hasar bölgesi işaretlenmedi'}
                   </div>
                 </div>
-                <div className="font-mono font-bold text-rose-300">
+                <div className="font-mono font-bold text-[var(--bad)]">
                   ₺{liveComparison.damageChargeTry.toLocaleString('tr-TR')}
                 </div>
               </div>
 
               <div className="bg-[--brand]/10 border border-[--brand-line] rounded-xl p-3.5 space-y-1.5">
-                <div className="flex justify-between text-zinc-300">
+                <div className="flex justify-between text-[var(--text-2)]">
                   <span>Alınan Depozito:</span>
                   <span className="font-mono">
                     ₺{liveComparison.depositCollectedTry.toLocaleString('tr-TR')}
                   </span>
                 </div>
-                <div className="flex justify-between text-amber-300">
+                <div className="flex justify-between text-[var(--warn)]">
                   <span>Toplam Ek Ücret / Kesinti:</span>
                   <span className="font-mono">
                     -₺{liveComparison.totalExtraChargesTry.toLocaleString('tr-TR')}
                   </span>
                 </div>
-                <div className="flex justify-between text-sm font-bold text-[#1267E6] pt-1 border-t border-white/[0.1]">
+                <div className="flex justify-between text-sm font-bold text-[#1267E6] pt-1 border-t border-[var(--line)]">
                   <span>İade Edilecek Net Depozito:</span>
                   <span className="font-mono">
                     ₺{liveComparison.netDepositRefundTry.toLocaleString('tr-TR')}
@@ -604,7 +592,7 @@ export function RentHandoverAndReturnTab({
 
           {/* Kayıtlı Teslim/İade Ekspertiz Geçmişi */}
           <div className="pt-2 border-t border-[--line] space-y-2">
-            <h4 className="text-xs font-semibold text-white">
+            <h4 className="text-xs font-semibold text-[var(--text)]">
               Kayıtlı Teslim &amp; İade Ekspertiz Formları ({inspectionForms.length})
             </h4>
             <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -621,10 +609,10 @@ export function RentHandoverAndReturnTab({
                     className="bg-[#F6F8FB] border border-[--line] rounded-xl p-2.5 flex items-center justify-between gap-2"
                   >
                     <div>
-                      <div className="font-mono font-semibold text-white">
+                      <div className="font-mono font-semibold text-[var(--text)]">
                         {f.formNo} ({f.formType === 'DELIVERY' ? 'Çıkış' : 'Dönüş'}) · {f.plate}
                       </div>
-                      <div className="text-[11px] text-zinc-400">
+                      <div className="text-[11px] text-[var(--text-muted)]">
                         {Number(f.odometerKm || 0).toLocaleString('tr-TR')} km · Yakıt %{f.fuelLevelPct} ·{' '}
                         {f.exteriorConditionNote}
                       </div>
@@ -633,7 +621,7 @@ export function RentHandoverAndReturnTab({
                       <img
                         src={photos[0]}
                         alt={f.formNo}
-                        className="w-14 h-10 object-cover rounded border border-white/[0.1]"
+                        className="w-14 h-10 object-cover rounded border border-[var(--line)]"
                       />
                     )}
                   </div>
@@ -807,10 +795,10 @@ export function RentDepositsChargesAndPenaltiesTab({
       <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-sm font-bold text-white">
+            <h3 className="text-sm font-bold text-[var(--text)]">
               Depozito, Km Aşımı, Yakıt Farkı, Gecikme ve Hasar Defteri ({depositCharges.length})
             </h3>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-[var(--text-muted)]">
               İade ekspertizinden ve HGS/ceza eşleştirmelerinden üretilen tüm kayıtlar Finans (Cari) ve E-Belge ile bağlanır.
             </p>
           </div>
@@ -819,7 +807,7 @@ export function RentDepositsChargesAndPenaltiesTab({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-[--line] text-[11px] text-zinc-400">
+              <tr className="border-b border-[--line] text-[11px] text-[var(--text-muted)]">
                 <th className="py-2 px-3">Kayıt No / Rezervasyon</th>
                 <th className="py-2 px-3">Araç / Müşteri</th>
                 <th className="py-2 px-3">İşlem Türü</th>
@@ -833,25 +821,25 @@ export function RentDepositsChargesAndPenaltiesTab({
               {depositCharges.map((chg: any) => (
                 <tr key={chg.id} className="hover:bg-[--page]">
                   <td className="py-2.5 px-3 font-mono">
-                    <div className="font-semibold text-white">{chg.entryNo}</div>
-                    <div className="text-[11px] text-zinc-400">{chg.reservationNo}</div>
+                    <div className="font-semibold text-[var(--text)]">{chg.entryNo}</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">{chg.reservationNo}</div>
                   </td>
                   <td className="py-2.5 px-3">
-                    <div className="font-mono text-white">{chg.plate}</div>
-                    <div className="text-[11px] text-zinc-400">{chg.customerName}</div>
+                    <div className="font-mono text-[var(--text)]">{chg.plate}</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">{chg.customerName}</div>
                   </td>
-                  <td className="py-2.5 px-3 text-white font-medium">
+                  <td className="py-2.5 px-3 text-[var(--text)] font-medium">
                     {RENT_CHARGE_ENTRY_TYPE_LABELS[chg.entryType as RentChargeEntryType] ||
                       chg.entryType}
                   </td>
-                  <td className="py-2.5 px-3 text-[11px] text-zinc-300">
+                  <td className="py-2.5 px-3 text-[11px] text-[var(--text-2)]">
                     {chg.calculationRuleNote || '-'}
                   </td>
                   <td className="py-2.5 px-3 font-mono font-semibold text-[#1267E6]">
                     ₺{Number(chg.totalWithVatTry || chg.amountTry || 0).toLocaleString('tr-TR')}
                   </td>
                   <td className="py-2.5 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-[--muted-bg] text-zinc-200">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-[--muted-bg] text-[var(--text-2)]">
                       {RENT_CHARGE_STATUS_LABELS[chg.status] || chg.status}
                     </span>
                     {chg.eDocumentNo && (
@@ -897,10 +885,10 @@ export function RentDepositsChargesAndPenaltiesTab({
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3 text-xs">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-[var(--text)]">
                 HGS / Otoyol Geçiş Eşleştirme ({tollPasses.length})
               </h3>
-              <p className="text-[11px] text-zinc-400">
+              <p className="text-[11px] text-[var(--text-muted)]">
                 Sağlayıcı adaptörü (Demo + CSV içe aktarma) ile plaka ve geçiş zamanına göre kiralama sözleşmesiyle eşleşir.
               </p>
             </div>
@@ -908,7 +896,7 @@ export function RentDepositsChargesAndPenaltiesTab({
               type="button"
               disabled={submitting}
               onClick={handleAutoMatch}
-              className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-[11px] cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-[var(--brand-soft)] hover:bg-[var(--brand-soft-2)] text-[var(--brand)] font-medium text-[11px] cursor-pointer"
             >
               Otomatik Eşleştir
             </button>
@@ -920,13 +908,13 @@ export function RentDepositsChargesAndPenaltiesTab({
               value={csvText}
               onChange={(e) => setCsvText(e.target.value)}
               placeholder="PLAKA;TARIH_SAAT;OTOYOL_ADI;TUTAR;GIRIS;CIKIS"
-              className="flex-1 bg-[#F6F8FB] border border-white/[0.1] rounded-xl px-3 py-1.5 text-[11px] text-white font-mono"
+              className="flex-1 bg-[#F6F8FB] border border-[var(--line)] rounded-xl px-3 py-1.5 text-[11px] text-[var(--text)] font-mono"
             />
             <button
               type="button"
               disabled={submitting}
               onClick={handleImportCsvTolls}
-              className="px-3 py-1.5 rounded-xl bg-[#1267E6] text-white font-semibold text-[11px] cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-[#1267E6] text-[var(--text)] font-semibold text-[11px] cursor-pointer"
             >
               CSV İçe Aktar
             </button>
@@ -939,11 +927,11 @@ export function RentDepositsChargesAndPenaltiesTab({
                 className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between gap-2"
               >
                 <div>
-                  <div className="font-mono font-semibold text-white">
+                  <div className="font-mono font-semibold text-[var(--text)]">
                     {tp.plate} · {tp.passNo} — ₺{Number(tp.amountTry).toLocaleString('tr-TR')}
                   </div>
-                  <div className="text-[11px] text-zinc-300">{tp.highwayOrBridgeName}</div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="text-[11px] text-[var(--text-2)]">{tp.highwayOrBridgeName}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">
                     {new Date(tp.passDateTime).toLocaleString('tr-TR')} · Eşleşen:{' '}
                     <span className="text-[#1267E6]">
                       {tp.matchedReservationNo
@@ -962,12 +950,12 @@ export function RentDepositsChargesAndPenaltiesTab({
                       type="button"
                       disabled={submitting}
                       onClick={() => handleReflectToCustomer('TOLL', tp.id)}
-                      className="px-2.5 py-1 rounded-lg bg-amber-400 text-white font-semibold text-[11px] cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-amber-400 text-[var(--text)] font-semibold text-[11px] cursor-pointer"
                     >
                       Müşteriye Yansıt
                     </button>
                   ) : (
-                    <span className="px-2 py-1 rounded-full text-[10px] bg-[--muted-bg] text-zinc-400">
+                    <span className="px-2 py-1 rounded-full text-[10px] bg-[--muted-bg] text-[var(--text-muted)]">
                       Şirket İçi
                     </span>
                   )}
@@ -980,10 +968,10 @@ export function RentDepositsChargesAndPenaltiesTab({
         {/* Sağ: Filo Trafik Cezaları (LojistikTrafficPenalty Yeniden Kullanımı) */}
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4 space-y-3 text-xs">
           <div>
-            <h3 className="text-sm font-bold text-white">
+            <h3 className="text-sm font-bold text-[var(--text)]">
               Trafik Cezaları (Filo Ortak Kayıtları) &amp; Müşteriye Rücu ({trafficPenalties.length})
             </h3>
-            <p className="text-[11px] text-zinc-400">
+            <p className="text-[11px] text-[var(--text-muted)]">
               Lojistik Filo modülündeki trafik cezaları plaka ve ihlal tarihine göre aktif kiralama dönemiyle eşleştirilir.
             </p>
           </div>
@@ -995,13 +983,13 @@ export function RentDepositsChargesAndPenaltiesTab({
                 className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3 flex items-center justify-between gap-2"
               >
                 <div>
-                  <div className="font-mono font-semibold text-white">
+                  <div className="font-mono font-semibold text-[var(--text)]">
                     {pen.plate} · {pen.penaltyNo} — ₺{Number(pen.amountTry).toLocaleString('tr-TR')}
                   </div>
-                  <div className="text-[11px] text-zinc-300">
+                  <div className="text-[11px] text-[var(--text-2)]">
                     {pen.violationType}: {pen.reason} ({pen.location || '-'})
                   </div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="text-[10px] text-[var(--text-muted)]">
                     {new Date(pen.violationDate).toLocaleString('tr-TR')} · Eşleşen:{' '}
                     <span className="text-[#1267E6]">
                       {pen.matchedReservationNo
@@ -1020,7 +1008,7 @@ export function RentDepositsChargesAndPenaltiesTab({
                       type="button"
                       disabled={submitting}
                       onClick={() => handleReflectToCustomer('PENALTY', pen.id)}
-                      className="px-2.5 py-1 rounded-lg bg-rose-400 text-white font-semibold text-[11px] cursor-pointer"
+                      className="px-2.5 py-1 rounded-lg bg-[var(--bad-soft)] text-[var(--bad)] font-semibold text-[11px] cursor-pointer"
                     >
                       Müşteriye Yansıt
                     </button>

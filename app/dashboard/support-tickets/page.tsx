@@ -856,7 +856,7 @@ export default function SupportTicketsPage() {
                   <button
                     type="submit"
                     disabled={updating}
-                    className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-medium text-xs transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                    className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-medium text-xs transition-all cursor-pointer shadow-sm disabled:opacity-50"
                   >
                     {updating ? (
                       <>

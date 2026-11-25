@@ -173,7 +173,7 @@ export function AsnTrackingTab({
           </div>
           <button
             type="submit"
-            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
+            className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
           >
             EDI DESADV İşle
           </button>
@@ -217,13 +217,7 @@ export function AsnTrackingTab({
                 </td>
                 <td className="py-3 px-3">
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-                      a.status === "KABUL_TAMAM"
-                        ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                        : a.status === "KAPI_GIRIS"
-                          ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                          : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                    }`}
+                    className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${ a.status === "KABUL_TAMAM" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : a.status === "KAPI_GIRIS" ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "bg-[--warn-soft] text-[--warn] border-[--warn]/25" }`}
                   >
                     {safeText(a.status)}
                   </span>
@@ -352,18 +346,12 @@ export function SingleSourceRiskTab({
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <ShieldAlert
-                    className={`size-4 ${
-                      item.approvedSupplierCount === 0 ? "text-[--bad]" : "text-[--warn]"
-                    }`}
+                    className={`size-4 ${ item.approvedSupplierCount === 0 ? "text-[--bad]" : "text-[--warn]" }`}
                   />
                   <span className="font-semibold text-[--text] text-sm">{safeText(item.itemName)}</span>
                   <span className="font-mono text-[11px] text-[--brand]">{safeText(item.sku)}</span>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                      item.approvedSupplierCount === 0
-                        ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
-                        : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                    }`}
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${ item.approvedSupplierCount === 0 ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25" : "bg-[--warn-soft] text-[--warn] border-[--warn]/25" }`}
                   >
                     {item.approvedSupplierCount === 0 ? "Tedarikçisiz Kritik Risk" : "Tek Kaynak Riski"}
                   </span>

@@ -182,8 +182,8 @@ export default function TodosPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Yapilacaklar Isler</h1>
-                    <p className="text-sm text-gray-500">
+                    <h1 className="text-3xl font-bold text-[var(--text)] mb-2">Yapilacaklar Isler</h1>
+                    <p className="text-sm text-[var(--text-muted)]">
                         Kendi islerinizi ve gunluk gorevlerinizi yonetin.
                     </p>
                 </div>
@@ -192,7 +192,7 @@ export default function TodosPage() {
                         resetForm()
                         setIsCreateDialogOpen(true)
                     }}
-                    className="bg-primary hover:bg-blue-600 dark:hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-all"
+                    className="bg-primary hover:bg-blue-600 :bg-blue-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 shadow-sm transition-all"
                 >
                     <span className="material-symbols-outlined text-[18px]">add</span>
                     Yeni Gorev
@@ -200,44 +200,44 @@ export default function TodosPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-[#1f2428] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                     <div className="flex flex-row items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Bekleyen Gorevler</h3>
-                        <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center">
+                        <h3 className="text-sm font-medium text-[var(--text-muted)] (--text-muted)]">Bekleyen Gorevler</h3>
+                        <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
                             <span className="material-symbols-outlined text-orange-500 text-[20px]">pending_actions</span>
                         </div>
                     </div>
                     <div>
-                        <div className="text-3xl font-bold text-gray-900 dark:text-white">{pendingTodosCount}</div>
-                        <p className="text-sm text-gray-500 mt-1">Tamamlanmayi bekliyor</p>
+                        <div className="text-3xl font-bold text-[var(--text)]">{pendingTodosCount}</div>
+                        <p className="text-sm text-[var(--text-muted)] mt-1">Tamamlanmayi bekliyor</p>
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-[#1f2428] border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                     <div className="flex flex-row items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Tamamlananlar</h3>
-                        <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 flex items-center justify-center">
+                        <h3 className="text-sm font-medium text-[var(--text-muted)] (--text-muted)]">Tamamlananlar</h3>
+                        <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
                             <span className="material-symbols-outlined text-green-500 text-[20px]">task_alt</span>
                         </div>
                     </div>
                     <div>
-                        <div className="text-3xl font-bold text-gray-900 dark:text-white">{completedTodosCount}</div>
+                        <div className="text-3xl font-bold text-[var(--text)]">{completedTodosCount}</div>
                         <p className="text-sm text-green-500 mt-1">Harika is cikardiniz</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-[#1f2428] border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-white border border-[var(--line)] rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                <div className="p-6 border-b border-[var(--line-soft)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Gorev Listesi</h3>
-                        <p className="text-sm text-gray-500">Kisisel gorevleriniz</p>
+                        <h3 className="text-lg font-bold text-[var(--text)]">Gorev Listesi</h3>
+                        <p className="text-sm text-[var(--text-muted)]">Kisisel gorevleriniz</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-3 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary text-gray-700 dark:text-gray-300"
+                            className="px-3 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary text-[var(--text-2)]"
                         >
                             <option value="all">Tumu</option>
                             <option value="pending">Bekleyenler</option>
@@ -249,16 +249,16 @@ export default function TodosPage() {
                     <div className="space-y-4">
                         {filteredTodos.length === 0 ? (
                             <div className="text-center py-8">
-                                <div className="w-16 h-16 bg-gray-50 dark:bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <span className="material-symbols-outlined text-[32px] text-gray-400">task</span>
+                                <div className="w-16 h-16 bg-[var(--muted-bg)] rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span className="material-symbols-outlined text-[32px] text-[var(--text-muted)]">task</span>
                                 </div>
-                                <p className="text-gray-500">Henuz bir gorev bulunmuyor.</p>
+                                <p className="text-[var(--text-muted)]">Henuz bir gorev bulunmuyor.</p>
                             </div>
                         ) : (
                             filteredTodos.map((todo) => (
                                 <div
                                     key={todo.id}
-                                    className={`flex items-start gap-4 p-5 rounded-2xl border transition-all ${todo.status === "completed" ? "bg-gray-50/50 dark:bg-white/10 border-gray-100 dark:border-gray-800 opacity-60" : "bg-white dark:bg-[#1f2428] border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-primary/30"}`}
+                                    className={`flex items-start gap-4 p-5 rounded-2xl border transition-all ${todo.status === "completed" ? "bg-gray-50/50 (--muted-bg)] border-[var(--line-soft)] opacity-60" : "bg-white border-[var(--line)] shadow-sm hover:shadow-md hover:border-primary/30"}`}
                                 >
                                     <div className="flex items-center h-6 mt-1">
                                         <input
@@ -271,22 +271,19 @@ export default function TodosPage() {
                                     <div className="flex-1">
                                         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
                                             <div className="space-y-1 pr-4">
-                                                <h3 className={`text-base font-bold ${todo.status === "completed" ? "text-gray-500 line-through" : "text-gray-900 dark:text-white"}`}>
+                                                <h3 className={`text-base font-bold ${todo.status === "completed" ? "text-[var(--text-muted)] line-through" : "text-[var(--text)]"}`}>
                                                     {todo.title}
                                                 </h3>
                                                 {todo.description && (
-                                                    <p className="text-sm text-gray-600 dark:text-gray-400">{todo.description}</p>
+                                                    <p className="text-sm text-[var(--text-muted)]">{todo.description}</p>
                                                 )}
                                             </div>
-                                            <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${todo.priority === "high" ? "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-500" :
-                                                todo.priority === "low" ? "bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-500" :
-                                                    "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-500"
-                                                }`}>
+                                            <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${todo.priority === "high" ? "bg-red-50 text-red-700 " : todo.priority === "low" ? "bg-green-50 text-green-700 " : "bg-blue-50 text-blue-700 " }`}>
                                                 {todo.priority === "high" ? "Yuksek" : todo.priority === "low" ? "Dusuk" : "Normal"}
                                             </span>
                                         </div>
 
-                                        <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                                        <div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-[var(--line-soft)]">
                                             {todo.startDate && (
                                                 <div className="flex items-center gap-2 text-sm font-medium text-blue-500">
                                                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
@@ -295,7 +292,7 @@ export default function TodosPage() {
                                             )}
 
                                             {todo.dueDate && (
-                                                <div className={`flex items-center gap-2 text-sm font-medium ${new Date(todo.dueDate) < new Date() && todo.status !== "completed" ? "text-red-500" : "text-gray-500 dark:text-gray-400"}`}>
+                                                <div className={`flex items-center gap-2 text-sm font-medium ${new Date(todo.dueDate) < new Date() && todo.status !== "completed" ? "text-red-500" : "text-[var(--text-muted)] (--text-muted)]"}`}>
                                                     <span className="material-symbols-outlined text-[16px]">calendar_today</span>
                                                     {new Date(todo.dueDate).toLocaleDateString("tr-TR")}
                                                 </div>
@@ -304,13 +301,13 @@ export default function TodosPage() {
                                             <div className="flex items-center gap-1 sm:ml-auto">
                                                 <button
                                                     onClick={() => openEditDialog(todo)}
-                                                    className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                                                    className="px-3 py-1.5 text-xs font-medium text-gray-600 (--text-2)] hover:text-primary hover:bg-gray-100 :bg-[var(--muted-bg)] rounded-lg transition-colors"
                                                 >
                                                     Duzenle
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(todo.id)}
-                                                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+                                                    className="p-1.5 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-50 :bg-[var(--bad-soft)] rounded-lg transition-colors"
                                                     title="Sil"
                                                 >
                                                     <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -327,73 +324,73 @@ export default function TodosPage() {
 
             {/* Create Dialog */}
             {isCreateDialogOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1f2428] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--muted-bg)] backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-[var(--line-soft)] flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Yeni Gorev Ekle</h3>
-                                <p className="text-sm text-gray-500">Yapilacaklar listenize yeni bir kayit olusturun</p>
+                                <h3 className="text-lg font-bold text-[var(--text)]">Yeni Gorev Ekle</h3>
+                                <p className="text-sm text-[var(--text-muted)]">Yapilacaklar listenize yeni bir kayit olusturun</p>
                             </div>
-                            <button onClick={() => setIsCreateDialogOpen(false)} className="text-gray-400 hover:text-gray-500">
+                            <button onClick={() => setIsCreateDialogOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-muted)]">
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
 
                         <div className="p-6 overflow-y-auto space-y-4 flex-1">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslik *</label>
+                                <label className="text-sm font-medium text-[var(--text-2)]">Baslik *</label>
                                 <input
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     placeholder="Gorev adi..."
-                                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Aciklama</label>
+                                <label className="text-sm font-medium text-[var(--text-2)]">Aciklama</label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Detaylar..."
                                     rows={3}
-                                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none text-[var(--text)]"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslangic Tarihi</label>
+                                    <label className="text-sm font-medium text-[var(--text-2)]">Baslangic Tarihi</label>
                                     <input
                                         type="date"
                                         value={formData.startDate}
                                         onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                        className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bitis Tarihi</label>
+                                    <label className="text-sm font-medium text-[var(--text-2)]">Bitis Tarihi</label>
                                     <input
                                         type="date"
                                         value={formData.dueDate}
                                         onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                                        className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/10 flex justify-end gap-3 mt-auto">
+                        <div className="px-6 py-4 border-t border-[var(--line-soft)] bg-gray-50/50 (--muted-bg)] flex justify-end gap-3 mt-auto">
                             <button
                                 onClick={() => setIsCreateDialogOpen(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-[var(--text-2)] hover:bg-gray-100 :bg-[var(--muted-bg)] rounded-xl transition-colors"
                             >
                                 Iptal
                             </button>
                             <button
                                 onClick={handleCreate}
                                 disabled={loading || !formData.title}
-                                className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                                className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                             >
                                 {loading ? "Ekleniyor..." : "Gorev Ekle"}
                             </button>
@@ -404,63 +401,63 @@ export default function TodosPage() {
 
             {/* Edit Dialog */}
             {isEditDialogOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1f2428] rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-                        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--muted-bg)] backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                        <div className="px-6 py-4 border-b border-[var(--line-soft)] flex items-center justify-between">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Gorev Duzenle</h3>
-                                <p className="text-sm text-gray-500">Gorev detaylarini guncelleyin</p>
+                                <h3 className="text-lg font-bold text-[var(--text)]">Gorev Duzenle</h3>
+                                <p className="text-sm text-[var(--text-muted)]">Gorev detaylarini guncelleyin</p>
                             </div>
-                            <button onClick={() => setIsEditDialogOpen(false)} className="text-gray-400 hover:text-gray-500">
+                            <button onClick={() => setIsEditDialogOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-muted)]">
                                 <span className="material-symbols-outlined">close</span>
                             </button>
                         </div>
 
                         <div className="p-6 overflow-y-auto space-y-4 flex-1">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslik *</label>
+                                <label className="text-sm font-medium text-[var(--text-2)]">Baslik *</label>
                                 <input
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Aciklama</label>
+                                <label className="text-sm font-medium text-[var(--text-2)]">Aciklama</label>
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     rows={3}
-                                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none text-[var(--text)]"
                                 />
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Baslangic Tarihi</label>
+                                    <label className="text-sm font-medium text-[var(--text-2)]">Baslangic Tarihi</label>
                                     <input
                                         type="date"
                                         value={formData.startDate}
                                         onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                        className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Bitis Tarihi</label>
+                                    <label className="text-sm font-medium text-[var(--text-2)]">Bitis Tarihi</label>
                                     <input
                                         type="date"
                                         value={formData.dueDate}
                                         onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                                        className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Durum</label>
+                                <label className="text-sm font-medium text-[var(--text-2)]">Durum</label>
                                 <select
                                     value={formData.status}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                    className="w-full px-4 py-2 bg-gray-50 dark:bg-white/10 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-2 bg-[var(--muted-bg)] border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-[var(--text)]"
                                 >
                                     <option value="pending">Bekliyor</option>
                                     <option value="completed">Tamamlandi</option>
@@ -468,17 +465,17 @@ export default function TodosPage() {
                             </div>
                         </div>
 
-                        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-white/10 flex justify-end gap-3 mt-auto">
+                        <div className="px-6 py-4 border-t border-[var(--line-soft)] bg-gray-50/50 (--muted-bg)] flex justify-end gap-3 mt-auto">
                             <button
                                 onClick={() => setIsEditDialogOpen(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
+                                className="px-4 py-2 text-sm font-medium text-[var(--text-2)] hover:bg-gray-100 :bg-[var(--muted-bg)] rounded-xl transition-colors"
                             >
                                 Iptal
                             </button>
                             <button
                                 onClick={handleEdit}
                                 disabled={loading || !formData.title}
-                                className="px-5 py-2 text-sm font-medium text-white bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                                className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-primary hover:bg-blue-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                             >
                                 {loading ? "Guncelleniyor..." : "Guncelle"}
                             </button>

@@ -41,7 +41,7 @@ export function AnalyticsView() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 gap-3 text-zinc-500">
+      <div className="flex flex-col items-center justify-center py-32 gap-3 text-[var(--text-muted)]">
         <Loader2 className="animate-spin text-[--brand] size-8" />
         <span className="text-xs font-mono">Analitik metrikleri hesaplanıyor...</span>
       </div>
@@ -60,12 +60,12 @@ export function AnalyticsView() {
       {/* ── KUTUSUZ ÜST KPI ŞERİDİ ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-3 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <TrendingUp className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <TrendingUp className="size-3.5 text-[var(--text-muted)]" />
             <span>Toplam Yükleme Hacmi</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={totalUploads} />
             </span>
             <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
@@ -75,12 +75,12 @@ export function AnalyticsView() {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Award className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Award className="size-3.5 text-[var(--text-muted)]" />
             <span>Onaylanan İçerik</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={totalApprovals} />
             </span>
             <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
@@ -90,15 +90,15 @@ export function AnalyticsView() {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Eye className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Eye className="size-3.5 text-[var(--text-muted)]" />
             <span>İzlenme & İndirme Hacmi</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={totalViews} />
             </span>
-            <span className="text-xs text-zinc-500 font-mono">/</span>
+            <span className="text-xs text-[var(--text-muted)] font-mono">/</span>
             <span className="text-xl font-light text-[--brand]">
               <AnimatedNumber value={totalDownloads} /> indirme
             </span>
@@ -113,7 +113,7 @@ export function AnalyticsView() {
           <div className="flex items-center justify-between border-b border-[--line] pb-3">
             <div className="flex items-center gap-2">
               <Sparkles className="text-[--brand] size-4" />
-              <h4 className="text-sm font-medium text-white">30 Günlük Yükleme & Onay Eğilimi</h4>
+              <h4 className="text-sm font-medium text-[var(--text)]">30 Günlük Yükleme & Onay Eğilimi</h4>
             </div>
             <div className="flex items-center gap-3 text-xs font-mono">
               <span className="flex items-center gap-1 text-sky-400">
@@ -159,7 +159,7 @@ export function AnalyticsView() {
         <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl space-y-4">
           <div className="flex items-center gap-2 border-b border-[--line] pb-3">
             <BarChart2 className="text-[--brand] size-4" />
-            <h4 className="text-sm font-medium text-white">Niş ve Kategori Dağılımı</h4>
+            <h4 className="text-sm font-medium text-[var(--text)]">Niş ve Kategori Dağılımı</h4>
           </div>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">

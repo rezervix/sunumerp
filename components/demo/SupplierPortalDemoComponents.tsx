@@ -140,7 +140,7 @@ export function ErpPerspectiveSwitchButton({
           value={selectedUsername}
           onChange={(e) => setSelectedUsername(e.target.value)}
           aria-label="Demo Tedarikçi Hesabı Seç"
-          className="h-9 rounded-xl border border-amber-500/30 bg-[#121614] px-2.5 text-xs text-amber-200 focus:outline-none focus:border-amber-400"
+          className="h-9 rounded-xl border border-[var(--warn-line)] bg-[var(--bg)] px-2.5 text-xs text-amber-200 focus:outline-none focus:border-amber-400"
         >
           {demoAccounts.map((acc) => (
             <option key={acc.username} value={acc.username}>
@@ -154,13 +154,13 @@ export function ErpPerspectiveSwitchButton({
         onClick={handleSwitch}
         disabled={busy}
         data-testid="demo-perspective-switch-btn"
-        className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-xs font-semibold border border-amber-500/35 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl text-xs font-semibold border border-amber-500/35 bg-[var(--warn-soft)] text-[var(--warn)] hover:bg-[var(--warn-soft)] transition-colors disabled:opacity-50"
       >
         <RefreshCw className={`size-3.5 ${busy ? "animate-spin" : ""}`} />
         {busy ? "Portal Açılıyor..." : "Perspektif Geçişi: Tedarikçi Portalı"}
         <ArrowRight className="size-3.5" />
       </button>
-      {err && <span className="text-[11px] text-rose-400">{err}</span>}
+      {err && <span className="text-[11px] text-[var(--bad)]">{err}</span>}
     </div>
   )
 }
@@ -219,16 +219,16 @@ export function DemoPortalLoginBox({
   return (
     <div className="rounded-[18px] border border-amber-500/25 bg-amber-500/[0.06] p-4 space-y-3">
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 text-amber-300 text-xs font-semibold">
+        <div className="flex items-center gap-2 text-[var(--warn)] text-xs font-semibold">
           <Sparkles className="size-4 shrink-0" />
           <span>Demo Ortamı Hızlı Erişim (Kısıtlı Tedarikçi Rolü)</span>
         </div>
-        <span className="rounded-md bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 text-[10px] font-medium text-amber-200">
+        <span className="rounded-md bg-[var(--warn-soft)] border border-[var(--warn-line)] px-2 py-0.5 text-[10px] font-medium text-amber-200">
           DEMO AKTİF
         </span>
       </div>
 
-      <p className="text-[11px] text-zinc-400 leading-relaxed">
+      <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
         Bu kutu yalnızca demo sunumunda görünür ve{" "}
         <span className="text-amber-200 font-medium">DISABLE_DEMO_MODE=true</span> ile kapanır.
         Yalnızca ilgili tedarikçiye izole portal yetkisi verir (şirket içi ERP kapalı kalır).
@@ -238,16 +238,16 @@ export function DemoPortalLoginBox({
         {primaryList.map((acc) => (
           <div
             key={acc.username}
-            className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/[0.07] bg-[#0B0E0D]/80 px-3 py-2"
+            className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--line-soft)] bg-[var(--bg)] px-3 py-2"
           >
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-100">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--text)]">
                 <Building2 className="size-3.5 text-[#1267E6]" />
                 <span className="truncate">{acc.supplierName}</span>
               </div>
-              <div className="text-[11px] text-zinc-400 font-mono mt-0.5">
-                Kullanıcı: <span className="text-zinc-200">{acc.username}</span> · Şifre:{" "}
-                <span className="text-zinc-200">demo123</span>
+              <div className="text-[11px] text-[var(--text-muted)] font-mono mt-0.5">
+                Kullanıcı: <span className="text-[var(--text-2)]">{acc.username}</span> · Şifre:{" "}
+                <span className="text-[var(--text-2)]">demo123</span>
               </div>
             </div>
             <button
@@ -255,7 +255,7 @@ export function DemoPortalLoginBox({
               disabled={busyUser !== null}
               onClick={() => handleDemoLogin(acc.username)}
               data-testid={`demo-supplier-login-${acc.username}`}
-              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1267E6] hover:bg-[#2ec18b] text-[#06120D] text-xs font-semibold transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#1267E6] hover:bg-[#2ec18b] text-[#0B1B33] text-xs font-semibold transition-colors disabled:opacity-50"
             >
               <KeyRound className="size-3.5" />
               {busyUser === acc.username ? "Giriş Yapılıyor..." : "Demo Tedarikçi ile Dene"}
@@ -264,7 +264,7 @@ export function DemoPortalLoginBox({
         ))}
       </div>
 
-      {err && <p className="text-xs text-rose-400">{err}</p>}
+      {err && <p className="text-xs text-[var(--bad)]">{err}</p>}
     </div>
   )
 }
@@ -307,14 +307,14 @@ export function DemoSupplierPerspectiveBar({
   return (
     <div
       data-testid="demo-perspective-return-bar"
-      className="border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs text-amber-200"
+      className="border-b border-[var(--warn-line)] bg-[var(--warn-soft)] px-4 py-2 text-xs text-amber-200"
     >
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="size-4 text-amber-300 shrink-0" />
+          <ShieldCheck className="size-4 text-[var(--warn)] shrink-0" />
           <span>
             <strong>Perspektif Görünümü (Demo):</strong> Şu anda{" "}
-            <span className="text-white font-semibold">{supplierName}</span> harici tedarikçi
+            <span className="text-[var(--text)] font-semibold">{supplierName}</span> harici tedarikçi
             oturumuyla geziniyorsunuz.
           </span>
         </div>
@@ -323,7 +323,7 @@ export function DemoSupplierPerspectiveBar({
           onClick={handleRestore}
           disabled={busy}
           data-testid="demo-restore-admin-btn"
-          className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-[#0B0E0D] font-semibold transition-colors disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 h-7 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-[#0B1B33] font-semibold transition-colors disabled:opacity-60"
         >
           <RotateCcw className={`size-3.5 ${busy ? "animate-spin" : ""}`} />
           {busy
@@ -343,7 +343,7 @@ export function DemoPortalGuideCard({ demoModeEnabled }: { demoModeEnabled: bool
   if (!demoModeEnabled || !open) return null
 
   return (
-    <div className="rounded-2xl border border-[--brand-line] bg-[--brand]/[0.04] px-4 py-3 text-xs text-zinc-300">
+    <div className="rounded-2xl border border-[--brand-line] bg-[--brand]/[0.04] px-4 py-3 text-xs text-[var(--text-2)]">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-2.5">
           <Info className="size-4 text-[#1267E6] shrink-0 mt-0.5" />
@@ -351,7 +351,7 @@ export function DemoPortalGuideCard({ demoModeEnabled }: { demoModeEnabled: bool
             <div className="font-semibold text-[#1267E6]">
               Bu Ekranda Ne Yapabilirsiniz? (Tedarikçi Self-Servis Demo Rehberi)
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] text-zinc-400">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] text-[var(--text-muted)]">
               <span>1. İletilen PO siparişlerini onaylayın veya gecikme riski (Kırmızı Bayrak) bildirin.</span>
               <span>2. Davet edildiğiniz açık RFQ ihalelerine birim fiyat ve nakliye dahil teklif verin.</span>
               <span>3. Onaylı PO için lot/SKT/SSCC içeren ASN ön sevkiyat ihbarı gönderin (WMS'e düşer).</span>
@@ -362,7 +362,7 @@ export function DemoPortalGuideCard({ demoModeEnabled }: { demoModeEnabled: bool
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-[11px] text-zinc-400 hover:text-zinc-200 px-2 py-0.5 rounded border border-[--line]"
+          className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-2)] px-2 py-0.5 rounded border border-[--line]"
         >
           Gizle
         </button>

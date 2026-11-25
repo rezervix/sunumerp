@@ -270,7 +270,7 @@ export default function DeveloperConsolePage() {
               PLATFORM DEVELOPER ONLY
             </span>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             Platform mimarisi, debug ortam değişkenleri, performans izleme ve sistem operasyonlarını yönetin.
           </p>
         </div>
@@ -279,7 +279,7 @@ export default function DeveloperConsolePage() {
           <button
             onClick={() => handleClearCache()}
             disabled={saving}
-            className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-zinc-300 hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-[var(--text-2)] hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${saving ? "animate-spin" : ""}`} />
             Cache Temizle
@@ -299,15 +299,7 @@ export default function DeveloperConsolePage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${
-                    isActive
-                      ? tab.danger
-                        ? "bg-rose-500/15 border-rose-500/30 text-rose-300 shadow-sm"
-                        : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-sm"
-                      : tab.danger
-                      ? "border-transparent text-rose-400/80 hover:bg-rose-500/10"
-                      : "border-transparent text-zinc-400 hover:bg-white/[0.04] hover:text-[--text]"
-                  }`}
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-all shrink-0 lg:shrink cursor-pointer border ${ isActive ? tab.danger ? "bg-[var(--bad-soft)] border-[var(--bad-line)] text-[var(--bad)] shadow-sm" : "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-sm" : tab.danger ? "border-transparent text-[var(--bad)]/80 hover:bg-[var(--bad-soft)]" : "border-transparent text-[var(--text-muted)] hover:bg-white/[0.04] hover:text-[--text]" }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
                   <span>{tab.label}</span>
@@ -318,15 +310,15 @@ export default function DeveloperConsolePage() {
 
           {/* Dev Info Box */}
           <div className="p-4 bg-[white]/90 rounded-[20px] border border-[--line] space-y-2 text-xs">
-            <div className="flex items-center justify-between text-zinc-400">
+            <div className="flex items-center justify-between text-[var(--text-muted)]">
               <span>Ortam:</span>
               <span className="font-mono font-medium text-[--text]">{devInfo?.environment || "production"}</span>
             </div>
-            <div className="flex items-center justify-between text-zinc-400">
+            <div className="flex items-center justify-between text-[var(--text-muted)]">
               <span>Sürüm:</span>
               <span className="font-mono text-[--text]">{devInfo?.version || "v1.0 Kurumsal"}</span>
             </div>
-            <div className="flex items-center justify-between text-zinc-400">
+            <div className="flex items-center justify-between text-[var(--text-muted)]">
               <span>Geliştirici:</span>
               <span className="font-medium text-[--brand]">{session?.user?.fullName}</span>
             </div>
@@ -347,7 +339,7 @@ export default function DeveloperConsolePage() {
                       <Server className="w-5 h-5 text-[--brand]" />
                       Ortam & Çalışma Sürümü Yapılandırması
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1">
+                    <p className="text-xs text-[var(--text-muted)] mt-1">
                       Local Debug Branch ve platform geliştirme ortamı ayarlarını yapılandırın.
                     </p>
                   </div>
@@ -357,7 +349,7 @@ export default function DeveloperConsolePage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="text-xs font-medium text-[--text]">Local Debug Branch Seçeneği</h4>
-                          <p className="text-[11px] text-zinc-400 mt-0.5">
+                          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
                             Etkinleştirildiğinde şube seçicide yalnızca yetkili geliştiricilere özel "Local Debug Branch" gösterilir.
                           </p>
                         </div>
@@ -368,11 +360,7 @@ export default function DeveloperConsolePage() {
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                            config.securityDisabled
-                              ? "bg-[--brand] shadow-xs justify-end"
-                              : "bg-zinc-800 justify-start"
-                          }`}
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${ config.securityDisabled ? "bg-[--brand] shadow-xs justify-end" : "bg-[var(--muted-bg)] justify-start" }`}
                         >
                           <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
                         </button>
@@ -383,11 +371,11 @@ export default function DeveloperConsolePage() {
                       <h4 className="text-xs font-medium text-[--text]">Sunucu & Çalışma Zamanı Detayları</h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div className="p-3 rounded-lg bg-[white] border border-[--line] font-mono text-[11px]">
-                          <span className="text-zinc-500">Node Environment:</span> <span className="text-[--brand]">{devInfo?.environment}</span>
+                          <span className="text-[var(--text-muted)]">Node Environment:</span> <span className="text-[--brand]">{devInfo?.environment}</span>
                         </div>
                         <div className="p-3 rounded-lg bg-[white] border border-[--line] font-mono text-[11px]">
-                          <span className="text-zinc-500">Tamper Protection:</span>{" "}
-                          <span className={config.tamperDetected ? "text-rose-400 font-bold" : "text-[--brand]"}>
+                          <span className="text-[var(--text-muted)]">Tamper Protection:</span>{" "}
+                          <span className={config.tamperDetected ? "text-[var(--bad)] font-bold" : "text-[--brand]"}>
                             {config.tamperDetected ? "İHLAL TESPİT EDİLDİ" : "Normal (Aktif)"}
                           </span>
                         </div>
@@ -405,7 +393,7 @@ export default function DeveloperConsolePage() {
                       <Activity className="w-5 h-5 text-[--brand]" />
                       Sistem Diagnostiği — Canlı Performans Kadranları
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1">
+                    <p className="text-xs text-[var(--text-muted)] mt-1">
                       requestAnimationFrame ile anlık UI FPS, frame jank süresi ve API ping ölçümü.
                       {diagnosticsLoading && <span className="ml-2 text-[--brand] animate-pulse">Ölçülüyor...</span>}
                     </p>
@@ -443,16 +431,16 @@ export default function DeveloperConsolePage() {
                           <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {diagnosticsLoading ? "..." : realFps !== null ? realFps : "—"}
                           </span>
-                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">FPS</span>
+                          <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] font-medium">FPS</span>
                         </div>
                       </div>
 
-                      <p className="text-[10px] text-zinc-500 mt-2">Hedef 60 FPS (Akıcı)</p>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-2">Hedef 60 FPS (Akıcı)</p>
                     </div>
 
                     {/* Maks Frame Jank Radial Gauge */}
                     <div className="p-5 rounded-[20px] bg-[#F6F8FB]/80 border border-[--line] flex flex-col items-center text-center relative overflow-hidden">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-amber-400 mb-2">Frame Gecikmesi</p>
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--warn)] mb-2">Frame Gecikmesi</p>
                       
                       {/* SVG Gauge */}
                       <div className="relative size-28 flex items-center justify-center my-1">
@@ -480,11 +468,11 @@ export default function DeveloperConsolePage() {
                           <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {diagnosticsLoading ? "..." : jankMs !== null ? `${jankMs}` : "—"}
                           </span>
-                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
+                          <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] font-medium">MS</span>
                         </div>
                       </div>
 
-                      <p className="text-[10px] text-zinc-500 mt-2">Jank Eşiği: 16.6ms</p>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-2">Jank Eşiği: 16.6ms</p>
                     </div>
 
                     {/* API Ping Süresi Radial Gauge */}
@@ -517,15 +505,15 @@ export default function DeveloperConsolePage() {
                           <span className="text-2xl font-light text-[--text] tracking-tight tabular-nums">
                             {apiPingMs === null ? (diagnosticsLoading ? "..." : "—") : apiPingMs === -1 ? "Err" : `${apiPingMs}`}
                           </span>
-                          <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-medium">MS</span>
+                          <span className="text-[9px] uppercase tracking-wider text-[var(--text-muted)] font-medium">MS</span>
                         </div>
                       </div>
 
-                      <p className="text-[10px] text-zinc-500 mt-2">/api/developer/config</p>
+                      <p className="text-[10px] text-[var(--text-muted)] mt-2">/api/developer/config</p>
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white/[0.02] border border-[--line] text-[11px] text-zinc-400 flex items-start gap-2">
+                  <div className="p-3 rounded-xl bg-white/[0.02] border border-[--line] text-[11px] text-[var(--text-muted)] flex items-start gap-2">
                     <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[--brand]" />
                     <span>
                       GPU donanım ivmesi Electron ana süreci üzerinden aktiftir. Tarayıcı ve masaüstü uygulamasında 60 FPS akıcı render garantisi sağlanır.
@@ -537,7 +525,7 @@ export default function DeveloperConsolePage() {
                       setActiveTab("environment")
                       setTimeout(() => setActiveTab("diagnostics"), 50)
                     }}
-                    className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-zinc-300 hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 text-xs font-medium rounded-full border border-[--line] text-[var(--text-2)] hover:text-[--text] hover:bg-[--muted-bg] transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     Yeniden Ölç
@@ -553,7 +541,7 @@ export default function DeveloperConsolePage() {
                       <Wrench className="w-5 h-5 text-[--brand]" />
                       Sistem Bakımı ve Platform Duyuru Bannerı
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1">
+                    <p className="text-xs text-[var(--text-muted)] mt-1">
                       Platform çapında bakım modunu ve üst duyuru bandını yönetin.
                     </p>
                   </div>
@@ -563,7 +551,7 @@ export default function DeveloperConsolePage() {
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="text-xs font-medium text-[--text]">Sistem Bakım Modu</h4>
-                          <p className="text-[11px] text-zinc-400 mt-0.5">
+                          <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
                             Aktif edildiğinde geliştirici dışındaki kullanıcılar bakım ekranına yönlendirilir.
                           </p>
                         </div>
@@ -583,11 +571,7 @@ export default function DeveloperConsolePage() {
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                            config.systemMaintenance?.maintenanceMode
-                              ? "bg-[--brand] shadow-xs justify-end"
-                              : "bg-zinc-800 justify-start"
-                          }`}
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${ config.systemMaintenance?.maintenanceMode ? "bg-[--brand] shadow-xs justify-end" : "bg-[var(--muted-bg)] justify-start" }`}
                         >
                           <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
                         </button>
@@ -612,17 +596,13 @@ export default function DeveloperConsolePage() {
                             setConfig(updated)
                             handleSaveDevConfig(updated)
                           }}
-                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                            config.systemMaintenance?.showAnnouncementBanner
-                              ? "bg-[--brand] shadow-xs justify-end"
-                              : "bg-zinc-800 justify-start"
-                          }`}
+                          className={`w-11 h-6 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${ config.systemMaintenance?.showAnnouncementBanner ? "bg-[--brand] shadow-xs justify-end" : "bg-[var(--muted-bg)] justify-start" }`}
                         >
                           <span className="size-5 rounded-full bg-white shadow-md transition-transform" />
                         </button>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-xs font-medium text-zinc-300">Duyuru Metni</label>
+                        <label className="text-xs font-medium text-[var(--text-2)]">Duyuru Metni</label>
                         <input
                           type="text"
                           value={config.systemMaintenance?.announcementBannerText || ""}
@@ -636,7 +616,7 @@ export default function DeveloperConsolePage() {
                               }
                             })
                           }}
-                          className="w-full px-3.5 py-2 bg-white border border-[--line] focus:border-[--brand-line] rounded-xl text-xs text-[--text] placeholder:text-zinc-500 outline-none"
+                          className="w-full px-3.5 py-2 bg-white border border-[--line] focus:border-[--brand-line] rounded-xl text-xs text-[--text] placeholder:text-[var(--text-muted)] outline-none"
                           placeholder="Örn: 24 Temmuz 23:00'da planlı sistem güncellemesi yapılacaktır."
                         />
                       </div>

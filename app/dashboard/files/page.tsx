@@ -240,14 +240,14 @@ export default function FilesPage() {
     switch (status) {
       case "sent":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/5 text-[--text-2] border border-[--line]">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--muted-bg)] text-[--text-2] border border-[--line]">
             <Send className="w-3 h-3 text-[--text-muted]" /> Gönderildi
           </span>
         )
       case "received":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-            <Inbox className="w-3 h-3 text-amber-400" /> Alındı
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">
+            <Inbox className="w-3 h-3 text-[var(--warn)]" /> Alındı
           </span>
         )
       case "acknowledged":
@@ -268,13 +268,13 @@ export default function FilesPage() {
   const getPriorityBadge = (priority: FileDelivery["priority"]) => {
     switch (priority) {
       case "urgent":
-        return <span className="text-[10px] font-medium text-rose-300 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-full uppercase">Acil</span>
+        return <span className="text-[10px] font-medium text-[var(--bad)] bg-[var(--bad-soft)] border border-[var(--bad-line)] px-2 py-0.5 rounded-full uppercase">Acil</span>
       case "high":
-        return <span className="text-[10px] font-medium text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full uppercase">Yüksek</span>
+        return <span className="text-[10px] font-medium text-[var(--warn)] bg-[var(--warn-soft)] border border-[var(--warn-line)] px-2 py-0.5 rounded-full uppercase">Yüksek</span>
       case "normal":
         return <span className="text-[10px] font-medium text-[--brand] bg-[--brand-soft] border border-[--brand-line] px-2 py-0.5 rounded-full uppercase">Normal</span>
       default:
-        return <span className="text-[10px] font-medium text-[--text-muted] bg-white/5 border border-[--line] px-2 py-0.5 rounded-full uppercase">Düşük</span>
+        return <span className="text-[10px] font-medium text-[--text-muted] bg-[var(--muted-bg)] border border-[--line] px-2 py-0.5 rounded-full uppercase">Düşük</span>
     }
   }
 
@@ -315,10 +315,10 @@ export default function FilesPage() {
 
         <div>
           <div className="flex items-center gap-1.5 text-[--text-muted] text-xs font-medium uppercase tracking-wider">
-            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <Clock className="w-3.5 h-3.5 text-[var(--warn)]" />
             Bekleyen Teslimatlar
           </div>
-          <div className="text-4xl font-light text-amber-400 tracking-tight mt-1">
+          <div className="text-4xl font-light text-[var(--warn)] tracking-tight mt-1">
             <AnimatedNumber value={stats.pending} />
           </div>
         </div>
@@ -328,22 +328,22 @@ export default function FilesPage() {
       <div className="bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-xl flex flex-col overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-[--line] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex gap-1 p-1 bg-white/5 border border-[--line] rounded-full">
+            <div className="flex gap-1 p-1 bg-[var(--muted-bg)] border border-[--line] rounded-full">
               <button
                 onClick={() => setActiveTab("all")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'all' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'all' ? 'bg-[var(--muted-bg)] text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Tümü
               </button>
               <button
                 onClick={() => setActiveTab("sent")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'sent' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'sent' ? 'bg-[var(--muted-bg)] text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Gönderilen
               </button>
               <button
                 onClick={() => setActiveTab("received")}
-                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'received' ? 'bg-white/10 text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
+                className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all ${activeTab === 'received' ? 'bg-[var(--muted-bg)] text-[--text] shadow-sm' : 'text-[--text-muted] hover:text-[--text]'}`}
               >
                 Alınan
               </button>
@@ -362,7 +362,7 @@ export default function FilesPage() {
             </div>
             <button
               onClick={() => setIsCreateDialogOpen(true)}
-              className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold px-5 py-2 rounded-full text-xs transition shadow-sm active:scale-95"
+              className="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-semibold px-5 py-2 rounded-full text-xs transition shadow-sm active:scale-95"
             >
               <Plus className="w-4 h-4" />
               Yeni Gönderim
@@ -393,9 +393,9 @@ export default function FilesPage() {
                 </tr>
               ) : (
                 filteredDeliveries.map((delivery) => (
-                  <tr key={delivery.id} className="border-b border-white/[0.04] border-l-2 border-l-transparent hover:border-l-[--brand] hover:bg-[--page] transition-colors group">
+                  <tr key={delivery.id} className="border-b border-[var(--line-soft)] border-l-2 border-l-transparent hover:border-l-[--brand] hover:bg-[--page] transition-colors group">
                     <td className="px-6 py-4">
-                      <div className="font-mono text-xs text-[--text-muted] bg-white/5 py-1 px-2.5 rounded-lg border border-[--line] inline-block">{delivery.trackingNumber}</div>
+                      <div className="font-mono text-xs text-[--text-muted] bg-[var(--muted-bg)] py-1 px-2.5 rounded-lg border border-[--line] inline-block">{delivery.trackingNumber}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="font-medium text-[--text]">{delivery.title}</div>
@@ -430,7 +430,7 @@ export default function FilesPage() {
                             setStatusUpdate({ status: delivery.status, notes: "" })
                             setIsStatusDialogOpen(true)
                           }}
-                          className="px-3 py-1 bg-white/5 hover:bg-white/10 text-[--text-2] border border-[--line] rounded-full text-xs font-medium transition"
+                          className="px-3 py-1 bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[--text-2] border border-[--line] rounded-full text-xs font-medium transition"
                         >
                           Durum
                         </button>
@@ -449,7 +449,7 @@ export default function FilesPage() {
                               }
                             }
                           }}
-                          className="p-1.5 text-[--text-muted] hover:text-rose-400 rounded-full transition"
+                          className="p-1.5 text-[--text-muted] hover:text-[var(--bad)] rounded-full transition"
                         >
                           <Trash className="w-3.5 h-3.5" />
                         </button>
@@ -579,17 +579,17 @@ export default function FilesPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-[--line] bg-[#0d100e] flex justify-end gap-3 mt-auto">
+            <div className="px-6 py-4 border-t border-[--line] bg-[var(--bg)] flex justify-end gap-3 mt-auto">
               <button
                 onClick={() => setIsCreateDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white/5 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-[var(--muted-bg)] rounded-full transition-colors"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleCreate}
                 disabled={loading || !formData.title || (!formData.toBranchId && !formData.toUserId) || formData.fileUrls.length === 0}
-                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="px-5 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Hazırlanıyor..." : "Gönderimi Başlat"}
               </button>
@@ -641,17 +641,17 @@ export default function FilesPage() {
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-[--line] bg-[#0d100e] flex justify-end gap-3">
+            <div className="px-6 py-4 border-t border-[--line] bg-[var(--bg)] flex justify-end gap-3">
               <button
                 onClick={() => setIsStatusDialogOpen(false)}
-                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-white/5 rounded-full transition-colors"
+                className="px-4 py-2 text-xs font-medium text-[--text-2] hover:text-[--text] border border-[--line] bg-[var(--muted-bg)] rounded-full transition-colors"
               >
                 Vazgeç
               </button>
               <button
                 onClick={handleStatusUpdate}
                 disabled={loading || !statusUpdate.status}
-                className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="px-5 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? "Kaydediliyor..." : "Durumu Kaydet"}
               </button>

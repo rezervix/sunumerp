@@ -461,29 +461,17 @@ export function WmsWorkflowStepper({
                 <button
                   type="button"
                   onClick={() => setActiveStage(step.stage)}
-                  className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between relative overflow-hidden h-full cursor-pointer ${
-                    isActive
-                      ? "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-sm font-semibold"
-                      : "bg-[--page] border-[--line] hover:bg-white text-[--text-muted] hover:text-[--text]"
-                  }`}
+                  className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between relative overflow-hidden h-full cursor-pointer ${ isActive ? "bg-[--brand-soft] border-[--brand-line] text-[--brand] shadow-sm font-semibold" : "bg-[--page] border-[--line] hover:bg-white text-[--text-muted] hover:text-[--text]" }`}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
                     <div
-                      className={`h-8 w-8 rounded-lg flex items-center justify-center transition-all ${
-                        isActive
-                          ? "bg-white text-[--brand] shadow-xs"
-                          : "bg-white text-[--text-muted] border border-[--line]"
-                      }`}
+                      className={`h-8 w-8 rounded-lg flex items-center justify-center transition-all ${ isActive ? "bg-white text-[--brand] shadow-xs" : "bg-white text-[--text-muted] border border-[--line]" }`}
                     >
                       <Icon className="h-4 w-4" />
                     </div>
                     {count > 0 ? (
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
-                          isActive
-                            ? "bg-[--brand] text-white border-transparent"
-                            : "bg-white text-[--text-muted] border-[--line]"
-                        }`}
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${ isActive ? "bg-[--brand] text-white border-transparent" : "bg-white text-[--text-muted] border-[--line]" }`}
                       >
                         {count}
                       </span>
@@ -589,11 +577,7 @@ export function WmsWorkflowStepper({
                         {task.taskNumber}
                       </span>
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
-                          task.priority === "HIGH" || task.priority === "URGENT"
-                            ? "bg-[--bad-soft] text-[--bad] border-[--bad-fill]/20"
-                            : "bg-[--page] text-[--text-muted] border-[--line]"
-                        }`}
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border ${ task.priority === "HIGH" || task.priority === "URGENT" ? "bg-[--bad-soft] text-[--bad] border-[--bad-fill]/20" : "bg-[--page] text-[--text-muted] border-[--line]" }`}
                       >
                         {task.priority === "HIGH" || task.priority === "URGENT" ? "Öncelikli" : "Normal"}
                       </span>
@@ -606,11 +590,7 @@ export function WmsWorkflowStepper({
                   </div>
 
                   <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium border ${
-                      task.status === "IN_PROGRESS"
-                        ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                        : "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/20"
-                    }`}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium border ${ task.status === "IN_PROGRESS" ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/20" }`}
                   >
                     {task.status === "IN_PROGRESS" ? "İşlemde" : "Bekliyor"}
                   </span>
@@ -1005,7 +985,7 @@ export function WmsWorkflowStepper({
           </div>
           <DialogFooter className="gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => setShortExecTask(null)} className="border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full cursor-pointer">Vazgeç</Button>
-            <Button type="button" disabled={modalLoading} onClick={handleCompleteShortExec} className="bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-white font-semibold rounded-full shadow-sm cursor-pointer disabled:opacity-50">
+            <Button type="button" disabled={modalLoading} onClick={handleCompleteShortExec} className="bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-[var(--text)] font-semibold rounded-full shadow-sm cursor-pointer disabled:opacity-50">
               {modalLoading ? "İşleniyor..." : "Kısmi Miktar ile Tamamla"}
             </Button>
           </DialogFooter>

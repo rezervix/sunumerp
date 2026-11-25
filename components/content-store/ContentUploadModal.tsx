@@ -22,7 +22,7 @@ interface UploadQueueItem {
 
 function getFileIcon(mimeType: string) {
   if (mimeType.startsWith("image/")) return <Image size={18} className="text-blue-500" />
-  if (mimeType.startsWith("video/")) return <Video size={18} className="text-purple-500" />
+  if (mimeType.startsWith("video/")) return <Video size={18} className="text-[var(--brand)]" />
   return <File size={18} className="text-muted-foreground" />
 }
 function formatBytes(bytes: number) { if (bytes < 1024) return `${bytes} B`; if (bytes < 1048576) return `${(bytes/1024).toFixed(1)} KB`; return `${(bytes/1048576).toFixed(1)} MB` }
@@ -190,12 +190,12 @@ export function ContentUploadModal({ open, onClose, onSuccess, niches }: Content
 
                     {/* Duplicate uyarısı */}
                     {item.status === "duplicate_warning" && item.duplicateInfo && (
-                      <div className="mt-2 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg text-xs">
+                      <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs">
                         <div className="flex items-start gap-2">
                           <GitCompare size={14} className="text-amber-600 mt-0.5 shrink-0" />
                           <div className="flex-1">
-                            <p className="font-semibold text-amber-800 dark:text-amber-200">Mükerrer Dosya Tespit Edildi</p>
-                            <p className="text-amber-700 dark:text-amber-300 mt-0.5">
+                            <p className="font-semibold text-amber-800">Mükerrer Dosya Tespit Edildi</p>
+                            <p className="text-amber-700 mt-0.5">
                               <span className="font-medium">{item.duplicateInfo.originalName}</span> adlı dosya zaten mağazada mevcut.
                               Yükleyen: {item.duplicateInfo.uploaderName} · {new Date(item.duplicateInfo.createdAt).toLocaleDateString("tr-TR")}
                             </p>

@@ -120,7 +120,7 @@ export default function MusteriTalepleriPage() {
           <Button
             variant="outline"
             onClick={fetchRequests}
-            className="gap-2 border-[--line] bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
+            className="gap-2 border-[--line] bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[var(--text-2)] rounded-full text-xs h-9"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Tazele
@@ -131,7 +131,7 @@ export default function MusteriTalepleriPage() {
       {requests.length === 0 ? (
         <Card className="max-w-md mx-auto text-center p-8 mt-12 bg-white/80 backdrop-blur-xl border border-[--line] rounded-[20px] shadow-xl text-[--text]">
           <CardContent className="space-y-4 pt-6">
-            <div className="mx-auto w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-[--line]">
+            <div className="mx-auto w-12 h-12 bg-[var(--muted-bg)] rounded-2xl flex items-center justify-center border border-[--line]">
               <CheckCircle2 className="h-6 w-6 text-[--brand]" />
             </div>
             <h2 className="text-base font-semibold text-[--text]">Harika! Bugünlük Talep Yok</h2>
@@ -145,7 +145,7 @@ export default function MusteriTalepleriPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {requests.map((branch, idx) => (
               <Card key={idx} className="flex flex-col h-full border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl overflow-hidden">
-                <CardHeader className="bg-[#0d100e] py-3 px-4 border-b border-[--line]">
+                <CardHeader className="bg-[var(--bg)] py-3 px-4 border-b border-[--line]">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-sm text-[--text] truncate">
                       {branch.branchName}
@@ -158,18 +158,18 @@ export default function MusteriTalepleriPage() {
                 <CardContent className="p-4 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-3">
                     {branch.requests.map((req, reqIdx) => (
-                      <div key={reqIdx} className="space-y-2 border-b border-white/[0.04] last:border-0 pb-3 last:pb-0">
+                      <div key={reqIdx} className="space-y-2 border-b border-[var(--line-soft)] last:border-0 pb-3 last:pb-0">
                         <div className="flex items-center justify-between text-xs text-[--text-muted]">
                           <span className="flex items-center gap-1">
                             <User className="h-3 w-3 text-[--text-muted]" />
-                            <strong className="text-zinc-300 font-medium">{req.sender}</strong>
+                            <strong className="text-[var(--text-2)] font-medium">{req.sender}</strong>
                           </span>
                           <span className="flex items-center gap-1 font-mono">
                             <Clock className="h-3 w-3 text-[--text-muted]" />
                             {req.time}
                           </span>
                         </div>
-                        <p className="text-xs text-zinc-300 leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-white/[0.04]">
+                        <p className="text-xs text-[var(--text-2)] leading-relaxed bg-white/[0.02] p-3 rounded-xl border border-[var(--line-soft)]">
                           {req.summary}
                         </p>
                         

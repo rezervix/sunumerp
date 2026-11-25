@@ -466,11 +466,7 @@ export default function InventoryAiAndAnalyticsPage() {
                 <div
                   key={fc.id}
                   onClick={() => setSelectedForecastId(fc.id)}
-                  className={`cursor-pointer bg-white/80 backdrop-blur-xl border p-5 rounded-[20px] flex flex-col justify-between space-y-3.5 transition-all shadow-card ${
-                    isSelected
-                      ? "border-[--brand] ring-2 ring-[--brand]/20 shadow-md"
-                      : "border-[--line] hover:border-[--brand-line]"
-                  }`}
+                  className={`cursor-pointer bg-white/80 backdrop-blur-xl border p-5 rounded-[20px] flex flex-col justify-between space-y-3.5 transition-all shadow-card ${ isSelected ? "border-[--brand] ring-2 ring-[--brand]/20 shadow-md" : "border-[--line] hover:border-[--brand-line]" }`}
                 >
                   <div>
                     <div className="flex items-center justify-between gap-1">
@@ -577,18 +573,12 @@ export default function InventoryAiAndAnalyticsPage() {
                   return (
                     <div
                       key={idx}
-                      className={`p-3.5 rounded-xl border flex flex-col justify-between ${
-                        isFuture
-                          ? "border-[--brand-line] bg-[--brand-soft]/30"
-                          : "border-[--line] bg-[--page]/60"
-                      }`}
+                      className={`p-3.5 rounded-xl border flex flex-col justify-between ${ isFuture ? "border-[--brand-line] bg-[--brand-soft]/30" : "border-[--line] bg-[--page]/60" }`}
                     >
                       <div className="text-xs font-medium text-[--text]">{pt.month}</div>
                       <div className="my-2.5 h-24 flex items-end justify-center bg-white rounded-xl p-2 border border-[--line]">
                         <div
-                          className={`w-full rounded-t-lg transition-all ${
-                            isFuture ? "bg-gradient-to-t from-[--brand] to-[--sky]" : "bg-[--brand]"
-                          }`}
+                          className={`w-full rounded-t-lg transition-all ${ isFuture ? "bg-gradient-to-t from-[--brand] to-[--sky]" : "bg-[--brand]" }`}
                           style={{ height: `${barHeightPercent}%` }}
                         />
                       </div>

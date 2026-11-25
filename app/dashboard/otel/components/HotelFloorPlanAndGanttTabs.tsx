@@ -116,15 +116,11 @@ export function HotelFloorPlanTab({
   return (
     <div className="space-y-4">
       {/* Durum Özeti & Renk Açıklaması */}
-      <div className="flex flex-wrap gap-2 rounded-xl border border-[--line] bg-[white] p-3">
+      <div className="flex flex-wrap gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3 shadow-sm">
         <button
           type="button"
           onClick={() => setStatusFilter('ALL')}
-          className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
-            statusFilter === 'ALL'
-              ? 'border-[#1267E6] bg-[--brand]/20 text-[#1267E6]'
-              : 'border-[--line] bg-[#161B18] text-zinc-300 hover:border-[--line]'
-          }`}
+          className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${ statusFilter === 'ALL' ? 'border-[var(--brand)] bg-[var(--brand-soft)] text-[var(--brand)]' : 'border-[var(--line)] bg-[var(--muted-bg)] text-[var(--text-2)] hover:border-[var(--brand-line)]' }`}
         >
           Tümü ({rooms.length})
         </button>
@@ -133,9 +129,7 @@ export function HotelFloorPlanTab({
             key={st}
             type="button"
             onClick={() => setStatusFilter(statusFilter === st ? 'ALL' : st)}
-            className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
-              HOTEL_ROOM_STATUS_BADGES[st]
-            } ${statusFilter === st ? 'ring-2 ring-white/40' : 'opacity-85 hover:opacity-100'}`}
+            className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${ HOTEL_ROOM_STATUS_BADGES[st] } ${statusFilter === st ? 'ring-2 ring-[var(--brand)]' : 'opacity-90 hover:opacity-100'}`}
           >
             {HOTEL_ROOM_STATUS_LABELS[st]} ({statusCounts[st] || 0})
           </button>
@@ -143,16 +137,12 @@ export function HotelFloorPlanTab({
       </div>
 
       {/* Filtre Çubuğu */}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[--line] bg-[white] p-3">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-3 shadow-sm">
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             type="button"
             onClick={() => setFloorFilter('ALL')}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-              floorFilter === 'ALL'
-                ? 'bg-[#1267E6] text-[#F6F8FB]'
-                : 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'
-            }`}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${ floorFilter === 'ALL' ? 'bg-[var(--brand)] text-white shadow-sm' : 'bg-[var(--muted-bg)] text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)]' }`}
           >
             Tüm Katlar
           </button>
@@ -161,11 +151,7 @@ export function HotelFloorPlanTab({
               key={f}
               type="button"
               onClick={() => setFloorFilter(String(f))}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                floorFilter === String(f)
-                  ? 'bg-[#1267E6] text-[#F6F8FB]'
-                  : 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'
-              }`}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${ floorFilter === String(f) ? 'bg-[var(--brand)] text-white shadow-sm' : 'bg-[var(--muted-bg)] text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)]' }`}
             >
               {f}. Kat
             </button>
@@ -175,7 +161,7 @@ export function HotelFloorPlanTab({
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-1.5 text-xs text-zinc-200 focus:border-[#1267E6] focus:outline-none"
+          className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-1.5 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
         >
           <option value="ALL">Tüm Oda Tipleri</option>
           {roomTypes.map((rt) => (
@@ -186,45 +172,45 @@ export function HotelFloorPlanTab({
         </select>
 
         <div className="relative ml-auto min-w-[200px] flex-1 sm:flex-none">
-          <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-zinc-500" />
+          <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[var(--text-muted)]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Oda no, tip veya rez. ara..."
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 pr-3 text-xs text-zinc-200 placeholder:text-zinc-500 focus:border-[#1267E6] focus:outline-none"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] py-1.5 pl-8 pr-3 text-xs text-[var(--text)] placeholder:text-[var(--text-muted)] focus:border-[var(--brand)] focus:outline-none"
           />
         </div>
       </div>
 
       {/* Kat Bazlı Etkileşimli Oda Kartları */}
       {roomsByFloor.length === 0 ? (
-        <div className="rounded-xl border border-[--line] bg-[white] p-8 text-center text-sm text-zinc-400">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-8 text-center text-sm text-[var(--text-muted)] shadow-sm">
           Seçilen filtrelere uygun oda bulunamadı.
         </div>
       ) : (
         roomsByFloor.map(([floorNum, floorRooms]) => (
           <div
             key={floorNum}
-            className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4"
+            className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm"
           >
-            <div className="flex items-center justify-between border-b border-[--line] pb-2">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
               <div className="flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-[#1267E6]" />
-                <h3 className="text-sm font-semibold text-zinc-100">
+                <Building2 className="h-4 w-4 text-[var(--brand)]" />
+                <h3 className="text-sm font-semibold text-[var(--text)]">
                   {floorNum}. Kat — {floorRooms.length} Oda
                 </h3>
               </div>
-              <span className="text-xs text-zinc-400">
+              <span className="text-xs text-[var(--text-muted)]">
                 Satışa Hazır:{' '}
-                <strong className="text-[#1267E6]">
+                <strong className="text-[var(--brand)]">
                   {floorRooms.filter((r) => r.status === 'CLEAN_VACANT').length}
                 </strong>{' '}
                 · Dolu:{' '}
-                <strong className="text-sky-300">
+                <strong className="text-[var(--text)]">
                   {floorRooms.filter((r) => r.status === 'OCCUPIED').length}
                 </strong>{' '}
                 · Kirli/Temizlik:{' '}
-                <strong className="text-amber-300">
+                <strong className="text-[var(--warn)]">
                   {
                     floorRooms.filter(
                       (r) =>
@@ -247,17 +233,17 @@ export function HotelFloorPlanTab({
                 return (
                   <div
                     key={room.id}
-                    className={`flex flex-col justify-between rounded-xl border p-3 transition ${badgeClass}`}
+                    className={`flex flex-col justify-between rounded-xl border p-3 transition shadow-sm ${badgeClass}`}
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <span className="text-lg font-bold tracking-tight text-white">
+                          <span className="text-lg font-bold tracking-tight text-[var(--text)]">
                             {room.roomNumber}
                           </span>
-                          <p className="text-[11px] text-zinc-200/80">{room.roomTypeName}</p>
+                          <p className="text-[11px] text-[var(--text-muted)]">{room.roomTypeName}</p>
                         </div>
-                        <span className="rounded bg-black/30 px-1.5 py-0.5 text-[10px] font-medium">
+                        <span className="rounded bg-black/5 px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-2)]">
                           {room.wingOrSection}
                         </span>
                       </div>
@@ -267,16 +253,16 @@ export function HotelFloorPlanTab({
                       </div>
 
                       {room.activeStaySummary && (
-                        <div className="mt-2 rounded-lg bg-black/30 p-2 text-[11px] text-zinc-200">
-                          <div className="font-mono text-[10px] text-sky-300">
+                        <div className="mt-2 rounded-lg bg-[var(--bg)] p-2 text-[11px] text-[var(--text-2)] border border-[var(--line)]">
+                          <div className="font-mono text-[10px] text-[var(--brand)]">
                             {room.activeStaySummary.reservationNo}
                           </div>
-                          <div className="mt-0.5 flex items-center justify-between text-[10px] text-zinc-300">
+                          <div className="mt-0.5 flex items-center justify-between text-[10px] text-[var(--text-muted)]">
                             <span>
                               Çıkış: {String(room.activeStaySummary.checkOutDate).slice(0, 10)}
                             </span>
                             {Number(room.activeStaySummary.balanceDueTry || 0) > 0 && (
-                              <span className="font-semibold text-amber-300">
+                              <span className="font-semibold text-[var(--warn)]">
                                 {Number(room.activeStaySummary.balanceDueTry).toLocaleString(
                                   'tr-TR'
                                 )}{' '}
@@ -288,24 +274,24 @@ export function HotelFloorPlanTab({
                       )}
 
                       {!room.activeStaySummary && room.notes && (
-                        <p className="mt-2 line-clamp-2 text-[10px] text-zinc-200/75">
+                        <p className="mt-2 line-clamp-2 text-[10px] text-[var(--text-muted)]">
                           {room.notes}
                         </p>
                       )}
                     </div>
 
                     {/* Tek Tıkla Durum Değiştirme & Hızlı Aksiyonlar */}
-                    <div className="mt-3 space-y-1.5 border-t border-[--line] pt-2">
+                    <div className="mt-3 space-y-1.5 border-t border-[var(--line-soft)] pt-2">
                       <select
                         disabled={isBusy}
                         value={st}
                         onChange={(e) =>
                           handleStatusChange(room.id, e.target.value as HotelRoomStatus)
                         }
-                        className="w-full rounded-md border border-[--line] bg-black/40 px-2 py-1 text-[11px] text-white focus:border-[#1267E6] focus:outline-none"
+                        className="w-full rounded-md border border-[var(--line)] bg-[var(--bg)] px-2 py-1 text-[11px] text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
                       >
                         {HOTEL_ROOM_STATUSES.map((opt) => (
-                          <option key={opt} value={opt} className="bg-[white] text-zinc-100">
+                          <option key={opt} value={opt} className="bg-[var(--bg)] text-[var(--text)]">
                             {HOTEL_ROOM_STATUS_LABELS[opt]}
                           </option>
                         ))}
@@ -318,7 +304,7 @@ export function HotelFloorPlanTab({
                             onClick={() =>
                               onOpenFolioForReservation(room.activeStaySummary.reservationId)
                             }
-                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 px-2 py-1 text-[10px] font-medium text-white hover:bg-black/60"
+                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[var(--muted-bg)] px-2 py-1 text-[10px] font-medium text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-colors"
                           >
                             <CreditCard className="h-3 w-3" /> Folio
                           </button>
@@ -326,7 +312,7 @@ export function HotelFloorPlanTab({
                           <button
                             type="button"
                             onClick={() => onQuickReserveRoom(room.id)}
-                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[--brand]/30 px-2 py-1 text-[10px] font-medium text-white hover:bg-[--brand]/45"
+                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[var(--brand)] px-2 py-1 text-[10px] font-medium text-[var(--text)] hover:bg-[var(--brand-hover)] transition-colors"
                           >
                             <Plus className="h-3 w-3" /> Rezerve Et
                           </button>
@@ -335,7 +321,7 @@ export function HotelFloorPlanTab({
                             type="button"
                             disabled={isBusy}
                             onClick={() => handleStatusChange(room.id, 'CLEAN_VACANT')}
-                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[--brand]/30 px-2 py-1 text-[10px] font-medium text-white hover:bg-[--brand]/45"
+                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[var(--ok)] px-2 py-1 text-[10px] font-medium text-[var(--text)] hover:opacity-90 transition-colors"
                           >
                             <CheckCircle2 className="h-3 w-3" /> Temiz Onayla
                           </button>
@@ -344,7 +330,7 @@ export function HotelFloorPlanTab({
                             type="button"
                             disabled={isBusy}
                             onClick={() => handleStatusChange(room.id, 'CLEAN_VACANT')}
-                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 px-2 py-1 text-[10px] font-medium text-white hover:bg-black/60"
+                            className="flex flex-1 items-center justify-center gap-1 rounded-md bg-[var(--muted-bg)] px-2 py-1 text-[10px] font-medium text-[var(--text-2)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-colors"
                           >
                             <Wrench className="h-3 w-3" /> Hazıra Al
                           </button>
@@ -390,31 +376,31 @@ export function HotelAvailabilityGanttTab({
   return (
     <div className="space-y-4">
       {/* Üst Kontrol Barı */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-[#1267E6]" />
+          <Calendar className="h-4 w-4 text-[var(--brand)]" />
           <div>
-            <h3 className="text-sm font-semibold text-zinc-100">
+            <h3 className="text-sm font-semibold text-[var(--text)]">
               Oda × Gün Rezervasyon Takvimi (Gantt)
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Boş bir güne tıklayarak o oda ve tarih için atomik çift rezervasyon kilitli kayıt açabilirsiniz.
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-xs text-zinc-400">Başlangıç:</label>
+          <label className="text-xs text-[var(--text-muted)]">Başlangıç:</label>
           <input
             type="date"
             value={ganttStartDate}
             onChange={(e) => onChangeStartDate(e.target.value)}
-            className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-200"
+            className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
           />
           <select
             value={floorFilter}
             onChange={(e) => setFloorFilter(e.target.value)}
-            className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-200"
+            className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
           >
             <option value="ALL">Tüm Katlar ({gantt?.rows?.length || 0} Oda)</option>
             {[1, 2, 3, 4, 5].map((f) => (
@@ -427,11 +413,11 @@ export function HotelAvailabilityGanttTab({
       </div>
 
       {/* Gantt Matrisi */}
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
         <table className="w-full min-w-[920px] border-collapse text-xs">
           <thead>
-            <tr className="border-b border-[--line] bg-[#161B18] text-zinc-400">
-              <th className="sticky left-0 z-10 bg-[#161B18] px-3 py-2.5 text-left font-medium">
+            <tr className="border-b border-[var(--line)] bg-[var(--muted-bg)] text-[var(--text-muted)]">
+              <th className="sticky left-0 z-10 bg-[var(--muted-bg)] px-3 py-2.5 text-left font-medium">
                 Oda / Tip
               </th>
               {dateHeaders.map((dk) => (
@@ -441,12 +427,12 @@ export function HotelAvailabilityGanttTab({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.05]">
+          <tbody className="divide-y divide-[var(--line-soft)]">
             {rows.map((row) => (
-              <tr key={row.roomId} className="hover:bg-[--page]">
-                <td className="sticky left-0 z-10 border-r border-[--line] bg-[white] px-3 py-2">
-                  <div className="font-semibold text-zinc-100">Oda {row.roomNumber}</div>
-                  <div className="text-[10px] text-zinc-400">{row.roomTypeName}</div>
+              <tr key={row.roomId} className="hover:bg-[var(--brand-soft)] transition-colors">
+                <td className="sticky left-0 z-10 border-r border-[var(--line)] bg-[var(--bg)] px-3 py-2">
+                  <div className="font-semibold text-[var(--text)]">Oda {row.roomNumber}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">{row.roomTypeName}</div>
                 </td>
                 {row.days.map((cell: any) => {
                   if (cell.status === 'CHECKED_IN') {
@@ -454,7 +440,7 @@ export function HotelAvailabilityGanttTab({
                       <td key={cell.dateKey} className="p-1">
                         <div
                           title={`${cell.reservationNo} — ${cell.guestLabel} (Konaklıyor)`}
-                          className="truncate rounded bg-sky-500/25 px-1.5 py-1.5 text-center text-[10px] font-medium text-sky-200 ring-1 ring-sky-500/40"
+                          className="truncate rounded bg-blue-50 px-1.5 py-1.5 text-center text-[10px] font-medium text-[var(--brand)] ring-1 ring-blue-200"
                         >
                           {cell.guestLabel?.split(' ')[0] || 'Dolu'}
                         </div>
@@ -466,7 +452,7 @@ export function HotelAvailabilityGanttTab({
                       <td key={cell.dateKey} className="p-1">
                         <div
                           title={`${cell.reservationNo} — ${cell.guestLabel} (Onaylı)`}
-                          className="truncate rounded bg-amber-500/20 px-1.5 py-1.5 text-center text-[10px] font-medium text-amber-200 ring-1 ring-amber-500/35"
+                          className="truncate rounded bg-amber-50 px-1.5 py-1.5 text-center text-[10px] font-medium text-[var(--warn)] ring-1 ring-amber-200"
                         >
                           Rez
                         </div>
@@ -478,7 +464,7 @@ export function HotelAvailabilityGanttTab({
                       <td key={cell.dateKey} className="p-1">
                         <div
                           title="Bakım / Arıza — Rezervasyon Kilitli"
-                          className="rounded bg-rose-500/20 px-1.5 py-1.5 text-center text-[10px] font-medium text-rose-300 ring-1 ring-rose-500/35"
+                          className="rounded bg-red-50 px-1.5 py-1.5 text-center text-[10px] font-medium text-[var(--bad)] ring-1 ring-red-200"
                         >
                           Bakım
                         </div>
@@ -491,7 +477,7 @@ export function HotelAvailabilityGanttTab({
                         type="button"
                         onClick={() => onQuickReserveCell(row.roomId, cell.dateKey)}
                         title={`Oda ${row.roomNumber} · ${cell.dateKey} — Müsait (Hızlı Rezervasyon)`}
-                        className="w-full rounded bg-[--brand]/10 px-1.5 py-1.5 text-center text-[10px] text-[#1267E6]/70 transition hover:bg-[--brand]/25 hover:text-[#1267E6]"
+                        className="w-full rounded bg-[var(--brand-soft)] px-1.5 py-1.5 text-center text-[10px] text-[var(--brand)] font-medium transition hover:bg-[var(--brand-soft-2)]"
                       >
                         Boş
                       </button>
@@ -505,31 +491,31 @@ export function HotelAvailabilityGanttTab({
       </div>
 
       {/* Sunucu Tarafı Çakışma & Kontenjan Aşım Günlüğü */}
-      <div className="rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
         <div className="mb-3 flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 text-[#1267E6]" />
-          <h4 className="text-sm font-semibold text-zinc-100">
+          <ShieldCheck className="h-4 w-4 text-[var(--brand)]" />
+          <h4 className="text-sm font-semibold text-[var(--text)]">
             Sunucu Tarafı Engellenen Çift Rezervasyon, Bakım ve Kontenjan Aşım Günlüğü (
             {conflictLogs.length})
           </h4>
         </div>
         {conflictLogs.length === 0 ? (
-          <p className="text-xs text-zinc-400">Henüz engellenmiş çakışma kaydı yok.</p>
+          <p className="text-xs text-[var(--text-muted)]">Henüz engellenmiş çakışma kaydı yok.</p>
         ) : (
           <div className="space-y-2">
             {conflictLogs.slice(0, 12).map((log) => (
               <div
                 key={log.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 py-2 text-xs"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs"
               >
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-rose-400" />
-                  <span className="font-mono text-[11px] font-semibold text-rose-300">
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-[var(--bad)]" />
+                  <span className="font-mono text-[11px] font-semibold text-[var(--bad)]">
                     {log.rejectionCode}
                   </span>
-                  <span className="text-zinc-200">{log.rejectionMessage}</span>
+                  <span className="text-[var(--text-2)]">{log.rejectionMessage}</span>
                 </div>
-                <span className="font-mono text-[10px] text-zinc-500">
+                <span className="font-mono text-[10px] text-[var(--text-muted)]">
                   Oda {log.roomNumber} · {String(log.attemptedAt || '').slice(0, 16).replace('T', ' ')}
                 </span>
               </div>

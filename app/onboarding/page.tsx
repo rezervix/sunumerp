@@ -177,7 +177,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F6F8FB] text-white p-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#F6F8FB] text-[var(--text)] p-6 relative overflow-hidden">
       {/* Dynamic Glowing accents */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
       <div className="fixed -top-32 -left-32 w-96 h-96 rounded-full bg-[--brand]/10 blur-[120px] pointer-events-none" />
@@ -191,8 +191,8 @@ export default function OnboardingPage() {
               S
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white">Sunum ERP Marka Kiti Motoru</h1>
-              <p className="text-xs text-zinc-400">Otonom Kurulum ve Dinamik Tema Tasarımı</p>
+              <h1 className="text-xl font-bold tracking-tight text-[var(--text)]">Sunum ERP Marka Kiti Motoru</h1>
+              <p className="text-xs text-[var(--text-muted)]">Otonom Kurulum ve Dinamik Tema Tasarımı</p>
             </div>
           </div>
           <span className="px-3 py-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full text-xs font-semibold flex items-center gap-1.5">
@@ -203,10 +203,10 @@ export default function OnboardingPage() {
         {/* Branding Engine Form */}
         <div className="space-y-6">
           <div>
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <h2 className="text-base font-bold text-[var(--text)] flex items-center gap-2">
               <Palette className="text-[--brand] size-5" /> Akıllı Logo ve Tema Motoru
             </h2>
-            <p className="text-xs text-zinc-400 mt-1">Şirket logonuzu yükleyin; renk analiz motoru marka kimliğinizi ve arka planını otomatik düzenler.</p>
+            <p className="text-xs text-[var(--text-muted)] mt-1">Şirket logonuzu yükleyin; renk analiz motoru marka kimliğinizi ve arka planını otomatik düzenler.</p>
           </div>
 
           {/* Drag & Drop File Upload */}
@@ -225,7 +225,7 @@ export default function OnboardingPage() {
               <div className="space-y-3">
                 <div className="flex justify-center items-center gap-6">
                   <div className="size-24 rounded-2xl bg-[#F6F8FB] p-2.5 flex items-center justify-center shadow-md border border-[--line] relative">
-                    <span className="absolute -top-2 left-2 text-[9px] font-bold bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded">Koyu Zemin</span>
+                    <span className="absolute -top-2 left-2 text-[9px] font-bold bg-[var(--muted-bg)] text-[var(--text-2)] px-1.5 py-0.5 rounded">Koyu Zemin</span>
                     <img src={activeLogo} alt="Logo Dark" className="max-h-full max-w-full object-contain" />
                   </div>
                   <div className="size-24 rounded-2xl bg-white p-2.5 flex items-center justify-center shadow-md border border-gray-200 relative">
@@ -237,12 +237,12 @@ export default function OnboardingPage() {
               </div>
             ) : (
               <>
-                <div className="size-12 rounded-xl bg-[--muted-bg] border border-[--line] flex items-center justify-center text-zinc-400">
+                <div className="size-12 rounded-xl bg-[--muted-bg] border border-[--line] flex items-center justify-center text-[var(--text-muted)]">
                   <Upload size={20} className="text-[--brand]" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">Logonuzu Sürükleyin veya Tıklayın</p>
-                  <p className="text-xs text-zinc-500 mt-1">PNG, JPG, SVG (Maks 10MB)</p>
+                  <p className="text-sm font-semibold text-[var(--text)]">Logonuzu Sürükleyin veya Tıklayın</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">PNG, JPG, SVG (Maks 10MB)</p>
                 </div>
               </>
             )}
@@ -254,30 +254,26 @@ export default function OnboardingPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Wand2 className="size-4 text-[--brand]" />
-                  <span className="text-xs font-semibold text-white">Arka Planı Otomatik Temizle (Şeffaflaştır)</span>
+                  <span className="text-xs font-semibold text-[var(--text)]">Arka Planı Otomatik Temizle (Şeffaflaştır)</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setAutoRemoveBg(!autoRemoveBg)}
-                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
-                    autoRemoveBg ? "bg-[--brand] shadow-[0_0_12px_rgba(52,211,153,0.5)]" : "bg-white/10"
-                  }`}
+                  className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${ autoRemoveBg ? "bg-[--brand] shadow-[0_0_12px_rgba(52,211,153,0.5)]" : "bg-[var(--muted-bg)]" }`}
                 >
                   <span
-                    className={`block w-4 h-4 rounded-full bg-black transition-transform absolute top-1 ${
-                      autoRemoveBg ? "translate-x-6" : "translate-x-1 bg-white"
-                    }`}
+                    className={`block w-4 h-4 rounded-full bg-black transition-transform absolute top-1 ${ autoRemoveBg ? "translate-x-6" : "translate-x-1 bg-white" }`}
                   />
                 </button>
               </div>
-              <p className="text-[11px] text-zinc-400">Beyaz veya açık renkli kutu zeminleri otomatik temizleyerek şeffaf PNG formatında entegre eder.</p>
+              <p className="text-[11px] text-[var(--text-muted)]">Beyaz veya açık renkli kutu zeminleri otomatik temizleyerek şeffaf PNG formatında entegre eder.</p>
             </div>
           )}
 
           {/* Palette Suggestions & WCAG Contrast */}
           {originalLogo && extractedPalette.length > 0 && (
             <div className="space-y-2">
-              <label className="text-xs text-zinc-400 font-semibold block uppercase tracking-wider">Algılanan Marka Paleti</label>
+              <label className="text-xs text-[var(--text-muted)] font-semibold block uppercase tracking-wider">Algılanan Marka Paleti</label>
               <div className="flex items-center gap-2 overflow-x-auto pb-1">
                 {extractedPalette.map((color, idx) => (
                   <button
@@ -293,8 +289,8 @@ export default function OnboardingPage() {
                   >
                     <span className="size-6 rounded-lg shadow-inner border border-[--line]" style={{ backgroundColor: color.hex }} />
                     <div>
-                      <p className="text-xs font-mono font-bold text-white">{color.hex}</p>
-                      <p className="text-[9px] text-zinc-400">WCAG {color.contrastWithWhite >= 4.5 ? "AA ✓" : "Düşük"}</p>
+                      <p className="text-xs font-mono font-bold text-[var(--text)]">{color.hex}</p>
+                      <p className="text-[9px] text-[var(--text-muted)]">WCAG {color.contrastWithWhite >= 4.5 ? "AA ✓" : "Düşük"}</p>
                     </div>
                   </button>
                 ))}
@@ -309,8 +305,8 @@ export default function OnboardingPage() {
               <div className="bg-[--page] p-4 rounded-2xl border border-[--line] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Sun className="size-4 text-amber-400" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-white">Açık Tema Renk Paleti</span>
+                    <Sun className="size-4 text-[var(--warn)]" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--text)]">Açık Tema Renk Paleti</span>
                   </div>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line] flex items-center gap-1">
                     <ShieldCheck size={10} /> Kontrast: {contrastRatio.toFixed(1)}:1
@@ -318,7 +314,7 @@ export default function OnboardingPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[11px] text-zinc-400 font-semibold">Ana Tema Rengi (Primary)</label>
+                    <label className="text-[11px] text-[var(--text-muted)] font-semibold">Ana Tema Rengi (Primary)</label>
                     <div className="flex items-center gap-3">
                       <input
                         type="color"
@@ -330,7 +326,7 @@ export default function OnboardingPage() {
                         }}
                         className="size-9 rounded-xl cursor-pointer bg-transparent border-0 outline-none"
                       />
-                      <span className="font-mono text-xs uppercase text-white font-bold">{primaryColor}</span>
+                      <span className="font-mono text-xs uppercase text-[var(--text)] font-bold">{primaryColor}</span>
                       <span className="text-[10px] px-2 py-1 rounded font-bold ml-auto" style={{ backgroundColor: primaryColor, color: primaryFg }}>
                         Metin Rengi
                       </span>
@@ -338,7 +334,7 @@ export default function OnboardingPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[11px] text-zinc-400 font-semibold">Vurgu Rengi (Accent)</label>
+                    <label className="text-[11px] text-[var(--text-muted)] font-semibold">Vurgu Rengi (Accent)</label>
                     <div className="flex items-center gap-3">
                       <input
                         type="color"
@@ -350,7 +346,7 @@ export default function OnboardingPage() {
                         }}
                         className="size-9 rounded-xl cursor-pointer bg-transparent border-0 outline-none"
                       />
-                      <span className="font-mono text-xs uppercase text-white font-bold">{accentColor}</span>
+                      <span className="font-mono text-xs uppercase text-[var(--text)] font-bold">{accentColor}</span>
                       <span className="text-[10px] px-2 py-1 rounded font-bold ml-auto" style={{ backgroundColor: accentColor, color: accentFg }}>
                         Vurgu Metni
                       </span>
@@ -360,11 +356,11 @@ export default function OnboardingPage() {
               </div>
 
               {/* Dynamic Dark Theme Pickers */}
-              <div className="bg-[#F6F8FB] text-white p-4 rounded-2xl border border-[--line] space-y-3">
+              <div className="bg-[#F6F8FB] text-[var(--text)] p-4 rounded-2xl border border-[--line] space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Moon className="size-4 text-[--brand]" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-200">Logodan Üretilen Karanlık Tema Paleti</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-2)]">Logodan Üretilen Karanlık Tema Paleti</span>
                   </div>
                   <button
                     type="button"
@@ -377,7 +373,7 @@ export default function OnboardingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="space-y-1">
-                    <label className="text-[10px] text-zinc-400 font-semibold">Koyu Zemin (Bg)</label>
+                    <label className="text-[10px] text-[var(--text-muted)] font-semibold">Koyu Zemin (Bg)</label>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
@@ -385,12 +381,12 @@ export default function OnboardingPage() {
                         onChange={(e) => setDarkBgColor(e.target.value)}
                         className="size-7 rounded cursor-pointer bg-transparent border-0"
                       />
-                      <span className="font-mono text-[11px] font-bold uppercase text-zinc-300">{darkBgColor}</span>
+                      <span className="font-mono text-[11px] font-bold uppercase text-[var(--text-2)]">{darkBgColor}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] text-zinc-400 font-semibold">Koyu Kart (Card)</label>
+                    <label className="text-[10px] text-[var(--text-muted)] font-semibold">Koyu Kart (Card)</label>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
@@ -398,12 +394,12 @@ export default function OnboardingPage() {
                         onChange={(e) => setDarkCardColor(e.target.value)}
                         className="size-7 rounded cursor-pointer bg-transparent border-0"
                       />
-                      <span className="font-mono text-[11px] font-bold uppercase text-zinc-300">{darkCardColor}</span>
+                      <span className="font-mono text-[11px] font-bold uppercase text-[var(--text-2)]">{darkCardColor}</span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[10px] text-zinc-400 font-semibold">Koyu Vurgu (Primary)</label>
+                    <label className="text-[10px] text-[var(--text-muted)] font-semibold">Koyu Vurgu (Primary)</label>
                     <div className="flex items-center gap-2">
                       <input
                         type="color"
@@ -411,7 +407,7 @@ export default function OnboardingPage() {
                         onChange={(e) => setDarkPrimaryColor(e.target.value)}
                         className="size-7 rounded cursor-pointer bg-transparent border-0"
                       />
-                      <span className="font-mono text-[11px] font-bold uppercase text-zinc-300">{darkPrimaryColor}</span>
+                      <span className="font-mono text-[11px] font-bold uppercase text-[var(--text-2)]">{darkPrimaryColor}</span>
                     </div>
                   </div>
                 </div>
@@ -420,7 +416,7 @@ export default function OnboardingPage() {
           )}
 
           {errorMsg && (
-            <p className="text-xs text-red-400 font-semibold bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
+            <p className="text-xs text-red-400 font-semibold bg-[var(--bad-soft)] border border-[var(--bad-line)] p-3 rounded-xl">
               {errorMsg}
             </p>
           )}

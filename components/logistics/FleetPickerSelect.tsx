@@ -71,7 +71,7 @@ export function FleetPickerSelect({
               : null;
             onSelectVehicle(v, d);
           }}
-          className="bg-[#0B0F0D] border border-white/[0.1] text-white text-[11px] rounded-lg px-2 py-1"
+          className="bg-[var(--bg)] border border-[var(--line)] text-[var(--text)] text-[11px] rounded-lg px-2 py-1"
         >
           <option value="">Kayıtlı Araç Seçin ({vehicles.length})</option>
           {vehicles.map((v) => (
@@ -88,7 +88,7 @@ export function FleetPickerSelect({
             const d = drivers.find((item) => item.id === e.target.value);
             if (d) onSelectDriver(d);
           }}
-          className="bg-[#0B0F0D] border border-white/[0.1] text-white text-[11px] rounded-lg px-2 py-1"
+          className="bg-[var(--bg)] border border-[var(--line)] text-[var(--text)] text-[11px] rounded-lg px-2 py-1"
         >
           <option value="">Kayıtlı Şoför Seçin ({drivers.length})</option>
           {drivers.map((d) => (

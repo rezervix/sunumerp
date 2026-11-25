@@ -103,7 +103,7 @@ export default function PrintOrderPage() {
                     <div className="p-8 md:p-10 border-b border-[#E3E8F0] bg-[#F6F8FB] print:bg-white">
                         <div className="flex justify-between items-start gap-4 flex-wrap">
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-xl bg-[#07254A] flex items-center justify-center text-white text-2xl font-bold shadow-sm">
+                                <div className="w-14 h-14 rounded-xl bg-[#07254A] flex items-center justify-center text-[var(--text)] text-2xl font-bold shadow-sm">
                                     C
                                 </div>
                                 <div>
@@ -233,7 +233,7 @@ export default function PrintOrderPage() {
                         </button>
                         <button
                             onClick={() => window.print()}
-                            className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#1267E6] to-[#1579F9] rounded-full hover:opacity-90 transition-all shadow-sm flex items-center gap-2"
+                            className="px-5 py-2 text-sm font-medium text-[var(--text)] bg-gradient-to-r from-[#1267E6] to-[#1579F9] rounded-full hover:opacity-90 transition-all shadow-sm flex items-center gap-2"
                         >
                             <span className="material-symbols-outlined text-[18px]">print</span>
                             Yazdır

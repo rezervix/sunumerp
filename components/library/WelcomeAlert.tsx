@@ -54,12 +54,12 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
         
         <div className="flex-1 space-y-3 min-w-0 pr-20 sm:pr-24 lg:pr-32">
           <div>
-            <h4 className="text-base font-semibold text-white leading-snug">
+            <h4 className="text-base font-semibold text-[var(--text)] leading-snug">
               {BRAND_CONFIG.name} — Dijital Arşiv & Kütüphane Bilgilendirmesi
             </h4>
           </div>
           
-          <div className="text-xs leading-relaxed text-zinc-300 space-y-2">
+          <div className="text-xs leading-relaxed text-[var(--text-2)] space-y-2">
             <p>
               Değerli Ekip Arkadaşlarımız,
             </p>
@@ -75,7 +75,7 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
           </div>
 
           <div className="pt-1.5">
-            <p className="text-[11px] text-zinc-500 font-mono">
+            <p className="text-[11px] text-[var(--text-muted)] font-mono">
               ℹ️ Bu bilgilendirme 90. ziyaretinizden sonra otomatik olarak gizlenecektir. (Mevcut ziyaret: {count}/90)
             </p>
           </div>
@@ -87,7 +87,7 @@ export function WelcomeAlert({ className }: WelcomeAlertProps) {
             variant="outline"
             size="sm"
             onClick={handleClose}
-            className="text-xs h-8 border-[--line] bg-[--page] text-zinc-400 hover:text-white hover:bg-[--muted-bg] transition-colors rounded-xl"
+            className="text-xs h-8 border-[--line] bg-[--page] text-[var(--text-muted)] hover:text-[var(--brand)] hover:bg-[--muted-bg] transition-colors rounded-xl"
           >
             <X size={13} className="sm:mr-1" />
             <span className="hidden sm:inline">Anladım, kapat</span>

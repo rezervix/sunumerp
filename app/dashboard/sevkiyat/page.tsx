@@ -213,33 +213,21 @@ export default function SevkiyatVeRotaPage() {
         <button
           type="button"
           onClick={() => setActiveTab('planning')}
-          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
-            activeTab === 'planning'
-              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
-              : 'text-[--text-muted] hover:text-[--text]'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${ activeTab === 'planning' ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]' : 'text-[--text-muted] hover:text-[--text]' }`}
         >
           <Truck className="w-3.5 h-3.5" /> Sefer Planlama, Rota &amp; Harita
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('pods')}
-          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
-            activeTab === 'pods'
-              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
-              : 'text-[--text-muted] hover:text-[--text]'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${ activeTab === 'pods' ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]' : 'text-[--text-muted] hover:text-[--text]' }`}
         >
           <FileCheck2 className="w-3.5 h-3.5" /> Teslimat Kanıtları (e-POD) &amp; Takip
         </button>
         <button
           type="button"
           onClick={() => setActiveTab('analytics')}
-          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${
-            activeTab === 'analytics'
-              ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]'
-              : 'text-[--text-muted] hover:text-[--text]'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 transition ${ activeTab === 'analytics' ? 'bg-white text-[--brand] font-semibold shadow-sm border border-[--line]' : 'text-[--text-muted] hover:text-[--text]' }`}
         >
           <BarChart3 className="w-3.5 h-3.5" /> Göstergeler, İş Geçmişi &amp; Adaptörler
         </button>

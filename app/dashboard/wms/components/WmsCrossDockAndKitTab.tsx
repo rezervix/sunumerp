@@ -238,7 +238,7 @@ export function WmsCrossDockAndKitTab({
             <Button
               size="sm"
               onClick={() => setIsXdOpen(true)}
-              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full shadow-sm gap-1.5 cursor-pointer"
+              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full shadow-sm gap-1.5 cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Yeni Cross-Dock Emri</span>
@@ -297,7 +297,7 @@ export function WmsCrossDockAndKitTab({
                       size="sm"
                       disabled={submitting}
                       onClick={() => handleAdvanceCrossDock(cd.id, "DISPATCHED")}
-                      className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1 cursor-pointer shadow-sm"
+                      className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full gap-1 cursor-pointer shadow-sm"
                     >
                       <Truck className="h-3.5 w-3.5" />
                       <span>Doğrudan Sevk Et</span>
@@ -372,11 +372,7 @@ export function WmsCrossDockAndKitTab({
                       <td className="py-3.5 px-5 font-mono font-semibold text-[--text]">{ko.kitOrderNo}</td>
                       <td className="py-3.5 px-3">
                         <span
-                          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
-                            ko.operationType === "ASSEMBLE"
-                              ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                              : "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/20"
-                          }`}
+                          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${ ko.operationType === "ASSEMBLE" ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/20" }`}
                         >
                           {ko.operationType === "ASSEMBLE" ? "Set Birleştirme" : "Set Bozma"}
                         </span>
@@ -406,7 +402,7 @@ export function WmsCrossDockAndKitTab({
                             size="sm"
                             disabled={submitting}
                             onClick={() => handleExecuteKit(ko.id)}
-                            className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1 cursor-pointer shadow-sm disabled:opacity-50"
+                            className="h-8 px-3.5 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full gap-1 cursor-pointer shadow-sm disabled:opacity-50"
                           >
                             <Play className="h-3 w-3" />
                             <span>Stokla Eşitle</span>
@@ -489,7 +485,7 @@ export function WmsCrossDockAndKitTab({
             </div>
             <DialogFooter className="gap-2 pt-2">
               <Button type="button" variant="outline" size="sm" onClick={() => setIsXdOpen(false)} className="text-xs border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full h-9 px-4 cursor-pointer">Vazgeç</Button>
-              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">
+              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">
                 Planla <ArrowRight className="h-3.5 w-3.5 ml-1" />
               </Button>
             </DialogFooter>
@@ -554,7 +550,7 @@ export function WmsCrossDockAndKitTab({
             </div>
             <DialogFooter className="gap-2 pt-2">
               <Button type="button" variant="outline" size="sm" onClick={() => setIsKitOpen(false)} className="text-xs border-[--line] bg-white text-[--text-2] hover:bg-[--muted-bg] rounded-full h-9 px-4 cursor-pointer">Vazgeç</Button>
-              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">Kitting Emri Aç</Button>
+              <Button type="submit" disabled={submitting} className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full h-9 px-4 cursor-pointer shadow-sm disabled:opacity-50">Kitting Emri Aç</Button>
             </DialogFooter>
           </form>
         </DialogContent>

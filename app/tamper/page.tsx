@@ -25,7 +25,7 @@ export default function TamperPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-white flex flex-col items-center justify-center p-6 select-none relative overflow-hidden">
+    <div className="min-h-screen bg-[#F6F8FB] text-[var(--text)] flex flex-col items-center justify-center p-6 select-none relative overflow-hidden">
       {/* Dynamic Background Glows */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
       <div className="fixed top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] rounded-full bg-[--brand]/5 blur-[120px] pointer-events-none" />
@@ -43,13 +43,13 @@ export default function TamperPage() {
               <span className="px-3 py-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full text-xs font-semibold uppercase tracking-wider">
                 Test Modu Aktif
               </span>
-              <h1 className="text-2xl font-bold tracking-tight text-white">Güvenlik Koruması Devre Dışı</h1>
-              <p className="text-xs text-zinc-400">
-                <code className="bg-white/10 px-1.5 py-0.5 rounded text-zinc-200 font-mono">storage/TEST_MODE</code> dosyası bulundu.
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--text)]">Güvenlik Koruması Devre Dışı</h1>
+              <p className="text-xs text-[var(--text-muted)]">
+                <code className="bg-[var(--muted-bg)] px-1.5 py-0.5 rounded text-[var(--text-2)] font-mono">storage/TEST_MODE</code> dosyası bulundu.
               </p>
             </div>
 
-            <div className="bg-[--page] border border-[--line] p-4 rounded-xl text-xs text-left leading-relaxed text-zinc-400 font-mono space-y-2">
+            <div className="bg-[--page] border border-[--line] p-4 rounded-xl text-xs text-left leading-relaxed text-[var(--text-muted)] font-mono space-y-2">
               <p className="text-[--brand] font-bold">[✓] TEST MODU BİLGİSİ</p>
               <p>&gt; Test bayrak dosyası silinmediği sürece güvenlik kilidi kapalı kalacaktır.</p>
               <p>&gt; Dosyayı sildiğinizde (storage/TEST_MODE) güvenlik koruması tekrar aktifleşecektir.</p>
@@ -69,7 +69,7 @@ export default function TamperPage() {
           <>
             <div className="absolute top-0 left-0 w-full h-1 bg-red-500" />
 
-            <div className="size-16 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto text-red-400 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+            <div className="size-16 rounded-2xl bg-[var(--bad-soft)] border border-[var(--bad-line)] flex items-center justify-center mx-auto text-red-400 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.2)]">
               <ShieldAlert size={36} />
             </div>
 
@@ -77,18 +77,18 @@ export default function TamperPage() {
               <h1 className="text-lg font-bold tracking-tight text-red-400 flex items-center justify-center gap-2">
                 <AlertTriangle size={18} /> GÜVENLİK İHLALİ ALGILANDI
               </h1>
-              <p className="text-xs text-zinc-400">Sunum ERP Otonom Lisans Koruma Sistemi</p>
+              <p className="text-xs text-[var(--text-muted)]">Sunum ERP Otonom Lisans Koruma Sistemi</p>
             </div>
 
-            <div className="bg-red-500/[0.03] border border-red-500/20 p-5 rounded-xl text-xs text-left leading-relaxed text-zinc-400 font-mono space-y-2">
+            <div className="bg-red-500/[0.03] border border-[var(--bad-line)] p-5 rounded-xl text-xs text-left leading-relaxed text-[var(--text-muted)] font-mono space-y-2">
               <p className="text-red-400 font-bold">[!] SİSTEM KORUMASI DEVREDE</p>
               <p>&gt; İzinsiz kod veya bellek manipülasyonu algılandı.</p>
               <p>&gt; Güvenlik politikası gereği kullanıcı oturumu askıya alınmıştır.</p>
               <p>&gt; Veritabanı önbelleği emniyet amacıyla kilitlenmiştir.</p>
-              <p className="text-zinc-200 mt-2 font-sans font-medium">&gt; Lütfen sistem yöneticinizle irtibata geçin.</p>
+              <p className="text-[var(--text-2)] mt-2 font-sans font-medium">&gt; Lütfen sistem yöneticinizle irtibata geçin.</p>
             </div>
 
-            <div className="flex items-center justify-between pt-2 text-[10px] text-zinc-500 font-mono border-t border-[--line]">
+            <div className="flex items-center justify-between pt-2 text-[10px] text-[var(--text-muted)] font-mono border-t border-[--line]">
               <span>KOD: 0x800F_TAMPER_DETECTED</span>
               <Link 
                 href="/dashboard/support-tickets"

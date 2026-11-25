@@ -852,7 +852,7 @@ export async function generateRmaLabelPayload(rmaId: string) {
     type: "svg",
     margin: 1,
     width: 148,
-    color: { dark: "#090d0b", light: "#ffffff" },
+    color: { dark: "#0B1B33", light: "#ffffff" },
   })
 
   return {

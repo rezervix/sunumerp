@@ -103,11 +103,7 @@ export function UpdateFileModal({
               onDragLeave={handleDrag}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${
-                dragActive
-                  ? "border-primary bg-primary/5 text-primary scale-[0.99]"
-                  : "border-muted-foreground/30 hover:border-primary/50 text-muted-foreground"
-              }`}
+              className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${ dragActive ? "border-primary bg-primary/5 text-primary scale-[0.99]" : "border-muted-foreground/30 hover:border-primary/50 text-muted-foreground" }`}
             >
               <input
                 ref={fileInputRef}

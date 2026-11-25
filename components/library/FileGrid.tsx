@@ -66,8 +66,8 @@ function formatDate(date: string) {
 function getFileIcon(mimeType: string, size = 24) {
   const cls = `shrink-0`
   if (mimeType.startsWith("image/")) return <Image size={size} className={cn(cls, "text-blue-400")} />
-  if (mimeType.startsWith("video/")) return <Video size={size} className={cn(cls, "text-purple-400")} />
-  if (mimeType.startsWith("audio/")) return <Music size={size} className={cn(cls, "text-pink-400")} />
+  if (mimeType.startsWith("video/")) return <Video size={size} className={cn(cls, "text-[var(--brand)]")} />
+  if (mimeType.startsWith("audio/")) return <Music size={size} className={cn(cls, "text-[var(--brand)]")} />
   if (mimeType.includes("zip") || mimeType.includes("rar") || mimeType.includes("7z"))
     return <Archive size={size} className={cn(cls, "text-yellow-400")} />
   if (mimeType.includes("pdf") || mimeType.includes("word") || mimeType.includes("sheet") || mimeType.includes("presentation"))
@@ -77,11 +77,11 @@ function getFileIcon(mimeType: string, size = 24) {
 
 function getFileColor(mimeType: string) {
   if (mimeType.startsWith("image/")) return "from-blue-500/20 to-cyan-500/10 border-blue-500/20"
-  if (mimeType.startsWith("video/")) return "from-purple-500/20 to-violet-500/10 border-purple-500/20"
-  if (mimeType.startsWith("audio/")) return "from-pink-500/20 to-rose-500/10 border-pink-500/20"
+  if (mimeType.startsWith("video/")) return "from-purple-500/20 to-violet-500/10 border-[var(--brand-line)]"
+  if (mimeType.startsWith("audio/")) return "from-pink-500/20 to-rose-500/10 border-[var(--brand-line)]/20"
   if (mimeType.includes("zip") || mimeType.includes("rar")) return "from-yellow-500/20 to-orange-500/10 border-yellow-500/20"
   if (mimeType.includes("pdf") || mimeType.includes("word") || mimeType.includes("sheet"))
-    return "from-red-500/20 to-orange-500/10 border-red-500/20"
+    return "from-red-500/20 to-orange-500/10 border-[var(--bad-line)]"
   return "from-muted/50 to-muted/30 border-border"
 }
 
@@ -272,7 +272,7 @@ export function FileGrid({
               {file.originalName}
             </p>
             {file.contentCalendar && (
-              <span className="mt-1 text-[9px] bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-semibold border border-sky-100 dark:border-sky-900/35 rounded px-1.5 py-0.5 inline-block truncate max-w-full text-left" title={file.contentCalendar.title}>
+              <span className="mt-1 text-[9px] bg-sky-50 text-sky-700 font-semibold border border-sky-100 rounded px-1.5 py-0.5 inline-block truncate max-w-full text-left" title={file.contentCalendar.title}>
                 📅 {file.contentCalendar.title}
               </span>
             )}
@@ -357,7 +357,7 @@ export function FileGrid({
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium truncate">{file.originalName}</p>
             {file.contentCalendar && (
-              <span className="text-[9px] bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-semibold border border-sky-100 dark:border-sky-900/35 rounded px-1 py-0">
+              <span className="text-[9px] bg-sky-50 text-sky-700 font-semibold border border-sky-100 rounded px-1 py-0">
                 📅 {file.contentCalendar.title}
               </span>
             )}
@@ -423,7 +423,7 @@ export function FileGrid({
           onDoubleClick={() => onFolderOpen(folder.id)}
         >
           <div className="flex items-center gap-2.5 mb-2">
-            <div className="size-9 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
+            <div className="size-9 rounded-lg bg-[var(--warn-soft)] flex items-center justify-center shrink-0">
               <FolderOpen size={20} className="text-amber-500" />
             </div>
             <div className="flex-1 min-w-0">
@@ -445,7 +445,7 @@ export function FileGrid({
         className="flex items-center gap-3 px-4 py-2.5 border-b border-border hover:bg-muted/30 transition-colors cursor-pointer"
         onDoubleClick={() => onFolderOpen(folder.id)}
       >
-        <div className="size-8 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
+        <div className="size-8 rounded-lg bg-[var(--warn-soft)] flex items-center justify-center shrink-0">
           <FolderOpen size={16} className="text-amber-500" />
         </div>
         <div className="flex-1 min-w-0">

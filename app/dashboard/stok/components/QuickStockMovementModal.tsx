@@ -196,11 +196,7 @@ export function QuickStockMovementModal({
             <button
               type="button"
               onClick={() => setMovementType("IN")}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                movementType === "IN"
-                  ? "bg-white text-[--brand] border border-[--brand-line] shadow-xs"
-                  : "text-[--text-muted] hover:text-[--text]"
-              }`}
+              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${ movementType === "IN" ? "bg-white text-[--brand] border border-[--brand-line] shadow-xs" : "text-[--text-muted] hover:text-[--text]" }`}
             >
               <IconArrowDownLeft size={14} />
               Stok Girişi (Alış)
@@ -208,11 +204,7 @@ export function QuickStockMovementModal({
             <button
               type="button"
               onClick={() => setMovementType("OUT")}
-              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                movementType === "OUT"
-                  ? "bg-white text-[--text] border border-[--line] shadow-xs"
-                  : "text-[--text-muted] hover:text-[--text]"
-              }`}
+              className={`py-2 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${ movementType === "OUT" ? "bg-white text-[--text] border border-[--line] shadow-xs" : "text-[--text-muted] hover:text-[--text]" }`}
             >
               <IconArrowUpRight size={14} />
               Stok Çıkışı (Satış/Sarf)

@@ -67,7 +67,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
 
   if (!data) {
     return (
-      <div className="text-center py-12 text-zinc-500 text-sm">
+      <div className="text-center py-12 text-[var(--text-muted)] text-sm">
         Rapor verileri bulunamadı.
       </div>
     )
@@ -94,31 +94,27 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
       {/* ── KUTUSUZ ÜST KPI ŞERİDİ ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Sparkles className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Sparkles className="size-3.5 text-[var(--text-muted)]" />
             <span>Bu Ay Oluşturulan İçerik</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={comparison?.thisMonth ?? 0} />
             </span>
-            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
-              (comparison?.changePercentage ?? 0) >= 0
-                ? "bg-[--brand]/10 text-[--brand] border-[--brand-line]"
-                : "bg-rose-500/10 text-rose-400 border-rose-500/20"
-            }`}>
+            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${ (comparison?.changePercentage ?? 0) >= 0 ? "bg-[--brand]/10 text-[--brand] border-[--brand-line]" : "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]" }`}>
               {comparison?.changePercentage >= 0 ? "+" : ""}{comparison?.changePercentage ?? 0}% vs geçen ay
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Users className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Users className="size-3.5 text-[var(--text-muted)]" />
             <span>Aktif Üretim Personeli</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={(teamWorkload?.shooters?.length ?? 0) + (teamWorkload?.editors?.length ?? 0)} />
             </span>
             <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
@@ -128,12 +124,12 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Layers className="size-3.5 text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Layers className="size-3.5 text-[var(--text-muted)]" />
             <span>Ana Paylaşım Platformu</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-2xl font-light text-white uppercase tracking-wide">
+            <span className="text-2xl font-light text-[var(--text)] uppercase tracking-wide">
               {topPlatform}
             </span>
             <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
@@ -147,7 +143,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Durum Dağılımı (Pie Chart) */}
         <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
-          <h3 className="text-sm font-medium text-white mb-4">İçerik Tamamlanma & Durum Dağılımı</h3>
+          <h3 className="text-sm font-medium text-[var(--text)] mb-4">İçerik Tamamlanma & Durum Dağılımı</h3>
           <div className="h-64">
             {statusData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -178,14 +174,14 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-zinc-500">Gösterilecek durum verisi bulunamadı</div>
+              <div className="flex items-center justify-center h-full text-xs text-[var(--text-muted)]">Gösterilecek durum verisi bulunamadı</div>
             )}
           </div>
         </div>
 
         {/* Platform Dağılımı (Bar Chart) */}
         <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
-          <h3 className="text-sm font-medium text-white mb-4">Platformlara Göre İçerik Hacmi</h3>
+          <h3 className="text-sm font-medium text-[var(--text)] mb-4">Platformlara Göre İçerik Hacmi</h3>
           <div className="h-64">
             {platformData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -205,7 +201,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-zinc-500">Gösterilecek platform verisi bulunamadı</div>
+              <div className="flex items-center justify-center h-full text-xs text-[var(--text-muted)]">Gösterilecek platform verisi bulunamadı</div>
             )}
           </div>
         </div>
@@ -215,14 +211,14 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
       <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl space-y-6">
         <div className="flex items-center gap-2 border-b border-[--line] pb-3">
           <Award size={16} className="text-[--brand]" />
-          <h3 className="text-sm font-medium text-white">Ekip İş Yükü ve Görev Dağılımı</h3>
+          <h3 className="text-sm font-medium text-[var(--text)]">Ekip İş Yükü ve Görev Dağılımı</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Çekim Uzmanları */}
           <div>
-            <h4 className="text-xs font-medium text-zinc-400 mb-3 flex items-center gap-1.5">
-              <Film className="size-3.5 text-amber-400" />
+            <h4 className="text-xs font-medium text-[var(--text-muted)] mb-3 flex items-center gap-1.5">
+              <Film className="size-3.5 text-[var(--warn)]" />
               Video & Prodüksiyon Çekim Sorumluları
             </h4>
             <div className="h-44">
@@ -244,14 +240,14 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-xs text-zinc-500">Aktif çekim görevi bulunamadı</div>
+                <div className="flex items-center justify-center h-full text-xs text-[var(--text-muted)]">Aktif çekim görevi bulunamadı</div>
               )}
             </div>
           </div>
 
           {/* Editörler */}
           <div>
-            <h4 className="text-xs font-medium text-zinc-400 mb-3 flex items-center gap-1.5">
+            <h4 className="text-xs font-medium text-[var(--text-muted)] mb-3 flex items-center gap-1.5">
               <CheckCircle2 className="size-3.5 text-[--brand]" />
               Kurgu & Editörler
             </h4>
@@ -274,7 +270,7 @@ export default function WorkloadDashboard({ branchId }: WorkloadDashboardProps) 
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-full text-xs text-zinc-500">Aktif edit görevi bulunamadı</div>
+                <div className="flex items-center justify-center h-full text-xs text-[var(--text-muted)]">Aktif edit görevi bulunamadı</div>
               )}
             </div>
           </div>

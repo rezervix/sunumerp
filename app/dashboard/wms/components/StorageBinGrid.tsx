@@ -324,11 +324,7 @@ export function StorageBinGrid({
           <button
             type="button"
             onClick={() => setViewMode("GRID")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer transition ${
-              viewMode === "GRID"
-                ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line] font-semibold"
-                : "text-[--text-muted] hover:text-[--text] hover:bg-white"
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer transition ${ viewMode === "GRID" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line] font-semibold" : "text-[--text-muted] hover:text-[--text] hover:bg-white" }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             Hücre Matrisi ({filteredBins.length})
@@ -336,11 +332,7 @@ export function StorageBinGrid({
           <button
             type="button"
             onClick={() => setViewMode("HIERARCHY")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer transition ${
-              viewMode === "HIERARCHY"
-                ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line] font-semibold"
-                : "text-[--text-muted] hover:text-[--text] hover:bg-white"
-            }`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer transition ${ viewMode === "HIERARCHY" ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line] font-semibold" : "text-[--text-muted] hover:text-[--text] hover:bg-white" }`}
           >
             <GitBranch className="w-3.5 h-3.5" />
             4-Seviye Ağaç (Depo → Bölge → Raf → Göz)
@@ -445,11 +437,7 @@ export function StorageBinGrid({
                                         key={bin.id}
                                         type="button"
                                         onClick={() => openBinDrawer(bin)}
-                                        className={`px-2 py-1 rounded-lg text-[11px] font-mono border cursor-pointer flex items-center gap-1 transition ${
-                                          bin.isBlocked
-                                            ? "bg-[--bad-soft] border-[--bad-fill]/30 text-[--bad]"
-                                            : "bg-[--brand-soft] border-[--brand-line] text-[--brand] hover:bg-[--brand-soft]/80"
-                                        }`}
+                                        className={`px-2 py-1 rounded-lg text-[11px] font-mono border cursor-pointer flex items-center gap-1 transition ${ bin.isBlocked ? "bg-[--bad-soft] border-[--bad-fill]/30 text-[--bad]" : "bg-[--brand-soft] border-[--brand-line] text-[--brand] hover:bg-[--brand-soft]/80" }`}
                                       >
                                         <span>{bin.code}</span>
                                         <span className="text-[9px] text-[--text-muted]">({WMS_BIN_ROLE_LABELS[role].split(" ")[0]})</span>
@@ -633,11 +621,7 @@ export function StorageBinGrid({
                   type="button"
                   variant="outline"
                   onClick={() => handleToggleBlock(selectedBin)}
-                  className={`h-9 text-xs rounded-xl gap-1.5 cursor-pointer ${
-                    selectedBin.isBlocked
-                      ? "bg-[--ok-soft] border-[--ok-fill]/30 text-[--ok] hover:bg-[--ok-soft]/80"
-                      : "bg-[--bad-soft] border-[--bad-fill]/30 text-[--bad] hover:bg-[--bad-soft]/80"
-                  }`}
+                  className={`h-9 text-xs rounded-xl gap-1.5 cursor-pointer ${ selectedBin.isBlocked ? "bg-[--ok-soft] border-[--ok-fill]/30 text-[--ok] hover:bg-[--ok-soft]/80" : "bg-[--bad-soft] border-[--bad-fill]/30 text-[--bad] hover:bg-[--bad-soft]/80" }`}
                 >
                   {selectedBin.isBlocked ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
                   {selectedBin.isBlocked ? "Kilidi Aç" : "Hücreyi Blokla"}

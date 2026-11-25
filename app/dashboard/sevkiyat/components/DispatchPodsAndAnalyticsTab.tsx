@@ -110,11 +110,7 @@ export function DispatchPodsAndAnalyticsTab({
                           </button>
                         ) : null}
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded-full ${
-                            s.status === 'TESLIM_EDILEMEDI'
-                              ? 'bg-[--bad-soft] text-[--bad] border border-[--bad-soft]'
-                              : 'bg-[--ok-soft] text-[--ok] border border-[--ok-soft]'
-                          }`}
+                          className={`text-[10px] px-2 py-0.5 rounded-full ${ s.status === 'TESLIM_EDILEMEDI' ? 'bg-[--bad-soft] text-[--bad] border border-[--bad-soft]' : 'bg-[--ok-soft] text-[--ok] border border-[--ok-soft]' }`}
                         >
                           {s.status}
                         </span>

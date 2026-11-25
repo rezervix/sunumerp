@@ -62,11 +62,7 @@ export function InventoryModuleNav() {
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                isActive
-                  ? "text-[--brand] font-semibold"
-                  : "text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg]"
-              }`}
+              className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${ isActive ? "text-[--brand] font-semibold" : "text-[--text-muted] hover:text-[--text] hover:bg-[--muted-bg]" }`}
             >
               {isActive && (
                 <motion.div

@@ -17,23 +17,23 @@ export const B2B_PARTNERSHIP_STATUS_META: Record<
 > = {
   PENDING: {
     label: "Onay Bekliyor",
-    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    badgeClass: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
   },
   APPROVED: {
     label: "Onaylı Partner",
-    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
+    badgeClass: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
   },
   REJECTED: {
     label: "Reddedildi",
-    badgeClass: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    badgeClass: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
   },
   SUSPENDED: {
     label: "Askıya Alındı",
-    badgeClass: "bg-orange-500/15 text-orange-300 border-orange-500/30",
+    badgeClass: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
   },
   REMOVED: {
     label: "Sonlandırıldı",
-    badgeClass: "bg-zinc-500/15 text-zinc-400 border-zinc-500/30",
+    badgeClass: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
   },
 }
 
@@ -54,15 +54,15 @@ export const B2B_RESOURCE_STATUS_META: Record<
 > = {
   ACTIVE: {
     label: "Paylaşımda",
-    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
+    badgeClass: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
   },
   PAUSED: {
     label: "Duraklatıldı",
-    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    badgeClass: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
   },
   ARCHIVED: {
     label: "Paylaşımdan Çekildi",
-    badgeClass: "bg-zinc-500/15 text-zinc-400 border-zinc-500/30",
+    badgeClass: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
   },
 }
 
@@ -83,27 +83,27 @@ export const B2B_CROSS_RES_STATUS_META: Record<
 > = {
   HOLD: {
     label: "Geçici Blokaj",
-    badgeClass: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    badgeClass: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
   },
   PENDING_APPROVAL: {
     label: "Sahip Onayı Bekliyor",
-    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    badgeClass: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
   },
   CONFIRMED: {
     label: "Onaylandı",
-    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
+    badgeClass: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
   },
   COMPLETED: {
     label: "Tamamlandı",
-    badgeClass: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",
+    badgeClass: "bg-[var(--brand-soft-2)] text-[var(--navy)] border border-[var(--brand-line)]",
   },
   REJECTED: {
     label: "Reddedildi",
-    badgeClass: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    badgeClass: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
   },
   CANCELLED: {
     label: "İptal Edildi",
-    badgeClass: "bg-zinc-500/15 text-zinc-400 border-zinc-500/30",
+    badgeClass: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
   },
 }
 
@@ -113,23 +113,23 @@ export const B2B_SETTLEMENT_STATUS_META: Record<
 > = {
   DRAFT: {
     label: "Taslak",
-    badgeClass: "bg-zinc-500/15 text-zinc-300 border-zinc-500/30",
+    badgeClass: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
   },
   PENDING_COUNTERPARTY: {
     label: "Karşı Firma Onayı Bekliyor",
-    badgeClass: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    badgeClass: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
   },
   APPROVED_BOTH: {
     label: "Çift Taraflı Onaylandı",
-    badgeClass: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
+    badgeClass: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
   },
   DISPUTED: {
     label: "İtiraz / İncelemede",
-    badgeClass: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+    badgeClass: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
   },
   SETTLED: {
     label: "Mahsuplaşıldı / Ödendi",
-    badgeClass: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",
+    badgeClass: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
   },
 }
 

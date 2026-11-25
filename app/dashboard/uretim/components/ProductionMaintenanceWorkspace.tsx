@@ -399,19 +399,19 @@ export function ProductionMaintenanceWorkspace() {
   const renderStatusBadge = (status: string) => {
     switch (status) {
       case "REQUESTED":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Talep Edildi</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">Talep Edildi</span>
       case "EVALUATED":
         return <span className="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Değerlendirildi</span>
       case "SCHEDULED":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Planlandı</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]">Planlandı</span>
       case "IN_PROGRESS":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Devam Ediyor</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]">Devam Ediyor</span>
       case "COMPLETED":
         return <span className="px-2 py-0.5 text-xs rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line]">Tamamlandı</span>
       case "CANCELLED":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-500/10 text-zinc-400 border border-zinc-500/20">İptal Edildi</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)]/10 text-[var(--text-muted)] border border-[var(--line)]/20">İptal Edildi</span>
       default:
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-500/10 text-zinc-300">{status}</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)]/10 text-[var(--text-2)]">{status}</span>
     }
   }
 
@@ -419,15 +419,15 @@ export function ProductionMaintenanceWorkspace() {
   const renderTypeBadge = (type: string) => {
     switch (type) {
       case "BREAKDOWN":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-medium">Arıza Onarım</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--bad-soft)] text-red-400 border border-[var(--bad-line)] font-medium">Arıza Onarım</span>
       case "PREVENTIVE":
         return <span className="px-2 py-0.5 text-xs rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Periyodik Bakım</span>
       case "CORRECTIVE":
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">Düzeltici Bakım</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">Düzeltici Bakım</span>
       case "IMPROVEMENT":
         return <span className="px-2 py-0.5 text-xs rounded-full bg-[--brand]/10 text-[--brand] border border-[--brand-line]">İyileştirme / Revizyon</span>
       default:
-        return <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-500/10 text-zinc-400">{type}</span>
+        return <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)]/10 text-[var(--text-muted)]">{type}</span>
     }
   }
 
@@ -437,14 +437,14 @@ export function ProductionMaintenanceWorkspace() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-[--page] border border-[--line] backdrop-blur-md">
         <div>
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <div className="p-2 rounded-xl bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">
               <Wrench className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-[var(--text)] tracking-tight">
               Ekipman & Bakım Yönetimi (CMMS & PdM)
             </h1>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             Kritik ekipman ağacı, periyodik bakım takvimi, kestirimci telemetri ve OEE / MTBF / MTTR performans metrikleri.
           </p>
         </div>
@@ -455,7 +455,7 @@ export function ProductionMaintenanceWorkspace() {
             size="sm"
             onClick={fetchMaintenanceData}
             disabled={loading}
-            className="border-[--line] hover:bg-white/5 text-zinc-300"
+            className="border-[--line] hover:bg-[var(--muted-bg)] text-[var(--text-2)]"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -464,7 +464,7 @@ export function ProductionMaintenanceWorkspace() {
             variant="outline"
             size="sm"
             onClick={handleTriggerPMJobs}
-            className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+            className="border-[var(--brand-line)] text-[var(--brand)] hover:bg-[var(--brand-soft)]"
           >
             <Play className="w-3.5 h-3.5 mr-1.5" />
             PM Tetikleyici Çalıştır
@@ -472,7 +472,7 @@ export function ProductionMaintenanceWorkspace() {
           <Button
             size="sm"
             onClick={() => setIsNewReadingOpen(true)}
-            className="bg-cyan-600 hover:bg-cyan-500 text-white"
+            className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium"
           >
             <Cpu className="w-3.5 h-3.5 mr-1.5" />
             Sensör Kaydet
@@ -492,14 +492,14 @@ export function ProductionMaintenanceWorkspace() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {/* OEE */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>OEE Skoru</span>
             <Activity className="w-4 h-4 text-[--brand]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             %{dashboardData?.kpis?.oeePct ?? "84.2"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1 flex gap-2">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1 flex gap-2">
             <span>Kull.: %{dashboardData?.kpis?.availabilityPct ?? "92"}</span>
             <span>Perf.: %{dashboardData?.kpis?.performancePct ?? "94"}</span>
           </div>
@@ -507,56 +507,56 @@ export function ProductionMaintenanceWorkspace() {
 
         {/* MTBF */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>MTBF (Arıza Aralığı)</span>
             <Clock className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="text-2xl font-bold text-white">
-            {dashboardData?.kpis?.mtbfHours ?? "184"} <span className="text-sm font-normal text-zinc-400">saat</span>
+          <div className="text-2xl font-bold text-[var(--text)]">
+            {dashboardData?.kpis?.mtbfHours ?? "184"} <span className="text-sm font-normal text-[var(--text-muted)]">saat</span>
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Ortalama arızasız çalışma süresi
           </div>
         </div>
 
         {/* MTTR */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>MTTR (Onarım Süresi)</span>
-            <Wrench className="w-4 h-4 text-amber-400" />
+            <Wrench className="w-4 h-4 text-[var(--warn)]" />
           </div>
-          <div className="text-2xl font-bold text-white">
-            {dashboardData?.kpis?.mttrMinutes ?? "42"} <span className="text-sm font-normal text-zinc-400">dk</span>
+          <div className="text-2xl font-bold text-[var(--text)]">
+            {dashboardData?.kpis?.mttrMinutes ?? "42"} <span className="text-sm font-normal text-[var(--text-muted)]">dk</span>
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Ortalama arıza onarım ve duruş süresi
           </div>
         </div>
 
         {/* Aktif Arızalar & Duruş */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Arıza & Duruş</span>
             <AlertOctagon className="w-4 h-4 text-red-400" />
           </div>
           <div className="text-2xl font-bold text-red-400">
-            {dashboardData?.summary?.downAssets ?? "0"} <span className="text-sm font-normal text-zinc-400">ekipman</span>
+            {dashboardData?.summary?.downAssets ?? "0"} <span className="text-sm font-normal text-[var(--text-muted)]">ekipman</span>
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Toplam duruş: {dashboardData?.summary?.totalDowntimeMinutes ?? "0"} dk
           </div>
         </div>
 
         {/* Bakım Maliyeti */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Bakım Maliyeti</span>
-            <DollarSign className="w-4 h-4 text-purple-400" />
+            <DollarSign className="w-4 h-4 text-[var(--brand)]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             ₺{(dashboardData?.summary?.totalMaintenanceCost ?? 0).toLocaleString("tr-TR")}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Yedek parça ve işçilik giderleri
           </div>
         </div>
@@ -566,11 +566,7 @@ export function ProductionMaintenanceWorkspace() {
       <div className="flex border-b border-[--line] overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab("work_orders")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "work_orders"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "work_orders" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <ClipboardList className="w-4 h-4" />
           Bakım İş Emirleri ({workOrders.length})
@@ -578,11 +574,7 @@ export function ProductionMaintenanceWorkspace() {
 
         <button
           onClick={() => setActiveTab("plans")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "plans"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "plans" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <Calendar className="w-4 h-4" />
           Bakım Planları ({plans.length})
@@ -590,11 +582,7 @@ export function ProductionMaintenanceWorkspace() {
 
         <button
           onClick={() => setActiveTab("assets")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "assets"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "assets" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <FolderTree className="w-4 h-4" />
           Ekipman & Varlık Ağacı ({assets.length})
@@ -602,11 +590,7 @@ export function ProductionMaintenanceWorkspace() {
 
         <button
           onClick={() => setActiveTab("predictive")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "predictive"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "predictive" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <Cpu className="w-4 h-4" />
           Kestirimci Bakım & Sensörler
@@ -614,11 +598,7 @@ export function ProductionMaintenanceWorkspace() {
 
         <button
           onClick={() => setActiveTab("conflicts")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "conflicts"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "conflicts" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <ShieldAlert className="w-4 h-4" />
           Kapasite Çakışmaları ({conflicts.length})
@@ -626,11 +606,7 @@ export function ProductionMaintenanceWorkspace() {
 
         <button
           onClick={() => setActiveTab("metrics")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "metrics"
-              ? "border-amber-500 text-amber-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "metrics" ? "border-amber-500 text-[var(--warn)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <TrendingUp className="w-4 h-4" />
           OEE & Performans Analizi
@@ -642,20 +618,20 @@ export function ProductionMaintenanceWorkspace() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="relative w-full sm:w-72">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <Input
                 placeholder="İş emri no, başlık veya makine..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 bg-[--page] border-[--line] text-white placeholder:text-zinc-500"
+                className="pl-9 bg-[--page] border-[--line] text-[var(--text)] placeholder:text-[var(--text-muted)]"
               />
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[160px] bg-[--page] border-[--line] text-zinc-200">
+                <SelectTrigger className="w-[160px] bg-[--page] border-[--line] text-[var(--text-2)]">
                   <SelectValue placeholder="Durum Filtresi" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                   <SelectItem value="ALL">Tüm Durumlar</SelectItem>
                   <SelectItem value="REQUESTED">Talep Edildi</SelectItem>
                   <SelectItem value="EVALUATED">Değerlendirildi</SelectItem>
@@ -671,47 +647,47 @@ export function ProductionMaintenanceWorkspace() {
             <Table>
               <TableHeader className="bg-white">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400">İş Emri No</TableHead>
-                  <TableHead className="text-zinc-400">Ekipman / Makine</TableHead>
-                  <TableHead className="text-zinc-400">Tür</TableHead>
-                  <TableHead className="text-zinc-400">Başlık / Açıklama</TableHead>
-                  <TableHead className="text-zinc-400">Durum</TableHead>
-                  <TableHead className="text-zinc-400">Duruş (Dk)</TableHead>
-                  <TableHead className="text-zinc-400">Maliyet</TableHead>
-                  <TableHead className="text-right text-zinc-400">Eylemler</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">İş Emri No</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Ekipman / Makine</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Tür</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Başlık / Açıklama</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Durum</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Duruş (Dk)</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Maliyet</TableHead>
+                  <TableHead className="text-right text-[var(--text-muted)]">Eylemler</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredOrders.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={8} className="text-center py-8 text-[var(--text-muted)]">
                       Kayıtlı bakım iş emri bulunamadı.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredOrders.map((wo) => (
-                    <TableRow key={wo.id} className="border-white/[0.05] hover:bg-[--page]">
-                      <TableCell className="font-mono text-xs font-semibold text-amber-400">
+                    <TableRow key={wo.id} className="border-[var(--line-soft)] hover:bg-[--page]">
+                      <TableCell className="font-mono text-xs font-semibold text-[var(--warn)]">
                         {wo.workOrderNumber}
                       </TableCell>
-                      <TableCell className="text-sm font-medium text-white">
+                      <TableCell className="text-sm font-medium text-[var(--text)]">
                         {wo.machineAsset?.name || "—"}
-                        <span className="block text-[11px] text-zinc-500 font-mono">
+                        <span className="block text-[11px] text-[var(--text-muted)] font-mono">
                           {wo.machineAsset?.code}
                         </span>
                       </TableCell>
                       <TableCell>{renderTypeBadge(wo.type)}</TableCell>
                       <TableCell>
-                        <div className="text-sm text-zinc-200">{wo.title}</div>
+                        <div className="text-sm text-[var(--text-2)]">{wo.title}</div>
                         {wo.failureReason && (
                           <div className="text-xs text-red-400/80">Kök Neden: {wo.failureReason}</div>
                         )}
                       </TableCell>
                       <TableCell>{renderStatusBadge(wo.status)}</TableCell>
-                      <TableCell className="text-sm text-zinc-300 font-mono">
+                      <TableCell className="text-sm text-[var(--text-2)] font-mono">
                         {wo.downtimeMinutes > 0 ? `${wo.downtimeMinutes} dk` : "—"}
                       </TableCell>
-                      <TableCell className="text-sm font-mono text-zinc-200">
+                      <TableCell className="text-sm font-mono text-[var(--text-2)]">
                         ₺{(wo.totalCost || 0).toLocaleString("tr-TR")}
                       </TableCell>
                       <TableCell className="text-right">
@@ -721,7 +697,7 @@ export function ProductionMaintenanceWorkspace() {
                               size="sm"
                               variant="outline"
                               onClick={() => handleStatusChange(wo.id, "IN_PROGRESS")}
-                              className="h-7 text-xs border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+                              className="h-7 text-xs border-[var(--brand-line)]/30 text-[var(--brand)] hover:bg-[var(--brand-soft)]"
                             >
                               Başlat
                             </Button>
@@ -738,7 +714,7 @@ export function ProductionMaintenanceWorkspace() {
                             </Button>
                           )}
                           {wo.status === "COMPLETED" && (
-                            <span className="text-xs text-zinc-500">Kapatıldı</span>
+                            <span className="text-xs text-[var(--text-muted)]">Kapatıldı</span>
                           )}
                         </div>
                       </TableCell>
@@ -755,11 +731,11 @@ export function ProductionMaintenanceWorkspace() {
       {activeTab === "plans" && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-white">Tanımlı Periyodik ve Kestirimci Bakım Planları</h3>
+            <h3 className="text-sm font-medium text-[var(--text)]">Tanımlı Periyodik ve Kestirimci Bakım Planları</h3>
             <Button
               size="sm"
               onClick={() => setIsNewPlanOpen(true)}
-              className="bg-purple-600 hover:bg-purple-500 text-white"
+              className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium"
             >
               <Plus className="w-3.5 h-3.5 mr-1.5" />
               Yeni Bakım Planı
@@ -770,49 +746,49 @@ export function ProductionMaintenanceWorkspace() {
             <Table>
               <TableHeader className="bg-white">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400">Plan Kodu</TableHead>
-                  <TableHead className="text-zinc-400">Plan Adı</TableHead>
-                  <TableHead className="text-zinc-400">Ekipman</TableHead>
-                  <TableHead className="text-zinc-400">Plan Tipi</TableHead>
-                  <TableHead className="text-zinc-400">Frekans / Eşik</TableHead>
-                  <TableHead className="text-zinc-400">Sonraki Planlanan</TableHead>
-                  <TableHead className="text-zinc-400">Durum</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Plan Kodu</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Plan Adı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Ekipman</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Plan Tipi</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Frekans / Eşik</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Sonraki Planlanan</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Durum</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {plans.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={7} className="text-center py-8 text-[var(--text-muted)]">
                       Tanımlı bakım planı bulunamadı.
                     </TableCell>
                   </TableRow>
                 ) : (
                   plans.map((p) => (
-                    <TableRow key={p.id} className="border-white/[0.05] hover:bg-[--page]">
-                      <TableCell className="font-mono text-xs text-purple-400 font-semibold">
+                    <TableRow key={p.id} className="border-[var(--line-soft)] hover:bg-[--page]">
+                      <TableCell className="font-mono text-xs text-[var(--brand)] font-semibold">
                         {p.code}
                       </TableCell>
-                      <TableCell className="text-sm text-white font-medium">
+                      <TableCell className="text-sm text-[var(--text)] font-medium">
                         {p.name}
                       </TableCell>
-                      <TableCell className="text-sm text-zinc-300">
+                      <TableCell className="text-sm text-[var(--text-2)]">
                         {p.machineAsset?.name || "Tüm Makineler"}
                       </TableCell>
                       <TableCell>
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-[--line] text-zinc-300">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)] border border-[--line] text-[var(--text-2)]">
                           {p.planType === "CALENDAR" && "Takvim Bazlı"}
                           {p.planType === "METER_HOURS" && "Çalışma Saati"}
                           {p.planType === "METER_COUNT" && "Üretim Adedi"}
                           {p.planType === "CONDITION" && "Sensör / Kestirimci"}
                         </span>
                       </TableCell>
-                      <TableCell className="text-sm font-mono text-zinc-300">
+                      <TableCell className="text-sm font-mono text-[var(--text-2)]">
                         {p.planType === "CALENDAR" && `${p.frequencyDays} Günde Bir`}
                         {p.planType === "METER_HOURS" && `Her ${p.frequencyHours} Saatte Bir`}
                         {p.planType === "METER_COUNT" && `Her ${p.frequencyCount} Adette Bir`}
                         {p.planType === "CONDITION" && `${p.conditionMetric} ${p.conditionOperator} ${p.conditionThreshold}`}
                       </TableCell>
-                      <TableCell className="text-sm text-zinc-400">
+                      <TableCell className="text-sm text-[var(--text-muted)]">
                         {p.nextScheduledDate
                           ? new Date(p.nextScheduledDate).toLocaleDateString("tr-TR")
                           : "Sayaç / Durum Takibinde"}
@@ -821,7 +797,7 @@ export function ProductionMaintenanceWorkspace() {
                         {p.isActive ? (
                           <span className="text-xs text-[--brand] font-medium">Aktif</span>
                         ) : (
-                          <span className="text-xs text-zinc-500">Pasif</span>
+                          <span className="text-xs text-[var(--text-muted)]">Pasif</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -837,62 +813,50 @@ export function ProductionMaintenanceWorkspace() {
       {activeTab === "assets" && (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-sm font-medium text-white">Ekipman ve Makine Parkuru Varlık Ağacı</h3>
+            <h3 className="text-sm font-medium text-[var(--text)]">Ekipman ve Makine Parkuru Varlık Ağacı</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {assets.map((asset) => (
               <div
                 key={asset.id}
-                className="p-4 rounded-xl border border-[--line] bg-white/[0.01] hover:border-amber-500/30 transition-all"
+                className="p-4 rounded-xl border border-[--line] bg-white/[0.01] hover:border-[var(--warn-line)] transition-all"
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="font-mono text-xs text-amber-400 font-semibold">
+                    <span className="font-mono text-xs text-[var(--warn)] font-semibold">
                       {asset.code}
                     </span>
-                    <h4 className="text-base font-bold text-white mt-0.5">{asset.name}</h4>
+                    <h4 className="text-base font-bold text-[var(--text)] mt-0.5">{asset.name}</h4>
                   </div>
                   <span
-                    className={`px-2 py-0.5 text-xs rounded-full font-bold ${
-                      asset.criticality === "A"
-                        ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                        : asset.criticality === "B"
-                        ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                        : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                    }`}
+                    className={`px-2 py-0.5 text-xs rounded-full font-bold ${ asset.criticality === "A" ? "bg-[var(--bad-soft)] text-red-400 border border-[var(--bad-line)]" : asset.criticality === "B" ? "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]" : "bg-blue-500/20 text-blue-400 border border-blue-500/30" }`}
                   >
                     Sınıf {asset.criticality || "B"}
                   </span>
                 </div>
 
-                <div className="mt-3 space-y-1.5 text-xs text-zinc-400">
+                <div className="mt-3 space-y-1.5 text-xs text-[var(--text-muted)]">
                   <div className="flex justify-between">
                     <span>Çalışma Saati:</span>
-                    <span className="font-mono text-zinc-200">{asset.operatingHours || 0} saat</span>
+                    <span className="font-mono text-[var(--text-2)]">{asset.operatingHours || 0} saat</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Toplam Üretim:</span>
-                    <span className="font-mono text-zinc-200">{(asset.productionCount || 0).toLocaleString("tr-TR")} adet</span>
+                    <span className="font-mono text-[var(--text-2)]">{(asset.productionCount || 0).toLocaleString("tr-TR")} adet</span>
                   </div>
                   <div className="flex justify-between">
                     <span>İş Merkezi:</span>
-                    <span className="text-zinc-200">{asset.workCenter?.name || "Bağımsız"}</span>
+                    <span className="text-[var(--text-2)]">{asset.workCenter?.name || "Bağımsız"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Yedek Parça Sayısı:</span>
-                    <span className="font-mono text-amber-300">{asset.spareParts?.length || 0} adet</span>
+                    <span className="font-mono text-[var(--warn)]">{asset.spareParts?.length || 0} adet</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Durum:</span>
                     <span
-                      className={`font-semibold ${
-                        asset.status === "ACTIVE"
-                          ? "text-[--brand]"
-                          : asset.status === "DOWN"
-                          ? "text-red-400"
-                          : "text-amber-400"
-                      }`}
+                      className={`font-semibold ${ asset.status === "ACTIVE" ? "text-[--brand]" : asset.status === "DOWN" ? "text-red-400" : "text-[var(--warn)]" }`}
                     >
                       {asset.status === "ACTIVE" ? "Çalışıyor" : asset.status === "DOWN" ? "Arızada (Duruş)" : asset.status}
                     </span>
@@ -909,15 +873,15 @@ export function ProductionMaintenanceWorkspace() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-sm font-medium text-white">Telemetri & Kestirimci Sensör İzleme</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <h3 className="text-sm font-medium text-[var(--text)]">Telemetri & Kestirimci Sensör İzleme</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 IoT titreşim, sıcaklık ve basınç sensörleri sınır aşımında otomatik arıza iş emri üretir.
               </p>
             </div>
             <Button
               size="sm"
               onClick={() => setIsNewReadingOpen(true)}
-              className="bg-cyan-600 hover:bg-cyan-500 text-white"
+              className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium"
             >
               <Cpu className="w-3.5 h-3.5 mr-1.5" />
               Sensör Okuması Simüle Et
@@ -926,32 +890,32 @@ export function ProductionMaintenanceWorkspace() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl border border-[--line] bg-white/[0.01]">
-              <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm mb-2">
+              <div className="flex items-center gap-2 text-[var(--warn)] font-semibold text-sm mb-2">
                 <Activity className="w-4 h-4" />
                 Sıcaklık Sensörleri
               </div>
-              <p className="text-xs text-zinc-400 mb-3">Normal çalışma aralığı: 40°C - 80°C. Üst limit: 85°C.</p>
-              <div className="text-2xl font-bold font-mono text-white">72.4 °C</div>
+              <p className="text-xs text-[var(--text-muted)] mb-3">Normal çalışma aralığı: 40°C - 80°C. Üst limit: 85°C.</p>
+              <div className="text-2xl font-bold font-mono text-[var(--text)]">72.4 °C</div>
               <div className="text-xs text-[--brand] mt-1">Normal Seviye</div>
             </div>
 
             <div className="p-4 rounded-xl border border-[--line] bg-white/[0.01]">
-              <div className="flex items-center gap-2 text-cyan-400 font-semibold text-sm mb-2">
+              <div className="flex items-center gap-2 text-[var(--brand)] font-semibold text-sm mb-2">
                 <Gauge className="w-4 h-4" />
                 Titreşim Sensörleri
               </div>
-              <p className="text-xs text-zinc-400 mb-3">ISO 10816 Standartları: &lt; 4.5 mm/s normal, &gt; 7.1 mm/s kritik alarm.</p>
-              <div className="text-2xl font-bold font-mono text-white">3.2 mm/s</div>
+              <p className="text-xs text-[var(--text-muted)] mb-3">ISO 10816 Standartları: &lt; 4.5 mm/s normal, &gt; 7.1 mm/s kritik alarm.</p>
+              <div className="text-2xl font-bold font-mono text-[var(--text)]">3.2 mm/s</div>
               <div className="text-xs text-[--brand] mt-1">Tolerans İçinde</div>
             </div>
 
             <div className="p-4 rounded-xl border border-[--line] bg-white/[0.01]">
-              <div className="flex items-center gap-2 text-purple-400 font-semibold text-sm mb-2">
+              <div className="flex items-center gap-2 text-[var(--brand)] font-semibold text-sm mb-2">
                 <Layers className="w-4 h-4" />
                 Hidrolik Basınç
               </div>
-              <p className="text-xs text-zinc-400 mb-3">İdeal işletme basıncı: 120 - 160 Bar.</p>
-              <div className="text-2xl font-bold font-mono text-white">142 Bar</div>
+              <p className="text-xs text-[var(--text-muted)] mb-3">İdeal işletme basıncı: 120 - 160 Bar.</p>
+              <div className="text-2xl font-bold font-mono text-[var(--text)]">142 Bar</div>
               <div className="text-xs text-[--brand] mt-1">Optimal</div>
             </div>
           </div>
@@ -963,8 +927,8 @@ export function ProductionMaintenanceWorkspace() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-sm font-medium text-white">Bakım Duruşu & Üretim Çizelgesi Çakışmaları</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <h3 className="text-sm font-medium text-[var(--text)]">Bakım Duruşu & Üretim Çizelgesi Çakışmaları</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 Planlanan bakım pencereleri ile Faz 6 kapasite çizelgelenmiş görevleri arasındaki çakışma uyarıları.
               </p>
             </div>
@@ -974,10 +938,10 @@ export function ProductionMaintenanceWorkspace() {
             <Table>
               <TableHeader className="bg-white">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400">Çakışma Aralığı</TableHead>
-                  <TableHead className="text-zinc-400">İlgili İş Emri / Görev</TableHead>
-                  <TableHead className="text-zinc-400">Uyarı Mesajı</TableHead>
-                  <TableHead className="text-zinc-400">Önlem</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Çakışma Aralığı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">İlgili İş Emri / Görev</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Uyarı Mesajı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Önlem</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -989,18 +953,18 @@ export function ProductionMaintenanceWorkspace() {
                   </TableRow>
                 ) : (
                   conflicts.map((c, idx) => (
-                    <TableRow key={idx} className="border-white/[0.05] bg-red-500/[0.02]">
-                      <TableCell className="font-mono text-xs text-amber-400">
+                    <TableRow key={idx} className="border-[var(--line-soft)] bg-red-500/[0.02]">
+                      <TableCell className="font-mono text-xs text-[var(--warn)]">
                         {c.conflictStartTime?.slice(0, 16).replace("T", " ")} - {c.conflictEndTime?.slice(11, 16)}
                       </TableCell>
-                      <TableCell className="text-sm font-semibold text-white">
+                      <TableCell className="text-sm font-semibold text-[var(--text)]">
                         #{c.conflictingWorkOrderNumber || c.conflictingTaskId}
                       </TableCell>
                       <TableCell className="text-sm text-red-300">
                         {c.message}
                       </TableCell>
                       <TableCell>
-                        <Button size="sm" variant="outline" className="h-7 text-xs border-amber-500/30 text-amber-400">
+                        <Button size="sm" variant="outline" className="h-7 text-xs border-[var(--warn-line)] text-[var(--warn)]">
                           Çizelgeyi Kaydır
                         </Button>
                       </TableCell>
@@ -1017,36 +981,36 @@ export function ProductionMaintenanceWorkspace() {
       {activeTab === "metrics" && (
         <div className="space-y-6">
           <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01]">
-            <h3 className="text-base font-bold text-white mb-2">
+            <h3 className="text-base font-bold text-[var(--text)] mb-2">
               OEE (Overall Equipment Effectiveness) Ayrıştırması
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-                <div className="text-sm text-zinc-400">Kullanılabilirlik (Availability)</div>
-                <div className="text-3xl font-bold text-white mt-1">
+                <div className="text-sm text-[var(--text-muted)]">Kullanılabilirlik (Availability)</div>
+                <div className="text-3xl font-bold text-[var(--text)] mt-1">
                   %{dashboardData?.kpis?.availabilityPct ?? "92.0"}
                 </div>
-                <div className="text-xs text-zinc-500 mt-2">
+                <div className="text-xs text-[var(--text-muted)] mt-2">
                   (Çalışma Süresi - Plansız Duruş) / Çalışma Süresi
                 </div>
               </div>
 
               <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-                <div className="text-sm text-zinc-400">Performans (Performance)</div>
-                <div className="text-3xl font-bold text-white mt-1">
+                <div className="text-sm text-[var(--text-muted)]">Performans (Performance)</div>
+                <div className="text-3xl font-bold text-[var(--text)] mt-1">
                   %{dashboardData?.kpis?.performancePct ?? "94.5"}
                 </div>
-                <div className="text-xs text-zinc-500 mt-2">
+                <div className="text-xs text-[var(--text-muted)] mt-2">
                   (Üretilen Adet x İdeal Çevrim) / Net Çalışma Süresi
                 </div>
               </div>
 
               <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-                <div className="text-sm text-zinc-400">Kalite (Quality)</div>
-                <div className="text-3xl font-bold text-white mt-1">
+                <div className="text-sm text-[var(--text-muted)]">Kalite (Quality)</div>
+                <div className="text-3xl font-bold text-[var(--text)] mt-1">
                   %{dashboardData?.kpis?.qualityPct ?? "98.2"}
                 </div>
-                <div className="text-xs text-zinc-500 mt-2">
+                <div className="text-xs text-[var(--text-muted)] mt-2">
                   Sağlam Ürün Adedi / Toplam Üretilen Adet
                 </div>
               </div>
@@ -1057,28 +1021,28 @@ export function ProductionMaintenanceWorkspace() {
 
       {/* MODAL 1: YENİ BAKIM İŞ EMRİ */}
       <Dialog open={isNewOrderOpen} onOpenChange={setIsNewOrderOpen}>
-        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-lg">
+        <DialogContent className="bg-[var(--bg)] border border-[--line] text-[var(--text)] max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-amber-400" />
+              <Wrench className="w-5 h-5 text-[var(--warn)]" />
               Yeni Bakım İş Emri Aç
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Arıza onarımı veya planlı koruyucu bakım iş emri oluşturun.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleCreateWorkOrder} className="space-y-3.5 mt-2">
             <div>
-              <Label className="text-xs text-zinc-300">Ekipman / Makine *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Ekipman / Makine *</Label>
               <Select
                 value={newOrderForm.machineAssetId}
                 onValueChange={(val) => setNewOrderForm({ ...newOrderForm, machineAssetId: val })}
               >
-                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                   <SelectValue placeholder="Ekipman seçiniz" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                   {assets.map((a) => (
                     <SelectItem key={a.id} value={a.id}>
                       {a.name} ({a.code})
@@ -1090,15 +1054,15 @@ export function ProductionMaintenanceWorkspace() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">İş Emri Türü</Label>
+                <Label className="text-xs text-[var(--text-2)]">İş Emri Türü</Label>
                 <Select
                   value={newOrderForm.type}
                   onValueChange={(val) => setNewOrderForm({ ...newOrderForm, type: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="BREAKDOWN">Arıza Onarım</SelectItem>
                     <SelectItem value="PREVENTIVE">Periyodik Bakım</SelectItem>
                     <SelectItem value="CORRECTIVE">Düzeltici Bakım</SelectItem>
@@ -1108,15 +1072,15 @@ export function ProductionMaintenanceWorkspace() {
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Öncelik</Label>
+                <Label className="text-xs text-[var(--text-2)]">Öncelik</Label>
                 <Select
                   value={newOrderForm.priority}
                   onValueChange={(val) => setNewOrderForm({ ...newOrderForm, priority: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="LOW">Düşük</SelectItem>
                     <SelectItem value="MEDIUM">Orta</SelectItem>
                     <SelectItem value="HIGH">Yüksek</SelectItem>
@@ -1127,22 +1091,22 @@ export function ProductionMaintenanceWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">İş Emri Başlığı *</Label>
+              <Label className="text-xs text-[var(--text-2)]">İş Emri Başlığı *</Label>
               <Input
                 placeholder="Örn: Ana mil rulman değişimi ve yağlama"
                 value={newOrderForm.title}
                 onChange={(e) => setNewOrderForm({ ...newOrderForm, title: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Açıklama / Arıza Belirtisi</Label>
+              <Label className="text-xs text-[var(--text-2)]">Açıklama / Arıza Belirtisi</Label>
               <Input
                 placeholder="Belirtilen ses, titreşim veya arıza ayrıntıları..."
                 value={newOrderForm.description}
                 onChange={(e) => setNewOrderForm({ ...newOrderForm, description: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
@@ -1151,7 +1115,7 @@ export function ProductionMaintenanceWorkspace() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsNewOrderOpen(false)}
-                className="border-[--line] text-zinc-300"
+                className="border-[--line] text-[var(--text-2)]"
               >
                 İptal
               </Button>
@@ -1165,13 +1129,13 @@ export function ProductionMaintenanceWorkspace() {
 
       {/* MODAL 2: YENİ BAKIM PLANI */}
       <Dialog open={isNewPlanOpen} onOpenChange={setIsNewPlanOpen}>
-        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-lg">
+        <DialogContent className="bg-[var(--bg)] border border-[--line] text-[var(--text)] max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-purple-400" />
+              <Calendar className="w-5 h-5 text-[var(--brand)]" />
               Yeni Bakım Planı Tanımla
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Takvim periyotları, çalışma saatleri veya sensör limitlerine göre otomatik tetiklenen plan.
             </DialogDescription>
           </DialogHeader>
@@ -1179,24 +1143,24 @@ export function ProductionMaintenanceWorkspace() {
           <form onSubmit={handleCreatePlan} className="space-y-3.5 mt-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Plan Kodu *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Plan Kodu *</Label>
                 <Input
                   placeholder="PM-CNC-01"
                   value={newPlanForm.code}
                   onChange={(e) => setNewPlanForm({ ...newPlanForm, code: e.target.value })}
-                  className="mt-1 bg-[--page] border-[--line] text-white uppercase font-mono"
+                  className="mt-1 bg-[--page] border-[--line] text-[var(--text)] uppercase font-mono"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Ekipman *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Ekipman *</Label>
                 <Select
                   value={newPlanForm.machineAssetId}
                   onValueChange={(val) => setNewPlanForm({ ...newPlanForm, machineAssetId: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue placeholder="Seçiniz" />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     {assets.map((a) => (
                       <SelectItem key={a.id} value={a.id}>
                         {a.name}
@@ -1208,26 +1172,26 @@ export function ProductionMaintenanceWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Plan Adı *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Plan Adı *</Label>
               <Input
                 placeholder="Aylık Hidrolik Yağ ve Filtre Değişim Planı"
                 value={newPlanForm.name}
                 onChange={(e) => setNewPlanForm({ ...newPlanForm, name: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Plan Tetikleme Tipi</Label>
+                <Label className="text-xs text-[var(--text-2)]">Plan Tetikleme Tipi</Label>
                 <Select
                   value={newPlanForm.planType}
                   onValueChange={(val: any) => setNewPlanForm({ ...newPlanForm, planType: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="CALENDAR">Takvim Bazlı (Gün)</SelectItem>
                     <SelectItem value="METER_HOURS">Çalışma Saati Bazlı</SelectItem>
                     <SelectItem value="METER_COUNT">Üretim Adedi Bazlı</SelectItem>
@@ -1239,34 +1203,34 @@ export function ProductionMaintenanceWorkspace() {
               <div>
                 {newPlanForm.planType === "CALENDAR" && (
                   <>
-                    <Label className="text-xs text-zinc-300">Periyot (Gün)</Label>
+                    <Label className="text-xs text-[var(--text-2)]">Periyot (Gün)</Label>
                     <Input
                       type="number"
                       value={newPlanForm.frequencyDays}
                       onChange={(e) => setNewPlanForm({ ...newPlanForm, frequencyDays: Number(e.target.value) })}
-                      className="mt-1 bg-[--page] border-[--line] text-white"
+                      className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
                     />
                   </>
                 )}
                 {newPlanForm.planType === "METER_HOURS" && (
                   <>
-                    <Label className="text-xs text-zinc-300">Frekans (Saat)</Label>
+                    <Label className="text-xs text-[var(--text-2)]">Frekans (Saat)</Label>
                     <Input
                       type="number"
                       value={newPlanForm.frequencyHours}
                       onChange={(e) => setNewPlanForm({ ...newPlanForm, frequencyHours: Number(e.target.value) })}
-                      className="mt-1 bg-[--page] border-[--line] text-white"
+                      className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
                     />
                   </>
                 )}
                 {newPlanForm.planType === "CONDITION" && (
                   <>
-                    <Label className="text-xs text-zinc-300">Eşik Değer</Label>
+                    <Label className="text-xs text-[var(--text-2)]">Eşik Değer</Label>
                     <Input
                       type="number"
                       value={newPlanForm.conditionThreshold}
                       onChange={(e) => setNewPlanForm({ ...newPlanForm, conditionThreshold: Number(e.target.value) })}
-                      className="mt-1 bg-[--page] border-[--line] text-white"
+                      className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
                     />
                   </>
                 )}
@@ -1278,11 +1242,11 @@ export function ProductionMaintenanceWorkspace() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsNewPlanOpen(false)}
-                className="border-[--line] text-zinc-300"
+                className="border-[--line] text-[var(--text-2)]"
               >
                 Vazgeç
               </Button>
-              <Button type="submit" className="bg-purple-600 hover:bg-purple-500 text-white">
+              <Button type="submit" className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium">
                 Planı Kaydet
               </Button>
             </DialogFooter>
@@ -1292,28 +1256,28 @@ export function ProductionMaintenanceWorkspace() {
 
       {/* MODAL 3: SENSÖR OKUMASI */}
       <Dialog open={isNewReadingOpen} onOpenChange={setIsNewReadingOpen}>
-        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-md">
+        <DialogContent className="bg-[var(--bg)] border border-[--line] text-[var(--text)] max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-cyan-400" />
+              <Cpu className="w-5 h-5 text-[var(--brand)]" />
               Sensör Telemetrisi Kaydet
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Kestirimci bakım kural kontrolü ve eşik aşım simülasyonu.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleRecordReading} className="space-y-3 mt-2">
             <div>
-              <Label className="text-xs text-zinc-300">Ekipman</Label>
+              <Label className="text-xs text-[var(--text-2)]">Ekipman</Label>
               <Select
                 value={readingForm.machineAssetId}
                 onValueChange={(val) => setReadingForm({ ...readingForm, machineAssetId: val })}
               >
-                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                   <SelectValue placeholder="Ekipman seçiniz" />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                   {assets.map((a) => (
                     <SelectItem key={a.id} value={a.id}>
                       {a.name}
@@ -1325,15 +1289,15 @@ export function ProductionMaintenanceWorkspace() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Sensör Tipi</Label>
+                <Label className="text-xs text-[var(--text-2)]">Sensör Tipi</Label>
                 <Select
                   value={readingForm.sensorType}
                   onValueChange={(val) => setReadingForm({ ...readingForm, sensorType: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="SICAKLIK">Sıcaklık (°C)</SelectItem>
                     <SelectItem value="TITRESIM">Titreşim (mm/s)</SelectItem>
                     <SelectItem value="BASINC">Basınç (Bar)</SelectItem>
@@ -1342,21 +1306,21 @@ export function ProductionMaintenanceWorkspace() {
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Ölçüm Değeri</Label>
+                <Label className="text-xs text-[var(--text-2)]">Ölçüm Değeri</Label>
                 <Input
                   type="number"
                   value={readingForm.readingValue}
                   onChange={(e) => setReadingForm({ ...readingForm, readingValue: Number(e.target.value) })}
-                  className="mt-1 bg-[--page] border-[--line] text-white font-mono"
+                  className="mt-1 bg-[--page] border-[--line] text-[var(--text)] font-mono"
                 />
               </div>
             </div>
 
             <DialogFooter className="mt-4">
-              <Button type="button" variant="outline" onClick={() => setIsNewReadingOpen(false)} className="border-[--line] text-zinc-300">
+              <Button type="button" variant="outline" onClick={() => setIsNewReadingOpen(false)} className="border-[--line] text-[var(--text-2)]">
                 İptal
               </Button>
-              <Button type="submit" className="bg-cyan-600 hover:bg-cyan-500 text-white">
+              <Button type="submit" className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium">
                 Ölçümü Gönder
               </Button>
             </DialogFooter>
@@ -1366,13 +1330,13 @@ export function ProductionMaintenanceWorkspace() {
 
       {/* MODAL 4: İŞ EMRİ TAMAMLAMA */}
       <Dialog open={isCompleteOrderOpen} onOpenChange={setIsCompleteOrderOpen}>
-        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-md">
+        <DialogContent className="bg-[var(--bg)] border border-[--line] text-[var(--text)] max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Check className="w-5 h-5 text-[--brand]" />
               Bakım İş Emrini Kapat
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               {selectedOrder?.workOrderNumber} - {selectedOrder?.title}
             </DialogDescription>
           </DialogHeader>
@@ -1380,49 +1344,49 @@ export function ProductionMaintenanceWorkspace() {
           <form onSubmit={handleCompleteOrderSubmit} className="space-y-3 mt-2">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Duruş Süresi (Dakika)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Duruş Süresi (Dakika)</Label>
                 <Input
                   type="number"
                   value={completionForm.downtimeMinutes}
                   onChange={(e) => setCompletionForm({ ...completionForm, downtimeMinutes: Number(e.target.value) })}
-                  className="mt-1 bg-[--page] border-[--line] text-white font-mono"
+                  className="mt-1 bg-[--page] border-[--line] text-[var(--text)] font-mono"
                 />
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">İşçilik Süresi (Saat)</Label>
+                <Label className="text-xs text-[var(--text-2)]">İşçilik Süresi (Saat)</Label>
                 <Input
                   type="number"
                   step="0.5"
                   value={completionForm.laborHours}
                   onChange={(e) => setCompletionForm({ ...completionForm, laborHours: Number(e.target.value) })}
-                  className="mt-1 bg-[--page] border-[--line] text-white font-mono"
+                  className="mt-1 bg-[--page] border-[--line] text-[var(--text)] font-mono"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Arıza / Kök Neden</Label>
+              <Label className="text-xs text-[var(--text-2)]">Arıza / Kök Neden</Label>
               <Input
                 placeholder="Örn: Yetersiz yağlama ve aşırı ısınma"
                 value={completionForm.failureReason}
                 onChange={(e) => setCompletionForm({ ...completionForm, failureReason: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Tamamlama Notları</Label>
+              <Label className="text-xs text-[var(--text-2)]">Tamamlama Notları</Label>
               <Input
                 placeholder="Yapılan işlemler, parça değişimi..."
                 value={completionForm.completionNotes}
                 onChange={(e) => setCompletionForm({ ...completionForm, completionNotes: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
             <DialogFooter className="mt-4">
-              <Button type="button" variant="outline" onClick={() => setIsCompleteOrderOpen(false)} className="border-[--line] text-zinc-300">
+              <Button type="button" variant="outline" onClick={() => setIsCompleteOrderOpen(false)} className="border-[--line] text-[var(--text-2)]">
                 Vazgeç
               </Button>
               <Button type="submit" className="bg-[--brand] hover:bg-[--brand] text-white">

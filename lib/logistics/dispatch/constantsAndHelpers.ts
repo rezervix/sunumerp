@@ -51,13 +51,13 @@ export const DISPATCH_TRIP_STATUS_LABELS: Record<DispatchTripStatus, string> = {
 }
 
 export const DISPATCH_TRIP_STATUS_BADGES: Record<DispatchTripStatus, string> = {
-  TASLAK: "bg-zinc-500/15 text-zinc-300 border-white/[0.1]",
+  TASLAK: "bg-[var(--muted-bg)]/15 text-[var(--text-2)] border-[var(--line)]",
   ONAYLANDI: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  YUKLENIYOR: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  YUKLENIYOR: "bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]",
   YOLDA: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  TESLIMAT_SURUYOR: "bg-teal-500/15 text-teal-300 border-teal-500/30",
+  TESLIMAT_SURUYOR: "bg-[var(--brand-soft)]/15 text-[var(--brand)] border-[var(--brand-line)]",
   TAMAMLANDI: "bg-[--brand]/20 text-[#1267E6] border-[--brand]/40",
-  IPTAL: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  IPTAL: "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]",
 }
 
 export const DISPATCH_STOP_STATUS_LABELS: Record<DispatchStopStatus, string> = {
@@ -70,12 +70,12 @@ export const DISPATCH_STOP_STATUS_LABELS: Record<DispatchStopStatus, string> = {
 }
 
 export const DISPATCH_STOP_STATUS_BADGES: Record<DispatchStopStatus, string> = {
-  BEKLIYOR: "bg-zinc-500/15 text-zinc-300 border-white/[0.08]",
+  BEKLIYOR: "bg-[var(--muted-bg)]/15 text-[var(--text-2)] border-[var(--line-soft)]",
   YOLDA: "bg-sky-500/15 text-sky-300 border-sky-500/25",
-  VARISTA: "bg-amber-500/15 text-amber-300 border-amber-500/25",
+  VARISTA: "bg-[var(--warn-soft)] text-[var(--warn)] border-amber-500/25",
   TESLIM_EDILDI: "bg-[--brand]/15 text-[#1267E6] border-[--brand]/30",
-  KISMI_TESLIM: "bg-amber-500/20 text-amber-200 border-amber-500/35",
-  TESLIM_EDILEMEDI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  KISMI_TESLIM: "bg-[var(--warn-soft)] text-amber-200 border-amber-500/35",
+  TESLIM_EDILEMEDI: "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]",
 }
 
 export const DISPATCH_FAILURE_REASON_LABELS: Record<DispatchFailureReasonCode, string> = {

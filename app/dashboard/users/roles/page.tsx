@@ -321,11 +321,7 @@ export default function RolesPage() {
                                         <button 
                                           type="button"
                                           onClick={() => togglePermission(m.key, action)}
-                                          className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                                            has
-                                              ? "bg-[--brand] shadow-xs justify-end"
-                                              : "bg-[--line] justify-start"
-                                          }`}
+                                          className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${ has ? "bg-[--brand] shadow-xs justify-end" : "bg-[--line] justify-start" }`}
                                         >
                                           <span className="size-4 rounded-full bg-white shadow-xs" />
                                         </button>
@@ -388,7 +384,7 @@ function ModalFooter({ onCancel, onSave, saving, saveLabel, disabled }: { onCanc
   return (
     <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 shrink-0">
       <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-[--text-2] border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors cursor-pointer">İptal</button>
-      <button onClick={onSave} disabled={saving || disabled} className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer">
+      <button onClick={onSave} disabled={saving || disabled} className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer">
         {saving ? "İşleniyor..." : saveLabel}
       </button>
     </div>

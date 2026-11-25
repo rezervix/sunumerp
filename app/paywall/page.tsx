@@ -82,7 +82,7 @@ export default function PaywallPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-white p-6 md:p-12 flex flex-col justify-center items-center relative overflow-hidden">
+    <div className="min-h-screen bg-[#F6F8FB] text-[var(--text)] p-6 md:p-12 flex flex-col justify-center items-center relative overflow-hidden">
       
       {/* Ambient Glows */}
       <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(16,185,129,0.12),transparent)]" />
@@ -95,8 +95,8 @@ export default function PaywallPage() {
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[--brand]/10 text-[--brand] border border-[--brand-line] rounded-full text-xs font-semibold uppercase tracking-wider">
             <Sparkles size={14} /> Sunum ERP SaaS Lisanslama
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Kullanım Planınızı Seçin</h1>
-          <p className="text-sm text-zinc-400 max-w-lg mx-auto font-light">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-[var(--text)]">Kullanım Planınızı Seçin</h1>
+          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto font-light">
             İşletmeniz için en uygun abonelik paketini seçerek tüm ERP ve operasyon modüllerini kesintisiz kullanın.
           </p>
         </div>
@@ -107,15 +107,11 @@ export default function PaywallPage() {
           {/* Paket 1: Ücretsiz */}
           <div
             onClick={() => setSelectedPlan("free")}
-            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${
-              selectedPlan === "free"
-                ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.15)] scale-[1.02]"
-                : "border-[--line] hover:border-[--line]"
-            }`}
+            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${ selectedPlan === "free" ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.15)] scale-[1.02]" : "border-[--line] hover:border-[--line]" }`}
           >
             <div className="space-y-4">
               <div className="flex justify-between items-start">
-                <span className="px-3 py-1 bg-[--muted-bg] text-zinc-400 border border-[--line] rounded-full text-xs font-semibold">Başlangıç</span>
+                <span className="px-3 py-1 bg-[--muted-bg] text-[var(--text-muted)] border border-[--line] rounded-full text-xs font-semibold">Başlangıç</span>
                 {selectedPlan === "free" && (
                   <div className="size-5 rounded-full bg-[--brand] flex items-center justify-center text-black">
                     <Check size={12} className="stroke-[3]" />
@@ -123,27 +119,23 @@ export default function PaywallPage() {
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Paket 1 (Ücretsiz)</h3>
-                <p className="text-xs text-zinc-400 mt-1">Temel özelliklerin ücretsiz kullanımı</p>
+                <h3 className="text-lg font-bold text-[var(--text)]">Paket 1 (Ücretsiz)</h3>
+                <p className="text-xs text-[var(--text-muted)] mt-1">Temel özelliklerin ücretsiz kullanımı</p>
               </div>
-              <div className="text-2xl font-light text-white">0 TL <span className="text-xs font-normal text-zinc-500">/ Süresiz</span></div>
-              <ul className="text-xs space-y-2 text-zinc-400">
+              <div className="text-2xl font-light text-[var(--text)]">0 TL <span className="text-xs font-normal text-[var(--text-muted)]">/ Süresiz</span></div>
+              <ul className="text-xs space-y-2 text-[var(--text-muted)]">
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Dashboard İzleme</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Temel Ayarlar</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Teknik Destek</li>
               </ul>
             </div>
-            <div className="text-[11px] text-zinc-500 font-medium flex items-center gap-1.5"><Shield size={12} className="text-zinc-400" /> Sadece 3 temel ekran</div>
+            <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5"><Shield size={12} className="text-[var(--text-muted)]" /> Sadece 3 temel ekran</div>
           </div>
 
           {/* Paket 2: Profesyonel */}
           <div
             onClick={() => setSelectedPlan("pro")}
-            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${
-              selectedPlan === "pro"
-                ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.2)] scale-[1.02]"
-                : "border-[--line] hover:border-[--line]"
-            }`}
+            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${ selectedPlan === "pro" ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.2)] scale-[1.02]" : "border-[--line] hover:border-[--line]" }`}
           >
             <div className="absolute -top-3 right-6 px-3 py-0.5 bg-[--brand] text-black rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
               Popüler
@@ -158,14 +150,14 @@ export default function PaywallPage() {
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Paket 2 (Profesyonel)</h3>
-                <p className="text-xs text-zinc-400 mt-1">Gelişmiş ERP modülleri ve tüm ekranlar</p>
+                <h3 className="text-lg font-bold text-[var(--text)]">Paket 2 (Profesyonel)</h3>
+                <p className="text-xs text-[var(--text-muted)] mt-1">Gelişmiş ERP modülleri ve tüm ekranlar</p>
               </div>
               <div className="space-y-0.5">
-                <div className="text-2xl font-light text-white">15.000 TL <span className="text-xs font-normal text-zinc-500">/ Ay</span></div>
+                <div className="text-2xl font-light text-[var(--text)]">15.000 TL <span className="text-xs font-normal text-[var(--text-muted)]">/ Ay</span></div>
                 <div className="text-[11px] text-[--brand] font-semibold">İlk 3 Ay Sadece 10.000 TL / Ay</div>
               </div>
-              <ul className="text-xs space-y-2 text-zinc-400">
+              <ul className="text-xs space-y-2 text-[var(--text-muted)]">
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Sınırsız CRM &amp; Proje Takibi</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Finansal Analiz &amp; Raporlar</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Detaylı Personel Denetim</li>
@@ -177,15 +169,11 @@ export default function PaywallPage() {
           {/* Paket 3: Enterprise */}
           <div
             onClick={() => setSelectedPlan("enterprise")}
-            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${
-              selectedPlan === "enterprise"
-                ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.15)] scale-[1.02]"
-                : "border-[--line] hover:border-[--line]"
-            }`}
+            className={`border rounded-[24px] p-6 cursor-pointer transition-all flex flex-col justify-between h-80 relative bg-[white]/90 ${ selectedPlan === "enterprise" ? "border-[--brand] ring-1 ring-[--brand-line] shadow-[0_0_20px_rgba(52,211,153,0.15)] scale-[1.02]" : "border-[--line] hover:border-[--line]" }`}
           >
             <div className="space-y-4">
               <div className="flex justify-between items-start">
-                <span className="px-3 py-1 bg-[--muted-bg] text-zinc-400 border border-[--line] rounded-full text-xs font-semibold">Özel</span>
+                <span className="px-3 py-1 bg-[--muted-bg] text-[var(--text-muted)] border border-[--line] rounded-full text-xs font-semibold">Özel</span>
                 {selectedPlan === "enterprise" && (
                   <div className="size-5 rounded-full bg-[--brand] flex items-center justify-center text-black">
                     <Check size={12} className="stroke-[3]" />
@@ -193,17 +181,17 @@ export default function PaywallPage() {
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">Paket 3 (Enterprise)</h3>
-                <p className="text-xs text-zinc-400 mt-1">Özel altyapı ve genişletilmiş yetkiler</p>
+                <h3 className="text-lg font-bold text-[var(--text)]">Paket 3 (Enterprise)</h3>
+                <p className="text-xs text-[var(--text-muted)] mt-1">Özel altyapı ve genişletilmiş yetkiler</p>
               </div>
-              <div className="text-2xl font-light text-white">30.000 TL <span className="text-xs font-normal text-zinc-500">/ Ay</span></div>
-              <ul className="text-xs space-y-2 text-zinc-400">
+              <div className="text-2xl font-light text-[var(--text)]">30.000 TL <span className="text-xs font-normal text-[var(--text-muted)]">/ Ay</span></div>
+              <ul className="text-xs space-y-2 text-[var(--text-muted)]">
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Özel Domain Desteği</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> 7/24 Özel Destek Hattı</li>
                 <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[--brand]" /> Özel Sunucu &amp; API Erişimi</li>
               </ul>
             </div>
-            <div className="text-[11px] text-zinc-500 font-medium flex items-center gap-1.5"><HelpCircle size={12} className="text-zinc-400" /> Şirkete özel altyapı</div>
+            <div className="text-[11px] text-[var(--text-muted)] font-medium flex items-center gap-1.5"><HelpCircle size={12} className="text-[var(--text-muted)]" /> Şirkete özel altyapı</div>
           </div>
 
         </div>
@@ -213,15 +201,15 @@ export default function PaywallPage() {
           
           {/* Left info column */}
           <div className="lg:col-span-2 space-y-6 bg-[white]/90 border border-[--line] rounded-[24px] p-6 shadow-md">
-            <h4 className="font-bold text-base text-white">Ödeme Detayları</h4>
+            <h4 className="font-bold text-base text-[var(--text)]">Ödeme Detayları</h4>
             <div className="space-y-4 text-xs">
               <div className="flex justify-between border-b border-[--line] pb-2.5">
-                <span className="text-zinc-400">Seçilen Plan</span>
-                <span className="font-bold capitalize text-white">{selectedPlan}</span>
+                <span className="text-[var(--text-muted)]">Seçilen Plan</span>
+                <span className="font-bold capitalize text-[var(--text)]">{selectedPlan}</span>
               </div>
               <div className="flex justify-between border-b border-[--line] pb-2.5">
-                <span className="text-zinc-400">Birim Fiyat</span>
-                <span className="text-zinc-200">
+                <span className="text-[var(--text-muted)]">Birim Fiyat</span>
+                <span className="text-[var(--text-2)]">
                   {selectedPlan === "free" ? "0 TL" : selectedPlan === "pro" ? "15.000 TL" : "30.000 TL"}
                 </span>
               </div>
@@ -237,7 +225,7 @@ export default function PaywallPage() {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-zinc-400 bg-[--page] p-3 rounded-xl border border-[--line]">
+            <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)] bg-[--page] p-3 rounded-xl border border-[--line]">
               <Lock size={15} className="text-[--brand] shrink-0" />
               <span>Ödemeleriniz PCI-DSS uyumlu 256-bit SSL korumasıyla şifrelenir.</span>
             </div>
@@ -250,49 +238,49 @@ export default function PaywallPage() {
                 <CreditCard size={18} />
               </div>
               <div>
-                <h4 className="font-bold text-sm text-white">Güvenli Kart Ödeme</h4>
-                <p className="text-xs text-zinc-400">Kart bilgilerinizi girerek aboneliğinizi başlatın</p>
+                <h4 className="font-bold text-sm text-[var(--text)]">Güvenli Kart Ödeme</h4>
+                <p className="text-xs text-[var(--text-muted)]">Kart bilgilerinizi girerek aboneliğinizi başlatın</p>
               </div>
             </div>
 
             {selectedPlan === "free" ? (
               <div className="p-6 bg-[--page] border border-[--line] rounded-2xl text-center space-y-2">
                 <Check className="size-8 text-[--brand] mx-auto" />
-                <p className="text-sm font-semibold text-white">Ücretsiz paket için kredi kartı gerekmemektedir.</p>
-                <p className="text-xs text-zinc-400">Onayladığınızda sadece Dashboard, Ayarlar ve Teknik Destek paneline erişebileceksiniz.</p>
+                <p className="text-sm font-semibold text-[var(--text)]">Ücretsiz paket için kredi kartı gerekmemektedir.</p>
+                <p className="text-xs text-[var(--text-muted)]">Onayladığınızda sadece Dashboard, Ayarlar ve Teknik Destek paneline erişebileceksiniz.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {/* Card holder */}
                 <div className="space-y-1.5">
-                  <label className="text-xs text-zinc-400 font-medium uppercase tracking-wider">KART ÜZERİNDEKİ İSİM</label>
+                  <label className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">KART ÜZERİNDEKİ İSİM</label>
                   <input
                     type="text"
                     required
                     placeholder="Ad Soyad"
                     value={cardHolder}
                     onChange={(e) => setCardHolder(e.target.value)}
-                    className="w-full h-11 bg-white border border-[--line] rounded-xl px-4 text-xs focus:outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                    className="w-full h-11 bg-white border border-[--line] rounded-xl px-4 text-xs focus:outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                   />
                 </div>
 
                 {/* Card number */}
                 <div className="space-y-1.5">
-                  <label className="text-xs text-zinc-400 font-medium uppercase tracking-wider">KART NUMARASI</label>
+                  <label className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">KART NUMARASI</label>
                   <input
                     type="text"
                     required
                     placeholder="0000 0000 0000 0000"
                     value={cardNumber}
                     onChange={(e) => handleCardNumberChange(e.target.value)}
-                    className="w-full h-11 bg-white border border-[--line] rounded-xl px-4 text-xs font-mono focus:outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                    className="w-full h-11 bg-white border border-[--line] rounded-xl px-4 text-xs font-mono focus:outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                   />
                 </div>
 
                 {/* Expiry and CVV */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs text-zinc-400 font-medium uppercase tracking-wider">AY</label>
+                    <label className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">AY</label>
                     <input
                       type="text"
                       required
@@ -300,11 +288,11 @@ export default function PaywallPage() {
                       maxLength={2}
                       value={expMonth}
                       onChange={(e) => setExpMonth(e.target.value.replace(/\D/g, ""))}
-                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs text-zinc-400 font-medium uppercase tracking-wider">YIL</label>
+                    <label className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">YIL</label>
                     <input
                       type="text"
                       required
@@ -312,11 +300,11 @@ export default function PaywallPage() {
                       maxLength={2}
                       value={expYear}
                       onChange={(e) => setExpYear(e.target.value.replace(/\D/g, ""))}
-                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs text-zinc-400 font-medium uppercase tracking-wider">CVC</label>
+                    <label className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">CVC</label>
                     <input
                       type="password"
                       required
@@ -324,7 +312,7 @@ export default function PaywallPage() {
                       maxLength={3}
                       value={cvc}
                       onChange={(e) => setCvc(e.target.value.replace(/\D/g, ""))}
-                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                      className="w-full h-11 bg-white border border-[--line] rounded-xl px-3 text-xs text-center focus:outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                     />
                   </div>
                 </div>
@@ -332,7 +320,7 @@ export default function PaywallPage() {
             )}
 
             {errorMsg && (
-              <p className="text-xs text-red-400 font-semibold bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
+              <p className="text-xs text-red-400 font-semibold bg-[var(--bad-soft)] border border-[var(--bad-line)] p-3 rounded-xl">
                 {errorMsg}
               </p>
             )}

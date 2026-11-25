@@ -55,7 +55,7 @@ export default function TrashPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 py-4 border-b border-[--line]">
         <div>
           <div className="flex items-center gap-2 text-[--text-muted] mb-1">
-            <Trash2 className="size-4 text-zinc-500" />
+            <Trash2 className="size-4 text-[var(--text-muted)]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">ÇÖPTEKİ TOPLAM ÖGE</span>
           </div>
           <div className="flex items-baseline gap-2">
@@ -70,14 +70,14 @@ export default function TrashPage() {
 
         <div>
           <div className="flex items-center gap-2 text-[--text-muted] mb-1">
-            <Clock className="size-4 text-amber-400" />
+            <Clock className="size-4 text-[var(--warn)]" />
             <span className="text-[11px] font-medium uppercase tracking-wider">OTOMATİK TEMİZLEME</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-light text-amber-400 tracking-tight">
+            <span className="text-4xl font-light text-[var(--warn)] tracking-tight">
               30 Gün
             </span>
-            <span className="text-[10px] text-amber-400 font-medium px-2 py-0.5 rounded-full bg-amber-500/10">
+            <span className="text-[10px] text-[var(--warn)] font-medium px-2 py-0.5 rounded-full bg-[var(--warn-soft)]">
               Saklama
             </span>
           </div>

@@ -120,7 +120,7 @@ export const ART_PRESETS: Record<ArtPreset, ArtRecipe> = {
   // red ink folding through teal-black water
   ember: {
     style: "marble",
-    colors: ["#07090c", "#16252c", "#3d5f68", "#1a1416", "#a3201a", "#ef4a2b", "#ff8a5c"],
+    colors: ["#0B1B33", "#0B1B33", "#3d5f68", "#0B1B33", "#a3201a", "#ef4a2b", "#ff8a5c"],
     scale: 0.62,
     warp: 3.2,
     angle: -0.5,
@@ -130,7 +130,7 @@ export const ART_PRESETS: Record<ArtPreset, ArtRecipe> = {
   // plum and rust, swirled
   dusk: {
     style: "marble",
-    colors: ["#120c18", "#3e2850", "#8f6c9c", "#2b1a24", "#b3502f", "#eab08a", "#fbe7d2"],
+    colors: ["#0B1B33", "#3e2850", "#8f6c9c", "#2b1a24", "#b3502f", "#eab08a", "#fbe7d2"],
     scale: 0.75,
     warp: 3.6,
     angle: 0.8,
@@ -150,7 +150,7 @@ export const ART_PRESETS: Record<ArtPreset, ArtRecipe> = {
   // moss and brass
   verdant: {
     style: "marble",
-    colors: ["#070b08", "#173024", "#4f7a5a", "#141812", "#a7843a", "#e9cf87", "#fbf3d6"],
+    colors: ["#0B1B33", "#0B1B33", "#4f7a5a", "#0B1B33", "#a7843a", "#e9cf87", "#fbf3d6"],
     scale: 0.7,
     warp: 3.4,
     angle: 2.1,
@@ -261,7 +261,7 @@ export type ArtJob = {
 export function createArtJob(width: number, height: number, recipe: ArtRecipe, seed: number): ArtJob {
   const w = Math.max(1, Math.round(width))
   const h = Math.max(1, Math.round(height))
-  const colors = recipe.colors.length >= 2 ? recipe.colors : ["#111111", "#eeeeee"]
+  const colors = recipe.colors.length >= 2 ? recipe.colors : ["#0B1B33", "#eeeeee"]
   const stops = colors.map((c, i) => ({ t: i / (colors.length - 1), c: hexToRgb(c) }))
   const scale = recipe.scale ?? 0.7
   const warp = recipe.warp ?? 3
@@ -919,7 +919,7 @@ const GF_CSS = `
   --gf-spread: 0px;
   --gf-fan: 0deg;
   --gf-stack: 15px;
-  --gf-ink: #141416;
+  --gf-ink: #0B1B33;
   --gf-ink-soft: rgba(20, 20, 22, .55);
   position: relative;
   display: inline-block;
@@ -969,7 +969,7 @@ const GF_CSS = `
   overflow: hidden;
   background: linear-gradient(180deg, #f3f3f4 0%, #e3e3e6 100%);
 }
-.gf-root[data-tone="dark"] .gf-back { background: linear-gradient(180deg, #2a2a2e 0%, #121214 100%); }
+.gf-root[data-tone="dark"] .gf-back { background: linear-gradient(180deg, #2a2a2e 0%, #0B1B33 100%); }
 .gf-art {
   position: absolute;
   left: -12px;
@@ -1040,8 +1040,8 @@ canvas.gf-art[data-ready] { opacity: 1; filter: none; }
     translate .9s var(--gf-ease),
     opacity .9s var(--gf-ease);
 }
-.gf-root[data-tone="dark"] .gf-sheet { background: linear-gradient(180deg, #2c2c30 0%, #1c1c1f 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 .5px rgba(255, 255, 255, .08), 0 12px 28px -8px rgba(0, 0, 0, .7); }
-.gf-sheet--art { background: #1a1a1d; }
+.gf-root[data-tone="dark"] .gf-sheet { background: linear-gradient(180deg, #2c2c30 0%, #0B1B33 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 0 0 .5px rgba(255, 255, 255, .08), 0 12px 28px -8px rgba(0, 0, 0, .7); }
+.gf-sheet--art { background: #0B1B33; }
 .gf-root[data-open] .gf-sheet:hover,
 .gf-root[data-open] .gf-sheet:focus-visible {
   transform:
@@ -1090,7 +1090,7 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
   font-size: 12.5px;
   font-weight: 560;
   letter-spacing: -.005em;
-  color: #18181b;
+  color: #0B1B33;
 }
 .gf-sheet-meta {
   flex: none;
@@ -1238,7 +1238,7 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
 .gf-key:focus-visible { outline: 2px solid #4c8dff; outline-offset: 3px; }
 .gf-key--add {
   color: #fff;
-  background: radial-gradient(120% 90% at 50% 0%, #3a3a3f 0%, #121214 55%, #050506 100%);
+  background: radial-gradient(120% 90% at 50% 0%, #3a3a3f 0%, #0B1B33 55%, #0B1B33 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .22),
     inset 0 -3px 8px rgba(0, 0, 0, .7),
@@ -1247,12 +1247,12 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
     0 3px 6px -2px rgba(0, 0, 0, .35);
 }
 .gf-root[data-tone="dark"] .gf-key--add {
-  color: #111113;
+  color: #0B1B33;
   background: radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #ececee 55%, #d2d2d6 100%);
   box-shadow: inset 0 1px 0 #fff, inset 0 -3px 8px rgba(0, 0, 0, .14), 0 0 0 1px rgba(0, 0, 0, .4), 0 14px 22px -8px rgba(0, 0, 0, .7);
 }
 .gf-key--more {
-  color: #111113;
+  color: #0B1B33;
   background: linear-gradient(180deg, rgba(255, 255, 255, .92) 0%, rgba(226, 226, 230, .82) 100%);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -1303,7 +1303,7 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
   border-radius: 10px;
   font-size: 13.5px;
   font-weight: 450;
-  color: #18181b;
+  color: #0B1B33;
   cursor: pointer;
 }
 .gf-root[data-tone="dark"] .gf-menu-item { color: #f4f4f5; }

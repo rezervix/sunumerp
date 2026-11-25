@@ -642,14 +642,14 @@ export function ProductionBomWorkspace({
         )
       case "DRAFT":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/15 text-amber-300 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">
             <Edit3 className="w-3 h-3" />
             TASLAK
           </span>
         )
       case "OBSOLETE":
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-700/40 text-zinc-400 border border-zinc-700">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--muted-bg)]/40 text-[var(--text-muted)] border border-[var(--line)]">
             PASİF
           </span>
         )
@@ -689,7 +689,7 @@ export function ProductionBomWorkspace({
             onClick={() => setActiveTab("where_used")}
             className="gap-2"
           >
-            <FolderTree className="w-4 h-4 text-violet-400" />
+            <FolderTree className="w-4 h-4 text-[var(--brand)]" />
             Nerede Kullanılıyor?
           </Button>
 
@@ -699,7 +699,7 @@ export function ProductionBomWorkspace({
             onClick={() => setActiveTab("compare")}
             className="gap-2"
           >
-            <Layers className="w-4 h-4 text-amber-400" />
+            <Layers className="w-4 h-4 text-[var(--warn)]" />
             Revizyon Karşılaştır
           </Button>
         </div>
@@ -711,7 +711,7 @@ export function ProductionBomWorkspace({
             onClick={() => {
               window.open("/api/production/bom-rota?section=export_csv", "_blank")
             }}
-            className="gap-1.5 text-xs text-zinc-300"
+            className="gap-1.5 text-xs text-[var(--text-2)]"
           >
             <Download className="w-3.5 h-3.5 text-[--brand]" />
             Excel/CSV İndir
@@ -725,7 +725,7 @@ export function ProductionBomWorkspace({
               setImportReport(null)
               setImportModalOpen(true)
             }}
-            className="gap-1.5 text-xs text-zinc-300"
+            className="gap-1.5 text-xs text-[var(--text-2)]"
           >
             <Upload className="w-3.5 h-3.5 text-sky-400" />
             CSV İçe Aktar
@@ -759,20 +759,20 @@ export function ProductionBomWorkspace({
       {activeTab === "boms" && (
         <div className="space-y-4">
           {/* Filtre ve Arama Çubuğu */}
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[--line] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3 flex-1 min-w-[280px]">
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-500" />
+                <Search className="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)]" />
                 <Input
                   value={bomsSearch}
                   onChange={(e) => setBomsSearch(e.target.value)}
                   placeholder="Reçete kodu, reçete adı veya mamul ara..."
-                  className="pl-9 h-9 bg-zinc-950/60 border-[--line] text-xs"
+                  className="pl-9 h-9 bg-[var(--bg)]/60 border-[--line] text-xs"
                 />
               </div>
 
               <Select value={bomsStatusFilter} onValueChange={(val) => setBomsStatusFilter(val)}>
-                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-[--line] text-xs">
+                <SelectTrigger className="w-36 h-9 bg-[var(--bg)]/60 border-[--line] text-xs">
                   <SelectValue placeholder="Statü" />
                 </SelectTrigger>
                 <SelectContent>
@@ -784,7 +784,7 @@ export function ProductionBomWorkspace({
               </Select>
 
               <Select value={bomsPhantomFilter} onValueChange={(val) => setBomsPhantomFilter(val)}>
-                <SelectTrigger className="w-36 h-9 bg-zinc-950/60 border-[--line] text-xs">
+                <SelectTrigger className="w-36 h-9 bg-[var(--bg)]/60 border-[--line] text-xs">
                   <SelectValue placeholder="Reçete Tipi" />
                 </SelectTrigger>
                 <SelectContent>
@@ -801,7 +801,7 @@ export function ProductionBomWorkspace({
                 size="sm"
                 onClick={fetchBoms}
                 disabled={bomsLoading}
-                className="h-9 px-3 text-xs text-zinc-400 hover:text-white"
+                className="h-9 px-3 text-xs text-[var(--text-muted)] hover:text-[var(--brand)]"
               >
                 <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${bomsLoading ? "animate-spin" : ""}`} />
                 Yenile
@@ -810,53 +810,53 @@ export function ProductionBomWorkspace({
           </div>
 
           {/* Reçeteler Tablosu */}
-          <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
+          <div className="rounded-xl border border-[--line] overflow-hidden bg-[var(--muted-bg)]">
             <Table>
-              <TableHeader className="bg-zinc-900/60">
+              <TableHeader className="bg-[var(--bg)]">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400 font-medium text-xs">Reçete Kodu</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs">Reçete Adı</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs">Mamul Kartı</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-center">Rev</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-center">Statü</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-right">Temel Miktar</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-right">Teorik Birim Maliyet</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-center">Bileşen Sayısı</TableHead>
-                  <TableHead className="text-zinc-400 font-medium text-xs text-right">Aksiyonlar</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs">Reçete Kodu</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs">Reçete Adı</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs">Mamul Kartı</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-center">Rev</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-center">Statü</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-right">Temel Miktar</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-right">Teorik Birim Maliyet</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-center">Bileşen Sayısı</TableHead>
+                  <TableHead className="text-[var(--text-muted)] font-medium text-xs text-right">Aksiyonlar</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {bomsLoading ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-12 text-zinc-500 text-xs">
+                    <TableCell colSpan={9} className="text-center py-12 text-[var(--text-muted)] text-xs">
                       Reçeteler yükleniyor...
                     </TableCell>
                   </TableRow>
                 ) : boms.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center py-12 text-zinc-500 text-xs">
+                    <TableCell colSpan={9} className="text-center py-12 text-[var(--text-muted)] text-xs">
                       Tanımlı ürün reçetesi bulunamadı. "Yeni Reçete" butonu ile oluşturabilirsiniz.
                     </TableCell>
                   </TableRow>
                 ) : (
                   boms.map((bom) => (
-                    <TableRow key={bom.id} className="border-white/[0.05] hover:bg-[--page] transition-colors">
+                    <TableRow key={bom.id} className="border-[var(--line-soft)] hover:bg-[--page] transition-colors">
                       <TableCell className="font-mono text-xs font-semibold text-[--brand]">
                         {bom.code}
                         {bom.isPhantom && (
-                          <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                          <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]">
                             PHANTOM
                           </span>
                         )}
                       </TableCell>
-                      <TableCell className="text-xs font-medium text-zinc-200">{bom.name}</TableCell>
-                      <TableCell className="text-xs text-zinc-400">
-                        <div className="font-mono text-[11px] text-zinc-500">{bom.finishedItemCode}</div>
+                      <TableCell className="text-xs font-medium text-[var(--text-2)]">{bom.name}</TableCell>
+                      <TableCell className="text-xs text-[var(--text-muted)]">
+                        <div className="font-mono text-[11px] text-[var(--text-muted)]">{bom.finishedItemCode}</div>
                         <div>{bom.finishedItemName}</div>
                       </TableCell>
-                      <TableCell className="text-center font-mono text-xs text-zinc-400">{bom.revision}</TableCell>
+                      <TableCell className="text-center font-mono text-xs text-[var(--text-muted)]">{bom.revision}</TableCell>
                       <TableCell className="text-center">{renderStatusBadge(bom.status)}</TableCell>
-                      <TableCell className="text-right text-xs font-mono text-zinc-300">
+                      <TableCell className="text-right text-xs font-mono text-[var(--text-2)]">
                         {bom.baseQuantity} {bom.baseUnit}
                       </TableCell>
                       <TableCell className="text-right text-xs font-mono font-medium text-[--brand]">
@@ -864,7 +864,7 @@ export function ProductionBomWorkspace({
                           ? formatCurrency(bom.totalTheoreticalCost / (bom.baseQuantity || 1))
                           : "—"}
                       </TableCell>
-                      <TableCell className="text-center text-xs font-mono text-zinc-400">
+                      <TableCell className="text-center text-xs font-mono text-[var(--text-muted)]">
                         {bom.components?.length || 0}
                       </TableCell>
                       <TableCell className="text-right">
@@ -903,7 +903,7 @@ export function ProductionBomWorkspace({
                               setCloneNewCode(`${bom.code}-R${nextRev}`)
                               setCloneBomModalOpen(true)
                             }}
-                            className="h-7 px-2 text-xs text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
+                            className="h-7 px-2 text-xs text-[var(--warn)] hover:text-[var(--warn)] hover:bg-[var(--warn-soft)]"
                             title="Kopyala & Yeni Revizyon Türet"
                           >
                             <Copy className="w-3 h-3 mr-1" />
@@ -915,7 +915,7 @@ export function ProductionBomWorkspace({
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeleteBom(bom)}
-                              className="h-7 px-2 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+                              className="h-7 px-2 text-xs text-[var(--bad)] hover:text-[var(--bad)] hover:bg-[var(--bad-soft)]"
                             >
                               <Trash2 className="w-3 h-3" />
                             </Button>
@@ -930,7 +930,7 @@ export function ProductionBomWorkspace({
           </div>
 
           {/* Sayfalama Kontrolleri */}
-          <div className="flex items-center justify-between text-xs text-zinc-500 pt-2">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] pt-2">
             <div>Toplam {bomsTotalCount} reçete listelendi</div>
             <div className="flex items-center gap-2">
               <Button
@@ -962,14 +962,14 @@ export function ProductionBomWorkspace({
       {/* ── 2. BÖLÜM: OPERASYON ROTALARI LİSTESİ ── */}
       {activeTab === "routings" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[--line] flex items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-zinc-500" />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-[var(--text-muted)]" />
               <Input
                 value={routingsSearch}
                 onChange={(e) => setRoutingsSearch(e.target.value)}
                 placeholder="Rota kodu veya mamul ara..."
-                className="pl-9 h-9 bg-zinc-950/60 border-[--line] text-xs"
+                className="pl-9 h-9 bg-[var(--bg)]/60 border-[--line] text-xs"
               />
             </div>
             <Button
@@ -994,52 +994,52 @@ export function ProductionBomWorkspace({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {routingsLoading ? (
-              <div className="col-span-full text-center py-12 text-zinc-500 text-xs">Rotalar yükleniyor...</div>
+              <div className="col-span-full text-center py-12 text-[var(--text-muted)] text-xs">Rotalar yükleniyor...</div>
             ) : routings.length === 0 ? (
-              <div className="col-span-full text-center py-12 text-zinc-500 text-xs">
+              <div className="col-span-full text-center py-12 text-[var(--text-muted)] text-xs">
                 Kayıtlı operasyon rotası bulunamadı.
               </div>
             ) : (
               routings.map((rt) => (
                 <div
                   key={rt.id}
-                  className="p-4 rounded-xl border border-[--line] bg-zinc-900/40 hover:border-white/[0.15] transition-all space-y-3"
+                  className="p-4 rounded-xl border border-[--line] bg-[var(--muted-bg)] hover:border-[var(--line)] transition-all space-y-3"
                 >
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="font-mono text-xs font-semibold text-sky-400">{rt.code}</div>
-                      <div className="text-sm font-medium text-zinc-200 mt-0.5">{rt.name}</div>
-                      <div className="text-xs text-zinc-400 font-mono mt-0.5">{rt.finishedItemName}</div>
+                      <div className="text-sm font-medium text-[var(--text-2)] mt-0.5">{rt.name}</div>
+                      <div className="text-xs text-[var(--text-muted)] font-mono mt-0.5">{rt.finishedItemName}</div>
                     </div>
                     {renderStatusBadge(rt.status)}
                   </div>
 
                   {/* Operasyon Çizelgesi */}
                   <div className="space-y-1.5 pt-2 border-t border-[--line]">
-                    <div className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">
+                    <div className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
                       Operasyon Adımları ({rt.operations?.length || 0})
                     </div>
                     {(rt.operations || []).map((op) => (
                       <div
                         key={op.id}
-                        className="flex items-center justify-between p-2 rounded-lg bg-zinc-950/60 border border-white/[0.04] text-xs"
+                        className="flex items-center justify-between p-2 rounded-lg bg-[var(--bg)]/60 border border-[var(--line-soft)] text-xs"
                       >
                         <div className="flex items-center gap-2">
                           <span className="w-5 h-5 rounded bg-sky-500/20 text-sky-300 font-mono text-[10px] flex items-center justify-center font-bold">
                             {op.operationNumber}
                           </span>
                           <div>
-                            <div className="font-medium text-zinc-200">{op.name}</div>
-                            <div className="text-[10px] text-zinc-500 font-mono">{op.workCenterName}</div>
+                            <div className="font-medium text-[var(--text-2)]">{op.name}</div>
+                            <div className="text-[10px] text-[var(--text-muted)] font-mono">{op.workCenterName}</div>
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <div className="font-mono text-[11px] text-zinc-300">
+                          <div className="font-mono text-[11px] text-[var(--text-2)]">
                             {op.runTimeMinutes} dk / {op.workerCount} işçi
                           </div>
                           {op.isQualityControlPoint && (
-                            <span className="inline-flex items-center gap-0.5 text-[9px] text-amber-400 font-medium">
+                            <span className="inline-flex items-center gap-0.5 text-[9px] text-[var(--warn)] font-medium">
                               <ShieldCheck className="w-2.5 h-2.5" /> Kalite Kontrol
                             </span>
                           )}
@@ -1074,7 +1074,7 @@ export function ProductionBomWorkspace({
                       <Plus className="w-3 h-3" /> Operasyon Ekle
                     </Button>
 
-                    <div className="text-right text-[11px] font-mono text-zinc-400">
+                    <div className="text-right text-[11px] font-mono text-[var(--text-muted)]">
                       Toplam Süre: {rt.totalRunTimeMinutes} dk
                     </div>
                   </div>
@@ -1088,11 +1088,11 @@ export function ProductionBomWorkspace({
       {/* ── 3. BÖLÜM: NEREDE KULLANILIYOR (WHERE-USED) TERS AĞAÇ SORGUSU ── */}
       {activeTab === "where_used" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[--line] flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex-1">
-              <Label className="text-xs text-zinc-400 mb-1 block">Sorgulanacak Malzeme (Hammadde / Yarı Mamul)</Label>
+              <Label className="text-xs text-[var(--text-muted)] mb-1 block">Sorgulanacak Malzeme (Hammadde / Yarı Mamul)</Label>
               <Select value={whereUsedItemId} onValueChange={(val) => setWhereUsedItemId(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
+                <SelectTrigger className="bg-[var(--bg)]/60 border-[--line] text-xs">
                   <SelectValue placeholder="Bir hammadde veya bileşen seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1109,7 +1109,7 @@ export function ProductionBomWorkspace({
               <Button
                 onClick={handleRunWhereUsed}
                 disabled={whereUsedLoading}
-                className="bg-violet-600 hover:bg-violet-700 text-white text-xs h-9 px-4 gap-2"
+                className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium text-xs h-9 px-4 gap-2"
               >
                 <Search className="w-3.5 h-3.5" />
                 Ters Ağaç Analizini Başlat
@@ -1118,28 +1118,28 @@ export function ProductionBomWorkspace({
           </div>
 
           {whereUsedResults.length > 0 && (
-            <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
+            <div className="rounded-xl border border-[--line] overflow-hidden bg-[var(--muted-bg)]">
               <Table>
-                <TableHeader className="bg-zinc-900/60">
+                <TableHeader className="bg-[var(--bg)]">
                   <TableRow className="border-[--line]">
-                    <TableHead className="text-zinc-400 font-medium text-xs">Seviye (Derinlik)</TableHead>
-                    <TableHead className="text-zinc-400 font-medium text-xs">Reçete Kodu</TableHead>
-                    <TableHead className="text-zinc-400 font-medium text-xs">Üst Mamul / Ürün</TableHead>
-                    <TableHead className="text-zinc-400 font-medium text-xs text-right">Kullanılan Miktar</TableHead>
-                    <TableHead className="text-zinc-400 font-medium text-xs text-center">İlişki Türü</TableHead>
+                    <TableHead className="text-[var(--text-muted)] font-medium text-xs">Seviye (Derinlik)</TableHead>
+                    <TableHead className="text-[var(--text-muted)] font-medium text-xs">Reçete Kodu</TableHead>
+                    <TableHead className="text-[var(--text-muted)] font-medium text-xs">Üst Mamul / Ürün</TableHead>
+                    <TableHead className="text-[var(--text-muted)] font-medium text-xs text-right">Kullanılan Miktar</TableHead>
+                    <TableHead className="text-[var(--text-muted)] font-medium text-xs text-center">İlişki Türü</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {whereUsedResults.map((res, idx) => (
-                    <TableRow key={idx} className="border-white/[0.04]">
-                      <TableCell className="font-mono text-xs text-violet-400 font-semibold">
+                    <TableRow key={idx} className="border-[var(--line-soft)]">
+                      <TableCell className="font-mono text-xs text-[var(--brand)] font-semibold">
                         Seviye {res.level}
                       </TableCell>
-                      <TableCell className="font-mono text-xs text-zinc-300 font-medium">
+                      <TableCell className="font-mono text-xs text-[var(--text-2)] font-medium">
                         {res.bomCode} (Rev {res.revision})
                       </TableCell>
-                      <TableCell className="text-xs text-zinc-200">
-                        <div className="font-mono text-[11px] text-zinc-500">{res.finishedItemCode}</div>
+                      <TableCell className="text-xs text-[var(--text-2)]">
+                        <div className="font-mono text-[11px] text-[var(--text-muted)]">{res.finishedItemCode}</div>
                         <div>{res.finishedItemName}</div>
                       </TableCell>
                       <TableCell className="text-right font-mono text-xs text-[--brand] font-medium">
@@ -1147,11 +1147,7 @@ export function ProductionBomWorkspace({
                       </TableCell>
                       <TableCell className="text-center">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-                            res.isDirect
-                              ? "bg-[--brand]/15 text-[--brand] border border-[--brand-line]"
-                              : "bg-zinc-800 text-zinc-400"
-                          }`}
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono ${ res.isDirect ? "bg-[--brand]/15 text-[--brand] border border-[--brand-line]" : "bg-[var(--muted-bg)] text-[var(--text-muted)]" }`}
                         >
                           {res.isDirect ? "DOĞRUDAN KALEM" : "ALT BİLEŞEN DOLAYLI"}
                         </span>
@@ -1168,11 +1164,11 @@ export function ProductionBomWorkspace({
       {/* ── 4. BÖLÜM: REVİZYON KARŞILAŞTIRMA (DIFF) ── */}
       {activeTab === "compare" && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-zinc-900/60 border border-[--line] grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[--line] grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label className="text-xs text-zinc-400 mb-1 block">Referans Reçete (A - Eski Revizyon)</Label>
+              <Label className="text-xs text-[var(--text-muted)] mb-1 block">Referans Reçete (A - Eski Revizyon)</Label>
               <Select value={compareBomA} onValueChange={(val) => setCompareBomA(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
+                <SelectTrigger className="bg-[var(--bg)]/60 border-[--line] text-xs">
                   <SelectValue placeholder="İlk reçeteyi seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1186,9 +1182,9 @@ export function ProductionBomWorkspace({
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-400 mb-1 block">Hedef Reçete (B - Yeni Revizyon)</Label>
+              <Label className="text-xs text-[var(--text-muted)] mb-1 block">Hedef Reçete (B - Yeni Revizyon)</Label>
               <Select value={compareBomB} onValueChange={(val) => setCompareBomB(val)}>
-                <SelectTrigger className="bg-zinc-950/60 border-[--line] text-xs">
+                <SelectTrigger className="bg-[var(--bg)]/60 border-[--line] text-xs">
                   <SelectValue placeholder="İkinci reçeteyi seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1214,25 +1210,19 @@ export function ProductionBomWorkspace({
           </div>
 
           {compareDiff && (
-            <div className="p-4 rounded-xl border border-[--line] bg-zinc-900/40 space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-zinc-950/60 border border-white/[0.05]">
-                <div className="text-xs text-zinc-300">
+            <div className="p-4 rounded-xl border border-[--line] bg-[var(--muted-bg)] space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-[var(--bg)]/60 border border-[var(--line-soft)]">
+                <div className="text-xs text-[var(--text-2)]">
                   Maliyet Değişimi:{" "}
                   <span
-                    className={`font-mono font-semibold ${
-                      compareDiff.costDifference.totalCostDelta > 0
-                        ? "text-rose-400"
-                        : compareDiff.costDifference.totalCostDelta < 0
-                        ? "text-[--brand]"
-                        : "text-zinc-400"
-                    }`}
+                    className={`font-mono font-semibold ${ compareDiff.costDifference.totalCostDelta > 0 ? "text-[var(--bad)]" : compareDiff.costDifference.totalCostDelta < 0 ? "text-[--brand]" : "text-[var(--text-muted)]" }`}
                   >
                     {compareDiff.costDifference.totalCostDelta > 0 ? "+" : ""}
                     {formatCurrency(compareDiff.costDifference.totalCostDelta)} (
                     {compareDiff.costDifference.percentageChange}%)
                   </span>
                 </div>
-                <div className="text-xs text-zinc-400">
+                <div className="text-xs text-[var(--text-muted)]">
                   Değişmeyen: {compareDiff.unchangedCount} | Eklenen: {compareDiff.addedComponents.length} | Çıkarılan:{" "}
                   {compareDiff.removedComponents.length} | Değiştirilen: {compareDiff.modifiedComponents.length}
                 </div>
@@ -1246,7 +1236,7 @@ export function ProductionBomWorkspace({
                   </div>
                   <div className="rounded-lg border border-[--brand-line] bg-[--brand]/5 p-2 space-y-1">
                     {compareDiff.addedComponents.map((c) => (
-                      <div key={c.id} className="flex justify-between text-xs text-zinc-300">
+                      <div key={c.id} className="flex justify-between text-xs text-[var(--text-2)]">
                         <span>
                           [{c.componentItemCode}] {c.componentItemName}
                         </span>
@@ -1262,16 +1252,16 @@ export function ProductionBomWorkspace({
               {/* Çıkarılan Kalemler */}
               {compareDiff.removedComponents.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-xs font-semibold text-rose-400 flex items-center gap-1.5">
+                  <div className="text-xs font-semibold text-[var(--bad)] flex items-center gap-1.5">
                     <Trash2 className="w-3.5 h-3.5" /> Çıkarılan Kalemler ({compareDiff.removedComponents.length})
                   </div>
-                  <div className="rounded-lg border border-rose-500/20 bg-rose-500/5 p-2 space-y-1">
+                  <div className="rounded-lg border border-[var(--bad-line)] bg-rose-500/5 p-2 space-y-1">
                     {compareDiff.removedComponents.map((c) => (
-                      <div key={c.id} className="flex justify-between text-xs text-zinc-300">
-                        <span className="line-through text-zinc-500">
+                      <div key={c.id} className="flex justify-between text-xs text-[var(--text-2)]">
+                        <span className="line-through text-[var(--text-muted)]">
                           [{c.componentItemCode}] {c.componentItemName}
                         </span>
-                        <span className="font-mono text-rose-400">
+                        <span className="font-mono text-[var(--bad)]">
                           -{c.quantity} {c.unit}
                         </span>
                       </div>
@@ -1283,20 +1273,20 @@ export function ProductionBomWorkspace({
               {/* Değiştirilen Kalemler */}
               {compareDiff.modifiedComponents.length > 0 && (
                 <div className="space-y-1.5">
-                  <div className="text-xs font-semibold text-amber-400 flex items-center gap-1.5">
+                  <div className="text-xs font-semibold text-[var(--warn)] flex items-center gap-1.5">
                     <Edit3 className="w-3.5 h-3.5" /> Miktar / Fire Oranı Değişenler ({compareDiff.modifiedComponents.length})
                   </div>
-                  <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-2 space-y-2">
+                  <div className="rounded-lg border border-[var(--warn-line)] bg-amber-500/5 p-2 space-y-2">
                     {compareDiff.modifiedComponents.map((m, i) => (
-                      <div key={i} className="flex items-center justify-between text-xs text-zinc-300">
+                      <div key={i} className="flex items-center justify-between text-xs text-[var(--text-2)]">
                         <div>
                           [{m.componentItemCode}] {m.componentItemName}
                         </div>
-                        <div className="font-mono text-zinc-400 flex items-center gap-2">
-                          <span className="text-rose-400 line-through">
+                        <div className="font-mono text-[var(--text-muted)] flex items-center gap-2">
+                          <span className="text-[var(--bad)] line-through">
                             {m.oldQuantity} {m.oldUnit} (Fire %{m.oldScrapPercent})
                           </span>
-                          <ArrowRight className="w-3 h-3 text-zinc-500" />
+                          <ArrowRight className="w-3 h-3 text-[var(--text-muted)]" />
                           <span className="text-[--brand] font-semibold">
                             {m.newQuantity} {m.newUnit} (Fire %{m.newScrapPercent})
                           </span>
@@ -1313,28 +1303,28 @@ export function ProductionBomWorkspace({
 
       {/* ── DETAY ÇEKMECESİ (BOM DRAWER) ── */}
       <Sheet open={bomDrawerOpen} onOpenChange={setBomDrawerOpen}>
-        <SheetContent side="right" className="w-full sm:max-w-2xl lg:max-w-4xl bg-[#0B0E0C] border-l border-[--line] p-0 flex flex-col">
+        <SheetContent side="right" className="w-full sm:max-w-2xl lg:max-w-4xl bg-[var(--bg)] border-l border-[--line] p-0 flex flex-col">
           {selectedBom && (
             <>
               {/* Çekmece Başlığı */}
-              <div className="p-6 border-b border-[--line] bg-zinc-950/60">
+              <div className="p-6 border-b border-[--line] bg-[var(--bg)]/60">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm font-bold text-[--brand]">{selectedBom.code}</span>
-                      <span className="font-mono text-xs px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                      <span className="font-mono text-xs px-2 py-0.5 rounded bg-[var(--muted-bg)] text-[var(--text-2)]">
                         Rev.{selectedBom.revision}
                       </span>
                       {renderStatusBadge(selectedBom.status)}
                     </div>
-                    <h2 className="text-lg font-semibold text-white mt-1">{selectedBom.name}</h2>
-                    <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                    <h2 className="text-lg font-semibold text-[var(--text)] mt-1">{selectedBom.name}</h2>
+                    <p className="text-xs text-[var(--text-muted)] font-mono mt-0.5">
                       Mamul: {selectedBom.finishedItemCode} — {selectedBom.finishedItemName}
                     </p>
                   </div>
 
                   <div className="text-right">
-                    <div className="text-xs text-zinc-500">Teorik Birim Maliyet</div>
+                    <div className="text-xs text-[var(--text-muted)]">Teorik Birim Maliyet</div>
                     <div className="text-lg font-mono font-bold text-[--brand]">
                       {formatCurrency(selectedBom.totalTheoreticalCost / (selectedBom.baseQuantity || 1))}
                     </div>
@@ -1342,7 +1332,7 @@ export function ProductionBomWorkspace({
                       variant="ghost"
                       size="sm"
                       onClick={() => handleRecalculateCost(selectedBom.id)}
-                      className="h-6 px-1.5 text-[10px] text-zinc-400 hover:text-[--brand] mt-1"
+                      className="h-6 px-1.5 text-[10px] text-[var(--text-muted)] hover:text-[--brand] mt-1"
                     >
                       <RefreshCw className="w-2.5 h-2.5 mr-1" />
                       Maliyeti Güncelle
@@ -1393,7 +1383,7 @@ export function ProductionBomWorkspace({
                 {selectedBomTab === "components" && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider">
+                      <span className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">
                         Reçete Formülü (Bileşen Listesi)
                       </span>
                       {selectedBom.status !== "APPROVED" && (
@@ -1419,26 +1409,26 @@ export function ProductionBomWorkspace({
                       )}
                     </div>
 
-                    <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
+                    <div className="rounded-xl border border-[--line] overflow-hidden bg-[var(--muted-bg)]">
                       <Table>
-                        <TableHeader className="bg-zinc-900/60">
+                        <TableHeader className="bg-[var(--bg)]">
                           <TableRow className="border-[--line]">
-                            <TableHead className="text-zinc-400 text-xs w-12">Sıra</TableHead>
-                            <TableHead className="text-zinc-400 text-xs">Bileşen Malzeme</TableHead>
-                            <TableHead className="text-zinc-400 text-xs text-right">Net Miktar</TableHead>
-                            <TableHead className="text-zinc-400 text-xs text-right">Fire %</TableHead>
-                            <TableHead className="text-zinc-400 text-xs text-right">Birim Fiyat</TableHead>
-                            <TableHead className="text-zinc-400 text-xs text-right">Tutar</TableHead>
-                            <TableHead className="text-zinc-400 text-xs text-center">İkame</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs w-12">Sıra</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs">Bileşen Malzeme</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs text-right">Net Miktar</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs text-right">Fire %</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs text-right">Birim Fiyat</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs text-right">Tutar</TableHead>
+                            <TableHead className="text-[var(--text-muted)] text-xs text-center">İkame</TableHead>
                             {selectedBom.status !== "APPROVED" && (
-                              <TableHead className="text-zinc-400 text-xs text-right">İşlem</TableHead>
+                              <TableHead className="text-[var(--text-muted)] text-xs text-right">İşlem</TableHead>
                             )}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {(selectedBom.components || []).length === 0 ? (
                             <TableRow>
-                              <TableCell colSpan={8} className="text-center py-8 text-zinc-500 text-xs">
+                              <TableCell colSpan={8} className="text-center py-8 text-[var(--text-muted)] text-xs">
                                 Henüz bileşen eklenmemiş. "Bileşen Ekle" butonu ile ekleyebilirsiniz.
                               </TableCell>
                             </TableRow>
@@ -1446,22 +1436,22 @@ export function ProductionBomWorkspace({
                             selectedBom.components!.map((comp) => {
                               const lineCost = (comp.quantity * (comp.unitCost || 0) * (1 + (comp.scrapPercent || 0) / 100))
                               return (
-                                <TableRow key={comp.id} className="border-white/[0.04]">
-                                  <TableCell className="font-mono text-xs text-zinc-500">{comp.lineNumber}</TableCell>
+                                <TableRow key={comp.id} className="border-[var(--line-soft)]">
+                                  <TableCell className="font-mono text-xs text-[var(--text-muted)]">{comp.lineNumber}</TableCell>
                                   <TableCell className="text-xs">
                                     <div className="font-mono text-[11px] text-[--brand]">{comp.componentItemCode}</div>
-                                    <div className="text-zinc-200 font-medium">{comp.componentItemName}</div>
+                                    <div className="text-[var(--text-2)] font-medium">{comp.componentItemName}</div>
                                     {comp.isPhantom && (
-                                      <span className="text-[10px] text-purple-400 font-mono">PHANTOM YARI MAMUL</span>
+                                      <span className="text-[10px] text-[var(--brand)] font-mono">PHANTOM YARI MAMUL</span>
                                     )}
                                   </TableCell>
-                                  <TableCell className="text-right font-mono text-xs text-zinc-300">
+                                  <TableCell className="text-right font-mono text-xs text-[var(--text-2)]">
                                     {comp.quantity} {comp.unit}
                                   </TableCell>
-                                  <TableCell className="text-right font-mono text-xs text-amber-400">
+                                  <TableCell className="text-right font-mono text-xs text-[var(--warn)]">
                                     %{comp.scrapPercent || 0}
                                   </TableCell>
-                                  <TableCell className="text-right font-mono text-xs text-zinc-400">
+                                  <TableCell className="text-right font-mono text-xs text-[var(--text-muted)]">
                                     {formatCurrency(comp.unitCost || 0)}
                                   </TableCell>
                                   <TableCell className="text-right font-mono text-xs text-[--brand] font-semibold">
@@ -1469,7 +1459,7 @@ export function ProductionBomWorkspace({
                                   </TableCell>
                                   <TableCell className="text-center">
                                     <div className="flex items-center justify-center gap-1">
-                                      <span className="text-xs font-mono text-zinc-400">
+                                      <span className="text-xs font-mono text-[var(--text-muted)]">
                                         {comp.substitutes?.length || 0}
                                       </span>
                                       {selectedBom.status !== "APPROVED" && (
@@ -1487,7 +1477,7 @@ export function ProductionBomWorkspace({
                                             })
                                             setAddSubstituteModalOpen(true)
                                           }}
-                                          className="h-6 w-6 p-0 text-violet-400 hover:text-violet-300"
+                                          className="h-6 w-6 p-0 text-[var(--brand)] hover:text-[var(--brand)]"
                                           title="İkame Malzeme Ekle"
                                         >
                                           <Plus className="w-3 h-3" />
@@ -1498,7 +1488,7 @@ export function ProductionBomWorkspace({
                                     {(comp.substitutes || []).map((s) => (
                                       <div
                                         key={s.id}
-                                        className="text-[10px] text-violet-300/80 font-mono mt-0.5 flex items-center justify-center gap-1"
+                                        className="text-[10px] text-[var(--brand)]/80 font-mono mt-0.5 flex items-center justify-center gap-1"
                                       >
                                         <span>
                                           P{s.priority}: {s.substituteItemCode} (1:{s.substitutionRatio})
@@ -1506,7 +1496,7 @@ export function ProductionBomWorkspace({
                                         {selectedBom.status !== "APPROVED" && (
                                           <button
                                             onClick={() => handleDeleteSubstitute(s.id)}
-                                            className="text-zinc-500 hover:text-rose-400"
+                                            className="text-[var(--text-muted)] hover:text-[var(--bad)]"
                                           >
                                             <X className="w-2.5 h-2.5" />
                                           </button>
@@ -1520,7 +1510,7 @@ export function ProductionBomWorkspace({
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => handleDeleteComponent(comp.id)}
-                                        className="h-6 w-6 p-0 text-rose-400 hover:text-rose-300"
+                                        className="h-6 w-6 p-0 text-[var(--bad)] hover:text-[var(--bad)]"
                                       >
                                         <Trash2 className="w-3 h-3" />
                                       </Button>
@@ -1539,17 +1529,17 @@ export function ProductionBomWorkspace({
                 {/* 2. Alt Sekme: Çok Seviyeli Patlatma (Explosion) */}
                 {selectedBomTab === "exploded" && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg)] border border-[--line]">
                       <div className="flex items-center gap-2">
-                        <Label className="text-xs text-zinc-400">Üretim Parti Miktarı:</Label>
+                        <Label className="text-xs text-[var(--text-muted)]">Üretim Parti Miktarı:</Label>
                         <Input
                           type="number"
                           min={1}
                           value={simQty}
                           onChange={(e) => setSimQty(Number(e.target.value) || 1)}
-                          className="w-24 h-8 bg-zinc-950 border-[--line] text-xs font-mono"
+                          className="w-24 h-8 bg-[var(--bg)] border-[--line] text-xs font-mono"
                         />
-                        <span className="text-xs text-zinc-400">{selectedBom.baseUnit}</span>
+                        <span className="text-xs text-[var(--text-muted)]">{selectedBom.baseUnit}</span>
                       </div>
                       <Button
                         size="sm"
@@ -1576,36 +1566,36 @@ export function ProductionBomWorkspace({
 
                         {/* Düzleştirilmiş Hammadde İhtiyaç Tablosu */}
                         <div className="space-y-2">
-                          <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider">
+                          <span className="text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">
                             Düzleştirilmiş Net / Brüt Malzeme İhtiyaçları
                           </span>
-                          <div className="rounded-xl border border-[--line] overflow-hidden bg-zinc-950/40">
+                          <div className="rounded-xl border border-[--line] overflow-hidden bg-[var(--muted-bg)]">
                             <Table>
-                              <TableHeader className="bg-zinc-900/60">
+                              <TableHeader className="bg-[var(--bg)]">
                                 <TableRow className="border-[--line]">
-                                  <TableHead className="text-zinc-400 text-xs">Hammadde Kodu</TableHead>
-                                  <TableHead className="text-zinc-400 text-xs">Malzeme Adı</TableHead>
-                                  <TableHead className="text-zinc-400 text-xs text-center">Seviyeler</TableHead>
-                                  <TableHead className="text-zinc-400 text-xs text-right">Net Miktar</TableHead>
-                                  <TableHead className="text-zinc-400 text-xs text-right">Brüt (Fire Dahil)</TableHead>
-                                  <TableHead className="text-zinc-400 text-xs text-right">Tahmini Tutar</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs">Hammadde Kodu</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs">Malzeme Adı</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs text-center">Seviyeler</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs text-right">Net Miktar</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs text-right">Brüt (Fire Dahil)</TableHead>
+                                  <TableHead className="text-[var(--text-muted)] text-xs text-right">Tahmini Tutar</TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
                                 {explodedData.flattenedSummary.map((m) => (
-                                  <TableRow key={m.itemId} className="border-white/[0.04]">
+                                  <TableRow key={m.itemId} className="border-[var(--line-soft)]">
                                     <TableCell className="font-mono text-xs text-[--brand] font-medium">
                                       {m.itemCode}
                                     </TableCell>
-                                    <TableCell className="text-xs text-zinc-200">{m.itemName}</TableCell>
-                                    <TableCell className="text-center font-mono text-[11px] text-zinc-400">
+                                    <TableCell className="text-xs text-[var(--text-2)]">{m.itemName}</TableCell>
+                                    <TableCell className="text-center font-mono text-[11px] text-[var(--text-muted)]">
                                       L{m.usedInLevels.join(", L")}
                                     </TableCell>
-                                    <TableCell className="text-right font-mono text-xs text-zinc-300">
+                                    <TableCell className="text-right font-mono text-xs text-[var(--text-2)]">
                                       {m.totalNetQuantity.toLocaleString("tr-TR", { maximumFractionDigits: 3 })}{" "}
                                       {m.unit}
                                     </TableCell>
-                                    <TableCell className="text-right font-mono text-xs text-amber-400 font-semibold">
+                                    <TableCell className="text-right font-mono text-xs text-[var(--warn)] font-semibold">
                                       {m.totalGrossQuantity.toLocaleString("tr-TR", { maximumFractionDigits: 3 })}{" "}
                                       {m.unit}
                                     </TableCell>
@@ -1627,21 +1617,21 @@ export function ProductionBomWorkspace({
                 {selectedBomTab === "cost" && (
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
-                        <div className="text-[11px] text-zinc-400">Malzeme Maliyeti</div>
-                        <div className="text-base font-mono font-bold text-zinc-100 mt-1">
+                      <div className="p-3 rounded-xl bg-[var(--bg)] border border-[--line]">
+                        <div className="text-[11px] text-[var(--text-muted)]">Malzeme Maliyeti</div>
+                        <div className="text-base font-mono font-bold text-[var(--text)] mt-1">
                           {formatCurrency(selectedBom.totalMaterialCost)}
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
-                        <div className="text-[11px] text-zinc-400">İşçilik / Makine</div>
+                      <div className="p-3 rounded-xl bg-[var(--bg)] border border-[--line]">
+                        <div className="text-[11px] text-[var(--text-muted)]">İşçilik / Makine</div>
                         <div className="text-base font-mono font-bold text-sky-400 mt-1">
                           {formatCurrency(selectedBom.totalLaborCost)}
                         </div>
                       </div>
-                      <div className="p-3 rounded-xl bg-zinc-900/60 border border-[--line]">
-                        <div className="text-[11px] text-zinc-400">Hazırlık / Genel Gider</div>
-                        <div className="text-base font-mono font-bold text-violet-400 mt-1">
+                      <div className="p-3 rounded-xl bg-[var(--bg)] border border-[--line]">
+                        <div className="text-[11px] text-[var(--text-muted)]">Hazırlık / Genel Gider</div>
+                        <div className="text-base font-mono font-bold text-[var(--brand)] mt-1">
                           {formatCurrency(selectedBom.totalOverheadCost)}
                         </div>
                       </div>
@@ -1662,17 +1652,17 @@ export function ProductionBomWorkspace({
 
       {/* ── YENİ REÇETE MODALI ── */}
       <Dialog open={createBomModalOpen} onOpenChange={setCreateBomModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">Yeni Ürün Reçetesi (BOM) Tanımla</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">Yeni Ürün Reçetesi (BOM) Tanımla</DialogTitle>
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Mamul stok kartına bağlı çok seviyeli reçete başlığı oluşturun.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Mamul / Ürün Seçimi *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Mamul / Ürün Seçimi *</Label>
               <Select
                 value={newBomForm.finishedItemId}
                 onValueChange={(val) => {
@@ -1685,7 +1675,7 @@ export function ProductionBomWorkspace({
                   }))
                 }}
               >
-                <SelectTrigger className="bg-zinc-900 border-white/[0.1] text-xs mt-1">
+                <SelectTrigger className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1">
                   <SelectValue placeholder="Mamul stok kartı seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1700,49 +1690,49 @@ export function ProductionBomWorkspace({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Reçete Kodu *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Reçete Kodu *</Label>
                 <Input
                   value={newBomForm.code}
                   onChange={(e) => setNewBomForm({ ...newBomForm, code: e.target.value.toUpperCase() })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Revizyon No</Label>
+                <Label className="text-xs text-[var(--text-2)]">Revizyon No</Label>
                 <Input
                   value={newBomForm.revision}
                   onChange={(e) => setNewBomForm({ ...newBomForm, revision: e.target.value })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Reçete Tanımı / Adı *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Reçete Tanımı / Adı *</Label>
               <Input
                 value={newBomForm.name}
                 onChange={(e) => setNewBomForm({ ...newBomForm, name: e.target.value })}
-                className="bg-zinc-900 border-white/[0.1] text-xs mt-1"
+                className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Temel Parti Miktarı</Label>
+                <Label className="text-xs text-[var(--text-2)]">Temel Parti Miktarı</Label>
                 <Input
                   type="number"
                   min={1}
                   value={newBomForm.baseQuantity}
                   onChange={(e) => setNewBomForm({ ...newBomForm, baseQuantity: Number(e.target.value) || 1 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Birim</Label>
+                <Label className="text-xs text-[var(--text-2)]">Birim</Label>
                 <Input
                   value={newBomForm.baseUnit}
                   onChange={(e) => setNewBomForm({ ...newBomForm, baseUnit: e.target.value })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1"
                 />
               </div>
             </div>
@@ -1753,7 +1743,7 @@ export function ProductionBomWorkspace({
                 checked={newBomForm.isPhantom}
                 onCheckedChange={(checked) => setNewBomForm({ ...newBomForm, isPhantom: Boolean(checked) })}
               />
-              <Label htmlFor="isPhantomCb" className="text-xs text-zinc-300 cursor-pointer">
+              <Label htmlFor="isPhantomCb" className="text-xs text-[var(--text-2)] cursor-pointer">
                 Hayalet Yarı Mamul (Phantom Subassembly - Stok tutulmaz, patlatmada doğrudan üst seviyeye aktarılır)
               </Label>
             </div>
@@ -1776,14 +1766,14 @@ export function ProductionBomWorkspace({
 
       {/* ── BİLEŞEN EKLE MODALI ── */}
       <Dialog open={addComponentModalOpen} onOpenChange={setAddComponentModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">Reçeteye Bileşen Ekle</DialogTitle>
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">Reçeteye Bileşen Ekle</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Bileşen Malzeme *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Bileşen Malzeme *</Label>
               <Select
                 value={newCompForm.componentItemId}
                 onValueChange={(val) => {
@@ -1791,7 +1781,7 @@ export function ProductionBomWorkspace({
                   setNewCompForm((f) => ({ ...f, componentItemId: val, unit: it?.unit || "Adet" }))
                 }}
               >
-                <SelectTrigger className="bg-zinc-900 border-white/[0.1] text-xs mt-1">
+                <SelectTrigger className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1">
                   <SelectValue placeholder="Malzeme seçiniz..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1806,53 +1796,53 @@ export function ProductionBomWorkspace({
 
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Miktar *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Miktar *</Label>
                 <Input
                   type="number"
                   step="any"
                   value={newCompForm.quantity}
                   onChange={(e) => setNewCompForm({ ...newCompForm, quantity: Number(e.target.value) || 0 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Birim</Label>
+                <Label className="text-xs text-[var(--text-2)]">Birim</Label>
                 <Input
                   value={newCompForm.unit}
                   onChange={(e) => setNewCompForm({ ...newCompForm, unit: e.target.value })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Fire %</Label>
+                <Label className="text-xs text-[var(--text-2)]">Fire %</Label>
                 <Input
                   type="number"
                   min={0}
                   max={100}
                   value={newCompForm.scrapPercent}
                   onChange={(e) => setNewCompForm({ ...newCompForm, scrapPercent: Number(e.target.value) || 0 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Sıra No</Label>
+                <Label className="text-xs text-[var(--text-2)]">Sıra No</Label>
                 <Input
                   type="number"
                   value={newCompForm.lineNumber}
                   onChange={(e) => setNewCompForm({ ...newCompForm, lineNumber: Number(e.target.value) || 10 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Operasyon Sırası (Opsiyonel)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Operasyon Sırası (Opsiyonel)</Label>
                 <Input
                   placeholder="Örn: 10, 20"
                   value={newCompForm.operationSequence}
                   onChange={(e) => setNewCompForm({ ...newCompForm, operationSequence: e.target.value })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
@@ -1875,22 +1865,22 @@ export function ProductionBomWorkspace({
 
       {/* ── İKAME MALZEME EKLE MODALI ── */}
       <Dialog open={addSubstituteModalOpen} onOpenChange={setAddSubstituteModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">İkame / Alternatif Malzeme Ekle</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">İkame / Alternatif Malzeme Ekle</DialogTitle>
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Bu reçete kalemi tükendiğinde veya yetersiz olduğunda kullanılacak alternatifi belirleyin.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">İkame Malzeme Seçimi *</Label>
+              <Label className="text-xs text-[var(--text-2)]">İkame Malzeme Seçimi *</Label>
               <Select
                 value={newSubForm.substituteItemId}
                 onValueChange={(val) => setNewSubForm({ ...newSubForm, substituteItemId: val })}
               >
-                <SelectTrigger className="bg-zinc-900 border-white/[0.1] text-xs mt-1">
+                <SelectTrigger className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1">
                   <SelectValue placeholder="İkame stok kartı seçin..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -1905,23 +1895,23 @@ export function ProductionBomWorkspace({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Öncelik Sırası (1=İlk)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Öncelik Sırası (1=İlk)</Label>
                 <Input
                   type="number"
                   min={1}
                   value={newSubForm.priority}
                   onChange={(e) => setNewSubForm({ ...newSubForm, priority: Number(e.target.value) || 1 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">İkame Oranı (1 birim yerine)</Label>
+                <Label className="text-xs text-[var(--text-2)]">İkame Oranı (1 birim yerine)</Label>
                 <Input
                   type="number"
                   step="0.01"
                   value={newSubForm.substitutionRatio}
                   onChange={(e) => setNewSubForm({ ...newSubForm, substitutionRatio: Number(e.target.value) || 1.0 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
@@ -1934,7 +1924,7 @@ export function ProductionBomWorkspace({
                   setNewSubForm({ ...newSubForm, isMandatoryApproval: Boolean(checked) })
                 }
               />
-              <Label htmlFor="isMandatoryApprCb" className="text-xs text-zinc-300 cursor-pointer">
+              <Label htmlFor="isMandatoryApprCb" className="text-xs text-[var(--text-2)] cursor-pointer">
                 Kullanım için üretim yöneticisi onayı zorunlu
               </Label>
             </div>
@@ -1947,7 +1937,7 @@ export function ProductionBomWorkspace({
             <Button
               size="sm"
               onClick={handleAddSubstitute}
-              className="bg-violet-600 hover:bg-violet-700 text-white font-semibold"
+              className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--text)] font-semibold"
             >
               İkameyi Kaydet
             </Button>
@@ -1957,26 +1947,26 @@ export function ProductionBomWorkspace({
 
       {/* ── KLONLAMA / YENİ REVİZYON MODALI ── */}
       <Dialog open={cloneBomModalOpen} onOpenChange={setCloneBomModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">
               Kopyala ve Değiştir (Yeni Revizyon)
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Mevcut onaylı reçetenin kopyasını taslak olarak türetip düzenleyebilirsiniz.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">Kaynak Reçete</Label>
+              <Label className="text-xs text-[var(--text-2)]">Kaynak Reçete</Label>
               <div className="font-mono text-xs text-[--brand] mt-1">
                 {cloneTargetBom?.code} (Rev {cloneTargetBom?.revision})
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Yeni Revizyon Numarası</Label>
+              <Label className="text-xs text-[var(--text-2)]">Yeni Revizyon Numarası</Label>
               <Input
                 value={cloneNewRevision}
                 onChange={(e) => {
@@ -1985,16 +1975,16 @@ export function ProductionBomWorkspace({
                     setCloneNewCode(`${cloneTargetBom.code}-R${e.target.value}`)
                   }
                 }}
-                className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Yeni Reçete Kodu</Label>
+              <Label className="text-xs text-[var(--text-2)]">Yeni Reçete Kodu</Label>
               <Input
                 value={cloneNewCode}
                 onChange={(e) => setCloneNewCode(e.target.value.toUpperCase())}
-                className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
               />
             </div>
           </div>
@@ -2016,51 +2006,51 @@ export function ProductionBomWorkspace({
 
       {/* ── OPERASYON EKLE MODALI ── */}
       <Dialog open={addOpModalOpen} onOpenChange={setAddOpModalOpen}>
-        <DialogContent className="sm:max-w-md bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-md bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">Rotaya Operasyon Ekle</DialogTitle>
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">Rotaya Operasyon Ekle</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Operasyon Sıra No *</Label>
+                <Label className="text-xs text-[var(--text-2)]">Operasyon Sıra No *</Label>
                 <Input
                   type="number"
                   value={newOpForm.operationNumber}
                   onChange={(e) => setNewOpForm({ ...newOpForm, operationNumber: Number(e.target.value) || 10 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">İşçi Sayısı</Label>
+                <Label className="text-xs text-[var(--text-2)]">İşçi Sayısı</Label>
                 <Input
                   type="number"
                   min={1}
                   value={newOpForm.workerCount}
                   onChange={(e) => setNewOpForm({ ...newOpForm, workerCount: Number(e.target.value) || 1 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Operasyon Adı *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Operasyon Adı *</Label>
               <Input
                 value={newOpForm.name}
                 onChange={(e) => setNewOpForm({ ...newOpForm, name: e.target.value })}
                 placeholder="Örn: CNC Torna İşleme"
-                className="bg-zinc-900 border-white/[0.1] text-xs mt-1"
+                className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1"
               />
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">İş Merkezi (İstasyon) *</Label>
+              <Label className="text-xs text-[var(--text-2)]">İş Merkezi (İstasyon) *</Label>
               <Select
                 value={newOpForm.workCenterId}
                 onValueChange={(val) => setNewOpForm({ ...newOpForm, workCenterId: val })}
               >
-                <SelectTrigger className="bg-zinc-900 border-white/[0.1] text-xs mt-1">
+                <SelectTrigger className="bg-[var(--bg)] border-[var(--line)] text-xs mt-1">
                   <SelectValue placeholder="İş merkezi seçiniz..." />
                 </SelectTrigger>
                 <SelectContent className="max-h-60">
@@ -2075,21 +2065,21 @@ export function ProductionBomWorkspace({
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <Label className="text-xs text-zinc-300">Hazırlık Süresi (dk)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Hazırlık Süresi (dk)</Label>
                 <Input
                   type="number"
                   value={newOpForm.setupTimeMinutes}
                   onChange={(e) => setNewOpForm({ ...newOpForm, setupTimeMinutes: Number(e.target.value) || 0 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
               <div>
-                <Label className="text-xs text-zinc-300">Birim İşlem Süresi (dk)</Label>
+                <Label className="text-xs text-[var(--text-2)]">Birim İşlem Süresi (dk)</Label>
                 <Input
                   type="number"
                   value={newOpForm.runTimeMinutes}
                   onChange={(e) => setNewOpForm({ ...newOpForm, runTimeMinutes: Number(e.target.value) || 0 })}
-                  className="bg-zinc-900 border-white/[0.1] text-xs font-mono mt-1"
+                  className="bg-[var(--bg)] border-[var(--line)] text-xs font-mono mt-1"
                 />
               </div>
             </div>
@@ -2103,7 +2093,7 @@ export function ProductionBomWorkspace({
                     setNewOpForm({ ...newOpForm, isQualityControlPoint: Boolean(checked) })
                   }
                 />
-                <Label htmlFor="qcPointCb" className="text-xs text-zinc-300 cursor-pointer">
+                <Label htmlFor="qcPointCb" className="text-xs text-[var(--text-2)] cursor-pointer">
                   Kalite Kontrol Kontrol Noktası (Gate / Inspection Point)
                 </Label>
               </div>
@@ -2114,7 +2104,7 @@ export function ProductionBomWorkspace({
                   checked={newOpForm.isSubcontracted}
                   onCheckedChange={(checked) => setNewOpForm({ ...newOpForm, isSubcontracted: Boolean(checked) })}
                 />
-                <Label htmlFor="subcontractCb" className="text-xs text-zinc-300 cursor-pointer">
+                <Label htmlFor="subcontractCb" className="text-xs text-[var(--text-2)] cursor-pointer">
                   Fason / Dış Kaynak Operasyonu
                 </Label>
               </div>
@@ -2166,34 +2156,34 @@ export function ProductionBomWorkspace({
 
       {/* ── CSV İÇE AKTARMA MODALI ── */}
       <Dialog open={importModalOpen} onOpenChange={setImportModalOpen}>
-        <DialogContent className="sm:max-w-2xl bg-zinc-950 border-white/[0.1] text-zinc-100">
+        <DialogContent className="sm:max-w-2xl bg-[var(--bg)] border-[var(--line)] text-[var(--text)]">
           <DialogHeader>
-            <DialogTitle className="text-base font-semibold text-white">Reçete İçe Aktar (Excel / CSV)</DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogTitle className="text-base font-semibold text-[var(--text)]">Reçete İçe Aktar (Excel / CSV)</DialogTitle>
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               CSV içeriğini yapıştırın veya dosyanızı kopyalayıp buraya aktarın.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-3 py-2">
             <div>
-              <Label className="text-xs text-zinc-300">CSV Metni (Noktalı virgül veya virgül ayırıcılı)</Label>
+              <Label className="text-xs text-[var(--text-2)]">CSV Metni (Noktalı virgül veya virgül ayırıcılı)</Label>
               <textarea
                 value={csvText}
                 onChange={(e) => setCsvText(e.target.value)}
                 placeholder="ReçeteKodu;ReçeteAdı;Revizyon;MamulKodu;TemelMiktar;TemelBirim;HayaletReçete;KalemSıraNo;BileşenKodu;BileşenMiktarı;BileşenBirimi;FireYüzdesi"
-                className="w-full h-40 mt-1 p-3 rounded-lg bg-zinc-900 border border-white/[0.1] text-xs font-mono text-zinc-200 resize-none focus:outline-none focus:border-[--brand]"
+                className="w-full h-40 mt-1 p-3 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-xs font-mono text-[var(--text-2)] resize-none focus:outline-none focus:border-[--brand]"
               />
             </div>
 
             {importReport && (
-              <div className="p-3 rounded-lg bg-zinc-900/60 border border-[--line] text-xs space-y-2">
+              <div className="p-3 rounded-lg bg-[var(--bg)] border border-[--line] text-xs space-y-2">
                 <div className="flex justify-between font-medium">
                   <span>Toplam Satır: {importReport.totalRows}</span>
                   <span className="text-[--brand]">Geçerli: {importReport.validRowCount}</span>
-                  <span className="text-rose-400">Hatalı: {importReport.errorRowCount}</span>
+                  <span className="text-[var(--bad)]">Hatalı: {importReport.errorRowCount}</span>
                 </div>
                 {importReport.errors?.length > 0 && (
-                  <div className="max-h-28 overflow-y-auto space-y-1 text-rose-300/90 text-[11px]">
+                  <div className="max-h-28 overflow-y-auto space-y-1 text-[var(--bad)]/90 text-[11px]">
                     {importReport.errors.map((e: any, i: number) => (
                       <div key={i}>
                         Satır {e.row}: {e.message}

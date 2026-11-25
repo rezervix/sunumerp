@@ -44,7 +44,7 @@ export function ContentAnalyticsPanel() {
   )
 
   if (error) return (
-    <div className="flex items-center justify-center py-20 text-rose-400 text-xs font-mono">{error}</div>
+    <div className="flex items-center justify-center py-20 text-[var(--bad)] text-xs font-mono">{error}</div>
   )
 
   if (!data) return null
@@ -54,27 +54,27 @@ export function ContentAnalyticsPanel() {
       {/* Kutusuz Üst KPI Şeridi */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-3 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Package size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Package size={13} className="text-[var(--text-muted)]" />
             <span>Toplam İçerik</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={data.totals.totalContent} />
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
+            <span className="text-[11px] font-mono text-[var(--text-muted)] bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
               Varlık
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Eye size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Eye size={13} className="text-[var(--text-muted)]" />
             <span>Toplam Görüntülenme</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={data.totals.totalViews} />
             </span>
             <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
@@ -84,12 +84,12 @@ export function ContentAnalyticsPanel() {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Download size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Download size={13} className="text-[var(--text-muted)]" />
             <span>Toplam İndirme</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               <AnimatedNumber value={data.totals.totalDownloads} />
             </span>
             <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
@@ -103,7 +103,7 @@ export function ContentAnalyticsPanel() {
         {/* Günlük Yükleme */}
         {data.dailyUploads.length > 0 && (
           <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
-            <h3 className="font-medium text-white text-sm mb-4 flex items-center gap-2">
+            <h3 className="font-medium text-[var(--text)] text-sm mb-4 flex items-center gap-2">
               <TrendingUp size={16} className="text-[--brand]" />
               Son 30 Gün Yükleme & Onay Eğilimi
             </h3>
@@ -144,7 +144,7 @@ export function ContentAnalyticsPanel() {
         {/* Niş Dağılımı */}
         {data.nicheStats.length > 0 && (
           <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 shadow-2xl">
-            <h3 className="font-medium text-white text-sm mb-4 flex items-center gap-2">
+            <h3 className="font-medium text-[var(--text)] text-sm mb-4 flex items-center gap-2">
               <Package size={16} className="text-[--brand]" />
               Niş Bazlı Dağılım
             </h3>

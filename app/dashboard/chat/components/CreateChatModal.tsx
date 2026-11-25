@@ -151,49 +151,37 @@ export function CreateChatModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden p-0 gap-0 shadow-2xl">
-        <DialogHeader className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800">
-          <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
+      <DialogContent className="max-w-md bg-white border border-[var(--line)] rounded-3xl overflow-hidden p-0 gap-0 shadow-2xl">
+        <DialogHeader className="p-6 pb-4 border-b border-[var(--line-soft)]">
+          <DialogTitle className="text-xl font-bold text-[var(--text)]">
             Yeni Sohbet Başlat
           </DialogTitle>
         </DialogHeader>
 
         {/* Tab Selector */}
-        <div className="flex px-6 pt-2 border-b border-gray-100 dark:border-gray-800 gap-4">
+        <div className="flex px-6 pt-2 border-b border-[var(--line-soft)] gap-4">
           <button
             onClick={() => setActiveTab("dm")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
-              activeTab === "dm"
-                ? "border-primary text-primary"
-                : "border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            }`}
+            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${ activeTab === "dm" ? "border-primary text-primary" : "border-transparent text-[var(--text-muted)] hover:text-gray-600 :text-[var(--text-2)]" }`}
           >
             Bireysel Sohbet (DM)
           </button>
           <button
             onClick={() => setActiveTab("group")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
-              activeTab === "group"
-                ? "border-primary text-primary"
-                : "border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            }`}
+            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${ activeTab === "group" ? "border-primary text-primary" : "border-transparent text-[var(--text-muted)] hover:text-gray-600 :text-[var(--text-2)]" }`}
           >
             Grup Oluştur
           </button>
           <button
             onClick={() => setActiveTab("broadcast")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
-              activeTab === "broadcast"
-                ? "border-primary text-primary"
-                : "border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            }`}
+            className={`pb-3 text-sm font-semibold border-b-2 transition-all ${ activeTab === "broadcast" ? "border-primary text-primary" : "border-transparent text-[var(--text-muted)] hover:text-gray-600 :text-[var(--text-2)]" }`}
           >
             Yayın Listesi (Broadcast)
           </button>
         </div>
 
         {error && (
-          <div className="px-6 py-3 bg-red-50 dark:bg-red-500/10 text-red-500 text-xs font-semibold border-b border-red-100 dark:border-red-900/20">
+          <div className="px-6 py-3 bg-red-50 text-red-500 text-xs font-semibold border-b border-red-100">
             {error}
           </div>
         )}
@@ -209,16 +197,16 @@ export function CreateChatModal({
                   placeholder="İsim veya kullanıcı adı arayın..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                 />
-                <span className="material-symbols-outlined text-gray-400 text-[18px] absolute left-3 top-3">
+                <span className="material-symbols-outlined text-[var(--text-muted)] text-[18px] absolute left-3 top-3">
                   search
                 </span>
               </div>
 
               <div className="flex-1 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
                 {filteredUsers.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-gray-400">
+                  <div className="text-center py-8 text-xs text-[var(--text-muted)]">
                     Kullanıcı bulunamadı.
                   </div>
                 ) : (
@@ -227,7 +215,7 @@ export function CreateChatModal({
                       key={u.id}
                       onClick={() => handleCreateDM(u)}
                       disabled={submitting}
-                      className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-left group"
+                      className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-gray-50 :bg-[var(--muted-bg)] transition-all text-left group"
                     >
                       <Avatar className="w-10 h-10 ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
                         <AvatarImage src={u.avatarUrl} />
@@ -236,12 +224,12 @@ export function CreateChatModal({
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-semibold text-sm text-gray-900 dark:text-white">
+                        <div className="font-semibold text-sm text-[var(--text)]">
                           {u.fullName}
                         </div>
-                        <div className="text-xs text-gray-500">@{u.username}</div>
+                        <div className="text-xs text-[var(--text-muted)]">@{u.username}</div>
                       </div>
-                      <span className="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[20px] ml-auto">
+                      <span className="material-symbols-outlined text-[var(--text-muted)] group-hover:text-primary transition-colors text-[20px] ml-auto">
                         chat_bubble
                       </span>
                     </button>
@@ -262,7 +250,7 @@ export function CreateChatModal({
                   }
                   value={chatName}
                   onChange={(e) => setChatName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                 />
 
                 {activeTab === "group" && (
@@ -272,14 +260,14 @@ export function CreateChatModal({
                       placeholder="Grup Açıklaması (İsteğe bağlı)"
                       value={chatDescription}
                       onChange={(e) => setChatDescription(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                     />
                     <input
                       type="text"
                       placeholder="Avatar URL'i (İsteğe bağlı)"
                       value={avatarUrl}
                       onChange={(e) => setAvatarUrl(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                     />
                   </>
                 )}
@@ -291,9 +279,9 @@ export function CreateChatModal({
                   placeholder="Kullanıcı davet et..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--line)] bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
                 />
-                <span className="material-symbols-outlined text-gray-400 text-[18px] absolute left-3 top-3">
+                <span className="material-symbols-outlined text-[var(--text-muted)] text-[18px] absolute left-3 top-3">
                   search
                 </span>
               </div>
@@ -305,11 +293,7 @@ export function CreateChatModal({
                     <button
                       key={u.id}
                       onClick={() => handleToggleSelect(u.id)}
-                      className={`w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all text-left ${
-                        isSelected
-                          ? "bg-primary/5 dark:bg-primary/10 border border-primary/20"
-                          : "hover:bg-gray-50 dark:hover:bg-white/5 border border-transparent"
-                      }`}
+                      className={`w-full flex items-center gap-3 p-2.5 rounded-2xl transition-all text-left ${ isSelected ? "bg-primary/5 border border-primary/20" : "hover:bg-gray-50 :bg-[var(--muted-bg)] border border-transparent" }`}
                     >
                       <Avatar className="w-9 h-9">
                         <AvatarImage src={u.avatarUrl} />
@@ -318,18 +302,14 @@ export function CreateChatModal({
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm truncate text-gray-900 dark:text-white">
+                        <div className="font-semibold text-sm truncate text-[var(--text)]">
                           {u.fullName}
                         </div>
-                        <div className="text-[11px] text-gray-500">@{u.username}</div>
+                        <div className="text-[11px] text-[var(--text-muted)]">@{u.username}</div>
                       </div>
                       <div className="shrink-0 flex items-center justify-center">
                         <span
-                          className={`material-symbols-outlined text-[22px] transition-all ${
-                            isSelected
-                              ? "text-primary"
-                              : "text-gray-300 dark:text-gray-700"
-                          }`}
+                          className={`material-symbols-outlined text-[22px] transition-all ${ isSelected ? "text-primary" : "text-[var(--text-2)] " }`}
                         >
                           {isSelected ? "check_circle" : "radio_button_unchecked"}
                         </span>
@@ -339,10 +319,10 @@ export function CreateChatModal({
                 })}
               </div>
 
-              <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3 shrink-0">
+              <div className="pt-4 border-t border-[var(--line-soft)] flex justify-end gap-3 shrink-0">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="px-4 py-2 rounded-xl text-sm font-semibold bg-[var(--muted-bg)] text-gray-600 (--text-2)] hover:bg-gray-100 :bg-[var(--muted-bg)]"
                 >
                   İptal
                 </button>

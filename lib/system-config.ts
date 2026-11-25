@@ -127,7 +127,7 @@ export interface SystemConfig {
   bgRemovedLogoUrl?: string // Background removed transparent PNG
   themeColors?: {
     primary: string // HEX color
-    primaryForeground?: string // Readable text color (#FFFFFF or #0F172A)
+    primaryForeground?: string // Readable text color (#FFFFFF or var(--page))
     accent: string  // Accent color
     accentForeground?: string // Readable accent text color
 
@@ -223,11 +223,11 @@ const DEFAULT_CONFIG: SystemConfig = {
     primaryForeground: "#FFFFFF",
     accent: "#D32F28",
     accentForeground: "#FFFFFF",
-    darkBackground: "#171310",
+    darkBackground: "#0B1B33",
     darkCard: "#231C17",
     darkPopover: "#2E261F",
-    darkSidebar: "#1C1613",
-    darkHeader: "#1C1613",
+    darkSidebar: "#0B1B33",
+    darkHeader: "#0B1B33",
     darkPrimary: "#E6923C",
     darkPrimaryForeground: "#FFFFFF",
     darkAccent: "#E2534B",

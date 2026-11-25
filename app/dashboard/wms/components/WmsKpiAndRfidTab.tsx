@@ -225,7 +225,7 @@ export function WmsKpiAndRfidTab({ selectedWarehouseId }: WmsKpiAndRfidTabProps)
             <Button
               type="submit"
               disabled={sendingRfid}
-              className="h-9 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-xl gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
+              className="h-9 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-xl gap-1.5 cursor-pointer shadow-sm disabled:opacity-50"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Okuma Gönder</span>
@@ -260,11 +260,7 @@ export function WmsKpiAndRfidTab({ selectedWarehouseId }: WmsKpiAndRfidTabProps)
                       <td className="py-2.5 px-3 font-mono text-[--text] font-medium">{ev.epcCode}</td>
                       <td className="py-2.5 px-3">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border ${
-                            ev.matchedType !== "UNMATCHED"
-                              ? "bg-[--ok-soft] text-[--ok] border-[--ok-fill]/20"
-                              : "bg-[--page] text-[--text-muted] border-[--line]"
-                          }`}
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border ${ ev.matchedType !== "UNMATCHED" ? "bg-[--ok-soft] text-[--ok] border-[--ok-fill]/20" : "bg-[--page] text-[--text-muted] border-[--line]" }`}
                         >
                           {ev.matchedType}: {ev.matchedLabel || "Eşleşmedi"}
                         </span>
@@ -288,7 +284,7 @@ export function WmsKpiAndRfidTab({ selectedWarehouseId }: WmsKpiAndRfidTabProps)
           <p className="text-[11px] text-[--text-muted]">
             Sabit portal veya el RFID okuyucuları doğrudan aşağıdaki endpoint üzerinden JSON gönderebilir.
           </p>
-          <pre className="bg-[--navy] border border-[--line] rounded-xl p-3 text-[10px] font-mono text-cyan-200 overflow-x-auto leading-relaxed shadow-inner">
+          <pre className="bg-[--navy] border border-[--line] rounded-xl p-3 text-[10px] font-mono text-[var(--brand)] overflow-x-auto leading-relaxed shadow-inner">
             {JSON.stringify(
               apiDoc || {
                 endpoint: "/api/wms/rfid",

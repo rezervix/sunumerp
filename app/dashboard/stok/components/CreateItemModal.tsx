@@ -280,7 +280,7 @@ export function CreateItemModal({
         </DialogHeader>
 
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-[var(--bad-soft)] border border-[var(--bad-line)] text-[var(--bad)] text-xs flex items-center gap-2">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -456,8 +456,7 @@ export function CreateItemModal({
               <AccordionContent className="px-4 pb-4 pt-1">
                 <Tabs defaultValue="variants" className="w-full">
                   <TabsList
-                    className={`grid ${showProductionTab ? "grid-cols-6" : "grid-cols-5"
-                      } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-3`}
+                    className={`grid ${showProductionTab ? "grid-cols-6" : "grid-cols-5" } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-3`}
                   >
                     <TabsTrigger value="variants" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Varyantlar</TabsTrigger>
                     <TabsTrigger value="lots" className="text-[11px] py-1 text-[--text-muted] data-[state=active]:text-[--text] data-[state=active]:bg-white/[0.1] rounded-lg">Lot / SKT</TabsTrigger>
@@ -533,7 +532,7 @@ export function CreateItemModal({
                               variant="ghost"
                               size="sm"
                               onClick={() => setVariants(variants.filter((_, i) => i !== idx))}
-                              className="h-7 w-7 p-0 text-rose-400 hover:text-rose-300"
+                              className="h-7 w-7 p-0 text-[var(--bad)] hover:text-[var(--bad)]"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -602,7 +601,7 @@ export function CreateItemModal({
                     </div>
 
                     {(trackLot || trackExpiry) && (
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-amber-500/[0.05] rounded-xl border border-amber-500/20">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-amber-500/[0.05] rounded-xl border border-[var(--warn-line)]">
                         {trackLot && (
                           <div className="space-y-1">
                             <Label className="text-[11px] font-medium text-[--text-2]">İlk Lot No</Label>
@@ -694,7 +693,7 @@ export function CreateItemModal({
                               variant="ghost"
                               size="sm"
                               onClick={() => setUnitConversions(unitConversions.filter((_, i) => i !== idx))}
-                              className="h-7 w-7 p-0 text-rose-400 hover:text-rose-300 ml-auto"
+                              className="h-7 w-7 p-0 text-[var(--bad)] hover:text-[var(--bad)] ml-auto"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -813,7 +812,7 @@ export function CreateItemModal({
                               variant="ghost"
                               size="sm"
                               onClick={() => setBomComponents(bomComponents.filter((_, i) => i !== idx))}
-                              className="h-7 w-7 p-0 text-rose-400 hover:text-rose-300"
+                              className="h-7 w-7 p-0 text-[var(--bad)] hover:text-[var(--bad)]"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -980,7 +979,7 @@ export function CreateItemModal({
               type="submit"
               size="sm"
               disabled={loading}
-              className="bg-[--brand] hover:bg-[--brand]/90 text-[#061811] font-semibold rounded-full cursor-pointer h-9 px-4 shadow-lg shadow-xs"
+              className="bg-[--brand] hover:bg-[--brand]/90 text-[#0B1B33] font-semibold rounded-full cursor-pointer h-9 px-4 shadow-lg shadow-xs"
             >
               {loading && <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />}
               Ürünü Kaydet

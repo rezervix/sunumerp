@@ -184,7 +184,7 @@ export default function ShootModal({
         <div className="space-y-4 py-2">
           {/* Durum Değişikliği (Sadece Edit Modunda) */}
           {editShoot && (
-            <div className="p-3 bg-muted/40 dark:bg-black/10 border border-border/50 rounded-xl space-y-2">
+            <div className="p-3 bg-muted/40 border border-border/50 rounded-xl space-y-2">
               <Label className="font-semibold text-xs text-foreground/90">Çekim Durumu</Label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="h-8 text-xs">
@@ -211,7 +211,7 @@ export default function ShootModal({
                   />
 
                   {selectedContentItemIds.length > 0 && (
-                    <div className="flex items-center gap-2 mt-2 bg-red-500/10 p-2 rounded border border-red-500/20">
+                    <div className="flex items-center gap-2 mt-2 bg-[var(--bad-soft)] p-2 rounded border border-[var(--bad-line)]">
                       <Checkbox
                         id="cancelLinked"
                         checked={cancelLinkedContents}
@@ -298,7 +298,7 @@ export default function ShootModal({
                     className={[
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all",
                       selected
-                        ? "border-amber-400 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400"
+                        ? "border-amber-400 bg-amber-50  text-amber-700 "
                         : "border-border bg-background text-muted-foreground hover:border-amber-300",
                     ].join(" ")}
                   >

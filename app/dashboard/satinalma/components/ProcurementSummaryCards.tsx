@@ -76,9 +76,7 @@ export function ProcurementSummaryCards({
             <span>Kritik Stok Uyarısı</span>
           </div>
           <div className="flex items-baseline gap-2 pt-1">
-            <div className={`text-3xl font-light tracking-tight tabular-nums ${
-              criticalItemsCount > 0 ? "text-[--bad]" : "text-[--text]"
-            }`}>
+            <div className={`text-3xl font-light tracking-tight tabular-nums ${ criticalItemsCount > 0 ? "text-[--bad]" : "text-[--text]" }`}>
               <AnimatedNumber value={criticalItemsCount} />
             </div>
             {stockoutCount > 0 && (

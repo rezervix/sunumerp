@@ -233,9 +233,7 @@ export function ItemDetailDrawer({
             <div className="flex-1 p-6">
               <Tabs defaultValue="locations" className="w-full">
                 <TabsList
-                  className={`grid ${
-                    showProductionTab ? "grid-cols-5" : "grid-cols-4"
-                  } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-4`}
+                  className={`grid ${ showProductionTab ? "grid-cols-5" : "grid-cols-4" } w-full bg-[--muted-bg] border border-[--line] p-1 rounded-xl mb-4`}
                 >
                   <TabsTrigger value="locations" className="text-xs py-1.5 gap-1 rounded-lg">
                     <IconWarehouse size={13} />

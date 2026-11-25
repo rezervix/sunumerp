@@ -118,20 +118,20 @@ export default function PartnerAgiDashboardPage() {
   const perspectiveList: any[] = data?.demoPerspectiveCompanies || []
 
   return (
-    <div className="space-y-5 p-4 md:p-6 text-zinc-100">
+    <div className="space-y-5 p-4 md:p-6 text-[var(--text)]">
       {/* ÜST BAŞLIK */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <Globe className="h-5 w-5 text-[--brand]" />
-            <h1 className="text-xl font-bold tracking-tight text-zinc-100">B2B Partner Ağı</h1>
+            <h1 className="text-xl font-bold tracking-tight text-[var(--text)]">B2B Partner Ağı</h1>
             {data?.activeCompany && (
               <span className="rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-xs font-medium text-sky-300">
                 Aktif Firma: {data.activeCompany.name}
               </span>
             )}
           </div>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">
             Partner firmalar arası ortak kaynak havuzu, white-label çapraz rezervasyon, çakışma kilidi, komisyon hakediş ve karşılıklı cari mutabakat.
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function PartnerAgiDashboardPage() {
             type="button"
             disabled={loading || busy}
             onClick={() => fetchSnapshot()}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 hover:bg-zinc-800"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-1.5 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)]"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} /> Yenile
           </button>
@@ -165,7 +165,7 @@ export default function PartnerAgiDashboardPage() {
               <Building2 className="h-4 w-4" />
               <span>Demo Kolaylığı — Firma Perspektifi (Kısıtlı Tek-Firma İzolasyonu)</span>
             </div>
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-[11px] text-[var(--text-muted)]">
               Tek tıkla firmalar arasında geçiş yapıp aynı çapraz rezervasyonun ve carinin (A alacağı = B borcu) iki tarafını inceleyin.
             </span>
           </div>
@@ -178,11 +178,7 @@ export default function PartnerAgiDashboardPage() {
                   type="button"
                   disabled={loading || busy}
                   onClick={() => switchDemoPerspective(comp.id)}
-                  className={`rounded-lg border px-3 py-1.5 text-xs transition ${
-                    isSelected
-                      ? "border-[--brand] bg-[--brand] text-white font-semibold"
-                      : "border-zinc-700 bg-zinc-900/80 text-zinc-300 hover:border-[--brand-line] hover:text-zinc-100"
-                  }`}
+                  className={`rounded-lg border px-3 py-1.5 text-xs transition ${ isSelected ? "border-[--brand] bg-[--brand] text-[var(--text)] font-semibold" : "border-[var(--line)] bg-[var(--bg)] text-[var(--text-2)] hover:border-[--brand-line] hover:text-[var(--text)]" }`}
                 >
                   {comp.name}
                   <span className="ml-1.5 text-[10px] opacity-75">
@@ -197,14 +193,14 @@ export default function PartnerAgiDashboardPage() {
 
       {/* DEMO REHBERİ (Sadece Demo Modunda) */}
       {data?.isDemoMode && showGuide && (
-        <div className="rounded-xl border border-sky-500/30 bg-zinc-900/90 p-4 text-xs text-zinc-300 space-y-2">
+        <div className="rounded-xl border border-sky-500/30 bg-[var(--bg)] p-4 text-xs text-[var(--text-2)] space-y-2">
           <div className="flex items-center justify-between">
             <strong className="text-sky-300">Hızlı Demo Senaryoları (2 Dakikada Çift Taraflı B2B Akışı)</strong>
-            <button type="button" onClick={() => setShowGuide(false)} className="text-zinc-400 hover:text-zinc-100">
+            <button type="button" onClick={() => setShowGuide(false)} className="text-[var(--text-muted)] hover:text-[var(--text)]">
               <X className="h-4 w-4" />
             </button>
           </div>
-          <ol className="list-decimal list-inside space-y-1 text-zinc-300">
+          <ol className="list-decimal list-inside space-y-1 text-[var(--text-2)]">
             <li>
               Yukarıdaki <strong>Firma Perspektifi</strong> çubuğundan <strong>Örnek Ege Rota Araç Kiralama</strong> seçin →{" "}
               <em>Çapraz Rezervasyonlar</em> sekmesinde <code>CRZ-2026-B2B001</code> kaydını <strong>Kaynak Sahibi (Alacaklı)</strong> olarak görün.
@@ -222,9 +218,9 @@ export default function PartnerAgiDashboardPage() {
 
       {/* UYARI / BİLGİ BANNERLARI */}
       {errorMsg && (
-        <div className="flex items-center justify-between gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2.5 text-xs text-rose-200">
+        <div className="flex items-center justify-between gap-2 rounded-xl border border-[var(--bad-line)] bg-[var(--bad-soft)] px-4 py-2.5 text-xs text-rose-200">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
+            <AlertTriangle className="h-4 w-4 shrink-0 text-[var(--bad)]" />
             <span>{errorMsg}</span>
           </div>
           <button type="button" onClick={() => setErrorMsg(null)}><X className="h-3.5 w-3.5" /></button>
@@ -242,44 +238,44 @@ export default function PartnerAgiDashboardPage() {
 
       {/* KPI ŞERİDİ */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
-          <div className="text-[11px] text-zinc-400">Onaylı / Bekleyen Partner</div>
-          <div className="text-lg font-bold text-zinc-100 mt-1">
-            {analytics.approvedPartnerCount ?? 0} <span className="text-xs font-normal text-amber-400">/ {analytics.pendingPartnerCount ?? 0}</span>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-3.5">
+          <div className="text-[11px] text-[var(--text-muted)]">Onaylı / Bekleyen Partner</div>
+          <div className="text-lg font-bold text-[var(--text)] mt-1">
+            {analytics.approvedPartnerCount ?? 0} <span className="text-xs font-normal text-[var(--warn)]">/ {analytics.pendingPartnerCount ?? 0}</span>
           </div>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
-          <div className="text-[11px] text-zinc-400">Erişilebilir Partner Kaynağı</div>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-3.5">
+          <div className="text-[11px] text-[var(--text-muted)]">Erişilebilir Partner Kaynağı</div>
           <div className="text-lg font-bold text-[--brand] mt-1">{analytics.visiblePartnerResourceCount ?? 0}</div>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
-          <div className="text-[11px] text-zinc-400">Çapraz Rezervasyon</div>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-3.5">
+          <div className="text-[11px] text-[var(--text-muted)]">Çapraz Rezervasyon</div>
           <div className="text-lg font-bold text-sky-300 mt-1">
             {analytics.totalCrossReservationCount ?? 0}
             {analytics.pendingApprovalCount > 0 && (
-              <span className="ml-1.5 text-xs font-normal text-amber-400">({analytics.pendingApprovalCount} onay bekliyor)</span>
+              <span className="ml-1.5 text-xs font-normal text-[var(--warn)]">({analytics.pendingApprovalCount} onay bekliyor)</span>
             )}
           </div>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
-          <div className="text-[11px] text-zinc-400">Açık Alacak / Borç</div>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-3.5">
+          <div className="text-[11px] text-[var(--text-muted)]">Açık Alacak / Borç</div>
           <div className="text-sm font-bold mt-1">
             <span className="text-[--brand]">{formatTryB2b(analytics.openReceivableTry)}</span>
-            <span className="text-zinc-500 mx-1">/</span>
-            <span className="text-rose-300">{formatTryB2b(analytics.openPayableTry)}</span>
+            <span className="text-[var(--text-muted)] mx-1">/</span>
+            <span className="text-[var(--bad)]">{formatTryB2b(analytics.openPayableTry)}</span>
           </div>
         </div>
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-3.5">
-          <div className="text-[11px] text-zinc-400">Kaynak Kullanım / Çakışma</div>
-          <div className="text-lg font-bold text-zinc-100 mt-1">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-3.5">
+          <div className="text-[11px] text-[var(--text-muted)]">Kaynak Kullanım / Çakışma</div>
+          <div className="text-lg font-bold text-[var(--text)] mt-1">
             %{analytics.resourceUtilizationPct ?? 0}{" "}
-            <span className="text-xs font-normal text-amber-400">({analytics.conflictCount ?? 0} blokaj)</span>
+            <span className="text-xs font-normal text-[var(--warn)]">({analytics.conflictCount ?? 0} blokaj)</span>
           </div>
         </div>
       </div>
 
       {/* SEKMELER */}
-      <div className="flex flex-wrap gap-1.5 border-b border-zinc-800 pb-2">
+      <div className="flex flex-wrap gap-1.5 border-b border-[var(--line)] pb-2">
         {(
           [
             ["pool", "Ortak Kaynak Havuzu & Takvim", Globe],
@@ -294,11 +290,7 @@ export default function PartnerAgiDashboardPage() {
             key={key}
             type="button"
             onClick={() => setActiveTab(key)}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
-              activeTab === key
-                ? "bg-[--brand] text-white"
-                : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
-            }`}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${ activeTab === key ? "bg-[--brand] text-white" : "text-[var(--text-muted)] hover:bg-[var(--bg)] hover:text-[var(--text)]" }`}
           >
             <Icon className="h-3.5 w-3.5" />
             {label}
@@ -308,7 +300,7 @@ export default function PartnerAgiDashboardPage() {
 
       {/* SEKME İÇERİĞİ */}
       {loading && !data ? (
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center text-xs text-zinc-400">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--muted-bg)] p-10 text-center text-xs text-[var(--text-muted)]">
           B2B Partner Ağı yükleniyor...
         </div>
       ) : data ? (

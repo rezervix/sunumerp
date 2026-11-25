@@ -1,0 +1,3257 @@
+{
+  "totalMatches": 461,
+  "falsePositivesCount": 0,
+  "falsePositives": [],
+  "trueIssuesCount": 461,
+  "catCounts": {
+    "Beyaz/Açık Metin (Okunaksız)": 345,
+    "Koyu Zemin Artığı (Hap/Kutu)": 32,
+    "Koyu/Sert Kenarlık": 23,
+    "Eski Koyu Hover Durumu": 19,
+    "Yasaklı Dekoratif Vurgu Rengi": 42
+  },
+  "fileBreakdown": {
+    "app/dashboard/turizm/page.tsx": 57,
+    "app/dashboard/turizm/raporlar/page.tsx": 32,
+    "app/dashboard/otel/page.tsx": 17,
+    "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx": 30,
+    "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx": 56,
+    "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx": 47,
+    "app/dashboard/otel/housekeeping/page.tsx": 21,
+    "app/dashboard/tur/page.tsx": 17,
+    "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx": 23,
+    "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx": 48,
+    "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx": 27,
+    "app/dashboard/tur/rehber/page.tsx": 10,
+    "app/dashboard/b2b/page.tsx": 76
+  },
+  "trueIssues": [
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 50,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"space-y-6 p-4 md:p-6 text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 56,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"text-xl font-bold tracking-tight text-white\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 77,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 77,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 77,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-800",
+      "snippet": "className=\"inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 77,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-700",
+      "snippet": "className=\"inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 77,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-800",
+      "snippet": "className=\"inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 86,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"flex flex-wrap gap-2 border-b border-zinc-800 pb-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 100,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "? \"bg-[--brand] text-white shadow-sm\""
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 101,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 101,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 101,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-800",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 101,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-800",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 114,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 119,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"text-3xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 123,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/80 text-xs "
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 126,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200 font-medium\">{m.rentacar.availableVehiclesCount} "
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 135,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 144,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 149,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"text-3xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 153,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/80 text-xs "
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 156,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200 font-medium\">{m.hotel.todayCheckInsCount} / {m.ho"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 165,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 174,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 176,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-400",
+      "snippet": "<span className=\"font-semibold text-purple-400\">Tur Operasyonları</span>"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 177,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-400",
+      "snippet": "<Compass className=\"h-4 w-4 text-purple-400\" />"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 179,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"text-3xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 183,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/80 text-xs "
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 186,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200 font-medium\">{m.tour.totalPassengersCount} yolcu<"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 190,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-400",
+      "snippet": "<span className=\"text-purple-400 font-medium\">%{m.tour.averageProfitMarginPct} m"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 195,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 204,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 206,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-400",
+      "snippet": "<span className=\"font-semibold text-teal-400\">B2B Partner Ekosistemi</span>"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 207,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-400",
+      "snippet": "<Globe className=\"h-4 w-4 text-teal-400\" />"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 209,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"text-3xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 213,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/80 text-xs "
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 216,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200 font-medium\">{m.b2b.activeCrossBookingsCount} akt"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 220,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-400",
+      "snippet": "<span className=\"text-teal-400 font-medium\">₺{m.b2b.openReceivableTry.toLocaleSt"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 225,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"mt-2 block text-center rounded-lg bg-[--muted-bg] py-1.5 text-xs text"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 234,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-6 space-y-4\">"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 235,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<h2 className=\"text-sm font-semibold text-zinc-200\">Entegre Sektörel Modül Kısay"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 239,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 239,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 243,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-xs font-semibold text-zinc-100\">Araç Kiralama</div>"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 250,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 250,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 254,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-xs font-semibold text-zinc-100\">Otel Mini PMS</div>"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 261,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 261,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-purple-500",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 261,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 263,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-400",
+      "snippet": "<Compass className=\"h-5 w-5 text-purple-400 shrink-0 mt-0.5\" />"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 265,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-xs font-semibold text-zinc-100\">Tur Operatörlüğü</div>"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 272,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 272,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-teal-500",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 272,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "className=\"flex items-start gap-3 rounded-xl border border-zinc-800/80 bg-zinc-9"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 274,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-400",
+      "snippet": "<Globe className=\"h-5 w-5 text-teal-400 shrink-0 mt-0.5\" />"
+    },
+    {
+      "file": "app/dashboard/turizm/page.tsx",
+      "line": 276,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-xs font-semibold text-zinc-100\">B2B Partner Ağı</div>"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 67,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"space-y-6 p-4 md:p-6 text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 74,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 74,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-800",
+      "snippet": "className=\"rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 74,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-800",
+      "snippet": "className=\"rounded-lg p-1 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 79,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"text-xl font-bold tracking-tight text-white\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 107,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 107,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 107,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-800",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 107,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-700",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 107,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-800",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 115,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"flex flex-wrap gap-2 border-b border-zinc-800 pb-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 129,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "? \"bg-[--brand] text-white shadow-sm\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 130,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 130,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 130,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-800",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 130,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-800",
+      "snippet": ": \"bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 145,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "className=\"rounded-xl border border-zinc-800 bg-[white] p-4 space-y-1\""
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 148,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"text-xl font-semibold text-white tracking-tight\">{card.value}</d"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 157,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-3\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 158,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<h2 className=\"text-xs font-semibold text-zinc-300 uppercase tracking-wider\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 179,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"rounded-2xl border border-zinc-800 bg-[white] p-5 space-y-4\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 182,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-sm font-semibold text-white\">{reportData?.title || \"Rapor De"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 193,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 193,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 193,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-700",
+      "snippet": "className=\"rounded-lg border border-zinc-700 bg-zinc-900/80 pl-9 pr-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 198,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<div className=\"overflow-x-auto rounded-xl border border-zinc-800/80\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 200,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "<thead className=\"bg-zinc-900/90 text-zinc-400 border-b border-zinc-800\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 200,
+      "category": "Koyu/Sert Kenarlık",
+      "val": "border-zinc-800",
+      "snippet": "<thead className=\"bg-zinc-900/90 text-zinc-400 border-b border-zinc-800\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 209,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-950",
+      "snippet": "<tbody className=\"divide-y divide-zinc-800/60 bg-zinc-950/40\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 211,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-zinc-900",
+      "snippet": "<tr key={idx} className=\"hover:bg-zinc-900/40 transition\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 211,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:bg-zinc-900",
+      "snippet": "<tr key={idx} className=\"hover:bg-zinc-900/40 transition\">"
+    },
+    {
+      "file": "app/dashboard/turizm/raporlar/page.tsx",
+      "line": 213,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td key={col.key} className=\"px-3.5 py-2.5 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 163,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"min-h-screen space-y-5 bg-[#F6F8FB] p-4 text-zinc-100 md:p-6\">"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 175,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"mt-1.5 text-xl font-bold tracking-tight text-white md:text-2xl\">"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 194,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<option key={c.id} value={c.id} className=\"bg-[white] text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 209,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 235,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 244,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 253,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"rounded-xl border border-[--brand-line] bg-[--brand]/5 p-4 text-"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 263,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">1. Kat Planı (50 Oda)</strong>"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 273,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">2. Check-In → Folio → Check-Out</strong>"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 283,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">3. Acenta Kontenjan Limiti</strong>"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 292,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">4. Çevrimdışı Housekeeping</strong>"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 312,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"mt-1 text-2xl font-bold text-white\">{cleanVacantCount}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 328,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"mt-1 text-2xl font-bold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 381,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 381,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 381,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/otel/page.tsx",
+      "line": 389,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/20",
+      "snippet": "active ? 'bg-black/20 text-[#F6F8FB]' : 'bg-white/[0.08] text-zinc-400'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 126,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'border-[--line] bg-[#161B18] text-zinc-300 hover:border-[--line]'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 154,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 167,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 178,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-1.5 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 194,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 213,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 255,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-lg font-bold tracking-tight text-white\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 258,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<p className=\"text-[11px] text-zinc-200/80\">{room.roomTypeName}</p>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 260,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/30",
+      "snippet": "<span className=\"rounded bg-black/30 px-1.5 py-0.5 text-[10px] font-medium\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 270,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<div className=\"mt-2 rounded-lg bg-black/30 p-2 text-[11px] text-zinc-200\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 270,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/30",
+      "snippet": "<div className=\"mt-2 rounded-lg bg-black/30 p-2 text-[11px] text-zinc-200\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 274,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"mt-0.5 flex items-center justify-between text-[10px] text-zinc-3"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 291,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<p className=\"mt-2 line-clamp-2 text-[10px] text-zinc-200/75\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 305,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"w-full rounded-md border border-[--line] bg-black/40 px-2 py-1 text-["
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 305,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/40",
+      "snippet": "className=\"w-full rounded-md border border-[--line] bg-black/40 px-2 py-1 text-["
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 308,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<option key={opt} value={opt} className=\"bg-[white] text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 321,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 321,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/40",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 321,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/60",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 329,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-[--brand]"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 338,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-[--brand]"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 347,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 347,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/40",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 347,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/60",
+      "snippet": "className=\"flex flex-1 items-center justify-center gap-1 rounded-md bg-black/40 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 397,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 412,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 417,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 448,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-semibold text-zinc-100\">Oda {row.roomNumber}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 511,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelFloorPlanAndGanttTabs.tsx",
+      "line": 530,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200\">{log.rejectionMessage}</span>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 84,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 103,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<h4 className=\"text-xs font-semibold uppercase tracking-wider text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 110,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 121,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 134,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 160,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-orange-300",
+      "snippet": "<h4 className=\"text-xs font-semibold uppercase tracking-wider text-orange-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 167,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 178,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 189,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 193,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"flex items-center gap-2 text-xs text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 217,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-orange-500",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg bg-orange-500/20 px-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 217,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-orange-300",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg bg-orange-500/20 px-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 217,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-orange-500",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg bg-orange-500/20 px-3 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 242,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-mono font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 248,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<div className=\"text-zinc-200\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 253,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2.5 text-zinc-300\">{t.assignedToName || 'Atanmadı'}</td>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 257,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-zinc-300'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 293,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-purple-500",
+      "snippet": "className=\"rounded bg-purple-500/20 px-2 py-1 text-[10px] text-purple-300 hover:"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 293,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-300",
+      "snippet": "className=\"rounded bg-purple-500/20 px-2 py-1 text-[10px] text-purple-300 hover:"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 293,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-purple-500",
+      "snippet": "className=\"rounded bg-purple-500/20 px-2 py-1 text-[10px] text-purple-300 hover:"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 386,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 394,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 411,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 418,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 429,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 458,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">{al.agencyName}</h4>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 597,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"rounded-xl border border-sky-500/30 bg-sky-500/5 p-4 text-xs tex"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 613,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "Toplam <strong className=\"text-zinc-100\">{kbsRecords.length}</strong> KBS hazırl"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 636,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 644,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 666,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-semibold text-zinc-100\">{k.kbsRefNo}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 669,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2.5 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 673,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-medium text-zinc-100\">{k.guestFullName}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 682,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "HOTEL_KBS_STATUS_BADGES[k.preparationStatus] || 'border-[--line] text-zinc-300'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 758,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 766,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<span className=\"font-mono text-xs font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 770,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"mt-1 text-sm font-semibold text-white\">{rt.name}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 782,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 801,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"py-2 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 804,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"py-2 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 808,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<td className=\"py-2 text-right font-mono font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 827,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 836,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 844,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 861,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 874,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 917,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 934,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 982,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 989,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200\">{ch.label}</span>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1012,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1025,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"font-mono text-sm font-bold text-white\">{n.nationalityCode}</div"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1035,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<strong className=\"text-zinc-200\">{daily.inHouseCount}</strong> konaklayan ·{' '"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1045,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1063,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<td className=\"py-2 font-medium text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelHkKbsAllotmentAndReportsTabs.tsx",
+      "line": 1075,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<td className=\"py-2 text-right font-mono font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 255,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 272,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 pr-3 te"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 298,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 298,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 310,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 326,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 343,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 354,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 363,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 378,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 395,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 415,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 426,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 435,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] px-4 py-2 text-xs text-zinc-300\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 465,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 465,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 478,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1."
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 487,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1."
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 496,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1."
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 504,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1."
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 513,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1."
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 519,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"flex items-center gap-2 text-xs text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 531,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"rounded-lg bg-sky-500 px-4 py-2 text-xs font-semibold text-white hove"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 554,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 554,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className=\"text-zinc-400 hover:text-white\""
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 563,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 569,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 596,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"text-zinc-300\">Kalan bakiyeyi şimdi tahsil et:</span>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 600,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 644,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-mono font-semibold text-zinc-100\">{r.reservationNo}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 652,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-semibold text-zinc-100\">Oda {r.roomNumber}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 658,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-medium text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 666,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2.5 font-mono text-[11px] text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 676,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "'border-[--line] text-zinc-300'"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 684,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 910,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 917,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 945,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-xs font-semibold text-zinc-200\">"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 984,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 999,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1017,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-[--brand-line] bg-[#0B0E0D] px-2.5 py"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1033,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1046,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-16 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1053,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1088,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-medium text-zinc-100\">{item.description}</div>"
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1102,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded border border-white/[0.1] bg-[#0B0E0D] px-2 py-1 text-[11px] "
+    },
+    {
+      "file": "app/dashboard/otel/components/HotelReservationsAndFolioTabs.tsx",
+      "line": 1113,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "item.isPayment ? 'text-[#1267E6]' : 'text-zinc-100'"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 195,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"min-h-screen bg-[#F6F8FB] p-4 text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 203,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"text-lg font-bold text-white\">Kat Hizmetleri Mobil Görev Ekranı</"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 205,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "Personel: <strong className=\"text-zinc-200\">{data?.staffUser?.username || '-'}</"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 215,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1 rounded-lg border border-white/[0.1] bg-[#161"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 300,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-lg font-bold text-white\">Oda {t.roomNumber}</span>"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 301,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 305,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"text-xs text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 312,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-zinc-300'"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 320,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<p className=\"rounded-lg bg-[#0B0E0D] p-2.5 text-xs text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 345,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-purple-500",
+      "snippet": "<div className=\"w-full rounded-lg border border-purple-500/30 bg-purple-500/10 p"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 345,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-purple-500",
+      "snippet": "<div className=\"w-full rounded-lg border border-purple-500/30 bg-purple-500/10 p"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 345,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-200",
+      "snippet": "<div className=\"w-full rounded-lg border border-purple-500/30 bg-purple-500/10 p"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 359,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-orange-500",
+      "snippet": "className=\"space-y-3 rounded-2xl border border-orange-500/30 bg-[white] p-4\""
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 361,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-orange-300",
+      "snippet": "<div className=\"flex items-center gap-2 text-sm font-semibold text-orange-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 368,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs t"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 379,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs t"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 392,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 te"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 395,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"flex items-center gap-2 text-xs text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 405,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-orange-500",
+      "snippet": "className=\"rounded-lg bg-orange-500/25 px-4 py-2 text-xs font-semibold text-oran"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 405,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-orange-200",
+      "snippet": "className=\"rounded-lg bg-orange-500/25 px-4 py-2 text-xs font-semibold text-oran"
+    },
+    {
+      "file": "app/dashboard/otel/housekeeping/page.tsx",
+      "line": 405,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-orange-500",
+      "snippet": "className=\"rounded-lg bg-orange-500/25 px-4 py-2 text-xs font-semibold text-oran"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 137,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"min-h-screen space-y-5 bg-[#F6F8FB] p-4 text-zinc-100 md:p-6\">"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 144,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"mt-1.5 text-xl font-bold tracking-tight text-white md:text-2xl\">"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 163,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<option key={c.id} value={c.id} className=\"bg-[white] text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 178,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 204,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 213,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 222,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"rounded-xl border border-[--brand-line] bg-[--brand]/5 p-4 text-"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 235,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">1. Otel & KBS Bağlı Tur</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 248,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">2. Koltuk Cinsiyet Kuralı & Harita</stro"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 258,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">3. Çapraz Kaynak Çakışması</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 267,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"block text-zinc-100\">4. Çevrimdışı Rehber Mobil</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 280,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"mt-1 text-2xl font-bold text-white\">"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 298,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"mt-1 text-2xl font-bold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 353,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 353,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 353,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": ": 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'"
+    },
+    {
+      "file": "app/dashboard/tur/page.tsx",
+      "line": 361,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/20",
+      "snippet": "active ? 'bg-black/20 text-[#F6F8FB]' : 'bg-white/[0.08] text-zinc-400'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 134,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 198,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 212,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 228,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs t"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 237,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 248,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 259,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 268,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 277,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs t"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 286,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 295,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 333,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<div className=\"border-b border-[--line] px-4 py-3 text-xs font-semibold text-zi"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 352,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-mono font-semibold text-zinc-100\">{b.bookingNo}</div>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 357,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2.5 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 447,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<div className=\"border-b border-[--line] px-4 py-3 text-xs font-semibold text-zi"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 468,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<td className=\"px-3 py-2 font-medium text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 474,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2 font-mono text-[11px] text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 581,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 594,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 615,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"font-semibold text-zinc-100\">{row.label}</div>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 655,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 676,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"font-mono text-[11px] font-semibold text-white\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourBookingsManifestoAndResourcesTabs.tsx",
+      "line": 679,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"text-zinc-200\">{c.rejectionMessage}</span>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 175,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "statusFilter === 'ALL' ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 186,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "statusFilter === st ? 'bg-[#1267E6] text-[#F6F8FB]' : 'bg-[#161B18] text-zinc-30"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 198,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 210,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 pr-3 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 243,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 253,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 261,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 275,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 285,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 295,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 301,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 312,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 318,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 328,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 343,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 358,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 373,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 391,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-[--brand]/35 bg-[#0B0E0D] px-2.5 py-2"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 407,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] px-4 py-2 text-xs text-zinc-300\""
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 444,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-zinc-300"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 453,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"mt-1 text-sm font-bold text-white\">{t.title}</h3>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 462,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "TOUR_STATUS_BADGES[t.status as TourStatus] || 'border-[--line] text-zinc-300'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 472,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 496,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"mt-3 grid grid-cols-3 gap-2 rounded-lg bg-[#0B0E0D] p-2.5 text-["
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 550,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-purple-500",
+      "snippet": "className=\"rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-medium text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 550,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-purple-300",
+      "snippet": "className=\"rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-medium text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 550,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-purple-500",
+      "snippet": "className=\"rounded-md bg-purple-500/15 px-2.5 py-1 text-[11px] font-medium text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 560,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"rounded-md border border-white/[0.1] bg-[#0B0E0D] px-2 py-1 text-[10p"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 703,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 710,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 726,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 737,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-pink-500",
+      "snippet": "<span className=\"rounded bg-pink-500/20 px-2 py-0.5 text-pink-300\">Kadın (K)</sp"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 737,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-pink-300",
+      "snippet": "<span className=\"rounded bg-pink-500/20 px-2 py-0.5 text-pink-300\">Kadın (K)</sp"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 746,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"flex-1 rounded border border-white/[0.1] bg-[white] px-2.5 py-1.5 tex"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 777,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-pink-500",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 777,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-pink-500",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 777,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-pink-200",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 805,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-pink-500",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 805,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-pink-500",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 805,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-pink-200",
+      "snippet": "? 'border-pink-500/40 bg-pink-500/20 text-pink-200'"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 834,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 878,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<span className=\"font-medium text-zinc-100\">{s.stopName}</span>{' '}"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 882,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"rounded bg-[--muted-bg] px-2 py-0.5 text-[10px] text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 896,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 902,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 908,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 916,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-1.5 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourPackagesAndSeatMapTabs.tsx",
+      "line": 923,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-1.5 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 81,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 88,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 103,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"mt-1 text-lg font-bold text-white\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 153,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 169,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 179,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 189,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 217,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-3 py-2 text-zinc-300\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 221,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<td className=\"px-3 py-2 text-zinc-100\">{ex.description}</td>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 289,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 297,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"col-span-3 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 p"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 304,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 311,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 341,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"text-zinc-100\">{ag.name}</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 347,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 361,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 369,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"col-span-3 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 p"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 375,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 382,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 413,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<strong className=\"text-zinc-100\">{g.fullName}</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 419,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "<span className=\"font-mono font-semibold text-zinc-200\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 453,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h3 className=\"text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 470,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 485,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<div className=\"mt-1 text-2xl font-bold text-white\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 510,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 557,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<h4 className=\"mb-3 text-sm font-semibold text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/components/TourProfitAgenciesAndReportsTabs.tsx",
+      "line": 564,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<div className=\"text-[11px] text-zinc-300\">{v.brandModel}</div>"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 231,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "<div className=\"min-h-screen bg-[#F6F8FB] p-4 text-zinc-100\">"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 238,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"text-lg font-bold text-white\">Rehber & Şoför Mobil Saha Ekranı</h"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 240,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "Görevli: <strong className=\"text-zinc-200\">{data?.staffUser?.username || '-'}</s"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 249,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-200",
+      "snippet": "className=\"flex items-center gap-1 rounded-lg border border-white/[0.1] bg-[#161"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 299,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"flex-1 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 335,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<strong className=\"text-sm text-white\">{p.fullName}</strong>"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 381,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 398,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-28 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 te"
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 403,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"flex-1 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 "
+    },
+    {
+      "file": "app/dashboard/tur/rehber/page.tsx",
+      "line": 430,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-100",
+      "snippet": "className=\"w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] p-2.5 text-x"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 15,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "pending: { label: \"Bekliyor\", bg: \"bg-zinc-500/15 border border-[--line]\", text:"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 18,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-teal-500",
+      "snippet": "delivered: { label: \"Teslim Edildi\", bg: \"bg-teal-500/15 border border-teal-500/"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 18,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-teal-500",
+      "snippet": "delivered: { label: \"Teslim Edildi\", bg: \"bg-teal-500/15 border border-teal-500/"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 18,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-300",
+      "snippet": "delivered: { label: \"Teslim Edildi\", bg: \"bg-teal-500/15 border border-teal-500/"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 134,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h1 className=\"text-2xl lg:text-3xl font-semibold text-white mb-1 tracking-tight"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 146,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-4xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 161,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-4xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 176,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-4xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 179,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"bg-[--muted-bg] text-zinc-300 text-xs px-2 py-0.5 rounded-full "
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 191,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<span className=\"text-4xl font-light text-white tracking-tight\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 207,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 207,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 207,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 212,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-white/10",
+      "snippet": "className=\"absolute inset-0 bg-white/10 rounded-full border border-[--line]\""
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 221,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 221,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 221,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 226,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-white/10",
+      "snippet": "className=\"absolute inset-0 bg-white/10 rounded-full border border-[--line]\""
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 235,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 235,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 235,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 240,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-white/10",
+      "snippet": "className=\"absolute inset-0 bg-white/10 rounded-full border border-[--line]\""
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 250,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 250,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 250,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "className={`relative px-4 py-2 text-sm font-medium rounded-full transition-color"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 255,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-white/10",
+      "snippet": "className=\"absolute inset-0 bg-white/10 rounded-full border border-[--line]\""
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 271,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"bg-[#1267E6] hover:bg-[#1267E6] text-white px-5 py-2.5 rounded-full t"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 292,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<td className=\"px-6 py-4 font-medium text-white\">{p.name}</td>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 294,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-6 py-4 text-zinc-300\">{p.unit}</td>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 330,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"bg-[#1267E6] hover:bg-[#1267E6] text-white px-5 py-2.5 rounded-full t"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 356,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<td className=\"px-6 py-4 font-medium text-white\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 360,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "{isSuperAdmin && <td className=\"px-6 py-4 text-zinc-300\">{r.branch?.name}</td>}"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 361,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<td className=\"px-6 py-4 text-zinc-300\">{r.quantity} {r.product?.unit || \"Adet\"}"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 415,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-lg font-semibold text-white group-hover:text-[--brand] trans"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 419,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<span className=\"font-semibold text-zinc-300\">{p.unit}</span>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 426,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "className=\"w-full py-2.5 bg-[--muted-bg] border border-[--line] hover:bg-[--bran"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 448,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-xl font-semibold text-white mb-2\">Web Tasarım & Yazılım</h3>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 452,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<ul className=\"text-sm text-zinc-300 space-y-2 mb-6\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 464,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "bg-teal-500",
+      "snippet": "<div className=\"w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 t"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 464,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "border-teal-500",
+      "snippet": "<div className=\"w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 t"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 464,
+      "category": "Yasaklı Dekoratif Vurgu Rengi",
+      "val": "text-teal-400",
+      "snippet": "<div className=\"w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 t"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 467,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-xl font-semibold text-white mb-2\">Sosyal Medya Yönetimi</h3>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 471,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<ul className=\"text-sm text-zinc-300 space-y-2 mb-6\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 486,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-xl font-semibold text-white mb-2\">Dijital Pazarlama & SEO</h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 490,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<ul className=\"text-sm text-zinc-300 space-y-2 mb-6\">"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 501,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/70",
+      "snippet": "<div className=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 504,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-lg font-semibold text-white\">{editProduct ? \"Ürün Düzenle\" :"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 505,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={() => setIsProductOpen(false)} className=\"p-1.5 text-zinc-400 h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 505,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "<button onClick={() => setIsProductOpen(false)} className=\"p-1.5 text-zinc-400 h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 511,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Ürün Adı *</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 515,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Açıklama</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 519,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Birim</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 521,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"Adet\" className=\"bg-[white] text-white\">Adet</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 522,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"Kg\" className=\"bg-[white] text-white\">Kg</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 523,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"Litre\" className=\"bg-[white] text-white\">Litre</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 524,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"Kutu\" className=\"bg-[white] text-white\">Kutu</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 525,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"Paket\" className=\"bg-[white] text-white\">Paket</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 530,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<button onClick={() => setIsProductOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 530,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={() => setIsProductOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 530,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "<button onClick={() => setIsProductOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 531,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={handleSaveProduct} disabled={loading || !productForm.name} clas"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 541,
+      "category": "Koyu Zemin Artığı (Hap/Kutu)",
+      "val": "bg-black/70",
+      "snippet": "<div className=\"fixed inset-0 z-50 flex items-center justify-center p-4 bg-black"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 545,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<h3 className=\"text-lg font-semibold text-white\">Stok / Hizmet Talebi Oluştur</h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 548,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={() => setIsRequestOpen(false)} className=\"p-1.5 text-zinc-400 h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 548,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "<button onClick={() => setIsRequestOpen(false)} className=\"p-1.5 text-zinc-400 h"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 554,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Ürün / Hizmet *</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 565,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"\" className=\"bg-[white] text-white\">Seçiniz</option>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 566,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<option value=\"custom\" className=\"bg-[white] text-white\">Diğer (Serbest Metin)</"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 567,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "{products.filter(p => p.isActive).map(p => <option key={p.id} value={p.id} class"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 572,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Özel Ürün/Hizmet Adı *</lab"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 583,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Miktar *</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 587,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<label className=\"text-sm font-medium text-zinc-300\">Notlar</label>"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 592,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-zinc-300",
+      "snippet": "<button onClick={() => setIsRequestOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 592,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={() => setIsRequestOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 592,
+      "category": "Eski Koyu Hover Durumu",
+      "val": "hover:text-white",
+      "snippet": "<button onClick={() => setIsRequestOpen(false)} className=\"px-4 py-2 text-sm fon"
+    },
+    {
+      "file": "app/dashboard/b2b/page.tsx",
+      "line": 593,
+      "category": "Beyaz/Açık Metin (Okunaksız)",
+      "val": "text-white",
+      "snippet": "<button onClick={handleCreateRequest} disabled={loading || (!requestForm.product"
+    }
+  ]
+}

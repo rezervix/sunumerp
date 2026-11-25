@@ -866,7 +866,7 @@ function ShellInner({
           ══════════════════════════════════════════════════════════════════════ */}
       <aside
         aria-label="Ana modüller"
-        className="hidden lg:flex flex-col items-center justify-between w-16 shrink-0 sticky top-0 h-screen bg-white/85 backdrop-blur-xl border-r border-[var(--line)] py-3 z-30"
+        className="hidden lg:flex flex-col items-center justify-between w-16 shrink-0 sticky top-0 h-screen bg-[var(--muted-bg)] backdrop-blur-xl border-r border-[var(--line)] py-3 z-30"
       >
         {/* Üst Logo */}
         <Link
@@ -896,11 +896,7 @@ function ShellInner({
                     href={firstHref}
                     aria-label={cat.title}
                     aria-current={isActive ? "page" : undefined}
-                    className={`relative flex size-10 items-center justify-center rounded-[12px] transition-colors duration-150 ${
-                      isActive
-                        ? "bg-[var(--brand-soft)] text-[var(--brand)]"
-                        : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]/80"
-                    }`}
+                    className={`relative flex size-10 items-center justify-center rounded-[12px] transition-colors duration-150 ${ isActive ? "bg-[var(--brand-soft)] text-[var(--brand)]" : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]/80" }`}
                   >
                     <Icon size={19} />
                     {unread > 0 && (
@@ -925,11 +921,7 @@ function ShellInner({
                   <button
                     type="button"
                     aria-label="Sistem, Şube ve Dil Ayarları"
-                    className={`flex size-10 items-center justify-center rounded-[12px] transition-colors cursor-pointer ${
-                      pathname.startsWith("/dashboard/settings")
-                        ? "bg-[var(--brand-soft)] text-[var(--brand)]"
-                        : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]/80"
-                    }`}
+                    className={`flex size-10 items-center justify-center rounded-[12px] transition-colors cursor-pointer ${ pathname.startsWith("/dashboard/settings") ? "bg-[var(--brand-soft)] text-[var(--brand)]" : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--muted-bg)]/80" }`}
                   >
                     <IconSettings size={18} />
                   </button>
@@ -1037,11 +1029,7 @@ function ShellInner({
                         key={item.href}
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`flex items-center justify-between px-3 py-2 rounded-[10px] text-sm transition-colors ${
-                          active
-                            ? "bg-[var(--brand-soft)] text-[var(--brand)] font-medium"
-                            : "text-[var(--text-2)] hover:bg-[var(--muted-bg)] hover:text-[var(--text)]"
-                        }`}
+                        className={`flex items-center justify-between px-3 py-2 rounded-[10px] text-sm transition-colors ${ active ? "bg-[var(--brand-soft)] text-[var(--brand)] font-medium" : "text-[var(--text-2)] hover:bg-[var(--muted-bg)] hover:text-[var(--text)]" }`}
                       >
                         <span className="truncate">{item.shortLabel}</span>
                       </Link>
@@ -1090,11 +1078,7 @@ function ShellInner({
                     key={tab.href}
                     href={tab.href}
                     aria-current={active ? "page" : undefined}
-                    className={`relative h-full inline-flex items-center px-2.5 sm:px-3 text-sm whitespace-nowrap transition-colors duration-150 ${
-                      active
-                        ? "text-[var(--brand)] font-semibold"
-                        : "text-[var(--text-2)] hover:text-[var(--text)] font-medium"
-                    }`}
+                    className={`relative h-full inline-flex items-center px-2.5 sm:px-3 text-sm whitespace-nowrap transition-colors duration-150 ${ active ? "text-[var(--brand)] font-semibold" : "text-[var(--text-2)] hover:text-[var(--text)] font-medium" }`}
                   >
                     <span>{tab.shortLabel}</span>
                     {active &&

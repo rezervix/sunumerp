@@ -140,7 +140,7 @@ export default function TaskDetailPage() {
           <button
             onClick={handleCustomerVision}
             disabled={aiLoading}
-            className="rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] px-5 py-2 text-xs font-medium text-white transition shadow-sm shrink-0 disabled:opacity-50 cursor-pointer"
+            className="rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] px-5 py-2 text-xs font-medium text-[var(--text)] transition shadow-sm shrink-0 disabled:opacity-50 cursor-pointer"
           >
             {aiLoading ? "Çalışıyor..." : "AI Analizi Oluştur"}
           </button>

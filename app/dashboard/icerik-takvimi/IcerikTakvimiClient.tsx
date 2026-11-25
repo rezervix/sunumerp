@@ -359,7 +359,7 @@ export default function IcerikTakvimiClient() {
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-semibold leading-none">İçerik Takvimi</h1>
                   {process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true" && (
-                    <Badge variant="outline" className="bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-200 animate-pulse text-[10px] py-0.5 px-1.5 font-medium rounded-full shrink-0">
+                    <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 animate-pulse text-[10px] py-0.5 px-1.5 font-medium rounded-full shrink-0">
                       ⚠️ Demo Modu Aktif
                     </Badge>
                   )}
@@ -547,42 +547,42 @@ export default function IcerikTakvimiClient() {
       {/* ── KUTUSUZ ÖZET DASHBOARD ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 py-4 border-b border-[--line]">
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Calendar size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Calendar size={13} className="text-[var(--text-muted)]" />
             <span>Bugün Toplam</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               {todayStats.total}
             </span>
-            <span className="text-[11px] font-mono text-zinc-400 bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
+            <span className="text-[11px] font-mono text-[var(--text-muted)] bg-white/[0.05] px-2 py-0.5 rounded-full border border-[--line]">
               İçerik
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <Camera size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <Camera size={13} className="text-[var(--text-muted)]" />
             <span>Bugün Çekim</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               {todayStats.shoots}
             </span>
-            <span className="text-[11px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+            <span className="text-[11px] font-mono text-[var(--warn)] bg-[var(--warn-soft)] px-2 py-0.5 rounded-full border border-[var(--warn-line)]">
               Set/Çekim
             </span>
           </div>
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <AlertCircle size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <AlertCircle size={13} className="text-[var(--text-muted)]" />
             <span>Onay Bekleyen</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               {todayStats.pending}
             </span>
             <span className="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
@@ -592,12 +592,12 @@ export default function IcerikTakvimiClient() {
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] uppercase tracking-wider">
-            <CheckCircle2 size={13} className="text-zinc-400" />
+          <div className="flex items-center gap-1.5 text-[var(--text-muted)] text-[11px] uppercase tracking-wider">
+            <CheckCircle2 size={13} className="text-[var(--text-muted)]" />
             <span>Bu Ay Yayınlanan</span>
           </div>
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-3xl font-light text-white">
+            <span className="text-3xl font-light text-[var(--text)]">
               {todayStats.published}
             </span>
             <span className="text-[11px] font-mono text-[--brand] bg-[--brand]/10 px-2 py-0.5 rounded-full border border-[--brand-line]">
@@ -798,12 +798,12 @@ function MonthView({
               <div className="flex items-center justify-between mb-1.5">
                 <span className={[
                   "text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full transition-all",
-                  isToday ? "bg-[--brand] text-black font-bold shadow-[0_0_10px_#1267E6]" : "text-zinc-400 group-hover:text-white",
+                  isToday ? "bg-[--brand] text-black font-bold shadow-[0_0_10px_#1267E6]" : "text-[var(--text-muted)] group-hover:text-[var(--brand)]",
                 ].join(" ")}>
                   {day.getDate()}
                 </span>
                 {hasContent && (
-                  <span className="text-[9px] text-zinc-500 group-hover:text-[--brand] transition-colors">
+                  <span className="text-[9px] text-[var(--text-muted)] group-hover:text-[--brand] transition-colors">
                     +Ekle
                   </span>
                 )}
@@ -813,7 +813,7 @@ function MonthView({
               {showShoots && dayShoots.map((shoot) => (
                 <div
                   key={shoot.id}
-                  className="mb-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center gap-1 truncate cursor-pointer hover:opacity-85"
+                  className="mb-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-700 flex items-center gap-1 truncate cursor-pointer hover:opacity-85"
                   onClick={(e) => { e.stopPropagation(); onShootClick(shoot) }}
                 >
                   <Camera size={9} />
@@ -886,11 +886,11 @@ function WeekView({
               <div
                 className={[
                   "text-center py-2 rounded-xl cursor-pointer transition-colors border",
-                  isToday ? "bg-[--brand]/10 border-[--brand-line] text-[--brand]" : "bg-[--page] border-white/[0.04] hover:bg-[--muted-bg]",
+                  isToday ? "bg-[--brand]/10 border-[--brand-line] text-[--brand]" : "bg-[--page] border-[var(--line-soft)] hover:bg-[--muted-bg]",
                 ].join(" ")}
                 onClick={() => onDayClick(day)}
               >
-                <div className="text-[10px] text-zinc-400">{TURKISH_DAYS[idx]}</div>
+                <div className="text-[10px] text-[var(--text-muted)]">{TURKISH_DAYS[idx]}</div>
                 <div className={[
                   "text-sm font-semibold mt-0.5",
                   isToday ? "text-[--brand] font-bold" : "text-white",
@@ -903,14 +903,14 @@ function WeekView({
               {showShoots && dayShoots.map((shoot) => (
                 <div
                   key={shoot.id}
-                  className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 cursor-pointer hover:opacity-80 transition-opacity"
+                  className="p-2 rounded-lg bg-amber-50 border border-amber-200 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={(e) => { e.stopPropagation(); onShootClick(shoot) }}
                 >
-                  <div className="flex items-center gap-1 text-amber-700 dark:text-amber-400 text-[10px] font-semibold mb-1">
+                  <div className="flex items-center gap-1 text-amber-700 text-[10px] font-semibold mb-1">
                     <Camera size={10} />
                     Çekim
                   </div>
-                  <div className="text-[10px] text-amber-600 dark:text-amber-300 truncate">{shoot.branch.name}</div>
+                  <div className="text-[10px] text-amber-600 truncate">{shoot.branch.name}</div>
                   {shoot.location && <div className="text-[9px] text-muted-foreground truncate">{shoot.location}</div>}
                 </div>
               ))}
@@ -1032,7 +1032,7 @@ function ListView({
                 {isToday ? "Bugün — " : ""}{dateLabel}
               </div>
               <div className="flex-1 h-px bg-[--muted-bg]" />
-              <span className="text-xs text-zinc-500 font-mono">
+              <span className="text-xs text-[var(--text-muted)] font-mono">
                 {dayItems.length} içerik{dayShoots.length > 0 ? ` · ${dayShoots.length} çekim` : ""}
               </span>
             </div>
@@ -1042,7 +1042,7 @@ function ListView({
               {dayShoots.map((shoot) => (
                 <div
                   key={shoot.id}
-                  className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/50 cursor-pointer hover:border-amber-300 transition-all"
+                  className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200 cursor-pointer hover:border-amber-300 transition-all"
                   onClick={() => onShootClick(shoot)}
                 >
                   <div className="mt-0.5 text-amber-500">

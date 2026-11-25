@@ -141,9 +141,7 @@ export function ContentCard({
   return (
     <>
       <div
-        className={`group relative flex flex-col rounded-[20px] border bg-[white]/90 text-card-foreground shadow-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden ${
-          isSelected ? "border-[--brand]/60 ring-2 ring-[--brand-line]" : "border-[--line] hover:border-white/[0.15]"
-        }`}
+        className={`group relative flex flex-col rounded-[20px] border bg-[white]/90 text-card-foreground shadow-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden ${ isSelected ? "border-[--brand]/60 ring-2 ring-[--brand-line]" : "border-[--line] hover:border-[var(--line)]" }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false)
@@ -190,7 +188,7 @@ export function ContentCard({
             ) : (
               <div className="relative h-full w-full flex items-center justify-center bg-black/80">
                 <VideoIcon size={32} className="text-white/60" />
-                <span className="absolute bottom-2 right-2 text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded font-mono">
+                <span className="absolute bottom-2 right-2 text-[10px] bg-black/60 text-[var(--text)] px-1.5 py-0.5 rounded font-mono">
                   VIDEO
                 </span>
               </div>
@@ -205,7 +203,7 @@ export function ContentCard({
           )}
 
           {/* Niche Badge */}
-          <span className="absolute top-2 right-2 inline-flex items-center rounded-full bg-black/60 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-white border border-[--line]">
+          <span className="absolute top-2 right-2 inline-flex items-center rounded-full bg-black/60 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-[var(--text)] border border-[--line]">
             {item.niche.name}
           </span>
 
@@ -213,7 +211,7 @@ export function ContentCard({
           {item.status !== "approved" && (
             <div className="absolute top-2 left-2 ml-10 inline-flex gap-1 z-10">
               {item.status === "pending_approval" && (
-                <span className="inline-flex items-center gap-1 rounded bg-amber-500/90 text-white px-1.5 py-0.5 text-[10px] font-bold uppercase shadow">
+                <span className="inline-flex items-center gap-1 rounded bg-amber-500/90 text-[var(--text)] px-1.5 py-0.5 text-[10px] font-bold uppercase shadow">
                   <Clock size={10} />
                   Bekliyor
                 </span>
@@ -242,7 +240,7 @@ export function ContentCard({
 
           {/* Version Indicator */}
           {versionNum > 1 && (
-            <span className="absolute bottom-2 right-2 text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded font-mono">
+            <span className="absolute bottom-2 right-2 text-[10px] bg-black/60 text-[var(--text)] px-1.5 py-0.5 rounded font-mono">
               v{versionNum}
             </span>
           )}
@@ -273,7 +271,7 @@ export function ContentCard({
         {/* Card Info Section */}
         <div className="flex flex-col flex-1 p-3">
           {item.status === "rejected" && item.rejectionReason && (
-            <div className="mb-2 p-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg text-xs text-red-700 dark:text-red-300 animate-in slide-in-from-top-1">
+            <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 animate-in slide-in-from-top-1">
               <span className="font-semibold">Red Gerekçesi:</span> {item.rejectionReason}
               {isRejectedAndOwner && (
                 <button
@@ -333,7 +331,7 @@ export function ContentCard({
                           setShowRejectModal(true)
                           setShowMenu(false)
                         }}
-                        className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-red-500/10 text-red-600 text-left transition-colors font-semibold"
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-[var(--bad-soft)] text-red-600 text-left transition-colors font-semibold"
                       >
                         <XCircle size={13} />
                         Reddet
@@ -383,7 +381,7 @@ export function ContentCard({
                   {canDelete && (
                     <button
                       onClick={handleDeleteClick}
-                      className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-red-500/10 text-red-500 text-left transition-colors font-medium"
+                      className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs hover:bg-[var(--bad-soft)] text-red-500 text-left transition-colors font-medium"
                     >
                       <Trash2 size={13} />
                       Sil

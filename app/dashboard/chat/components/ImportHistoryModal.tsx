@@ -245,7 +245,7 @@ export default function ImportHistoryModal({
   const renderUploadStep = () => (
     <div className="space-y-5">
       {/* Uyarı */}
-      <Alert className="border-amber-500/30 bg-amber-500/5">
+      <Alert className="border-[var(--warn-line)] bg-amber-500/5">
         <Info className="h-4 w-4 text-amber-500" />
         <AlertDescription className="text-sm text-muted-foreground">
           WhatsApp, dışa aktarımda genellikle <strong>son 10.000 mesaj</strong> veya belirli
@@ -260,11 +260,7 @@ export default function ImportHistoryModal({
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleFileDrop}
         onClick={() => fileInputRef.current?.click()}
-        className={`
-          relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed
-          p-10 cursor-pointer transition-all duration-200
-          ${isDragging ? "border-primary bg-primary/5 scale-[1.01]" : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/30"}
-        `}
+        className={`relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-10 cursor-pointer transition-all duration-200 ${isDragging ? "border-primary bg-primary/5 scale-[1.01]" : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/30"}`}
       >
         <div className={`p-4 rounded-full transition-colors ${isDragging ? "bg-primary/10" : "bg-muted"}`}>
           <FileArchive className={`h-8 w-8 ${isDragging ? "text-primary" : "text-muted-foreground"}`} />
@@ -342,8 +338,8 @@ export default function ImportHistoryModal({
             </div>
           </div>
           <div className="rounded-lg bg-muted/40 p-4 flex items-center gap-3">
-            <div className="p-2 bg-purple-500/10 rounded-lg">
-              <Image className="h-5 w-5 text-purple-500" />
+            <div className="p-2 bg-[var(--brand-soft)] rounded-lg">
+              <Image className="h-5 w-5 text-[var(--brand)]" />
             </div>
             <div>
               <p className="text-2xl font-bold">{previewResult.mediaCount.toLocaleString("tr-TR")}</p>

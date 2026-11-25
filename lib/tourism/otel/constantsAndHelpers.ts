@@ -34,13 +34,13 @@ export const HOTEL_ROOM_STATUS_LABELS: Record<HotelRoomStatus, string> = {
 }
 
 export const HOTEL_ROOM_STATUS_BADGES: Record<HotelRoomStatus, string> = {
-  CLEAN_VACANT: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  OCCUPIED: "bg-sky-500/20 text-sky-300 border-sky-500/40",
-  DIRTY_VACANT: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-  CLEANING_IN_PROGRESS: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
-  INSPECTION_PENDING: "bg-purple-500/20 text-purple-300 border-purple-500/40",
-  MAINTENANCE: "bg-orange-500/20 text-orange-300 border-orange-500/40",
-  OUT_OF_ORDER: "bg-rose-500/20 text-rose-300 border-rose-500/40",
+  CLEAN_VACANT: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  OCCUPIED: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
+  DIRTY_VACANT: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  CLEANING_IN_PROGRESS: "bg-[var(--brand-soft)] text-[var(--navy)] border border-[var(--brand-line)]",
+  INSPECTION_PENDING: "bg-[var(--brand-soft-2)] text-[var(--brand)] border border-[var(--brand-line)]",
+  MAINTENANCE: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  OUT_OF_ORDER: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
 }
 
 export const HOTEL_BOARD_TYPES = ["RO", "BB", "HB", "FB", "AI"] as const
@@ -95,12 +95,12 @@ export const HOTEL_RESERVATION_STATUS_LABELS: Record<HotelReservationStatus, str
 }
 
 export const HOTEL_RESERVATION_STATUS_BADGES: Record<HotelReservationStatus, string> = {
-  PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  CONFIRMED: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  CHECKED_IN: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  CHECKED_OUT: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
-  CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  NO_SHOW: "bg-purple-500/15 text-purple-300 border-purple-500/30",
+  PENDING: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  CONFIRMED: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
+  CHECKED_IN: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  CHECKED_OUT: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
+  CANCELLED: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
+  NO_SHOW: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
 }
 
 export const HOTEL_FOLIO_GROUPS = [
@@ -162,11 +162,11 @@ export const HOTEL_HK_STATUS_LABELS: Record<string, string> = {
 }
 
 export const HOTEL_HK_STATUS_BADGES: Record<string, string> = {
-  PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  IN_PROGRESS: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  COMPLETED: "bg-purple-500/15 text-purple-300 border-purple-500/30",
-  INSPECTED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  CANCELLED: "bg-zinc-500/15 text-zinc-400 border-white/[0.1]",
+  PENDING: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  IN_PROGRESS: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
+  COMPLETED: "bg-[var(--brand-soft-2)] text-[var(--navy)] border border-[var(--brand-line)]",
+  INSPECTED: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  CANCELLED: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
 }
 
 export const HOTEL_KBS_TYPE_LABELS: Record<string, string> = {
@@ -183,10 +183,10 @@ export const HOTEL_KBS_STATUS_LABELS: Record<string, string> = {
 }
 
 export const HOTEL_KBS_STATUS_BADGES: Record<string, string> = {
-  HAZIRLANDI: "bg-sky-500/15 text-sky-300 border-sky-500/30",
-  GONDERILDI_MANUEL: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  HATALI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  EKSIK_VERI: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  HAZIRLANDI: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
+  GONDERILDI_MANUEL: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  HATALI: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
+  EKSIK_VERI: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
 }
 
 export const HOTEL_INVOICE_TIMING_LABELS: Record<string, string> = {

@@ -339,11 +339,7 @@ export default function SupplierMasterScorecardTab({
                 key={tab.id}
                 type="button"
                 onClick={() => setSubView(tab.id as any)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
-                  active
-                    ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]"
-                    : "text-[--text-muted] hover:text-[--text] border border-transparent hover:bg-[--muted-bg]"
-                }`}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${ active ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" : "text-[--text-muted] hover:text-[--text] border border-transparent hover:bg-[--muted-bg]" }`}
               >
                 <Icon className="size-3.5" />
                 {tab.label}
@@ -474,13 +470,7 @@ export default function SupplierMasterScorecardTab({
                     </td>
                     <td className="py-3 px-3">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-medium ${
-                          sup.approvalStatus === "ONAYLI"
-                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                            : sup.approvalStatus === "KARALISTE"
-                              ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
-                              : "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                        }`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-medium ${ sup.approvalStatus === "ONAYLI" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : sup.approvalStatus === "KARALISTE" ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25" : "bg-[--warn-soft] text-[--warn] border-[--warn]/25" }`}
                       >
                         {SUPPLIER_APPROVAL_LABELS[sup.approvalStatus] || safeText(sup.approvalStatus)}
                       </span>
@@ -490,15 +480,7 @@ export default function SupplierMasterScorecardTab({
                         {Number(sup.effectiveScore || 0).toFixed(1)}
                       </span>
                       <span
-                        className={`ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                          sup.effectiveTier === "A"
-                            ? "bg-[--ok-soft] text-[--ok]"
-                            : sup.effectiveTier === "B"
-                              ? "bg-[--brand-soft] text-[--brand]"
-                              : sup.effectiveTier === "C"
-                                ? "bg-[--warn-soft] text-[--warn]"
-                                : "bg-[--bad-soft] text-[--bad]"
-                        }`}
+                        className={`ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${ sup.effectiveTier === "A" ? "bg-[--ok-soft] text-[--ok]" : sup.effectiveTier === "B" ? "bg-[--brand-soft] text-[--brand]" : sup.effectiveTier === "C" ? "bg-[--warn-soft] text-[--warn]" : "bg-[--bad-soft] text-[--bad]" }`}
                       >
                         {safeText(sup.effectiveTier)}
                       </span>
@@ -795,15 +777,7 @@ export default function SupplierMasterScorecardTab({
                     </td>
                     <td className="py-3 px-3">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-                          doc.status === "GECERLI"
-                            ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                            : doc.status === "YENILEME_YAKIN"
-                              ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                              : doc.status === "SURESI_DOLMUS"
-                                ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25"
-                                : "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                        }`}
+                        className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${ doc.status === "GECERLI" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : doc.status === "YENILEME_YAKIN" ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25" : doc.status === "SURESI_DOLMUS" ? "bg-[--bad-soft] text-[--bad] border-[--bad]/25" : "bg-[--brand-soft] text-[--brand] border-[--brand-line]" }`}
                       >
                         {DOC_STATUS_LABELS[doc.status] || safeText(doc.status)}
                       </span>
@@ -1074,7 +1048,7 @@ export default function SupplierMasterScorecardTab({
             <div className="flex justify-end gap-2 pt-2 border-t border-[--line]">
               <button
                 type="submit"
-                className="h-9 px-5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
+                className="h-9 px-5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
               >
                 Bağlantıyı Kaydet
               </button>

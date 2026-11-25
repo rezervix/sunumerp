@@ -94,8 +94,8 @@ export function PartnerNetworkAndPoolTabs({
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-zinc-100">Partner Firma Ağı ve Karşılıklı Onay</h2>
-            <p className="text-xs text-zinc-400">
+            <h2 className="text-base font-semibold text-[var(--text)]">Partner Firma Ağı ve Karşılıklı Onay</h2>
+            <p className="text-xs text-[var(--text-muted)]">
               Kaynak paylaşımı yalnızca <span className="text-[--brand] font-medium">Onaylı Partner (APPROVED)</span> firmalar arasında çalışır.
             </p>
           </div>
@@ -106,27 +106,27 @@ export function PartnerNetworkAndPoolTabs({
               setInviteTargetId(invitable[0]?.id || "")
               setInviteOpen(true)
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[--brand] px-3 py-2 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[--brand] px-3 py-2 text-xs font-medium text-[var(--text)] hover:bg-[--brand] disabled:opacity-50"
           >
             <Plus className="h-3.5 w-3.5" /> Partnerlik Daveti Gönder
           </button>
         </div>
 
         {inviteOpen && (
-          <div className="rounded-xl border border-[--brand-line] bg-zinc-900/90 p-4 space-y-3">
+          <div className="rounded-xl border border-[--brand-line] bg-[var(--bg)] p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-100">Yeni B2B Partnerlik Daveti</h3>
-              <button type="button" onClick={() => setInviteOpen(false)} className="text-zinc-400 hover:text-zinc-200">
+              <h3 className="text-sm font-semibold text-[var(--text)]">Yeni B2B Partnerlik Daveti</h3>
+              <button type="button" onClick={() => setInviteOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-2)]">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div className="md:col-span-2">
-                <label className="block text-[11px] text-zinc-400 mb-1">Hedef Partner Firma</label>
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Hedef Partner Firma</label>
                 <select
                   value={inviteTargetId}
                   onChange={(e) => setInviteTargetId(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
                 >
                   {invitable.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -136,43 +136,43 @@ export function PartnerNetworkAndPoolTabs({
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Komisyon Oranı (%)</label>
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Komisyon Oranı (%)</label>
                 <input
                   type="number"
                   min={0}
                   max={40}
                   value={inviteCommission}
                   onChange={(e) => setInviteCommission(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Mutabakat Vadesi (Gün)</label>
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Mutabakat Vadesi (Gün)</label>
                 <input
                   type="number"
                   min={1}
                   max={90}
                   value={inviteTermDays}
                   onChange={(e) => setInviteTermDays(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-[11px] text-zinc-400 mb-1">İş Birliği Notu</label>
+              <label className="block text-[11px] text-[var(--text-muted)] mb-1">İş Birliği Notu</label>
               <input
                 type="text"
                 placeholder="Örn: Yaz sezonu araç ve kontenjan paylaşım protokolü"
                 value={inviteNotes}
                 onChange={(e) => setInviteNotes(e.target.value)}
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
               />
             </div>
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setInviteOpen(false)}
-                className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
+                className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)]"
               >
                 Vazgeç
               </button>
@@ -191,7 +191,7 @@ export function PartnerNetworkAndPoolTabs({
                     setInviteNotes("")
                   }
                 }}
-                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
+                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-[var(--text)] hover:bg-[--brand] disabled:opacity-50"
               >
                 Daveti Gönder
               </button>
@@ -203,18 +203,18 @@ export function PartnerNetworkAndPoolTabs({
           {partnerships.map((ps) => {
             const st = B2B_PARTNERSHIP_STATUS_META[ps.status] || {
               label: ps.status,
-              badgeClass: "bg-zinc-700 text-zinc-200 border-zinc-600",
+              badgeClass: "bg-[var(--muted-bg)] text-[var(--text-2)] border-[var(--line)]",
             }
             const isExpanded = expandedHistoryId === ps.id
             return (
-              <div key={ps.id} className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4 space-y-3">
+              <div key={ps.id} className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-4 space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-sky-400" />
-                      <span className="text-sm font-semibold text-zinc-100">{ps.counterpartyCompanyName}</span>
+                      <span className="text-sm font-semibold text-[var(--text)]">{ps.counterpartyCompanyName}</span>
                     </div>
-                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                    <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
                       {ps.code} · {B2B_COMPANY_TYPE_LABELS[ps.counterpartyCompanyType] || ps.counterpartyCompanyType} · {ps.counterpartyCity || "—"}
                     </p>
                   </div>
@@ -223,24 +223,24 @@ export function PartnerNetworkAndPoolTabs({
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 rounded-lg bg-zinc-950/60 p-2.5 text-xs">
+                <div className="grid grid-cols-3 gap-2 rounded-lg bg-[var(--bg)]/60 p-2.5 text-xs">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">Yön</span>
-                    <span className="text-zinc-200">{ps.direction === "INCOMING" ? "Gelen Davet" : "Giden Davet"}</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">Yön</span>
+                    <span className="text-[var(--text-2)]">{ps.direction === "INCOMING" ? "Gelen Davet" : "Giden Davet"}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">Komisyon</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">Komisyon</span>
                     <span className="text-[--brand] font-medium">%{ps.commissionRatePct}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">Vade</span>
-                    <span className="text-zinc-200">{ps.settlementTermDays} gün</span>
+                    <span className="text-[10px] text-[var(--text-muted)] block">Vade</span>
+                    <span className="text-[var(--text-2)]">{ps.settlementTermDays} gün</span>
                   </div>
                 </div>
 
-                {ps.notes && <p className="text-xs text-zinc-400">{ps.notes}</p>}
+                {ps.notes && <p className="text-xs text-[var(--text-muted)]">{ps.notes}</p>}
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-800/80">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--line)]">
                   <div className="flex flex-wrap gap-1.5">
                     {ps.status === "PENDING" && ps.direction === "INCOMING" && (
                       <>
@@ -255,7 +255,7 @@ export function PartnerNetworkAndPoolTabs({
                               reason: "Firma yetkilisi onayı ile kabul edildi.",
                             })
                           }
-                          className="rounded-md bg-[--brand]/90 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-[--brand]"
+                          className="rounded-md bg-[--brand]/90 px-2.5 py-1 text-[11px] font-medium text-[var(--text)] hover:bg-[--brand]"
                         >
                           Yetkili Onayıyla Kabul Et
                         </button>
@@ -269,7 +269,7 @@ export function PartnerNetworkAndPoolTabs({
                               reason: "İş birliği koşulları uygun görülmedi.",
                             })
                           }
-                          className="rounded-md bg-rose-600/80 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-rose-500"
+                          className="rounded-md bg-rose-600/80 px-2.5 py-1 text-[11px] font-medium text-[var(--text)] hover:bg-rose-500"
                         >
                           Reddet
                         </button>
@@ -287,7 +287,7 @@ export function PartnerNetworkAndPoolTabs({
                             reason: "Operasyonel inceleme nedeniyle geçici askıya alındı.",
                           })
                         }
-                        className="rounded-md border border-orange-500/40 bg-orange-500/10 px-2.5 py-1 text-[11px] text-orange-300 hover:bg-orange-500/20"
+                        className="rounded-md border border-[var(--warn-line)] bg-[var(--warn-soft)] px-2.5 py-1 text-[11px] text-orange-300 hover:bg-[var(--warn-soft)]"
                       >
                         Askıya Al
                       </button>
@@ -321,7 +321,7 @@ export function PartnerNetworkAndPoolTabs({
                             reason: "Partnerlik ilişkisi sonlandırıldı.",
                           })
                         }
-                        className="rounded-md border border-zinc-700 px-2.5 py-1 text-[11px] text-zinc-400 hover:text-rose-300 hover:border-rose-500/40"
+                        className="rounded-md border border-[var(--line)] px-2.5 py-1 text-[11px] text-[var(--text-muted)] hover:text-[var(--bad)] hover:border-[var(--bad-line)]"
                       >
                         Sonlandır
                       </button>
@@ -338,18 +338,18 @@ export function PartnerNetworkAndPoolTabs({
                 </div>
 
                 {isExpanded && (
-                  <div className="rounded-lg bg-zinc-950/70 border border-zinc-800 p-2.5 space-y-1.5">
-                    <div className="text-[11px] font-medium text-zinc-300">İlişki Durum Geçmişi</div>
+                  <div className="rounded-lg bg-[var(--bg)]/70 border border-[var(--line)] p-2.5 space-y-1.5">
+                    <div className="text-[11px] font-medium text-[var(--text-2)]">İlişki Durum Geçmişi</div>
                     {(ps.history || []).length === 0 ? (
-                      <p className="text-[11px] text-zinc-500">Geçmiş kaydı yok.</p>
+                      <p className="text-[11px] text-[var(--text-muted)]">Geçmiş kaydı yok.</p>
                     ) : (
                       (ps.history || []).map((h: any) => (
-                        <div key={h.id} className="text-[11px] text-zinc-400 flex justify-between gap-2">
+                        <div key={h.id} className="text-[11px] text-[var(--text-muted)] flex justify-between gap-2">
                           <span>
                             {h.fromStatus ? `${h.fromStatus} → ` : ""}
-                            <strong className="text-zinc-200">{h.toStatus}</strong> · {h.reason || "—"} ({h.actorName || "Sistem"})
+                            <strong className="text-[var(--text-2)]">{h.toStatus}</strong> · {h.reason || "—"} ({h.actorName || "Sistem"})
                           </span>
-                          <span className="shrink-0 text-zinc-500">{formatDateTimeTrB2b(h.createdAt)}</span>
+                          <span className="shrink-0 text-[var(--text-muted)]">{formatDateTimeTrB2b(h.createdAt)}</span>
                         </div>
                       ))
                     )}
@@ -359,7 +359,7 @@ export function PartnerNetworkAndPoolTabs({
             )
           })}
           {partnerships.length === 0 && (
-            <div className="col-span-full rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-500">
+            <div className="col-span-full rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-xs text-[var(--text-muted)]">
               Bu firma perspektifi için henüz partnerlik kaydı bulunmuyor.
             </div>
           )}
@@ -378,10 +378,10 @@ export function PartnerNetworkAndPoolTabs({
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-[var(--text)] flex items-center gap-2">
               <Globe className="h-4 w-4 text-[--brand]" /> Onaylı Partnerlerin Ortak Kaynak Havuzu
             </h2>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Yalnızca onaylı partnerlerinizin bu firmaya açtığı kaynaklar veri minimizasyonu uygulanarak listelenir.
             </p>
           </div>
@@ -392,7 +392,7 @@ export function PartnerNetworkAndPoolTabs({
                 setFilterType(e.target.value)
                 onFilterPool({ resourceType: e.target.value, search: filterSearch, startAt: filterStart, endAt: filterEnd })
               }}
-              className="rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text-2)]"
             >
               <option value="ALL">Tüm Kaynak Tipleri</option>
               {Object.entries(B2B_RESOURCE_TYPE_META).map(([k, v]) => (
@@ -408,7 +408,7 @@ export function PartnerNetworkAndPoolTabs({
                 setFilterStart(e.target.value)
                 onFilterPool({ resourceType: filterType, search: filterSearch, startAt: e.target.value, endAt: filterEnd })
               }}
-              className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-200"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-1.5 text-xs text-[var(--text-2)]"
             />
             <input
               type="date"
@@ -417,10 +417,10 @@ export function PartnerNetworkAndPoolTabs({
                 setFilterEnd(e.target.value)
                 onFilterPool({ resourceType: filterType, search: filterSearch, startAt: filterStart, endAt: e.target.value })
               }}
-              className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-1.5 text-xs text-zinc-200"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-1.5 text-xs text-[var(--text-2)]"
             />
             <div className="relative">
-              <Search className="h-3.5 w-3.5 text-zinc-500 absolute left-2.5 top-2" />
+              <Search className="h-3.5 w-3.5 text-[var(--text-muted)] absolute left-2.5 top-2" />
               <input
                 type="text"
                 placeholder="Kaynak, şehir, partner ara..."
@@ -429,7 +429,7 @@ export function PartnerNetworkAndPoolTabs({
                   setFilterSearch(e.target.value)
                   onFilterPool({ resourceType: filterType, search: e.target.value, startAt: filterStart, endAt: filterEnd })
                 }}
-                className="rounded-lg border border-zinc-700 bg-zinc-950 pl-8 pr-3 py-1.5 text-xs text-zinc-200 w-52"
+                className="rounded-lg border border-[var(--line)] bg-[var(--bg)] pl-8 pr-3 py-1.5 text-xs text-[var(--text-2)] w-52"
               />
             </div>
           </div>
@@ -439,41 +439,37 @@ export function PartnerNetworkAndPoolTabs({
           {partnerPool.map((res) => {
             const typeMeta = B2B_RESOURCE_TYPE_META[res.resourceType] || { label: res.resourceType, unitLabel: "Gün" }
             return (
-              <div key={res.id} className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4 flex flex-col justify-between gap-3">
+              <div key={res.id} className="rounded-xl border border-[var(--line)] bg-[var(--bg)]/70 p-4 flex flex-col justify-between gap-3">
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <span className="text-[10px] uppercase tracking-wider text-sky-400 font-semibold">{typeMeta.label}</span>
-                      <h3 className="text-sm font-semibold text-zinc-100">{res.title}</h3>
-                      <p className="text-[11px] text-zinc-400">
-                        Sahip: <span className="text-zinc-200">{res.ownerCompanyName}</span> · {res.city || "—"}
+                      <h3 className="text-sm font-semibold text-[var(--text)]">{res.title}</h3>
+                      <p className="text-[11px] text-[var(--text-muted)]">
+                        Sahip: <span className="text-[var(--text-2)]">{res.ownerCompanyName}</span> · {res.city || "—"}
                       </p>
                     </div>
                     <span
-                      className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                        res.isAvailableForRange
-                          ? "bg-[--brand]/15 text-[--brand] border-[--brand-line]"
-                          : "bg-rose-500/15 text-rose-300 border-rose-500/30"
-                      }`}
+                      className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${ res.isAvailableForRange ? "bg-[--brand]/15 text-[--brand] border-[--brand-line]" : "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]" }`}
                     >
                       {res.isAvailableForRange ? "Müsait" : "Dolu / Çakışma"}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2 rounded-lg bg-zinc-950/60 p-2 text-xs">
+                  <div className="grid grid-cols-3 gap-2 rounded-lg bg-[var(--bg)]/60 p-2 text-xs">
                     <div>
-                      <span className="text-[10px] text-zinc-500 block">Partner Fiyatı</span>
+                      <span className="text-[10px] text-[var(--text-muted)] block">Partner Fiyatı</span>
                       <span className="text-[--brand] font-semibold">
                         {formatTryB2b(res.netPartnerRateTry)}/{typeMeta.unitLabel}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-zinc-500 block">Komisyon</span>
-                      <span className="text-zinc-200">%{res.commissionRatePct}</span>
+                      <span className="text-[10px] text-[var(--text-muted)] block">Komisyon</span>
+                      <span className="text-[var(--text-2)]">%{res.commissionRatePct}</span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-zinc-500 block">Onay</span>
-                      <span className="text-zinc-200">{res.approvalMode === "AUTO" ? "Otomatik" : "Sahip Onayı"}</span>
+                      <span className="text-[10px] text-[var(--text-muted)] block">Onay</span>
+                      <span className="text-[var(--text-2)]">{res.approvalMode === "AUTO" ? "Otomatik" : "Sahip Onayı"}</span>
                     </div>
                   </div>
 
@@ -483,12 +479,12 @@ export function PartnerNetworkAndPoolTabs({
                       <span>Veri minimizasyonu: Plaka/şasi/dahili telefon gizli.</span>
                     </div>
                   ) : res.sensitiveMeta?.plate ? (
-                    <div className="text-[11px] text-zinc-400">Paylaşılan Referans: {res.sensitiveMeta.plate}</div>
+                    <div className="text-[11px] text-[var(--text-muted)]">Paylaşılan Referans: {res.sensitiveMeta.plate}</div>
                   ) : null}
 
                   {res.bookedWindows?.length > 0 && (
-                    <div className="text-[11px] text-zinc-400 flex items-center gap-1">
-                      <CalendarDays className="h-3 w-3 text-amber-400" />
+                    <div className="text-[11px] text-[var(--text-muted)] flex items-center gap-1">
+                      <CalendarDays className="h-3 w-3 text-[var(--warn)]" />
                       <span>
                         Dolu pencereler:{" "}
                         {res.bookedWindows
@@ -508,7 +504,7 @@ export function PartnerNetworkAndPoolTabs({
                     setBookGuest("")
                     setBookNotes("")
                   }}
-                  className="w-full rounded-lg bg-[--brand]/90 px-3 py-2 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
+                  className="w-full rounded-lg bg-[--brand]/90 px-3 py-2 text-xs font-medium text-[var(--text)] hover:bg-[--brand] disabled:opacity-50"
                 >
                   White-Label Çapraz Rezervasyon Aç
                 </button>
@@ -516,7 +512,7 @@ export function PartnerNetworkAndPoolTabs({
             )
           })}
           {partnerPool.length === 0 && (
-            <div className="col-span-full rounded-xl border border-dashed border-zinc-800 p-8 text-center text-xs text-zinc-500">
+            <div className="col-span-full rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-xs text-[var(--text-muted)]">
               Seçili kriterlere uygun onaylı partner kaynağı bulunamadı.
             </div>
           )}
@@ -524,13 +520,13 @@ export function PartnerNetworkAndPoolTabs({
       </div>
 
       {/* BÖLÜM 2: KENDİ PAYLAŞTIĞIM KAYNAKLAR */}
-      <div className="space-y-3 pt-4 border-t border-zinc-800">
+      <div className="space-y-3 pt-4 border-t border-[var(--line)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-zinc-100 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-[var(--text)] flex items-center gap-2">
               <Users className="h-4 w-4 text-sky-400" /> Kendi Paylaştığım Kaynaklar ({ownResources.length})
             </h2>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Kaynak paylaşımdan çekildiğinde mevcut onaylı çapraz rezervasyonlar korunur; yalnızca yeni talepler kapanır.
             </p>
           </div>
@@ -538,15 +534,15 @@ export function PartnerNetworkAndPoolTabs({
             type="button"
             disabled={busy}
             onClick={() => setResModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-3 py-2 text-xs font-medium text-white hover:bg-sky-500"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-sky-600 px-3 py-2 text-xs font-medium text-[var(--text)] hover:bg-sky-500"
           >
             <Plus className="h-3.5 w-3.5" /> Havuza Yeni Kaynak Aç
           </button>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/60">
+        <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)]">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-zinc-800 text-[11px] text-zinc-400 bg-zinc-950/50">
+            <thead className="border-b border-[var(--line)] text-[11px] text-[var(--text-muted)] bg-[var(--muted-bg)]">
               <tr>
                 <th className="px-3 py-2.5">Kaynak</th>
                 <th className="px-3 py-2.5">Tip / Şehir</th>
@@ -558,24 +554,24 @@ export function PartnerNetworkAndPoolTabs({
             </thead>
             <tbody className="divide-y divide-zinc-800/70">
               {ownResources.map((r) => {
-                const st = B2B_RESOURCE_STATUS_META[r.status] || { label: r.status, badgeClass: "bg-zinc-700 text-zinc-200 border-zinc-600" }
+                const st = B2B_RESOURCE_STATUS_META[r.status] || { label: r.status, badgeClass: "bg-[var(--muted-bg)] text-[var(--text-2)] border-[var(--line)]" }
                 return (
-                  <tr key={r.id} className="hover:bg-zinc-800/30">
+                  <tr key={r.id} className="hover:bg-[var(--muted-bg)]/30">
                     <td className="px-3 py-2.5">
-                      <div className="font-medium text-zinc-100">{r.title}</div>
-                      <div className="text-[11px] text-zinc-500">
+                      <div className="font-medium text-[var(--text)]">{r.title}</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">
                         {B2B_APPROVAL_MODE_LABELS[r.approvalMode] || r.approvalMode} · Min. {r.minDurationDays} gün · {r.activeCrossBookingCount} aktif rez.
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-zinc-300">
+                    <td className="px-3 py-2.5 text-[var(--text-2)]">
                       {B2B_RESOURCE_TYPE_META[r.resourceType]?.label || r.resourceType}
-                      <div className="text-[11px] text-zinc-500">{r.city || "—"}</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">{r.city || "—"}</div>
                     </td>
                     <td className="px-3 py-2.5">
                       <span className="text-[--brand] font-medium">{formatTryB2b(r.netPartnerRateTry)}</span>
-                      <div className="text-[11px] text-zinc-500">%{r.commissionRatePct} komisyon</div>
+                      <div className="text-[11px] text-[var(--text-muted)]">%{r.commissionRatePct} komisyon</div>
                     </td>
-                    <td className="px-3 py-2.5 text-zinc-300">
+                    <td className="px-3 py-2.5 text-[var(--text-2)]">
                       <div>{B2B_VISIBILITY_LABELS[r.visibilityScope] || r.visibilityScope}</div>
                       <div className="text-[11px] text-sky-400">
                         {r.hideSensitiveFields ? "Hassas alanlar gizli" : "Hassas alanlar açık"}
@@ -598,7 +594,7 @@ export function PartnerNetworkAndPoolTabs({
                               reason: "Yeni taleplere duraklatıldı; mevcut onaylı rezervasyonlar korundu.",
                             })
                           }
-                          className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 text-[11px] text-amber-300 hover:bg-amber-500/20"
+                          className="rounded-md border border-[var(--warn-line)] bg-[var(--warn-soft)] px-2.5 py-1 text-[11px] text-[var(--warn)] hover:bg-[var(--warn-soft)]"
                         >
                           Duraklat / Çek
                         </button>
@@ -624,7 +620,7 @@ export function PartnerNetworkAndPoolTabs({
               })}
               {ownResources.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-6 text-center text-zinc-500">
+                  <td colSpan={6} className="px-4 py-6 text-center text-[var(--text-muted)]">
                     Bu firmanın henüz ortak havuza açtığı bir kaynak yok.
                   </td>
                 </tr>
@@ -637,70 +633,70 @@ export function PartnerNetworkAndPoolTabs({
       {/* YENİ KAYNAK PAYLAŞIM MODALI */}
       {resModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-xl rounded-xl border border-zinc-700 bg-zinc-900 p-5 space-y-4">
+          <div className="w-full max-w-xl rounded-xl border border-[var(--line)] bg-[var(--bg)] p-5 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-100">Ortak Kaynak Havuzuna Kaynak Aç</h3>
-              <button type="button" onClick={() => setResModalOpen(false)} className="text-zinc-400 hover:text-zinc-100">
+              <h3 className="text-sm font-semibold text-[var(--text)]">Ortak Kaynak Havuzuna Kaynak Aç</h3>
+              <button type="button" onClick={() => setResModalOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text)]">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Kaynak Tipi</label>
-                <select value={resType} onChange={(e) => setResType(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100">
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Kaynak Tipi</label>
+                <select value={resType} onChange={(e) => setResType(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]">
                   {Object.entries(B2B_RESOURCE_TYPE_META).map(([k, v]) => (
                     <option key={k} value={k}>{v.label}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Şehir</label>
-                <input value={resCity} onChange={(e) => setResCity(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Şehir</label>
+                <input value={resCity} onChange={(e) => setResCity(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div className="col-span-2">
-                <label className="block text-[11px] text-zinc-400 mb-1">Kaynak Başlığı</label>
-                <input value={resTitle} onChange={(e) => setResTitle(e.target.value)} placeholder="Örn: VIP Mercedes Vito 8+1 veya Deluxe Oda Bloğu" className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Kaynak Başlığı</label>
+                <input value={resTitle} onChange={(e) => setResTitle(e.target.value)} placeholder="Örn: VIP Mercedes Vito 8+1 veya Deluxe Oda Bloğu" className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Kategori</label>
-                <input value={resCategory} onChange={(e) => setResCategory(e.target.value)} placeholder="VIP / Deluxe / Rehber" className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Kategori</label>
+                <input value={resCategory} onChange={(e) => setResCategory(e.target.value)} placeholder="VIP / Deluxe / Rehber" className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Kapasite</label>
-                <input type="number" min={1} value={resCapacity} onChange={(e) => setResCapacity(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Kapasite</label>
+                <input type="number" min={1} value={resCapacity} onChange={(e) => setResCapacity(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Partner Birim Fiyatı (TRY)</label>
-                <input type="number" min={1} value={resRate} onChange={(e) => setResRate(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Partner Birim Fiyatı (TRY)</label>
+                <input type="number" min={1} value={resRate} onChange={(e) => setResRate(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Komisyon (%) / Min. Gün</label>
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Komisyon (%) / Min. Gün</label>
                 <div className="grid grid-cols-2 gap-2">
-                  <input type="number" min={0} max={40} value={resCommission} onChange={(e) => setResCommission(e.target.value)} className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-2 text-zinc-100" />
-                  <input type="number" min={1} value={resMinDays} onChange={(e) => setResMinDays(e.target.value)} className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-2 text-zinc-100" />
+                  <input type="number" min={0} max={40} value={resCommission} onChange={(e) => setResCommission(e.target.value)} className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-[var(--text)]" />
+                  <input type="number" min={1} value={resMinDays} onChange={(e) => setResMinDays(e.target.value)} className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-[var(--text)]" />
                 </div>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Görünürlük Kapsamı</label>
-                <select value={resVisibility} onChange={(e) => setResVisibility(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100">
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Görünürlük Kapsamı</label>
+                <select value={resVisibility} onChange={(e) => setResVisibility(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]">
                   <option value="ALL_APPROVED_PARTNERS">Tüm Onaylı Partnerler</option>
                   <option value="PRIVATE">Sadece Kendi Firmam (Kapalı)</option>
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Onay Kuralı</label>
-                <select value={resApprovalMode} onChange={(e) => setResApprovalMode(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100">
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Onay Kuralı</label>
+                <select value={resApprovalMode} onChange={(e) => setResApprovalMode(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]">
                   <option value="MANUAL">Sahip Firma Onayı</option>
                   <option value="AUTO">Otomatik Onay</option>
                 </select>
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Dahili Plaka / Kod (Opsiyonel)</label>
-                <input value={resPlate} onChange={(e) => setResPlate(e.target.value)} placeholder="35 ORN 001" className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Dahili Plaka / Kod (Opsiyonel)</label>
+                <input value={resPlate} onChange={(e) => setResPlate(e.target.value)} placeholder="35 ORN 001" className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Dahili İletişim (Opsiyonel)</label>
-                <input value={resPhone} onChange={(e) => setResPhone(e.target.value)} placeholder="+90 555 ..." className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Dahili İletişim (Opsiyonel)</label>
+                <input value={resPhone} onChange={(e) => setResPhone(e.target.value)} placeholder="+90 555 ..." className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <label className="col-span-2 flex items-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 p-2.5 text-sky-200 cursor-pointer">
                 <input type="checkbox" checked={resHideSensitive} onChange={(e) => setResHideSensitive(e.target.checked)} />
@@ -708,7 +704,7 @@ export function PartnerNetworkAndPoolTabs({
               </label>
             </div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setResModalOpen(false)} className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300">
+              <button type="button" onClick={() => setResModalOpen(false)} className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-2)]">
                 Vazgeç
               </button>
               <button
@@ -734,7 +730,7 @@ export function PartnerNetworkAndPoolTabs({
                     setResTitle("")
                   }
                 }}
-                className="rounded-lg bg-sky-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-sky-500 disabled:opacity-50"
+                className="rounded-lg bg-sky-600 px-4 py-1.5 text-xs font-medium text-[var(--text)] hover:bg-sky-500 disabled:opacity-50"
               >
                 Kaynağı Havuza Aç
               </button>
@@ -746,52 +742,52 @@ export function PartnerNetworkAndPoolTabs({
       {/* WHITE-LABEL ÇAPRAZ REZERVASYON MODALI */}
       {bookingTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-lg rounded-xl border border-[--brand-line] bg-zinc-900 p-5 space-y-4">
+          <div className="w-full max-w-lg rounded-xl border border-[--brand-line] bg-[var(--bg)] p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-zinc-100">Atomik Çapraz Rezervasyon Oluştur</h3>
-                <p className="text-[11px] text-zinc-400">
+                <h3 className="text-sm font-semibold text-[var(--text)]">Atomik Çapraz Rezervasyon Oluştur</h3>
+                <p className="text-[11px] text-[var(--text-muted)]">
                   {bookingTarget.title} · Sahip: {bookingTarget.ownerCompanyName}
                 </p>
               </div>
-              <button type="button" onClick={() => setBookingTarget(null)} className="text-zinc-400 hover:text-zinc-100">
+              <button type="button" onClick={() => setBookingTarget(null)} className="text-[var(--text-muted)] hover:text-[var(--text)]">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Başlangıç Tarihi</label>
-                <input type="date" value={bookStart} onChange={(e) => setBookStart(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Başlangıç Tarihi</label>
+                <input type="date" value={bookStart} onChange={(e) => setBookStart(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Bitiş Tarihi</label>
-                <input type="date" value={bookEnd} onChange={(e) => setBookEnd(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Bitiş Tarihi</label>
+                <input type="date" value={bookEnd} onChange={(e) => setBookEnd(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Adet / Oda / Koltuk</label>
-                <input type="number" min={1} max={bookingTarget.capacity || 20} value={bookQty} onChange={(e) => setBookQty(e.target.value)} className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Adet / Oda / Koltuk</label>
+                <input type="number" min={1} max={bookingTarget.capacity || 20} value={bookQty} onChange={(e) => setBookQty(e.target.value)} className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div>
-                <label className="block text-[11px] text-zinc-400 mb-1">Müşteri / Grup Etiketi</label>
-                <input value={bookGuest} onChange={(e) => setBookGuest(e.target.value)} placeholder="Örn: Örnek Grup Transferi" className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Müşteri / Grup Etiketi</label>
+                <input value={bookGuest} onChange={(e) => setBookGuest(e.target.value)} placeholder="Örn: Örnek Grup Transferi" className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
               <div className="col-span-2">
-                <label className="block text-[11px] text-zinc-400 mb-1">Operasyon Notu</label>
-                <input value={bookNotes} onChange={(e) => setBookNotes(e.target.value)} placeholder="Teslim saati / özel talep..." className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-2 text-zinc-100" />
+                <label className="block text-[11px] text-[var(--text-muted)] mb-1">Operasyon Notu</label>
+                <input value={bookNotes} onChange={(e) => setBookNotes(e.target.value)} placeholder="Teslim saati / özel talep..." className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-[var(--text)]" />
               </div>
-              <label className="col-span-2 flex items-center gap-2 text-zinc-300 cursor-pointer">
+              <label className="col-span-2 flex items-center gap-2 text-[var(--text-2)] cursor-pointer">
                 <input type="checkbox" checked={bookWhiteLabel} onChange={(e) => setBookWhiteLabel(e.target.checked)} />
                 <span>White-label kiralama (kendi firma markamızla müşteriye sunulacak)</span>
               </label>
             </div>
-            <div className="rounded-lg bg-zinc-950/70 border border-zinc-800 p-2.5 text-[11px] text-zinc-400 flex items-center gap-2">
+            <div className="rounded-lg bg-[var(--bg)]/70 border border-[var(--line)] p-2.5 text-[11px] text-[var(--text-muted)] flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-[--brand] shrink-0" />
               <span>
                 Sunucu çakışma kilidi aktif: Tarih çakışması varsa HTTP 409 ile reddedilir ve alternatif kaynaklar önerilir; hata durumunda iki taraf da geri alınır.
               </span>
             </div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setBookingTarget(null)} className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300">
+              <button type="button" onClick={() => setBookingTarget(null)} className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--text-2)]">
                 Vazgeç
               </button>
               <button
@@ -809,7 +805,7 @@ export function PartnerNetworkAndPoolTabs({
                   })
                   if (ok) setBookingTarget(null)
                 }}
-                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-white hover:bg-[--brand] disabled:opacity-50"
+                className="rounded-lg bg-[--brand] px-4 py-1.5 text-xs font-medium text-[var(--text)] hover:bg-[--brand] disabled:opacity-50"
               >
                 Rezervasyonu Oluştur
               </button>

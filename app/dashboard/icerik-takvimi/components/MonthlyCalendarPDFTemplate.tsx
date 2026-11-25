@@ -129,7 +129,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
           <p className="text-xs text-slate-600 font-medium tracking-wide mb-1">
             {TURKISH_MONTHS[month]} {year} Sosyal Medya Yayın Takvimi
           </p>
-          <div className="flex items-center gap-3 text-[9px] text-slate-500 uppercase font-semibold">
+          <div className="flex items-center gap-3 text-[9px] text-[var(--text-muted)] uppercase font-semibold">
             <span>{startOfMonthStr}</span>
             <span className="w-[3px] h-[3px] rounded-full bg-slate-300"></span>
             <span>Rapor Tarihi: {todayStr}</span>
@@ -147,29 +147,29 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
           <div className="flex items-center gap-0 w-full">
             {/* Total Planned */}
             <div className="flex flex-col flex-1 px-4 border-r border-slate-200">
-              <span className="text-[9px] text-slate-500 uppercase tracking-[0.1em] mb-0.5 font-semibold">Toplam Planlanan</span>
+              <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-0.5 font-semibold">Toplam Planlanan</span>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl text-orange-500 font-bold">{totalPlanned}</span>
               </div>
             </div>
             {/* Gönderi */}
             <div className="flex flex-col flex-1 px-4 border-r border-slate-200">
-              <span className="text-[9px] text-slate-500 uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
+              <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
                 <span className="material-symbols-outlined text-[11px] text-green-600">image</span> Gönderi
               </span>
               <div className="text-xl text-[#041627] font-semibold">{postCount}</div>
             </div>
             {/* Reels */}
             <div className="flex flex-col flex-1 px-4 border-r border-slate-200">
-              <span className="text-[9px] text-slate-500 uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
+              <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
                 <span className="material-symbols-outlined text-[11px] text-blue-600">movie</span> Reels
               </span>
               <div className="text-xl text-[#041627] font-semibold">{reelsCount}</div>
             </div>
             {/* Story */}
             <div className="flex flex-col flex-1 px-4">
-              <span className="text-[9px] text-slate-500 uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
-                <span className="material-symbols-outlined text-[11px] text-purple-600">amp_stories</span> Story
+              <span className="text-[9px] text-[var(--text-muted)] uppercase tracking-[0.1em] mb-0.5 flex items-center gap-1 font-semibold">
+                <span className="material-symbols-outlined text-[11px] text-[var(--brand)]">amp_stories</span> Story
               </span>
               <div className="text-xl text-[#041627] font-semibold">{storyCount}</div>
             </div>
@@ -204,7 +204,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
               if (!isCurrentMonth) {
                 return (
                   <div key={idx} className="p-1.5 bg-[#fbfcfd] relative min-h-0">
-                    <span className="absolute top-1.5 right-1.5 text-[10px] text-slate-300 font-medium">
+                    <span className="absolute top-1.5 right-1.5 text-[10px] text-[var(--text-2)] font-medium">
                       {day.getDate()}
                     </span>
                   </div>
@@ -233,7 +233,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
                           iconName = "movie"
                           typeLabel = "Reels"
                         } else if (item.contentType === "story") {
-                          badgeStyle = "border-purple-500 text-purple-700 bg-purple-50/30"
+                          badgeStyle = "border-[var(--brand-line)] text-[var(--brand)] bg-[var(--brand-soft)]/30"
                           iconName = "amp_stories"
                           typeLabel = "Story"
                         }
@@ -259,7 +259,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
 
                   {/* Visual indicator if more than 2 posts */}
                   {remainingCount > 0 && (
-                    <div className="text-[8px] text-slate-400 font-semibold text-right mt-0.5">
+                    <div className="text-[8px] text-[var(--text-muted)] font-semibold text-right mt-0.5">
                       +{remainingCount} daha
                     </div>
                   )}
@@ -273,7 +273,7 @@ export const MonthlyCalendarPDFTemplate: React.FC<MonthlyCalendarPDFTemplateProp
       {/* Footer */}
       <footer className="flex justify-between items-center px-2 shrink-0">
         <div>
-          <p className="text-[9px] text-slate-500 leading-relaxed font-medium max-w-xl">
+          <p className="text-[9px] text-[var(--text-muted)] leading-relaxed font-medium max-w-xl">
             {footerNote}
           </p>
         </div>

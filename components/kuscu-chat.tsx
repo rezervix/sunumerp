@@ -102,7 +102,7 @@ export function KuscuChat() {
           type="button"
           onClick={() => setIsOpen(true)}
           title="Daron AMA AI — Doğal Dil Stok & ERP Asistanı"
-          className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 bg-white/88 backdrop-blur-xl border border-[var(--brand-line)] text-[var(--navy)] hover:text-[var(--brand)] hover:border-[var(--brand)] rounded-full px-3.5 py-2 shadow-[var(--shadow-card)] transition-all duration-150 ease-out cursor-pointer"
+          className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 bg-[var(--muted-bg)] backdrop-blur-xl border border-[var(--brand-line)] text-[var(--navy)] hover:text-[var(--brand)] hover:border-[var(--brand)] rounded-full px-3.5 py-2 shadow-[var(--shadow-card)] transition-all duration-150 ease-out cursor-pointer"
         >
           <span className="size-2 rounded-full bg-[var(--brand)] shrink-0" />
           <span className="text-xs font-medium tracking-tight">Daron AMA AI</span>
@@ -147,11 +147,7 @@ export function KuscuChat() {
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`rounded-2xl p-3 text-xs leading-relaxed ${
-                  msg.role === "user"
-                    ? "bg-[var(--brand-soft)] text-[var(--navy)] border border-[var(--brand-line)] ml-8"
-                    : "bg-[var(--page)] border border-[var(--line-soft)] text-[var(--text)] mr-4"
-                }`}
+                className={`rounded-2xl p-3 text-xs leading-relaxed ${ msg.role === "user" ? "bg-[var(--brand-soft)] text-[var(--navy)] border border-[var(--brand-line)] ml-8" : "bg-[var(--page)] border border-[var(--line-soft)] text-[var(--text)] mr-4" }`}
               >
                 {msg.intent && (
                   <div className="font-mono text-[10px] text-[var(--brand)] font-medium mb-1">

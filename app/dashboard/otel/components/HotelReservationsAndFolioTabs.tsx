@@ -242,18 +242,14 @@ export function HotelReservationsAndCheckInOutTab({
   return (
     <div className="space-y-4">
       {/* Üst Çubuk */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex flex-wrap items-center gap-2">
           {['ALL', 'CONFIRMED', 'CHECKED_IN', 'PENDING', 'CHECKED_OUT', 'CANCELLED'].map((st) => (
             <button
               key={st}
               type="button"
               onClick={() => setStatusFilter(st)}
-              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${
-                statusFilter === st
-                  ? 'bg-[#1267E6] text-[#F6F8FB]'
-                  : 'bg-[#161B18] text-zinc-300 hover:bg-[--muted-bg]'
-              }`}
+              className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition ${ statusFilter === st ? 'bg-[var(--brand)] text-white' : 'bg-[var(--muted-bg)] text-[var(--text-2)] hover:bg-[--muted-bg]' }`}
             >
               {st === 'ALL'
                 ? `Tümü (${reservations.length})`
@@ -264,18 +260,18 @@ export function HotelReservationsAndCheckInOutTab({
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-zinc-500" />
+            <Search className="pointer-events-none absolute left-2.5 top-2 h-3.5 w-3.5 text-[var(--text-muted)]" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rez no, oda, misafir, acenta..."
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] py-1.5 pl-8 pr-3 text-xs text-zinc-200"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] py-1.5 pl-8 pr-3 text-xs text-[var(--text)]"
             />
           </div>
           <button
             type="button"
             onClick={() => setShowCreateForm((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             <Plus className="h-3.5 w-3.5" /> Yeni Rezervasyon
           </button>
@@ -286,28 +282,28 @@ export function HotelReservationsAndCheckInOutTab({
       {showCreateForm && (
         <form
           onSubmit={handleCreateReservation}
-          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand-line] bg-[white] p-4 md:grid-cols-4"
+          className="grid grid-cols-1 gap-3 rounded-xl border border-[--brand-line] bg-[var(--bg)] shadow-sm p-4 md:grid-cols-4"
         >
           <div className="md:col-span-4 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-[#1267E6]">
+            <h4 className="text-sm font-semibold text-[var(--brand)]">
               Yeni Otel Rezervasyonu (Sunucu Tarafı Atomik Çakışma & Kontenjan Kilitli)
             </h4>
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}
-              className="text-zinc-400 hover:text-white"
+              className="text-[var(--text-muted)] hover:text-[var(--brand)]"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Oda</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Oda</label>
             <select
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {rooms.map((rm) => (
                 <option key={rm.id} value={rm.id}>
@@ -318,12 +314,12 @@ export function HotelReservationsAndCheckInOutTab({
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Misafir (Mevcut Cari)</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Misafir (Mevcut Cari)</label>
             <select
               value={customerId}
               onChange={(e) => setCustomerId(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {guests.map((g) => (
                 <option key={g.id} value={g.id}>
@@ -334,33 +330,33 @@ export function HotelReservationsAndCheckInOutTab({
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Giriş Tarihi</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Giriş Tarihi</label>
             <input
               type="date"
               value={checkInDate}
               onChange={(e) => setCheckInDate(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Çıkış Tarihi</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Çıkış Tarihi</label>
             <input
               type="date"
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
               required
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Pansiyon Tipi</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Pansiyon Tipi</label>
             <select
               value={boardType}
               onChange={(e) => setBoardType(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {HOTEL_BOARD_TYPES.map((bt) => (
                 <option key={bt} value={bt}>
@@ -371,11 +367,11 @@ export function HotelReservationsAndCheckInOutTab({
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">Satış Kanalı</label>
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Satış Kanalı</label>
             <select
               value={channelSource}
               onChange={(e) => setChannelSource(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {HOTEL_CHANNEL_SOURCES.map((ch) => (
                 <option key={ch} value={ch}>
@@ -386,13 +382,13 @@ export function HotelReservationsAndCheckInOutTab({
           </div>
 
           <div>
-            <label className="mb-1 block text-[11px] text-zinc-400">
+            <label className="mb-1 block text-[11px] text-[var(--text-muted)]">
               Acenta Kontenjanı (Opsiyonel)
             </label>
             <select
               value={allotmentId}
               onChange={(e) => setAllotmentId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Direkt / Kontenjansız</option>
               {allotments.map((al) => (
@@ -405,25 +401,25 @@ export function HotelReservationsAndCheckInOutTab({
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Yetişkin</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Yetişkin</label>
               <input
                 type="number"
                 min={1}
                 max={6}
                 value={adultsCount}
                 onChange={(e) => setAdultsCount(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Çocuk</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Çocuk</label>
               <input
                 type="number"
                 min={0}
                 max={4}
                 value={childrenCount}
                 onChange={(e) => setChildrenCount(Number(e.target.value))}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
               />
             </div>
           </div>
@@ -432,14 +428,14 @@ export function HotelReservationsAndCheckInOutTab({
             <button
               type="button"
               onClick={() => setShowCreateForm(false)}
-              className="rounded-lg border border-white/[0.1] px-4 py-2 text-xs text-zinc-300"
+              className="rounded-lg border border-[var(--line)] px-4 py-2 text-xs text-[var(--text-2)]"
             >
               Vazgeç
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover] disabled:opacity-50"
+              className="rounded-lg bg-[var(--brand)] px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover] disabled:opacity-50"
             >
               {submitting ? 'Kontrol Ediliyor...' : 'Rezervasyonu Kaydet'}
             </button>
@@ -449,20 +445,20 @@ export function HotelReservationsAndCheckInOutTab({
 
       {/* Check-In Paneli (KVKK Veri Minimizasyonu — Kimlik Fotokopisi Saklanmaz) */}
       {checkInTarget && (
-        <div className="space-y-3 rounded-xl border border-sky-500/40 bg-[white] p-4">
+        <div className="space-y-3 rounded-xl border border-sky-500/40 bg-[var(--bg)] shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
               <h4 className="text-sm font-semibold text-sky-300">
                 Misafir Check-In: {checkInTarget.reservationNo} · Oda {checkInTarget.roomNumber}
               </h4>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[var(--text-muted)]">
                 KVKK veri minimizasyonu uygulanır: Yalnızca KBS giriş hazırlığı için gerekli kimlik/pasaport alanları işlenir, kimlik fotokopisi saklanmaz.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setCheckInTarget(null)}
-              className="text-zinc-400 hover:text-white"
+              className="text-[var(--text-muted)] hover:text-[var(--brand)]"
             >
               <X className="h-4 w-4" />
             </button>
@@ -470,53 +466,53 @@ export function HotelReservationsAndCheckInOutTab({
 
           <div className="grid grid-cols-1 gap-3 md:grid-cols-5">
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Anahtar Kart Kodu</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Anahtar Kart Kodu</label>
               <input
                 value={keyCardCode}
                 onChange={(e) => setKeyCardCode(e.target.value)}
                 placeholder={`KEY-${checkInTarget.roomNumber}`}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">TCKN (Güncelleme)</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">TCKN (Güncelleme)</label>
               <input
                 value={guestTckn}
                 onChange={(e) => setGuestTckn(e.target.value)}
                 placeholder="Mevcut korunur"
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Pasaport No</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Pasaport No</label>
               <input
                 value={guestPassportNo}
                 onChange={(e) => setGuestPassportNo(e.target.value)}
                 placeholder="Yabancı misafir"
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Uyruk</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Uyruk</label>
               <input
                 value={guestNationality}
                 onChange={(e) => setGuestNationality(e.target.value)}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Doğum Tarihi</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Doğum Tarihi</label>
               <input
                 type="date"
                 value={guestBirthDate}
                 onChange={(e) => setGuestBirthDate(e.target.value)}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
               />
             </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <label className="flex items-center gap-2 text-xs text-zinc-300">
+            <label className="flex items-center gap-2 text-xs text-[var(--text-2)]">
               <input
                 type="checkbox"
                 checked={overrideDirtyRoom}
@@ -528,7 +524,7 @@ export function HotelReservationsAndCheckInOutTab({
               type="button"
               disabled={submitting}
               onClick={handleConfirmCheckIn}
-              className="rounded-lg bg-sky-500 px-4 py-2 text-xs font-semibold text-white hover:bg-sky-400 disabled:opacity-50"
+              className="rounded-lg bg-sky-500 px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-sky-400 disabled:opacity-50"
             >
               {submitting ? 'İşleniyor...' : 'Check-In Onayla & KBS Giriş Hazırla'}
             </button>
@@ -538,51 +534,51 @@ export function HotelReservationsAndCheckInOutTab({
 
       {/* Check-Out Paneli (Bakiye Kontrolü + Otomatik Housekeeping + Fatura) */}
       {checkOutTarget && (
-        <div className="space-y-3 rounded-xl border border-amber-500/40 bg-[white] p-4">
+        <div className="space-y-3 rounded-xl border border-[var(--warn-line)] bg-[var(--bg)] shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-amber-300">
+              <h4 className="text-sm font-semibold text-[var(--warn)]">
                 Misafir Check-Out: {checkOutTarget.reservationNo} · Oda {checkOutTarget.roomNumber}
               </h4>
-              <p className="text-xs text-zinc-400">
+              <p className="text-xs text-[var(--text-muted)]">
                 Check-Out ile oda kirli (DIRTY_VACANT) işaretlenir, otomatik temizlik görevi açılır, KBS Çıkış hazırlanır ve E-Belge/Finans kaydı oluşturulur.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setCheckOutTarget(null)}
-              className="text-zinc-400 hover:text-white"
+              className="text-[var(--text-muted)] hover:text-[var(--brand)]"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 rounded-lg bg-[#0B0E0D] p-3 text-xs md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 rounded-lg bg-[var(--bg)] p-3 text-xs md:grid-cols-4">
             <div>
-              <span className="text-zinc-500">Konaklama:</span>{' '}
-              <strong className="text-zinc-100">
+              <span className="text-[var(--text-muted)]">Konaklama:</span>{' '}
+              <strong className="text-[var(--text)]">
                 {Number(checkOutTarget.roomTotalTry || 0).toLocaleString('tr-TR')} ₺
               </strong>
             </div>
             <div>
-              <span className="text-zinc-500">Ekstralar:</span>{' '}
-              <strong className="text-zinc-100">
+              <span className="text-[var(--text-muted)]">Ekstralar:</span>{' '}
+              <strong className="text-[var(--text)]">
                 {Number(checkOutTarget.extrasTotalTry || 0).toLocaleString('tr-TR')} ₺
               </strong>
             </div>
             <div>
-              <span className="text-zinc-500">Ödenen:</span>{' '}
-              <strong className="text-[#1267E6]">
+              <span className="text-[var(--text-muted)]">Ödenen:</span>{' '}
+              <strong className="text-[var(--brand)]">
                 {Number(checkOutTarget.paidTotalTry || 0).toLocaleString('tr-TR')} ₺
               </strong>
             </div>
             <div>
-              <span className="text-zinc-500">Kalan Bakiye:</span>{' '}
+              <span className="text-[var(--text-muted)]">Kalan Bakiye:</span>{' '}
               <strong
                 className={
                   Number(checkOutTarget.balanceDueTry || 0) > 0
-                    ? 'text-amber-300'
-                    : 'text-[#1267E6]'
+                    ? 'text-[var(--warn)]'
+                    : 'text-[var(--brand)]'
                 }
               >
                 {Number(checkOutTarget.balanceDueTry || 0).toLocaleString('tr-TR')} ₺
@@ -593,11 +589,11 @@ export function HotelReservationsAndCheckInOutTab({
           <div className="flex flex-wrap items-center justify-between gap-3">
             {Number(checkOutTarget.balanceDueTry || 0) > 0 ? (
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-zinc-300">Kalan bakiyeyi şimdi tahsil et:</span>
+                <span className="text-[var(--text-2)]">Kalan bakiyeyi şimdi tahsil et:</span>
                 <select
                   value={settleMethod}
                   onChange={(e) => setSettleMethod(e.target.value)}
-                  className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-1.5 text-xs text-zinc-100"
+                  className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-1.5 text-xs text-[var(--text)]"
                 >
                   <option value="PAYMENT_CARD">Kredi Kartı ile Kapat</option>
                   <option value="PAYMENT_CASH">Nakit ile Kapat</option>
@@ -606,7 +602,7 @@ export function HotelReservationsAndCheckInOutTab({
                 </select>
               </div>
             ) : (
-              <span className="flex items-center gap-1.5 text-xs text-[#1267E6]">
+              <span className="flex items-center gap-1.5 text-xs text-[var(--brand)]">
                 <CheckCircle2 className="h-4 w-4" /> Folio bakiyesi kapalı (0 ₺).
               </span>
             )}
@@ -615,7 +611,7 @@ export function HotelReservationsAndCheckInOutTab({
               type="button"
               disabled={submitting}
               onClick={handleConfirmCheckOut}
-              className="rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-amber-300 disabled:opacity-50"
+              className="rounded-lg bg-amber-400 px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-amber-300 disabled:opacity-50"
             >
               {submitting ? 'Tamamlanıyor...' : 'Check-Out Tamamla'}
             </button>
@@ -624,9 +620,9 @@ export function HotelReservationsAndCheckInOutTab({
       )}
 
       {/* Rezervasyon Listesi */}
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
         <table className="w-full min-w-[920px] text-left text-xs">
-          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
             <tr>
               <th className="px-3 py-2.5">Rez No / Kanal</th>
               <th className="px-3 py-2.5">Oda & Tip</th>
@@ -641,56 +637,51 @@ export function HotelReservationsAndCheckInOutTab({
             {filtered.map((r) => (
               <tr key={r.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5">
-                  <div className="font-mono font-semibold text-zinc-100">{r.reservationNo}</div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="font-mono font-semibold text-[var(--text)]">{r.reservationNo}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">
                     {HOTEL_CHANNEL_LABELS[r.channelSource as keyof typeof HOTEL_CHANNEL_LABELS] ||
                       r.channelSource}
                     {r.agencyName ? ` · ${r.agencyName}` : ''}
                   </div>
                 </td>
                 <td className="px-3 py-2.5">
-                  <div className="font-semibold text-zinc-100">Oda {r.roomNumber}</div>
-                  <div className="text-[10px] text-zinc-400">
+                  <div className="font-semibold text-[var(--text)]">Oda {r.roomNumber}</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">
                     {r.roomTypeName} · {r.boardType}
                   </div>
                 </td>
                 <td className="px-3 py-2.5">
-                  <div className="font-medium text-zinc-100">
+                  <div className="font-medium text-[var(--text)]">
                     {r.guest?.name || r.guest?.company || 'Misafir'}
                   </div>
-                  <div className="font-mono text-[10px] text-zinc-400">
+                  <div className="font-mono text-[10px] text-[var(--text-muted)]">
                     {r.guest?.nationality || 'TR'} ·{' '}
                     {r.guest?.tckn || r.guest?.passportNo || 'Kimlik bekleniyor'}
                   </div>
                 </td>
-                <td className="px-3 py-2.5 font-mono text-[11px] text-zinc-300">
+                <td className="px-3 py-2.5 font-mono text-[11px] text-[var(--text-2)]">
                   <div>{String(r.checkInDate).slice(0, 10)}</div>
-                  <div className="text-zinc-500">
+                  <div className="text-[var(--text-muted)]">
                     → {String(r.checkOutDate).slice(0, 10)} ({r.nightsCount} gece)
                   </div>
                 </td>
                 <td className="px-3 py-2.5">
                   <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                      HOTEL_RESERVATION_STATUS_BADGES[r.status as HotelReservationStatus] ||
-                      'border-[--line] text-zinc-300'
-                    }`}
+                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${ HOTEL_RESERVATION_STATUS_BADGES[r.status as HotelReservationStatus] || 'border-[--line] text-[var(--text-2)]' }`}
                   >
                     {HOTEL_RESERVATION_STATUS_LABELS[r.status as HotelReservationStatus] ||
                       r.status}
                   </span>
                 </td>
                 <td className="px-3 py-2.5 text-right font-mono">
-                  <div className="text-zinc-100">
+                  <div className="text-[var(--text)]">
                     {(Number(r.roomTotalTry || 0) + Number(r.extrasTotalTry || 0)).toLocaleString(
                       'tr-TR'
                     )}{' '}
                     ₺
                   </div>
                   <div
-                    className={`text-[10px] ${
-                      Number(r.balanceDueTry || 0) > 0 ? 'text-amber-300' : 'text-[#1267E6]'
-                    }`}
+                    className={`text-[10px] ${ Number(r.balanceDueTry || 0) > 0 ? 'text-[var(--warn)]' : 'text-[var(--brand)]' }`}
                   >
                     Bakiye: {Number(r.balanceDueTry || 0).toLocaleString('tr-TR')} ₺
                   </div>
@@ -721,7 +712,7 @@ export function HotelReservationsAndCheckInOutTab({
                           setCheckOutTarget(r);
                           setSettleMethod('PAYMENT_CARD');
                         }}
-                        className="rounded-md bg-amber-500/20 px-2 py-1 text-[11px] font-medium text-amber-300 hover:bg-amber-500/35"
+                        className="rounded-md bg-[var(--warn-soft)] px-2 py-1 text-[11px] font-medium text-[var(--warn)] hover:bg-amber-500/35"
                       >
                         Check-Out
                       </button>
@@ -729,7 +720,7 @@ export function HotelReservationsAndCheckInOutTab({
                     <button
                       type="button"
                       onClick={() => onOpenFolio(r.id)}
-                      className="rounded-md bg-[--brand]/15 px-2 py-1 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/30"
+                      className="rounded-md bg-[--brand]/15 px-2 py-1 text-[11px] font-medium text-[var(--brand)] hover:bg-[--brand]/30"
                     >
                       Folio
                     </button>
@@ -737,7 +728,7 @@ export function HotelReservationsAndCheckInOutTab({
                       <button
                         type="button"
                         onClick={() => handleCancelReservation(r.id)}
-                        className="rounded-md bg-rose-500/15 px-2 py-1 text-[11px] font-medium text-rose-300 hover:bg-rose-500/30"
+                        className="rounded-md bg-[var(--bad-soft)] px-2 py-1 text-[11px] font-medium text-[var(--bad)] hover:bg-rose-500/30"
                       >
                         İptal
                       </button>
@@ -904,17 +895,17 @@ export function HotelFolioAndBillingTab({
   return (
     <div className="space-y-4">
       {/* Rezervasyon Seçici */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex items-center gap-2">
-          <CreditCard className="h-4 w-4 text-[#1267E6]" />
-          <h3 className="text-sm font-semibold text-zinc-100">
+          <CreditCard className="h-4 w-4 text-[var(--brand)]" />
+          <h3 className="text-sm font-semibold text-[var(--text)]">
             Oda Hesabı (Folio), Stok Bağlı Minibar, Split Folio & E-Belge
           </h3>
         </div>
         <select
           value={selectedRes?.id || ''}
           onChange={(e) => setSelectedResId(e.target.value)}
-          className="min-w-[280px] rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-3 py-2 text-xs text-zinc-100"
+          className="min-w-[280px] rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)]"
         >
           {activeReservations.map((r) => (
             <option key={r.id} value={r.id}>
@@ -939,22 +930,22 @@ export function HotelFolioAndBillingTab({
               return (
                 <div
                   key={grp}
-                  className="rounded-xl border border-[--line] bg-[white] p-4"
+                  className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-zinc-200">
+                    <span className="text-xs font-semibold text-[var(--text)]">
                       {HOTEL_FOLIO_GROUP_LABELS[grp]}
                     </span>
-                    <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-zinc-400">
+                    <span className="rounded bg-[--muted-bg] px-1.5 py-0.5 text-[10px] text-[var(--text-muted)]">
                       {g.itemCount} kalem
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between text-xs">
-                    <span className="text-zinc-400">
+                    <span className="text-[var(--text-muted)]">
                       Borç: {Number(g.chargesTry).toLocaleString('tr-TR')} ₺ · Ödenen:{' '}
                       {Number(g.paymentsTry).toLocaleString('tr-TR')} ₺
                     </span>
-                    <strong className="text-sm text-[#1267E6]">
+                    <strong className="text-sm text-[var(--brand)]">
                       {Number(g.balanceTry).toLocaleString('tr-TR')} ₺
                     </strong>
                   </div>
@@ -962,7 +953,7 @@ export function HotelFolioAndBillingTab({
                     type="button"
                     disabled={busy || g.chargesTry <= 0}
                     onClick={() => handleIssueInvoice(grp)}
-                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 py-1.5 text-[11px] font-medium text-[#1267E6] hover:bg-[--brand]/20 disabled:opacity-40"
+                    className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-[--brand-line] bg-[--brand]/10 py-1.5 text-[11px] font-medium text-[var(--brand)] hover:bg-[--brand]/20 disabled:opacity-40"
                   >
                     <FileText className="h-3.5 w-3.5" /> Bu Folioyu Faturala (E-Belge)
                   </button>
@@ -974,14 +965,14 @@ export function HotelFolioAndBillingTab({
           {/* Yeni Masraf / Stok Bağlı Minibar / Kısmi Tahsilat Formu */}
           <form
             onSubmit={handleAddEntry}
-            className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-6"
+            className="grid grid-cols-1 gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4 md:grid-cols-6"
           >
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Kalem Türü</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Kalem Türü</label>
               <select
                 value={entryCategory}
                 onChange={(e) => setEntryCategory(e.target.value as HotelFolioCategory)}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
               >
                 {HOTEL_FOLIO_CATEGORIES.filter((c) => c !== 'ROOM_NIGHT').map((cat) => (
                   <option key={cat} value={cat}>
@@ -992,11 +983,11 @@ export function HotelFolioAndBillingTab({
             </div>
 
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Hedef Folio</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Hedef Folio</label>
               <select
                 value={folioGroup}
                 onChange={(e) => setFolioGroup(e.target.value as HotelFolioGroup)}
-                className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
               >
                 {HOTEL_FOLIO_GROUPS.map((g) => (
                   <option key={g} value={g}>
@@ -1008,13 +999,13 @@ export function HotelFolioAndBillingTab({
 
             {entryCategory === 'MINIBAR' ? (
               <div className="md:col-span-2">
-                <label className="mb-1 block text-[11px] text-[#1267E6]">
+                <label className="mb-1 block text-[11px] text-[var(--brand)]">
                   Minibar Stok Ürünü (Stoktan Düşer)
                 </label>
                 <select
                   value={inventoryItemId}
                   onChange={(e) => handleSelectMinibar(e.target.value)}
-                  className="w-full rounded-lg border border-[--brand-line] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[--brand-line] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
                 >
                   {minibarItems.map((m) => (
                     <option key={m.id} value={m.id}>
@@ -1025,32 +1016,32 @@ export function HotelFolioAndBillingTab({
               </div>
             ) : (
               <div className="md:col-span-2">
-                <label className="mb-1 block text-[11px] text-zinc-400">Açıklama</label>
+                <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Açıklama</label>
                 <input
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Örn. Oda servisi, çamaşırhane veya kısmi tahsilat"
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
                 />
               </div>
             )}
 
             <div>
-              <label className="mb-1 block text-[11px] text-zinc-400">Adet / Birim Tutar (₺)</label>
+              <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Adet / Birim Tutar (₺)</label>
               <div className="flex gap-1.5">
                 <input
                   type="number"
                   min={1}
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-16 rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                  className="w-16 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
                 />
                 <input
                   type="number"
                   min={1}
                   value={unitPriceTry}
                   onChange={(e) => setUnitPriceTry(Number(e.target.value))}
-                  className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+                  className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
                 />
               </div>
             </div>
@@ -1059,7 +1050,7 @@ export function HotelFolioAndBillingTab({
               <button
                 type="submit"
                 disabled={busy}
-                className="w-full rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover] disabled:opacity-50"
+                className="w-full rounded-lg bg-[var(--brand)] px-3 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover] disabled:opacity-50"
               >
                 Folioya İşle
               </button>
@@ -1067,9 +1058,9 @@ export function HotelFolioAndBillingTab({
           </form>
 
           {/* Folio Hareket Tablosu */}
-          <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+          <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
             <table className="w-full min-w-[820px] text-left text-xs">
-              <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+              <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
                 <tr>
                   <th className="px-3 py-2.5">Kalem No</th>
                   <th className="px-3 py-2.5">Kategori / Açıklama</th>
@@ -1081,12 +1072,12 @@ export function HotelFolioAndBillingTab({
               <tbody className="divide-y divide-white/[0.05]">
                 {(selectedRes.folioItems || []).map((item: any) => (
                   <tr key={item.id} className="hover:bg-[--page]">
-                    <td className="px-3 py-2 font-mono text-[11px] text-zinc-400">
+                    <td className="px-3 py-2 font-mono text-[11px] text-[var(--text-muted)]">
                       {item.entryNo}
                     </td>
                     <td className="px-3 py-2">
-                      <div className="font-medium text-zinc-100">{item.description}</div>
-                      <div className="text-[10px] text-zinc-500">
+                      <div className="font-medium text-[var(--text)]">{item.description}</div>
+                      <div className="text-[10px] text-[var(--text-muted)]">
                         {HOTEL_FOLIO_CATEGORY_LABELS[item.entryCategory as HotelFolioCategory] ||
                           item.entryCategory}{' '}
                         · {item.quantity} × {Number(item.unitPriceTry).toLocaleString('tr-TR')} ₺
@@ -1099,7 +1090,7 @@ export function HotelFolioAndBillingTab({
                         onChange={(e) =>
                           handleSplitItem(item.id, e.target.value as HotelFolioGroup)
                         }
-                        className="rounded border border-white/[0.1] bg-[#0B0E0D] px-2 py-1 text-[11px] text-zinc-200 disabled:opacity-50"
+                        className="rounded border border-[var(--line)] bg-[var(--bg)] px-2 py-1 text-[11px] text-[var(--text)] disabled:opacity-50"
                       >
                         {HOTEL_FOLIO_GROUPS.map((g) => (
                           <option key={g} value={g}>
@@ -1109,9 +1100,7 @@ export function HotelFolioAndBillingTab({
                       </select>
                     </td>
                     <td
-                      className={`px-3 py-2 text-right font-mono font-semibold ${
-                        item.isPayment ? 'text-[#1267E6]' : 'text-zinc-100'
-                      }`}
+                      className={`px-3 py-2 text-right font-mono font-semibold ${ item.isPayment ? 'text-[var(--brand)]' : 'text-[var(--text)]' }`}
                     >
                       {item.isPayment ? '− ' : '+ '}
                       {Number(item.totalWithVatTry || item.amountTry).toLocaleString('tr-TR')} ₺
@@ -1123,11 +1112,11 @@ export function HotelFolioAndBillingTab({
                         </span>
                       )}
                       {item.eDocumentNo ? (
-                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[#1267E6]">
+                        <span className="rounded bg-[--brand]/15 px-1.5 py-0.5 text-[var(--brand)]">
                           {item.eDocumentNo}
                         </span>
                       ) : (
-                        <span className="text-zinc-500">Açık</span>
+                        <span className="text-[var(--text-muted)]">Açık</span>
                       )}
                     </td>
                   </tr>

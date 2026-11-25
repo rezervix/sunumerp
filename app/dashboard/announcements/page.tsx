@@ -9,8 +9,8 @@ import { useAuth } from "@/lib/auth/context"
 
 const targetConfig: Record<string, { label: string; icon: string; bg: string; text: string }> = {
     all: { label: "Herkese", icon: "public", bg: "bg-[--brand-soft]", text: "text-[--brand] border border-[--brand-line]" },
-    branch: { label: "Şubelere", icon: "domain", bg: "bg-white/[0.06]", text: "text-zinc-300 border border-[--line]" },
-    staff: { label: "Personele", icon: "group", bg: "bg-amber-500/10", text: "text-amber-300 border border-amber-500/20" },
+    branch: { label: "Şubelere", icon: "domain", bg: "bg-white/[0.06]", text: "text-[var(--text-2)] border border-[--line]" },
+    staff: { label: "Personele", icon: "group", bg: "bg-[var(--warn-soft)]", text: "text-[var(--warn)] border border-[var(--warn-line)]" },
 }
 
 interface Announcement {
@@ -86,7 +86,7 @@ export default function AnnouncementsPage() {
     const FormContent = () => (
         <div className="space-y-4 py-4 flex-1 overflow-y-auto">
             <div className="space-y-2">
-                <label className="text-xs font-medium text-zinc-300">Başlık *</label>
+                <label className="text-xs font-medium text-[var(--text-2)]">Başlık *</label>
                 <input
                     type="text"
                     value={form.title}
@@ -96,7 +96,7 @@ export default function AnnouncementsPage() {
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-medium text-zinc-300">İçerik *</label>
+                <label className="text-xs font-medium text-[var(--text-2)]">İçerik *</label>
                 <textarea
                     value={form.content}
                     onChange={e => setForm({ ...form, content: e.target.value })}
@@ -106,7 +106,7 @@ export default function AnnouncementsPage() {
                 />
             </div>
             <div className="space-y-2">
-                <label className="text-xs font-medium text-zinc-300">Hedef Kitle</label>
+                <label className="text-xs font-medium text-[var(--text-2)]">Hedef Kitle</label>
                 <select
                     value={form.targetType}
                     onChange={e => setForm({ ...form, targetType: e.target.value as Announcement["targetType"] })}
@@ -124,8 +124,8 @@ export default function AnnouncementsPage() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-light text-white tracking-tight">Duyurular</h1>
-                    <p className="text-xs text-zinc-400 mt-1">Sistem genelindeki duyuruları yönetin ve takip edin</p>
+                    <h1 className="text-3xl font-light text-[var(--text)] tracking-tight">Duyurular</h1>
+                    <p className="text-xs text-[var(--text-muted)] mt-1">Sistem genelindeki duyuruları yönetin ve takip edin</p>
                 </div>
                 {isSuperAdmin && (
                     <button
@@ -142,8 +142,8 @@ export default function AnnouncementsPage() {
                 {items.length === 0 && (
                     <div className="bg-white/80 backdrop-blur-xl rounded-[20px] border border-[--line] shadow-sm p-12 text-center flex flex-col items-center justify-center text-[--text-muted]">
                         <span className="material-symbols-outlined text-4xl mb-4 sm:text-5xl text-zinc-600">campaign</span>
-                        <p className="text-sm font-medium text-zinc-300">Henüz duyuru bulunmuyor</p>
-                        <p className="text-xs text-zinc-500 mt-1">Yeni bir duyuru oluşturarak tüm ekiple paylaşabilirsiniz.</p>
+                        <p className="text-sm font-medium text-[var(--text-2)]">Henüz duyuru bulunmuyor</p>
+                        <p className="text-xs text-[var(--text-muted)] mt-1">Yeni bir duyuru oluşturarak tüm ekiple paylaşabilirsiniz.</p>
                     </div>
                 )}
                 {items.map(item => {
@@ -157,16 +157,16 @@ export default function AnnouncementsPage() {
                                         <span className={`material-symbols-outlined ${cfg.text}`}>{Icon}</span>
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-base font-medium text-white leading-tight">{item.title}</h3>
-                                        <div className="flex items-center flex-wrap gap-2 mt-2 text-xs text-zinc-400">
+                                        <h3 className="text-base font-medium text-[var(--text)] leading-tight">{item.title}</h3>
+                                        <div className="flex items-center flex-wrap gap-2 mt-2 text-xs text-[var(--text-muted)]">
                                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium ${cfg.bg} ${cfg.text}`}>
                                                 <span className="material-symbols-outlined text-[13px]">campaign</span>
                                                 {cfg.label}
                                             </span>
                                             <span className="text-zinc-600">•</span>
-                                            <span className="font-medium text-zinc-300">{item.createdBy.fullName}</span>
+                                            <span className="font-medium text-[var(--text-2)]">{item.createdBy.fullName}</span>
                                             <span className="text-zinc-600">•</span>
-                                            <span className="font-mono text-zinc-500">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</span>
+                                            <span className="font-mono text-[var(--text-muted)]">{new Date(item.createdAt).toLocaleDateString("tr-TR")}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -174,14 +174,14 @@ export default function AnnouncementsPage() {
                                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 max-lg:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => openEdit(item)}
-                                            className="p-1.5 text-zinc-400 hover:text-[--brand] hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                                            className="p-1.5 text-[var(--text-muted)] hover:text-[--brand] hover:bg-white/[0.06] rounded-full transition-colors flex items-center justify-center cursor-pointer"
                                             title="Düzenle"
                                         >
                                             <span className="material-symbols-outlined text-[18px]">edit</span>
                                         </button>
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                                            className="p-1.5 text-[var(--text-muted)] hover:text-[var(--bad)] hover:bg-[var(--bad-soft)] rounded-full transition-colors flex items-center justify-center cursor-pointer"
                                             title="Sil"
                                         >
                                             <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -190,7 +190,7 @@ export default function AnnouncementsPage() {
                                 )}
                             </div>
                             <div className="pl-[60px]">
-                                <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
+                                <p className="text-[var(--text-2)] text-sm leading-relaxed whitespace-pre-wrap">{item.content}</p>
                             </div>
                         </div>
                     )
@@ -200,13 +200,13 @@ export default function AnnouncementsPage() {
             {/* Create Modal */}
             {isCreateOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div className="bg-white border border-[--line] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                    <div className="bg-white border border-[--line] text-[var(--text)] rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                         <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
                             <div>
-                                <h3 className="text-base font-medium text-white">Yeni Duyuru</h3>
-                                <p className="text-xs text-zinc-400 mt-0.5">Tüm kullanıcılara duyuru yayınlayın</p>
+                                <h3 className="text-base font-medium text-[var(--text)]">Yeni Duyuru</h3>
+                                <p className="text-xs text-[var(--text-muted)] mt-0.5">Tüm kullanıcılara duyuru yayınlayın</p>
                             </div>
-                            <button onClick={() => setIsCreateOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
+                            <button onClick={() => setIsCreateOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--brand)] cursor-pointer">
                                 <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
@@ -216,14 +216,14 @@ export default function AnnouncementsPage() {
                         <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsCreateOpen(false)}
-                                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--brand)] rounded-full transition-colors cursor-pointer"
                             >
                                 İptal
                             </button>
                             <button
                                 onClick={handleCreate}
                                 disabled={loading || !form.title || !form.content}
-                                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                             >
                                 {loading ? "Yayınlanıyor..." : "Yayınla"}
                             </button>
@@ -235,12 +235,12 @@ export default function AnnouncementsPage() {
             {/* Edit Modal */}
             {isEditOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div className="bg-white border border-[--line] text-white rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                    <div className="bg-white border border-[--line] text-[var(--text)] rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                         <div className="px-6 py-4 border-b border-[--line] flex items-center justify-between">
                             <div>
-                                <h3 className="text-base font-medium text-white">Duyuruyu Düzenle</h3>
+                                <h3 className="text-base font-medium text-[var(--text)]">Duyuruyu Düzenle</h3>
                             </div>
-                            <button onClick={() => setIsEditOpen(false)} className="text-zinc-400 hover:text-white cursor-pointer">
+                            <button onClick={() => setIsEditOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--brand)] cursor-pointer">
                                 <span className="material-symbols-outlined text-[20px]">close</span>
                             </button>
                         </div>
@@ -250,14 +250,14 @@ export default function AnnouncementsPage() {
                         <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 mt-auto">
                             <button
                                 onClick={() => setIsEditOpen(false)}
-                                className="px-4 py-2 text-xs font-medium text-zinc-400 hover:text-white rounded-full transition-colors cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--brand)] rounded-full transition-colors cursor-pointer"
                             >
                                 İptal
                             </button>
                             <button
                                 onClick={handleEdit}
                                 disabled={loading}
-                                className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
+                                className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                             >
                                 {loading ? "Kaydediliyor..." : "Güncelle"}
                             </button>

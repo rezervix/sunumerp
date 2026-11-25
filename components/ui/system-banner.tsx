@@ -34,9 +34,9 @@ export function SystemBanner() {
             className={cn(
               'w-full px-4 py-3 flex items-center justify-between text-sm font-medium transition-colors border-b',
               isSuccess && 'bg-[--brand] text-white border-[--brand] bg-[--brand]',
-              isInfo && 'bg-blue-600 text-white border-blue-700 dark:bg-blue-700',
-              isWarning && 'bg-amber-500 text-slate-950 border-amber-600 dark:bg-amber-600 dark:text-white',
-              isError && 'bg-rose-600 text-white border-rose-700 dark:bg-rose-700'
+              isInfo && 'bg-blue-600 text-white border-blue-700 ',
+              isWarning && 'bg-amber-500 text-slate-950 border-amber-600  ',
+              isError && 'bg-rose-600 text-white border-rose-700 '
             )}
           >
             <div className="flex items-center gap-3 max-w-7xl mx-auto w-full">
@@ -53,7 +53,7 @@ export function SystemBanner() {
               {banner.actionLabel && banner.onAction && (
                 <button
                   onClick={banner.onAction}
-                  className="px-3 py-1 text-xs font-semibold rounded bg-white/20 hover:bg-white/30 transition-colors shrink-0"
+                  className="px-3 py-1 text-xs font-semibold rounded bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] transition-colors shrink-0"
                 >
                   {banner.actionLabel}
                 </button>
@@ -64,7 +64,7 @@ export function SystemBanner() {
                   banner.onDismiss?.()
                   systemNotificationService.dismissBanner(banner.id)
                 }}
-                className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0"
+                className="p-1 rounded-md hover:bg-black/10 :bg-[var(--muted-bg)] transition-colors shrink-0"
                 aria-label="Kapat"
               >
                 <X className="h-4 w-4" />

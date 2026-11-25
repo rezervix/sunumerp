@@ -496,9 +496,9 @@ export default function ChatPage() {
     const el = document.getElementById(`msg-${targetMessageId}`)
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" })
-      el.classList.add("bg-primary/10", "dark:bg-primary/20")
+      el.classList.add("bg-primary/10", "")
       setTimeout(() => {
-        el.classList.remove("bg-primary/10", "dark:bg-primary/20")
+        el.classList.remove("bg-primary/10", "")
       }, 2000)
     }
   }
@@ -528,7 +528,7 @@ export default function ChatPage() {
     <div className="flex flex-col h-[calc(100vh-140px)] min-h-[500px] overflow-hidden rounded-[24px] border border-[--line] bg-white/80 backdrop-blur-xl backdrop-blur-xl shadow-2xl relative">
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar Panel */}
-        <div className={`w-80 border-r border-[--line] flex flex-col h-full overflow-hidden shrink-0 bg-[#0c100e]/80 ${selectedConversation ? "max-lg:hidden" : "max-lg:w-full"}`}>
+        <div className={`w-80 border-r border-[--line] flex flex-col h-full overflow-hidden shrink-0 bg-[var(--bg)] ${selectedConversation ? "max-lg:hidden" : "max-lg:w-full"}`}>
           {/* Header Action Tools */}
           <div className="p-4 pb-2 flex items-center justify-between border-b border-[--line] select-none">
             <h2 className="text-base font-light text-[--text] tracking-tight">Sohbetler</h2>
@@ -536,14 +536,14 @@ export default function ChatPage() {
               <button
                 onClick={() => setIsStarredOpen(true)}
                 title="Yıldızlı Mesajlar"
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-amber-400 transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-[var(--warn)] transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">star</span>
               </button>
               <button
                 onClick={() => setIsBlockedOpen(true)}
                 title="Engellenenler"
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-rose-400 transition-colors"
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/[0.06] text-[--text-muted] hover:text-[var(--bad)] transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">block</span>
               </button>
@@ -587,11 +587,7 @@ export default function ChatPage() {
                   setActiveTab(tab.id as any)
                   setSelectedConversation(null)
                 }}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shrink-0 border transition-all cursor-pointer ${
-                  activeTab === tab.id
-                    ? "bg-[--brand]/15 text-[--brand] border-[--brand-line] shadow-xs"
-                    : "bg-white/[0.02] text-[--text-muted] border-white/[0.05] hover:text-[--text] hover:bg-white/[0.05]"
-                }`}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium shrink-0 border transition-all cursor-pointer ${ activeTab === tab.id ? "bg-[--brand]/15 text-[--brand] border-[--brand-line] shadow-xs" : "bg-white/[0.02] text-[--text-muted] border-[var(--line-soft)] hover:text-[--text] hover:bg-white/[0.05]" }`}
               >
                 <span className="material-symbols-outlined text-[14px]">{tab.icon}</span>
                 {tab.label}
@@ -622,11 +618,7 @@ export default function ChatPage() {
                   <div key={c.id} className="relative group w-full">
                     <button
                       onClick={() => setSelectedConversation(c)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all border text-left cursor-pointer ${
-                        isSelected
-                          ? "bg-[--brand]/10 border-[--brand-line] shadow-xs"
-                          : "hover:bg-white/[0.04] border-transparent"
-                      }`}
+                      className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all border text-left cursor-pointer ${ isSelected ? "bg-[--brand]/10 border-[--brand-line] shadow-xs" : "hover:bg-white/[0.04] border-transparent" }`}
                     >
                       <div className="relative shrink-0 select-none">
                         <Avatar className="w-10 h-10 border border-[--line]">
@@ -637,7 +629,7 @@ export default function ChatPage() {
                         </Avatar>
                         {/* DM Active presence dot */}
                         {c.type === "dm" && userPresences[otherUser?.id]?.isOnline && (
-                          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[#0c100e] bg-[--brand] shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                          <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-[var(--line)] bg-[--brand] shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
                         )}
                       </div>
 
@@ -693,30 +685,30 @@ export default function ChatPage() {
                     <div className="absolute right-3 top-[50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity z-10">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="w-7 h-7 rounded-full bg-white border border-white/[0.08] shadow-md flex items-center justify-center hover:scale-105 active:scale-95 text-zinc-300">
+                          <button className="w-7 h-7 rounded-full bg-white border border-[var(--line-soft)] shadow-md flex items-center justify-center hover:scale-105 active:scale-95 text-[var(--text-2)]">
                             <span className="material-symbols-outlined text-[15px]">expand_more</span>
                           </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="bg-white border border-white/[0.08] text-[--text] rounded-xl p-1 shadow-2xl w-44">
-                          <DropdownMenuItem onClick={() => handleMarkUnread(c.id)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                        <DropdownMenuContent className="bg-white border border-[var(--line-soft)] text-[--text] rounded-xl p-1 shadow-2xl w-44">
+                          <DropdownMenuItem onClick={() => handleMarkUnread(c.id)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                             <span className="material-symbols-outlined text-[16px]">mark_chat_unread</span> Okunmadı İşaretle
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleArchive(c.id)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                          <DropdownMenuItem onClick={() => handleArchive(c.id)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                             <span className="material-symbols-outlined text-[16px]">archive</span> Arşivle
                           </DropdownMenuItem>
                           {c.isMuted ? (
-                            <DropdownMenuItem onClick={() => handleMute(c.id, null)} className="rounded-lg gap-2 cursor-pointer py-2 text-rose-400 hover:bg-rose-500/10">
+                            <DropdownMenuItem onClick={() => handleMute(c.id, null)} className="rounded-lg gap-2 cursor-pointer py-2 text-[var(--bad)] hover:bg-[var(--bad-soft)]">
                               <span className="material-symbols-outlined text-[16px]">volume_up</span> Sesi Aç
                             </DropdownMenuItem>
                           ) : (
                             <>
-                              <DropdownMenuItem onClick={() => handleMute(c.id, "8h")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                              <DropdownMenuItem onClick={() => handleMute(c.id, "8h")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                                 <span className="material-symbols-outlined text-[16px]">notifications_paused</span> 8 Saat Sessiz
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleMute(c.id, "1w")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                              <DropdownMenuItem onClick={() => handleMute(c.id, "1w")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                                 <span className="material-symbols-outlined text-[16px]">notifications_paused</span> 1 Hafta Sessiz
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleMute(c.id, "forever")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                              <DropdownMenuItem onClick={() => handleMute(c.id, "forever")} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                                 <span className="material-symbols-outlined text-[16px]">volume_off</span> Kalıcı Sessiz
                               </DropdownMenuItem>
                             </>
@@ -798,9 +790,7 @@ export default function ChatPage() {
                   <button
                     onClick={() => setIsDetailOpen(!isDetailOpen)}
                     title="Detayları Göster"
-                    className={`w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${
-                      isDetailOpen ? "text-primary" : "text-gray-400"
-                    }`}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center hover:bg-gray-50 :bg-[var(--muted-bg)] transition-colors ${ isDetailOpen ? "text-primary" : "text-[var(--text-muted)]" }`}
                   >
                     <span className="material-symbols-outlined text-[22px]">info</span>
                   </button>
@@ -814,13 +804,13 @@ export default function ChatPage() {
                 className="flex-1 overflow-y-auto p-6 bg-[url('/images/chat-bg.png')] bg-opacity-5 scroll-smooth custom-scrollbar"
               >
                 {loadingMessages && (
-                  <div className="text-center py-4 text-xs text-gray-400 select-none">
+                  <div className="text-center py-4 text-xs text-[var(--text-muted)] select-none">
                     Daha eski mesajlar yükleniyor...
                   </div>
                 )}
 
                 {messages.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-gray-400 select-none">
+                  <div className="flex flex-col items-center justify-center py-20 text-[var(--text-muted)] select-none">
                     <span className="material-symbols-outlined text-5xl opacity-40 mb-2">forum</span>
                     <p className="text-xs font-semibold">Burada henüz mesaj yok.</p>
                   </div>
@@ -864,8 +854,8 @@ export default function ChatPage() {
               <div className="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined text-[36px]">chat_bubble_outline</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-[--text]">ERP WhatsApp Chat</h3>
-              <p className="text-xs text-gray-500 max-w-xs mt-1 leading-relaxed">
+              <h3 className="text-lg font-bold text-gray-900 ]">ERP WhatsApp Chat</h3>
+              <p className="text-xs text-[var(--text-muted)] max-w-xs mt-1 leading-relaxed">
                 İletişime başlamak için soldan bir bireysel sohbet, grup veya şube kanalı seçin.
               </p>
             </div>

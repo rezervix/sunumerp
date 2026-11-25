@@ -77,21 +77,21 @@ export function HotelHousekeepingSupervisionTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex items-center gap-2">
-          <ClipboardCheck className="h-4 w-4 text-[#1267E6]" />
+          <ClipboardCheck className="h-4 w-4 text-[var(--brand)]" />
           <div>
-            <h3 className="text-sm font-semibold text-zinc-100">
+            <h3 className="text-sm font-semibold text-[var(--text)]">
               Housekeeping Görevleri, Kat Şefi Denetimi & Teknik Arıza Yönetimi
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Temizlik personeli mobil ekranı çevrimdışı kuyrukla çalışır; denetim onayı (INSPECTED) odaları otomatik Satışa Hazır yapar.
             </p>
           </div>
         </div>
         <Link
           href="/dashboard/otel/housekeeping"
-          className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+          className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
         >
           <Smartphone className="h-3.5 w-3.5" /> Mobil Housekeeping Ekranını Aç
         </Link>
@@ -99,15 +99,15 @@ export function HotelHousekeepingSupervisionTab({
 
       {/* Yeni Görev & Teknik Arıza Formları */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-300">
+        <div className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-2)]">
             Temizlik Görevi Aç & Ata
           </h4>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <select
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {rooms.map((rm) => (
                 <option key={rm.id} value={rm.id}>
@@ -118,7 +118,7 @@ export function HotelHousekeepingSupervisionTab({
             <select
               value={taskType}
               onChange={(e) => setTaskType(e.target.value)}
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {Object.entries(HOTEL_HK_TASK_TYPE_LABELS)
                 .filter(([k]) => k !== 'TECHNICAL_FAULT')
@@ -131,7 +131,7 @@ export function HotelHousekeepingSupervisionTab({
             <select
               value={assignedToUserId}
               onChange={(e) => setAssignedToUserId(e.target.value)}
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="">Personel Seç...</option>
               {staff.map((st) => (
@@ -150,21 +150,21 @@ export function HotelHousekeepingSupervisionTab({
                 'Temizlik görevi oluşturuldu ve atandı.'
               )
             }
-            className="flex items-center gap-1.5 rounded-lg bg-[--brand]/20 px-3 py-1.5 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/30"
+            className="flex items-center gap-1.5 rounded-lg bg-[--brand]/20 px-3 py-1.5 text-xs font-medium text-[var(--brand)] hover:bg-[--brand]/30"
           >
             <Plus className="h-3.5 w-3.5" /> Görevi Oluştur
           </button>
         </div>
 
-        <div className="space-y-3 rounded-xl border border-[--line] bg-[white] p-4">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-orange-300">
+        <div className="space-y-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--warn)]">
             Teknik Arıza / Bakım Kaydı Bildir
           </h4>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <select
               value={faultRoomId}
               onChange={(e) => setFaultRoomId(e.target.value)}
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               {rooms.map((rm) => (
                 <option key={rm.id} value={rm.id}>
@@ -175,7 +175,7 @@ export function HotelHousekeepingSupervisionTab({
             <select
               value={faultCategory}
               onChange={(e) => setFaultCategory(e.target.value)}
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             >
               <option value="KLIMA_HVAC">Klima / HVAC</option>
               <option value="TESISAT_SU">Su / Tesisat</option>
@@ -186,11 +186,11 @@ export function HotelHousekeepingSupervisionTab({
               value={faultDescription}
               onChange={(e) => setFaultDescription(e.target.value)}
               placeholder="Arıza açıklaması..."
-              className="rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
             />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <label className="flex items-center gap-2 text-xs text-zinc-300">
+            <label className="flex items-center gap-2 text-xs text-[var(--text-2)]">
               <input
                 type="checkbox"
                 checked={markOutOfOrder}
@@ -214,7 +214,7 @@ export function HotelHousekeepingSupervisionTab({
                 );
                 setFaultDescription('');
               }}
-              className="flex items-center gap-1.5 rounded-lg bg-orange-500/20 px-3 py-1.5 text-xs font-medium text-orange-300 hover:bg-orange-500/35 disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-lg bg-[var(--warn-soft)] px-3 py-1.5 text-xs font-medium text-[var(--warn)] border border-[var(--warn)]/30 hover:opacity-90 disabled:opacity-40 transition-colors"
             >
               <Wrench className="h-3.5 w-3.5" /> Arıza Bildir
             </button>
@@ -223,9 +223,9 @@ export function HotelHousekeepingSupervisionTab({
       </div>
 
       {/* Görev Listesi */}
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
         <table className="w-full min-w-[840px] text-left text-xs">
-          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
             <tr>
               <th className="px-3 py-2.5">Görev No / Oda</th>
               <th className="px-3 py-2.5">Tür / Öncelik</th>
@@ -239,28 +239,26 @@ export function HotelHousekeepingSupervisionTab({
             {tasks.map((t) => (
               <tr key={t.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5">
-                  <div className="font-mono font-semibold text-zinc-100">
+                  <div className="font-mono font-semibold text-[var(--text)]">
                     Oda {t.roomNumber} · {t.taskNo}
                   </div>
-                  <div className="text-[10px] text-zinc-500">{t.floorNumber}. Kat</div>
+                  <div className="text-[10px] text-[var(--text-muted)]">{t.floorNumber}. Kat</div>
                 </td>
                 <td className="px-3 py-2.5">
-                  <div className="text-zinc-200">
+                  <div className="text-[var(--text)]">
                     {HOTEL_HK_TASK_TYPE_LABELS[t.taskType] || t.taskType}
                   </div>
-                  <span className="text-[10px] text-amber-300">Öncelik: {t.priority}</span>
+                  <span className="text-[10px] text-[var(--warn)]">Öncelik: {t.priority}</span>
                 </td>
-                <td className="px-3 py-2.5 text-zinc-300">{t.assignedToName || 'Atanmadı'}</td>
+                <td className="px-3 py-2.5 text-[var(--text-2)]">{t.assignedToName || 'Atanmadı'}</td>
                 <td className="px-3 py-2.5">
                   <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                      HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-zinc-300'
-                    }`}
+                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${HOTEL_HK_STATUS_BADGES[t.status] || 'border-[--line] text-[var(--text-2)]' }`}
                   >
                     {HOTEL_HK_STATUS_LABELS[t.status] || t.status}
                   </span>
                 </td>
-                <td className="px-3 py-2.5 text-zinc-400">
+                <td className="px-3 py-2.5 text-[var(--text-muted)]">
                   {t.faultDescription || t.notes || '-'}
                 </td>
                 <td className="px-3 py-2.5 text-right">
@@ -290,7 +288,7 @@ export function HotelHousekeepingSupervisionTab({
                             `Oda ${t.roomNumber} tamamlandı (denetim bekliyor).`
                           )
                         }
-                        className="rounded bg-purple-500/20 px-2 py-1 text-[10px] text-purple-300 hover:bg-purple-500/35"
+                        className="rounded bg-[var(--brand-soft)] px-2 py-1 text-[10px] text-[var(--brand)] hover:bg-[var(--brand-soft-2)] transition-colors"
                       >
                         Tamamla
                       </button>
@@ -305,7 +303,7 @@ export function HotelHousekeepingSupervisionTab({
                             `Oda ${t.roomNumber} denetlendi ve Satışa Hazır oldu.`
                           )
                         }
-                        className="rounded bg-[--brand]/25 px-2 py-1 text-[10px] font-semibold text-[#1267E6] hover:bg-[--brand]/40"
+                        className="rounded bg-[--brand]/25 px-2 py-1 text-[10px] font-semibold text-[var(--brand)] hover:bg-[--brand]/40"
                       >
                         Denetim Onayla
                       </button>
@@ -374,24 +372,24 @@ export function HotelAllotmentsTab({
     <div className="space-y-4">
       <form
         onSubmit={handleSave}
-        className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-6"
+        className="grid grid-cols-1 gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4 md:grid-cols-6"
       >
         <div className="md:col-span-2">
-          <label className="mb-1 block text-[11px] text-zinc-400">Acenta / Tur Operatörü Adı</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Acenta / Tur Operatörü Adı</label>
           <input
             required
             value={agencyName}
             onChange={(e) => setAgencyName(e.target.value)}
             placeholder="Örn. Örnek Akdeniz Turizm Acentası"
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           />
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">Oda Tipi</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Oda Tipi</label>
           <select
             value={roomTypeId}
             onChange={(e) => setRoomTypeId(e.target.value)}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           >
             {roomTypes.map((rt) => (
               <option key={rt.id} value={rt.id}>
@@ -401,39 +399,39 @@ export function HotelAllotmentsTab({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">Gecelik Oda / Release Gün</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Gecelik Oda / Release Gün</label>
           <div className="flex gap-1.5">
             <input
               type="number"
               min={1}
               value={allocatedRoomsPerNight}
               onChange={(e) => setAllocatedRoomsPerNight(Number(e.target.value))}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
             />
             <input
               type="number"
               min={0}
               value={releaseDaysBefore}
               onChange={(e) => setReleaseDaysBefore(Number(e.target.value))}
-              className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2 py-2 text-xs text-zinc-100"
+              className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2 py-2 text-xs text-[var(--text)]"
             />
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">Net Gecelik (₺)</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Net Gecelik (₺)</label>
           <input
             type="number"
             min={100}
             value={netRatePerNightTry}
             onChange={(e) => setNetRatePerNightTry(Number(e.target.value))}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           />
         </div>
         <div className="flex items-end">
           <button
             type="submit"
             disabled={busy}
-            className="w-full rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="w-full rounded-lg bg-[var(--brand)] px-3 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             Kontenjan Ekle
           </button>
@@ -444,38 +442,26 @@ export function HotelAllotmentsTab({
         {allotments.map((al) => (
           <div
             key={al.id}
-            className={`rounded-xl border p-4 ${
-              al.status === 'EXHAUSTED'
-                ? 'border-rose-500/40 bg-rose-500/5'
-                : al.isNearLimit || al.status === 'NEAR_LIMIT'
-                  ? 'border-amber-500/40 bg-amber-500/5'
-                  : 'border-[--line] bg-[white]'
-            }`}
+            className={`rounded-xl border p-4 ${al.status === 'EXHAUSTED' ? 'border-[var(--bad-line)] bg-rose-500/5' : al.isNearLimit || al.status === 'NEAR_LIMIT' ? 'border-[var(--warn-line)] bg-amber-500/5' : 'border-[--line] bg-[var(--bg)] shadow-sm' }`}
           >
             <div className="flex items-start justify-between gap-2">
               <div>
-                <div className="font-mono text-xs text-[#1267E6]">{al.code}</div>
-                <h4 className="text-sm font-semibold text-zinc-100">{al.agencyName}</h4>
-                <p className="text-xs text-zinc-400">
+                <div className="font-mono text-xs text-[var(--brand)]">{al.code}</div>
+                <h4 className="text-sm font-semibold text-[var(--text)]">{al.agencyName}</h4>
+                <p className="text-xs text-[var(--text-muted)]">
                   {al.roomType?.name || 'Oda Tipi'} · Gecelik {al.allocatedRoomsPerNight} oda · Net:{' '}
                   {Number(al.netRatePerNightTry).toLocaleString('tr-TR')} ₺
                 </p>
               </div>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
-                  al.status === 'EXHAUSTED'
-                    ? 'bg-rose-500/20 text-rose-300'
-                    : al.isNearLimit || al.status === 'NEAR_LIMIT'
-                      ? 'bg-amber-500/20 text-amber-300'
-                      : 'bg-[--brand]/15 text-[#1267E6]'
-                }`}
+                className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${al.status === 'EXHAUSTED' ? 'bg-[var(--bad-soft)] text-[var(--bad)]' : al.isNearLimit || al.status === 'NEAR_LIMIT' ? 'bg-[var(--warn-soft)] text-[var(--warn)]' : 'bg-[--brand]/15 text-[var(--brand)]' }`}
               >
                 {al.status} (%{al.usagePct})
               </span>
             </div>
 
             <div className="mt-3">
-              <div className="mb-1 flex justify-between text-[11px] text-zinc-400">
+              <div className="mb-1 flex justify-between text-[11px] text-[var(--text-muted)]">
                 <span>
                   Kullanılan: {al.usedRoomNights} / {al.totalRoomNightCap} oda-gece
                 </span>
@@ -483,19 +469,13 @@ export function HotelAllotmentsTab({
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.08]">
                 <div
-                  className={`h-full rounded-full ${
-                    al.usagePct >= 95
-                      ? 'bg-rose-500'
-                      : al.usagePct >= 80
-                        ? 'bg-amber-400'
-                        : 'bg-[#1267E6]'
-                  }`}
+                  className={`h-full rounded-full ${al.usagePct >= 95 ? 'bg-rose-500' : al.usagePct >= 80 ? 'bg-amber-400' : 'bg-[var(--brand)]' }`}
                   style={{ width: `${Math.min(100, al.usagePct)}%` }}
                 />
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap justify-between gap-2 border-t border-[--line] pt-2 text-[11px] text-zinc-400">
+            <div className="mt-3 flex flex-wrap justify-between gap-2 border-t border-[--line] pt-2 text-[11px] text-[var(--text-muted)]">
               <span>
                 Dönem: {String(al.validFrom).slice(0, 10)} → {String(al.validTo).slice(0, 10)}
               </span>
@@ -594,30 +574,30 @@ export function HotelKbsPreparationTab({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-4 text-xs text-zinc-300">
+      <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-4 text-xs text-[var(--text-2)]">
         <div className="flex items-start gap-2.5">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" />
           <div className="space-y-1">
             <strong className="text-sky-300">
               KBS Kimlik Bildirimi Hazırlık ve Kurum Dışa Aktarma Altyapısı (Canlı Bağlantı Kurulmaz)
             </strong>
-            <p className="text-zinc-400">
+            <p className="text-[var(--text-muted)]">
               EGM KBS (<code>kbs.egm.gov.tr</code> — EGMSEC 2FA/OTP + sabit IP) ve Jandarma KBS Tesis 2 resmî tesis yetkisi gerektirdiğinden (doküman kontrol tarihi: 2026-11-20) bu ekran check-in/out kayıtlarını doğrular, eksik alanları raporlar ve XML şablon / CSV / JSON dışa aktarma paketi hazırlar.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[--line] bg-[white] p-3">
-        <span className="text-xs text-zinc-400">
-          Toplam <strong className="text-zinc-100">{kbsRecords.length}</strong> KBS hazırlık kaydı
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-3">
+        <span className="text-xs text-[var(--text-muted)]">
+          Toplam <strong className="text-[var(--text)]">{kbsRecords.length}</strong> KBS hazırlık kaydı
         </span>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             disabled={busy}
             onClick={handleBulkRetry}
-            className="flex items-center gap-1.5 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-1.5 text-xs font-medium text-amber-300 hover:bg-amber-500/20"
+            className="flex items-center gap-1.5 rounded-lg border border-amber-500/35 bg-[var(--warn-soft)] px-3 py-1.5 text-xs font-medium text-[var(--warn)] hover:bg-[var(--warn-soft)]"
           >
             <RefreshCw className="h-3.5 w-3.5" /> Hatalı / Eksikleri Yeniden Dene
           </button>
@@ -625,7 +605,7 @@ export function HotelKbsPreparationTab({
             type="button"
             disabled={busy}
             onClick={() => handleExport('XML_SABLON')}
-            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-1.5 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-1.5 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             <Download className="h-3.5 w-3.5" /> XML Şablon İndir
           </button>
@@ -633,7 +613,7 @@ export function HotelKbsPreparationTab({
             type="button"
             disabled={busy}
             onClick={() => handleExport('CSV')}
-            className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-1.5 text-xs text-zinc-200 hover:bg-white/[0.08]"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] px-3 py-1.5 text-xs text-[var(--text)] hover:bg-white/[0.08]"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> CSV İndir
           </button>
@@ -641,16 +621,16 @@ export function HotelKbsPreparationTab({
             type="button"
             disabled={busy}
             onClick={() => handleExport('JSON_PAKET')}
-            className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-1.5 text-xs text-zinc-200 hover:bg-white/[0.08]"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] px-3 py-1.5 text-xs text-[var(--text)] hover:bg-white/[0.08]"
           >
             <FileText className="h-3.5 w-3.5" /> JSON Paket
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white]">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm">
         <table className="w-full min-w-[840px] text-left text-xs">
-          <thead className="border-b border-[--line] bg-[#161B18] text-zinc-400">
+          <thead className="border-b border-[--line] bg-[var(--muted-bg)] text-[var(--text-muted)]">
             <tr>
               <th className="px-3 py-2.5">KBS Ref / Oda</th>
               <th className="px-3 py-2.5">Bildirim Tipi</th>
@@ -663,29 +643,27 @@ export function HotelKbsPreparationTab({
             {kbsRecords.map((k) => (
               <tr key={k.id} className="hover:bg-[--page]">
                 <td className="px-3 py-2.5 font-mono text-[11px]">
-                  <div className="font-semibold text-zinc-100">{k.kbsRefNo}</div>
-                  <div className="text-zinc-500">Oda {k.roomNumber}</div>
+                  <div className="font-semibold text-[var(--text)]">{k.kbsRefNo}</div>
+                  <div className="text-[var(--text-muted)]">Oda {k.roomNumber}</div>
                 </td>
-                <td className="px-3 py-2.5 text-zinc-300">
+                <td className="px-3 py-2.5 text-[var(--text-2)]">
                   {HOTEL_KBS_TYPE_LABELS[k.notificationType] || k.notificationType}
                 </td>
                 <td className="px-3 py-2.5">
-                  <div className="font-medium text-zinc-100">{k.guestFullName}</div>
-                  <div className="font-mono text-[10px] text-zinc-400">
+                  <div className="font-medium text-[var(--text)]">{k.guestFullName}</div>
+                  <div className="font-mono text-[10px] text-[var(--text-muted)]">
                     {k.guestNationality} · {k.guestTcknMasked || k.guestPassportMasked || 'Eksik'}
                     {k.guestBirthYear ? ` · ${k.guestBirthYear}` : ''}
                   </div>
                 </td>
                 <td className="px-3 py-2.5">
                   <span
-                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                      HOTEL_KBS_STATUS_BADGES[k.preparationStatus] || 'border-[--line] text-zinc-300'
-                    }`}
+                    className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-medium ${HOTEL_KBS_STATUS_BADGES[k.preparationStatus] || 'border-[--line] text-[var(--text-2)]' }`}
                   >
                     {HOTEL_KBS_STATUS_LABELS[k.preparationStatus] || k.preparationStatus}
                   </span>
                 </td>
-                <td className="px-3 py-2.5 text-[11px] text-zinc-400">
+                <td className="px-3 py-2.5 text-[11px] text-[var(--text-muted)]">
                   {k.lastErrorNote || (k.exportedFormat ? `Aktarım: ${k.exportedFormat}` : 'Tam / Dışa aktarmaya hazır')}
                 </td>
               </tr>
@@ -754,21 +732,21 @@ export function HotelRoomTypesTariffsPolicyTab({
   return (
     <div className="space-y-4">
       {/* Oda Tipleri */}
-      <div className="rounded-xl border border-[--line] bg-[white] p-4">
-        <h3 className="mb-3 text-sm font-semibold text-zinc-100">
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+        <h3 className="mb-3 text-sm font-semibold text-[var(--text)]">
           Oda Tipleri ({roomTypes.length})
         </h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {roomTypes.map((rt) => (
-            <div key={rt.id} className="rounded-lg border border-[--line] bg-[#161B18] p-3">
+            <div key={rt.id} className="rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] p-3">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-[#1267E6]">{rt.code}</span>
-                <span className="font-mono text-xs font-semibold text-zinc-100">
+                <span className="font-mono text-xs text-[var(--brand)]">{rt.code}</span>
+                <span className="font-mono text-xs font-semibold text-[var(--text)]">
                   {Number(rt.baseRateTry).toLocaleString('tr-TR')} ₺ / gece
                 </span>
               </div>
-              <div className="mt-1 text-sm font-semibold text-white">{rt.name}</div>
-              <p className="mt-1 text-[11px] text-zinc-400">
+              <div className="mt-1 text-sm font-semibold text-[var(--text)]">{rt.name}</div>
+              <p className="mt-1 text-[11px] text-[var(--text-muted)]">
                 {rt.areaSqm} m² · Maks {rt.maxAdults} Yetişkin + {rt.maxChildren} Çocuk ·{' '}
                 {rt.bedConfiguration}
               </p>
@@ -778,12 +756,12 @@ export function HotelRoomTypesTariffsPolicyTab({
       </div>
 
       {/* Fiyat Tarifeleri */}
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white] p-4">
-        <h3 className="mb-3 text-sm font-semibold text-zinc-100">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+        <h3 className="mb-3 text-sm font-semibold text-[var(--text)]">
           Sezon × Oda Tipi × Pansiyon Fiyat Tarifeleri ({tariffs.length})
         </h3>
         <table className="w-full min-w-[740px] text-left text-xs">
-          <thead className="border-b border-[--line] text-zinc-400">
+          <thead className="border-b border-[--line] text-[var(--text-muted)]">
             <tr>
               <th className="py-2">Tarife Kodu / Adı</th>
               <th className="py-2">Sezon</th>
@@ -796,19 +774,19 @@ export function HotelRoomTypesTariffsPolicyTab({
             {tariffs.map((trf) => (
               <tr key={trf.id}>
                 <td className="py-2">
-                  <span className="font-mono text-[#1267E6]">{trf.code}</span> — {trf.name}
+                  <span className="font-mono text-[var(--brand)]">{trf.code}</span> — {trf.name}
                 </td>
-                <td className="py-2 text-zinc-300">
+                <td className="py-2 text-[var(--text-2)]">
                   {HOTEL_SEASON_LABELS[trf.seasonType] || trf.seasonType}
                 </td>
-                <td className="py-2 text-zinc-300">
+                <td className="py-2 text-[var(--text-2)]">
                   {HOTEL_BOARD_TYPE_LABELS[trf.boardType as keyof typeof HOTEL_BOARD_TYPE_LABELS] ||
                     trf.boardType}
                 </td>
-                <td className="py-2 text-right font-mono font-semibold text-zinc-100">
+                <td className="py-2 text-right font-mono font-semibold text-[var(--text)]">
                   {Number(trf.nightlyRateTry).toLocaleString('tr-TR')} ₺
                 </td>
-                <td className="py-2 text-right font-mono text-zinc-400">
+                <td className="py-2 text-right font-mono text-[var(--text-muted)]">
                   +{trf.extraAdultRateTry} ₺ / +{trf.childRateTry} ₺
                 </td>
               </tr>
@@ -820,28 +798,28 @@ export function HotelRoomTypesTariffsPolicyTab({
       {/* Ayarlanabilir Politika & Oranlar */}
       <form
         onSubmit={handleSavePolicy}
-        className="grid grid-cols-1 gap-3 rounded-xl border border-[--line] bg-[white] p-4 md:grid-cols-4"
+        className="grid grid-cols-1 gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4 md:grid-cols-4"
       >
         <div className="md:col-span-4 flex items-center gap-2">
-          <Settings className="h-4 w-4 text-[#1267E6]" />
-          <h3 className="text-sm font-semibold text-zinc-100">
+          <Settings className="h-4 w-4 text-[var(--brand)]" />
+          <h3 className="text-sm font-semibold text-[var(--text)]">
             Ayarlanabilir Tesis Politika, Faturalama ve Oran Ayarları
           </h3>
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">Tesis Görünen Adı</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Tesis Görünen Adı</label>
           <input
             value={hotelDisplayName}
             onChange={(e) => setHotelDisplayName(e.target.value)}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           />
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">E-Belge / Fatura Zamanlaması</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">E-Belge / Fatura Zamanlaması</label>
           <select
             value={invoiceTimingMode}
             onChange={(e) => setInvoiceTimingMode(e.target.value)}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           >
             {Object.entries(HOTEL_INVOICE_TIMING_LABELS).map(([k, v]) => (
               <option key={k} value={k}>
@@ -851,18 +829,18 @@ export function HotelRoomTypesTariffsPolicyTab({
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">Varsayılan KDV Oranı (%)</label>
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">Varsayılan KDV Oranı (%)</label>
           <input
             type="number"
             min={0}
             max={100}
             value={defaultVatRatePct}
             onChange={(e) => setDefaultVatRatePct(Number(e.target.value))}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           />
         </div>
         <div>
-          <label className="mb-1 block text-[11px] text-zinc-400">
+          <label className="mb-1 block text-[11px] text-[var(--text-muted)]">
             Ek Konaklama Oranı (Ayarlanabilir %)
           </label>
           <input
@@ -871,14 +849,14 @@ export function HotelRoomTypesTariffsPolicyTab({
             max={100}
             value={accommodationExtraRatePct}
             onChange={(e) => setAccommodationExtraRatePct(Number(e.target.value))}
-            className="w-full rounded-lg border border-white/[0.1] bg-[#0B0E0D] px-2.5 py-2 text-xs text-zinc-100"
+            className="w-full rounded-lg border border-[var(--line)] bg-[var(--bg)] px-2.5 py-2 text-xs text-[var(--text)]"
           />
         </div>
         <div className="md:col-span-4 flex justify-end">
           <button
             type="submit"
             disabled={busy}
-            className="rounded-lg bg-[#1267E6] px-4 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="rounded-lg bg-[var(--brand)] px-4 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             Politika Ayarlarını Kaydet
           </button>
@@ -910,14 +888,14 @@ export function HotelAnalyticsAndReportsTab({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[--line] bg-[white] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-[#1267E6]" />
+          <BarChart3 className="h-4 w-4 text-[var(--brand)]" />
           <div>
-            <h3 className="text-sm font-semibold text-zinc-100">
+            <h3 className="text-sm font-semibold text-[var(--text)]">
               Doluluk %, ADR, RevPAR, Kanal & Anonim Uyruk Raporları
             </h3>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Tüm metrikler {analytics?.periodDays || 90} günlük konaklama ve folio verilerinden canlı hesaplanır.
             </p>
           </div>
@@ -925,13 +903,13 @@ export function HotelAnalyticsAndReportsTab({
         <div className="flex gap-2">
           <a
             href={exportUrl('xlsx')}
-            className="flex items-center gap-1.5 rounded-lg bg-[#1267E6] px-3 py-2 text-xs font-semibold text-[#F6F8FB] hover:bg-[--brand-hover]"
+            className="flex items-center gap-1.5 rounded-lg bg-[var(--brand)] px-3 py-2 text-xs font-semibold text-[var(--text)] hover:bg-[--brand-hover]"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> Excel (.xlsx) İndir
           </a>
           <a
             href={exportUrl('pdf')}
-            className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-2 text-xs font-medium text-zinc-200 hover:bg-white/[0.08]"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] px-3 py-2 text-xs font-medium text-[var(--text)] hover:bg-white/[0.08]"
           >
             <FileText className="h-3.5 w-3.5" /> PDF (.pdf) İndir
           </a>
@@ -940,37 +918,37 @@ export function HotelAnalyticsAndReportsTab({
 
       {/* Formül Açıklaması ve Ana KPI Kartları */}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">Dönem Doluluk Oranı (%)</div>
-          <div className="mt-1 text-2xl font-bold text-[#1267E6]">%{kpis.occupancyPct ?? 0}</div>
-          <div className="mt-1 text-[11px] text-zinc-400">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <div className="text-xs text-[var(--text-muted)]">Dönem Doluluk Oranı (%)</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--brand)]">%{kpis.occupancyPct ?? 0}</div>
+          <div className="mt-1 text-[11px] text-[var(--text-muted)]">
             {kpis.soldRoomNights ?? 0} / {kpis.sellableRoomNights ?? 0} oda-gece
           </div>
-          <div className="mt-2 rounded bg-[#0B0E0D] px-2 py-1 font-mono text-[10px] text-zinc-400">
+          <div className="mt-2 rounded bg-[var(--bg)] px-2 py-1 font-mono text-[10px] text-[var(--text-muted)]">
             Formül: {kpis.formulas?.occupancyFormula}
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">ADR (Ortalama Günlük Oda Fiyatı)</div>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <div className="text-xs text-[var(--text-muted)]">ADR (Ortalama Günlük Oda Fiyatı)</div>
           <div className="mt-1 text-2xl font-bold text-sky-300">
             {Number(kpis.adrTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-1 text-[11px] text-zinc-400">
+          <div className="mt-1 text-[11px] text-[var(--text-muted)]">
             Oda Geliri: {Number(kpis.roomRevenueTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-2 rounded bg-[#0B0E0D] px-2 py-1 font-mono text-[10px] text-zinc-400">
+          <div className="mt-2 rounded bg-[var(--bg)] px-2 py-1 font-mono text-[10px] text-[var(--text-muted)]">
             Formül: {kpis.formulas?.adrFormula}
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">RevPAR (Mevcut Oda Başı Gelir)</div>
-          <div className="mt-1 text-2xl font-bold text-amber-300">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <div className="text-xs text-[var(--text-muted)]">RevPAR (Mevcut Oda Başı Gelir)</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--warn)]">
             {Number(kpis.revParTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-1 text-[11px] text-zinc-400">
+          <div className="mt-1 text-[11px] text-[var(--text-muted)]">
             Toplam Gelir (+Ekstra): {Number(kpis.totalRevenueTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-2 rounded bg-[#0B0E0D] px-2 py-1 font-mono text-[10px] text-zinc-400">
+          <div className="mt-2 rounded bg-[var(--bg)] px-2 py-1 font-mono text-[10px] text-[var(--text-muted)]">
             Formül: {kpis.formulas?.revParFormula}
           </div>
         </div>
@@ -978,22 +956,22 @@ export function HotelAnalyticsAndReportsTab({
 
       {/* Kanal Dağılımı & Anonimleştirilmiş Uyruk İstatistikleri */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <h4 className="mb-3 text-sm font-semibold text-zinc-100">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+          <h4 className="mb-3 text-sm font-semibold text-[var(--text)]">
             Kanal / Acenta Bazlı Gelir Dağılımı
           </h4>
           <div className="space-y-2.5">
             {channels.map((ch: any) => (
               <div key={ch.channelSource} className="space-y-1 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-zinc-200">{ch.label}</span>
-                  <span className="font-mono text-[#1267E6]">
+                  <span className="text-[var(--text)]">{ch.label}</span>
+                  <span className="font-mono text-[var(--brand)]">
                     {Number(ch.revenueTry).toLocaleString('tr-TR')} ₺ ({ch.roomNights} gece)
                   </span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-white/[0.08]">
                   <div
-                    className="h-full rounded-full bg-[#1267E6]"
+                    className="h-full rounded-full bg-[var(--brand)]"
                     style={{
                       width: `${Math.min(
                         100,
@@ -1007,12 +985,12 @@ export function HotelAnalyticsAndReportsTab({
           </div>
         </div>
 
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-zinc-100">
+            <h4 className="text-sm font-semibold text-[var(--text)]">
               Anonimleştirilmiş Misafir Uyruk İstatistikleri
             </h4>
-            <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[10px] text-[#1267E6]">
+            <span className="rounded bg-[--brand]/15 px-2 py-0.5 text-[10px] text-[var(--brand)]">
               KVKK · Kişisel Veri İçermez
             </span>
           </div>
@@ -1020,33 +998,33 @@ export function HotelAnalyticsAndReportsTab({
             {nationalities.map((n: any) => (
               <div
                 key={n.nationalityCode}
-                className="rounded-lg border border-[--line] bg-[#161B18] p-2.5 text-xs"
+                className="rounded-lg border border-[var(--line)] bg-[var(--muted-bg)] p-2.5 text-xs"
               >
-                <div className="font-mono text-sm font-bold text-white">{n.nationalityCode}</div>
-                <div className="text-[11px] text-zinc-400">
+                <div className="font-mono text-sm font-bold text-[var(--text)]">{n.nationalityCode}</div>
+                <div className="text-[11px] text-[var(--text-muted)]">
                   {n.guestCount} misafir · {n.staysCount} konaklama
                 </div>
-                <div className="mt-1 font-mono text-[11px] text-[#1267E6]">%{n.sharePct}</div>
+                <div className="mt-1 font-mono text-[11px] text-[var(--brand)]">%{n.sharePct}</div>
               </div>
             ))}
           </div>
-          <div className="mt-3 rounded-lg bg-[#0B0E0D] p-2.5 text-[11px] text-zinc-400">
+          <div className="mt-3 rounded-lg bg-[var(--bg)] p-2.5 text-[11px] text-[var(--text-muted)]">
             Günlük Özet ({daily.reportDate}):{' '}
-            <strong className="text-zinc-200">{daily.inHouseCount}</strong> konaklayan ·{' '}
+            <strong className="text-[var(--text)]">{daily.inHouseCount}</strong> konaklayan ·{' '}
             <strong className="text-sky-300">{daily.arrivalsToday}</strong> bugün giriş ·{' '}
-            <strong className="text-amber-300">{daily.departuresToday}</strong> bugün çıkış ·{' '}
-            <strong className="text-[#1267E6]">{daily.cleanVacantCount}</strong> temiz boş
+            <strong className="text-[var(--warn)]">{daily.departuresToday}</strong> bugün çıkış ·{' '}
+            <strong className="text-[var(--brand)]">{daily.cleanVacantCount}</strong> temiz boş
           </div>
         </div>
       </div>
 
       {/* Oda Tipi Bazlı Performans Tablosu */}
-      <div className="overflow-x-auto rounded-xl border border-[--line] bg-[white] p-4">
-        <h4 className="mb-3 text-sm font-semibold text-zinc-100">
+      <div className="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--bg)] shadow-sm p-4">
+        <h4 className="mb-3 text-sm font-semibold text-[var(--text)]">
           Oda Tipi Bazlı Doluluk, ADR ve RevPAR Tablosu
         </h4>
         <table className="w-full min-w-[700px] text-left text-xs">
-          <thead className="border-b border-[--line] text-zinc-400">
+          <thead className="border-b border-[--line] text-[var(--text-muted)]">
             <tr>
               <th className="py-2">Oda Tipi</th>
               <th className="py-2 text-right">Oda Adedi</th>
@@ -1060,19 +1038,19 @@ export function HotelAnalyticsAndReportsTab({
           <tbody className="divide-y divide-white/[0.05]">
             {roomTypes.map((rt: any) => (
               <tr key={rt.roomTypeId}>
-                <td className="py-2 font-medium text-zinc-100">
-                  {rt.name} <span className="font-mono text-[10px] text-zinc-500">({rt.code})</span>
+                <td className="py-2 font-medium text-[var(--text)]">
+                  {rt.name} <span className="font-mono text-[10px] text-[var(--text-muted)]">({rt.code})</span>
                 </td>
                 <td className="py-2 text-right font-mono">{rt.roomCount}</td>
                 <td className="py-2 text-right font-mono">{rt.soldRoomNights}</td>
-                <td className="py-2 text-right font-mono text-[#1267E6]">%{rt.occupancyPct}</td>
+                <td className="py-2 text-right font-mono text-[var(--brand)]">%{rt.occupancyPct}</td>
                 <td className="py-2 text-right font-mono">
                   {Number(rt.adrTry).toLocaleString('tr-TR')}
                 </td>
                 <td className="py-2 text-right font-mono">
                   {Number(rt.revParTry).toLocaleString('tr-TR')}
                 </td>
-                <td className="py-2 text-right font-mono font-semibold text-zinc-100">
+                <td className="py-2 text-right font-mono font-semibold text-[var(--text)]">
                   {Number(rt.roomRevenueTry).toLocaleString('tr-TR')}
                 </td>
               </tr>

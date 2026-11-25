@@ -65,25 +65,25 @@ export default function SupplierPortalInviteTokenPage() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F6F8FB] text-zinc-100 flex items-center justify-center p-6">
+    <div className="flex-1 overflow-y-auto bg-[#F6F8FB] text-[var(--text)] flex items-center justify-center p-6">
       <div className="w-full max-w-md rounded-2xl border border-[--line] bg-[white] p-6 space-y-5 shadow-2xl">
         {verifying ? (
           <div className="py-6 text-center space-y-3">
             <RefreshCw className="size-7 text-[#1267E6] animate-spin mx-auto" />
-            <div className="text-sm font-medium text-white">Davet İmzanız Doğrulanıyor...</div>
+            <div className="text-sm font-medium text-[var(--text)]">Davet İmzanız Doğrulanıyor...</div>
           </div>
         ) : errorMsg ? (
           <div className="space-y-4 text-center">
-            <div className="size-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-400">
+            <div className="size-12 rounded-2xl bg-[var(--bad-soft)] border border-[var(--bad-line)] flex items-center justify-center mx-auto text-[var(--bad)]">
               <AlertTriangle className="size-6" />
             </div>
             <div className="space-y-1">
-              <h1 className="text-lg font-bold text-white">Davet Geçersiz veya Süresi Dolmuş</h1>
-              <p className="text-xs text-rose-300">{errorMsg}</p>
+              <h1 className="text-lg font-bold text-[var(--text)]">Davet Geçersiz veya Süresi Dolmuş</h1>
+              <p className="text-xs text-[var(--bad)]">{errorMsg}</p>
             </div>
             <a
               href="/tedarikci-portali"
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-[--line] bg-white/[0.05] text-xs text-white"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-xl border border-[--line] bg-white/[0.05] text-xs text-[var(--text)]"
             >
               Tedarikçi Giriş Sayfasına Git
             </a>
@@ -94,20 +94,20 @@ export default function SupplierPortalInviteTokenPage() {
               <ShieldCheck className="size-4" />
               <span>İmzalı Tedarikçi Portal Daveti Doğrulandı</span>
             </div>
-            <div className="rounded-xl border border-[--line] bg-[#0B0E0D] p-4 space-y-1.5">
-              <div className="text-base font-bold text-white">{inviteInfo.supplier?.name}</div>
-              <div className="text-xs font-mono text-zinc-400">
+            <div className="rounded-xl border border-[--line] bg-[var(--bg)] p-4 space-y-1.5">
+              <div className="text-base font-bold text-[var(--text)]">{inviteInfo.supplier?.name}</div>
+              <div className="text-xs font-mono text-[var(--text-muted)]">
                 Kod: {inviteInfo.supplier?.code} · Amaç: {inviteInfo.invite?.purpose}
               </div>
               {inviteInfo.invite?.relatedRef && (
                 <div className="text-xs text-[#1267E6]">İlgili Referans: {inviteInfo.invite.relatedRef}</div>
               )}
-              <div className="text-[11px] text-zinc-500">
+              <div className="text-[11px] text-[var(--text-muted)]">
                 Geçerlilik Sonu:{" "}
                 {new Date(inviteInfo.invite?.expiresAt).toLocaleString("tr-TR")}
               </div>
             </div>
-            <p className="text-[11px] text-zinc-400 leading-relaxed">
+            <p className="text-[11px] text-[var(--text-muted)] leading-relaxed">
               Devam ettiğinizde yalnızca <strong>{inviteInfo.supplier?.name}</strong> kayıtlarına
               erişebilen kısıtlı tedarikçi portal oturumu başlatılacaktır.
             </p>

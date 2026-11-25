@@ -256,9 +256,7 @@ export function StockTable({
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span
-                            className={`text-sm font-semibold tabular-nums ${
-                              isCritical ? "text-[--bad]" : "text-[--text]"
-                            }`}
+                            className={`text-sm font-semibold tabular-nums ${ isCritical ? "text-[--bad]" : "text-[--text]" }`}
                           >
                             {totalStock} {safeText(item.baseUnit, "Adet")}
                           </span>

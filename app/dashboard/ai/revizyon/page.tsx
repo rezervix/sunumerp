@@ -181,11 +181,7 @@ export default function AiRevizyonPage() {
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
-              isDragging
-                ? "border-[--brand] bg-[--brand-soft]/50 shadow-sm"
-                : "border-[--line] bg-[--page] hover:border-[--brand] hover:bg-white"
-            }`}
+            className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${ isDragging ? "border-[--brand] bg-[--brand-soft]/50 shadow-sm" : "border-[--line] bg-[--page] hover:border-[--brand] hover:bg-white" }`}
           >
             <div className="flex flex-col items-center gap-2">
               <div className="size-10 rounded-xl bg-[--brand-soft] border border-[--brand-line] flex items-center justify-center text-[--brand]">
@@ -228,7 +224,7 @@ export default function AiRevizyonPage() {
               <Button
                 onClick={handleSubmit}
                 disabled={isSubmitting || !canUseAi}
-                className="bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-white font-medium text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all"
+                className="bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 text-[var(--text)] font-medium text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all"
               >
                 {isSubmitting ? (
                   <><Loader2 size={14} className="mr-2 animate-spin" /> AI Analiz Ediyor...</>

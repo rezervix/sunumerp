@@ -161,7 +161,7 @@ export default function RentACarDashboardPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-zinc-100 p-4 md:p-6 space-y-5">
+    <div className="min-h-screen bg-[#F6F8FB] text-[var(--text)] p-4 md:p-6 space-y-5">
       {/* Üst Başlık & Aksiyon Çubuğu */}
       <div className="bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-5 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -169,10 +169,10 @@ export default function RentACarDashboardPage() {
             <Truck className="w-5 h-5 text-[#1267E6]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white">
+            <h1 className="text-lg font-bold text-[var(--text)]">
               Araç Kiralama (Rent-a-Car) Operasyon &amp; Sözleşme Merkezi
             </h1>
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-[var(--text-muted)]">
               Lojistik Filo entegreli müsaitlik Gantt takvimi, atomik çift rezervasyon kilidi, dijital imzalı sözleşme, teslim/iade ekspertizi, HGS/ceza yansıtma ve KABİS hazırlığı
             </p>
           </div>
@@ -190,9 +190,9 @@ export default function RentACarDashboardPage() {
           <button
             type="button"
             onClick={handleDispatchAlerts}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs font-medium text-[var(--text)] cursor-pointer"
           >
-            <Bell className="w-3.5 h-3.5 text-amber-300" />
+            <Bell className="w-3.5 h-3.5 text-[var(--warn)]" />
             Uyarıları Tara ({alerts.totalAlerts || 0})
           </button>
 
@@ -200,7 +200,7 @@ export default function RentACarDashboardPage() {
             type="button"
             onClick={() => loadSnapshot()}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-white/[0.1] text-xs font-medium text-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[--muted-bg] hover:bg-white/[0.12] border border-[var(--line)] text-xs font-medium text-[var(--text)] cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[#1267E6] ${loading ? 'animate-spin' : ''}`} />
             Verileri Güncelle
@@ -227,11 +227,7 @@ export default function RentACarDashboardPage() {
                       setDemoCompanyId(comp.id);
                       loadSnapshot({ companyId: comp.id });
                     }}
-                    className={`px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer ${
-                      active
-                        ? 'bg-[#1267E6] text-white font-semibold'
-                        : 'bg-[--muted-bg] text-zinc-300 hover:text-white'
-                    }`}
+                    className={`px-3 py-1 rounded-xl text-xs font-medium transition cursor-pointer ${ active ? 'bg-[#1267E6] text-[var(--text)] font-semibold' : 'bg-[--muted-bg] text-[var(--text-2)] hover:text-[var(--brand)]' }`}
                   >
                     {comp.name}
                   </button>
@@ -246,7 +242,7 @@ export default function RentACarDashboardPage() {
                   setFocusedReservationId('trzm-rnt-res-11');
                   setActiveTab('reservations');
                 }}
-                className="px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 text-[11px] cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad-line)] text-[11px] cursor-pointer"
               >
                 Senaryo: Geciken İade (34 RNT 202)
               </button>
@@ -256,7 +252,7 @@ export default function RentACarDashboardPage() {
                   setFocusedReservationId('trzm-rnt-res-06');
                   setActiveTab('handover');
                 }}
-                className="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[11px] cursor-pointer"
+                className="px-2.5 py-1 rounded-lg bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)] text-[11px] cursor-pointer"
               >
                 Senaryo: Hasar Fotoğraflı İade Farkı
               </button>
@@ -270,7 +266,7 @@ export default function RentACarDashboardPage() {
               <button
                 type="button"
                 onClick={() => setShowDemoGuide((prev) => !prev)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.08] text-zinc-200 text-[11px] cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.08] text-[var(--text-2)] text-[11px] cursor-pointer"
               >
                 <HelpCircle className="w-3.5 h-3.5 text-[#1267E6]" />
                 Bu ekranda neler yapabilirsiniz?
@@ -279,21 +275,21 @@ export default function RentACarDashboardPage() {
           </div>
 
           {showDemoGuide && (
-            <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3.5 text-xs text-zinc-300 grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="bg-[#F6F8FB] border border-[--line] rounded-xl p-3.5 text-xs text-[var(--text-2)] grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
-                <strong className="text-white block mb-0.5">1. Gantt &amp; Çakışma Kilidi</strong>
+                <strong className="text-[var(--text)] block mb-0.5">1. Gantt &amp; Çakışma Kilidi</strong>
                 Araç satırlarında kirada, rezerve ve bakımdaki (`34 RNT 913`) günleri görebilir; boş güne tıklayarak atomik çakışma korumalı rezervasyon açabilirsiniz.
               </div>
               <div>
-                <strong className="text-white block mb-0.5">2. Dijital İmzalı Sözleşme</strong>
+                <strong className="text-[var(--text)] block mb-0.5">2. Dijital İmzalı Sözleşme</strong>
                 Rezervasyon satırındaki &ldquo;Sözleşme / İmza&rdquo; butonuyla tarayıcı üzerinden müşteri imzası alıp yazdırılabilir sözleşme üretebilirsiniz.
               </div>
               <div>
-                <strong className="text-white block mb-0.5">3. Teslim &amp; İade Fark Hesabı</strong>
+                <strong className="text-[var(--text)] block mb-0.5">3. Teslim &amp; İade Fark Hesabı</strong>
                 Çıkış ve dönüş km, yakıt yüzdesi ve karoser hasar fotoğraflarını karşılaştırıp aşım/yakıt/gecikme bedelini depozitodan otomatik mahsup edebilirsiniz.
               </div>
               <div>
-                <strong className="text-white block mb-0.5">4. HGS/Ceza, KABİS &amp; TCO</strong>
+                <strong className="text-[var(--text)] block mb-0.5">4. HGS/Ceza, KABİS &amp; TCO</strong>
                 Filo cezalarını ve HGS geçişlerini plaka+tarih ile eşleştirip müşteriye faturalayabilir, KABİS CSV paketi ve Filo TCO kârlılık Excel/PDF raporu indirebilirsiniz.
               </div>
             </div>
@@ -304,29 +300,29 @@ export default function RentACarDashboardPage() {
       {/* Üst KPI Kartları (Veritabanı Kayıtlarından Canlı Hesaplanan) */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Kiralama Filosu / Kirada</div>
-          <div className="text-2xl font-bold text-white font-mono mt-1">
+          <div className="text-[11px] text-[var(--text-muted)]">Kiralama Filosu / Kirada</div>
+          <div className="text-2xl font-bold text-[var(--text)] font-mono mt-1">
             {rentalVehicles.length}{' '}
             <span className="text-sm text-[#1267E6]">/ {rentedCount} kirada</span>
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             {availableCount} müsait · {maintenanceCount} bakımda
           </div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Ortalama Doluluk &amp; Rezervasyon</div>
+          <div className="text-[11px] text-[var(--text-muted)]">Ortalama Doluluk &amp; Rezervasyon</div>
           <div className="text-2xl font-bold text-[#1267E6] font-mono mt-1">
             %{analytics?.summary?.avgUtilizationPct ?? 0}
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             {reservations.length} kayıt ({analytics?.summary?.completedCount || 0} tamamlandı)
           </div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Kiralama &amp; Ek Ücret Geliri</div>
-          <div className="text-2xl font-bold text-white font-mono mt-1">
+          <div className="text-[11px] text-[var(--text-muted)]">Kiralama &amp; Ek Ücret Geliri</div>
+          <div className="text-2xl font-bold text-[var(--text)] font-mono mt-1">
             ₺{Number(analytics?.summary?.totalRevenueTry || 0).toLocaleString('tr-TR')}
           </div>
           <div className="text-[11px] text-[#1267E6] mt-0.5">
@@ -336,25 +332,23 @@ export default function RentACarDashboardPage() {
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Eşleşen HGS &amp; Trafik Cezası</div>
-          <div className="text-2xl font-bold text-amber-300 font-mono mt-1">
+          <div className="text-[11px] text-[var(--text-muted)]">Eşleşen HGS &amp; Trafik Cezası</div>
+          <div className="text-2xl font-bold text-[var(--warn)] font-mono mt-1">
             {tollPasses.length + trafficPenalties.length}
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             {kabisRecords.length} KABİS bildirim hazırlık paketi
           </div>
         </div>
 
         <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-4">
-          <div className="text-[11px] text-zinc-400">Aktif Operasyon Uyarısı</div>
+          <div className="text-[11px] text-[var(--text-muted)]">Aktif Operasyon Uyarısı</div>
           <div
-            className={`text-2xl font-bold font-mono mt-1 ${
-              (alerts.totalAlerts || 0) > 0 ? 'text-rose-300' : 'text-[#1267E6]'
-            }`}
+            className={`text-2xl font-bold font-mono mt-1 ${ (alerts.totalAlerts || 0) > 0 ? 'text-[var(--bad)]' : 'text-[#1267E6]' }`}
           >
             {alerts.totalAlerts || 0}
           </div>
-          <div className="text-[11px] text-zinc-400 mt-0.5">
+          <div className="text-[11px] text-[var(--text-muted)] mt-0.5">
             Geciken iade, yaklaşan teslim &amp; depozito
           </div>
         </div>
@@ -407,11 +401,7 @@ export default function RentACarDashboardPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as RentTabId)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${
-                active
-                  ? 'bg-[#1267E6] text-white font-semibold'
-                  : 'text-zinc-400 hover:text-white hover:bg-[--muted-bg]'
-              }`}
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition cursor-pointer ${ active ? 'bg-[#1267E6] text-[var(--text)] font-semibold' : 'text-[var(--text-muted)] hover:text-[var(--brand)] hover:bg-[--muted-bg]' }`}
             >
               <Icon className="w-3.5 h-3.5" />
               {tab.label}
@@ -421,14 +411,14 @@ export default function RentACarDashboardPage() {
       </div>
 
       {errorMsg && !data && (
-        <div className="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-4 text-xs text-rose-200 flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-400" />
+        <div className="bg-[var(--bad-soft)] border border-[var(--bad-line)] rounded-2xl p-4 text-xs text-rose-200 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-[var(--bad)]" />
           {errorMsg}
         </div>
       )}
 
       {loading && !data ? (
-        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-12 text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
+        <div className="bg-[white]/90 border border-[--line] rounded-[20px] p-12 text-center text-xs text-[var(--text-muted)] flex items-center justify-center gap-2">
           <Activity className="w-4 h-4 text-[#1267E6] animate-pulse" />
           Araç kiralama veritabanı yükleniyor...
         </div>

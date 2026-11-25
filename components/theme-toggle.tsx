@@ -15,7 +15,7 @@ export function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <button className="relative size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-[--line] text-white/70 hover:text-primary transition-all flex items-center justify-center">
+            <button className="relative size-9 rounded-xl bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] border border-[--line] text-[var(--text)]/70 hover:text-primary transition-all flex items-center justify-center">
                 <Sun size={18} />
             </button>
         )
@@ -24,7 +24,7 @@ export function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="relative size-9 rounded-xl bg-white/5 hover:bg-white/10 border border-[--line] text-white/70 hover:text-primary transition-all flex items-center justify-center cursor-pointer"
+            className="relative size-9 rounded-xl bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] border border-[--line] text-[var(--text)]/70 hover:text-primary transition-all flex items-center justify-center cursor-pointer"
             title={theme === "dark" ? "Açık Tema" : "Koyu Tema"}
         >
             {theme === "dark" ? (

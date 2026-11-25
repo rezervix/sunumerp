@@ -39,12 +39,12 @@ export const TOUR_STATUS_LABELS: Record<TourStatus, string> = {
 }
 
 export const TOUR_STATUS_BADGES: Record<TourStatus, string> = {
-  DRAFT: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
-  ON_SALE: "bg-sky-500/15 text-sky-300 border-sky-500/35",
-  GUARANTEED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  FULL: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-  COMPLETED: "bg-purple-500/15 text-purple-300 border-purple-500/35",
-  CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/35",
+  DRAFT: "bg-[var(--muted-bg)] text-[var(--text-muted)] border border-[var(--line)]",
+  ON_SALE: "bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]",
+  GUARANTEED: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  FULL: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  COMPLETED: "bg-[var(--brand-soft-2)] text-[var(--navy)] border border-[var(--brand-line)]",
+  CANCELLED: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
 }
 
 export const TOUR_BOOKING_STATUS_LABELS: Record<string, string> = {
@@ -68,9 +68,9 @@ export const TOUR_BOARDING_STATUS_LABELS: Record<string, string> = {
 }
 
 export const TOUR_BOARDING_STATUS_BADGES: Record<string, string> = {
-  WAITING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  BOARDED: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  NO_SHOW: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+  WAITING: "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn)]/30",
+  BOARDED: "bg-[var(--ok-soft)] text-[var(--ok)] border border-[var(--ok)]/30",
+  NO_SHOW: "bg-[var(--bad-soft)] text-[var(--bad)] border border-[var(--bad)]/30",
 }
 
 export const TOUR_EXPENSE_CATEGORIES = [

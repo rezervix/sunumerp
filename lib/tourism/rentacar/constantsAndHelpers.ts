@@ -103,12 +103,12 @@ export const RENT_RESERVATION_STATUS_LABELS: Record<RentReservationStatus, strin
 }
 
 export const RENT_RESERVATION_STATUS_BADGES: Record<RentReservationStatus, string> = {
-  PENDING: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  PENDING: "bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]",
   CONFIRMED: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   ACTIVE: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  COMPLETED: "bg-zinc-500/15 text-zinc-300 border-white/[0.12]",
-  CANCELLED: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  NO_SHOW: "bg-purple-500/15 text-purple-300 border-purple-500/30",
+  COMPLETED: "bg-[var(--muted-bg)]/15 text-[var(--text-2)] border-[var(--line-soft)]",
+  CANCELLED: "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]",
+  NO_SHOW: "bg-[var(--brand-soft)]/15 text-[var(--brand)] border-[var(--brand-line)]",
 }
 
 export const RENT_CONTRACT_STATUSES = [
@@ -180,8 +180,8 @@ export const RENT_KABIS_STATUS_LABELS: Record<string, string> = {
 export const RENT_KABIS_STATUS_BADGES: Record<string, string> = {
   HAZIRLANDI: "bg-sky-500/15 text-sky-300 border-sky-500/30",
   GONDERILDI_MANUEL: "bg-[--ok-soft] text-[--ok] border border-[--ok]/20",
-  HATALI: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  EKSIK_VERI: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+  HATALI: "bg-[var(--bad-soft)] text-[var(--bad)] border-[var(--bad-line)]",
+  EKSIK_VERI: "bg-[var(--warn-soft)] text-[var(--warn)] border-[var(--warn-line)]",
 }
 
 export const RENT_INVOICE_TIMING_LABELS: Record<string, string> = {

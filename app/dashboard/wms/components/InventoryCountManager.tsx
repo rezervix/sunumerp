@@ -247,12 +247,7 @@ export function InventoryCountManager({
 
           {activeSession && (
             <span
-              className={`rounded-full px-3 py-0.5 text-xs font-semibold border ${activeSession.status === "RECONCILED"
-                  ? "bg-[--ok-soft] text-[--ok] border-[--ok-fill]/20"
-                  : activeSession.status === "PENDING_APPROVAL"
-                    ? "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/30"
-                    : "bg-[--page] text-[--text-muted] border-[--line]"
-                }`}
+              className={`rounded-full px-3 py-0.5 text-xs font-semibold border ${activeSession.status === "RECONCILED" ? "bg-[--ok-soft] text-[--ok] border-[--ok-fill]/20" : activeSession.status === "PENDING_APPROVAL" ? "bg-[--warn-soft] text-[--warn] border-[--warn-fill]/30" : "bg-[--page] text-[--text-muted] border-[--line]" }`}
             >
               {activeSession.status === "RECONCILED"
                 ? "Mahsuplaştı"
@@ -298,7 +293,7 @@ export function InventoryCountManager({
               size="sm"
               disabled={isReconciling}
               onClick={() => handleReconcile(true)}
-              className="h-9 px-4 text-xs bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-white font-semibold rounded-full gap-1.5 shadow-sm cursor-pointer"
+              className="h-9 px-4 text-xs bg-[--warn-fill] hover:bg-[--warn-fill]/90 text-[var(--text)] font-semibold rounded-full gap-1.5 shadow-sm cursor-pointer"
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
               <span>Yönetici Onayı ile Mahsuplaştır</span>
@@ -310,7 +305,7 @@ export function InventoryCountManager({
               size="sm"
               disabled={isReconciling}
               onClick={() => handleReconcile(false)}
-              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+              className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
             >
               {isReconciling ? (
                 <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -596,7 +591,7 @@ export function InventoryCountManager({
               size="sm"
               disabled={isCreatingSession}
               onClick={handleCreateSession}
-              className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full shadow-sm h-9 px-4 cursor-pointer disabled:opacity-50"
+              className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full shadow-sm h-9 px-4 cursor-pointer disabled:opacity-50"
             >
               {isCreatingSession ? "Başlatılıyor..." : "Sayımı Başlat"}
             </Button>

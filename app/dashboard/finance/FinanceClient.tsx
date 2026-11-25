@@ -338,11 +338,7 @@ export default function FinanceClient() {
             <span className={`text-3xl font-light tracking-tight tabular-nums ${netBalance >= 0 ? "text-[--ok]" : "text-[--bad]"}`}>
               <AnimatedNumber value={netBalance} prefix={netBalance >= 0 ? "+₺" : "-₺"} />
             </span>
-            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
-              netBalance >= 0 
-                ? "bg-[--ok-soft] text-[--ok] border-[--ok]/20" 
-                : "bg-[--bad-soft] text-[--bad] border-[--bad]/20"
-            }`}>
+            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${ netBalance >= 0 ? "bg-[--ok-soft] text-[--ok] border-[--ok]/20" : "bg-[--bad-soft] text-[--bad] border-[--bad]/20" }`}>
               Kasa
             </span>
           </div>
@@ -579,11 +575,7 @@ export default function FinanceClient() {
                   </td>
                   <td className="px-6 py-3.5 text-right font-mono">
                     <div className="flex items-center justify-end gap-3">
-                      <span className={`font-semibold tabular-nums ${
-                        record.type === "INCOME" ? "text-[--ok]" : 
-                        record.type === "EXPENSE" ? "text-[--bad]" :
-                        record.type === "DEBT" ? "text-[--text-2]" : "text-[--brand]"
-                      }`}>
+                      <span className={`font-semibold tabular-nums ${ record.type === "INCOME" ? "text-[--ok]" : record.type === "EXPENSE" ? "text-[--bad]" : record.type === "DEBT" ? "text-[--text-2]" : "text-[--brand]" }`}>
                         {record.type === "INCOME" || record.type === "EXPECTED_PAYMENT" ? "+" : "-"}₺{record.amount.toLocaleString("tr-TR")}
                       </span>
 
@@ -733,7 +725,7 @@ export default function FinanceClient() {
                 <button
                   onClick={handleCreate}
                   disabled={loading || !formData.description || formData.amount <= 0}
-                  className="px-5 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-5 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:from-[--brand-hover] hover:to-[--brand] rounded-full shadow-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {loading ? "Kaydediliyor..." : "Kaydet"}
                 </button>

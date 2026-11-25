@@ -253,26 +253,26 @@ export function ProductionConsolidatedWorkspace() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-5 rounded-2xl bg-[--page] border border-[--line] backdrop-blur-md">
         <div>
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <div className="p-2 rounded-xl bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]">
               <TrendingUp className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">
+            <h1 className="text-xl font-bold text-[var(--text)] tracking-tight">
               Konsolide Üretim Yönetim Merkezi & Raporlama
             </h1>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             Satış, MRP, İş Emri, Kapasite, Kalite Kontrol ve Bakım modülleri arasında uçtan uca senkronizasyon, OTD ve anlık bildirimler.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-[--line]">
-            <span className="text-xs text-zinc-400 pl-2 pr-1">Rol Görünümü:</span>
+            <span className="text-xs text-[var(--text-muted)] pl-2 pr-1">Rol Görünümü:</span>
             <Select value={roleView} onValueChange={(val: any) => setRoleView(val)}>
-              <SelectTrigger className="h-8 border-none bg-transparent text-xs font-semibold text-purple-300">
+              <SelectTrigger className="h-8 border-none bg-transparent text-xs font-semibold text-[var(--brand)]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+              <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                 <SelectItem value="FABRIKA_MUDURU">Fabrika Müdürü (Finansal & Genel)</SelectItem>
                 <SelectItem value="PLANLAMA_MUDURU">Planlama Müdürü (MRP & Kapasite)</SelectItem>
                 <SelectItem value="ATOLYE_SEFI">Atölye Şefi (İş Emirleri & İcra)</SelectItem>
@@ -286,7 +286,7 @@ export function ProductionConsolidatedWorkspace() {
             size="sm"
             onClick={fetchDashboardData}
             disabled={loading}
-            className="border-[--line] hover:bg-white/5 text-zinc-300 h-9"
+            className="border-[--line] hover:bg-[var(--muted-bg)] text-[var(--text-2)] h-9"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
             Yenile
@@ -307,84 +307,84 @@ export function ProductionConsolidatedWorkspace() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {/* OTD */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Zamanında Teslim (OTD)</span>
             <CheckCircle2 className="w-4 h-4 text-[--brand]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             %{dashboardData?.kpis?.onTimeDeliveryPct ?? "95.5"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             {dashboardData?.counts?.completedWorkOrders ?? 0} tamamlanan iş emri
           </div>
         </div>
 
         {/* Schedule Adherence */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Çizelge Uyumu</span>
             <Clock className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             %{dashboardData?.kpis?.scheduleAdherencePct ?? "92.0"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Planlanan vs Fiili üretim
           </div>
         </div>
 
         {/* OEE */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Fabrika OEE</span>
-            <Activity className="w-4 h-4 text-purple-400" />
+            <Activity className="w-4 h-4 text-[var(--brand)]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             %{dashboardData?.kpis?.overallOeePct ?? "84.2"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             {dashboardData?.counts?.totalMachines ?? 0} aktif tezgah parkı
           </div>
         </div>
 
         {/* Ret / Fire */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Ret / Fire Oranı</span>
             <AlertOctagon className="w-4 h-4 text-red-400" />
           </div>
           <div className="text-2xl font-bold text-red-400">
             %{dashboardData?.kpis?.scrapRatePct ?? "1.8"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             {dashboardData?.counts?.rejectedInspections ?? 0} ret muayenesi
           </div>
         </div>
 
         {/* Kapasite Doluluk */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Kapasite Doluluk</span>
-            <Layers className="w-4 h-4 text-cyan-400" />
+            <Layers className="w-4 h-4 text-[var(--brand)]" />
           </div>
-          <div className="text-2xl font-bold text-white">
+          <div className="text-2xl font-bold text-[var(--text)]">
             %{dashboardData?.kpis?.capacityUtilizationPct ?? "78.4"}
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Haftalık çizelgelenen mesai
           </div>
         </div>
 
         {/* Kritik Malzeme Açığı */}
         <div className="p-4 rounded-xl bg-[--page] border border-[--line]">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-1">
+          <div className="flex items-center justify-between text-xs text-[var(--text-muted)] mb-1">
             <span>Kritik Stok Açığı</span>
-            <Package className="w-4 h-4 text-amber-400" />
+            <Package className="w-4 h-4 text-[var(--warn)]" />
           </div>
-          <div className="text-2xl font-bold text-amber-400">
-            {dashboardData?.kpis?.lowStockItemCount ?? 0} <span className="text-xs text-zinc-400 font-normal">kalem</span>
+          <div className="text-2xl font-bold text-[var(--warn)]">
+            {dashboardData?.kpis?.lowStockItemCount ?? 0} <span className="text-xs text-[var(--text-muted)] font-normal">kalem</span>
           </div>
-          <div className="text-[11px] text-zinc-500 mt-1">
+          <div className="text-[11px] text-[var(--text-muted)] mt-1">
             Asgari stok altındaki hammadde
           </div>
         </div>
@@ -394,11 +394,7 @@ export function ProductionConsolidatedWorkspace() {
       <div className="flex border-b border-[--line] overflow-x-auto gap-2">
         <button
           onClick={() => setActiveTab("dashboard")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "dashboard"
-              ? "border-purple-500 text-purple-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "dashboard" ? "border-[var(--brand-line)] text-[var(--brand)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <BarChart2 className="w-4 h-4" />
           Genel Dashboard & Süreç Durumu
@@ -406,11 +402,7 @@ export function ProductionConsolidatedWorkspace() {
 
         <button
           onClick={() => setActiveTab("reports")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "reports"
-              ? "border-purple-500 text-purple-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "reports" ? "border-[var(--brand-line)] text-[var(--brand)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <FileText className="w-4 h-4" />
           Rapor Seti & Excel / CSV
@@ -418,11 +410,7 @@ export function ProductionConsolidatedWorkspace() {
 
         <button
           onClick={() => setActiveTab("notifications")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "notifications"
-              ? "border-purple-500 text-purple-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "notifications" ? "border-[var(--brand-line)] text-[var(--brand)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <Bell className="w-4 h-4" />
           Bildirim Merkezi & Kurallar ({notificationRules.length})
@@ -430,11 +418,7 @@ export function ProductionConsolidatedWorkspace() {
 
         <button
           onClick={() => setActiveTab("audit_trail")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "audit_trail"
-              ? "border-purple-500 text-purple-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "audit_trail" ? "border-[var(--brand-line)] text-[var(--brand)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <History className="w-4 h-4" />
           Denetim İzi (Audit Trail)
@@ -442,11 +426,7 @@ export function ProductionConsolidatedWorkspace() {
 
         <button
           onClick={() => setActiveTab("e2e_scenarios")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${
-            activeTab === "e2e_scenarios"
-              ? "border-purple-500 text-purple-400"
-              : "border-transparent text-zinc-400 hover:text-zinc-200"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap ${ activeTab === "e2e_scenarios" ? "border-[var(--brand-line)] text-[var(--brand)]" : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-2)]" }`}
         >
           <Play className="w-4 h-4 text-[--brand]" />
           Uçtan Uca Entegrasyon Senaryoları
@@ -459,37 +439,37 @@ export function ProductionConsolidatedWorkspace() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Süreç Entegrasyon Akışı */}
             <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-4">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Layers className="w-4 h-4 text-purple-400" />
+              <h3 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2">
+                <Layers className="w-4 h-4 text-[var(--brand)]" />
                 Uçtan Uca Üretim Akış Durumu
               </h3>
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
-                  <span className="text-zinc-400">Aktif İş Emirleri:</span>
-                  <div className="text-lg font-bold text-white mt-1">
+                <div className="p-3 rounded-lg bg-[--page] border border-[var(--line-soft)]">
+                  <span className="text-[var(--text-muted)]">Aktif İş Emirleri:</span>
+                  <div className="text-lg font-bold text-[var(--text)] mt-1">
                     {dashboardData?.counts?.activeWorkOrders ?? 0} Adet
                   </div>
-                  <span className="text-[11px] text-cyan-400">Atölyede İcrada</span>
+                  <span className="text-[11px] text-[var(--brand)]">Atölyede İcrada</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
-                  <span className="text-zinc-400">Geciken İşler:</span>
+                <div className="p-3 rounded-lg bg-[--page] border border-[var(--line-soft)]">
+                  <span className="text-[var(--text-muted)]">Geciken İşler:</span>
                   <div className="text-lg font-bold text-red-400 mt-1">
                     {dashboardData?.counts?.delayedWorkOrders ?? 0} Adet
                   </div>
                   <span className="text-[11px] text-red-400/80">Termin Aşımı</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
-                  <span className="text-zinc-400">Arızalı Ekipman:</span>
-                  <div className="text-lg font-bold text-amber-400 mt-1">
+                <div className="p-3 rounded-lg bg-[--page] border border-[var(--line-soft)]">
+                  <span className="text-[var(--text-muted)]">Arızalı Ekipman:</span>
+                  <div className="text-lg font-bold text-[var(--warn)] mt-1">
                     {dashboardData?.counts?.downMachines ?? 0} Tezgah
                   </div>
-                  <span className="text-[11px] text-amber-400/80">Duruş Halinde</span>
+                  <span className="text-[11px] text-[var(--warn)]/80">Duruş Halinde</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-[--page] border border-white/[0.05]">
-                  <span className="text-zinc-400">Muayene Sayısı:</span>
+                <div className="p-3 rounded-lg bg-[--page] border border-[var(--line-soft)]">
+                  <span className="text-[var(--text-muted)]">Muayene Sayısı:</span>
                   <div className="text-lg font-bold text-[--brand] mt-1">
                     {dashboardData?.counts?.totalInspections ?? 0} Muayene
                   </div>
@@ -497,38 +477,38 @@ export function ProductionConsolidatedWorkspace() {
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-lg bg-purple-500/[0.05] border border-purple-500/20 text-xs text-purple-300 flex items-center justify-between">
-                <span>Rol Bakış Açısı: <strong className="text-white">{roleView}</strong></span>
-                <span className="text-[11px] text-zinc-400">Modüller senkronize çalışıyor</span>
+              <div className="p-3.5 rounded-lg bg-[var(--brand-soft)]/[0.05] border border-[var(--brand-line)] text-xs text-[var(--brand)] flex items-center justify-between">
+                <span>Rol Bakış Açısı: <strong className="text-[var(--text)]">{roleView}</strong></span>
+                <span className="text-[11px] text-[var(--text-muted)]">Modüller senkronize çalışıyor</span>
               </div>
             </div>
 
             {/* Son Olaylar ve Alarmlar */}
             <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Bell className="w-4 h-4 text-amber-400" />
+              <h3 className="text-sm font-semibold text-[var(--text)] flex items-center gap-2">
+                <Bell className="w-4 h-4 text-[var(--warn)]" />
                 Son Üretim Alarmları ve Bildirimler
               </h3>
               <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
                 {(!dashboardData?.recentAlerts || dashboardData.recentAlerts.length === 0) ? (
-                  <div className="text-center py-8 text-zinc-500 text-xs">
+                  <div className="text-center py-8 text-[var(--text-muted)] text-xs">
                     Aktif kritik ikaz bulunmuyor. Sistem olağan seyrinde.
                   </div>
                 ) : (
                   dashboardData.recentAlerts.map((n: any) => (
                     <div
                       key={n.id}
-                      className="p-3 rounded-lg border border-white/[0.05] bg-[--page] flex items-start gap-2.5 text-xs"
+                      className="p-3 rounded-lg border border-[var(--line-soft)] bg-[--page] flex items-start gap-2.5 text-xs"
                     >
                       {n.type === "error" ? (
                         <AlertOctagon className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                       ) : (
-                        <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                        <AlertTriangle className="w-4 h-4 text-[var(--warn)] shrink-0 mt-0.5" />
                       )}
                       <div>
-                        <div className="font-semibold text-zinc-200">{n.title}</div>
-                        <div className="text-zinc-400 mt-0.5">{n.message}</div>
-                        <div className="text-[10px] text-zinc-500 mt-1">
+                        <div className="font-semibold text-[var(--text-2)]">{n.title}</div>
+                        <div className="text-[var(--text-muted)] mt-0.5">{n.message}</div>
+                        <div className="text-[10px] text-[var(--text-muted)] mt-1">
                           {new Date(n.createdAt).toLocaleString("tr-TR")}
                         </div>
                       </div>
@@ -547,10 +527,10 @@ export function ProductionConsolidatedWorkspace() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-[--page] border border-[--line]">
             <div className="flex items-center gap-3">
               <Select value={selectedReport} onValueChange={setSelectedReport}>
-                <SelectTrigger className="w-[260px] bg-white border-[--line] text-white text-xs">
+                <SelectTrigger className="w-[260px] bg-white border-[--line] text-[var(--text)] text-xs">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                   <SelectItem value="work_order_cost">İş Emri Maliyet Analizi Raporu</SelectItem>
                   <SelectItem value="material_variance">Malzeme Tüketim & Sapma Raporu</SelectItem>
                   <SelectItem value="machine_efficiency">Makine Verimlilik & OEE Raporu</SelectItem>
@@ -562,7 +542,7 @@ export function ProductionConsolidatedWorkspace() {
                 size="sm"
                 onClick={() => fetchReportData(selectedReport)}
                 disabled={reportLoading}
-                className="border-[--line] text-zinc-300"
+                className="border-[--line] text-[var(--text-2)]"
               >
                 <RefreshCw className={`w-3 h-3 mr-1 ${reportLoading ? "animate-spin" : ""}`} />
                 Yenile
@@ -585,47 +565,47 @@ export function ProductionConsolidatedWorkspace() {
                 <TableRow className="border-[--line]">
                   {selectedReport === "work_order_cost" && (
                     <>
-                      <TableHead className="text-zinc-400">İş Emri No</TableHead>
-                      <TableHead className="text-zinc-400">Planlanan Maliyet</TableHead>
-                      <TableHead className="text-zinc-400">Fiili Maliyet</TableHead>
-                      <TableHead className="text-zinc-400">Maliyet Farkı</TableHead>
-                      <TableHead className="text-zinc-400">Sapma (%)</TableHead>
-                      <TableHead className="text-zinc-400">Malzeme Farkı</TableHead>
-                      <TableHead className="text-zinc-400">İşçilik Farkı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">İş Emri No</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Planlanan Maliyet</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Fiili Maliyet</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Maliyet Farkı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Sapma (%)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Malzeme Farkı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">İşçilik Farkı</TableHead>
                     </>
                   )}
                   {selectedReport === "material_variance" && (
                     <>
-                      <TableHead className="text-zinc-400">Malzeme Kodu</TableHead>
-                      <TableHead className="text-zinc-400">Malzeme Adı</TableHead>
-                      <TableHead className="text-zinc-400">Planlanan Miktar</TableHead>
-                      <TableHead className="text-zinc-400">Fiili Tüketim</TableHead>
-                      <TableHead className="text-zinc-400">Fark Miktar</TableHead>
-                      <TableHead className="text-zinc-400">Sapma (%)</TableHead>
-                      <TableHead className="text-zinc-400">Maliyet Etkisi</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Malzeme Kodu</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Malzeme Adı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Planlanan Miktar</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Fiili Tüketim</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Fark Miktar</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Sapma (%)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Maliyet Etkisi</TableHead>
                     </>
                   )}
                   {selectedReport === "machine_efficiency" && (
                     <>
-                      <TableHead className="text-zinc-400">Makine Kodu</TableHead>
-                      <TableHead className="text-zinc-400">Makine Adı</TableHead>
-                      <TableHead className="text-zinc-400">Kritiklik</TableHead>
-                      <TableHead className="text-zinc-400">Çalışma Saati</TableHead>
-                      <TableHead className="text-zinc-400">Duruş (Dk)</TableHead>
-                      <TableHead className="text-zinc-400">MTBF (Saat)</TableHead>
-                      <TableHead className="text-zinc-400">MTTR (Dk)</TableHead>
-                      <TableHead className="text-zinc-400">OEE (%)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Makine Kodu</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Makine Adı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Kritiklik</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Çalışma Saati</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Duruş (Dk)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">MTBF (Saat)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">MTTR (Dk)</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">OEE (%)</TableHead>
                     </>
                   )}
                   {selectedReport === "maintenance_cost" && (
                     <>
-                      <TableHead className="text-zinc-400">Bakım İş Emri</TableHead>
-                      <TableHead className="text-zinc-400">Makine</TableHead>
-                      <TableHead className="text-zinc-400">Tür</TableHead>
-                      <TableHead className="text-zinc-400">Duruş Süresi</TableHead>
-                      <TableHead className="text-zinc-400">Yedek Parça Tutarı</TableHead>
-                      <TableHead className="text-zinc-400">İşçilik Tutarı</TableHead>
-                      <TableHead className="text-zinc-400">Toplam Tutar</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Bakım İş Emri</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Makine</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Tür</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Duruş Süresi</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Yedek Parça Tutarı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">İşçilik Tutarı</TableHead>
+                      <TableHead className="text-[var(--text-muted)]">Toplam Tutar</TableHead>
                     </>
                   )}
                 </TableRow>
@@ -633,64 +613,64 @@ export function ProductionConsolidatedWorkspace() {
               <TableBody>
                 {reportData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={7} className="text-center py-8 text-[var(--text-muted)]">
                       Rapor için uygun kayıt bulunamadı.
                     </TableCell>
                   </TableRow>
                 ) : (
                   reportData.map((row: any, idx: number) => (
-                    <TableRow key={idx} className="border-white/[0.05] hover:bg-[--page]">
+                    <TableRow key={idx} className="border-[var(--line-soft)] hover:bg-[--page]">
                       {selectedReport === "work_order_cost" && (
                         <>
-                          <TableCell className="font-mono text-xs font-semibold text-purple-400">{row.workOrderNumber}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">₺{(row.totalPlannedCost || 0).toLocaleString("tr-TR")}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-200">₺{(row.totalActualCost || 0).toLocaleString("tr-TR")}</TableCell>
+                          <TableCell className="font-mono text-xs font-semibold text-[var(--brand)]">{row.workOrderNumber}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">₺{(row.totalPlannedCost || 0).toLocaleString("tr-TR")}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">₺{(row.totalActualCost || 0).toLocaleString("tr-TR")}</TableCell>
                           <TableCell className={`font-mono text-xs font-bold ${row.varianceAmount > 0 ? "text-red-400" : "text-[--brand]"}`}>
                             {row.varianceAmount > 0 ? `+₺${row.varianceAmount}` : `₺${row.varianceAmount}`}
                           </TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">%{row.variancePercentage}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-400">₺{row.materialVariance}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-400">₺{row.laborVariance}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">%{row.variancePercentage}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-muted)]">₺{row.materialVariance}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-muted)]">₺{row.laborVariance}</TableCell>
                         </>
                       )}
                       {selectedReport === "material_variance" && (
                         <>
-                          <TableCell className="font-mono text-xs text-amber-400">{row.itemCode}</TableCell>
-                          <TableCell className="text-sm text-zinc-200">{row.itemName}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-400">{row.plannedQuantity} {row.unit}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-200 font-semibold">{row.actualQuantity} {row.unit}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--warn)]">{row.itemCode}</TableCell>
+                          <TableCell className="text-sm text-[var(--text-2)]">{row.itemName}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-muted)]">{row.plannedQuantity} {row.unit}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)] font-semibold">{row.actualQuantity} {row.unit}</TableCell>
                           <TableCell className={`font-mono text-xs ${row.varianceQuantity > 0 ? "text-red-400" : "text-[--brand]"}`}>
                             {row.varianceQuantity > 0 ? `+${row.varianceQuantity}` : row.varianceQuantity}
                           </TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">%{row.variancePercentage}</TableCell>
-                          <TableCell className="font-mono text-xs font-semibold text-zinc-200">₺{row.varianceCost}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">%{row.variancePercentage}</TableCell>
+                          <TableCell className="font-mono text-xs font-semibold text-[var(--text-2)]">₺{row.varianceCost}</TableCell>
                         </>
                       )}
                       {selectedReport === "machine_efficiency" && (
                         <>
-                          <TableCell className="font-mono text-xs text-cyan-400">{row.machineCode}</TableCell>
-                          <TableCell className="text-sm text-white font-medium">{row.machineName}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--brand)]">{row.machineCode}</TableCell>
+                          <TableCell className="text-sm text-[var(--text)] font-medium">{row.machineName}</TableCell>
                           <TableCell>
-                            <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-[--line] font-bold">
+                            <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)] border border-[--line] font-bold">
                               {row.criticality}
                             </span>
                           </TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">{row.operatingHours} saat</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">{row.operatingHours} saat</TableCell>
                           <TableCell className="font-mono text-xs text-red-400">{row.totalDowntimeMinutes} dk</TableCell>
                           <TableCell className="font-mono text-xs text-blue-400">{row.mtbfHours} saat</TableCell>
-                          <TableCell className="font-mono text-xs text-amber-400">{row.mttrMinutes} dk</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--warn)]">{row.mttrMinutes} dk</TableCell>
                           <TableCell className="font-mono text-xs font-bold text-[--brand]">%{row.oeePct}</TableCell>
                         </>
                       )}
                       {selectedReport === "maintenance_cost" && (
                         <>
-                          <TableCell className="font-mono text-xs text-purple-400">{row.workOrderNumber}</TableCell>
-                          <TableCell className="text-sm text-white">{row.machineName}</TableCell>
-                          <TableCell className="text-xs text-zinc-400">{row.type}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">{row.downtimeMinutes} dk</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">₺{(row.sparePartsCost || 0).toLocaleString("tr-TR")}</TableCell>
-                          <TableCell className="font-mono text-xs text-zinc-300">₺{(row.laborCost || 0).toLocaleString("tr-TR")}</TableCell>
-                          <TableCell className="font-mono text-xs font-bold text-white">₺{(row.totalCost || 0).toLocaleString("tr-TR")}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--brand)]">{row.workOrderNumber}</TableCell>
+                          <TableCell className="text-sm text-[var(--text)]">{row.machineName}</TableCell>
+                          <TableCell className="text-xs text-[var(--text-muted)]">{row.type}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">{row.downtimeMinutes} dk</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">₺{(row.sparePartsCost || 0).toLocaleString("tr-TR")}</TableCell>
+                          <TableCell className="font-mono text-xs text-[var(--text-2)]">₺{(row.laborCost || 0).toLocaleString("tr-TR")}</TableCell>
+                          <TableCell className="font-mono text-xs font-bold text-[var(--text)]">₺{(row.totalCost || 0).toLocaleString("tr-TR")}</TableCell>
                         </>
                       )}
                     </TableRow>
@@ -707,15 +687,15 @@ export function ProductionConsolidatedWorkspace() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-sm font-semibold text-white">Olay Bazlı Bildirim Kuralları</h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <h3 className="text-sm font-semibold text-[var(--text)]">Olay Bazlı Bildirim Kuralları</h3>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">
                 Kritik üretim gecikmeleri, kalite retleri, kalibrasyon ve arıza durumlarında anlık bildirim tetikleyicileri.
               </p>
             </div>
             <Button
               size="sm"
               onClick={() => setIsRuleModalOpen(true)}
-              className="bg-purple-600 hover:bg-purple-500 text-white"
+              className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium"
             >
               <Plus className="w-3.5 h-3.5 mr-1.5" />
               Yeni Kural Tanımla
@@ -726,48 +706,42 @@ export function ProductionConsolidatedWorkspace() {
             <Table>
               <TableHeader className="bg-white">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400">Kural Adı</TableHead>
-                  <TableHead className="text-zinc-400">Olay Türü</TableHead>
-                  <TableHead className="text-zinc-400">Önem Derecesi</TableHead>
-                  <TableHead className="text-zinc-400">Kanal</TableHead>
-                  <TableHead className="text-zinc-400">Hedef Roller</TableHead>
-                  <TableHead className="text-zinc-400">Durum</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Kural Adı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Olay Türü</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Önem Derecesi</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Kanal</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Hedef Roller</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Durum</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {notificationRules.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-[var(--text-muted)]">
                       Henüz bildirim kuralı tanımlanmamış.
                     </TableCell>
                   </TableRow>
                 ) : (
                   notificationRules.map((rule) => (
-                    <TableRow key={rule.id} className="border-white/[0.05] hover:bg-[--page]">
-                      <TableCell className="text-sm font-semibold text-white">{rule.name}</TableCell>
-                      <TableCell className="font-mono text-xs text-purple-300">{rule.eventType}</TableCell>
+                    <TableRow key={rule.id} className="border-[var(--line-soft)] hover:bg-[--page]">
+                      <TableCell className="text-sm font-semibold text-[var(--text)]">{rule.name}</TableCell>
+                      <TableCell className="font-mono text-xs text-[var(--brand)]">{rule.eventType}</TableCell>
                       <TableCell>
                         <span
-                          className={`px-2 py-0.5 text-xs rounded-full font-bold ${
-                            rule.severity === "CRITICAL"
-                              ? "bg-red-500/20 text-red-400 border border-red-500/30"
-                              : rule.severity === "WARNING"
-                              ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                              : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                          }`}
+                          className={`px-2 py-0.5 text-xs rounded-full font-bold ${ rule.severity === "CRITICAL" ? "bg-[var(--bad-soft)] text-red-400 border border-[var(--bad-line)]" : rule.severity === "WARNING" ? "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]" : "bg-blue-500/20 text-blue-400 border border-blue-500/30" }`}
                         >
                           {rule.severity}
                         </span>
                       </TableCell>
-                      <TableCell className="text-xs text-zinc-300">{rule.channel}</TableCell>
-                      <TableCell className="text-xs text-zinc-400">
+                      <TableCell className="text-xs text-[var(--text-2)]">{rule.channel}</TableCell>
+                      <TableCell className="text-xs text-[var(--text-muted)]">
                         {rule.targetRoles?.join(", ") || "Tüm Roller"}
                       </TableCell>
                       <TableCell>
                         {rule.isActive ? (
                           <span className="text-xs text-[--brand] font-medium">Aktif</span>
                         ) : (
-                          <span className="text-xs text-zinc-500">Pasif</span>
+                          <span className="text-xs text-[var(--text-muted)]">Pasif</span>
                         )}
                       </TableCell>
                     </TableRow>
@@ -784,19 +758,19 @@ export function ProductionConsolidatedWorkspace() {
         <div className="space-y-4">
           <div className="flex justify-between items-center gap-3">
             <div className="relative w-72">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <Input
                 placeholder="İşlem, kaynak veya detay ara..."
                 value={auditSearch}
                 onChange={(e) => setAuditSearch(e.target.value)}
-                className="pl-9 bg-[--page] border-[--line] text-white placeholder:text-zinc-500"
+                className="pl-9 bg-[--page] border-[--line] text-[var(--text)] placeholder:text-[var(--text-muted)]"
               />
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={fetchAuditLogs}
-              className="border-[--line] text-zinc-300"
+              className="border-[--line] text-[var(--text-2)]"
             >
               <RefreshCw className="w-3.5 h-3.5 mr-1" />
               Yenile
@@ -807,38 +781,38 @@ export function ProductionConsolidatedWorkspace() {
             <Table>
               <TableHeader className="bg-white">
                 <TableRow className="border-[--line]">
-                  <TableHead className="text-zinc-400">Tarih</TableHead>
-                  <TableHead className="text-zinc-400">Kullanıcı</TableHead>
-                  <TableHead className="text-zinc-400">Kaynak (Resource)</TableHead>
-                  <TableHead className="text-zinc-400">İşlem (Action)</TableHead>
-                  <TableHead className="text-zinc-400">Detaylar</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Tarih</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Kullanıcı</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Kaynak (Resource)</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">İşlem (Action)</TableHead>
+                  <TableHead className="text-[var(--text-muted)]">Detaylar</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {auditLogs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-zinc-500">
+                    <TableCell colSpan={5} className="text-center py-8 text-[var(--text-muted)]">
                       Üretim modüllerine ait denetim logu bulunamadı.
                     </TableCell>
                   </TableRow>
                 ) : (
                   auditLogs.map((log) => (
-                    <TableRow key={log.id} className="border-white/[0.05] hover:bg-[--page]">
-                      <TableCell className="font-mono text-xs text-zinc-400">
+                    <TableRow key={log.id} className="border-[var(--line-soft)] hover:bg-[--page]">
+                      <TableCell className="font-mono text-xs text-[var(--text-muted)]">
                         {new Date(log.createdAt).toLocaleString("tr-TR")}
                       </TableCell>
-                      <TableCell className="text-xs text-white font-medium">
+                      <TableCell className="text-xs text-[var(--text)] font-medium">
                         {log.user?.fullName || log.userId}
                       </TableCell>
-                      <TableCell className="font-mono text-xs text-purple-400 font-semibold">
+                      <TableCell className="font-mono text-xs text-[var(--brand)] font-semibold">
                         {log.resource}
                       </TableCell>
                       <TableCell>
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-white/5 border border-[--line] text-zinc-200">
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-[var(--muted-bg)] border border-[--line] text-[var(--text-2)]">
                           {log.action}
                         </span>
                       </TableCell>
-                      <TableCell className="text-xs text-zinc-300 max-w-md truncate">
+                      <TableCell className="text-xs text-[var(--text-2)] max-w-md truncate">
                         {log.details || "—"}
                       </TableCell>
                     </TableRow>
@@ -857,21 +831,21 @@ export function ProductionConsolidatedWorkspace() {
             {/* SENARYO A */}
             <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-[var(--brand-soft)] text-[var(--brand)] border border-[var(--brand-line)]">
                   Senaryo A
                 </span>
-                <Sparkles className="w-4 h-4 text-purple-400" />
+                <Sparkles className="w-4 h-4 text-[var(--brand)]" />
               </div>
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-[var(--text)]">
                 Siparişten Sevkiyata ve Fiili Maliyete Uçtan Uca Akış
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 Satış Siparişi → MPS / MRP İhtiyaç Patlatımı → Eksik Hammadde Satınalma Talebi → İş Emri Reçete/Rota Snapshot'ı → Atölye İcrası → Kalite AQL Muayenesi & Kabulü → Mamul Girişi & FIFO CostLayer → Sevkiyat ve Fiili Maliyet Varyansı.
               </p>
               <Button
                 onClick={() => handleRunScenario("A")}
                 disabled={scenarioRunning}
-                className="w-full bg-purple-600 hover:bg-purple-500 text-white mt-2"
+                className="w-full bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium mt-2"
               >
                 <Play className="w-3.5 h-3.5 mr-1.5" />
                 Senaryo A'yı Başlat ve Simüle Et
@@ -881,15 +855,15 @@ export function ProductionConsolidatedWorkspace() {
             {/* SENARYO B */}
             <div className="p-5 rounded-xl border border-[--line] bg-white/[0.01] space-y-3">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span className="px-2.5 py-0.5 text-xs rounded-full font-bold bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]">
                   Senaryo B
                 </span>
-                <Wrench className="w-4 h-4 text-amber-400" />
+                <Wrench className="w-4 h-4 text-[var(--warn)]" />
               </div>
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-[var(--text)]">
                 Sensör Arızası → Bakım → Kapasite Çakışması ve İyileşme
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 Kestirimci Bakım Titreşim Telemetrisi Aşımı → Otomatik Acil Arıza İş Emri → Makinenin DOWN Yapılması → Kapasite Çizelgesinde Çakışma Alarmı → Onarım İcrası (Duruş ve Yedek Parça Tüketimi) → Makinenin ACTIVE Yapılması ve OEE/MTBF/MTTR Güncellenmesi.
               </p>
               <Button
@@ -917,40 +891,40 @@ export function ProductionConsolidatedWorkspace() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 {lastScenarioResult.scenario === "A" && (
                   <>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Üretilen İş Emri:</span>
-                      <div className="font-mono font-bold text-white mt-0.5">#{lastScenarioResult.workOrderNumber}</div>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Üretilen İş Emri:</span>
+                      <div className="font-mono font-bold text-[var(--text)] mt-0.5">#{lastScenarioResult.workOrderNumber}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Satınalma Talebi:</span>
-                      <div className="font-mono font-bold text-white mt-0.5">#{lastScenarioResult.purchaseRequisitionNumber}</div>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Satınalma Talebi:</span>
+                      <div className="font-mono font-bold text-[var(--text)] mt-0.5">#{lastScenarioResult.purchaseRequisitionNumber}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Kalite Muayenesi:</span>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Kalite Muayenesi:</span>
                       <div className="font-mono font-bold text-[--brand] mt-0.5">KABUL (#{lastScenarioResult.inspectionNumber})</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Zamanında Teslim:</span>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Zamanında Teslim:</span>
                       <div className="font-mono font-bold text-[--brand] mt-0.5">%{lastScenarioResult.otdPercentage} OTD</div>
                     </div>
                   </>
                 )}
                 {lastScenarioResult.scenario === "B" && (
                   <>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">İlgili Ekipman:</span>
-                      <div className="font-mono font-bold text-white mt-0.5">{lastScenarioResult.machineCode}</div>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">İlgili Ekipman:</span>
+                      <div className="font-mono font-bold text-[var(--text)] mt-0.5">{lastScenarioResult.machineCode}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Bakım İş Emri:</span>
-                      <div className="font-mono font-bold text-white mt-0.5">#{lastScenarioResult.maintOrderNumber}</div>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Bakım İş Emri:</span>
+                      <div className="font-mono font-bold text-[var(--text)] mt-0.5">#{lastScenarioResult.maintOrderNumber}</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Duruş Süresi:</span>
-                      <div className="font-mono font-bold text-amber-400 mt-0.5">{lastScenarioResult.downtimeMinutes} Dakika</div>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Duruş Süresi:</span>
+                      <div className="font-mono font-bold text-[var(--warn)] mt-0.5">{lastScenarioResult.downtimeMinutes} Dakika</div>
                     </div>
-                    <div className="p-3 rounded-lg bg-black/30 border border-white/5">
-                      <span className="text-zinc-400">Yeni Makine Durumu:</span>
+                    <div className="p-3 rounded-lg bg-black/30 border border-[var(--line-soft)]">
+                      <span className="text-[var(--text-muted)]">Yeni Makine Durumu:</span>
                       <div className="font-mono font-bold text-[--brand] mt-0.5">{lastScenarioResult.finalMachineStatus}</div>
                     </div>
                   </>
@@ -963,39 +937,39 @@ export function ProductionConsolidatedWorkspace() {
 
       {/* MODAL: YENİ BİLDİRİM KURALI */}
       <Dialog open={isRuleModalOpen} onOpenChange={setIsRuleModalOpen}>
-        <DialogContent className="bg-zinc-950 border border-[--line] text-white max-w-md">
+        <DialogContent className="bg-[var(--bg)] border border-[--line] text-[var(--text)] max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5 text-purple-400" />
+              <Bell className="w-5 h-5 text-[var(--brand)]" />
               Yeni Bildirim Kuralı Oluştur
             </DialogTitle>
-            <DialogDescription className="text-xs text-zinc-400">
+            <DialogDescription className="text-xs text-[var(--text-muted)]">
               Üretim olaylarına duyarlı otomatik uyarı mekanizması.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSaveRule} className="space-y-3.5 mt-2">
             <div>
-              <Label className="text-xs text-zinc-300">Kural Adı *</Label>
+              <Label className="text-xs text-[var(--text-2)]">Kural Adı *</Label>
               <Input
                 placeholder="Örn: 24 Saati Aşan İş Emri Gecikme Uyarısı"
                 value={ruleForm.name}
                 onChange={(e) => setRuleForm({ ...ruleForm, name: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-zinc-300">Olay Türü</Label>
+                <Label className="text-xs text-[var(--text-2)]">Olay Türü</Label>
                 <Select
                   value={ruleForm.eventType}
                   onValueChange={(val) => setRuleForm({ ...ruleForm, eventType: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="WORK_ORDER_DELAY">İş Emri Gecikmesi</SelectItem>
                     <SelectItem value="CAPACITY_OVERLOAD">Kapasite Aşımı</SelectItem>
                     <SelectItem value="QUALITY_REJECTION">Kalite Muayene Ret / NCR</SelectItem>
@@ -1007,15 +981,15 @@ export function ProductionConsolidatedWorkspace() {
               </div>
 
               <div>
-                <Label className="text-xs text-zinc-300">Önem Derecesi</Label>
+                <Label className="text-xs text-[var(--text-2)]">Önem Derecesi</Label>
                 <Select
                   value={ruleForm.severity}
                   onValueChange={(val: any) => setRuleForm({ ...ruleForm, severity: val })}
                 >
-                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                  <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                  <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                     <SelectItem value="INFO">Bilgi (Info)</SelectItem>
                     <SelectItem value="WARNING">Uyarı (Warning)</SelectItem>
                     <SelectItem value="CRITICAL">Kritik (Critical)</SelectItem>
@@ -1025,15 +999,15 @@ export function ProductionConsolidatedWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Kanal</Label>
+              <Label className="text-xs text-[var(--text-2)]">Kanal</Label>
               <Select
                 value={ruleForm.channel}
                 onValueChange={(val: any) => setRuleForm({ ...ruleForm, channel: val })}
               >
-                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-zinc-200">
+                <SelectTrigger className="mt-1 bg-[--page] border-[--line] text-[var(--text-2)]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-[--line] text-zinc-200">
+                <SelectContent className="bg-[var(--bg)] border-[--line] text-[var(--text-2)]">
                   <SelectItem value="IN_APP">Uygulama İçi (In-App)</SelectItem>
                   <SelectItem value="EMAIL">E-Posta</SelectItem>
                   <SelectItem value="SMS">SMS</SelectItem>
@@ -1043,12 +1017,12 @@ export function ProductionConsolidatedWorkspace() {
             </div>
 
             <div>
-              <Label className="text-xs text-zinc-300">Açıklama</Label>
+              <Label className="text-xs text-[var(--text-2)]">Açıklama</Label>
               <Input
                 placeholder="Kural tetiklenme şartları..."
                 value={ruleForm.description}
                 onChange={(e) => setRuleForm({ ...ruleForm, description: e.target.value })}
-                className="mt-1 bg-[--page] border-[--line] text-white"
+                className="mt-1 bg-[--page] border-[--line] text-[var(--text)]"
               />
             </div>
 
@@ -1057,11 +1031,11 @@ export function ProductionConsolidatedWorkspace() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsRuleModalOpen(false)}
-                className="border-[--line] text-zinc-300"
+                className="border-[--line] text-[var(--text-2)]"
               >
                 İptal
               </Button>
-              <Button type="submit" className="bg-purple-600 hover:bg-purple-500 text-white">
+              <Button type="submit" className="bg-[var(--brand-soft)] hover:bg-[var(--brand-soft)] text-[var(--brand)] font-medium">
                 Kuralı Kaydet
               </Button>
             </DialogFooter>

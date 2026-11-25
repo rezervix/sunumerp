@@ -218,7 +218,7 @@ export function WmsPackagingAndSsccTab({
           <Button
             size="sm"
             onClick={() => setIsNewLpnOpen(true)}
-            className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full shadow-sm gap-1.5 cursor-pointer"
+            className="h-9 px-4 text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full shadow-sm gap-1.5 cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Yeni SSCC-18 LPN / Palet</span>
@@ -525,7 +525,7 @@ export function WmsPackagingAndSsccTab({
               <Button
                 type="submit"
                 disabled={submitting}
-                className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-white font-semibold rounded-full h-9 px-4 shadow-sm cursor-pointer disabled:opacity-50"
+                className="text-xs bg-[--brand] hover:bg-[--brand-hover] text-[var(--text)] font-semibold rounded-full h-9 px-4 shadow-sm cursor-pointer disabled:opacity-50"
               >
                 {submitting ? "Üretiliyor..." : "SSCC-18 Üret & Kaydet"}
               </Button>

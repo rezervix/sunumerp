@@ -173,7 +173,7 @@ export default function GunSonuRaporuPage() {
   if (!report) {
     return (
       <div className="p-6 text-center space-y-4">
-        <AlertTriangle className="h-10 w-10 text-rose-500 mx-auto" />
+        <AlertTriangle className="h-10 w-10 text-[var(--bad)] mx-auto" />
         <h2 className="text-lg font-semibold text-[--text]">Rapor Yüklenemedi</h2>
         <Button onClick={() => fetchReport()} className="rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] text-black font-semibold">Tekrar Dene</Button>
       </div>
@@ -200,11 +200,7 @@ export default function GunSonuRaporuPage() {
               <ClipboardCheck className="h-5 w-5 text-[--brand]" />
               Gün Sonu Raporu
             </h1>
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-              isSubmitted 
-                ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" 
-                : "bg-amber-500/10 text-amber-300 border border-amber-500/20"
-            }`}>
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${ isSubmitted ? "bg-[--brand-soft] text-[--brand] border border-[--brand-line]" : "bg-[var(--warn-soft)] text-[var(--warn)] border border-[var(--warn-line)]" }`}>
               <span className={`h-1.5 w-1.5 rounded-full ${isSubmitted ? "bg-gradient-to-r from-[--brand] to-[--blue] text-[--text]" : "bg-amber-400"}`} />
               {isSubmitted ? "Gönderildi" : "Taslak"}
             </span>
@@ -220,7 +216,7 @@ export default function GunSonuRaporuPage() {
               variant="outline"
               onClick={() => fetchReport(true)}
               disabled={regenerating || submitting}
-              className="gap-2 border-[--line] bg-white/5 hover:bg-white/10 text-zinc-300 rounded-full text-xs h-9"
+              className="gap-2 border-[--line] bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] text-[var(--text-2)] rounded-full text-xs h-9"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${regenerating ? "animate-spin" : ""}`} />
               Yeniden Derle
@@ -230,7 +226,7 @@ export default function GunSonuRaporuPage() {
           <Button
             onClick={handleSubmit}
             disabled={submitting || isSubmitted}
-            className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-white font-semibold rounded-full text-xs h-9 shadow-sm disabled:opacity-50"
+            className="gap-2 bg-gradient-to-r from-[--brand] to-[--blue] text-[--text] hover:from-[--brand-hover] hover:to-[--brand] text-[var(--text)] font-semibold rounded-full text-xs h-9 shadow-sm disabled:opacity-50"
           >
             {isSubmitted ? (
               <>
@@ -282,14 +278,14 @@ export default function GunSonuRaporuPage() {
           ) : (
             report.autoContent.map((branch, bIdx) => (
               <Card key={bIdx} className="overflow-hidden border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl">
-                <CardHeader className="bg-[#0d100e] py-3 px-4 flex flex-row items-center justify-between border-b border-[--line]">
+                <CardHeader className="bg-[var(--bg)] py-3 px-4 flex flex-row items-center justify-between border-b border-[--line]">
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[--text]" />
                     <CardTitle className="text-sm font-semibold text-[--text]">
                       {branch.branchName}
                     </CardTitle>
                   </div>
-                  <span className="text-[10px] bg-white/5 text-[--text-muted] border border-[--line] py-0.5 px-2.5 rounded-full font-mono font-medium">
+                  <span className="text-[10px] bg-[var(--muted-bg)] text-[--text-muted] border border-[--line] py-0.5 px-2.5 rounded-full font-mono font-medium">
                     {branch.items.length} Madde
                   </span>
                 </CardHeader>
@@ -301,9 +297,7 @@ export default function GunSonuRaporuPage() {
                       return (
                         <li 
                           key={iIdx} 
-                          className={`group flex items-start gap-3 p-2.5 rounded-xl transition-all ${
-                            isEditing ? "bg-white/5 border border-[--brand-line]" : "hover:bg-white/[0.02]"
-                          }`}
+                          className={`group flex items-start gap-3 p-2.5 rounded-xl transition-all ${ isEditing ? "bg-[var(--muted-bg)] border border-[--brand-line]" : "hover:bg-white/[0.02]" }`}
                         >
                           <span className="text-[--brand] font-bold text-xs mt-0.5 shrink-0">•</span>
                           
@@ -312,7 +306,7 @@ export default function GunSonuRaporuPage() {
                               <Input 
                                 value={editingText} 
                                 onChange={(e) => setEditingText(e.target.value)}
-                                className="h-8 py-1 text-xs bg-black/40 border-[--line] text-[--text] rounded-lg"
+                                className="h-8 py-1 text-xs bg-[var(--muted-bg)] border-[--line] text-[--text] rounded-lg"
                                 autoFocus
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") saveEditing(bIdx, iIdx)
@@ -330,7 +324,7 @@ export default function GunSonuRaporuPage() {
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
-                                className="h-8 w-8 text-rose-400 hover:bg-rose-500/10 shrink-0 rounded-lg"
+                                className="h-8 w-8 text-[var(--bad)] hover:bg-[var(--bad-soft)] shrink-0 rounded-lg"
                                 onClick={cancelEditing}
                               >
                                 <X className="h-4 w-4" />
@@ -338,7 +332,7 @@ export default function GunSonuRaporuPage() {
                             </div>
                           ) : (
                             <>
-                              <span className="flex-1 text-xs text-zinc-300 leading-relaxed">
+                              <span className="flex-1 text-xs text-[var(--text-2)] leading-relaxed">
                                 {item}
                               </span>
                               {!isSubmitted && (
@@ -354,7 +348,7 @@ export default function GunSonuRaporuPage() {
                                   <Button
                                     size="icon"
                                     variant="ghost"
-                                    className="h-7 w-7 text-[--text-muted] hover:text-rose-400 rounded-lg"
+                                    className="h-7 w-7 text-[--text-muted] hover:text-[var(--bad)] rounded-lg"
                                     onClick={() => handleDeleteBullet(bIdx, iIdx)}
                                   >
                                     <Trash2 className="h-3.5 w-3.5" />
@@ -383,7 +377,7 @@ export default function GunSonuRaporuPage() {
                       <Button
                         size="sm"
                         onClick={() => handleAddBullet(bIdx)}
-                        className="h-8 gap-1.5 px-3 shrink-0 rounded-full bg-white/5 hover:bg-white/10 border border-[--line] text-xs text-zinc-300"
+                        className="h-8 gap-1.5 px-3 shrink-0 rounded-full bg-[var(--muted-bg)] hover:bg-[var(--muted-bg)] border border-[--line] text-xs text-[var(--text-2)]"
                       >
                         <Plus className="h-3.5 w-3.5" />
                         Ekle
@@ -404,8 +398,8 @@ export default function GunSonuRaporuPage() {
           </div>
 
           <Card className="border border-[--line] bg-white/80 backdrop-blur-xl rounded-[20px] shadow-xl">
-            <CardHeader className="bg-[#0d100e] border-b border-[--line] py-3 px-4">
-              <CardTitle className="text-xs font-semibold flex items-center gap-1.5 text-amber-400">
+            <CardHeader className="bg-[var(--bg)] border-b border-[--line] py-3 px-4">
+              <CardTitle className="text-xs font-semibold flex items-center gap-1.5 text-[var(--warn)]">
                 <AlertTriangle className="h-4 w-4" />
                 Dış Bağımlılık & Özel Notlar
               </CardTitle>
@@ -444,7 +438,7 @@ export default function GunSonuRaporuPage() {
                     <div key={log.id} className="flex gap-2 text-xs">
                       <Clock className="h-3.5 w-3.5 text-[--text-muted] shrink-0 mt-0.5" />
                       <div className="space-y-0.5">
-                        <span className="font-medium text-zinc-300">
+                        <span className="font-medium text-[var(--text-2)]">
                           {log.action === "create_draft" ? "Taslak Oluşturuldu" : 
                            log.action === "update_draft" ? "Taslak Güncellendi" : 
                            log.action === "submit" ? "Rapor Gönderildi" : log.action}

@@ -239,7 +239,7 @@ export default function RfqComparisonTab({
             />
             <button
               type="submit"
-              className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-white font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
+              className="h-9 px-4 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] text-[var(--text)] font-semibold shadow-sm hover:opacity-95 transition cursor-pointer"
             >
               Teklife Açık RFQ Oluştur
             </button>
@@ -257,11 +257,7 @@ export default function RfqComparisonTab({
                       checked ? prev.filter((id) => id !== sup.id) : [...prev, sup.id]
                     )
                   }
-                  className={`px-2.5 py-1 rounded-full border text-[11px] font-medium transition cursor-pointer ${
-                    checked
-                      ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                      : "border-[--line] text-[--text-muted] hover:bg-[--muted-bg]"
-                  }`}
+                  className={`px-2.5 py-1 rounded-full border text-[11px] font-medium transition cursor-pointer ${ checked ? "bg-[--brand-soft] text-[--brand] border-[--brand-line]" : "border-[--line] text-[--text-muted] hover:bg-[--muted-bg]" }`}
                 >
                   {safeText(sup.name)}
                 </button>
@@ -280,22 +276,12 @@ export default function RfqComparisonTab({
               <div
                 key={r.id}
                 onClick={() => setSelectedRfqId(r.id)}
-                className={`cursor-pointer rounded-2xl border p-3.5 transition-colors shadow-sm ${
-                  active
-                    ? "border-[--brand-line] bg-[--brand-soft]/60"
-                    : "border-[--line] bg-white hover:border-[--brand-line]"
-                }`}
+                className={`cursor-pointer rounded-2xl border p-3.5 transition-colors shadow-sm ${ active ? "border-[--brand-line] bg-[--brand-soft]/60" : "border-[--line] bg-white hover:border-[--brand-line]" }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-xs font-bold text-[--brand]">{safeText(r.rfqNumber)}</span>
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                      r.status === "SONUCLANDI"
-                        ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25"
-                        : r.status === "DEGERLENDIRMEDE"
-                          ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25"
-                          : "bg-[--brand-soft] text-[--brand] border-[--brand-line]"
-                    }`}
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${ r.status === "SONUCLANDI" ? "bg-[--ok-soft] text-[--ok] border-[--ok]/25" : r.status === "DEGERLENDIRMEDE" ? "bg-[--warn-soft] text-[--warn] border-[--warn]/25" : "bg-[--brand-soft] text-[--brand] border-[--brand-line]" }`}
                   >
                     {safeText(r.status)}
                   </span>
@@ -406,9 +392,7 @@ export default function RfqComparisonTab({
                                 {cell ? (
                                   <div>
                                     <span
-                                      className={`font-semibold ${
-                                        cell.isBestPrice ? "text-[--ok]" : "text-[--text]"
-                                      }`}
+                                      className={`font-semibold ${ cell.isBestPrice ? "text-[--ok]" : "text-[--text]" }`}
                                     >
                                       {safeCurrency(cell.unitPrice)}
                                     </span>
@@ -466,7 +450,7 @@ export default function RfqComparisonTab({
                                 type="button"
                                 onClick={() => handleAwardQuote(matrix.rfq.id, q.id)}
                                 data-testid={`award-quote-${q.quoteNumber}`}
-                                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white font-semibold shadow-sm transition cursor-pointer"
+                                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-[var(--text)] font-semibold shadow-sm transition cursor-pointer"
                               >
                                 <Sparkles className="size-3.5" />
                                 Kazanan Seç → PO Aç
@@ -563,7 +547,7 @@ export default function RfqComparisonTab({
             <div className="flex justify-end gap-2 pt-2 border-t border-[--line]">
               <button
                 type="submit"
-                className="h-9 px-5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-white font-semibold shadow-sm transition cursor-pointer"
+                className="h-9 px-5 rounded-full bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-95 text-[var(--text)] font-semibold shadow-sm transition cursor-pointer"
               >
                 Teklifi Kaydet
               </button>

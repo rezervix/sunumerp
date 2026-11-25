@@ -160,22 +160,22 @@ export default function HotelMiniPmsDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen space-y-5 bg-[#F6F8FB] p-4 text-zinc-100 md:p-6">
+    <div className="min-h-screen space-y-5 bg-[var(--page)] p-4 text-[var(--text)] md:p-6">
       {/* Üst Başlık & Demo Kontrolleri */}
-      <div className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-[--line] bg-[white] p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4 rounded-2xl border border-[var(--line)] bg-[var(--bg)] p-5 shadow-sm">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[--brand]/35 bg-[--brand]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#1267E6]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--brand-line)] bg-[var(--brand-soft)] px-2.5 py-0.5 text-[11px] font-medium text-[var(--brand)]">
               <Building2 className="h-3.5 w-3.5" /> Otel Yönetimi (Mini PMS)
             </span>
             {policyConfig?.hotelDisplayName && (
-              <span className="text-xs text-zinc-400">{policyConfig.hotelDisplayName}</span>
+              <span className="text-xs text-[var(--text-muted)]">{policyConfig.hotelDisplayName}</span>
             )}
           </div>
-          <h1 className="mt-1.5 text-xl font-bold tracking-tight text-white md:text-2xl">
+          <h1 className="mt-1.5 text-xl font-bold tracking-tight text-[var(--text)] md:text-2xl">
             Otel Ön Büro, Kat Planı, Folio, Housekeeping & KBS Paneli
           </h1>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-[var(--text-muted)]">
             Atomik çift rezervasyon kilidi, KVKK maskeli misafir kaydı, stok bağlantılı minibar folio, çevrimdışı housekeeping ve Doluluk/ADR/RevPAR raporları tek ekranda.
           </p>
         </div>
@@ -188,10 +188,10 @@ export default function HotelMiniPmsDashboardPage() {
                 setDemoCompanyId(e.target.value);
                 loadSnapshot({ companyId: e.target.value });
               }}
-              className="rounded-lg border border-[--brand]/35 bg-[#0B0E0D] px-3 py-2 text-xs text-[#1267E6]"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text)] focus:border-[var(--brand)] focus:outline-none"
             >
               {demoPerspectiveCompanies.map((c: any) => (
-                <option key={c.id} value={c.id} className="bg-[white] text-zinc-100">
+                <option key={c.id} value={c.id} className="bg-[var(--bg)] text-[var(--text)]">
                   Perspektif: {c.name}
                 </option>
               ))}
@@ -206,7 +206,7 @@ export default function HotelMiniPmsDashboardPage() {
                 setRevealKvkk(next);
                 loadSnapshot({ reveal: next });
               }}
-              className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-2 text-xs text-zinc-200 hover:bg-white/[0.08]"
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
             >
               {revealKvkk ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
               {revealKvkk ? 'KVKK Maskele' : 'KVKK Aç (Denetimli)'}
@@ -215,7 +215,7 @@ export default function HotelMiniPmsDashboardPage() {
 
           <Link
             href="/dashboard/otel/housekeeping"
-            className="flex items-center gap-1.5 rounded-lg border border-[--brand]/35 bg-[--brand]/10 px-3 py-2 text-xs font-medium text-[#1267E6] hover:bg-[--brand]/20"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--brand-line)] bg-[var(--brand-soft)] px-3 py-2 text-xs font-medium text-[var(--brand)] hover:bg-[var(--brand-soft-2)] transition-colors"
           >
             <Smartphone className="h-3.5 w-3.5" /> Mobil Housekeeping
           </Link>
@@ -223,7 +223,7 @@ export default function HotelMiniPmsDashboardPage() {
           <button
             type="button"
             onClick={handleDispatchAlerts}
-            className="flex items-center gap-1.5 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-300 hover:bg-amber-500/20"
+            className="flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-[var(--warn)] hover:bg-amber-100 transition-colors"
           >
             <Bell className="h-3.5 w-3.5" /> Uyarıları Bildir ({alerts.totalAlerts || 0})
           </button>
@@ -232,16 +232,16 @@ export default function HotelMiniPmsDashboardPage() {
             <button
               type="button"
               onClick={() => setShowDemoGuide((v) => !v)}
-              className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-2 text-xs text-zinc-200 hover:bg-white/[0.08]"
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
             >
-              <HelpCircle className="h-3.5 w-3.5 text-[#1267E6]" /> Bu Ekranda Neler Yapabilirsiniz?
+              <HelpCircle className="h-3.5 w-3.5 text-[var(--brand)]" /> Bu Ekranda Neler Yapabilirsiniz?
             </button>
           )}
 
           <button
             type="button"
             onClick={() => loadSnapshot()}
-            className="flex items-center gap-1.5 rounded-lg border border-white/[0.12] bg-[#161B18] px-3 py-2 text-xs text-zinc-200 hover:bg-white/[0.08]"
+            className="flex items-center gap-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] px-3 py-2 text-xs text-[var(--text-2)] hover:bg-[var(--muted-bg)] transition-colors"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} /> Yenile
           </button>
@@ -250,47 +250,47 @@ export default function HotelMiniPmsDashboardPage() {
 
       {/* Yalnızca Demo Ortamında Görünen Kısa Kılavuz & Senaryo Kısayolları */}
       {isDemoMode && showDemoGuide && (
-        <div className="rounded-xl border border-[--brand-line] bg-[--brand]/5 p-4 text-xs text-zinc-300">
-          <div className="mb-2 font-semibold text-[#1267E6]">
+        <div className="rounded-xl border border-[var(--brand-line)] bg-[var(--brand-soft)] p-4 text-xs text-[var(--text)] shadow-sm">
+          <div className="mb-2 font-semibold text-[var(--brand)]">
             Demo Senaryo Kısayolları (Yalnızca Demo Ortamında Gösterilir)
           </div>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
             <button
               type="button"
               onClick={() => setActiveTab('floor_plan')}
-              className="rounded-lg border border-[--line] bg-[white] p-2.5 text-left hover:border-[#1267E6]/50"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2.5 text-left hover:border-[var(--brand)] transition shadow-sm"
             >
-              <strong className="block text-zinc-100">1. Kat Planı (50 Oda)</strong>
-              <span className="text-[11px] text-zinc-400">
+              <strong className="block text-[var(--text)]">1. Kat Planı (50 Oda)</strong>
+              <span className="text-[11px] text-[var(--text-muted)]">
                 5 katlı odalarda tek tıkla temizlik/bakım durumu değiştirin.
               </span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('reservations')}
-              className="rounded-lg border border-[--line] bg-[white] p-2.5 text-left hover:border-[#1267E6]/50"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2.5 text-left hover:border-[var(--brand)] transition shadow-sm"
             >
-              <strong className="block text-zinc-100">2. Check-In → Folio → Check-Out</strong>
-              <span className="text-[11px] text-zinc-400">
+              <strong className="block text-[var(--text)]">2. Check-In → Folio → Check-Out</strong>
+              <span className="text-[11px] text-[var(--text-muted)]">
                 OTL-2026-1014 için Check-In yapıp minibar ekleyin, bakiye kapatıp Check-Out alın.
               </span>
             </button>
             <button
               type="button"
               onClick={() => setActiveTab('allotments')}
-              className="rounded-lg border border-[--line] bg-[white] p-2.5 text-left hover:border-[#1267E6]/50"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2.5 text-left hover:border-[var(--brand)] transition shadow-sm"
             >
-              <strong className="block text-zinc-100">3. Acenta Kontenjan Limiti</strong>
-              <span className="text-[11px] text-zinc-400">
+              <strong className="block text-[var(--text)]">3. Acenta Kontenjan Limiti</strong>
+              <span className="text-[11px] text-[var(--text-muted)]">
                 KNT-EGE-DLX (%88 dolu) dolmaya yakın uyarısını ve aşım engellemesini inceleyin.
               </span>
             </button>
             <Link
               href="/dashboard/otel/housekeeping"
-              className="rounded-lg border border-[--line] bg-[white] p-2.5 text-left hover:border-[#1267E6]/50"
+              className="rounded-lg border border-[var(--line)] bg-[var(--bg)] p-2.5 text-left hover:border-[var(--brand)] transition shadow-sm"
             >
-              <strong className="block text-zinc-100">4. Çevrimdışı Housekeeping</strong>
-              <span className="text-[11px] text-zinc-400">
+              <strong className="block text-[var(--text)]">4. Çevrimdışı Housekeeping</strong>
+              <span className="text-[11px] text-[var(--text-muted)]">
                 Kısıtlı temizlik personeli (<code>temizlik.ayse</code> / <code>demo123</code>) mobil ekranını deneyin.
               </span>
             </Link>
@@ -300,42 +300,42 @@ export default function HotelMiniPmsDashboardPage() {
 
       {/* Özet KPI Şeridi */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">Anlık Oda Doluluğu</div>
-          <div className="mt-1 text-2xl font-bold text-[#1267E6]">%{liveOccupancyPct}</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
+          <div className="text-xs text-[var(--text-muted)]">Anlık Oda Doluluğu</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--brand)]">%{liveOccupancyPct}</div>
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
             {occupiedCount} Dolu / {rooms.length} Aktif Oda
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">Satışa Hazır / Temizlikte</div>
-          <div className="mt-1 text-2xl font-bold text-white">{cleanVacantCount}</div>
-          <div className="mt-0.5 text-[11px] text-amber-300">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
+          <div className="text-xs text-[var(--text-muted)]">Satışa Hazır / Temizlikte</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--text)]">{cleanVacantCount}</div>
+          <div className="mt-0.5 text-[11px] text-[var(--warn)]">
             {dirtyOrCleaningCount} kirli / temizlik / denetim
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">ADR (Ort. Günlük Oda)</div>
-          <div className="mt-1 text-2xl font-bold text-sky-300">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
+          <div className="text-xs text-[var(--text-muted)]">ADR (Ort. Günlük Oda)</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--text)]">
             {Number(analytics?.kpis?.adrTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-0.5 text-[11px] text-zinc-400">
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
             RevPAR: {Number(analytics?.kpis?.revParTry || 0).toLocaleString('tr-TR')} ₺
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">Toplam Konaklama + Ekstra</div>
-          <div className="mt-1 text-2xl font-bold text-zinc-100">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
+          <div className="text-xs text-[var(--text-muted)]">Toplam Konaklama + Ekstra</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--text)]">
             {Number(analytics?.kpis?.totalRevenueTry || 0).toLocaleString('tr-TR')} ₺
           </div>
-          <div className="mt-0.5 text-[11px] text-zinc-400">
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
             {analytics?.kpis?.soldRoomNights || 0} satılan oda-gece
           </div>
         </div>
-        <div className="rounded-xl border border-[--line] bg-[white] p-4">
-          <div className="text-xs text-zinc-400">Aktif Uyarılar & KBS</div>
-          <div className="mt-1 text-2xl font-bold text-amber-300">{alerts.totalAlerts || 0}</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400">
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--bg)] p-4 shadow-sm">
+          <div className="text-xs text-[var(--text-muted)]">Aktif Uyarılar & KBS</div>
+          <div className="mt-1 text-2xl font-bold text-[var(--warn)]">{alerts.totalAlerts || 0}</div>
+          <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
             KBS Eksik/Hatalı:{' '}
             {
               kbsRecords.filter(
@@ -348,15 +348,11 @@ export default function HotelMiniPmsDashboardPage() {
 
       {/* Aktif Uyarılar Şeridi */}
       {alerts.alerts?.length > 0 && (
-        <div className="flex flex-wrap gap-2 rounded-xl border border-amber-500/25 bg-amber-500/5 p-3">
+        <div className="flex flex-wrap gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3">
           {alerts.alerts.slice(0, 5).map((al: any) => (
             <div
               key={al.entityId}
-              className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] ${
-                al.severity === 'error'
-                  ? 'border-rose-500/35 bg-rose-500/15 text-rose-200'
-                  : 'border-amber-500/30 bg-amber-500/10 text-amber-200'
-              }`}
+              className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] ${ al.severity === 'error' ? 'border-red-200 bg-red-50 text-[var(--bad)]' : 'border-amber-200 bg-amber-100/50 text-[var(--warn)]' }`}
             >
               <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
               <span>{al.title}</span>
@@ -366,7 +362,7 @@ export default function HotelMiniPmsDashboardPage() {
       )}
 
       {/* Sekme Navigasyonu */}
-      <div className="flex flex-wrap gap-1.5 rounded-xl border border-[--line] bg-[white] p-2">
+      <div className="flex flex-wrap gap-1.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] p-2 shadow-sm">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;
@@ -375,19 +371,13 @@ export default function HotelMiniPmsDashboardPage() {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
-                active
-                  ? 'bg-[#1267E6] text-[#F6F8FB]'
-                  : 'text-zinc-300 hover:bg-[--muted-bg] hover:text-white'
-              }`}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${ active ? 'bg-[var(--brand)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)]' }`}
             >
               <Icon className="h-3.5 w-3.5" />
               <span>{tab.label}</span>
               {tab.badge !== undefined && (
                 <span
-                  className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                    active ? 'bg-black/20 text-[#F6F8FB]' : 'bg-white/[0.08] text-zinc-400'
-                  }`}
+                  className={`rounded-full px-1.5 py-0.5 text-[10px] ${ active ? 'bg-[var(--muted-bg)] text-[var(--text)]' : 'bg-[var(--muted-bg)] text-[var(--text-muted)]' }`}
                 >
                   {tab.badge}
                 </span>
@@ -399,7 +389,7 @@ export default function HotelMiniPmsDashboardPage() {
 
       {/* Hata veya Yükleniyor Durumu */}
       {errorMsg && (
-        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-xs text-rose-200">
+        <div className="rounded-xl border border-[var(--bad-line)] bg-[var(--bad-soft)] p-4 text-xs text-rose-200">
           {errorMsg}
         </div>
       )}
@@ -509,7 +499,7 @@ export default function HotelMiniPmsDashboardPage() {
           )}
         </div>
       ) : (
-        <div className="rounded-xl border border-[--line] bg-[white] p-12 text-center text-sm text-zinc-400">
+        <div className="rounded-xl border border-[--line] bg-[white] p-12 text-center text-sm text-[var(--text-muted)]">
           Otel PMS verileri yükleniyor...
         </div>
       )}

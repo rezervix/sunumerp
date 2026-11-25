@@ -10,18 +10,18 @@ import {
 import { toast } from "sonner"
 
 const STATUS_META_LOCAL: Record<string, { label: string; color: string; bg: string }> = {
-  draft:            { label: "Taslak",           color: "text-slate-600 dark:text-slate-300",   bg: "bg-slate-100 dark:bg-slate-800" },
-  awaiting_shoot:   { label: "Çekim Bekleniyor", color: "text-amber-600 dark:text-amber-300",   bg: "bg-amber-100 dark:bg-amber-900/30" },
-  in_editing:       { label: "Editleniyor",       color: "text-blue-600 dark:text-blue-350",    bg: "bg-blue-100 dark:bg-blue-900/30" },
-  pending_approval: { label: "Onay Bekliyor",     color: "text-violet-600 dark:text-violet-300",  bg: "bg-violet-100 dark:bg-violet-900/30" },
-  scheduled:        { label: "Planlandı",         color: "text-sky-600 dark:text-sky-300",     bg: "bg-sky-100 dark:bg-sky-900/30" },
+  draft:            { label: "Taslak",           color: "text-slate-600 (--text-2)]",   bg: "bg-slate-100 (--muted-bg)]" },
+  awaiting_shoot:   { label: "Çekim Bekleniyor", color: "text-amber-600 ",   bg: "bg-amber-100 " },
+  in_editing:       { label: "Editleniyor",       color: "text-blue-600 ",    bg: "bg-blue-100 " },
+  pending_approval: { label: "Onay Bekliyor",     color: "text-[var(--brand)] (--brand)]",  bg: "bg-[var(--brand-soft)] (--brand-soft)]/30" },
+  scheduled:        { label: "Planlandı",         color: "text-sky-600 ",     bg: "bg-sky-100 " },
   published:        { label: "Yayınlandı",        color: "text-[--ok]", bg: "bg-[--ok-soft]" },
-  cancelled:        { label: "İptal Edildi",      color: "text-red-600 dark:text-red-300",     bg: "bg-red-100 dark:bg-red-900/30" },
-  missed:           { label: "Kaçırıldı",         color: "text-orange-650 dark:text-orange-300",  bg: "bg-orange-100 dark:bg-orange-900/30" },
-  planned:          { label: "Planlandı",         color: "text-sky-600 dark:text-sky-300",     bg: "bg-sky-100 dark:bg-sky-900/30" },
+  cancelled:        { label: "İptal Edildi",      color: "text-red-600 ",     bg: "bg-red-100 " },
+  missed:           { label: "Kaçırıldı",         color: "text-orange-650 ",  bg: "bg-orange-100 " },
+  planned:          { label: "Planlandı",         color: "text-sky-600 ",     bg: "bg-sky-100 " },
   shot:             { label: "Çekildi",           color: "text-[--ok]", bg: "bg-[--ok-soft]" },
   completed:        { label: "Tamamlandı",        color: "text-[--ok]", bg: "bg-[--ok-soft]" },
-  postponed:        { label: "Ertelendi",         color: "text-amber-600 dark:text-amber-300",   bg: "bg-amber-100 dark:bg-amber-900/30" },
+  postponed:        { label: "Ertelendi",         color: "text-amber-600 ",   bg: "bg-amber-100 " },
 }
 
 interface MessageBubbleProps {
@@ -255,7 +255,7 @@ export function MessageBubble({
   if (isSystem) {
     return (
       <div className="flex justify-center my-3">
-        <span className="px-4 py-1.5 rounded-full text-[11px] font-semibold bg-gray-100 dark:bg-white/5 border border-gray-200/50 dark:border-gray-800 text-gray-500 tracking-wide select-none shadow-xs">
+        <span className="px-4 py-1.5 rounded-full text-[11px] font-semibold bg-gray-100 (--muted-bg)] border border-gray-200/50 text-[var(--text-muted)] tracking-wide select-none shadow-xs">
           {msg.content}
         </span>
       </div>
@@ -276,13 +276,11 @@ export function MessageBubble({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
-      className={`flex flex-col group/bubble relative ${
-        isMe ? "items-end" : "items-start"
-      } mb-4 max-w-[85%] ${isMe ? "ml-auto" : "mr-auto"}`}
+      className={`flex flex-col group/bubble relative ${ isMe ? "items-end" : "items-start" } mb-4 max-w-[85%] ${isMe ? "ml-auto" : "mr-auto"}`}
     >
       {/* Sender Name (for groups/channels) */}
       {!isMe && msg.conversation?.type !== "dm" && (
-        <span className="text-[11px] font-semibold text-zinc-400 mb-1 ml-2 uppercase tracking-wider">
+        <span className="text-[11px] font-semibold text-[var(--text-muted)] mb-1 ml-2 uppercase tracking-wider">
           {msg.fromUser?.fullName}
         </span>
       )}
@@ -291,9 +289,7 @@ export function MessageBubble({
       {msg.replyToMessageId && (
         <button
           onClick={() => onSelectRepliedMessage(msg.replyToMessageId)}
-          className={`flex flex-col text-left px-3 py-2 rounded-t-2xl border-l-2 bg-white/[0.04] text-xs text-zinc-400 max-w-full truncate transition-all hover:bg-white/[0.08] ${
-            isMe ? "border-[--brand]" : "border-zinc-600"
-          }`}
+          className={`flex flex-col text-left px-3 py-2 rounded-t-2xl border-l-2 bg-white/[0.04] text-xs text-[var(--text-muted)] max-w-full truncate transition-all hover:bg-white/[0.08] ${ isMe ? "border-[--brand]" : "border-[var(--line)]" }`}
         >
           <span className="font-semibold text-[10px] text-[--brand]">
             {msg.replyFromUserId === currentUserId ? "Sen" : msg.replyToMessage?.fromUser?.fullName || "Kullanıcı"}
@@ -314,34 +310,34 @@ export function MessageBubble({
           <div className="opacity-0 group-hover/bubble:opacity-100 transition-opacity flex items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 text-zinc-400">
+                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--muted-bg)] text-[var(--text-muted)]">
                   <span className="material-symbols-outlined text-[20px]">more_vert</span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-white border border-[--line] text-[--text] rounded-xl p-1 shadow-2xl">
-                <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                   <span className="material-symbols-outlined text-[18px]">reply</span> Yanıtla
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onForward} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                <DropdownMenuItem onClick={onForward} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                   <span className="material-symbols-outlined text-[18px]">forward</span> İlet
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onStar} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                <DropdownMenuItem onClick={onStar} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                   <span className="material-symbols-outlined text-[18px]">star</span> Yıldızla
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onPin} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                <DropdownMenuItem onClick={onPin} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                   <span className="material-symbols-outlined text-[18px]">push_pin</span> Sabitle
                 </DropdownMenuItem>
                 {msg.contentType === "text" && !isDeleted && (
-                  <DropdownMenuItem onClick={() => setIsEditing(true)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-white/10">
+                  <DropdownMenuItem onClick={() => setIsEditing(true)} className="rounded-lg gap-2 cursor-pointer py-2 hover:bg-[var(--muted-bg)]">
                     <span className="material-symbols-outlined text-[18px]">edit</span> Düzenle
                   </DropdownMenuItem>
                 )}
                 {!isDeleted && (
                   <>
-                    <DropdownMenuItem onClick={() => onDelete(false)} className="rounded-lg gap-2 cursor-pointer py-2 text-rose-400 hover:bg-rose-500/10">
+                    <DropdownMenuItem onClick={() => onDelete(false)} className="rounded-lg gap-2 cursor-pointer py-2 text-[var(--bad)] hover:bg-[var(--bad-soft)]">
                       <span className="material-symbols-outlined text-[18px]">delete</span> Benden Sil
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDelete(true)} className="rounded-lg gap-2 cursor-pointer py-2 text-rose-400 hover:bg-rose-500/10 font-semibold">
+                    <DropdownMenuItem onClick={() => onDelete(true)} className="rounded-lg gap-2 cursor-pointer py-2 text-[var(--bad)] hover:bg-[var(--bad-soft)] font-semibold">
                       <span className="material-symbols-outlined text-[18px]">delete_forever</span> Herkesten Sil
                     </DropdownMenuItem>
                   </>
@@ -353,16 +349,12 @@ export function MessageBubble({
 
         {/* Balloon Body */}
         <div
-          className={`relative rounded-3xl shadow-sm overflow-hidden flex flex-col p-3.5 border ${
-            isMe
-              ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white font-normal border-[--brand-line] rounded-tr-none shadow-xs"
-              : "bg-white text-[--text] border-[--line] rounded-tl-none shadow-xl"
-          }`}
+          className={`relative rounded-3xl shadow-sm overflow-hidden flex flex-col p-3.5 border ${ isMe ? "bg-gradient-to-r from-[--brand] to-[--blue] text-white font-normal border-[--brand-line] rounded-tr-none shadow-xs" : "bg-white text-[--text] border-[--line] rounded-tl-none shadow-xl" }`}
           style={{ minWidth: "120px" }}
         >
           {/* Starred tag */}
           {msg.isStarred && (
-            <div className="absolute top-2 right-2 flex items-center text-amber-400 select-none">
+            <div className="absolute top-2 right-2 flex items-center text-[var(--warn)] select-none">
               <span className="material-symbols-outlined text-[14px]">star</span>
             </div>
           )}
@@ -380,7 +372,7 @@ export function MessageBubble({
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full bg-black/5 dark:bg-black/20 text-sm focus:outline-none p-2 rounded-xl resize-none text-inherit"
+                className="w-full bg-black/5 text-sm focus:outline-none p-2 rounded-xl resize-none text-inherit"
                 rows={2}
               />
               <div className="flex justify-end gap-2">
@@ -395,7 +387,7 @@ export function MessageBubble({
                     onEdit(editContent)
                     setIsEditing(false)
                   }}
-                  className="px-2 py-1 text-xs bg-white text-black dark:bg-primary-foreground dark:text-primary rounded-lg font-semibold"
+                  className="px-2 py-1 text-xs bg-white text-black rounded-lg font-semibold"
                 >
                   Kaydet
                 </button>
@@ -413,7 +405,7 @@ export function MessageBubble({
                 <>
                   {/* File / Media Render */}
                   {msg.fileUrl && (
-                    <div className="mb-2 rounded-2xl overflow-hidden bg-black/5 dark:bg-black/20 shrink-0 max-w-[280px]">
+                    <div className="mb-2 rounded-2xl overflow-hidden bg-black/5 shrink-0 max-w-[280px]">
                       {msg.contentType === "image" ? (
                         <a href={msg.fileUrl} target="_blank" rel="noreferrer" className="block relative group/media">
                           <img
@@ -422,7 +414,7 @@ export function MessageBubble({
                             className="max-h-[220px] w-full object-cover transition-transform group-hover/media:scale-101 duration-300"
                           />
                           <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/media:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="material-symbols-outlined text-white text-3xl">open_in_new</span>
+                            <span className="material-symbols-outlined text-[var(--text)] text-3xl">open_in_new</span>
                           </div>
                         </a>
                       ) : msg.contentType === "video" ? (
@@ -432,9 +424,7 @@ export function MessageBubble({
                           <div className="flex items-center gap-2">
                             <button
                               onClick={togglePlay}
-                              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                isMe ? "bg-white text-primary" : "bg-primary text-white"
-                              }`}
+                              className={`w-8 h-8 rounded-full flex items-center justify-center ${ isMe ? "bg-white text-primary" : "bg-primary text-white" }`}
                             >
                               <span className="material-symbols-outlined text-[20px]">
                                 {isPlaying ? "pause" : "play_arrow"}
@@ -444,7 +434,7 @@ export function MessageBubble({
                               {formatTime(currentTime)} / {formatTime(duration)}
                             </span>
                           </div>
-                          <div className="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                          <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                             <div
                               className="bg-primary h-full transition-all duration-100"
                               style={{ width: `${progressPercent}%` }}
@@ -457,9 +447,7 @@ export function MessageBubble({
                           {/* Play/Pause Button */}
                           <button
                             onClick={togglePlay}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-105 ${
-                              isMe ? "bg-white text-primary" : "bg-primary text-white"
-                            }`}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-105 ${ isMe ? "bg-white text-primary" : "bg-primary text-white" }`}
                           >
                             <span className="material-symbols-outlined text-[24px]">
                               {isPlaying ? "pause" : "play_arrow"}
@@ -495,11 +483,7 @@ export function MessageBubble({
                           <div className="flex flex-col gap-1 items-end shrink-0 select-none">
                             <button
                               onClick={changePlaybackRate}
-                              className={`px-2 py-0.5 rounded-md text-[9px] font-bold border transition ${
-                                isMe
-                                  ? "border-white/30 hover:bg-white/10"
-                                  : "border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5"
-                              }`}
+                              className={`px-2 py-0.5 rounded-md text-[9px] font-bold border transition ${ isMe ? "border-[var(--line-soft)] hover:bg-[var(--muted-bg)]" : "border-[var(--line)] hover:bg-gray-50 :bg-[var(--muted-bg)]" }`}
                             >
                               {playRate}x
                             </button>
@@ -515,12 +499,10 @@ export function MessageBubble({
                           download
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center gap-3 p-3 hover:bg-black/5 dark:hover:bg-white/5 transition group/doc min-w-[200px]"
+                          className="flex items-center gap-3 p-3 hover:bg-black/5 :bg-[var(--muted-bg)] transition group/doc min-w-[200px]"
                         >
                           <div
-                            className={`p-2.5 rounded-xl ${
-                              isMe ? "bg-white/20" : "bg-gray-100 dark:bg-gray-850"
-                            }`}
+                            className={`p-2.5 rounded-xl ${ isMe ? "bg-[var(--muted-bg)]" : "bg-gray-100 " }`}
                           >
                             <span className="material-symbols-outlined text-[24px]">description</span>
                           </div>
@@ -546,7 +528,7 @@ export function MessageBubble({
                       href={`https://www.google.com/maps/search/?api=1&query=${msg.locationLat},${msg.locationLng}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="mb-2 overflow-hidden rounded-2xl block border border-gray-250 dark:border-gray-750 bg-gray-50 dark:bg-black/10 transition hover:opacity-95 max-w-[280px]"
+                      className="mb-2 overflow-hidden rounded-2xl block border border-gray-250 bg-gray-50 transition hover:opacity-95 max-w-[280px]"
                     >
                       <div className="h-32 bg-sky-100 flex items-center justify-center relative">
                         <span className="material-symbols-outlined text-red-500 text-4xl animate-bounce">
@@ -560,7 +542,7 @@ export function MessageBubble({
                         <div className="font-bold text-xs truncate">
                           {msg.locationName || "Konum Paylaşıldı"}
                         </div>
-                        <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+                        <div className="text-[10px] text-[var(--text-muted)] (--text-muted)] mt-0.5 truncate">
                           {msg.locationAddress || `${msg.locationLat.toFixed(5)}, ${msg.locationLng.toFixed(5)}`}
                         </div>
                       </div>
@@ -591,10 +573,10 @@ export function MessageBubble({
                             totalVotes > 0 ? Math.round((votes.length / totalVotes) * 100) : 0
 
                           return (
-                            <div key={opt.id} className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 p-2.5">
+                            <div key={opt.id} className="relative overflow-hidden rounded-xl border border-[var(--line)] bg-gray-50 p-2.5">
                               {/* Percentage Progress Bar */}
                               <div
-                                className="absolute top-0 left-0 bottom-0 bg-primary/10 dark:bg-primary/20 transition-all duration-300 pointer-events-none"
+                                className="absolute top-0 left-0 bottom-0 bg-primary/10 transition-all duration-300 pointer-events-none"
                                 style={{ width: `${percentage}%` }}
                               />
 
@@ -609,7 +591,7 @@ export function MessageBubble({
                                   <span className="text-xs font-semibold">{opt.text}</span>
                                 </button>
 
-                                <span className="text-[10px] font-bold text-gray-500">
+                                <span className="text-[10px] font-bold text-[var(--text-muted)]">
                                   {votes.length} ({percentage}%)
                                 </span>
                               </div>
@@ -618,7 +600,7 @@ export function MessageBubble({
                               {!JSON.parse(msg.pollData).isAnonymous && votes.length > 0 && (
                                 <div className="mt-1 flex items-center gap-1">
                                   {/* Just show simple count/dots or simple initials */}
-                                  <span className="text-[9px] text-gray-400 font-semibold uppercase tracking-wider">
+                                  <span className="text-[9px] text-[var(--text-muted)] font-semibold uppercase tracking-wider">
                                     {votes.length} oy verildi
                                   </span>
                                 </div>
@@ -632,19 +614,19 @@ export function MessageBubble({
 
                   {/* Task Card View (if pollData holds content_task_card) */}
                   {taskCardData ? (
-                    <div className="flex flex-col gap-3 p-3 text-xs min-w-[280px] max-w-[340px] select-none bg-muted/20 dark:bg-muted/10 rounded-2xl border border-border/50">
+                    <div className="flex flex-col gap-3 p-3 text-xs min-w-[280px] max-w-[340px] select-none bg-muted/20 rounded-2xl border border-border/50">
                       {/* Firma & Rol */}
                       <div className="flex items-center justify-between gap-2 border-b border-border/40 pb-2">
-                        <span className="font-bold text-[13px] text-foreground truncate max-w-[180px] dark:text-white">
+                        <span className="font-bold text-[13px] text-foreground truncate max-w-[180px]">
                           {taskCardData.title}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-primary/10 text-primary dark:bg-white/10 dark:text-primary-foreground font-bold text-[10px] tracking-wide uppercase shrink-0">
+                        <span className="px-2 py-0.5 rounded bg-primary/10 text-primary (--muted-bg)] font-bold text-[10px] tracking-wide uppercase shrink-0">
                           {taskCardData.role}
                         </span>
                       </div>
 
                       {/* Bilgiler */}
-                      <div className="space-y-1.5 text-foreground/80 dark:text-gray-300">
+                      <div className="space-y-1.5 text-foreground/80 (--text-2)]">
                         <div className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-[15px] opacity-70">calendar_today</span>
                           <span>Tarih: {taskCardData.date}</span>
@@ -656,7 +638,7 @@ export function MessageBubble({
                           </div>
                         )}
                         {taskCardData.extraNote && (
-                          <div className="flex flex-col gap-0.5 mt-1 p-2 bg-muted/40 dark:bg-black/20 rounded-lg text-foreground/75 dark:text-gray-300">
+                          <div className="flex flex-col gap-0.5 mt-1 p-2 bg-muted/40 rounded-lg text-foreground/75 (--text-2)]">
                             <span className="font-semibold text-[10px] text-muted-foreground uppercase">Görev Notu:</span>
                             <span className="italic">"{taskCardData.extraNote}"</span>
                           </div>
@@ -664,13 +646,9 @@ export function MessageBubble({
                       </div>
 
                       {/* Canlı Durum */}
-                      <div className="flex items-center justify-between gap-2 bg-muted/40 dark:bg-black/10 p-2 rounded-xl border border-border/30">
-                        <span className="text-muted-foreground dark:text-gray-400 font-medium">Güncel Durum:</span>
-                        <span className={`font-bold px-2.5 py-0.5 rounded-full text-[11px] ${
-                          entityStatus ? (STATUS_META_LOCAL[entityStatus]?.bg || "bg-slate-100") : "bg-slate-100"
-                        } ${
-                          entityStatus ? (STATUS_META_LOCAL[entityStatus]?.color || "text-slate-700") : "text-slate-700"
-                        }`}>
+                      <div className="flex items-center justify-between gap-2 bg-muted/40 p-2 rounded-xl border border-border/30">
+                        <span className="text-muted-foreground (--text-muted)] font-medium">Güncel Durum:</span>
+                        <span className={`font-bold px-2.5 py-0.5 rounded-full text-[11px] ${ entityStatus ? (STATUS_META_LOCAL[entityStatus]?.bg || "bg-slate-100") : "bg-slate-100" } ${ entityStatus ? (STATUS_META_LOCAL[entityStatus]?.color || "text-slate-700") : "text-slate-700" }`}>
                           {entityStatus ? (STATUS_META_LOCAL[entityStatus]?.label || entityStatus) : "Taslak"}
                         </span>
                       </div>
@@ -698,11 +676,7 @@ export function MessageBubble({
                                 key={opt}
                                 disabled={isUpdatingStatus || isActive}
                                 onClick={() => handleTaskStatusChange(opt)}
-                                className={`flex-1 min-w-[70px] px-2 py-1.5 rounded-lg border text-[10px] font-bold text-center transition-all ${
-                                  isActive
-                                    ? "bg-foreground text-background border-foreground dark:bg-white dark:text-black opacity-100 cursor-default scale-100"
-                                    : "border-border/60 hover:bg-muted/50 text-foreground/85 dark:text-gray-200"
-                                }`}
+                                className={`flex-1 min-w-[70px] px-2 py-1.5 rounded-lg border text-[10px] font-bold text-center transition-all ${ isActive ? "bg-foreground text-background border-foreground opacity-100 cursor-default scale-100" : "border-border/60 hover:bg-muted/50 text-foreground/85 (--text-2)]" }`}
                               >
                                 {meta.label}
                               </button>
@@ -759,11 +733,11 @@ export function MessageBubble({
           <div className="opacity-0 group-hover/bubble:opacity-100 transition-opacity flex items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400">
+                <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 :bg-[var(--muted-bg)] text-[var(--text-muted)]">
                   <span className="material-symbols-outlined text-[20px]">more_vert</span>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-xl p-1 shadow-lg">
+              <DropdownMenuContent className="bg-white border border-[var(--line)] rounded-xl p-1 shadow-lg">
                 <DropdownMenuItem onClick={onReply} className="rounded-lg gap-2 cursor-pointer py-2">
                   <span className="material-symbols-outlined text-[18px]">reply</span> Yanıtla
                 </DropdownMenuItem>
@@ -788,13 +762,13 @@ export function MessageBubble({
             <div className="relative">
               <button
                 onClick={() => setReactionSelectorOpen(!reactionSelectorOpen)}
-                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/5 text-gray-400 text-base"
+                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 :bg-[var(--muted-bg)] text-[var(--text-muted)] text-base"
               >
                 😊
               </button>
 
               {reactionSelectorOpen && (
-                <div className="absolute bottom-9 left-0 bg-white dark:bg-[#1f1f1f] border border-gray-250 dark:border-gray-750 p-1.5 rounded-full flex gap-1 shadow-xl z-20 animate-in slide-in-from-bottom-2 duration-150">
+                <div className="absolute bottom-9 left-0 bg-white border border-gray-250 p-1.5 rounded-full flex gap-1 shadow-xl z-20 animate-in slide-in-from-bottom-2 duration-150">
                   {quickEmojis.map((e) => (
                     <button
                       key={e}
@@ -817,13 +791,11 @@ export function MessageBubble({
       {/* Floating Reactions display at balloon bottom */}
       {(msg.reactions || []).length > 0 && (
         <div
-          className={`flex items-center gap-1 mt-[-6px] bg-white border border-[--line] rounded-full px-2 py-0.5 shadow-lg z-10 select-none ${
-            isMe ? "mr-3" : "ml-3"
-          }`}
+          className={`flex items-center gap-1 mt-[-6px] bg-white border border-[--line] rounded-full px-2 py-0.5 shadow-lg z-10 select-none ${ isMe ? "mr-3" : "ml-3" }`}
         >
           {Object.entries(reactionsMap).map(([emoji, count]) => (
             <span key={emoji} className="text-xs">
-              {emoji} <span className="text-[10px] font-bold text-zinc-400">{count as number}</span>
+              {emoji} <span className="text-[10px] font-bold text-[var(--text-muted)]">{count as number}</span>
             </span>
           ))}
         </div>

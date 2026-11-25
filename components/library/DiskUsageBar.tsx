@@ -27,8 +27,8 @@ function formatBytes(bytes: number) {
 
 const TYPE_COLORS: Record<string, string> = {
   image: "bg-blue-400",
-  video: "bg-purple-400",
-  audio: "bg-pink-400",
+  video: "bg-[var(--brand-soft)]",
+  audio: "bg-[var(--brand-soft)]",
   document: "bg-red-400",
   archive: "bg-yellow-400",
   other: "bg-muted-foreground",
@@ -123,7 +123,7 @@ export function DiskUsageBar({ branchId, refreshTrigger }: DiskUsageBarProps) {
                   initial={{ width: 0 }}
                   animate={{ width: `${(t.sizeBytes / totalSegments) * 100}%` }}
                   transition={{ duration: 0.9, ease: "easeOut" }}
-                  className={cn("h-full rounded-full", TYPE_COLORS[t.type] ?? "bg-zinc-600")}
+                  className={cn("h-full rounded-full", TYPE_COLORS[t.type] ?? "bg-[var(--muted-bg)]")}
                   title={`${TYPE_LABELS[t.type] ?? t.type}: ${formatBytes(t.sizeBytes)}`}
                 />
               ))}

@@ -320,11 +320,7 @@ export default function UsersPage() {
                     <button
                       onClick={() => handleToggleActive(u)}
                       title={u.isActive ? "Pasif yap" : "Aktif yap"}
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors cursor-pointer ${
-                        u.isActive
-                          ? "bg-[--ok-soft] text-[--ok] border border-[--ok-soft]"
-                          : "bg-[--muted-bg] text-[--text-muted] border border-[--line]"
-                      }`}
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium transition-colors cursor-pointer ${ u.isActive ? "bg-[--ok-soft] text-[--ok] border border-[--ok-soft]" : "bg-[--muted-bg] text-[--text-muted] border border-[--line]" }`}
                     >
                       {u.isActive ? <><ToggleRight size={13}/>Aktif</> : <><ToggleLeft size={13}/>Pasif</>}
                     </button>
@@ -572,7 +568,7 @@ function ModalFooter({ onCancel, onSave, saving, saveLabel, disabled }: { onCanc
   return (
     <div className="px-6 py-4 border-t border-[--line] bg-[--page] flex justify-end gap-2.5 shrink-0">
       <button onClick={onCancel} className="px-4 py-2 text-xs font-medium text-[--text-2] border border-[--line] rounded-full hover:bg-[--muted-bg] transition-colors cursor-pointer shadow-xs">{tText("common.cancel", "İptal")}</button>
-      <button onClick={onSave} disabled={saving||disabled} className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer">
+      <button onClick={onSave} disabled={saving||disabled} className="px-4 py-2 text-xs font-medium text-[var(--text)] bg-gradient-to-r from-[--brand] to-[--blue] hover:opacity-90 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer">
         {saving ? "İşleniyor..." : saveLabel}
       </button>
     </div>
@@ -598,11 +594,7 @@ function CustomPermsGrid({ perms, onToggle }: { perms: Record<string,string[]>; 
                     key={a}
                     type="button"
                     onClick={()=>onToggle(r.key,a)}
-                    className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${
-                      has
-                        ? "bg-[--brand] justify-end"
-                        : "bg-[--line] justify-start"
-                    }`}
+                    className={`w-9 h-5 rounded-full transition-all duration-300 p-0.5 flex items-center cursor-pointer ${ has ? "bg-[--brand] justify-end" : "bg-[--line] justify-start" }`}
                   >
                     <span className="size-4 rounded-full bg-white shadow-xs" />
                   </button>

@@ -114,7 +114,7 @@ function LoginPageContent() {
       <div className="fixed -bottom-40 -left-40 size-[500px] rounded-full bg-[--brand]/5 blur-[120px] pointer-events-none" />
 
       {/* ── Sol Marka Paneli (Masaüstü Hero) ── */}
-      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 bg-[#0C100E] border-r border-[--line] relative overflow-hidden p-12 text-white z-10">
+      <div className="hidden lg:flex flex-col justify-between w-[480px] xl:w-[540px] shrink-0 bg-[var(--bg)] border-r border-[--line] relative overflow-hidden p-12 text-[var(--text)] z-10">
         {/* Dekoratif Glow Daireler */}
         <div className="absolute -top-32 -left-32 size-96 rounded-full bg-[--brand]/10 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -right-24 size-96 rounded-full bg-[--brand]/10 blur-3xl pointer-events-none" />
@@ -124,18 +124,18 @@ function LoginPageContent() {
           <SunumLogo className="size-11" />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-white font-bold text-lg leading-tight tracking-tight">Sunum ERP</h1>
+              <h1 className="text-[var(--text)] font-bold text-lg leading-tight tracking-tight">Sunum ERP</h1>
               <span className="px-2.5 py-0.5 text-[10px] font-semibold bg-[--brand]/10 text-[--brand] rounded-full uppercase tracking-wider border border-[--brand-line]">
                 Canlı Demo
               </span>
             </div>
-            <p className="text-zinc-400 text-xs font-medium mt-0.5">Kurumsal İşletme Yönetim Sistemi</p>
+            <p className="text-[var(--text-muted)] text-xs font-medium mt-0.5">Kurumsal İşletme Yönetim Sistemi</p>
           </div>
         </div>
 
         {/* Hero Metinleri */}
         <div className="relative z-10 my-auto py-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[--muted-bg] text-zinc-300 text-xs font-medium mb-6 border border-[--line] backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[--muted-bg] text-[var(--text-2)] text-xs font-medium mb-6 border border-[--line] backdrop-blur-sm">
             <Sparkles className="size-3.5 text-[--brand]" />
             <span>İnteraktif Sunum &amp; İnceleme Ortamı</span>
           </div>
@@ -147,7 +147,7 @@ function LoginPageContent() {
             </span> Yönetin.
           </h2>
 
-          <p className="text-zinc-400 mt-4 text-sm leading-relaxed max-w-md font-light">
+          <p className="text-[var(--text-muted)] mt-4 text-sm leading-relaxed max-w-md font-light">
             Müşteriler, finansal akışlar, aktif projeler ve ekip koordinasyonu tek bir modern kontrol panelinde birleşiyor. Şifre girmeden canlı demoyu hemen test edin.
           </p>
 
@@ -161,8 +161,8 @@ function LoginPageContent() {
                     <Icon className="size-4" />
                   </div>
                   <div>
-                    <h4 className="text-white text-xs font-medium">{f.label}</h4>
-                    <p className="text-zinc-400 text-[11px] mt-0.5">{f.desc}</p>
+                    <h4 className="text-[var(--text)] text-xs font-medium">{f.label}</h4>
+                    <p className="text-[var(--text-muted)] text-[11px] mt-0.5">{f.desc}</p>
                   </div>
                 </div>
               )
@@ -171,7 +171,7 @@ function LoginPageContent() {
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 flex items-center justify-between text-xs text-zinc-500 pt-4 border-t border-[--line]">
+        <div className="relative z-10 flex items-center justify-between text-xs text-[var(--text-muted)] pt-4 border-t border-[--line]">
           <span>{BRAND_CONFIG.copyright}</span>
           <span className="flex items-center gap-1.5 text-[--brand]/80">
             <ShieldCheck className="size-3.5 text-[--brand]" /> Canlı Demo Sürümü
@@ -186,8 +186,8 @@ function LoginPageContent() {
         <div className="flex flex-col items-center gap-2 mb-8 lg:hidden text-center">
           <SunumLogo className="size-14" />
           <div>
-            <h1 className="text-xl font-bold text-white">Sunum ERP</h1>
-            <span className="text-xs text-zinc-400 font-medium">Canlı Demo Yönetim Paneli</span>
+            <h1 className="text-xl font-bold text-[var(--text)]">Sunum ERP</h1>
+            <span className="text-xs text-[var(--text-muted)] font-medium">Canlı Demo Yönetim Paneli</span>
           </div>
         </div>
 
@@ -211,16 +211,16 @@ function LoginPageContent() {
                 <Sparkles className="size-3.5 animate-pulse" />
                 <span>Tek Tıkla Canlı İnceleme</span>
               </div>
-              <h2 className="text-2xl font-bold tracking-tight text-white">
+              <h2 className="text-2xl font-bold tracking-tight text-[var(--text)]">
                 Sunum ERP&apos;yi Deneyimleyin
               </h2>
-              <p className="text-sm text-zinc-400 leading-relaxed font-light">
+              <p className="text-sm text-[var(--text-muted)] leading-relaxed font-light">
                 Kullanıcı adı ve şifreye gerek olmadan tam yetkili Süper Yönetici hesabıyla doğrudan panele erişin.
               </p>
             </div>
 
             {demoError && (
-              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-[var(--bad-soft)] border border-[var(--bad-line)] text-red-400 text-xs flex items-center gap-2">
                 <AlertCircle className="size-4 shrink-0" />
                 <span>{demoError}</span>
               </div>
@@ -250,7 +250,7 @@ function LoginPageContent() {
               {/* Otomatik Geri Sayım Bilgisi */}
               {autoLaunchCountdown !== null && autoLaunchCountdown > 0 && !startingDemo && (
                 <div className="text-center pt-1">
-                  <div className="flex items-center justify-center gap-2 text-xs text-zinc-400 font-medium">
+                  <div className="flex items-center justify-center gap-2 text-xs text-[var(--text-muted)] font-medium">
                     <span className="size-1.5 rounded-full bg-[--brand] animate-ping" />
                     <span>{autoLaunchCountdown} saniye içinde otomatik yönlendiriliyorsunuz...</span>
                     <button
@@ -261,7 +261,7 @@ function LoginPageContent() {
                     </button>
                   </div>
                   {/* İnce İlerleme Çubuğu */}
-                  <div className="w-32 h-1 bg-white/10 rounded-full mx-auto mt-2 overflow-hidden">
+                  <div className="w-32 h-1 bg-[var(--muted-bg)] rounded-full mx-auto mt-2 overflow-hidden">
                     <div
                       className="h-full bg-[--brand] transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                       style={{ width: `${((2 - autoLaunchCountdown) / 2) * 100}%` }}
@@ -273,17 +273,17 @@ function LoginPageContent() {
 
             {/* Demo Özellikleri & Rozetler */}
             <div className="pt-3 border-t border-[--line] space-y-2.5">
-              <div className="flex items-center gap-2.5 text-xs text-zinc-400">
+              <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                 <ShieldCheck className="size-4 text-[--brand] shrink-0" />
-                <span><strong className="text-zinc-200">Süper Yönetici Yetkileri:</strong> Tüm modüller ve ayarlar açık.</span>
+                <span><strong className="text-[var(--text-2)]">Süper Yönetici Yetkileri:</strong> Tüm modüller ve ayarlar açık.</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs text-zinc-400">
-                <BarChart3 className="size-4 text-teal-400 shrink-0" />
-                <span><strong className="text-zinc-200">Zengin Örnek Veriler:</strong> CRM, siparişler ve finans tabloları dolu.</span>
+              <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
+                <BarChart3 className="size-4 text-[var(--brand)] shrink-0" />
+                <span><strong className="text-[var(--text-2)]">Zengin Örnek Veriler:</strong> CRM, siparişler ve finans tabloları dolu.</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs text-zinc-400">
+              <div className="flex items-center gap-2.5 text-xs text-[var(--text-muted)]">
                 <Building2 className="size-4 text-[--brand] shrink-0" />
-                <span><strong className="text-zinc-200">4 Farklı Şube:</strong> İstanbul HQ, Ankara, İzmir ve Bursa hazır.</span>
+                <span><strong className="text-[var(--text-2)]">4 Farklı Şube:</strong> İstanbul HQ, Ankara, İzmir ve Bursa hazır.</span>
               </div>
             </div>
 
@@ -293,7 +293,7 @@ function LoginPageContent() {
           <div className="text-center">
             <button
               onClick={() => setShowManualLogin(v => !v)}
-              className="text-xs text-zinc-400 hover:text-white inline-flex items-center gap-1.5 transition-colors py-1 cursor-pointer"
+              className="text-xs text-[var(--text-muted)] hover:text-[var(--brand)] inline-flex items-center gap-1.5 transition-colors py-1 cursor-pointer"
             >
               <span>Geliştirici / Manuel Giriş Yap</span>
               <ChevronDown className={`size-3.5 transition-transform duration-200 ${showManualLogin ? "rotate-180" : ""}`} />
@@ -302,35 +302,35 @@ function LoginPageContent() {
             {showManualLogin && (
               <form onSubmit={handleManualLogin} className="mt-4 bg-[white]/90 backdrop-blur-xl border border-[--line] rounded-[20px] p-6 space-y-4 text-left">
                 {manualError && (
-                  <div className="p-3 rounded-xl bg-red-500/10 text-red-400 text-xs flex items-center gap-2 border border-red-500/20">
+                  <div className="p-3 rounded-xl bg-[var(--bad-soft)] text-red-400 text-xs flex items-center gap-2 border border-[var(--bad-line)]">
                     <AlertCircle className="size-3.5 shrink-0" />
                     <span>{manualError}</span>
                   </div>
                 )}
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">Kullanıcı Adı</label>
+                  <label className="text-xs font-medium text-[var(--text-2)] block mb-1.5">Kullanıcı Adı</label>
                   <div className="relative">
-                    <User className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                    <User className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
                     <input
                       type="text"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
                       placeholder="admin veya demo"
-                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-zinc-300 block mb-1.5">Şifre</label>
+                  <label className="text-xs font-medium text-[var(--text-2)] block mb-1.5">Şifre</label>
                   <div className="relative">
-                    <Lock className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                    <Lock className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
                     <input
                       type="password"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-white placeholder:text-zinc-600"
+                      className="w-full pl-10 pr-3.5 py-2.5 text-xs bg-white border border-[--line] rounded-xl outline-none focus:border-[--brand-line] text-[var(--text)] placeholder:text-zinc-600"
                     />
                   </div>
                 </div>
