@@ -79885,6 +79885,62 @@
       "link": "/dashboard/personel-denetim",
       "isRead": false,
       "id": "local-1795586572360-6etvz4tpiat"
+    },
+    {
+      "createdAt": "2026-11-25T06:03:51.758Z",
+      "updatedAt": "2026-11-25T06:03:51.758Z",
+      "isActive": true,
+      "userId": "user-art-director",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "\"Ziraat Bankası Temmuz Ayı Tarım Kredisi Kampanyası İnfografikleri\" görevinizin teslim tarihi geçti. Lütfen durumunu güncelleyin.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false,
+      "id": "local-1795586631754-kc04e9qbdnh"
+    },
+    {
+      "createdAt": "2026-11-25T06:03:52.421Z",
+      "updatedAt": "2026-11-25T06:03:52.421Z",
+      "isActive": true,
+      "userId": "local-debug-user",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "Atadığınız \"Ziraat Bankası Temmuz Ayı Tarım Kredisi Kampanyası İnfografikleri\" görevinin teslim tarihi geçti.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false,
+      "id": "local-1795586632421-qn27hjw1hh"
+    },
+    {
+      "createdAt": "2026-11-25T06:03:53.287Z",
+      "updatedAt": "2026-11-25T06:03:53.287Z",
+      "isActive": true,
+      "userId": "user-developer",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "\"Teknosa B2B Bayi Portalı Çoklu Para Birimi Desteği\" görevinizin teslim tarihi geçti. Lütfen durumunu güncelleyin.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false,
+      "id": "local-1795586633287-8wqv9b8qpev"
+    },
+    {
+      "createdAt": "2026-11-25T06:03:54.602Z",
+      "updatedAt": "2026-11-25T06:03:54.602Z",
+      "isActive": true,
+      "userId": "local-debug-user",
+      "title": "Görev Gecikti! ⚠️",
+      "message": "Atadığınız \"Teknosa B2B Bayi Portalı Çoklu Para Birimi Desteği\" görevinin teslim tarihi geçti.",
+      "type": "warning",
+      "moduleType": "tasks",
+      "content": null,
+      "link": "/dashboard/personel-denetim",
+      "isRead": false,
+      "id": "local-1795586634602-ihysnvx88l"
     }
   ],
   "auditLog": [
